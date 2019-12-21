@@ -20,26 +20,42 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFI_H
-#define _WIFI_H
+#ifndef _WEBSERVER_H
+#define _WEBSERVER_H
 
-#include "main.h"
-#include "config.h"
-#include "ArduinoLog.h"
-#include <Ticker.h>
-#include <WiFiClient.h>         //ESP32 Core WiFi Library
-#include <WiFiManager.h>        //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+#include "wifi.h"
+#include "execota.h"
+#include "bubbles.h"
+#include "tools.h"
+#include "jsonconfig.h"
+#include "bubserial.h"
+#include "version.h"
+#include <FS.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266HTTPClient.h>
 
-void doWiFi();
-void doWiFi(bool);
-void resetWifi();
+class WebServer {
+    private:
+        // Singleton Declarations
+        WebServer() {}
+        static WebServer *single;
+        // External Declarations
+        FS *filesystem;
+        ESP8266WebServer *server;
+        // Private Methods
+        String getContentType(String);
+        bool handleFileRead(String);
+        void aliases();
+        bool running;
 
-// WiFiManager Callbacks
-void apCallback(WiFiManager *myWiFiManager);
-void configResetCallback();
-void preSaveConfigCallback();
-void saveConfigCallback();
-void saveParamsCallback();
-void webServerCallback();
+    public:
+        // Singleton Declarations
+        static WebServer* getInstance();
+        ~WebServer() {single = NULL;}
+        // Other Declarations
+        void initialize(int port);
+        void handleLoop();
+        void stop();
+};
 
-#endif // _WIFI_H
+#endif // _WEBSERVER_H

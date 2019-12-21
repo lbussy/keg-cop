@@ -32,7 +32,7 @@ void doWiFi() {
 void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current config
 
     WiFiManager wifiManager;
-    //JsonConfig *config = JsonConfig::getInstance();
+    JsonConfig *config = JsonConfig::getInstance();
 
     // WiFiManager Callbacks
     wifiManager.setAPCallback(apCallback); // Called after AP has started
@@ -71,10 +71,9 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
     wifiManager.setShowDnsFields(true);    // force show dns field always
 
     if (ignore) { // Voluntary portal
-        blinker.attach_ms(APBLINK, wifiBlinker);
+        blinker.attach_ms(APBLINK, [](){digitalWrite(LED, !(digitalRead(LED)));});
         wifiManager.setConfigPortalTimeout(120);
-        if (wifiManager.startConfigPortal(APNAME, AP_PASSWD)) {
-        //if (wifiManager.startConfigPortal(config->ssid, config->appwd)) {
+        if (wifiManager.startConfigPortal(config->ssid, config->appwd)) {
             // We finished with portal, do we need this?
         } else {
             // Hit timeout on voluntary portal
@@ -82,15 +81,15 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             digitalWrite(LED, LOW);
             delay(3000);
             digitalWrite(LED, HIGH);
-            Log.notice(F("Hit timeout for on-demand portal, exiting." CR));
+            Log.warning(F("Hit timeout for on-demand portal, exiting." CR));
         }
     } else { // Normal WiFi connection attempt
-        blinker.attach_ms(STABLINK, wifiBlinker);
+        blinker.attach_ms(STABLINK, [](){digitalWrite(LED, !(digitalRead(LED)));});
         wifiManager.setConnectTimeout(30);
         wifiManager.setConfigPortalTimeout(120);
         if (!wifiManager.autoConnect(APNAME, AP_PASSWD)) {
-            Log.warning(F("Failed to connect and hit timeout."));
-            //if (blinker.active()) blinker.detach(); // Turn off blinker
+            Log.error(F("Failed to connect and hit timeout." CR));
+            blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
             delay(3000);
             digitalWrite(LED, HIGH);
@@ -112,20 +111,13 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
         Log.notice(F("Saving configuration." CR));
     }
 
-    WiFi.setHostname(HOSTNAME);
-    //WiFi.setHostname(config->hostname);
+    WiFi.setHostname(config->hostname);
 
-    Log.notice(F("Connecting to access point: %s."), WiFi.SSID().c_str());
+    Log.verbose(F("Connecting to access point: %s." CR), WiFi.SSID().c_str());
     while (WiFi.status() != WL_CONNECTED) {
-        blinker.attach_ms(STABLINK, wifiBlinker);
+        blinker.attach_ms(STABLINK, [](){digitalWrite(LED, !(digitalRead(LED)));});
         delay(500);
-#ifdef LOG_LEVEL
-        Serial.print(F("."));
-#endif
     }
-#ifdef LOG_LEVEL
-    Serial.println();
-#endif
     Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());
     blinker.detach(); // Turn off blinker
     digitalWrite(LED, HIGH); // Turn off LED
@@ -143,19 +135,16 @@ void resetWifi() { // Wipe wifi settings and reset controller
     delay(1000);
 }
 
-void wifiBlinker() { // Invert Current State of LED
-    digitalWrite(LED, !(digitalRead(LED)));
-}
-
 // WiFiManager Callbacks
 
 void apCallback(WiFiManager *myWiFiManager) { // Entered Access Point mode
     Log.verbose(F("[CALLBACK]: setAPCallback fired." CR));
     blinker.detach(); // Turn off blinker
-    blinker.attach_ms(APBLINK, wifiBlinker);
+    blinker.attach_ms(APBLINK, [](){digitalWrite(LED, !(digitalRead(LED)));});
     Log.notice(F("Entered portal mode; name: %s, IP: %s." CR),
         myWiFiManager->getConfigPortalSSID().c_str(),
-        WiFi.localIP().toString().c_str());
+        WiFi.localIP().toString().c_str()
+    );
 }
 
 void configResetCallback() {
@@ -163,24 +152,18 @@ void configResetCallback() {
 }
 
 void preSaveConfigCallback() {
-    Log.verbose(F("[CALLBACK]:  " CR));
+    Log.verbose(F("[CALLBACK]:  preSaveConfigCallback fired." CR));
 }
 
 void saveConfigCallback() {
     Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
 }
 
-void saveParamsCallback() { // Set flag to save config
+void saveParamsCallback() {
     Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CR));
-    shouldSaveConfig = true;
+    shouldSaveConfig = true; // Set flag to save config
 }
 
 void webServerCallback() {
     Log.verbose(F("[CALLBACK]: setWebServerCallback fired." CR));
-}
-
-// Misc helpers
-
-bool isNullField(const char *field) {
-    return ((field == NULL) || (field[0] == '\0'));
 }

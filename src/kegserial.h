@@ -24,10 +24,13 @@ SOFTWARE. */
 #define _BUB_SERIAL_H
 
 #include "config.h"
-#include <ArduinoLog.h>
+#include "ArduinoLog.h"
+#include <Arduino.h>
 
 void serial();
 void printTimestamp(Print* _logOutput);
+
+#define prefLen 22
 
 #endif //_BUB_SERIAL_H
  

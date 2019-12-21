@@ -24,8 +24,8 @@ SOFTWARE. */
 
 #ifndef DISABLE_LOGGING
 
-void serial() { // Start serial with auto-detected rate (default to BAUD)
-    delay(3000); // Delay to allow monitor to start
+void serial() {
+    delay(3000); // Delay to allow a monitor to start
     Serial.begin(BAUD);
     Serial.setDebugOutput(true);
     Serial.flush();
@@ -35,9 +35,16 @@ void serial() { // Start serial with auto-detected rate (default to BAUD)
 }
 
 void printTimestamp(Print* _logOutput) {
-  char c[12];
-  sprintf(c, "%10lu ", millis());
-  _logOutput->print(c);
+    time_t now;
+    time_t rawtime = time(&now);
+    struct tm ts;
+    ts = *localtime(&rawtime);
+    char locTime[prefLen] = {'\0'};
+    strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
+
+    //char c[12];
+    //sprintf(c, "%10lu ", millis());
+    _logOutput->print(locTime);
 }
 
 #else // DISABLE_LOGGING

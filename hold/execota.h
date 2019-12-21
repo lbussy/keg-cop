@@ -20,26 +20,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFI_H
-#define _WIFI_H
+#ifndef _EXECOTA_H
+#define _EXECOTA_H
 
-#include "main.h"
+#include "tools.h"
+#include "jsonconfig.h"
 #include "config.h"
-#include "ArduinoLog.h"
-#include <Ticker.h>
-#include <WiFiClient.h>         //ESP32 Core WiFi Library
-#include <WiFiManager.h>        //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+#include <ESP8266httpUpdate.h>
+#include <ArduinoLog.h>
 
-void doWiFi();
-void doWiFi(bool);
-void resetWifi();
+void execfw();
+void execspiffs();
 
-// WiFiManager Callbacks
-void apCallback(WiFiManager *myWiFiManager);
-void configResetCallback();
-void preSaveConfigCallback();
-void saveConfigCallback();
-void saveParamsCallback();
-void webServerCallback();
-
-#endif // _WIFI_H
+#endif //_EXECOTA_H

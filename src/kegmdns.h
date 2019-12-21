@@ -20,26 +20,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFI_H
-#define _WIFI_H
+// (#include <ESP8266mDNS.h> includes #include "LEAmDNS.h", which in turn
+// uses the MDNS_H include guard.  Long story short, do not rename this
+// to MDNS_H.)
+
+#ifndef _MDNS_H
+#define _MDNS_H
 
 #include "main.h"
-#include "config.h"
-#include "ArduinoLog.h"
-#include <Ticker.h>
-#include <WiFiClient.h>         //ESP32 Core WiFi Library
-#include <WiFiManager.h>        //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+#include <ArduinoLog.h>
+#include <ESPmDNS.h>
 
-void doWiFi();
-void doWiFi(bool);
-void resetWifi();
+void mdnssetup();
 
-// WiFiManager Callbacks
-void apCallback(WiFiManager *myWiFiManager);
-void configResetCallback();
-void preSaveConfigCallback();
-void saveConfigCallback();
-void saveParamsCallback();
-void webServerCallback();
-
-#endif // _WIFI_H
+#endif // _MDNS_H

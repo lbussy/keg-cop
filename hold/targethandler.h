@@ -20,26 +20,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFI_H
-#define _WIFI_H
+#ifndef _TARGETHANDLER_H
+#define _TARGETHANDLER_H
 
-#include "main.h"
 #include "config.h"
-#include "ArduinoLog.h"
-#include <Ticker.h>
-#include <WiFiClient.h>         //ESP32 Core WiFi Library
-#include <WiFiManager.h>        //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+#include "jsonconfig.h"
+#include "bubbles.h"
+#include <LCBUrl.h>
+#include <ArduinoLog.h>
+#include <ArduinoJson.h>
+#include <WiFiClient.h>
+#include <ESP8266HTTPClient.h>
 
-void doWiFi();
-void doWiFi(bool);
-void resetWifi();
+void httpPost();
+void bfPost();
+bool postJson(String);
+bool postJson(String, const char*);
 
-// WiFiManager Callbacks
-void apCallback(WiFiManager *myWiFiManager);
-void configResetCallback();
-void preSaveConfigCallback();
-void saveConfigCallback();
-void saveParamsCallback();
-void webServerCallback();
-
-#endif // _WIFI_H
+#endif // _TARGETHANDLER_H

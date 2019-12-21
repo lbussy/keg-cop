@@ -2,18 +2,23 @@
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
-Keg Cop is free software: you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation, either version 3 of the License, or (at your
-option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Brew Bubbles is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
-General Public License for more details.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-You should have received a copy of the GNU General Public License along
-with Brew Bubbles. If not, see <https://www.gnu.org/licenses/>. */
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE. */
 
 #include "main.h"
 
@@ -21,32 +26,20 @@ void setup() {
     serial();
     pinMode(LED, OUTPUT);
 
-    // pinMode(RESETWIFI, INPUT_PULLUP);
-    // if (digitalRead(RESETWIFI) == LOW) {
-    //     Log.notice(F("%s low, presenting portal." CR), RESETWIFI);
-    //     doWiFi(true);
-    // } else if (rst == true) {
-    //     Log.notice(F("DRD: Double reset boot, presenting portal." CR));
-    //     doWiFi(true);
-    // } else {
-    //     Log.verbose(F("DRD: Normal boot." CR));
-         doWiFi();
-    // }
-
-    // JsonConfig *config = JsonConfig::getInstance();
-    if (!MDNS.begin(HOSTNAME)) {
-    //if (!MDNS.begin(config->hostname)) {
-        Log.error(F("Error setting up MDNS responder."));
+    pinMode(RESETWIFI, INPUT_PULLUP);
+    if (digitalRead(RESETWIFI) == LOW) {
+        Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
+        doWiFi(true);
     } else {
-        Log.notice(F("mDNS responder started, hostname: %s.local." CR), WiFi.getHostname());
-        MDNS.addService("http", "tcp", 80);
+        Log.verbose(F("WiFi: Normal boot." CR));
+        doWiFi(false);
     }
+    
+    setClock();     // Get NTP time hack
+    mdnssetup();    // Set up mDNS listener
 
     // WebServer *server = WebServer::getInstance();
     // server->initialize(PORT); // Turn on web server
-
-    // NtpHandler *ntpTime = NtpHandler::getInstance();
-    // ntpTime->start();
     
     // execspiffs(); // Check for pending SPIFFS update
 
@@ -57,6 +50,10 @@ void loop() {
     // JsonConfig *config = JsonConfig::getInstance();
     // WebServer *server = WebServer::getInstance();
     // Bubbles *bubble = Bubbles::getInstance();
+
+    // DEBUG:  Ticker for time hack test
+    //Ticker timehack;
+    //timehack.attach(10, [](){Log.verbose(F("UTC date/time: %s" CR), getDTS().c_str());});
 
     // Bubble loop to create 60 second readings
     // Ticker bubUpdate;
@@ -87,8 +84,8 @@ void loop() {
 //         }
 
 //         if (bubble->doBub) { // Serial log for bubble detect
-// #ifdef LOG_LEVEL
-//             Log.verbose(F("॰ₒ๐°৹" CR)); // Looks like a bubble, right?
+// #ifdef LOGGING
+//             Log.verbose(F("॰ₒ๐°৹" CR));
 // #endif
 //             bubble->doBub = false;
 //         }

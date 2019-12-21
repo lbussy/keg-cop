@@ -20,26 +20,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFI_H
-#define _WIFI_H
+#ifndef _NTP_H
+#define _NTP_H
 
-#include "main.h"
 #include "config.h"
-#include "ArduinoLog.h"
 #include <Ticker.h>
-#include <WiFiClient.h>         //ESP32 Core WiFi Library
-#include <WiFiManager.h>        //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+#include <WiFi.h>
+#include "ArduinoLog.h"
 
-void doWiFi();
-void doWiFi(bool);
-void resetWifi();
+void setClock();    // Set system clock from NTP
+String getDTS();    // Get JSON-ish UTC date/time
+int getYear();      // tm_year
+int getMonth();     // tm_mon
+int getDate();      // tm_mday
+int getWday();      // tm_wday
+int getHour();      // tm_hour
+int getMinute();    // tm_min
+int getSecond();    // tm_sec
+int getYDay();      // tm_yday
 
-// WiFiManager Callbacks
-void apCallback(WiFiManager *myWiFiManager);
-void configResetCallback();
-void preSaveConfigCallback();
-void saveConfigCallback();
-void saveParamsCallback();
-void webServerCallback();
+#define dtsLen 21
 
-#endif // _WIFI_H
+#endif // _NTP_H

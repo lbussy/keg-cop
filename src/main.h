@@ -23,20 +23,13 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
+#include "jsonconfig.h"
 #include "kegserial.h"
 #include "config.h"
-// #include "jsonconfig.h"
-// #include "ntphandler.h"
-// #include "webserver.h"
+#include "ArduinoLog.h"
+#include "ntp.h"
 #include "kegwifi.h"
 #include "version.h"
-// #include "targethandler.h"
-// #include "bubbles.h"
-// #include <WiFiManager.h>
-// #include <ESP8266WiFi.h>
-// #include <ESP8266mDNS.h>
-#include <ESPmDNS.h>
-
-// static bool doTarget = false;  // Semaphore for Target timer
+#include "kegmdns.h"
 
 #endif // _MAIN_H
