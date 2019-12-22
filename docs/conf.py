@@ -65,11 +65,11 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['_static/']
 
 # (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
 # Path should be relative to the ``_static`` files directory.
-html_logo = "police.png"
+html_logo = "_static/police.png"
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.
@@ -116,7 +116,7 @@ html_theme_options = {
 
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
-    'navbar_class': "navbar navbar-inverse",
+    'navbar_class': "navbar",
 
     # Fix navigation bar to top of page?
     # Values: "true" (default) or "false"

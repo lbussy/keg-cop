@@ -50,11 +50,12 @@ SOFTWARE. -->
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="https://getbootstrap.com/docs/4.3/examples/sticky-footer/sticky-footer.css">
 
     <style>
         main>.container {
-            padding: 60px 15px 0;
+            width: auto;
+            max-width: 1024px;
+            padding: 50px 15px 0;
         }
 
         .footer {
@@ -73,7 +74,7 @@ SOFTWARE. -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <a class="navbar-brand" href="#">
-                <img src="mstile-150x150.png" style="width:32px;height:32px;">
+                <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
@@ -101,27 +102,70 @@ SOFTWARE. -->
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp"> <!-- Container -->
+        <!-- Container -->
+        <div class="container" id="settingsapp">
 
             <div class="page-header" id="banner">
-                <h1>Under Construction</h1>
+                <h1>Settings</h1>
             </div>
-            <div class="card border-dark mb-3">
 
-                <!-- About Keg Cop Information -->
-                <div class="card-header">
-                    <h4 class="card-title">Not quite ready ...</h4>
+            <!-- Tabs Header -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#controller">Controller</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#system">System</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#taps">Taps</a>
+                </li>
+            </ul>
+            <!-- Tab Header -->
+
+            <!-- Tab Content -->
+            <div id="myTabContent" class="tab-content">
+                <!-- Controller Card -->
+                <div class="tab-pane fade active show" id="controller">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header">
+                            <h4 class="card-title">Controller Configuration</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>This is where the information goes</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p>
-                        This is a placeholder for a website which will provide support
-                        for the Keg Cop project.  Please check back after release.
-                    </p>
+                <!-- Controller Card -->
+                <!-- System Card -->
+                <div class="tab-pane fade" id="system">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header">
+                            <h4 class="card-title">System Configuration</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>This is where the information goes</p>
+                        </div>
+                    </div>
                 </div>
-            </div> <!-- About Keg Cop Information -->
+                <!-- System Card -->
+                <!-- Taps Card -->
+                <div class="tab-pane fade" id="taps">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header">
+                            <h4 class="card-title">Taps Configuration</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>This is where the information goes</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Taps Card -->
+            </div>
+            <!-- Tabs Content -->
 
-        </div> <!-- Container -->
-
+        </div>
+        <!-- Container -->
     </main>
 
     <footer class="footer mt-auto py-3">
@@ -132,7 +176,7 @@ SOFTWARE. -->
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" >
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js">
     </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
     </script>
