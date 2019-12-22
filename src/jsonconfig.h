@@ -38,13 +38,14 @@ class JsonConfig {
         const char * filename = "/config.json"; // Configuration file
 
     public:
-        // Singleton Declarations
-        ~JsonConfig() {single = NULL;}          // Destructor
+        // Public Methods:
         static JsonConfig* getInstance();       // Pseudo-constructor
-
-        // Methods
+        ~JsonConfig() {single = NULL;}          // Destructor
         bool parse();                           // Read config
         bool save();                            // Write config
+
+        // Public Properties:
+
 
         // Configuration properties
         //

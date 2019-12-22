@@ -37,9 +37,6 @@ void setup() {
     
     setClock();     // Get NTP time hack
     mdnssetup();    // Set up mDNS listener
-
-    // WebServer *server = WebServer::getInstance();
-    // server->initialize(PORT); // Turn on web server
     
     // execspiffs(); // Check for pending SPIFFS update
 
@@ -47,8 +44,8 @@ void setup() {
 }
 
 void loop() {
+    HtmlServer *server = HtmlServer::getInstance();
     // JsonConfig *config = JsonConfig::getInstance();
-    // WebServer *server = WebServer::getInstance();
     // Bubbles *bubble = Bubbles::getInstance();
 
     // DEBUG:  Ticker for time hack test
@@ -91,7 +88,6 @@ void loop() {
 //         }
 
 //         // Regular loop handlers
-//         server->handleLoop();   // Handle HTML requests
-//         MDNS.update();          // Handle mDNS requests
+            server->htmlLoop();     // Handle HTML requests
     }
 }

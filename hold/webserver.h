@@ -23,39 +23,41 @@ SOFTWARE. */
 #ifndef _WEBSERVER_H
 #define _WEBSERVER_H
 
-#include "wifi.h"
-#include "execota.h"
-#include "bubbles.h"
-#include "tools.h"
+//#include "wifi.h"
+//#include "execota.h"
 #include "jsonconfig.h"
-#include "bubserial.h"
 #include "version.h"
-#include <FS.h>
-#include <ESP8266WebServer.h>
-#include <ESP8266HTTPClient.h>
+#include <SPIFFS.h>
+#include <WiFiClient.h>
+#include <WiFiServer.h>
 
 class WebServer {
     private:
-        // Singleton Declarations
+        // Private Methods:
         WebServer() {}
+        void aliases();
+
+        // Private Properties:
         static WebServer *single;
-        // External Declarations
-        FS *filesystem;
-        ESP8266WebServer *server;
-        // Private Methods
+        bool running;
         String getContentType(String);
         bool handleFileRead(String);
-        void aliases();
-        bool running;
+
+        // External Methods & Classes:
+        FS *filesystem;
+        WiFiServer *server;
+        WiFiClient *client;
 
     public:
-        // Singleton Declarations
+        // Public Methods:
         static WebServer* getInstance();
         ~WebServer() {single = NULL;}
-        // Other Declarations
         void initialize(int port);
         void handleLoop();
         void stop();
+
+        // Public Properties
+
 };
 
 #endif // _WEBSERVER_H

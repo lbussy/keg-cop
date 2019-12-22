@@ -20,17 +20,49 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _MAIN_H
-#define _MAIN_H
+#ifndef _HTMLSERVER_H
+#define _HTMLSERVER_H
 
-#include "htmlserver.h"
-#include "jsonconfig.h"
-#include "kegserial.h"
-#include "config.h"
-#include "ArduinoLog.h"
-#include "ntp.h"
-#include "kegwifi.h"
 #include "version.h"
-#include "kegmdns.h"
+#include "kegwifi.h"
+#include "config.h"
+#include "jsonconfig.h"
+#include <ArduinoLog.h>
+#include <SPIFFS.h>
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <HTTPClient.h>
+#include <WebServer.h>
+#include <ESPmDNS.h>
 
-#endif // _MAIN_H
+class HtmlServer {
+    private:
+        // Private Methods:
+        HtmlServer() {}                         // Constructor
+        String formatBytes(size_t);
+        String getContentType(String);
+        bool exists(String);
+        bool handleFileRead(String);
+        void handleFileUpload();
+        void handleFileDelete();
+        void handleFileCreate();
+        void handleFileList();
+        void initAliases();
+        void htmlSetup();
+
+        // Private Properties:
+        static HtmlServer *single;              // Singleton instance
+        WebServer *server;
+
+    public:
+        // Public Methods:
+        static HtmlServer* getInstance();       // Pseudo-constructor
+        void stop();
+        ~HtmlServer() {single = NULL;}          // Destructor
+
+        // Public Properties:
+        void htmlLoop();
+
+};
+
+#endif // _HTMLSERVER_H
