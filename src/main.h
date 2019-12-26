@@ -23,6 +23,8 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
+#include "flowmeter.h"
+#include "sensor.h"
 #include "htmlserver.h"
 #include "jsonconfig.h"
 #include "kegserial.h"
