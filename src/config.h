@@ -201,7 +201,7 @@ SOFTWARE. */
 // Input pin for keg 1 flow
 //
 #ifndef KEG1
-#define KEG1 15
+#define KEG1 16
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -211,7 +211,7 @@ SOFTWARE. */
 // Input pin for keg 2 flow
 //
 #ifndef KEG2
-#define KEG2 13
+#define KEG2 17
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -221,7 +221,7 @@ SOFTWARE. */
 // Input pin for keg 3 flow
 //
 #ifndef KEG3
-#define KEG3 2
+#define KEG3 5
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -231,7 +231,7 @@ SOFTWARE. */
 // Input pin for keg 4 flow
 //
 #ifndef KEG4
-#define KEG4 12
+#define KEG4 18
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -241,7 +241,7 @@ SOFTWARE. */
 // Input pin for keg 5 flow
 //
 #ifndef KEG5
-#define KEG5 4
+#define KEG5 19
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -251,7 +251,7 @@ SOFTWARE. */
 // Input pin for keg 6 flow
 //
 #ifndef KEG6
-#define KEG6 14
+#define KEG6 21
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -261,7 +261,7 @@ SOFTWARE. */
 // Input pin for keg 7 flow
 //
 #ifndef KEG7
-#define KEG7 17
+#define KEG7 22
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -271,7 +271,7 @@ SOFTWARE. */
 // Input pin for keg 8 flow
 //
 #ifndef KEG8
-#define KEG8 27
+#define KEG8 23
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -291,7 +291,7 @@ SOFTWARE. */
 // Define room temp sensor pin
 //
 #ifndef ROOMSENSE
-#define ROOMSENSE 34
+#define ROOMSENSE 32
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -301,7 +301,7 @@ SOFTWARE. */
 // Define tower temp sensor pin
 //
 #ifndef TOWERSENSE
-#define TOWERSENSE 32
+#define TOWERSENSE 33
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -311,7 +311,7 @@ SOFTWARE. */
 // Define upper chamber temp sensor pin
 //
 #ifndef UCHAMBSENSE
-#define UCHAMBSENSE 33
+#define UCHAMBSENSE 25
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -321,7 +321,7 @@ SOFTWARE. */
 // Define lower chamber temp sensor pin
 //
 #ifndef LCHAMBSENSE
-#define LCHAMBSENSE 25
+#define LCHAMBSENSE 26
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -331,7 +331,7 @@ SOFTWARE. */
 // Define keg temp sensor pin
 //
 #ifndef KEGSENSE
-#define KEGSENSE 26
+#define KEGSENSE 27
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
