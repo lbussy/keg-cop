@@ -43,51 +43,51 @@ void setup() {
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
 
+char upTime[21] = {'\0'}; // DEBUG
+
 void loop() {
+    // DEBUG:
+    time_t now;
+    time_t rawtime = time(&now);
+    struct tm ts;
+    ts = *localtime(&rawtime);
+    strftime(upTime, sizeof(upTime), "%FT%TZ ", &ts);
+    // DEBUG:
+
     HtmlServer *server = HtmlServer::getInstance();
-    // JsonConfig *config = JsonConfig::getInstance();
-    // Bubbles *bubble = Bubbles::getInstance();
+    Serial.println();
 
-    // DEBUG:  Ticker for time hack test
-    //Ticker timehack;
-    //timehack.attach(10, [](){Log.verbose(F("UTC date/time: %s" CR), getDTS().c_str());});
-
-    // Bubble loop to create 60 second readings
-    // Ticker bubUpdate;
-    // bubUpdate.attach(KEGLOOP, [bubble](){ bubble->update(); });
-
-    // Target timer
-    // Ticker postTimer;
-    // postTimer.attach(config->targetfreq * 60, [postTimer](){ doTarget = true; });
+    Ticker tempTest;
+    tempTest.attach(2, [](){
+        Log.notice("Up since: %s" CR, upTime); // DEBUG
+        Sensor *sensor = Sensor::getInstance();
+        Flow *flow = Flow::getInstance();
+        JsonConfig *config = JsonConfig::getInstance();
+        sensor->getTemps();
+        for (int i=0; i<5; ++i) {
+            if (config->units) {
+                Log.notice(F("%s's temp on pin %d: %D°F taken %d seconds ago. Last error = %s" CR),
+                    sensor->sensors[i].name.c_str(),
+                    sensor->sensors[i].pin,
+                    sensor->sensors[i].value,
+                    (millis() - sensor->sensors[i].lastReading) / 1000,
+                    sensor->sensors[i].lastErr.c_str());
+            } else {
+                Log.notice(F("%s's temp on pin %d: %D°C taken %d seconds ago. Last error = %s" CR),
+                    sensor->sensors[i].name.c_str(),
+                    sensor->sensors[i].pin,
+                    sensor->sensors[i].value,
+                    (millis() - sensor->sensors[i].lastReading) / 1000,
+                    sensor->sensors[i].lastErr.c_str());
+            }
+        }
+        for (int i = 0; i <  sizeof(flow->kegPins)/sizeof(int); i++) {
+            Log.notice("%d: Pin %d, count:\t%d" CR, i, flow->kegPins[i], flow->count[i]);
+        }
+        Serial.println();
+    });
 
     while (true) {
-
-//         // Handle JSON posts
-//         if (doTarget) { // Do Target post
-//             doTarget = false;
-//             httpPost();
-//         }
-//         if (doBF) { // Do BF post
-//             doBF = false;
-//             bfPost();
-//         }
-
-//         // If timers needs to be updated, update timers
-//         if (config->updateTargetFreq) {
-//             Log.notice(F("Resetting target frequency timer to %l minutes." CR), config->targetfreq);
-//             postTimer.detach();
-//             postTimer.attach(config->targetfreq * 60, httpPost);
-//             config->updateTargetFreq = false;
-//         }
-
-//         if (bubble->doBub) { // Serial log for bubble detect
-// #ifdef LOGGING
-//             Log.verbose(F("॰ₒ๐°৹" CR));
-// #endif
-//             bubble->doBub = false;
-//         }
-
-//         // Regular loop handlers
-            server->htmlLoop();     // Handle HTML requests
+        server->htmlLoop();     // Handle HTML requests
     }
 }

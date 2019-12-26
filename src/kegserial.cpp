@@ -29,6 +29,7 @@ void serial() {
     Serial.begin(BAUD);
     Serial.setDebugOutput(true);
     Serial.flush();
+    Serial.println();
     Log.begin(LOG_LEVEL, &Serial, true);
     Log.setPrefix(printTimestamp);
     Log.notice(F("Serial logging started at %l." CR), BAUD);
@@ -41,9 +42,6 @@ void printTimestamp(Print* _logOutput) {
     ts = *localtime(&rawtime);
     char locTime[prefLen] = {'\0'};
     strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
-
-    //char c[12];
-    //sprintf(c, "%10lu ", millis());
     _logOutput->print(locTime);
 }
 
