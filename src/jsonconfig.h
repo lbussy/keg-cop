@@ -56,7 +56,7 @@ class JsonConfig {
         // Cop Config
         char bname[33];                         // Breweery name
         char kname[33];                         // Kegerator name
-        bool units;                             // Units in imerial or metric
+        bool units;                             // Units in imperial or metric
         int numtap;                             // Number of taps used
         // Target Config
         //      - Local Target
