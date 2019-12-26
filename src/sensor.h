@@ -43,7 +43,8 @@ class Sensor {
             unsigned long lastReading;      // millis() of last good
             std::string lastErr;            // Last error message
             double offset;                  // Offset for callibration
-        } name, pin, value, lastReading, lastErr, offset;
+            int errors;
+        } name, pin, value, lastReading, lastErr, offset, errors;
         portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 
     public:
