@@ -341,7 +341,7 @@ SOFTWARE. */
 // Define cool actuator pin
 //
 #ifndef COOL
-#define COOL 23
+#define COOL 14
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -351,7 +351,7 @@ SOFTWARE. */
 // Define heat actuator pin
 //
 #ifndef HEAT
-#define HEAT 22
+#define HEAT 0
 #endif
 //
 //////////////////////////////////////////////////////////////////////////

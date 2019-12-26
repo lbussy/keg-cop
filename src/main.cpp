@@ -41,9 +41,16 @@ void setup() {
     // execspiffs(); // Check for pending SPIFFS update
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
+
+    pinMode(HEAT, OUTPUT);
+    digitalWrite(HEAT, HIGH);
+    pinMode(COOL, OUTPUT);
+    digitalWrite(COOL, HIGH);
 }
 
 char upTime[21] = {'\0'}; // DEBUG
+bool heatState = false;
+bool coolState = false;
 
 void loop() {
     // DEBUG:
@@ -66,18 +73,20 @@ void loop() {
         sensor->getTemps();
         for (int i=0; i<5; ++i) {
             if (config->units) {
-                Log.notice(F("%s's temp on pin %d: %D°F taken %d seconds ago. Last error = %s" CR),
+                Log.notice(F("%s's temp on pin %d: %D°F taken %d seconds ago. Total errors: %d. Last error: %s." CR),
                     sensor->sensors[i].name.c_str(),
                     sensor->sensors[i].pin,
                     sensor->sensors[i].value,
                     (millis() - sensor->sensors[i].lastReading) / 1000,
+                    sensor->sensors[i].errors,
                     sensor->sensors[i].lastErr.c_str());
             } else {
-                Log.notice(F("%s's temp on pin %d: %D°C taken %d seconds ago. Last error = %s" CR),
+                Log.notice(F("%s's temp on pin %d: %D°C taken %d seconds ago. Total errors: %d. Last error: %s." CR),
                     sensor->sensors[i].name.c_str(),
                     sensor->sensors[i].pin,
                     sensor->sensors[i].value,
                     (millis() - sensor->sensors[i].lastReading) / 1000,
+                    sensor->sensors[i].errors,
                     sensor->sensors[i].lastErr.c_str());
             }
         }
@@ -85,6 +94,16 @@ void loop() {
             Log.notice("%d: Pin %d, count:\t%d" CR, i, flow->kegPins[i], flow->count[i]);
         }
         Serial.println();
+    });
+
+    Ticker heatTest;
+    heatTest.attach(2, [](){
+        digitalWrite(HEAT, !(digitalRead(HEAT)));
+    });
+
+    Ticker coolTest;
+    coolTest.attach(3, [](){
+        digitalWrite(COOL, !(digitalRead(COOL)));
     });
 
     while (true) {
