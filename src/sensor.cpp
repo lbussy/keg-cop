@@ -51,13 +51,15 @@ void Sensor::getTemps() {
         }
         portEXIT_CRITICAL(&mux);
         if (_temp < -126) { // DEVICE_DISCONNECTED_* = -196.6F or -127C
-            single->sensors[i].lastErr = "Device disconnected.";
+            single->sensors[i].lastErr = "Device disconnected";
+            single->sensors[i].errors++;
             // single->sensors[i].value = 0; // Keep last reading
         } else if (_temp >= 185 ) {
-            single->sensors[i].lastErr = "Sensor error.";
+            single->sensors[i].lastErr = "Sensor error";
+            single->sensors[i].errors++;
             // single->sensors[i].value = 0;  // Keep last reading
         } else {
-            single->sensors[i].lastErr = "";
+            single->sensors[i].lastErr = "None";
             single->sensors[i].value = _temp;
             single->sensors[i].lastReading = millis();
         }
@@ -65,9 +67,9 @@ void Sensor::getTemps() {
 }
 
 void Sensor::getSensors() {
-    single->sensors[0] = {"Room", ROOMSENSE, double(0), long(0), ""};
-    single->sensors[1] = {"Tower", TOWERSENSE, double(0), long(0), ""};
-    single->sensors[2] = {"Upper Chamber", UCHAMBSENSE, double(0), long(0), ""};
-    single->sensors[3] = {"Lower Chamber", LCHAMBSENSE, double(0), long(0), ""};
-    single->sensors[4] = {"Keg", KEGSENSE, double(0), long(0), ""};
+    single->sensors[0] = {"Room", ROOMSENSE, double(0), long(0), "", 0, 0};
+    single->sensors[1] = {"Tower", TOWERSENSE, double(0), long(0), "", 0, 0};
+    single->sensors[2] = {"Upper Chamber", UCHAMBSENSE, double(0), long(0), "", 0, 0};
+    single->sensors[3] = {"Lower Chamber", LCHAMBSENSE, double(0), long(0), "", 0, 0};
+    single->sensors[4] = {"Keg", KEGSENSE, double(0), long(0), "", 0, 0};
 }
