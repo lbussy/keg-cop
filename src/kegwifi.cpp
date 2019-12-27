@@ -157,6 +157,9 @@ void preSaveConfigCallback() {
 
 void saveConfigCallback() {
     Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
+    WiFi.mode(WIFI_STA); // Explicitly set mode, esp defaults to STA+AP
+    delay(1000);
+    ESP.restart(); // TODO:  Restart after setting Wifi or else it's buggy
 }
 
 void saveParamsCallback() {

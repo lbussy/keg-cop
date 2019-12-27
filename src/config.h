@@ -191,7 +191,7 @@ SOFTWARE. */
 // Define reset WiFi on boot pin - reset if pulled low on boot
 //
 #ifndef RESETWIFI
-#define RESETWIFI 11
+#define RESETWIFI 13
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -201,7 +201,7 @@ SOFTWARE. */
 // Input pin for keg 1 flow
 //
 #ifndef KEG1
-#define KEG1 16
+#define KEG1 4
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -211,7 +211,7 @@ SOFTWARE. */
 // Input pin for keg 2 flow
 //
 #ifndef KEG2
-#define KEG2 17
+#define KEG2 16
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -221,7 +221,7 @@ SOFTWARE. */
 // Input pin for keg 3 flow
 //
 #ifndef KEG3
-#define KEG3 5
+#define KEG3 17
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -348,10 +348,10 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Define heat actuator pin
+// Define solenoid actuator pin
 //
-#ifndef HEAT
-#define HEAT 0
+#ifndef SOLENOID
+#define SOLENOID 0
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
