@@ -42,8 +42,8 @@ void setup() {
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 
-    pinMode(HEAT, OUTPUT);
-    digitalWrite(HEAT, HIGH);
+    pinMode(SOLENOID, OUTPUT);
+    digitalWrite(SOLENOID, HIGH);
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, HIGH);
 }
@@ -96,9 +96,9 @@ void loop() {
         Serial.println();
     });
 
-    Ticker heatTest;
-    heatTest.attach(2, [](){
-        digitalWrite(HEAT, !(digitalRead(HEAT)));
+    Ticker solTest;
+    solTest.attach(2, [](){
+        digitalWrite(SOLENOID, !(digitalRead(SOLENOID)));
     });
 
     Ticker coolTest;
