@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "flowmeter.h"
+#include "kegflow.h"
 
 Flow* Flow::single = NULL;
 Flow *pFlow; // Pointer to Counter class
