@@ -34,6 +34,8 @@ Sensor* Sensor::getInstance() {
 
 void Sensor::initSensors() {
     for (int i=0; i<5; ++i) {
+        single->sensors[i].name = tapNames[i];
+        single->sensors[i].pin = flowPins[i];
         single->sensors[i].value = 0;
         single->sensors[i].average = 0;
         // sensors[i].buffer.push(0);
@@ -42,16 +44,6 @@ void Sensor::initSensors() {
         single->sensors[i].offset = 0;
         single->sensors[i].errors = 0;
     }
-    single->sensors[0].name = "Room";
-    single->sensors[0].pin = int(ROOMSENSE);
-    single->sensors[1].name = "Tower";
-    single->sensors[1].pin = int(TOWERSENSE);
-    single->sensors[2].name = "Upper Chamber";
-    single->sensors[2].pin = int(UCHAMBSENSE);
-    single->sensors[3].name = "Lower Chamber";
-    single->sensors[3].pin = int(LCHAMBSENSE);
-    single->sensors[4].name = "Keg";
-    single->sensors[4].pin = int(KEGSENSE);
 }
 
 void Sensor::sampleTemps() {
