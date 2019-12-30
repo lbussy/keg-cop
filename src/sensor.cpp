@@ -27,20 +27,39 @@ Sensor* Sensor::single = NULL;
 Sensor* Sensor::getInstance() {
     if (!single) {
         single = new Sensor();
-        single->getSensors();
+        single->initSensors();
     }
     return single;
 }
 
-void Sensor::getTemps() {
-    // Takes about 600ms
+void Sensor::initSensors() {
+    for (int i=0; i<5; ++i) {
+        single->sensors[i].value = 0;
+        single->sensors[i].average = 0;
+        // sensors[i].buffer.push(0);
+        single->sensors[i].lastReading = 0;
+        single->sensors[i].lastErr = "";
+        single->sensors[i].offset = 0;
+        single->sensors[i].errors = 0;
+    }
+    single->sensors[0].name = "Room";
+    single->sensors[0].pin = int(ROOMSENSE);
+    single->sensors[1].name = "Tower";
+    single->sensors[1].pin = int(TOWERSENSE);
+    single->sensors[2].name = "Upper Chamber";
+    single->sensors[2].pin = int(UCHAMBSENSE);
+    single->sensors[3].name = "Lower Chamber";
+    single->sensors[3].pin = int(LCHAMBSENSE);
+    single->sensors[4].name = "Keg";
+    single->sensors[4].pin = int(KEGSENSE);
+}
+
+void Sensor::sampleTemps() {
     JsonConfig *config = JsonConfig::getInstance();
-    
     for (int i=0; i<5; ++i) {
         int pin = single->sensors[i].pin;
         OneWire oneWire(pin);
         portENTER_CRITICAL(&mux);
-        // vTaskDelay(10);
         DallasTemperature thisSensor(&oneWire);
         thisSensor.requestTemperatures();
         double _temp;
@@ -61,15 +80,16 @@ void Sensor::getTemps() {
         } else {
             single->sensors[i].lastErr = "None";
             single->sensors[i].value = _temp;
+            sensors[i].buffer.push(_temp); // Push to buffer
+            // Average the buffer
+            float avg = 0.0;
+            uint8_t size = sensors[i].buffer.size();
+            for (int x = 0; x < sensors[i].buffer.size(); x++) {
+                // float thisTemp = tempAmbAvg[i];
+                avg += sensors[i].buffer[x] / size;
+            }
+            sensors[i].average = avg;
             single->sensors[i].lastReading = millis();
         }
     }
-}
-
-void Sensor::getSensors() {
-    single->sensors[0] = {"Room", ROOMSENSE, double(0), long(0), "", 0, 0};
-    single->sensors[1] = {"Tower", TOWERSENSE, double(0), long(0), "", 0, 0};
-    single->sensors[2] = {"Upper Chamber", UCHAMBSENSE, double(0), long(0), "", 0, 0};
-    single->sensors[3] = {"Lower Chamber", LCHAMBSENSE, double(0), long(0), "", 0, 0};
-    single->sensors[4] = {"Keg", KEGSENSE, double(0), long(0), "", 0, 0};
 }

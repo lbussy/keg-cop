@@ -48,62 +48,14 @@ void setup() {
     digitalWrite(COOL, HIGH);
 }
 
-char upTime[21] = {'\0'}; // DEBUG
-bool heatState = false;
-bool coolState = false;
-
 void loop() {
-    // DEBUG:
-    time_t now;
-    time_t rawtime = time(&now);
-    struct tm ts;
-    ts = *localtime(&rawtime);
-    strftime(upTime, sizeof(upTime), "%FT%TZ ", &ts);
-    // DEBUG:
-
     HtmlServer *server = HtmlServer::getInstance();
-    Serial.println();
 
-    Ticker tempTest;
-    tempTest.attach(2, [](){
-        Log.notice("Up since: %s" CR, upTime); // DEBUG
+    Ticker sampleSensors;
+    sampleSensors.attach(TEMPLOOP, [](){
         Sensor *sensor = Sensor::getInstance();
-        Flow *flow = Flow::getInstance();
-        JsonConfig *config = JsonConfig::getInstance();
-        sensor->getTemps();
-        for (int i=0; i<5; ++i) {
-            if (config->units) {
-                Log.notice(F("%s's temp on pin %d: %D°F taken %d seconds ago. Total errors: %d. Last error: %s." CR),
-                    sensor->sensors[i].name.c_str(),
-                    sensor->sensors[i].pin,
-                    sensor->sensors[i].value,
-                    (millis() - sensor->sensors[i].lastReading) / 1000,
-                    sensor->sensors[i].errors,
-                    sensor->sensors[i].lastErr.c_str());
-            } else {
-                Log.notice(F("%s's temp on pin %d: %D°C taken %d seconds ago. Total errors: %d. Last error: %s." CR),
-                    sensor->sensors[i].name.c_str(),
-                    sensor->sensors[i].pin,
-                    sensor->sensors[i].value,
-                    (millis() - sensor->sensors[i].lastReading) / 1000,
-                    sensor->sensors[i].errors,
-                    sensor->sensors[i].lastErr.c_str());
-            }
-        }
-        for (int i = 0; i <  sizeof(flow->kegPins)/sizeof(int); i++) {
-            Log.notice("%d: Pin %d, count:\t%d" CR, i, flow->kegPins[i], flow->count[i]);
-        }
-        Serial.println();
-    });
-
-    Ticker solTest;
-    solTest.attach(2, [](){
-        digitalWrite(SOLENOID, !(digitalRead(SOLENOID)));
-    });
-
-    Ticker coolTest;
-    coolTest.attach(3, [](){
-        digitalWrite(COOL, !(digitalRead(COOL)));
+        //Flow *flow = Flow::getInstance();
+        sensor->sampleTemps();
     });
 
     while (true) {

@@ -27,31 +27,34 @@ SOFTWARE. */
 #include "jsonconfig.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <CircularBuffer.h>
 
 class Sensor {
     private:
         // Private Methods:
-        Sensor() {}                         // Constructor
-        void getSensors();                    // Load temps from devices
+        Sensor() {}                                 // Constructor
+        void initSensors();                         // Load temps from devices
 
         // Private Properties:
-        static Sensor *single;              // Singleton instance
+        static Sensor *single;                      // Singleton instance
         struct sensor {
-            std::string name;               // Sensor description
-            int pin;                        // μC Pin
-            double value;                   // Temp reading
-            unsigned long lastReading;      // millis() of last good
-            std::string lastErr;            // Last error message
-            double offset;                  // Offset for callibration
+            std::string name;                       // Sensor description
+            int pin;                                // μC Pin
+            double value;                           // Temp reading
+            double average;                         // Avaerage reading (1 min)
+            CircularBuffer<float, TEMPAVG> buffer;  // Circ buffer for avg
+            unsigned long lastReading;              // millis() of last good
+            std::string lastErr;                    // Last error message
+            double offset;                          // Offset for callibration
             int errors;
-        } name, pin, value, lastReading, lastErr, offset, errors;
+        } name, pin, value, average, lastReading, lastErr, offset, errors;
         portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 
     public:
         // Public Methods:
         static Sensor* getInstance();       // Pseudo-constructor
         ~Sensor() {single = NULL;}          // Destructor
-        void getTemps();                    // Load temps from devices
+        void sampleTemps();                 // Add temp sample to average
 
         // Public Properties:
         sensor sensors[5];                  // Temp Sensors
