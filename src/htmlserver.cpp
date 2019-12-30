@@ -298,7 +298,11 @@ void HtmlServer::initAliases() {
 }
 
 void HtmlServer::htmlSetup() {
-    SPIFFS.begin(); {
+    // Mount SPIFFS
+    if (!SPIFFS.begin()) {
+        Log.error(F("HTML: Failed to mount SPIFFS." CR));
+        return;
+    } else {
         File root = SPIFFS.open("/");
         File file = root.openNextFile();
         while (file) {
