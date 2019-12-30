@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _FLOWMETER_H
-#define _FLOWMETER_H
+#ifndef _KEGFLOW_H
+#define _KEGFLOW_H
 
 #include "config.h"
 #include <string.h>
@@ -63,4 +63,4 @@ class Flow {
         keg kegs[8];
 };
 
-#endif // _FLOWMETER_H
+#endif // _KEGFLOW_H
