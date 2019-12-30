@@ -38,7 +38,7 @@ bool JsonConfig::parse() {
 
     // Mount SPIFFS
     if (!SPIFFS.begin()) {
-        Log.error(F("Failed to mount SPIFFS." CR));
+        Log.error(F("CONFIG: Failed to mount SPIFFS." CR));
         return false;
     }
 
@@ -167,7 +167,7 @@ bool JsonConfig::save() {
 
     // Mount SPIFFS
     if (!SPIFFS.begin()) {
-        Log.error(F("Failed to mount SPIFFS." CR));
+        Log.error(F("CONFIG: Failed to mount SPIFFS." CR));
         return false;
     }
 
