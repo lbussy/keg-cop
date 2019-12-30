@@ -57,6 +57,13 @@ static ICACHE_RAM_ATTR void HandleIntISR7(void) { // External interrupt handler
     pFlow->handleInterrupts(7); // Calls class member handler
 }
 
+static void (*pf[])(void) = { // ISR Function Pointers
+    HandleIntISR0, HandleIntISR1,
+    HandleIntISR2, HandleIntISR3,
+    HandleIntISR4, HandleIntISR5,
+    HandleIntISR6, HandleIntISR7
+};
+
 Flow* Flow::getInstance() {
     if (!single) {
         single = new Flow();
@@ -108,7 +115,7 @@ void Flow::parse() { // Load Keg information
         char filename[11];
         strcpy(filename, "/tap");   // Copy string one into the result
         char idx[1];
-        sprintf(idx, "%f", i);      // Copy tap ID into a char
+        sprintf(idx, "%u", i);      // Copy tap ID into a char
         strcat(filename, idx);      // Add tap ID
         strcat(filename, ".json");  // Filename
 
@@ -181,7 +188,7 @@ void Flow::save(int tap) { // Save off a single Keg
     char filename[11];
     strcpy(filename, "/tap");   // Copy string one into the result
     char idx[1];
-    sprintf(idx, "%f", tap);      // Copy tap ID into a char
+    sprintf(idx, "%u", tap);      // Copy tap ID into a char
     strcat(filename, idx);      // Add tap ID
     strcat(filename, ".json");  // Filename
 
