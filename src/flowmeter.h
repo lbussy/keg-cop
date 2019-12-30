@@ -63,11 +63,4 @@ class Flow {
         keg kegs[8];
 };
 
-static void (*pf[])(void) = { // ISR Function Pointers
-    HandleIntISR0, HandleIntISR1,
-    HandleIntISR2, HandleIntISR3,
-    HandleIntISR4, HandleIntISR5,
-    HandleIntISR6, HandleIntISR7
-};
-
 #endif // _FLOWMETER_H
