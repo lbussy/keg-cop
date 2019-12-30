@@ -24,25 +24,50 @@ SOFTWARE. */
 #define _FLOWMETER_H
 
 #include "config.h"
+#include <string.h>
+#include <SPIFFS.h>
+#include <ArduinoJson.h>
+#include <ArduinoLog.h>
 #include <Arduino.h>
 
 class Flow {
     private:
-        // Singleton Declarations
+        // Class Private Methods
         Flow() {};
         static Flow *single;
-        // Other Declarations
-        volatile unsigned long ulMicroLast; // Last pulse time for resolution (micros())
+        void start();
+        void parse();
+        void save(int);
+
+        // Class Private Properties
+        struct keg {
+            int tapid;                          // Tap ID
+            int pin;                            // μC Pin
+            long ppg;                           // Pulses per Gallon
+            char name[33];                      // Beer Name
+            volatile unsigned long count;       // Unregistered Pulse Count
+            double capacity;                    // Tap Capacity
+            double remaining;                   // Tap remaining
+        } tapid, pin, ppg, name, count, capacity, remaining;
+        int kegPins[8] = {KEG0, KEG1, KEG2, KEG3, KEG4, KEG5, KEG6, KEG7};
 
     public:
-        // Singleton Declarations
+        // Class Public Methods
         static Flow* getInstance();
         ~Flow() {single = NULL;}
-        // Other Declarations
-        void start();
-        volatile unsigned long count[8];        // Store pulse count
-        void handleInterrupts(int);
-        int kegPins[8] = {KEG1, KEG2, KEG3, KEG4, KEG5, KEG6, KEG7, KEG8};
+        void handleInterrupts(int);             // Needs to be public for ISRs
+        void logFlow();                         // Apply deductions to volumes
+        void save();                            // Save all taps
+
+        // Class Public Properties
+        keg kegs[8];
+};
+
+static void (*pf[])(void) = { // ISR Function Pointers
+    HandleIntISR0, HandleIntISR1,
+    HandleIntISR2, HandleIntISR3,
+    HandleIntISR4, HandleIntISR5,
+    HandleIntISR6, HandleIntISR7
 };
 
 #endif // _FLOWMETER_H

@@ -51,10 +51,17 @@ void setup() {
 void loop() {
     HtmlServer *server = HtmlServer::getInstance();
 
-    Ticker sampleSensors;
-    sampleSensors.attach(TEMPLOOP, [](){
+    // Log any pours
+    Ticker logFlow;
+    logFlow.attach(KEGLOOP, [](){
+        Flow *flow = Flow::getInstance();
+        flow->logFlow();
+    });
+
+    // Create sliding average of temps
+    Ticker sampleTemps;
+    sampleTemps.attach(TEMPLOOP, [](){
         Sensor *sensor = Sensor::getInstance();
-        //Flow *flow = Flow::getInstance();
         sensor->sampleTemps();
     });
 
