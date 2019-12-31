@@ -45,13 +45,11 @@ bool JsonConfig::parse() {
     // Open file for reading
     bool loaded;
     File file = SPIFFS.open(filename, "r");
-    // This may fail if the file is missing
-    if (!file) {
+    if (!SPIFFS.exists(filename) || !file) {
         Log.warning(F("Failed to open configuration file." CR));
         loaded = false;
     } else {
         // Parse the JSON object in the file
-        // bool success = deserializeJson(doc, file);
         DeserializationError err = deserializeJson(doc, file);
         if (err) {
             Log.error(F("Failed to deserialize configuration." CR));
@@ -62,7 +60,7 @@ bool JsonConfig::parse() {
         }
     }
 
-    if(loaded == false) { // Load defaults
+    if (loaded == false) { // Load defaults
         Log.notice(F("Using default configuration." CR));
 
         // Set defaults for WiFi Config
@@ -74,7 +72,7 @@ bool JsonConfig::parse() {
         strlcpy(single->bname, COPNAME, sizeof(single->bname));
         strlcpy(single->kname, SOURCE, sizeof(single->kname));
         single->units = UNITS;
-        single->numtap = 0;
+        single->numtap = NUMTAPS;
 
         // Set defaults for target config
         //      - Local target config
