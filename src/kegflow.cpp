@@ -23,38 +23,38 @@ SOFTWARE. */
 #include "kegflow.h"
 
 Flow* Flow::single = NULL;
-Flow *pFlow; // Pointer to Counter class
+Flow *flow; // Pointer to Counter class
 
-static ICACHE_RAM_ATTR void HandleIntISR0(void) { // External interrupt handler
-    pFlow->handleInterrupts(0); // Calls class member handler
+static IRAM_ATTR void HandleIntISR0(void) {
+    flow->handleInterrupts(0);
 }
 
-static ICACHE_RAM_ATTR void HandleIntISR1(void) { // External interrupt handler
-    pFlow->handleInterrupts(1); // Calls class member handler
+static IRAM_ATTR void HandleIntISR1(void) {
+    flow->handleInterrupts(1);
 }
 
-static ICACHE_RAM_ATTR void HandleIntISR2(void) { // External interrupt handler
-    pFlow->handleInterrupts(2); // Calls class member handler
+static IRAM_ATTR void HandleIntISR2(void) {
+    flow->handleInterrupts(2);
 }
 
-static ICACHE_RAM_ATTR void HandleIntISR3(void) { // External interrupt handler
-    pFlow->handleInterrupts(3); // Calls class member handler
+static IRAM_ATTR void HandleIntISR3(void) {
+    flow->handleInterrupts(3);
 }
 
-static ICACHE_RAM_ATTR void HandleIntISR4(void) { // External interrupt handler
-    pFlow->handleInterrupts(4); // Calls class member handler
+static IRAM_ATTR void HandleIntISR4(void) {
+    flow->handleInterrupts(4);
 }
 
-static ICACHE_RAM_ATTR void HandleIntISR5(void) { // External interrupt handler
-    pFlow->handleInterrupts(5); // Calls class member handler
+static IRAM_ATTR void HandleIntISR5(void) {
+    flow->handleInterrupts(5);
 }
 
-static ICACHE_RAM_ATTR void HandleIntISR6(void) { // External interrupt handler
-    pFlow->handleInterrupts(6); // Calls class member handler
+static IRAM_ATTR void HandleIntISR6(void) {
+    flow->handleInterrupts(6);
 }
 
-static ICACHE_RAM_ATTR void HandleIntISR7(void) { // External interrupt handler
-    pFlow->handleInterrupts(7); // Calls class member handler
+static IRAM_ATTR void HandleIntISR7(void) {
+    flow->handleInterrupts(7);
 }
 
 static void (*pf[])(void) = { // ISR Function Pointers
@@ -73,32 +73,42 @@ Flow* Flow::getInstance() {
 }
 
 void Flow::start() { // Starting point for Keg data
-    for (int i = 0; i <  sizeof(single->kegs)/sizeof(int); i++) {
+    JsonConfig *config = JsonConfig::getInstance();
+    for (int i = 0; i < config->numtap; i++) {
         single->kegs[i].tapid = i;
         single->kegs[i].pin = kegPins[i];
         single->kegs[i].count = 0;
-        single->parse();
+        single->kegs[i].updated = false;
         pinMode(kegPins[i], INPUT_PULLUP);
         digitalWrite(kegPins[i], HIGH);
         attachInterrupt(digitalPinToInterrupt(single->kegs[i].pin), pf[i], FALLING);
     }
-    pFlow = single;
+    flow = single;
+    single->parse();
 }
 
-void Flow::handleInterrupts(int pin) { // Increment pulse count
-    single->kegs[pin].count++;
+void Flow::handleInterrupts(int tap) { // Increment pulse count
+    single->kegs[tap].count++;
+    single->kegs[tap].updated = true;
 }
 
 void Flow::logFlow() { // Save debits to keg and to file
-    for (int i = 0; i <  sizeof(single->kegs)/sizeof(int); i++) {
-        single->kegs[i].remaining = single->kegs[i].count / single->kegs[i].ppg;
-        single->kegs[i].count = 0;
-        single->save(i);
+    JsonConfig *config = JsonConfig::getInstance();
+    for (int i = 0; i < config->numtap; i++) {
+        //gpio_intr_disable(kegGPIO[i]);
+        if (single->kegs[i].updated == true) {
+            single->kegs[i].remaining = single->kegs[i].count / single->kegs[i].ppg;
+            single->kegs[i].count = 0;
+            single->kegs[i].updated = false;
+            single->save(i);
+        }
+        //gpio_intr_enable(kegGPIO[i]);
     }
 }
 
 void Flow::parse() { // Load Keg information
-    for (int i = 0; i <  sizeof(single->kegs)/sizeof(int); i++) {
+    JsonConfig *config = JsonConfig::getInstance();
+    for (int i = 0; i < config->numtap; i++) {
         const size_t capacity = JSON_OBJECT_SIZE(4) + 80;
         DynamicJsonDocument doc(capacity);
 
@@ -108,9 +118,6 @@ void Flow::parse() { // Load Keg information
             return;
         }
 
-        // Open file for reading
-        bool loaded;
-
         // Concatenate Tap's filename
         char filename[11];
         strcpy(filename, "/tap");   // Copy string one into the result
@@ -119,30 +126,29 @@ void Flow::parse() { // Load Keg information
         strcat(filename, idx);      // Add tap ID
         strcat(filename, ".json");  // Filename
 
+        // Open file for reading
+        bool loaded;
         File file = SPIFFS.open(filename, "r");
-        // This may fail if the file is missing
-        if (!file) {
-            Log.warning(F("Failed to open %s file." CR), filename);
+        if (!SPIFFS.exists(filename) || !file) {
+            Log.warning(F("Failed to open %s." CR), filename);
             loaded = false;
         } else {
             // Parse the JSON object in the file
-            // bool success = deserializeJson(doc, file);
             DeserializationError err = deserializeJson(doc, file);
             if (err) {
                 Log.error(F("Failed to deserialize %s." CR), filename);
-                Log.error(err.c_str());         
+                Log.error(F("%s" CR), err.c_str());         
                 loaded = false;
             } else {
                 loaded = true;
             }
         }
 
-        if(loaded == false) { // Load defaults
+        if (loaded == false) { // Load defaults
             Log.notice(F("Using default data for %s." CR), filename);
 
             single->kegs[i].ppg = PPG;
-            const char * _kegname = "Keg " + (single->kegs[i].tapid + 1);
-            strlcpy(single->kegs[i].name, _kegname, sizeof(_kegname));
+            strlcpy(single->kegs[i].name, DEFAULTBEER, sizeof(DEFAULTBEER));
             single->kegs[i].capacity = KEGSIZE;
             single->kegs[i].remaining = KEGSIZE;
 
@@ -151,12 +157,10 @@ void Flow::parse() { // Load Keg information
 
         } else { // Parse from file
 
-            Log.notice(F("Parsing data from %s." CR), filename);
-
+            Log.verbose(F("Parsing data from %s." CR), filename);
             // Parse Tap Config
             single->kegs[i].ppg = doc["ppg"] | PPG;
-            const char * _kegname = "Keg " + (single->kegs[i].tapid + 1);
-            strlcpy(single->kegs[i].name, doc["beername"] | _kegname , max(sizeof(_kegname), sizeof(doc["beername"])));
+            strlcpy(single->kegs[i].name, doc["beername"] | DEFAULTBEER , sizeof(DEFAULTBEER));
             single->kegs[i].capacity = doc["capacity"] | KEGSIZE;
             single->kegs[i].remaining = doc["remaining"] | KEGSIZE;
         }
@@ -164,13 +168,14 @@ void Flow::parse() { // Load Keg information
 }
 
 void Flow::save() { // Save off all Kegs
-    for (int i = 0; i <  sizeof(single->kegs)/sizeof(int); i++) {
+    JsonConfig *config = JsonConfig::getInstance();
+    for (int i = 0; i < config->numtap; i++) {
         single->save(i);
     }
 }
 
 void Flow::save(int tap) { // Save off a single Keg
-    const size_t capacity = JSON_OBJECT_SIZE(4);
+    const size_t capacity = JSON_OBJECT_SIZE(4) + 80;
     DynamicJsonDocument doc(capacity);
 
     doc["ppg"] = single->kegs[tap].ppg;
@@ -188,7 +193,7 @@ void Flow::save(int tap) { // Save off a single Keg
     char filename[11];
     strcpy(filename, "/tap");   // Copy string one into the result
     char idx[1];
-    sprintf(idx, "%u", tap);      // Copy tap ID into a char
+    sprintf(idx, "%u", tap);    // Copy tap ID into a char
     strcat(filename, idx);      // Add tap ID
     strcat(filename, ".json");  // Filename
 
