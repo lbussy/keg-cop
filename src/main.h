@@ -23,7 +23,7 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
-#include "flow.h"
+#include "flowmeter.h"
 #include "temperature.h"
 #include "htmlserver.h"
 #include "jsonconfig.h"
