@@ -20,26 +20,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFI_H
-#define _WIFI_H
+#include "mdnshandler.h"
 
-#include "main.h"
-#include "config.h"
-#include "ArduinoLog.h"
-#include <Ticker.h>
-#include <WiFiClient.h>         //ESP32 Core WiFi Library
-#include <WiFiManager.h>        //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
-
-void doWiFi();
-void doWiFi(bool);
-void resetWifi();
-
-// WiFiManager Callbacks
-void apCallback(WiFiManager *myWiFiManager);
-void configResetCallback();
-void preSaveConfigCallback();
-void saveConfigCallback();
-void saveParamsCallback();
-void webServerCallback();
-
-#endif // _WIFI_H
+void mdnssetup() {
+    if (!MDNS.begin(WiFi.getHostname())) { // Start the mDNS responder
+        Log.error(F("Error setting up mDNS responder." CR));
+    } else {
+        Log.notice(F("mDNS responder started for %s.local." CR), WiFi.getHostname());
+        MDNS.addService("http", "tcp", PORT);
+        Log.notice(F("HTTP registered via mDNS on port %i." CR), PORT);
+    }
+}

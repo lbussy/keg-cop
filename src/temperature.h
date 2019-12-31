@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _SENSOR_H
-#define _SENSOR_H
+#ifndef _TEMPERATURE_H
+#define _TEMPERATURE_H
 
 #include "config.h"
 #include "jsonconfig.h"
@@ -63,4 +63,4 @@ class Sensor {
 
 };
 
-#endif // _SENSOR_H
+#endif // _TEMPERATURE_H

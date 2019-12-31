@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _KEGFLOW_H
-#define _KEGFLOW_H
+#ifndef _FLOW_H
+#define _FLOW_H
 
 #include "config.h"
 #include "jsonconfig.h"
@@ -109,4 +109,4 @@ class Flow {
         keg kegs[8];
 };
 
-#endif // _KEGFLOW_H
+#endif // _FLOW_H

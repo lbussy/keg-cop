@@ -20,14 +20,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "kegmdns.h"
+#include "seriallog.h"
 
-void mdnssetup() {
-    if (!MDNS.begin(WiFi.getHostname())) { // Start the mDNS responder
-        Log.error(F("Error setting up mDNS responder." CR));
-    } else {
-        Log.notice(F("mDNS responder started for %s.local." CR), WiFi.getHostname());
-        MDNS.addService("http", "tcp", PORT);
-        Log.notice(F("HTTP registered via mDNS on port %i." CR), PORT);
-    }
+#ifndef DISABLE_LOGGING
+
+void serial() {
+    delay(3000); // Delay to allow a monitor to start
+    Serial.begin(BAUD);
+    Serial.setDebugOutput(true);
+    Serial.flush();
+    Serial.println();
+    Log.begin(LOG_LEVEL, &Serial, true);
+    Log.setPrefix(printTimestamp);
+    Log.notice(F("Serial logging started at %l." CR), BAUD);
 }
+
+void printTimestamp(Print* _logOutput) {
+    time_t now;
+    time_t rawtime = time(&now);
+    struct tm ts;
+    ts = *localtime(&rawtime);
+    char locTime[prefLen] = {'\0'};
+    strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
+    _logOutput->print(locTime);
+}
+
+#else // DISABLE_LOGGING
+
+void serial(){}
+
+#endif // DISABLE_LOGGING

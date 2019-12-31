@@ -20,17 +20,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _BUB_SERIAL_H
-#define _BUB_SERIAL_H
+// (#include <ESP8266mDNS.h> includes #include "LEAmDNS.h", which in turn
+// uses the MDNS_H include guard.  Long story short, do not rename this
+// to MDNS_H.)
 
-#include "config.h"
-#include "ArduinoLog.h"
-#include <Arduino.h>
+#ifndef _MDNSHANDLER_H
+#define _MDNSHANDLER_H
 
-void serial();
-void printTimestamp(Print* _logOutput);
+#include "main.h"
+#include <ArduinoLog.h>
+#include <ESPmDNS.h>
 
-#define prefLen 22
+void mdnssetup();
 
-#endif //_BUB_SERIAL_H
- 
+#endif // _MDNSHANDLER_H
