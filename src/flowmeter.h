@@ -20,12 +20,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _FLOW_H
-#define _FLOW_H
+#ifndef _FLOWMETER_H
+#define _FLOWMETER_H
 
 #include "config.h"
 #include "jsonconfig.h"
-#include <string.h>
 #include <SPIFFS.h>
 #include <ArduinoJson.h>
 #include <ArduinoLog.h>
@@ -41,60 +40,17 @@ class Flow {
         void save(int);
 
         // Class Private Properties
+        int kegPins[8] = {KEG0, KEG1, KEG2, KEG3, KEG4, KEG5, KEG6, KEG7};
         struct keg {
             int tapid;                          // Tap ID
             int pin;                            // μC Pin
             long ppg;                           // Pulses per Gallon
             char name[33];                      // Beer Name
-            unsigned long count;  // Unregistered Pulse Count
-            bool updated = false;        // Semaphore for update needed
+            long pulse;                // Unregistered Pulse Count
+            bool updated = false;               // Semaphore for update needed
             double capacity;                    // Tap Capacity
             double remaining;                   // Tap remaining
         } tapid, pin, ppg, name, count, capacity, remaining;
-        int kegPins[8] = {KEG0, KEG1, KEG2, KEG3, KEG4, KEG5, KEG6, KEG7};
-        gpio_num_t kegGPIO[41] = {
-            GPIO_NUM_0,
-            GPIO_NUM_1,
-            GPIO_NUM_2,
-            GPIO_NUM_3,
-            GPIO_NUM_4,
-            GPIO_NUM_5,
-            GPIO_NUM_6,
-            GPIO_NUM_7,
-            GPIO_NUM_8,
-            GPIO_NUM_9,
-            GPIO_NUM_10,
-            GPIO_NUM_11,
-            GPIO_NUM_12,
-            GPIO_NUM_13,
-            GPIO_NUM_14,
-            GPIO_NUM_15,
-            GPIO_NUM_16,
-            GPIO_NUM_17,
-            GPIO_NUM_18,
-            GPIO_NUM_19, // Dummy value
-            GPIO_NUM_19,
-            GPIO_NUM_21,
-            GPIO_NUM_22,
-            GPIO_NUM_23,
-            GPIO_NUM_23, // Dummy value
-            GPIO_NUM_25,
-            GPIO_NUM_26,
-            GPIO_NUM_27,
-            GPIO_NUM_27, // Dummy value
-            GPIO_NUM_27, // Dummy value
-            GPIO_NUM_27, // Dummy value
-            GPIO_NUM_27, // Dummy value
-            GPIO_NUM_32,
-            GPIO_NUM_33,
-            GPIO_NUM_34,
-            GPIO_NUM_35,
-            GPIO_NUM_36,
-            GPIO_NUM_37,
-            GPIO_NUM_38,
-            GPIO_NUM_39,
-            GPIO_NUM_MAX
-        };
 
     public:
         // Class Public Methods
@@ -109,4 +65,4 @@ class Flow {
         keg kegs[8];
 };
 
-#endif // _FLOW_H
+#endif // _FLOWMETER_H
