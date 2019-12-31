@@ -50,7 +50,6 @@ void setup() {
 
 void loop() {
     HtmlServer *server = HtmlServer::getInstance();
-    //Flow *flow = Flow::getInstance(); // Need to instantiate it to get the tap data
 
     // Log any pours
     Ticker logFlow;
