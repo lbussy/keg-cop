@@ -23,16 +23,16 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
-#include "kegflow.h"
-#include "sensor.h"
+#include "flow.h"
+#include "temperature.h"
 #include "htmlserver.h"
 #include "jsonconfig.h"
-#include "kegserial.h"
+#include "seriallog.h"
 #include "config.h"
-#include "ArduinoLog.h"
+#include <ArduinoLog.h>
 #include "ntp.h"
-#include "kegwifi.h"
+#include "wifihandler.h"
 #include "version.h"
-#include "kegmdns.h"
+#include "mdnshandler.h"
 
 #endif // _MAIN_H

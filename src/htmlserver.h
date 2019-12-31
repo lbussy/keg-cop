@@ -24,7 +24,7 @@ SOFTWARE. */
 #define _HTMLSERVER_H
 
 #include "version.h"
-#include "kegwifi.h"
+#include "wifihandler.h"
 #include "config.h"
 #include "jsonconfig.h"
 #include <ArduinoLog.h>

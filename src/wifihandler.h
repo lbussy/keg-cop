@@ -20,33 +20,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "kegserial.h"
+#ifndef _WIFIHANDLER_H
+#define _WIFIHANDLER_H
 
-#ifndef DISABLE_LOGGING
+#include "main.h"
+#include "config.h"
+#include "ArduinoLog.h"
+#include <Ticker.h>
+#include <WiFiClient.h>         //ESP32 Core WiFi Library
+#include <WiFiManager.h>        //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
 
-void serial() {
-    delay(3000); // Delay to allow a monitor to start
-    Serial.begin(BAUD);
-    Serial.setDebugOutput(true);
-    Serial.flush();
-    Serial.println();
-    Log.begin(LOG_LEVEL, &Serial, true);
-    Log.setPrefix(printTimestamp);
-    Log.notice(F("Serial logging started at %l." CR), BAUD);
-}
+void doWiFi();
+void doWiFi(bool);
+void resetWifi();
 
-void printTimestamp(Print* _logOutput) {
-    time_t now;
-    time_t rawtime = time(&now);
-    struct tm ts;
-    ts = *localtime(&rawtime);
-    char locTime[prefLen] = {'\0'};
-    strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
-    _logOutput->print(locTime);
-}
+// WiFiManager Callbacks
+void apCallback(WiFiManager *myWiFiManager);
+void configResetCallback();
+void preSaveConfigCallback();
+void saveConfigCallback();
+void saveParamsCallback();
+void webServerCallback();
 
-#else // DISABLE_LOGGING
-
-void serial(){}
-
-#endif // DISABLE_LOGGING
+#endif // _WIFIHANDLER_H
