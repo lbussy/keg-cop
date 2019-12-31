@@ -23,38 +23,38 @@ SOFTWARE. */
 #include "flowmeter.h"
 
 Flow* Flow::single = NULL;
-Flow *flow; // Pointer to Counter class
+Flow *flowmeter; // Pointer to Counter class
 
 static IRAM_ATTR void HandleIntISR0(void) {
-    flow->handleInterrupts(0);
+    flowmeter->handleInterrupts(0);
 }
 
 static IRAM_ATTR void HandleIntISR1(void) {
-    flow->handleInterrupts(1);
+    flowmeter->handleInterrupts(1);
 }
 
 static IRAM_ATTR void HandleIntISR2(void) {
-    flow->handleInterrupts(2);
+    flowmeter->handleInterrupts(2);
 }
 
 static IRAM_ATTR void HandleIntISR3(void) {
-    flow->handleInterrupts(3);
+    flowmeter->handleInterrupts(3);
 }
 
 static IRAM_ATTR void HandleIntISR4(void) {
-    flow->handleInterrupts(4);
+    flowmeter->handleInterrupts(4);
 }
 
 static IRAM_ATTR void HandleIntISR5(void) {
-    flow->handleInterrupts(5);
+    flowmeter->handleInterrupts(5);
 }
 
 static IRAM_ATTR void HandleIntISR6(void) {
-    flow->handleInterrupts(6);
+    flowmeter->handleInterrupts(6);
 }
 
 static IRAM_ATTR void HandleIntISR7(void) {
-    flow->handleInterrupts(7);
+    flowmeter->handleInterrupts(7);
 }
 
 static void (*pf[])(void) = { // ISR Function Pointers
@@ -72,37 +72,35 @@ Flow* Flow::getInstance() {
     return single;
 }
 
-void Flow::start() { // Starting point for Keg data
+void Flow::start() {
     JsonConfig *config = JsonConfig::getInstance();
     for (int i = 0; i < config->numtap; i++) {
         single->kegs[i].tapid = i;
         single->kegs[i].pin = kegPins[i];
-        single->kegs[i].count = 0;
+        single->kegs[i].pulse = 0;
         single->kegs[i].updated = false;
         pinMode(kegPins[i], INPUT_PULLUP);
         digitalWrite(kegPins[i], HIGH);
         attachInterrupt(digitalPinToInterrupt(single->kegs[i].pin), pf[i], FALLING);
     }
-    flow = single;
+    flowmeter = single;
     single->parse();
 }
 
 void Flow::handleInterrupts(int tap) { // Increment pulse count
-    single->kegs[tap].count++;
+    single->kegs[tap].pulse++;
     single->kegs[tap].updated = true;
 }
 
 void Flow::logFlow() { // Save debits to keg and to file
     JsonConfig *config = JsonConfig::getInstance();
     for (int i = 0; i < config->numtap; i++) {
-        //gpio_intr_disable(kegGPIO[i]);
         if (single->kegs[i].updated == true) {
-            single->kegs[i].remaining = single->kegs[i].count / single->kegs[i].ppg;
-            single->kegs[i].count = 0;
+            single->kegs[i].remaining = single->kegs[i].remaining - (double(single->kegs[i].pulse) / double(single->kegs[i].ppg));
+            single->kegs[i].pulse = 0;
             single->kegs[i].updated = false;
             single->save(i);
         }
-        //gpio_intr_enable(kegGPIO[i]);
     }
 }
 
