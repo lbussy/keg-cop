@@ -129,7 +129,7 @@ bool JsonConfig::parse() {
 }
 
 bool JsonConfig::save() {
-    const size_t capacity = 2*JSON_OBJECT_SIZE(2) + 3*JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(4);
+    const size_t capacity = 2*JSON_OBJECT_SIZE(2) + 3*JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(4) + 710;
     DynamicJsonDocument doc(capacity);
 
     // Parse WiFi Config
