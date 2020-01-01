@@ -61,8 +61,8 @@ void loop() {
     // Create sliding average of temps
     Ticker sampleTemps;
     sampleTemps.attach(TEMPLOOP, [](){
-        Sensor *sensor = Sensor::getInstance();
-        sensor->sampleTemps();
+        Temperature *temps = Temperature::getInstance();
+        temps->sampleTemps();
     });
 
     while (true) {

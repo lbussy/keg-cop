@@ -33,7 +33,7 @@ JsonConfig* JsonConfig::getInstance() {
 }
 
 bool JsonConfig::parse() {
-    const size_t capacity = 2*JSON_OBJECT_SIZE(2) + 3*JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(4) + 710;
+    const size_t capacity = 2*JSON_OBJECT_SIZE(2) + 3*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + 790;
     DynamicJsonDocument doc(capacity);
 
     // Mount SPIFFS
@@ -74,6 +74,15 @@ bool JsonConfig::parse() {
         single->units = UNITS;
         single->numtap = NUMTAPS;
 
+        // Set defaults for temp config
+        single->setpoint = DEFSET;
+        single->controlpoint = DEFCON;
+        single->roomcal = 0;
+        single->towercal = 0;
+        single->uppercal = 0;
+        single->lowercal = 0;
+        single->kegcal = 0;
+
         // Set defaults for target config
         //      - Local target config
         strlcpy(single->targeturl, "", sizeof(single->targeturl));
@@ -106,7 +115,17 @@ bool JsonConfig::parse() {
         strlcpy(single->bname, copconfig["bname"] | COPNAME, sizeof(single->bname));
         strlcpy(single->kname, copconfig["kname"] | SOURCE, sizeof(single->kname));
         single->units = copconfig["units"] | UNITS;
-        single->numtap = copconfig["numtap"] | 0;
+        single->numtap = copconfig["numtap"] | 8;
+
+        // Parse Temps config
+        JsonObject temps = doc["temps"];
+        single->setpoint = temps["setpoint"] | DEFSET;
+        single->controlpoint = temps["controlpoint"] | DEFCON;
+        single->roomcal = temps["roomcal"] | 0;
+        single->towercal = temps["towercal"] | 0;
+        single->uppercal = temps["uppercal"] | 0;
+        single->lowercal = temps["lowercal"] | 0;
+        single->kegcal = temps["kegcal"] | 0;
 
 		// Parse Target config
         // 		- Local target config
@@ -129,23 +148,33 @@ bool JsonConfig::parse() {
 }
 
 bool JsonConfig::save() {
-    const size_t capacity = 2*JSON_OBJECT_SIZE(2) + 3*JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(4) + 710;
+    const size_t capacity = 2*JSON_OBJECT_SIZE(2) + 3*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + 790;
     DynamicJsonDocument doc(capacity);
 
-    // Parse WiFi Config
+    // Serialize WiFi Config
     JsonObject wificonfig = doc.createNestedObject("wificonfig");
     wificonfig["ssid"] = single->ssid;
     wificonfig["appwd"] = single->appwd;
     wificonfig["hostname"] = single->hostname;
 
-    // Parse Cop config
+    // Serialize Cop config
     JsonObject copconfig = doc.createNestedObject("copconfig");
     copconfig["bname"] = single->bname;
     copconfig["kname"] = single->kname;
     copconfig["units"] = single->units;
     copconfig["numtap"] = single->numtap;
 
-    // Parse Target config
+    // Serialize Temps config
+    JsonObject temps = doc.createNestedObject("temps");
+    temps["setpoint"] = single->setpoint;
+    temps["controlpoint"] = single->controlpoint;
+    temps["roomcal"] = single->roomcal;
+    temps["towercal"] = single->towercal;
+    temps["uppercal"] = single->uppercal;
+    temps["lowercal"] = single->lowercal;
+    temps["kegcal"] = single->kegcal;
+
+    // Serialize Target config
     JsonObject target = doc.createNestedObject("target");
     // 		- Local target config
     JsonObject target_local = target.createNestedObject("local");
@@ -157,7 +186,7 @@ bool JsonConfig::save() {
     target_cloud["cloudkey"] = single->cloudkey;
     target_cloud["cloudfreq"] = single->cloudfreq;
 
-    // Parse OTA config
+    // Serialize OTA config
     JsonObject ota = doc.createNestedObject("ota");
     ota["dospiffs1"] = false;
     ota["dospiffs2"] = false;
