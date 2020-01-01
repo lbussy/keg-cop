@@ -22,17 +22,17 @@ SOFTWARE. */
 
 #include "temperature.h"
 
-Sensor* Sensor::single = NULL;
+Temperature* Temperature::single = NULL;
 
-Sensor* Sensor::getInstance() {
+Temperature* Temperature::getInstance() {
     if (!single) {
-        single = new Sensor();
+        single = new Temperature();
         single->initSensors();
     }
     return single;
 }
 
-void Sensor::initSensors() {
+void Temperature::initSensors() {
     for (int i=0; i<5; ++i) {
         single->sensors[i].name = tapNames[i];
         single->sensors[i].pin = flowPins[i];
@@ -46,7 +46,7 @@ void Sensor::initSensors() {
     }
 }
 
-void Sensor::sampleTemps() {
+void Temperature::sampleTemps() {
     JsonConfig *config = JsonConfig::getInstance();
     for (int i=0; i<5; ++i) {
         int pin = single->sensors[i].pin;
@@ -66,7 +66,7 @@ void Sensor::sampleTemps() {
             single->sensors[i].errors++;
             // single->sensors[i].value = 0; // Keep last reading
         } else if (_temp >= 185 ) {
-            single->sensors[i].lastErr = "Sensor error";
+            single->sensors[i].lastErr = "Temperature error";
             single->sensors[i].errors++;
             // single->sensors[i].value = 0;  // Keep last reading
         } else {

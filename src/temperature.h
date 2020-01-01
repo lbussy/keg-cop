@@ -29,16 +29,16 @@ SOFTWARE. */
 #include <DallasTemperature.h>
 #include <CircularBuffer.h>
 
-class Sensor {
+class Temperature {
     private:
         // Private Methods:
-        Sensor() {}                                 // Constructor
+        Temperature() {}                                 // Constructor
         void initSensors();                         // Load temps from devices
 
         // Private Properties:
-        static Sensor *single;                      // Singleton instance
+        static Temperature *single;                      // Singleton instance
         struct sensor {
-            std::string name;                       // Sensor description
+            std::string name;                       // Temperature description
             int pin;                                // μC Pin
             double value;                           // Temp reading
             double average;                         // Avaerage reading (1 min)
@@ -54,8 +54,8 @@ class Sensor {
 
     public:
         // Public Methods:
-        static Sensor* getInstance();       // Pseudo-constructor
-        ~Sensor() {single = NULL;}          // Destructor
+        static Temperature* getInstance();  // Pseudo-constructor
+        ~Temperature() {single = NULL;}     // Destructor
         void sampleTemps();                 // Add temp sample to average
 
         // Public Properties:

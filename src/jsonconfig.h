@@ -58,6 +58,14 @@ class JsonConfig {
         char kname[33];                         // Kegerator name
         bool units;                             // Units in imperial or metric
         int numtap;                             // Number of taps used
+        // Temps
+        double setpoint;                        // Kegerator setpoint
+        int controlpoint;                       // Thermostat sensor (0-4)
+        double roomcal;                         // Room sensor cal
+        double towercal;                        // Tower sensor cal
+        double uppercal;                        // Upper sensor cal
+        double lowercal;                        // Lower sensor cal
+        double kegcal;                          // Keg sensor cal
         // Target Config
         //      - Local Target
         char targeturl[129];                    // Target host
