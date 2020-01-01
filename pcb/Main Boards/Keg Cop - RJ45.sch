@@ -1820,12 +1820,6 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <label x="-63.5" y="71.12" size="1.778" layer="95"/>
 <pinref part="X1" gate="G$1" pin="8"/>
 <wire x1="-48.26" y1="71.12" x2="-63.5" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="15.24" y1="35.56" x2="15.24" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="15.24" y1="15.24" x2="93.98" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="93.98" y1="15.24" x2="93.98" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="X2" gate="G$1" pin="7"/>
-<wire x1="111.76" y1="60.96" x2="93.98" y2="60.96" width="0.1524" layer="91"/>
-<label x="106.68" y="60.96" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -1866,35 +1860,33 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <junction x="-15.24" y="17.78"/>
 <pinref part="X1" gate="G$1" pin="7"/>
 <wire x1="-53.34" y1="68.58" x2="-63.5" y2="68.58" width="0.1524" layer="91"/>
-<pinref part="X2" gate="G$1" pin="8"/>
-<wire x1="73.66" y1="71.12" x2="73.66" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="63.5" x2="111.76" y2="63.5" width="0.1524" layer="91"/>
-<junction x="73.66" y="71.12"/>
-<label x="106.68" y="63.5" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="SOL" class="0">
 <segment>
-<pinref part="RELAY" gate="1" pin="3"/>
-<wire x1="-20.32" y1="12.7" x2="-20.32" y2="25.4" width="0.1524" layer="91"/>
-<label x="-20.32" y="12.7" size="1.778" layer="95" rot="R90"/>
-<pinref part="D32" gate="G$1" pin="IO14"/>
-<wire x1="27.94" y1="45.72" x2="20.32" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="20.32" y1="45.72" x2="20.32" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="20.32" y1="25.4" x2="-20.32" y2="25.4" width="0.1524" layer="91"/>
-<label x="20.32" y="45.72" size="1.778" layer="95"/>
+<wire x1="20.32" y1="25.4" x2="-17.78" y2="25.4" width="0.1524" layer="91"/>
+<pinref part="RELAY" gate="1" pin="2"/>
+<wire x1="-17.78" y1="25.4" x2="-17.78" y2="12.7" width="0.1524" layer="91"/>
+<label x="-17.78" y="12.7" size="1.778" layer="95" rot="R90"/>
+<wire x1="20.32" y1="45.72" x2="20.32" y2="48.26" width="0.1524" layer="91"/>
+<pinref part="D32" gate="G$1" pin="IO27"/>
+<wire x1="20.32" y1="48.26" x2="27.94" y2="48.26" width="0.1524" layer="91"/>
+<label x="20.32" y="48.26" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="COOL" class="0">
 <segment>
-<pinref part="RELAY" gate="1" pin="2"/>
-<label x="-17.78" y="12.7" size="1.778" layer="95" rot="R90"/>
-<pinref part="D32" gate="G$1" pin="IO0"/>
-<wire x1="63.5" y1="40.64" x2="71.12" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="40.64" x2="71.12" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="20.32" x2="-17.78" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="-17.78" y1="20.32" x2="-17.78" y2="12.7" width="0.1524" layer="91"/>
-<label x="66.04" y="40.64" size="1.778" layer="95"/>
+<wire x1="71.12" y1="20.32" x2="-20.32" y2="20.32" width="0.1524" layer="91"/>
+<pinref part="RELAY" gate="1" pin="3"/>
+<wire x1="-20.32" y1="20.32" x2="-20.32" y2="12.7" width="0.1524" layer="91"/>
+<label x="-20.32" y="12.7" size="1.778" layer="95" rot="R90"/>
+<wire x1="71.12" y1="20.32" x2="76.2" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="20.32" x2="76.2" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="43.18" x2="73.66" y2="43.18" width="0.1524" layer="91"/>
+<pinref part="D32" gate="G$1" pin="IO4"/>
+<wire x1="73.66" y1="43.18" x2="63.5" y2="43.18" width="0.1524" layer="91"/>
+<label x="66.04" y="43.18" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="RDAT" class="0">
@@ -1973,9 +1965,9 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <junction x="-55.88" y="63.5"/>
 </segment>
 <segment>
-<pinref part="D32" gate="G$1" pin="IO27"/>
-<wire x1="27.94" y1="48.26" x2="20.32" y2="48.26" width="0.1524" layer="91"/>
-<label x="20.32" y="48.26" size="1.778" layer="95"/>
+<pinref part="D32" gate="G$1" pin="IO14"/>
+<wire x1="27.94" y1="45.72" x2="22.86" y2="45.72" width="0.1524" layer="91"/>
+<label x="20.32" y="45.72" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="KEG4" class="0">
@@ -2005,15 +1997,38 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <pinref part="X2" gate="G$1" pin="6"/>
 </segment>
 </net>
+<net name="KEG7" class="0">
+<segment>
+<pinref part="D32" gate="G$1" pin="IO22"/>
+<label x="66.04" y="66.04" size="1.778" layer="95"/>
+<wire x1="63.5" y1="66.04" x2="78.74" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="66.04" x2="78.74" y2="60.96" width="0.1524" layer="91"/>
+<label x="106.68" y="60.96" size="1.778" layer="95"/>
+<pinref part="X2" gate="G$1" pin="7"/>
+<wire x1="78.74" y1="60.96" x2="111.76" y2="60.96" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="KEG8" class="0">
+<segment>
+<pinref part="D32" gate="G$1" pin="IO23"/>
+<label x="66.04" y="68.58" size="1.778" layer="95"/>
+<wire x1="63.5" y1="68.58" x2="81.28" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="81.28" y1="68.58" x2="81.28" y2="63.5" width="0.1524" layer="91"/>
+<label x="106.68" y="63.5" size="1.778" layer="95"/>
+<pinref part="X2" gate="G$1" pin="8"/>
+<wire x1="81.28" y1="63.5" x2="111.76" y2="63.5" width="0.1524" layer="91"/>
+</segment>
+</net>
 <net name="KEG1" class="0">
 <segment>
-<pinref part="D32" gate="G$1" pin="IO4"/>
-<label x="66.04" y="43.18" size="1.778" layer="95"/>
-<wire x1="63.5" y1="43.18" x2="101.6" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="101.6" y1="43.18" x2="101.6" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="101.6" y1="45.72" x2="111.76" y2="45.72" width="0.1524" layer="91"/>
 <label x="106.68" y="45.72" size="1.778" layer="95"/>
 <pinref part="X2" gate="G$1" pin="1"/>
+<pinref part="D32" gate="G$1" pin="IO0"/>
+<wire x1="63.5" y1="40.64" x2="101.6" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="101.6" y1="40.64" x2="101.6" y2="43.18" width="0.1524" layer="91"/>
+<label x="66.04" y="40.64" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="KEG2" class="0">

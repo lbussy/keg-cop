@@ -65,6 +65,27 @@ void loop() {
         temps->sampleTemps();
     });
 
+    // mDNS Reset Timer - Helps avoid the host not found issues
+    Ticker mDNSTimer;
+    mDNSTimer.attach(MDNSTIMER, [](){
+        JsonConfig *config = JsonConfig::getInstance();
+        MDNS.end();
+        if (!MDNS.begin(config->hostname)) {
+            Log.error(F("Error resetting MDNS responder."));
+        } else {
+            Log.notice(F("mDNS responder restarted, hostname: %s.local." CR), WiFi.getHostname());
+            MDNS.addService("http", "tcp", 80);
+        }
+    });
+
+    // Reboot timer - I wish controllers could be counted on to be more
+    // stable but at least it only takes a few seconds.
+    Ticker rebootTimer;
+    rebootTimer.attach(REBOOTTIMER, [](){
+        Log.notice(F("Reboot timer - rebooting system."));
+        ESP.restart();
+    });
+
     while (true) {
         server->htmlLoop();     // Handle HTML requests
     }

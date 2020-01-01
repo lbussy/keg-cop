@@ -49,8 +49,8 @@ class Temperature {
             int errors;
         } name, pin, value, average, lastReading, lastErr, offset, errors;
         portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
-        std::string tapNames[8] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
-        int flowPins[8] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
+        std::string tapNames[5] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
+        int flowPins[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
 
     public:
         // Public Methods:
