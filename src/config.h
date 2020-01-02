@@ -241,7 +241,7 @@ SOFTWARE. */
 // Input pin for keg 0 flow
 //
 #ifndef KEG0
-#define KEG0 0 // TODO: Finish swapping with SOLENOID
+#define KEG0 0
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -441,7 +441,7 @@ SOFTWARE. */
 // Define keg temp sensor pin
 //
 #ifndef KEGSENSE
-#define KEGSENSE 14 // TODO: Finish swapping with COOL
+#define KEGSENSE 14
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -451,7 +451,7 @@ SOFTWARE. */
 // Define cool actuator pin
 //
 #ifndef COOL
-#define COOL 27 // TODO: Finish swapping with KEGSENSE
+#define COOL 27
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -481,7 +481,7 @@ SOFTWARE. */
 // Define solenoid actuator pin
 //
 #ifndef SOLENOID
-#define SOLENOID 4 // TODO:  Finish swapping with KEG0
+#define SOLENOID 4
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
