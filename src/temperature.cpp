@@ -72,6 +72,7 @@ void Temperature::sampleTemps() {
         } else {
             single->sensors[i].lastErr = "None";
             single->sensors[i].value = _temp;
+            _temp = calTemp(i, _temp);
             sensors[i].buffer.push(_temp); // Push to buffer
             // Average the buffer
             float avg = 0.0;
@@ -84,4 +85,19 @@ void Temperature::sampleTemps() {
             single->sensors[i].lastReading = millis();
         }
     }
+}
+
+double Temperature::calTemp(int pin, double unCal) {
+    double calibrated;
+    JsonConfig *config = JsonConfig::getInstance();
+    double calVal[5] = {
+        config->roomcal,
+        config->towercal,
+        config->uppercal,
+        config->lowercal,
+        config->kegcal
+    };
+    int flowPins[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
+    calibrated = unCal + calVal[pin];
+    return calibrated;
 }
