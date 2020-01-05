@@ -51,6 +51,7 @@ class Temperature {
         portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
         std::string tapNames[5] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
         int flowPins[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
+        double calTemp(int, double);                           // Return calibrated temp
 
     public:
         // Public Methods:
