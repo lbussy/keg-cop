@@ -1371,10 +1371,10 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <wire x1="71.12" y1="43.18" x2="81.28" y2="43.18" width="0.1524" layer="91"/>
 <label x="76.2" y="43.18" size="1.778" layer="95"/>
 <pinref part="X2" gate="G$1" pin="1"/>
-<pinref part="D32" gate="G$1" pin="IO0"/>
-<wire x1="33.02" y1="38.1" x2="71.12" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="38.1" x2="71.12" y2="43.18" width="0.1524" layer="91"/>
-<label x="35.56" y="38.1" size="1.778" layer="95"/>
+<pinref part="D32" gate="G$1" pin="IO4"/>
+<wire x1="33.02" y1="40.64" x2="71.12" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="40.64" x2="71.12" y2="43.18" width="0.1524" layer="91"/>
+<label x="35.56" y="40.64" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="KEG2" class="0">
