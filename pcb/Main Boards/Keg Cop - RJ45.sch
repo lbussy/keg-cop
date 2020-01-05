@@ -1862,33 +1862,6 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <wire x1="-53.34" y1="68.58" x2="-63.5" y2="68.58" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="SOL" class="0">
-<segment>
-<wire x1="20.32" y1="45.72" x2="20.32" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="20.32" y1="25.4" x2="-17.78" y2="25.4" width="0.1524" layer="91"/>
-<pinref part="RELAY" gate="1" pin="2"/>
-<wire x1="-17.78" y1="25.4" x2="-17.78" y2="12.7" width="0.1524" layer="91"/>
-<label x="-17.78" y="12.7" size="1.778" layer="95" rot="R90"/>
-<wire x1="20.32" y1="45.72" x2="20.32" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="D32" gate="G$1" pin="IO27"/>
-<wire x1="20.32" y1="48.26" x2="27.94" y2="48.26" width="0.1524" layer="91"/>
-<label x="20.32" y="48.26" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="COOL" class="0">
-<segment>
-<wire x1="71.12" y1="20.32" x2="-20.32" y2="20.32" width="0.1524" layer="91"/>
-<pinref part="RELAY" gate="1" pin="3"/>
-<wire x1="-20.32" y1="20.32" x2="-20.32" y2="12.7" width="0.1524" layer="91"/>
-<label x="-20.32" y="12.7" size="1.778" layer="95" rot="R90"/>
-<wire x1="71.12" y1="20.32" x2="76.2" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="76.2" y1="20.32" x2="76.2" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="76.2" y1="43.18" x2="73.66" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="D32" gate="G$1" pin="IO4"/>
-<wire x1="73.66" y1="43.18" x2="63.5" y2="43.18" width="0.1524" layer="91"/>
-<label x="66.04" y="43.18" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="RDAT" class="0">
 <segment>
 <label x="-63.5" y="53.34" size="1.778" layer="95"/>
@@ -2033,13 +2006,13 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 </net>
 <net name="KEG2" class="0">
 <segment>
-<pinref part="D32" gate="G$1" pin="IO16"/>
-<label x="66.04" y="45.72" size="1.778" layer="95"/>
-<wire x1="63.5" y1="45.72" x2="99.06" y2="45.72" width="0.1524" layer="91"/>
 <label x="106.68" y="48.26" size="1.778" layer="95"/>
 <pinref part="X2" gate="G$1" pin="2"/>
-<wire x1="99.06" y1="45.72" x2="99.06" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="99.06" y1="48.26" x2="111.76" y2="48.26" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="48.26" x2="99.06" y2="43.18" width="0.1524" layer="91"/>
+<pinref part="D32" gate="G$1" pin="IO4"/>
+<wire x1="99.06" y1="43.18" x2="63.5" y2="43.18" width="0.1524" layer="91"/>
+<label x="66.04" y="43.18" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="KEG3" class="0">
@@ -2051,6 +2024,32 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <wire x1="96.52" y1="50.8" x2="111.76" y2="50.8" width="0.1524" layer="91"/>
 <label x="106.68" y="50.8" size="1.778" layer="95"/>
 <pinref part="X2" gate="G$1" pin="3"/>
+</segment>
+</net>
+<net name="COOL" class="0">
+<segment>
+<pinref part="D32" gate="G$1" pin="IO27"/>
+<wire x1="27.94" y1="48.26" x2="17.78" y2="48.26" width="0.1524" layer="91"/>
+<wire x1="17.78" y1="48.26" x2="17.78" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="17.78" y1="43.18" x2="22.86" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="43.18" x2="22.86" y2="33.02" width="0.1524" layer="91"/>
+<pinref part="RELAY" gate="1" pin="2"/>
+<wire x1="-17.78" y1="12.7" x2="-17.78" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="-17.78" y1="33.02" x2="22.86" y2="33.02" width="0.1524" layer="91"/>
+<label x="20.32" y="48.26" size="1.778" layer="95"/>
+<label x="-17.78" y="12.7" size="1.778" layer="95" rot="R90"/>
+</segment>
+</net>
+<net name="SOL" class="0">
+<segment>
+<pinref part="D32" gate="G$1" pin="IO16"/>
+<wire x1="63.5" y1="45.72" x2="73.66" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="45.72" x2="73.66" y2="25.4" width="0.1524" layer="91"/>
+<pinref part="RELAY" gate="1" pin="3"/>
+<wire x1="73.66" y1="25.4" x2="-20.32" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="-20.32" y1="25.4" x2="-20.32" y2="12.7" width="0.1524" layer="91"/>
+<label x="66.04" y="45.72" size="1.778" layer="95"/>
+<label x="-20.32" y="12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
 </nets>
