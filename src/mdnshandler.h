@@ -32,5 +32,6 @@ SOFTWARE. */
 #include <ESPmDNS.h>
 
 void mdnssetup();
+void mdnsreset();
 
 #endif // _MDNSHANDLER_H
