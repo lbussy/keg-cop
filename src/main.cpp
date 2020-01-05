@@ -42,6 +42,7 @@ void setup() {
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 
+    // Set pins for solenoids
     pinMode(SOLENOID, OUTPUT);
     digitalWrite(SOLENOID, HIGH);
     pinMode(COOL, OUTPUT);
@@ -67,23 +68,18 @@ void loop() {
 
     // mDNS Reset Timer - Helps avoid the host not found issues
     Ticker mDNSTimer;
-    mDNSTimer.attach(MDNSTIMER, [](){
-        JsonConfig *config = JsonConfig::getInstance();
-        MDNS.end();
-        if (!MDNS.begin(config->hostname)) {
-            Log.error(F("Error resetting MDNS responder."));
-        } else {
-            Log.notice(F("mDNS responder restarted, hostname: %s.local." CR), WiFi.getHostname());
-            MDNS.addService("http", "tcp", 80);
-        }
-    });
+    mDNSTimer.attach(MDNSTIMER, mdnsreset);
 
     // Reboot timer - I wish controllers could be counted on to be more
     // stable but at least it only takes a few seconds.
     Ticker rebootTimer;
     rebootTimer.attach(REBOOTTIMER, [](){
-        Log.notice(F("Reboot timer - rebooting system."));
+        Log.notice(F("Reboot timer - rebooting system." CR));
+        // All the machinations are necessary or else restart() hangs
+        portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+        vTaskEnterCritical(&mux);
         ESP.restart();
+        vTaskExitCritical(&mux);
     });
 
     while (true) {
