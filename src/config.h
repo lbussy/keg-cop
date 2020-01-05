@@ -251,7 +251,7 @@ SOFTWARE. */
 // Input pin for keg 1 flow
 //
 #ifndef KEG1
-#define KEG1 16
+#define KEG1 4
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -481,7 +481,7 @@ SOFTWARE. */
 // Define solenoid actuator pin
 //
 #ifndef SOLENOID
-#define SOLENOID 4
+#define SOLENOID 16
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
