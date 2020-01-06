@@ -82,6 +82,18 @@ void loop() {
         vTaskExitCritical(&mux);
     });
 
+    // DEBUG
+    Ticker test;
+    test.attach(5, [](){
+        Temperature *temp = Temperature::getInstance();
+        // int flowPins[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
+        Log.verbose(F("DEBUG: ROOMSENSE=%F°, %l millis ago" CR),
+            temp->sensors[0].value,
+            temp->sensors[0].lastReading,
+            temp->sensors[0].offset
+        );
+    });
+
     while (true) {
         server->htmlLoop();     // Handle HTML requests
     }

@@ -41,7 +41,7 @@ void Temperature::initSensors() {
         // sensors[i].buffer.push(0);
         single->sensors[i].lastReading = 0;
         single->sensors[i].lastErr = "";
-        single->sensors[i].offset = 0;
+        single->setCal(i);
         single->sensors[i].errors = 0;
     }
 }
@@ -72,7 +72,7 @@ void Temperature::sampleTemps() {
         } else {
             single->sensors[i].lastErr = "None";
             single->sensors[i].value = _temp;
-            _temp = calTemp(i, _temp);
+            _temp = _temp + single->sensors[i].offset;
             sensors[i].buffer.push(_temp); // Push to buffer
             // Average the buffer
             float avg = 0.0;
@@ -87,8 +87,7 @@ void Temperature::sampleTemps() {
     }
 }
 
-double Temperature::calTemp(int pin, double unCal) {
-    double calibrated;
+void Temperature::setCal(int idx) {
     JsonConfig *config = JsonConfig::getInstance();
     double calVal[5] = {
         config->roomcal,
@@ -97,7 +96,8 @@ double Temperature::calTemp(int pin, double unCal) {
         config->lowercal,
         config->kegcal
     };
-    int flowPins[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
-    calibrated = unCal + calVal[pin];
-    return calibrated;
+    single->sensors[idx].offset = calVal[idx];
+    Log.verbose(F("Applying %F° offset to pin %i." CR),
+        single->sensors[idx].offset,
+        single->sensors[idx].pin);
 }

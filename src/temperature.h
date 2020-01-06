@@ -32,17 +32,17 @@ SOFTWARE. */
 class Temperature {
     private:
         // Private Methods:
-        Temperature() {}                                 // Constructor
+        Temperature() {}                            // Constructor
         void initSensors();                         // Load temps from devices
 
         // Private Properties:
-        static Temperature *single;                      // Singleton instance
+        static Temperature *single;                 // Singleton instance
         struct sensor {
             std::string name;                       // Temperature description
             int pin;                                // μC Pin
-            double value;                           // Temp reading
-            double average;                         // Avaerage reading (1 min)
-            CircularBuffer<float, TEMPAVG> buffer;  // Circ buffer for avg
+            double value;                           // Temp reading (pre offset)
+            double average;                         // Average reading (1 min)
+            CircularBuffer<float, TEMPAVG> buffer;  // Circ buffer for avging
             unsigned long lastReading;              // millis() of last good
             std::string lastErr;                    // Last error message
             double offset;                          // Offset for callibration
@@ -51,7 +51,6 @@ class Temperature {
         portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
         std::string tapNames[5] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
         int flowPins[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
-        double calTemp(int, double);                           // Return calibrated temp
 
     public:
         // Public Methods:
@@ -61,7 +60,7 @@ class Temperature {
 
         // Public Properties:
         sensor sensors[5];                  // Temp Sensors
-
+        void setCal(int);                   // Add calibration offset to sensor
 };
 
 #endif // _TEMPERATURE_H
