@@ -82,17 +82,35 @@ void loop() {
         vTaskExitCritical(&mux);
     });
 
+    // Handle temperature control
+    Ticker stat;
+    stat.attach(TEMPLOOP, [](){
+        Thermostat *stat = Thermostat::getInstance();
+        stat->controlLoop();
+    });
+
     // DEBUG
     Ticker test;
     test.attach(5, [](){
         Temperature *temp = Temperature::getInstance();
-        // int flowPins[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
-        Log.verbose(F("DEBUG: ROOMSENSE=%F°, %l millis ago" CR),
-            temp->sensors[0].value,
-            temp->sensors[0].lastReading,
-            temp->sensors[0].offset
+        Thermostat *stat = Thermostat::getInstance();
+        long int now = static_cast<long int> (time(NULL));
+        for (int i; i < 5; i++) {
+            const char* flowPins[5] = {"ROOMSENSE", "TOWERSENSE", "UCHAMBSENSE", "LCHAMBSENSE", "KEGSENSE"};
+            Log.verbose(F("DEBUG: %s=%F°, %l millis ago." CR),
+                flowPins[i],
+                temp->sensors[i].value,
+                temp->sensors[i].lastReading,
+                temp->sensors[i].offset
+            );
+        }
+        Log.verbose(F("DEBUG: Cooling is %T, last run started %d seconds ago, last run ended %d seconds ago."),
+            stat->cooling,
+            now - stat->lastOn,
+            now - stat->lastOff
         );
     });
+    // DEBUG
 
     while (true) {
         server->htmlLoop();     // Handle HTML requests
