@@ -38,18 +38,18 @@ class Temperature {
         // Private Properties:
         static Temperature *single;                 // Singleton instance
         struct sensor {
-            std::string name;                       // Temperature description
+            std::string name;                       // Temperature description      // DEBUG
             int pin;                                // μC Pin
             double value;                           // Temp reading (pre offset)
             double average;                         // Average reading (1 min)
             CircularBuffer<float, TEMPAVG> buffer;  // Circ buffer for avging
-            unsigned long lastReading;              // millis() of last good
-            std::string lastErr;                    // Last error message
+            unsigned long lastReading;              // millis() of last good        // DEBUG
+            std::string lastErr;                    // Last error message           // DEBUG
             double offset;                          // Offset for callibration
-            int errors;
+            int errors;                             // Number of errors encountered // DEBUG
         } name, pin, value, average, lastReading, lastErr, offset, errors;
         portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
-        std::string tapNames[5] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
+        std::string tapNames[5] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP}; // DEBUG
         int flowPins[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
 
     public:
