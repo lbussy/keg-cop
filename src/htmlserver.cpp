@@ -303,12 +303,13 @@ void HtmlServer::htmlSetup() {
         Log.error(F("HTML: Failed to mount SPIFFS." CR));
         return;
     } else {
+        Log.verbose(F("Files in SPIFFS:" CR));
         File root = SPIFFS.open("/");
         File file = root.openNextFile();
         while (file) {
             String fileName = file.name();
             size_t fileSize = file.size();
-            Log.verbose(F("FS File: %s, size: %s" CR), fileName.c_str(), formatBytes(fileSize).c_str());
+            Log.verbose(F("\t%s (%s)." CR), fileName.c_str(), formatBytes(fileSize).c_str());
             file = root.openNextFile();
         }
     }
