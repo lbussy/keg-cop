@@ -158,29 +158,29 @@
 </layers>
 <board>
 <plain>
-<wire x1="0" y1="52.75" x2="0" y2="1" width="0" layer="20"/>
+<wire x1="0" y1="49" x2="0" y2="1" width="0" layer="20"/>
 <wire x1="0" y1="1" x2="1" y2="0" width="0" layer="20" curve="90"/>
-<wire x1="1" y1="0" x2="16.77" y2="0" width="0" layer="20"/>
-<wire x1="16.77" y1="0" x2="17.77" y2="1" width="0" layer="20" curve="90"/>
-<wire x1="17.77" y1="1" x2="17.77" y2="52.75" width="0" layer="20"/>
-<wire x1="17.77" y1="52.75" x2="16.77" y2="53.75" width="0" layer="20" curve="90"/>
-<wire x1="16.77" y1="53.75" x2="1" y2="53.75" width="0" layer="20"/>
-<wire x1="1" y1="53.75" x2="0" y2="52.75" width="0" layer="20" curve="90"/>
-<text x="6.3" y="46.9" size="0.8128" layer="25" align="top-center">G</text>
-<text x="8.86" y="46.9" size="0.8128" layer="25" align="top-center">V</text>
-<text x="11.42" y="46.9" size="0.8128" layer="25" align="top-center">D</text>
-<text x="6.3" y="40.3" size="0.8128" layer="25" align="top-center">G</text>
-<text x="8.86" y="40.3" size="0.8128" layer="25" align="top-center">V</text>
-<text x="11.42" y="40.3" size="0.8128" layer="25" align="top-center">D</text>
-<text x="6.3" y="33.8" size="0.8128" layer="25" align="top-center">G</text>
-<text x="8.86" y="33.8" size="0.8128" layer="25" align="top-center">V</text>
-<text x="11.42" y="33.8" size="0.8128" layer="25" align="top-center">D</text>
-<text x="6.3" y="27.2" size="0.8128" layer="25" align="top-center">G</text>
-<text x="8.86" y="27.2" size="0.8128" layer="25" align="top-center">V</text>
-<text x="11.42" y="27.2" size="0.8128" layer="25" align="top-center">D</text>
-<text x="6.3" y="20.6" size="0.8128" layer="25" align="top-center">G</text>
-<text x="8.86" y="20.6" size="0.8128" layer="25" align="top-center">V</text>
-<text x="11.42" y="20.6" size="0.8128" layer="25" align="top-center">D</text>
+<wire x1="1" y1="0" x2="18" y2="0" width="0" layer="20"/>
+<wire x1="18" y1="0" x2="19" y2="1" width="0" layer="20" curve="90"/>
+<wire x1="19" y1="1" x2="19" y2="49" width="0" layer="20"/>
+<wire x1="19" y1="49" x2="18" y2="50" width="0" layer="20" curve="90"/>
+<wire x1="18" y1="50" x2="1" y2="50" width="0" layer="20"/>
+<wire x1="1" y1="50" x2="0" y2="49" width="0" layer="20" curve="90"/>
+<text x="6.9" y="43.2" size="0.8128" layer="25" align="top-center">G</text>
+<text x="9.5" y="43.2" size="0.8128" layer="25" align="top-center">V</text>
+<text x="12" y="43.2" size="0.8128" layer="25" align="top-center">D</text>
+<text x="6.9" y="37.2" size="0.8128" layer="25" align="top-center">G</text>
+<text x="9.5" y="37.2" size="0.8128" layer="25" align="top-center">V</text>
+<text x="12" y="37.2" size="0.8128" layer="25" align="top-center">D</text>
+<text x="6.9" y="31.2" size="0.8128" layer="25" align="top-center">G</text>
+<text x="9.5" y="31.2" size="0.8128" layer="25" align="top-center">V</text>
+<text x="12" y="31.2" size="0.8128" layer="25" align="top-center">D</text>
+<text x="6.9" y="25.1" size="0.8128" layer="25" align="top-center">G</text>
+<text x="9.5" y="25.1" size="0.8128" layer="25" align="top-center">V</text>
+<text x="12" y="25.1" size="0.8128" layer="25" align="top-center">D</text>
+<text x="6.9" y="19.1" size="0.8128" layer="25" align="top-center">G</text>
+<text x="9.5" y="19.1" size="0.8128" layer="25" align="top-center">V</text>
+<text x="12" y="19.1" size="0.8128" layer="25" align="top-center">D</text>
 </plain>
 <libraries>
 <library name="Donnie">
@@ -445,100 +445,100 @@ design rules under a new name.</description>
 </pass>
 </autorouter>
 <elements>
-<element name="ROOM" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.32" y="22.4" smashed="yes">
-<attribute name="NAME" x="5.05" y="24.305" size="0.8128" layer="25"/>
+<element name="ROOM" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.9219" y="20.8" smashed="yes">
+<attribute name="NAME" x="5.6519" y="22.705" size="0.8128" layer="25"/>
 </element>
-<element name="TOWER" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.32" y="28.9475" smashed="yes">
-<attribute name="NAME" x="5.05" y="30.8525" size="0.8128" layer="25"/>
+<element name="TOWER" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.9219" y="26.8225" smashed="yes">
+<attribute name="NAME" x="5.6519" y="28.7275" size="0.8128" layer="25"/>
 </element>
-<element name="UPPER" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.32" y="35.495" smashed="yes">
-<attribute name="NAME" x="5.05" y="37.4" size="0.8128" layer="25"/>
+<element name="UPPER" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.9219" y="32.845" smashed="yes">
+<attribute name="NAME" x="5.6519" y="34.75" size="0.8128" layer="25"/>
 </element>
-<element name="LOWER" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.32" y="42.0425" smashed="yes">
-<attribute name="NAME" x="5.05" y="43.9475" size="0.8128" layer="25"/>
+<element name="LOWER" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.9219" y="38.8675" smashed="yes">
+<attribute name="NAME" x="5.6519" y="40.7725" size="0.8128" layer="25"/>
 </element>
-<element name="KEG" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.32" y="48.59" smashed="yes">
-<attribute name="NAME" x="5.05" y="50.495" size="0.8128" layer="25"/>
+<element name="KEG" library="Donnie" package="HDR-3_VERT" value="3-PIN" x="6.9219" y="44.89" smashed="yes">
+<attribute name="NAME" x="5.6519" y="46.795" size="0.8128" layer="25"/>
 </element>
-<element name="SENSORS" library="con-tycoelectronics" library_urn="urn:adsk.eagle:library:193" package="RJ45-NO-SHIELD" package3d_urn="urn:adsk.eagle:package:10660/1" value="RJ45-8X" x="8.89" y="5.511" smashed="yes">
-<attribute name="MF" value="" x="30.48" y="-3.379" size="1.778" layer="27" display="off"/>
-<attribute name="MPN" value="RJ45-8X" x="30.48" y="-3.379" size="1.778" layer="27" display="off"/>
-<attribute name="NAME" x="8.865" y="17.376" size="0.8128" layer="25" align="bottom-center"/>
-<attribute name="OC_FARNELL" value="unknown" x="30.48" y="-3.379" size="1.778" layer="27" display="off"/>
-<attribute name="OC_NEWARK" value="16R6101" x="30.48" y="-3.379" size="1.778" layer="27" display="off"/>
-<attribute name="POPULARITY" value="0" x="30.48" y="-3.379" size="1.778" layer="27" display="off"/>
+<element name="SENSORS" library="con-tycoelectronics" library_urn="urn:adsk.eagle:library:193" package="RJ45-NO-SHIELD" package3d_urn="urn:adsk.eagle:package:10660/1" value="RJ45-8X" x="9.5" y="5.511" smashed="yes">
+<attribute name="MF" value="" x="31.09" y="-3.379" size="1.778" layer="27" display="off"/>
+<attribute name="MPN" value="RJ45-8X" x="31.09" y="-3.379" size="1.778" layer="27" display="off"/>
+<attribute name="NAME" x="9.475" y="16.776" size="0.8128" layer="25" align="bottom-center"/>
+<attribute name="OC_FARNELL" value="unknown" x="31.09" y="-3.379" size="1.778" layer="27" display="off"/>
+<attribute name="OC_NEWARK" value="16R6101" x="31.09" y="-3.379" size="1.778" layer="27" display="off"/>
+<attribute name="POPULARITY" value="0" x="31.09" y="-3.379" size="1.778" layer="27" display="off"/>
 </element>
 </elements>
 <signals>
 <signal name="RDAT">
 <contactref element="SENSORS" pad="1"/>
 <contactref element="ROOM" pad="3"/>
-<wire x1="4.445" y1="11.861" x2="4.445" y2="10.355" width="1.016" layer="16"/>
-<wire x1="5.8" y1="9" x2="14.7" y2="9" width="1.016" layer="16"/>
-<wire x1="14.7" y1="9" x2="16.1" y2="10.4" width="1.016" layer="16"/>
-<wire x1="14.1" y1="19.3" x2="11.9" y2="19.3" width="1.016" layer="16"/>
-<wire x1="11.9" y1="19.3" x2="11.4" y2="19.8" width="1.016" layer="16"/>
-<wire x1="11.4" y1="19.8" x2="11.4" y2="22.4" width="1.016" layer="16"/>
-<wire x1="4.445" y1="10.355" x2="5.8" y2="9" width="1.016" layer="16"/>
-<wire x1="16.1" y1="10.4" x2="16.1" y2="17.3" width="1.016" layer="16"/>
-<wire x1="16.1" y1="17.3" x2="14.1" y2="19.3" width="1.016" layer="16"/>
+<wire x1="15.2" y1="9" x2="6.3" y2="9" width="1.016" layer="16"/>
+<wire x1="15.2" y1="9" x2="16.6" y2="10.4" width="1.016" layer="16"/>
+<wire x1="16.6" y1="10.4" x2="16.6" y2="17.3" width="1.016" layer="16"/>
+<wire x1="16.6" y1="17.3" x2="15.3" y2="18.6" width="1.016" layer="16"/>
+<wire x1="15.3" y1="18.6" x2="12.4" y2="18.6" width="1.016" layer="16"/>
+<wire x1="12.4" y1="18.6" x2="12.0019" y2="18.9981" width="1.016" layer="16"/>
+<wire x1="12.0019" y1="18.9981" x2="12.0019" y2="20.8" width="1.016" layer="16"/>
+<wire x1="6.3" y1="9" x2="5.055" y2="10.245" width="1.016" layer="16"/>
+<wire x1="5.055" y1="10.245" x2="5.055" y2="11.861" width="1.016" layer="16"/>
 </signal>
 <signal name="TDAT">
 <contactref element="SENSORS" pad="2"/>
 <contactref element="TOWER" pad="3"/>
-<wire x1="5.715" y1="14.401" x2="5.715" y2="15.585" width="1.016" layer="16"/>
-<wire x1="5.715" y1="15.585" x2="3" y2="18.3" width="1.016" layer="16"/>
-<wire x1="11.4" y1="28.9475" x2="11.4" y2="31.7" width="1.016" layer="16"/>
-<wire x1="13.4" y1="33.7" x2="13.4" y2="50.1" width="1.016" layer="16"/>
-<wire x1="13.4" y1="50.1" x2="11.3" y2="52.2" width="1.016" layer="16"/>
-<wire x1="4.6" y1="52.2" x2="3" y2="50.6" width="1.016" layer="16"/>
-<wire x1="3" y1="50.6" x2="3" y2="18.3" width="1.016" layer="16"/>
-<wire x1="11.4" y1="31.7" x2="13.4" y2="33.7" width="1.016" layer="16"/>
-<wire x1="11.3" y1="52.2" x2="4.6" y2="52.2" width="1.016" layer="16"/>
+<wire x1="12.0019" y1="26.8225" x2="12.0019" y2="29.9019" width="1.016" layer="16"/>
+<wire x1="13.9" y1="31.8" x2="13.9" y2="46.3" width="1.016" layer="16"/>
+<wire x1="13.9" y1="46.3" x2="11.9" y2="48.3" width="1.016" layer="16"/>
+<wire x1="5.7" y1="48.3" x2="3.6" y2="46.2" width="1.016" layer="16"/>
+<wire x1="3.6" y1="46.2" x2="3.6" y2="18.2" width="1.016" layer="16"/>
+<wire x1="12.0019" y1="29.9019" x2="13.9" y2="31.8" width="1.016" layer="16"/>
+<wire x1="11.9" y1="48.3" x2="5.7" y2="48.3" width="1.016" layer="16"/>
+<wire x1="6.325" y1="15.475" x2="6.325" y2="14.401" width="1.016" layer="16"/>
+<wire x1="3.6" y1="18.2" x2="6.325" y2="15.475" width="1.016" layer="16"/>
 </signal>
 <signal name="UDAT">
 <contactref element="SENSORS" pad="3"/>
 <contactref element="UPPER" pad="3"/>
-<wire x1="6.985" y1="11.861" x2="6.985" y2="10.415" width="1.016" layer="1"/>
-<wire x1="14.7" y1="9" x2="16.1" y2="10.4" width="1.016" layer="1"/>
-<wire x1="16.1" y1="10.4" x2="16.1" y2="17.3" width="1.016" layer="1"/>
-<wire x1="14.4" y1="19" x2="14.4" y2="31.2" width="1.016" layer="1"/>
-<wire x1="14.4" y1="31.2" x2="13.4" y2="32.2" width="1.016" layer="1"/>
-<wire x1="11.4" y1="33.1" x2="11.4" y2="35.495" width="1.016" layer="1"/>
-<wire x1="6.985" y1="10.415" x2="8.4" y2="9" width="1.016" layer="1"/>
-<wire x1="8.4" y1="9" x2="14.7" y2="9" width="1.016" layer="1"/>
-<wire x1="16.1" y1="17.3" x2="14.4" y2="19" width="1.016" layer="1"/>
-<wire x1="13.4" y1="32.2" x2="12.3" y2="32.2" width="1.016" layer="1"/>
-<wire x1="12.3" y1="32.2" x2="11.4" y2="33.1" width="1.016" layer="1"/>
+<wire x1="15.2" y1="9" x2="16.6" y2="10.4" width="1.016" layer="1"/>
+<wire x1="16.6" y1="10.4" x2="16.6" y2="17.3" width="1.016" layer="1"/>
+<wire x1="14.9" y1="19" x2="14.9" y2="29.2" width="1.016" layer="1"/>
+<wire x1="8.9" y1="9" x2="15.2" y2="9" width="1.016" layer="1"/>
+<wire x1="16.6" y1="17.3" x2="14.9" y2="19" width="1.016" layer="1"/>
+<wire x1="14.9" y1="29.2" x2="13.9" y2="30.2" width="1.016" layer="1"/>
+<wire x1="13.9" y1="30.2" x2="12.6" y2="30.2" width="1.016" layer="1"/>
+<wire x1="12.6" y1="30.2" x2="12.0019" y2="30.7981" width="1.016" layer="1"/>
+<wire x1="12.0019" y1="30.7981" x2="12.0019" y2="32.845" width="1.016" layer="1"/>
+<wire x1="7.595" y1="11.861" x2="7.595" y2="10.305" width="1.016" layer="1"/>
+<wire x1="7.595" y1="10.305" x2="8.9" y2="9" width="1.016" layer="1"/>
 </signal>
 <signal name="LDAT">
 <contactref element="SENSORS" pad="4"/>
 <contactref element="LOWER" pad="3"/>
-<wire x1="8.255" y1="14.401" x2="8.255" y2="15.645" width="1.016" layer="1"/>
-<wire x1="4.3" y1="18.8" x2="4.3" y2="38" width="1.016" layer="1"/>
-<wire x1="11.4" y1="39.7" x2="11.4" y2="42.0425" width="1.016" layer="1"/>
-<wire x1="8.255" y1="15.645" x2="7" y2="16.9" width="1.016" layer="1"/>
-<wire x1="7" y1="16.9" x2="6.2" y2="16.9" width="1.016" layer="1"/>
-<wire x1="6.2" y1="16.9" x2="4.3" y2="18.8" width="1.016" layer="1"/>
-<wire x1="4.3" y1="38" x2="5" y2="38.7" width="1.016" layer="1"/>
-<wire x1="5" y1="38.7" x2="10.4" y2="38.7" width="1.016" layer="1"/>
-<wire x1="10.4" y1="38.7" x2="11.4" y2="39.7" width="1.016" layer="1"/>
+<wire x1="4.9" y1="18.7" x2="4.9" y2="35" width="1.016" layer="1"/>
+<wire x1="8.865" y1="15.535" x2="7.5" y2="16.9" width="1.016" layer="1"/>
+<wire x1="7.5" y1="16.9" x2="6.7" y2="16.9" width="1.016" layer="1"/>
+<wire x1="6.7" y1="16.9" x2="4.9" y2="18.7" width="1.016" layer="1"/>
+<wire x1="4.9" y1="35" x2="5.9" y2="36" width="1.016" layer="1"/>
+<wire x1="5.9" y1="36" x2="10.9" y2="36" width="1.016" layer="1"/>
+<wire x1="10.9" y1="36" x2="12.0019" y2="37.1019" width="1.016" layer="1"/>
+<wire x1="12.0019" y1="37.1019" x2="12.0019" y2="38.8675" width="1.016" layer="1"/>
+<wire x1="8.865" y1="14.401" x2="8.865" y2="15.535" width="1.016" layer="1"/>
 </signal>
 <signal name="KDAT">
 <contactref element="SENSORS" pad="5"/>
 <contactref element="KEG" pad="3"/>
 <contactref element="SENSORS" pad="6"/>
-<wire x1="9.525" y1="11.861" x2="9.525" y2="13.131" width="1.016" layer="16"/>
-<wire x1="9.525" y1="13.131" x2="10.795" y2="14.401" width="1.016" layer="16"/>
-<wire x1="10.795" y1="14.401" x2="10.795" y2="15.605" width="1.016" layer="16"/>
-<wire x1="6.2" y1="16.9" x2="4.3" y2="18.8" width="1.016" layer="16"/>
-<wire x1="4.3" y1="18.8" x2="4.3" y2="50" width="1.016" layer="16"/>
-<wire x1="4.3" y1="50" x2="5.2" y2="50.9" width="1.016" layer="16"/>
-<wire x1="10.8" y1="50.9" x2="11.4" y2="50.3" width="1.016" layer="16"/>
-<wire x1="11.4" y1="50.3" x2="11.4" y2="48.59" width="1.016" layer="16"/>
-<wire x1="10.795" y1="15.605" x2="9.5" y2="16.9" width="1.016" layer="16"/>
-<wire x1="9.5" y1="16.9" x2="6.2" y2="16.9" width="1.016" layer="16"/>
-<wire x1="5.2" y1="50.9" x2="10.8" y2="50.9" width="1.016" layer="16"/>
+<wire x1="7.4" y1="16.2" x2="4.8" y2="18.8" width="1.016" layer="16"/>
+<wire x1="4.8" y1="18.8" x2="4.8" y2="45.7" width="1.016" layer="16"/>
+<wire x1="4.8" y1="45.7" x2="6.2" y2="47.1" width="1.016" layer="16"/>
+<wire x1="12.0019" y1="46.4981" x2="11.4" y2="47.1" width="1.016" layer="16"/>
+<wire x1="10.7" y1="16.2" x2="11.405" y2="15.495" width="1.016" layer="16"/>
+<wire x1="10.7" y1="16.2" x2="7.4" y2="16.2" width="1.016" layer="16"/>
+<wire x1="6.2" y1="47.1" x2="11.4" y2="47.1" width="1.016" layer="16"/>
+<wire x1="12.0019" y1="44.89" x2="12.0019" y2="46.4981" width="1.016" layer="16"/>
+<wire x1="10.135" y1="11.861" x2="10.135" y2="13.131" width="1.016" layer="16"/>
+<wire x1="10.135" y1="13.131" x2="11.405" y2="14.401" width="1.016" layer="16"/>
+<wire x1="11.405" y1="15.495" x2="11.405" y2="14.401" width="1.016" layer="16"/>
 </signal>
 <signal name="GND">
 <contactref element="SENSORS" pad="7"/>
@@ -547,31 +547,31 @@ design rules under a new name.</description>
 <contactref element="TOWER" pad="1"/>
 <contactref element="UPPER" pad="1"/>
 <contactref element="LOWER" pad="1"/>
-<wire x1="12.065" y1="11.861" x2="12.065" y2="10.835" width="1.016" layer="16"/>
-<wire x1="14.29" y1="10.3" x2="14.9" y2="10.91" width="1.016" layer="16"/>
-<wire x1="14.9" y1="10.91" x2="14.9" y2="16.8" width="1.016" layer="16"/>
-<wire x1="13.6" y1="18.1" x2="6.8" y2="18.1" width="1.016" layer="16"/>
-<wire x1="6.32" y1="18.58" x2="6.32" y2="22.4" width="1.016" layer="16"/>
-<wire x1="12.065" y1="10.835" x2="12.6" y2="10.3" width="1.016" layer="16"/>
-<wire x1="12.6" y1="10.3" x2="14.29" y2="10.3" width="1.016" layer="16"/>
-<wire x1="14.9" y1="16.8" x2="13.6" y2="18.1" width="1.016" layer="16"/>
-<wire x1="6.8" y1="18.1" x2="6.32" y2="18.58" width="1.016" layer="16"/>
-<wire x1="6.32" y1="22.4" x2="6.32" y2="28.9475" width="1.016" layer="16"/>
-<wire x1="6.32" y1="35.495" x2="6.32" y2="28.9475" width="1.016" layer="16"/>
-<wire x1="6.32" y1="42.0425" x2="6.32" y2="35.495" width="1.016" layer="16"/>
-<wire x1="6.32" y1="48.59" x2="6.32" y2="42.0425" width="1.016" layer="16"/>
-<polygon width="0.1524" layer="1">
-<vertex x="18.3" y="54.1"/>
-<vertex x="18.3" y="-0.3"/>
-<vertex x="-0.3" y="-0.3"/>
-<vertex x="-0.3" y="54.1"/>
+<wire x1="14.79" y1="10.3" x2="15.4" y2="10.91" width="1.016" layer="16"/>
+<wire x1="15.4" y1="10.91" x2="15.4" y2="16.8" width="1.016" layer="16"/>
+<wire x1="14.8" y1="17.4" x2="8" y2="17.4" width="1.016" layer="16"/>
+<wire x1="6.9219" y1="18.4781" x2="6.9219" y2="20.8" width="1.016" layer="16"/>
+<wire x1="14.79" y1="10.3" x2="13.1" y2="10.3" width="1.016" layer="16"/>
+<wire x1="15.4" y1="16.8" x2="14.8" y2="17.4" width="1.016" layer="16"/>
+<wire x1="8" y1="17.4" x2="6.9219" y2="18.4781" width="1.016" layer="16"/>
+<wire x1="6.9219" y1="26.8225" x2="6.9219" y2="20.8" width="1.016" layer="16"/>
+<wire x1="6.9219" y1="32.845" x2="6.9219" y2="26.8225" width="1.016" layer="16"/>
+<wire x1="6.9219" y1="38.8675" x2="6.9219" y2="32.845" width="1.016" layer="16"/>
+<wire x1="6.9219" y1="44.89" x2="6.9219" y2="38.8675" width="1.016" layer="16"/>
+<polygon width="1.016" layer="1">
+<vertex x="20" y="51"/>
+<vertex x="20" y="-1"/>
+<vertex x="-1" y="-1"/>
+<vertex x="-1" y="51"/>
 </polygon>
-<polygon width="0.1524" layer="16" spacing="1.4224">
-<vertex x="-0.3" y="54.1"/>
-<vertex x="18.3" y="54.1"/>
-<vertex x="18.3" y="-0.3"/>
-<vertex x="-0.3" y="-0.3"/>
+<polygon width="1.016" layer="16" spacing="1.4224">
+<vertex x="-1" y="51"/>
+<vertex x="20" y="51"/>
+<vertex x="20" y="-1"/>
+<vertex x="-1" y="-1"/>
 </polygon>
+<wire x1="13.1" y1="10.3" x2="12.675" y2="10.725" width="1.016" layer="16"/>
+<wire x1="12.675" y1="10.725" x2="12.675" y2="11.861" width="1.016" layer="16"/>
 </signal>
 <signal name="5V">
 <contactref element="SENSORS" pad="8"/>
@@ -580,15 +580,15 @@ design rules under a new name.</description>
 <contactref element="TOWER" pad="2"/>
 <contactref element="UPPER" pad="2"/>
 <contactref element="LOWER" pad="2"/>
-<wire x1="13.335" y1="14.401" x2="13.335" y2="15.565" width="1.016" layer="1"/>
-<wire x1="12" y1="16.9" x2="10.9" y2="16.9" width="1.016" layer="1"/>
-<wire x1="10.9" y1="16.9" x2="8.86" y2="18.94" width="1.016" layer="1"/>
-<wire x1="8.86" y1="18.94" x2="8.86" y2="22.4" width="1.016" layer="1"/>
-<wire x1="13.335" y1="15.565" x2="12" y2="16.9" width="1.016" layer="1"/>
-<wire x1="8.86" y1="22.4" x2="8.86" y2="28.9475" width="1.016" layer="16"/>
-<wire x1="8.86" y1="28.9475" x2="8.86" y2="35.495" width="1.016" layer="16"/>
-<wire x1="8.86" y1="35.495" x2="8.86" y2="42.0425" width="1.016" layer="16"/>
-<wire x1="8.86" y1="42.0425" x2="8.86" y2="48.59" width="1.016" layer="16"/>
+<wire x1="12.5" y1="16.9" x2="11.4" y2="16.9" width="1.016" layer="1"/>
+<wire x1="13.945" y1="15.455" x2="12.5" y2="16.9" width="1.016" layer="1"/>
+<wire x1="9.4619" y1="26.8225" x2="9.4619" y2="20.8" width="1.016" layer="16"/>
+<wire x1="9.4619" y1="32.845" x2="9.4619" y2="26.8225" width="1.016" layer="16"/>
+<wire x1="9.4619" y1="38.8675" x2="9.4619" y2="32.845" width="1.016" layer="16"/>
+<wire x1="9.4619" y1="44.89" x2="9.4619" y2="38.8675" width="1.016" layer="16"/>
+<wire x1="11.4" y1="16.9" x2="9.4619" y2="18.8381" width="1.016" layer="1"/>
+<wire x1="9.4619" y1="18.8381" x2="9.4619" y2="20.8" width="1.016" layer="1"/>
+<wire x1="13.945" y1="14.401" x2="13.945" y2="15.455" width="1.016" layer="1"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
