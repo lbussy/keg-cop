@@ -56,10 +56,10 @@ SOFTWARE. */
  
 //////////////////////////////////////////////////////////////////////////
 //
-// Define data source (identifies sensor/keezer source to target)
+// Define data KNAME (identifies sensor/keezer source to target)
 //
-#ifndef SOURCE
-#define SOURCE "Keg Cop"
+#ifndef KNAME
+#define KNAME "Kegerator 1"
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -200,8 +200,8 @@ SOFTWARE. */
 //
 // Default Cop name
 //
-#ifndef COPNAME
-#define COPNAME "Kegerator 1"
+#ifndef BRWYNAME
+#define BRWYNAME "My Homebrew"
 #endif
 //
 //////////////////////////////////////////////////////////////////////////

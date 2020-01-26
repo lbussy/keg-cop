@@ -69,8 +69,8 @@ bool JsonConfig::parse() {
         strlcpy(single->hostname, HOSTNAME, sizeof(single->hostname));
 
         // Set defaults for Cop config
-        strlcpy(single->bname, COPNAME, sizeof(single->bname));
-        strlcpy(single->kname, SOURCE, sizeof(single->kname));
+        strlcpy(single->bname, BRWYNAME, sizeof(single->bname));
+        strlcpy(single->kname, KNAME, sizeof(single->kname));
         single->units = UNITS;
         single->numtap = NUMTAPS;
 
@@ -112,8 +112,8 @@ bool JsonConfig::parse() {
 
         // Parse Cop config
         JsonObject copconfig = doc["copconfig"];
-        strlcpy(single->bname, copconfig["bname"] | COPNAME, sizeof(single->bname));
-        strlcpy(single->kname, copconfig["kname"] | SOURCE, sizeof(single->kname));
+        strlcpy(single->bname, copconfig["bname"] | BRWYNAME, sizeof(single->bname));
+        strlcpy(single->kname, copconfig["kname"] | KNAME, sizeof(single->kname));
         single->units = copconfig["units"] | UNITS;
         single->numtap = copconfig["numtap"] | 8;
 

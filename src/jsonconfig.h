@@ -54,7 +54,7 @@ class JsonConfig {
         char appwd[65];                         // AP Pwd
         char hostname[33];                      // Hostname
         // Cop Config
-        char bname[33];                         // Breweery name
+        char bname[33];                         // Brewery name
         char kname[33];                         // Kegerator name
         bool units;                             // Units in imperial or metric
         int numtap;                             // Number of taps used
