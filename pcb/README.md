@@ -7,4 +7,4 @@ Contained here are two folders:
 
 The type and number required of each board will vary by the intended configuration.  Use this flowchart to determine which boards you need and how many:
 
-![alt text](FlowChart.PNG "Flow Chart")
+![alt text]('Board Selection Flow Chart.PNG' "Flow Chart")
