@@ -25,7 +25,7 @@ SOFTWARE. */
 #if DEBUG || RPINTS // Enable Serial
 
 void serial() {
-    delay(3000); // Delay to allow a monitor to start
+    _delay(3000); // Delay to allow a monitor to start
 
 #if RPINTS
     // Define RPINTS Serial setup
