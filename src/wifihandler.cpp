@@ -40,7 +40,7 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
     myAsyncWifiManager.setSaveParamsCallback(saveParamsCallback); // Called after parameters are saved via params menu or wifi config
     myAsyncWifiManager.setWebServerCallback(webServerCallback); // Called after webserver is setup
 
-#ifndef DISABLE_LOGGING
+#if DEBUG && !RPINTS
     myAsyncWifiManager.setDebugOutput(true); // Verbose debug is enabled by default
 #else
     myAsyncWifiManager.setDebugOutput(false);
@@ -77,7 +77,7 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             // Hit timeout on voluntary portal
             if (blinker.active()) blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
-            _delay(3000);
+            delay(3000);
             digitalWrite(LED, HIGH);
             Log.notice(F("Hit timeout for on-demand portal, exiting." CR));
             setDoReset();
@@ -90,18 +90,22 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             Log.warning(F("Failed to connect and hit timeout."));
             if (blinker.active()) blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
-            _delay(3000);
+            delay(3000);
             digitalWrite(LED, HIGH);
             Log.warning(F("Hit timeout on connect, restarting." CR));
             ESP.restart();
-            _delay(1000); // Just a hack to give it time to reset
+            delay(1000); // Just a hack to give it time to reset
         } else {
             // We finished with portal (configured)
             WiFi.mode(WIFI_STA); // Explicitly set mode, esp defaults to STA+AP
-            WiFi.setSleepMode(WIFI_NONE_SLEEP); // Make sure sleep is disabled
             if (blinker.active()) blinker.detach(); // Turn off blinker
                 digitalWrite(LED, HIGH); // Turn off LED
+#ifdef ESP8266
+            WiFi.setSleepMode(WIFI_NONE_SLEEP); // Make sure sleep is disabled
             WiFi.hostname(config.hostname);
+#elif defined ESP32
+            WiFi.setHostname(config.hostname);
+#endif
         }
     }
 
@@ -117,14 +121,14 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
 
 void resetWifi() { // Wipe wifi settings and reset controller
     AsyncWiFiManager myAsyncWifiManager;
-    _delay(3000); // Allow page to load
+    delay(3000); // Allow page to load
     myAsyncWifiManager.resetSettings();
     if (blinker.active()) blinker.detach(); // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
-    _delay(3000);
+    delay(3000);
     Log.warning(F("Restarting after clearing wifi settings." CR));
     ESP.restart();
-    _delay(1000);
+    delay(1000);
 }
 
 void wifiBlinker() { // Invert Current State of LED
