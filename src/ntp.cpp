@@ -24,32 +24,56 @@ SOFTWARE. */
 
 void setClock() {
     Ticker blinker;
-    blinker.attach(NTPBLINK, [](){digitalWrite(LED, !(digitalRead(LED)));});
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+    Log.notice(F("Entering blocking loop to get NTP time."));
+    blinker.attach_ms(NTPBLINK, ntpBlinker);
+    configTime(GMT, 0, "pool.ntp.org", "time.nist.gov");
     time_t nowSecs = time(nullptr);
-    Log.verbose(F("Entering blocking loop to set NTP time." CR));
-    while (nowSecs < 8 * 3600 * 2) {
-        delay(500);
+    time_t startSecs = time(nullptr);
+    int cycle = 0;
+    while (nowSecs < EPOCH_1_1_2019) {
+        if (nowSecs - startSecs > 9) {
+            if (cycle > 9) {
+                Log.warning(F("Unable to get time hack from %s, rebooting." CR), TIMESERVER);
+                ESP.restart();
+            }
+#ifdef LOG_LEVEL && !RPINTS
+            Serial.println();
+#endif
+            Log.verbose(F("Re-requesting time hack." CR));
+            configTime(GMT, 0, TIMESERVER);
+            startSecs = time(nullptr);
+            cycle++;
+        }
+#ifdef LOG_LEVEL && !RPINTS
+        Serial.print(F("."));
+#endif
+        delay(1000);
+#ifdef ESP8266
         yield();
+#endif
         nowSecs = time(nullptr);
     }
+    blinker.detach();
+#ifdef LOG_LEVEL
+    Serial.println();
+#endif
+    Log.notice(F("NTP time set." CR));
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
-    Log.notice(F("NTP time set." CR));
-    blinker.detach(); // Turn off blinker
-    digitalWrite(LED, HIGH); // Turn off LED
 }
 
 String getDTS() {
-    // JSON-type string = 2019-12-20T13:59:39Z
+    // Returns JSON-type string = 2019-12-20T13:59:39Z
+    /// Also:
+    // sprintf(dts, "%04u-%02u-%02uT%02u:%02u:%02uZ", getYear(), getMonth(), getDate(), getHour(), getMinute(), getSecond());
     time_t now;
     time_t rawtime = time(&now);
     struct tm ts;
     ts = *localtime(&rawtime);
-    char MY_TIME[dtsLen] = {'\0'};
-    strftime(MY_TIME, sizeof(MY_TIME), "%FT%TZ", &ts);
-    String dts = String(MY_TIME);
-    return dts;
+    char dta[21] = {'\0'};
+    strftime(dta, sizeof(dta), "%FT%TZ", &ts);
+    String dateTimeString = String(dta);
+    return dateTimeString;
 }
 
 int getYear() {
@@ -130,4 +154,8 @@ int getYDay() {
     ts = gmtime ( &rawtime );
     int yday = ts->tm_yday;
     return yday;
+}
+
+void ntpBlinker() {
+  digitalWrite(LED, !(digitalRead(LED)));  // Invert Current State of LED  
 }
