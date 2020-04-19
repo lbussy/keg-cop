@@ -23,10 +23,6 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
-#include "thermostat.h"
-#include "flowmeter.h"
-#include "temperature.h"
-#include "htmlserver.h"
 #include "jsonconfig.h"
 #include "seriallog.h"
 #include "config.h"

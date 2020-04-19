@@ -50,46 +50,46 @@ void setup() {
 }
 
 void loop() {
-    HtmlServer *server = HtmlServer::getInstance();
+    // HtmlServer *server = HtmlServer::getInstance();
 
-    // Log any pours
-    Ticker logFlow;
-    logFlow.attach(KEGLOOP, [](){
-        Flow *flow = Flow::getInstance();
-        flow->logFlow();
-    });
+    // // Log any pours
+    // Ticker logFlow;
+    // logFlow.attach(KEGLOOP, [](){
+    //     Flow *flow = Flow::getInstance();
+    //     flow->logFlow();
+    // });
 
-    // Create sliding average of temps
-    Ticker sampleTemps;
-    sampleTemps.attach(TEMPLOOP, [](){
-        Temperature *temps = Temperature::getInstance();
-        temps->sampleTemps();
-    });
+    // // Create sliding average of temps
+    // Ticker sampleTemps;
+    // sampleTemps.attach(TEMPLOOP, [](){
+    //     Temperature *temps = Temperature::getInstance();
+    //     temps->sampleTemps();
+    // });
 
-    // mDNS Reset Timer - Helps avoid the host not found issues
-    Ticker mDNSTimer;
-    mDNSTimer.attach(MDNSTIMER, mdnsreset);
+    // // mDNS Reset Timer - Helps avoid the host not found issues
+    // Ticker mDNSTimer;
+    // mDNSTimer.attach(MDNSTIMER, mdnsreset);
 
-    // Reboot timer - I wish controllers could be counted on to be more
-    // stable but at least it only takes a few seconds.
-    Ticker rebootTimer;
-    rebootTimer.attach(REBOOTTIMER, [](){
-        Log.notice(F("Reboot timer - rebooting system." CR));
-        // All the machinations are necessary or else restart() hangs
-        portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
-        vTaskEnterCritical(&mux);
-        ESP.restart();
-        vTaskExitCritical(&mux);
-    });
+    // // Reboot timer - I wish controllers could be counted on to be more
+    // // stable but at least it only takes a few seconds.
+    // Ticker rebootTimer;
+    // rebootTimer.attach(REBOOTTIMER, [](){
+    //     Log.notice(F("Reboot timer - rebooting system." CR));
+    //     // All the machinations are necessary or else restart() hangs
+    //     portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+    //     vTaskEnterCritical(&mux);
+    //     ESP.restart();
+    //     vTaskExitCritical(&mux);
+    // });
 
-    // Handle temperature control
-    Ticker stat;
-    stat.attach(TEMPLOOP, [](){
-        Thermostat *stat = Thermostat::getInstance();
-        stat->controlLoop();
-    });
+    // // Handle temperature control
+    // Ticker stat;
+    // stat.attach(TEMPLOOP, [](){
+    //     Thermostat *stat = Thermostat::getInstance();
+    //     stat->controlLoop();
+    // });
 
-    while (true) {
-        server->htmlLoop();     // Handle HTML requests
-    }
+    // while (true) {
+    //     server->htmlLoop();     // Handle HTML requests
+    // }
 }
