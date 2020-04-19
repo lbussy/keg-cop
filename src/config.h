@@ -25,6 +25,26 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
+// Determine whether Raspberry Pints Compatible reports are sent via serial
+//
+#ifndef RPINTS
+#define RPINTS false
+#endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Turn debug printing via serial on or off
+//
+#ifndef DEBUG
+#define DEBUG true
+#endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
 // Set verbosity of debug messages 0-6
 //
 //      * 0 - LOG_LEVEL_SILENT     no output 
@@ -35,11 +55,21 @@ SOFTWARE. */
 //      * 5 - LOG_LEVEL_TRACE      errors, warnings, notices & traces 
 //      * 6 - LOG_LEVEL_VERBOSE    all 
 //
-// Uncomment #define DISABLE_LOGGING to remove all logging
+// Uncomment #define for logging level desired
+// Raspberry Pints compatibility will disable all logging
 //
-#ifndef LOG_LEVEL
-#define LOG_LEVEL LOG_LEVEL_VERBOSE
-// #define DISABLE_LOGGING // Uncomment to disable all logging
+#if RPINTS || !DEBUG
+    #define DISABLE_LOGGING // Disable all logging
+#else
+    #ifndef LOG_LEVEL
+        // #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
+        // #define LOG_LEVEL LOG_LEVEL_FATAL      // Fatal errors
+        // #define LOG_LEVEL LOG_LEVEL_ERROR      // All errors
+        // #define LOG_LEVEL LOG_LEVEL_WARNING    // Errors, and warnings
+        // #define LOG_LEVEL LOG_LEVEL_NOTICE     // Errors, warnings and notices
+        // #define LOG_LEVEL LOG_LEVEL_TRACE      // Errors, warnings, notices & traces
+        #define LOG_LEVEL LOG_LEVEL_VERBOSE    // All
+    #endif
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -112,6 +142,16 @@ SOFTWARE. */
 //
 #ifndef BAUD
 #define BAUD 115200
+#endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Set Rasperry Pints baud rate
+//
+#ifndef RPBAUD
+#define RPBAUD 9600
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -471,7 +511,11 @@ SOFTWARE. */
 // Default control point
 //
 #ifndef DEFCON
+// #define DEFCON 0 // Room
+// #define DEFCON 1 // Tower
 #define DEFCON 2 // Upper Chamber
+// #define DEFCON 3 // Lower Chamber
+// #define DEFCON 4 // Keg
 #endif
 //
 //////////////////////////////////////////////////////////////////////////

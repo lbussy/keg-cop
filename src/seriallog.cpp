@@ -22,19 +22,27 @@ SOFTWARE. */
 
 #include "seriallog.h"
 
-#ifndef DISABLE_LOGGING
+#if DEBUG || RPINTS// Enable Serial
 
 void serial() {
     delay(3000); // Delay to allow a monitor to start
-    Serial.begin(BAUD);
-    Serial.setDebugOutput(true);
+
+#if RPINTS
+    // Define RPINTS Serial setup
+    Serial.begin(RPBAUD);
     Serial.flush();
-    Serial.println();
+    Serial.setDebugOutput(false);
+#else // !RPINTS
+    Serial.begin(BAUD);
+    Serial.flush();
+    Serial.setDebugOutput(true);
     Log.begin(LOG_LEVEL, &Serial, true);
     Log.setPrefix(printTimestamp);
     Log.notice(F("Serial logging started at %l." CR), BAUD);
+#endif // !RPINTS
 }
 
+#if !RPINTS
 void printTimestamp(Print* _logOutput) {
     time_t now;
     time_t rawtime = time(&now);
@@ -44,6 +52,7 @@ void printTimestamp(Print* _logOutput) {
     strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
     _logOutput->print(locTime);
 }
+#endif // !RPINTS
 
 #else // DISABLE_LOGGING
 
