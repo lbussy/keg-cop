@@ -25,6 +25,7 @@ SOFTWARE. */
 
 #define WM_ASYNC
 
+#include "tools.h"
 #include "config.h"
 #include "jsonconfig.h"
 #ifdef ESP8266

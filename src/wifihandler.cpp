@@ -77,7 +77,7 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             // Hit timeout on voluntary portal
             if (blinker.active()) blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
-            delay(3000);
+            _delay(3000);
             digitalWrite(LED, HIGH);
             Log.notice(F("Hit timeout for on-demand portal, exiting." CR));
             setDoReset();
@@ -90,11 +90,11 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             Log.warning(F("Failed to connect and hit timeout."));
             if (blinker.active()) blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
-            delay(3000);
+            _delay(3000);
             digitalWrite(LED, HIGH);
             Log.warning(F("Hit timeout on connect, restarting." CR));
             ESP.restart();
-            delay(1000); // Just a hack to give it time to reset
+            _delay(1000); // Just a hack to give it time to reset
         } else {
             // We finished with portal (configured)
             WiFi.mode(WIFI_STA); // Explicitly set mode, esp defaults to STA+AP
@@ -121,14 +121,14 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
 
 void resetWifi() { // Wipe wifi settings and reset controller
     AsyncWiFiManager myAsyncWifiManager;
-    delay(3000); // Allow page to load
+    _delay(3000); // Allow page to load
     myAsyncWifiManager.resetSettings();
     if (blinker.active()) blinker.detach(); // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
-    delay(3000);
+    _delay(3000);
     Log.warning(F("Restarting after clearing wifi settings." CR));
     ESP.restart();
-    delay(1000);
+    _delay(1000);
 }
 
 void wifiBlinker() { // Invert Current State of LED
