@@ -24,60 +24,100 @@ SOFTWARE. */
 #define _JSONCONFIG_H
 
 #include "config.h"
-#include <ArduinoLog.h>
-#include "SPIFFS.h"
 #include <ArduinoJson.h>
+#include <SPIFFS.h>
+#include <FS.h>
 
-class JsonConfig {
-    private:
-        // Private Methods:
-        JsonConfig() {}                         // Constructor
+struct ApConfig
+{
+    // Stores Access Point configuration
+    char ssid[32];
+    char passphrase[64];
 
-        // Private Properties:
-        static JsonConfig *single;              // Singleton instance
-        const char * filename = "/config.json"; // Configuration file
-
-    public:
-        // Public Methods:
-        static JsonConfig* getInstance();       // Pseudo-constructor
-        ~JsonConfig() {single = NULL;}          // Destructor
-        bool parse();                           // Read config
-        bool save();                            // Write config
-
-        // Public Properties:
-
-
-        // Configuration properties
-        //
-        // WiFi Config
-        char ssid[33];                          // AP SSID
-        char appwd[65];                         // AP Pwd
-        char hostname[33];                      // Hostname
-        // Cop Config
-        char bname[33];                         // Brewery name
-        char kname[33];                         // Kegerator name
-        bool units;                             // Units in imperial or metric
-        int numtap;                             // Number of taps used
-        // Temps
-        double setpoint;                        // Kegerator setpoint
-        int controlpoint;                       // Thermostat sensor (0-4)
-        double roomcal;                         // Room sensor cal
-        double towercal;                        // Tower sensor cal
-        double uppercal;                        // Upper sensor cal
-        double lowercal;                        // Lower sensor cal
-        double kegcal;                          // Keg sensor cal
-        // Target Config
-        //      - Local Target
-        char targeturl[129];                    // Target host
-        unsigned long targetfreq;               // Target freqency
-        //      - Cloud target
-        char cloudtype[65];                     // Type of cloud account
-        char cloudkey[65];                      // Cloud key
-        unsigned long cloudfreq;                // Cloud frequency
-        // OTA
-        bool dospiffs1;                         // Reboot one time before SPIFFS OTA
-        bool dospiffs2;                         // Update SPIFFS on reboot
-        bool didupdate;                         // Semaphore to indicate OTA complete
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
 };
+
+struct CopConfig
+{
+    // Stores Bubble configuration
+    char breweryname[64];
+    char kegeratorname[64];
+    bool imperial;
+    int numtap;
+    int rpintscompat;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+struct Temperatures
+{
+    // Stores Temp Probe configuration
+    float setpoint;
+    int controlpoint;
+    float roomcal;
+    float towercal;
+    float uppercal;
+    float lowercal;
+    float kegcal;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+struct URLTarget
+{
+    // Stores URL Target configuration
+    char url[128];
+    int freq;
+    bool update;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+struct CloudTarget
+{
+    // Stores Cloud Target configuration
+    char type[32];
+    char url[128];
+    char key[64];
+    int freq;
+    bool update;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+struct Config
+{
+    // Stores the complete configuration
+    ApConfig apconfig;
+    char hostname[32];
+    CopConfig copconfig;
+    Temperatures temps;
+    URLTarget urltarget;
+    CloudTarget cloud;
+    bool dospiffs1;
+    bool dospiffs2;
+    bool didupdate;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+bool deleteConfigFile();
+bool loadConfig();
+bool saveConfig();
+bool loadFile();
+bool saveFile();
+bool printConfig();
+bool printFile();
+bool serializeConfig(Print &);
+bool deserializeConfig(Stream &);
+bool merge(JsonVariant, JsonVariantConst);
+bool mergeJsonObject(JsonVariantConst);
+bool mergeJsonString(String);
 
 #endif // _JSONCONFIG_H

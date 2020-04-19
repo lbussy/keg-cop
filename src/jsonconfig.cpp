@@ -22,197 +22,481 @@ SOFTWARE. */
 
 #include "jsonconfig.h"
 
-JsonConfig* JsonConfig::single = NULL;
+const char *filename = "/config.json";
+Config config;
+extern const size_t capacityDeserial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9) + 820;
+extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9);
 
-JsonConfig* JsonConfig::getInstance() {
-    if (!single) {
-        single = new JsonConfig();
-        single->parse(); // True to wipe config.json for testing
+bool deleteConfigFile() {
+    if (!SPIFFS.begin()) {
+        return false;
     }
-    return single;
+    return SPIFFS.remove(filename);
 }
 
-bool JsonConfig::parse() {
-    const size_t capacity = 2*JSON_OBJECT_SIZE(2) + 3*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + 790;
-    DynamicJsonDocument doc(capacity);
+bool loadConfig()
+{
+    // Manage loading the configuration
+    if (!loadFile()) {
+        return false;
+    } else {
+        saveFile();
+        return true;
+    }
+}
 
-    // Mount SPIFFS
+bool loadFile()
+{
     if (!SPIFFS.begin()) {
-        Log.error(F("CONFIG: Failed to mount SPIFFS." CR));
+        return false;
+    }
+    // Loads the configuration from a file on SPIFFS
+    File file = SPIFFS.open(filename, "r");
+    if (!SPIFFS.exists(filename) || !file) {
+        // File does not exist or unable to read file
+    } else {
+        // Existing configuration present
+    }
+
+    if (!deserializeConfig(file)) {
+        file.close();
+        return false;
+    } else {
+        file.close();
+        return true;
+    }
+}
+
+bool saveConfig()
+{
+    return saveFile();
+}
+
+bool saveFile()
+{
+    // Saves the configuration to a file on SPIFFS
+    File file = SPIFFS.open(filename, "w");
+    if (!file) {
+        file.close();
         return false;
     }
 
-    // Open file for reading
-    bool loaded;
-    File file = SPIFFS.open(filename, "r");
-    if (!SPIFFS.exists(filename) || !file) {
-        Log.warning(F("Failed to open configuration file." CR));
-        loaded = false;
+    // Serialize JSON to file
+    if (!serializeConfig(file)) {
+        file.close();
+        return false;
+    }
+    file.close();
+    return true;
+}
+
+bool deserializeConfig(Stream &src)
+{
+    // Deserialize configuration
+    DynamicJsonDocument doc(capacityDeserial);
+
+    // Parse the JSON object in the file
+    DeserializationError err = deserializeJson(doc, src);
+
+    if (err) {
+        config.load(doc.as<JsonObject>());
+        return true;
     } else {
-        // Parse the JSON object in the file
-        DeserializationError err = deserializeJson(doc, file);
-        if (err) {
-            Log.error(F("Failed to deserialize configuration." CR));
-            Log.error(err.c_str());         
-            loaded = false;
-        } else {
-            loaded = true;
-        }
+        config.load(doc.as<JsonObject>());
+        return true;
+    }
+    // TODO:  Can I return false here somehow?
+}
+
+bool serializeConfig(Print &dst)
+{
+    // Serialize configuration
+    DynamicJsonDocument doc(capacitySerial);
+
+    // Create an object at the root
+    JsonObject root = doc.to<JsonObject>();
+
+    // Fill the object
+    config.save(root);
+
+    // Serialize JSON to file
+    return serializeJsonPretty(doc, dst) > 0;
+}
+
+bool printFile()
+{
+    // Prints the content of a file to the Serial
+    File file = SPIFFS.open(filename, "r");
+    if (!file)
+        return false;
+
+    while (file.available())
+        Serial.print((char)file.read());
+
+    Serial.println();
+    file.close();
+    return true;
+}
+
+bool printConfig()
+{
+    // Serialize configuration
+    DynamicJsonDocument doc(capacitySerial);
+
+    // Create an object at the root
+    JsonObject root = doc.to<JsonObject>();
+
+    // Fill the object
+    config.save(root);
+
+    // Serialize JSON to file
+    bool retval = serializeJsonPretty(doc, Serial) > 0;
+    Serial.println();
+    return retval;
+}
+
+bool mergeJsonString(String newJson)
+{
+    // Serialize configuration
+    DynamicJsonDocument doc(capacityDeserial);
+
+    // Parse directly from file
+    DeserializationError err = deserializeJson(doc, newJson);
+    if (err)
+        Serial.println(err.c_str());
+
+    return mergeJsonObject(doc);
+}
+
+bool mergeJsonObject(JsonVariantConst src)
+{
+    // Serialize configuration
+    DynamicJsonDocument doc(capacityDeserial);
+
+    // Create an object at the root
+    JsonObject root = doc.to<JsonObject>();
+
+    // Fill the object
+    config.save(root);
+
+    // Merge in the configuration
+    if (merge(root, src))
+    {
+        // Move new object to config
+        config.load(root);
+        saveFile();
+        return true;
     }
 
-    if (loaded == false) { // Load defaults
-        Log.notice(F("Using default configuration." CR));
+    return false;
+}
 
-        // Set defaults for WiFi Config
-        strlcpy(single->ssid, APNAME, sizeof(single->ssid));
-        strlcpy(single->appwd, AP_PASSWD, sizeof(single->appwd));
-        strlcpy(single->hostname, HOSTNAME, sizeof(single->hostname));
-
-        // Set defaults for Cop config
-        strlcpy(single->bname, BRWYNAME, sizeof(single->bname));
-        strlcpy(single->kname, KNAME, sizeof(single->kname));
-        single->units = UNITS;
-        single->numtap = NUMTAPS;
-
-        // Set defaults for temp config
-        single->setpoint = DEFSET;
-        single->controlpoint = DEFCON;
-        single->roomcal = 0;
-        single->towercal = 0;
-        single->uppercal = 0;
-        single->lowercal = 0;
-        single->kegcal = 0;
-
-        // Set defaults for target config
-        //      - Local target config
-        strlcpy(single->targeturl, "", sizeof(single->targeturl));
-        single->targetfreq = TARGETFREQ;
-        //      - Cloud target config
-        strlcpy(single->cloudtype, "", sizeof(single->cloudtype));
-        strlcpy(single->cloudkey, "", sizeof(single->cloudkey));
-        single->cloudfreq = 0;
-
-        // Set defaults for OTA config
-        single->dospiffs1 = false;
-        single->dospiffs2 = false;
-        single->didupdate = false;
-
-        // We created default configuration, save it
-        single->save();
-
-    } else { // Parse from file
-
-        Log.notice(F("Parsing configuration data." CR));
-
-        // Parse WiFi Config
-        JsonObject wificonfig = doc["wificonfig"];
-        strlcpy(single->ssid, wificonfig["ssid"] | APNAME, sizeof(single->ssid));
-        strlcpy(single->appwd, wificonfig["appwd"] | AP_PASSWD, sizeof(single->appwd));
-        strlcpy(single->hostname, wificonfig["hostname"] | HOSTNAME, sizeof(single->hostname));
-
-        // Parse Cop config
-        JsonObject copconfig = doc["copconfig"];
-        strlcpy(single->bname, copconfig["bname"] | BRWYNAME, sizeof(single->bname));
-        strlcpy(single->kname, copconfig["kname"] | KNAME, sizeof(single->kname));
-        single->units = copconfig["units"] | UNITS;
-        single->numtap = copconfig["numtap"] | 8;
-
-        // Parse Temps config
-        JsonObject temps = doc["temps"];
-        single->setpoint = temps["setpoint"] | DEFSET;
-        single->controlpoint = temps["controlpoint"] | DEFCON;
-        single->roomcal = temps["roomcal"] | 0;
-        single->towercal = temps["towercal"] | 0;
-        single->uppercal = temps["uppercal"] | 0;
-        single->lowercal = temps["lowercal"] | 0;
-        single->kegcal = temps["kegcal"] | 0;
-
-		// Parse Target config
-        // 		- Local target config
-        JsonObject target_local = doc["target"]["local"];
-        strlcpy(single->targeturl, target_local["targeturl"] | "", sizeof(single->targeturl));
-        single->targetfreq = target_local["targetfreq"] | TARGETFREQ;
-        // 		- Cloud target config
-        JsonObject target_cloud = doc["target"]["cloud"];
-        strlcpy(single->cloudtype, target_cloud["cloudtype"] | "", sizeof(cloudtype));
-        strlcpy(single->cloudkey, target_cloud["cloudkey"] | "", sizeof(cloudkey));
-        single->cloudfreq = target_cloud["cloudfreq"];
-
-        // Parse OTA config
-        JsonObject ota = doc["ota"];
-        single->dospiffs1 = ota["dospiffs1"] | false;
-        single->dospiffs2 = ota["dospiffs2"] | false;
-        single->didupdate = ota["didupdate"] | false;
+bool merge(JsonVariant dst, JsonVariantConst src)
+{
+    if (src.is<JsonObject>())
+    {
+        for (auto kvp : src.as<JsonObject>())
+        {
+            merge(dst.getOrAddMember(kvp.key()), kvp.value());
+        }
+    }
+    else
+    {
+        dst.set(src);
     }
     return true;
 }
 
-bool JsonConfig::save() {
-    const size_t capacity = 2*JSON_OBJECT_SIZE(2) + 3*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + 790;
-    DynamicJsonDocument doc(capacity);
+void ApConfig::save(JsonObject obj) const
+{
+    obj["ssid"] = ssid;
+    obj["passphrase"] = passphrase;
+}
 
-    // Serialize WiFi Config
-    JsonObject wificonfig = doc.createNestedObject("wificonfig");
-    wificonfig["ssid"] = single->ssid;
-    wificonfig["appwd"] = single->appwd;
-    wificonfig["hostname"] = single->hostname;
-
-    // Serialize Cop config
-    JsonObject copconfig = doc.createNestedObject("copconfig");
-    copconfig["bname"] = single->bname;
-    copconfig["kname"] = single->kname;
-    copconfig["units"] = single->units;
-    copconfig["numtap"] = single->numtap;
-
-    // Serialize Temps config
-    JsonObject temps = doc.createNestedObject("temps");
-    temps["setpoint"] = single->setpoint;
-    temps["controlpoint"] = single->controlpoint;
-    temps["roomcal"] = single->roomcal;
-    temps["towercal"] = single->towercal;
-    temps["uppercal"] = single->uppercal;
-    temps["lowercal"] = single->lowercal;
-    temps["kegcal"] = single->kegcal;
-
-    // Serialize Target config
-    JsonObject target = doc.createNestedObject("target");
-    // 		- Local target config
-    JsonObject target_local = target.createNestedObject("local");
-    target_local["targeturl"] = single->targeturl;
-    target_local["targetfreq"] = single->targetfreq;
-    // 		- Cloud target config
-    JsonObject target_cloud = target.createNestedObject("cloud");
-    target_cloud["cloudtype"] = single->cloudtype;
-    target_cloud["cloudkey"] = single->cloudkey;
-    target_cloud["cloudfreq"] = single->cloudfreq;
-
-    // Serialize OTA config
-    JsonObject ota = doc.createNestedObject("ota");
-    ota["dospiffs1"] = false;
-    ota["dospiffs2"] = false;
-    ota["didupdate"] = false;
-
-    // Mount SPIFFS
-    if (!SPIFFS.begin()) {
-        Log.error(F("CONFIG: Failed to mount SPIFFS." CR));
-        return false;
+void ApConfig::load(JsonObjectConst obj)
+{
+    // Load Access Point configuration
+    //
+    if (obj["ssid"].isNull()) {
+        strlcpy(ssid, APNAME, sizeof(ssid));
+    } else {
+        const char* sd = obj["ssid"];
+        strlcpy(ssid, sd, sizeof(ssid));
     }
 
-    // Open file for writing
-    File file = SPIFFS.open(filename, "w");
-    if (!file) {
-        Log.error(F("Failed to open configuration file." CR));
-        return false;
+    if (obj["passphrase"].isNull()) {
+        strlcpy(passphrase, AP_PASSWD, sizeof(passphrase));
     } else {
-        // Serialize the JSON object to the file
-        bool success = serializeJson(doc, file);
-        // This may fail if the JSON is invalid
-        if (!success) {
-            Log.error(F("Failed to serialize configuration." CR));
-            return false;
-        } else {
-            Log.verbose(F("Saved configuration as %s." CR), filename);
-            return true;
-        }
+        const char* ps = obj["passphrase"];
+        strlcpy(passphrase, ps, sizeof(passphrase));
+    }
+
+}
+
+void CopConfig::save(JsonObject obj) const
+{
+    obj["breweryname"] = breweryname;
+    obj["kegeratorname"] = kegeratorname;
+    obj["imperial"] = imperial;
+    obj["numtap"] = numtap;
+    obj["rpintscompat"] = rpintscompat;
+}
+
+void CopConfig::load(JsonObjectConst obj)
+{
+    // Load Cop configuration
+    //
+    if (obj["breweryname"].isNull()) {
+        strlcpy(breweryname, BRWYNAME, sizeof(breweryname));
+    } else {
+        const char* bn = obj["breweryname"];
+        strlcpy(breweryname, bn, sizeof(breweryname));
+    }
+
+    if (obj["kegeratorname"].isNull()) {
+        strlcpy(breweryname, KNAME, sizeof(kegeratorname));
+    } else {
+        const char* kn = obj["kegeratorname"];
+        strlcpy(kegeratorname, kn, sizeof(kegeratorname));
+    }
+
+    if (obj["imperial"].isNull()) {
+        imperial = UNITS;
+    } else {
+        bool units = obj["imperial"];
+        imperial = units;
+    }
+
+    if (obj["numtap"].isNull()) {
+        numtap = NUMTAPS;
+    } else {
+        int nt = obj["numtap"];
+        numtap = nt;
+    }
+
+    if (obj["rpintscompat"].isNull()) {
+        rpintscompat = RPINTS;
+    } else {
+        bool rpints = obj["rpintscompat"];
+        rpintscompat = rpints;
+    }
+}
+
+void Temperatures::save(JsonObject obj) const
+{
+    obj["setpoint"] = setpoint;
+    obj["controlpoint"] = controlpoint;
+    obj["roomcal"] = roomcal;
+    obj["towercal"] = towercal;
+    obj["uppercal"] = uppercal;
+    obj["lowercal"] = lowercal;
+    obj["kegcal"] = kegcal;
+}
+
+void Temperatures::load(JsonObjectConst obj)
+{
+    // Load Temperature configuration
+    //
+    if (obj["setpoint"].isNull()) {
+        setpoint = DEFSET;
+    } else {
+        float sp = obj["setpoint"];
+        setpoint = sp;
+    }
+
+    if (obj["controlpoint"].isNull()) {
+        controlpoint = DEFCON;
+    } else {
+        int cp = obj["controlpoint"];
+        controlpoint = cp;
+    }
+
+    if (obj["roomcal"].isNull()) {
+        roomcal = 0.0;
+    } else {
+        float rc = obj["roomcal"];
+        roomcal = rc;
+    }
+
+    if (obj["towercal"].isNull()) {
+        towercal = 0.0;
+    } else {
+        float tc = obj["towercal"];
+        towercal = tc;
+    }
+
+    if (obj["uppercal"].isNull()) {
+        uppercal = 0.0;
+    } else {
+        float uc = obj["uppercal"];
+        uppercal = uc;
+    }
+
+    if (obj["lowercal"].isNull()) {
+        lowercal = 0.0;
+    } else {
+        float lc = obj["lowercal"];
+        lowercal = lc;
+    }
+
+    if (obj["kegcal"].isNull()) {
+        kegcal = 0.0;
+    } else {
+        float kc = obj["kegcal"];
+        kegcal = kc;
+    }
+}
+
+void URLTarget::save(JsonObject obj) const
+{
+    obj["url"] = url;
+    obj["freq"] = freq;
+    obj["update"] = update;
+}
+
+void URLTarget::load(JsonObjectConst obj)
+{
+    // Load URL Target configuration
+    //
+    if (obj["url"].isNull()) {
+        strlcpy(url, "", sizeof(url));
+    } else {
+        const char* tu = obj["url"];
+        strlcpy(url, tu, sizeof(url));
+    }
+
+    if (obj["freq"].isNull()) {
+        freq = 2;
+    } else {
+        int f = obj["freq"];
+        freq = f;
+    }
+
+    if (obj["update"].isNull()) {
+        update = false;
+    } else {
+        bool u = obj["update"];
+        update = u;
+    }
+}
+
+void CloudTarget::save(JsonObject obj) const
+{
+    obj["type"] = type;
+    obj["url"] = url;
+    obj["key"] = key;
+    obj["freq"] = freq;
+    obj["update"] = update;
+}
+
+void CloudTarget::load(JsonObjectConst obj)
+{
+    // Load Cloud configuration
+    //
+    if (obj["type"].isNull()) {
+        strlcpy(key, "", sizeof(type));
+    } else {
+        const char* t = obj["type"];
+        strlcpy(type, t, sizeof(type));
+    }
+
+    if (obj["url"].isNull()) {
+        strlcpy(url, "", sizeof(url));
+    } else {
+        const char* u = obj["url"];
+        strlcpy(url, u, sizeof(url));
+    }
+
+    if (obj["key"].isNull()) {
+        strlcpy(key, "", sizeof(key));
+    } else {
+        const char* k = obj["key"];
+        strlcpy(key, k, sizeof(key));
+    }
+
+    if (obj["freq"].isNull()) {
+        freq = 15;
+    } else {
+        int f = obj["freq"];
+        freq = f;
+    }
+
+    if (obj["update"].isNull()) {
+        update = false;
+    } else {
+        bool u = obj["update"];
+        update = u;
+    }
+}
+
+    // Stores the complete configuration
+    // ApConfig apconfig;
+    // char hostname[32];
+    // CopConfig copconfig;
+    // Temperatures temps;
+    // URLTarget urltarget;
+    // CloudTarget cloud;
+    // bool dospiffs1;
+    // bool dospiffs2;
+    // bool didupdate;
+
+void Config::save(JsonObject obj) const
+{
+    // Add Access Point object
+    apconfig.save(obj.createNestedObject("apconfig"));
+    // Add Hostname object
+    obj["hostname"] = hostname;
+    // Add Bubble object
+    copconfig.save(obj.createNestedObject("copconfig"));
+    // Add Calibration object
+    temps.save(obj.createNestedObject("temps"));
+    // Add Target object
+    urltarget.save(obj.createNestedObject("urltarget"));
+    // Add Cloud object
+    cloud.save(obj.createNestedObject("cloud"));
+    // Add dospiffs1 object
+    obj["dospiffs1"] = dospiffs1;
+    // Add dospiffs2 object
+    obj["dospiffs2"] = dospiffs2;
+    // Add dospiffs1 object
+    obj["didupdate"] = didupdate;
+}
+
+void Config::load(JsonObjectConst obj)
+{
+    // Load all config objects
+    //
+
+    apconfig.load(obj["apconfig"]);
+
+    if (obj["hostname"].isNull()) {
+        strlcpy(hostname, APNAME, sizeof(hostname));
+    } else {
+        const char* hn = obj["hostname"];
+        strlcpy(hostname, hn, sizeof(hostname));
+    }
+
+    copconfig.load(obj["copconfig"]);
+    temps.load(obj["temps"]);
+    urltarget.load(obj["urltarget"]);
+    cloud.load(obj["cloud"]);
+
+    if (obj["dospiffs1"].isNull()) {
+        dospiffs1 = false;
+    } else {
+        dospiffs1 = obj["dospiffs1"];
+    }
+
+    if (obj["dospiffs2"].isNull()) {
+        dospiffs2 = false;
+    } else {
+        dospiffs2 = obj["dospiffs2"];
+    }
+
+    bool firstrun = obj["didupdate"].isNull();
+    if (firstrun) {
+        didupdate = false;
+    } else {
+        didupdate = obj["didupdate"];
     }
 }
