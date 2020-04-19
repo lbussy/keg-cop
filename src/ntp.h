@@ -29,6 +29,7 @@ SOFTWARE. */
 #include <WiFi.h>
 #endif
 
+#include "tools.h"
 #include "config.h"
 #include <Ticker.h>
 #include <ArduinoLog.h>

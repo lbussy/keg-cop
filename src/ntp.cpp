@@ -47,7 +47,7 @@ void setClock() {
 #ifdef LOG_LEVEL && !RPINTS
         Serial.print(F("."));
 #endif
-        delay(1000);
+        _delay(1000);
 #ifdef ESP8266
         yield();
 #endif
