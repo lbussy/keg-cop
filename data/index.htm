@@ -4,28 +4,6 @@
 <head>
     <meta charset="utf-8">
 
-    <!-- Copyright (C) 2019 Lee C. Bussy (@LBussy)
-
-    This file is part of Lee Bussy's Keg Cop (keg-cop).
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE. -->
-
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <meta name="description" content="Keg Cop, a Home Brewing application">
@@ -35,11 +13,11 @@
 
     <link rel="canonical" href="https://www.kegcop.com/">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
@@ -50,7 +28,7 @@
         main>.container {
             width: auto;
             max-width: 1024px;
-            padding: 50px 15px 0;
+            padding: 20px 15px 0;
         }
 
         .footer {
@@ -69,7 +47,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <a class="navbar-brand" href="/">
-                <img src="/mstile-150x150.png" style="width:25px;height:25px;">
+                <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
@@ -78,8 +56,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/settings/">Settings</a>
@@ -97,14 +75,13 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp">
+        <div class="container" id="indexApp">
             <!-- Container -->
 
             <div class="page-header" id="banner">
                 <h1>{Brewery Name}</h1>
             </div>
-            <div class="card border-dark mb-3">
-                <!-- Keg Cop Main Page -->
+            <div class="card border-dark mb-3"> <!-- Sensor Readings -->
                 <div class="card-header">
                     <h4 class="card-title">Tap List</h4>
                 </div>
@@ -165,7 +142,7 @@
                     </div>
                 </div>
 
-            </div> <!-- About Keg Cop Information -->
+            </div> <!-- Sensor Readings -->
 
         </div> <!-- Container -->
 
@@ -173,15 +150,95 @@
 
     <footer class="footer mt-auto py-3">
         <div class="container">
-            <span class="text-muted">Copyright &copy; 2020, Lee C. Bussy</span>
+            <span class="text-muted">Copyright &copy; 2019-2020, Lee C. Bussy</span>
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
     </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+    <script>
+        // Attach the event after the page loads
+        if (window.addEventListener)
+            window.addEventListener("load", loadPage, false);
+        else if (window.attachEvent)
+            window.attachEvent("onload", loadPage);
+        else window.onload = loadPage;
+
+        function loadPage() {
+            // console.log("DEBUG: Entering: " + arguments.callee.name);
+
+            loadData(); // Load data the first time
+
+            reloadPeriod = 60;
+            (function countdown(remaining) { // Refresh data every 60 secs
+                if (remaining === 0) {
+                    loadData()
+                    remaining = reloadPeriod
+                }
+                document.getElementById('countdown').innerHTML = remaining
+                setTimeout(function () { countdown(remaining - 1) }, 1000)
+            })(reloadPeriod)
+            // console.log("DEBUG: Exiting: " + arguments.callee.name);
+        }
+
+        function loadData() {
+            // console.log("DEBUG: Entering: " + arguments.callee.name);
+            var url = "/bubble/";
+            var bubble = $.getJSON(url, function () {
+            })
+                .done(function (bubble) {
+                    try {
+                        $("#name").text(bubble.name)
+                        $("#bpm").text(parseFloat(bubble.bpm).toFixed(1));
+
+                        if (bubble.ambient == -100) {
+                            $("#aTemp").text("Not connected")
+                        } else if (bubble.ambient == 0) {
+                            $("#aTemp").text("Not yet updated.")
+                        } else {
+                            $("#aTemp").text(parseFloat(bubble.ambient).toFixed(2) + "°" + bubble.temp_unit);
+                        }
+
+                        if (bubble.temp == -100) {
+                            $("#vTemp").text("Not connected")
+                        } else if (bubble.temp == 0) {
+                            $("#vTemp").text("Not yet updated.")
+                        } else {
+                            $("#vTemp").text(parseFloat(bubble.temp).toFixed(2) + "°" + bubble.temp_unit);
+                        }
+
+                        var date = new Date(bubble.datetime)
+                        $("#time").text(date)
+                    }
+                    catch {
+                        $("#name").text("Not yet updated.")
+                        $("#bpm").text("Not yet updated.")
+                        $("#aTemp").text("Not yet updated.")
+                        $("#vTemp").text("Not yet updated.")
+                        $("#time").text("Not yet updated.")
+                    }
+                })
+                .fail(function () {
+                    $("#name").text("Error loading JSON.")
+                    $("#bpm").text("Error loading JSON.")
+                    $("#aTemp").text("Error loading JSON.")
+                    $("#vTemp").text("Error loading JSON.")
+                    $("#time").text("Error loading JSON.")
+                })
+                .always(function () {
+                    // Post load processing here
+                }
+            );
+            // console.log("DEBUG: Exiting: " + arguments.callee.name);
+        }
     </script>
 
 </body>
