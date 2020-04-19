@@ -24,11 +24,7 @@ SOFTWARE. */
 #define _TOOLS_H
 
 #include <ArduinoLog.h>
-#include <ArduinoJson.h>
-#include <EEPROM.h>
 #include <Arduino.h>
-
-#define EEPROM_ADDRESS 0x00
 
 void _delay(unsigned long);
 void resetController();
