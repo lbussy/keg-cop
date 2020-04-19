@@ -22,7 +22,7 @@ SOFTWARE. */
 
 #include "seriallog.h"
 
-#if DEBUG || RPINTS// Enable Serial
+#if DEBUG || RPINTS // Enable Serial
 
 void serial() {
     delay(3000); // Delay to allow a monitor to start
