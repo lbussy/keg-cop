@@ -23,23 +23,32 @@ SOFTWARE. */
 #ifndef _WIFIHANDLER_H
 #define _WIFIHANDLER_H
 
-#include "main.h"
-#include "config.h"
-#include "ArduinoLog.h"
-#include <Ticker.h>
-#include <WiFiClient.h>         //ESP32 Core WiFi Library
-#include <WiFiManager.h>        //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+#define WM_ASYNC
 
+#include "config.h"
+#include "jsonconfig.h"
+#ifdef ESP8266
+#include <ESP8266WiFi.h>
+#elif defined ESP32
+#include <WiFi.h>
+#endif
+#include <Ticker.h>
+#include <ArduinoLog.h>
+#include <AsyncWiFiManager.h>
+
+void wifiBlinker();
 void doWiFi();
 void doWiFi(bool);
 void resetWifi();
 
 // WiFiManager Callbacks
-void apCallback(WiFiManager *myWiFiManager);
+void apCallback(AsyncWiFiManager *myWiFiManager);
 void configResetCallback();
 void preSaveConfigCallback();
 void saveConfigCallback();
 void saveParamsCallback();
 void webServerCallback();
+
+extern struct Config config;
 
 #endif // _WIFIHANDLER_H
