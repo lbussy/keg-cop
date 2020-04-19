@@ -23,6 +23,7 @@ SOFTWARE. */
 #ifndef _SERIALLOG_H
 #define _SERIALLOG_H
 
+#include "tools.h"
 #include "config.h"
 #include "ArduinoLog.h"
 #include <Arduino.h>
