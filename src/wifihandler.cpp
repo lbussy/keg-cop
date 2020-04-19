@@ -75,7 +75,7 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             // We finished with portal, do we need this?
         } else {
             // Hit timeout on voluntary portal
-            if (blinker.active()) blinker.detach(); // Turn off blinker
+            blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
             _delay(3000);
             digitalWrite(LED, HIGH);
@@ -88,7 +88,7 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
         myAsyncWifiManager.setConfigPortalTimeout(120);
         if (!myAsyncWifiManager.autoConnect(config.apconfig.ssid, config.apconfig.passphrase)) {
             Log.warning(F("Failed to connect and hit timeout."));
-            if (blinker.active()) blinker.detach(); // Turn off blinker
+            blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
             _delay(3000);
             digitalWrite(LED, HIGH);
@@ -98,8 +98,8 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
         } else {
             // We finished with portal (configured)
             WiFi.mode(WIFI_STA); // Explicitly set mode, esp defaults to STA+AP
-            if (blinker.active()) blinker.detach(); // Turn off blinker
-                digitalWrite(LED, HIGH); // Turn off LED
+            blinker.detach(); // Turn off blinker
+            digitalWrite(LED, HIGH); // Turn off LED
 #ifdef ESP8266
             WiFi.setSleepMode(WIFI_NONE_SLEEP); // Make sure sleep is disabled
             WiFi.hostname(config.hostname);
@@ -115,7 +115,7 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
     // }
 
     Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());
-    if (blinker.active()) blinker.detach(); // Turn off blinker
+    blinker.detach(); // Turn off blinker
     digitalWrite(LED, HIGH); // Turn off LED
 }
 
@@ -123,7 +123,7 @@ void resetWifi() { // Wipe wifi settings and reset controller
     AsyncWiFiManager myAsyncWifiManager;
     _delay(3000); // Allow page to load
     myAsyncWifiManager.resetSettings();
-    if (blinker.active()) blinker.detach(); // Turn off blinker
+    blinker.detach(); // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
     _delay(3000);
     Log.warning(F("Restarting after clearing wifi settings." CR));
@@ -139,7 +139,7 @@ void wifiBlinker() { // Invert Current State of LED
 
 void apCallback(AsyncWiFiManager *asyncWiFiManager) { // Entered Access Point mode
     Log.verbose(F("[CALLBACK]: setAPCallback fired." CR));
-    if (blinker.active()) blinker.detach(); // Turn off blinker
+    blinker.detach(); // Turn off blinker
     blinker.attach_ms(APBLINK, wifiBlinker);
     Log.notice(F("Entered portal mode; name: %s, IP: %s." CR),
         asyncWiFiManager->getConfigPortalSSID().c_str(),
