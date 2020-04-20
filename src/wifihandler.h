@@ -20,17 +20,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFIHANDLER_H
-#define _WIFIHANDLER_H
+#ifndef _WIFI_H
+#define _WIFI_H
 
 #define WM_ASYNC
 
-#include "tools.h"
 #include "config.h"
 #include "jsonconfig.h"
+#include "tools.h"
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
-#elif defined ESP32
+#endif
+#ifdef ESP32
 #include <WiFi.h>
 #endif
 #include <Ticker.h>
@@ -52,4 +53,4 @@ void webServerCallback();
 
 extern struct Config config;
 
-#endif // _WIFIHANDLER_H
+#endif // _WIFI_H
