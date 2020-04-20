@@ -173,71 +173,7 @@
         else window.onload = loadPage;
 
         function loadPage() {
-            // console.log("DEBUG: Entering: " + arguments.callee.name);
 
-            loadData(); // Load data the first time
-
-            reloadPeriod = 60;
-            (function countdown(remaining) { // Refresh data every 60 secs
-                if (remaining === 0) {
-                    loadData()
-                    remaining = reloadPeriod
-                }
-                document.getElementById('countdown').innerHTML = remaining
-                setTimeout(function () { countdown(remaining - 1) }, 1000)
-            })(reloadPeriod)
-            // console.log("DEBUG: Exiting: " + arguments.callee.name);
-        }
-
-        function loadData() {
-            // console.log("DEBUG: Entering: " + arguments.callee.name);
-            var url = "/bubble/";
-            var bubble = $.getJSON(url, function () {
-            })
-                .done(function (bubble) {
-                    try {
-                        $("#name").text(bubble.name)
-                        $("#bpm").text(parseFloat(bubble.bpm).toFixed(1));
-
-                        if (bubble.ambient == -100) {
-                            $("#aTemp").text("Not connected")
-                        } else if (bubble.ambient == 0) {
-                            $("#aTemp").text("Not yet updated.")
-                        } else {
-                            $("#aTemp").text(parseFloat(bubble.ambient).toFixed(2) + "°" + bubble.temp_unit);
-                        }
-
-                        if (bubble.temp == -100) {
-                            $("#vTemp").text("Not connected")
-                        } else if (bubble.temp == 0) {
-                            $("#vTemp").text("Not yet updated.")
-                        } else {
-                            $("#vTemp").text(parseFloat(bubble.temp).toFixed(2) + "°" + bubble.temp_unit);
-                        }
-
-                        var date = new Date(bubble.datetime)
-                        $("#time").text(date)
-                    }
-                    catch {
-                        $("#name").text("Not yet updated.")
-                        $("#bpm").text("Not yet updated.")
-                        $("#aTemp").text("Not yet updated.")
-                        $("#vTemp").text("Not yet updated.")
-                        $("#time").text("Not yet updated.")
-                    }
-                })
-                .fail(function () {
-                    $("#name").text("Error loading JSON.")
-                    $("#bpm").text("Error loading JSON.")
-                    $("#aTemp").text("Error loading JSON.")
-                    $("#vTemp").text("Error loading JSON.")
-                    $("#time").text("Error loading JSON.")
-                })
-                .always(function () {
-                    // Post load processing here
-                }
-            );
-            // console.log("DEBUG: Exiting: " + arguments.callee.name);
         }
     </script>
 
