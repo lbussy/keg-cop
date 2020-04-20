@@ -1,6 +1,6 @@
 /* Copyright (C) 2019-2020 Lee C. Bussy (@LBussy)
 
-This file is part of Lee Bussy's Keg Cop (keg-cop).
+This file is part of Lee Bussy's Brew Bubbbles (brew-bubbles).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -93,15 +93,17 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             _delay(3000);
             digitalWrite(LED, HIGH);
             Log.warning(F("Hit timeout on connect, restarting." CR));
-            ESP.restart();
+            resetController();
             _delay(1000); // Just a hack to give it time to reset
         } else {
             // We finished with portal (configured)
             WiFi.mode(WIFI_STA); // Explicitly set mode, esp defaults to STA+AP
-            blinker.detach(); // Turn off blinker
-            digitalWrite(LED, HIGH); // Turn off LED
 #ifdef ESP8266
             WiFi.setSleepMode(WIFI_NONE_SLEEP); // Make sure sleep is disabled
+#endif
+            blinker.detach(); // Turn off blinker
+                digitalWrite(LED, HIGH); // Turn off LED
+#ifdef ESP8266
             WiFi.hostname(config.hostname);
 #elif defined ESP32
             WiFi.setHostname(config.hostname);
@@ -127,7 +129,7 @@ void resetWifi() { // Wipe wifi settings and reset controller
     digitalWrite(LED, LOW); // Turn on LED
     _delay(3000);
     Log.warning(F("Restarting after clearing wifi settings." CR));
-    ESP.restart();
+    resetController();
     _delay(1000);
 }
 
