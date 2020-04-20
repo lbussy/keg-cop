@@ -1,6 +1,6 @@
 /* Copyright (C) 2019-2020 Lee C. Bussy (@LBussy)
 
-This file is part of Lee Bussy's Brew Bubbbles (brew-bubbles).
+This file is part of Lee Bussy's Keg Cop (keg-cop).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,42 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WEBSERVER_H
-#define _WEBSERVER_H
+#include "serialhandler.h"
 
-#include "wifihandler.h"
-#include "jsonconfig.h"
-#include "version.h"
-#include "config.h"
-#include <ArduinoLog.h>
-#include <ArduinoJson.h>
-#include <AsyncJson.h>
-#include <FS.h>
-#include <WiFi.h>
-#include <WiFiClient.h>
-#include <HTTPClient.h>
-#include <ESPmDNS.h>
-#include <Arduino.h>
+#if DEBUG || RPINTS // Enable Serial
 
-void initWebServer();
-void setRegPageAliases();
-void setActionPageHandlers();
-void setJsonHandlers();
-void setSettingsAliases();
-void stopWebServer();
+void serial() {
+    _delay(3000); // Delay to allow a monitor to start
 
-extern struct Config config;
-// extern struct ThatVersion thatVersion;
-extern const size_t capacityDeserial;
-extern const size_t capacitySerial;
+#if RPINTS
+    // Define RPINTS Serial setup
+    Serial.begin(RPBAUD);
+    Serial.flush();
+    Serial.setDebugOutput(false);
+#else // !RPINTS
+    Serial.begin(BAUD);
+    Serial.flush();
+    Serial.setDebugOutput(true);
+    Log.begin(LOG_LEVEL, &Serial, true);
+    Log.setPrefix(printTimestamp);
+    Log.notice(F("Serial logging started at %l." CR), BAUD);
+#endif // !RPINTS
+}
 
-#endif // _WEBSERVER_H
+#if !RPINTS
+void printTimestamp(Print* _logOutput) {
+    time_t now;
+    time_t rawtime = time(&now);
+    struct tm ts;
+    ts = *localtime(&rawtime);
+    char locTime[prefLen] = {'\0'};
+    strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
+    _logOutput->print(locTime);
+}
+#endif // !RPINTS
+
+#else // DISABLE_LOGGING
+
+void serial(){}
+
+#endif // DISABLE_LOGGING
