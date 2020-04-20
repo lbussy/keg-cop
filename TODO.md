@@ -16,15 +16,15 @@
 - Add temp sensors
 - Add flow meters
 - Add thermostat
-- Add wifi
 - Add webs server
-- Add config
-- Add mDNS
-- Add ntp
-- Add serial
 - Add thisVersion
 - Add thatVersion
 
 # Done Items
 
 - ~~Add web pages~~
+- ~~Add config~~
+- ~~Add wifi~~
+- ~~Add mDNS~~
+- ~~Add ntp~~
+- ~~Add serial~~
