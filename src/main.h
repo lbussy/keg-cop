@@ -24,12 +24,14 @@ SOFTWARE. */
 #define _MAIN_H
 
 #include "jsonconfig.h"
-#include "seriallog.h"
+#include "serialhandler.h"
 #include "config.h"
-#include "ntp.h"
+#include "ntphandler.h"
 #include "wifihandler.h"
 #include "version.h"
 #include "mdnshandler.h"
 #include <ArduinoLog.h>
+
+extern struct Config config;
 
 #endif // _MAIN_H

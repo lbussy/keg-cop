@@ -20,18 +20,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-// (#include <ESP8266mDNS.h> includes #include "LEAmDNS.h", which in turn
-// uses the MDNS_H include guard.  Long story short, do not rename this
-// to MDNS_H.)
-
 #ifndef _MDNSHANDLER_H
 #define _MDNSHANDLER_H
 
 #include "main.h"
+#include "jsonconfig.h"
 #include <ArduinoLog.h>
+
+#ifdef ESP8266
+#include <ESP8266WiFi.h>
+#elif defined ESP32
+#include <WiFi.h>
+#endif
+
 #include <ESPmDNS.h>
 
 void mdnssetup();
 void mdnsreset();
+
+extern struct Config config;
 
 #endif // _MDNSHANDLER_H
