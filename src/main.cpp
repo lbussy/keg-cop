@@ -24,6 +24,12 @@ SOFTWARE. */
 
 void setup() {
     serial();
+
+    if (loadConfig())
+        Log.notice(F("Configuration loaded." CR));
+    else
+        Log.error(F("Unable to load cofiguration." CR));
+
     pinMode(LED, OUTPUT);
 
     pinMode(RESETWIFI, INPUT_PULLUP);
