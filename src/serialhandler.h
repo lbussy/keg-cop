@@ -25,6 +25,7 @@ SOFTWARE. */
 
 #include "tools.h"
 #include "config.h"
+#include "jsonconfig.h"
 #include "ArduinoLog.h"
 #include <Arduino.h>
 
@@ -32,6 +33,8 @@ void serial();
 void printTimestamp(Print* _logOutput);
 
 #define prefLen 22
+
+extern struct Config config;
 
 #endif //_SERIALLOG_H
  
