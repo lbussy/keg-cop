@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "ntp.h"
+#include "ntphandler.h"
 
 void setClock() {
     Ticker blinker;
@@ -34,7 +34,7 @@ void setClock() {
         if (nowSecs - startSecs > 9) {
             if (cycle > 9) {
                 Log.warning(F("Unable to get time hack from %s, rebooting." CR), TIMESERVER);
-                ESP.restart();
+                resetController();
             }
 #if LOG_LEVEL && !RPINTS
             Serial.println();
