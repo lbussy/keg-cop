@@ -28,6 +28,7 @@ SOFTWARE. */
 #include "config.h"
 #include "ntphandler.h"
 #include "wifihandler.h"
+#include "webpagehandler.h"
 #include "version.h"
 #include "mdnshandler.h"
 #include <ArduinoLog.h>
