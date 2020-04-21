@@ -28,12 +28,14 @@ SOFTWARE. */
 #include "config.h"
 #include "jsonconfig.h"
 #include "tools.h"
+
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
 #endif
 #ifdef ESP32
 #include <WiFi.h>
 #endif
+
 #include <Ticker.h>
 #include <ArduinoLog.h>
 #include <AsyncWiFiManager.h>
@@ -52,5 +54,7 @@ void saveParamsCallback();
 void webServerCallback();
 
 extern struct Config config;
+extern const size_t capacitySerial;
+extern const size_t capacityDeserial;
 
 #endif // _WIFI_H
