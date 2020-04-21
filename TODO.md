@@ -5,8 +5,8 @@
 - Add web page handlers
 - Add web page scripting
     - Index
-    - About
-    - Settings
+    - ~~About
+    - Settings~~
     - Ota
     - Ota2
     - Reset
@@ -16,9 +16,10 @@
 - Add temp sensors
 - Add flow meters
 - Add thermostat
-- Add webs server
-- Add thisVersion
+- ~~Add web server~~
+- ~~Add thisVersion~~
 - Add thatVersion
+- Add OTA
 
 # Done Items
 
