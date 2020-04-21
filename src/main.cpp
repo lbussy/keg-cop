@@ -30,9 +30,15 @@ void setup() {
     else
         Log.error(F("Unable to load cofiguration." CR));
 
+    // Set pins for solenoids
+    pinMode(SOLENOID, OUTPUT);
+    digitalWrite(SOLENOID, HIGH);
+    pinMode(COOL, OUTPUT);
+    digitalWrite(COOL, HIGH);
+    // Set other pins
     pinMode(LED, OUTPUT);
-
     pinMode(RESETWIFI, INPUT_PULLUP);
+
     if (digitalRead(RESETWIFI) == LOW) {
         Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
         doWiFi(true);
@@ -40,19 +46,17 @@ void setup() {
         Log.verbose(F("WiFi: Normal boot." CR));
         doWiFi(false);
     }
-    
-    setClock();     // Get NTP time hack
-    mdnssetup();    // Set up mDNS listener
-    
-    // execspiffs(); // Check for pending SPIFFS update
+
+    setClock();             // Set NTP Time
+    //execspiffs();           // Check for pending SPIFFS update
+    //loadBpm() ;             // Get last BPM reading if it was a controlled reboot
+    mdnssetup();            // Set up mDNS responder
+    initWebServer();        // Turn on web server
+    //doPoll();               // Get server version at startup
+    //if (bubbles.start())    // Initialize bubble counter
+    //    Log.notice(F("Bubble counter initialized." CR));
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
-
-    // Set pins for solenoids
-    pinMode(SOLENOID, OUTPUT);
-    digitalWrite(SOLENOID, HIGH);
-    pinMode(COOL, OUTPUT);
-    digitalWrite(COOL, HIGH);
 }
 
 void loop() {
