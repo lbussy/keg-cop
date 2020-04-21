@@ -20,21 +20,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WEBSERVER_H
-#define _WEBSERVER_H
+#ifndef _WEBPAGEHANDLER_H
+#define _WEBPAGEHANDLER_H
 
 #include "wifihandler.h"
+// #include "execota.h"
+// #include "flowmeter.h"
 #include "jsonconfig.h"
 #include "version.h"
 #include "config.h"
+// #include "thatVersion.h"
+// #include "pushhelper.h"
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 #include <FS.h>
-#include <WiFi.h>
-#include <WiFiClient.h>
-#include <HTTPClient.h>
-#include <ESPmDNS.h>
+#include <ESPAsyncWebServer.h>
+// #include <ESP8266HTTPClient.h>
+// #include <ESP8266mDNS.h>
 #include <Arduino.h>
 
 void initWebServer();
@@ -46,9 +49,8 @@ void stopWebServer();
 
 extern struct Config config;
 // extern struct ThatVersion thatVersion;
+// extern struct Flowemeter flow;
 extern const size_t capacityDeserial;
 extern const size_t capacitySerial;
 
-extern struct Config config;
-
-#endif // _WEBSERVER_H
+#endif // _WEBPAGEHANDLER_H
