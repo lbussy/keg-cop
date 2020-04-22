@@ -261,7 +261,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
 
     if (obj["imperial"].isNull()) {
-        imperial = UNITS;
+        imperial = IMPERIAL;
     } else {
         bool units = obj["imperial"];
         imperial = units;
