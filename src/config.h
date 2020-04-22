@@ -55,8 +55,9 @@ SOFTWARE. */
 //      * 5 - LOG_LEVEL_TRACE      errors, warnings, notices & traces 
 //      * 6 - LOG_LEVEL_VERBOSE    all 
 //
-// Uncomment #define for logging level desired
-// Raspberry Pints compatibility will disable all logging
+// Uncomment #define for logging level desired.
+// Raspberry Pints compatibility will disable all logging in favor of
+// reporting via the serial connection.
 //
 #if RPINTS || !DEBUG
     #define DISABLE_LOGGING // Disable all logging
@@ -380,8 +381,8 @@ SOFTWARE. */
 //
 // Define units format (true = Imperial, false = Metric)
 //
-#ifndef UNITS
-#define UNITS true
+#ifndef IMPERIAL
+#define IMPERIAL true
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
