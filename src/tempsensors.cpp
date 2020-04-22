@@ -22,3 +22,40 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
+void sensorInit()
+{
+    // This is only necessary due to a bug in the DS18B20_TR (upstream) library
+    // https://github.com/RobTillaart/DS18B20_RT/issues/2
+    OneWire oneWire(KEGSENSE);
+    DS18B20 sensor(&oneWire);
+    sensor.begin();
+}
+
+double getTempC(uint8_t pin)
+{
+    OneWire oneWire(pin);
+    DS18B20 sensor(&oneWire);
+    float retVal;
+    if (!sensor.begin())
+    {
+        // No sensor found
+        retVal = DEVICE_DISCONNECTED_C;
+    }
+    else
+    {
+        sensor.setResolution(TEMP_12_BIT);
+        sensor.requestTemperatures();
+        while (!sensor.isConversionComplete())
+            ;
+        retVal = sensor.getTempC();
+    }
+    return retVal;
+}
+
+double convertCtoF(double C)
+{
+    // T(°F) = T(°C) × 1.8 + 32
+    double F;
+    F= C * 1.8 + 32;
+    return F;
+}
