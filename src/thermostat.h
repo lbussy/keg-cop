@@ -2,11 +2,18 @@
 #define _THERMOSTAT_H
 
 #include "config.h"
-#include "temperature.h"
-#include "ntp.h"
+#include "tempsensors.h"
+// #include "ntphandler.h"
 #include "jsonconfig.h"
 
-class Thermostat {
+struct Thermostat
+{
+    bool cooling;                               // Cooling state
+    long int lastOff;                           // Timestamp for last off
+    long int lastOn;                            // Timestamp for last on
+}
+
+class Foo {
     private:
         // Private Methods:
         Thermostat() {}                             // Constructor
@@ -21,12 +28,16 @@ class Thermostat {
         // Public Methods:
         static Thermostat* getInstance();           // Pseudo-constructor
         ~Thermostat() {single = NULL;}              // Destructor
-        void controlLoop();                         // Thermostat control
+                                 // Thermostat control
 
         // Public Properties:
-        bool cooling;                               // Cooling state
-        long int lastOff;                           // Timestamp for last off
-        long int lastOn;                            // Timestamp for last on
+
 };
+
+void startControl();
+void controlLoop();
+
+extern struct Config config;
+extern struct Devices device;
 
 #endif // _THERMOSTAT_H
