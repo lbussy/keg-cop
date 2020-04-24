@@ -38,20 +38,23 @@ void setup() {
     // Set other pins
     pinMode(LED, OUTPUT);
     pinMode(RESETWIFI, INPUT_PULLUP);
+    // DEBUG get rid of error pulling first value
+    sensorInit();
 
+    // Check if portal is requested
     if (digitalRead(RESETWIFI) == LOW) {
         Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
-        doWiFi(true);
+        //doWiFi(true);
     } else {
         Log.verbose(F("WiFi: Normal boot." CR));
-        doWiFi(false);
+        //doWiFi(false);
     }
 
-    setClock();             // Set NTP Time
+    //setClock();             // Set NTP Time
     //execspiffs();           // Check for pending SPIFFS update
     //loadBpm() ;             // Get last BPM reading if it was a controlled reboot
-    mdnssetup();            // Set up mDNS responder
-    initWebServer();        // Turn on web server
+    //mdnssetup();            // Set up mDNS responder
+    //initWebServer();        // Turn on web server
     //doPoll();               // Get server version at startup
     //if (bubbles.start())    // Initialize bubble counter
     //    Log.notice(F("Bubble counter initialized." CR));
@@ -60,6 +63,10 @@ void setup() {
 }
 
 void loop() {
+    // Poll Temperatures
+    Ticker sampleTemps;
+    sampleTemps.attach(TEMPLOOP, pollTemps);
+
     // HtmlServer *server = HtmlServer::getInstance();
 
     // // Log any pours
@@ -100,6 +107,16 @@ void loop() {
     // });
 
     // while (true) {
-    //     server->htmlLoop();     // Handle HTML requests
+    //     for (int i; sizeof(device); i++)
+    //     {
+    //         Log.verbose(F("DEBUG: %s's last value = %D°C, avterage = %D°C (%l readings)" CR),
+    //             device.sensor[i].name,
+    //             device.sensor[i].value,
+    //             device.sensor[i].average,
+    //             device.sensor[i].buffer.size()
+    //         );
+    //     }
+
+    //     // server->htmlLoop();     // Handle HTML requests
     // }
 }
