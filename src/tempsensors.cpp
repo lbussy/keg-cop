@@ -22,13 +22,56 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
+const char * sensorName[5] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
+int sensorPin[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
+Devices device;
+
 void sensorInit()
 {
-    // This is only necessary due to a bug in the DS18B20_TR (upstream) library
-    // https://github.com/RobTillaart/DS18B20_RT/issues/2
-    OneWire oneWire(KEGSENSE);
-    DS18B20 sensor(&oneWire);
-    sensor.begin();
+    for (int i = 0; i < device.size; i++)
+    {
+        strlcpy(device.sensor[i].name, sensorName[i], sizeof(device.sensor[i].name));
+        device.sensor[i].pin = sensorPin[i];
+        device.sensor[i].value = DEVICE_DISCONNECTED_C;
+        device.sensor[i].average = DEVICE_DISCONNECTED_C;
+        device.sensor[i].calibration = 0.0; // DEBUG = config.temps.calibration[i];
+    }
+    pollTemps();
+}
+
+void pollTemps()
+{
+    for (int i = 0; i < device.size; i++)
+    {
+        device.sensor[i].value = getTempC(device.sensor[i].pin);
+        if (device.sensor[i].value == DEVICE_DISCONNECTED_C)
+        {
+            // Delete oldest value if device shows disconnected
+            if (!device.sensor[i].buffer.isEmpty())
+                device.sensor[i].buffer.shift();
+        }
+        else
+        {
+            // Calibration: Values will be stored corrected
+            device.sensor[i].value = device.sensor[i].value + device.sensor[i].calibration;
+            // Push to buffer
+            device.sensor[i].buffer.push(device.sensor[i].value);
+        }
+
+        if (device.sensor[i].buffer.isEmpty())
+        {
+            device.sensor[i].average = DEVICE_DISCONNECTED_C;
+        }
+        else
+        {
+            // Create average
+            float avg = 0.0;
+            for (int x = 0; x < device.sensor[i].buffer.size(); x++) {
+                avg += device.sensor[i].buffer[x] / device.sensor[i].buffer.size();
+            }
+            device.sensor[i].average = avg;
+        }
+    }
 }
 
 double getTempC(uint8_t pin)
@@ -56,6 +99,21 @@ double convertCtoF(double C)
 {
     // T(°F) = T(°C) × 1.8 + 32
     double F;
-    F= C * 1.8 + 32;
+    F = C * 1.8 + 32;
     return F;
+}
+
+void showTemps()
+{ // DEBUG: Show temperature values
+    for (int i = 0; i < device.size; i++)
+    {
+        Log.verbose(F("DEBUG: %S on pin %i is %D, average %D (%l in sample), calibration: %D." CR),
+            device.sensor[i].name,
+            device.sensor[i].pin,
+            device.sensor[i].value,
+            device.sensor[i].average,
+            device.sensor[i].buffer.size(),
+            device.sensor[i].calibration
+        );
+    }
 }

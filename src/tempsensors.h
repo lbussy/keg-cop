@@ -24,7 +24,9 @@ SOFTWARE. */
 #define _TEMPSENSORS_H
 
 #include "config.h"
-#include "jsonconfig.h"
+// #include "jsonconfig.h" // DEBUG
+#include <ArduinoLog.h> // DEBUG
+#include <CircularBuffer.h>
 #include <OneWire.h>
 #include <DS18B20.h>
 
@@ -39,13 +41,27 @@ SOFTWARE. */
 #define DEVICE_DISCONNECTED_F -196.6
 #define DEVICE_DISCONNECTED_RAW -7040
 
-// This is only necessary due to a bug in the DS18B20_TR (upstream) library
-// https://github.com/RobTillaart/DS18B20_RT/issues/2
+struct Sensor {
+    char name[32];                          // Name of sensor
+    int pin;                                // Sensor pin
+    double value;                           // Latest temp reading
+    double average;                         // Average reading (6 over 1 min)
+    double calibration;                     // Calibration offset
+    CircularBuffer<float, TEMPAVG> buffer;  // Circ buffer for avging
+};
+
+struct Devices
+{
+    int size = 5;
+    Sensor sensor[5];
+};
+
 void sensorInit();
-
-double convertCtoF(double C);
+void pollTemps();
 double getTempC(uint8_t);
+double convertCtoF(double C);
+void showTemps();
 
-extern struct Config config;
+// extern struct Config config; // DEBUG
 
 #endif // _TEMPSENSORS_H
