@@ -22,33 +22,42 @@ SOFTWARE. */
 
 #include "main.h"
 
-void setup() {
+void setup()
+{
+    // Setup serial connections
     serial();
 
+    // Load configuration
     if (loadConfig())
         Log.notice(F("Configuration loaded." CR));
     else
         Log.error(F("Unable to load cofiguration." CR));
+
+    // Set wifi reset pin
+    pinMode(RESETWIFI, INPUT_PULLUP);
+    // Set LED pin
+    pinMode(LED, OUTPUT);
+    // Check if portal is requested
+    if (digitalRead(RESETWIFI) == LOW)
+    {
+        Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
+        //doWiFi(true);
+    }
+    else
+    {
+        Log.verbose(F("WiFi: Normal boot." CR));
+        //doWiFi(false);
+    }
 
     // Set pins for solenoids
     pinMode(SOLENOID, OUTPUT);
     digitalWrite(SOLENOID, HIGH);
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, HIGH);
-    // Set other pins
-    pinMode(LED, OUTPUT);
-    pinMode(RESETWIFI, INPUT_PULLUP);
-    // DEBUG get rid of error pulling first value
-    sensorInit();
 
-    // Check if portal is requested
-    if (digitalRead(RESETWIFI) == LOW) {
-        Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
-        //doWiFi(true);
-    } else {
-        Log.verbose(F("WiFi: Normal boot." CR));
-        //doWiFi(false);
-    }
+    // Start controls
+    sensorInit();   // Set up temperature sensors
+    startControl(); // Start thermostat
 
     //setClock();             // Set NTP Time
     //execspiffs();           // Check for pending SPIFFS update
@@ -62,10 +71,15 @@ void setup() {
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
 
-void loop() {
+void loop()
+{
     // Poll Temperatures
     Ticker sampleTemps;
     sampleTemps.attach(TEMPLOOP, pollTemps);
+
+    // Handle temperature control
+    Ticker stat;
+    stat.attach(TEMPLOOP, controlLoop);
 
     // HtmlServer *server = HtmlServer::getInstance();
 
@@ -99,13 +113,6 @@ void loop() {
     //     vTaskExitCritical(&mux);
     // });
 
-    // // Handle temperature control
-    // Ticker stat;
-    // stat.attach(TEMPLOOP, [](){
-    //     Thermostat *stat = Thermostat::getInstance();
-    //     stat->controlLoop();
-    // });
-
     // while (true) {
     //     for (int i; sizeof(device); i++)
     //     {
@@ -119,4 +126,18 @@ void loop() {
 
     //     // server->htmlLoop();     // Handle HTML requests
     // }
+}
+
+void showTemps()
+{ // DEBUG: Show temperature values
+    for (int i = 0; i < device.size; i++)
+    {
+        Log.verbose(F("DEBUG: %S on pin %i is %D, average %D (%l in sample), calibration: %D." CR),
+                    device.sensor[i].name,
+                    device.sensor[i].pin,
+                    device.sensor[i].value,
+                    device.sensor[i].average,
+                    device.sensor[i].buffer.size(),
+                    device.sensor[i].calibration);
+    }
 }
