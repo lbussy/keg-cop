@@ -56,11 +56,7 @@ struct Temperatures
     // Stores Temp Probe configuration
     float setpoint;
     int controlpoint;
-    float roomcal;
-    float towercal;
-    float uppercal;
-    float lowercal;
-    float kegcal;
+    float calibration[5];
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
