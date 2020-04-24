@@ -286,11 +286,11 @@ void Temperatures::save(JsonObject obj) const
 {
     obj["setpoint"] = setpoint;
     obj["controlpoint"] = controlpoint;
-    obj["roomcal"] = roomcal;
-    obj["towercal"] = towercal;
-    obj["uppercal"] = uppercal;
-    obj["lowercal"] = lowercal;
-    obj["kegcal"] = kegcal;
+    obj["roomcal"] = calibration[0];
+    obj["towercal"] = calibration[1];
+    obj["uppercal"] = calibration[2];
+    obj["lowercal"] = calibration[3];
+    obj["kegcal"] = calibration[4];
 }
 
 void Temperatures::load(JsonObjectConst obj)
@@ -312,38 +312,38 @@ void Temperatures::load(JsonObjectConst obj)
     }
 
     if (obj["roomcal"].isNull()) {
-        roomcal = 0.0;
+        calibration[0] = 0.0;
     } else {
         float rc = obj["roomcal"];
-        roomcal = rc;
+        calibration[0] = rc;
     }
 
     if (obj["towercal"].isNull()) {
-        towercal = 0.0;
+        calibration[1] = 0.0;
     } else {
         float tc = obj["towercal"];
-        towercal = tc;
+        calibration[1] = tc;
     }
 
     if (obj["uppercal"].isNull()) {
-        uppercal = 0.0;
+        calibration[2] = 0.0;
     } else {
         float uc = obj["uppercal"];
-        uppercal = uc;
+        calibration[2] = uc;
     }
 
     if (obj["lowercal"].isNull()) {
-        lowercal = 0.0;
+        calibration[3] = 0.0;
     } else {
         float lc = obj["lowercal"];
-        lowercal = lc;
+        calibration[3] = lc;
     }
 
     if (obj["kegcal"].isNull()) {
-        kegcal = 0.0;
+        calibration[4] = 0.0;
     } else {
         float kc = obj["kegcal"];
-        kegcal = kc;
+        calibration[4] = kc;
     }
 }
 
@@ -428,17 +428,6 @@ void CloudTarget::load(JsonObjectConst obj)
         update = u;
     }
 }
-
-    // Stores the complete configuration
-    // ApConfig apconfig;
-    // char hostname[32];
-    // CopConfig copconfig;
-    // Temperatures temps;
-    // URLTarget urltarget;
-    // CloudTarget cloud;
-    // bool dospiffs1;
-    // bool dospiffs2;
-    // bool didupdate;
 
 void Config::save(JsonObject obj) const
 {
