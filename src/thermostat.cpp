@@ -1,27 +1,18 @@
 #include "thermostat.h"
 
-Thermostat* Thermostat::single = NULL;
+Thermostat stat;
 
-Thermostat* Thermostat::getInstance() {
-    if (!single) {
-        single = new Thermostat();
-        single->config = JsonConfig::getInstance();
-        single->temp = Temperature::getInstance();
-        long int now = static_cast<long int> (time(NULL));
-        single->lastOff = now;
-        single->lastOn = now;
-        single->cooling = false;
-    }
-    return single;
+void startControl() {
+    long int now = static_cast<long int> (time(NULL));
+    stat.lastOff = now;
+    stat.lastOn = now;
+    stat.cooling = false;
 }
 
-void Thermostat::controlLoop() {
+void controlLoop() {
     long int now = static_cast<long int> (time(NULL));
-    Temperature *temp = Temperature::getInstance();
-    Thermostat *stat = Thermostat::getInstance();
-    JsonConfig *config = JsonConfig::getInstance();
 
-    if (temp->sensors[config->controlpoint].average > config->setpoint) {
+    if (device.sensor[config.temps.controlpoint].average > config->setpoint) {
         int wait = std::abs(now - single->lastOff);
         if (!single->cooling && (wait >= COOLDELAY)) {
             Log.verbose(F("DEBUG: [Switching to cool] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %d seconds ago, last run ended %d seconds ago, diff is %d seconds." CR),
