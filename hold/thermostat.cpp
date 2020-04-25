@@ -26,51 +26,53 @@ Thermostat stat;
 
 void startControl()
 {
-    long int now = static_cast<long int>(time(NULL));
-    stat.lastOff = now;
-    stat.lastOn = now;
+    stat.lastOff = millis();
+    stat.lastOn = millis();
     stat.cooling = false;
 }
 
 void controlLoop()
 {
-    long int now = static_cast<long int>(time(NULL));
+    unsigned long now = millis();
 
     if (device.sensor[config.temps.controlpoint].average > config.temps.setpoint)
     {
-        int wait = std::abs(now - stat.lastOff);
+        unsigned long wait = now - stat.lastOff;
         if (!stat.cooling && (wait >= COOLDELAY))
         {
-            Log.verbose(F("DEBUG: [Switching to cool] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %d seconds ago, last run ended %d seconds ago, diff is %d seconds." CR),
+            Log.verbose(F("DEBUG: [Switching to cool] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, diff is %D seconds." CR),
                         stat.cooling,
                         device.sensor[config.temps.controlpoint].average,
                         config.temps.setpoint,
-                        now - stat.lastOn,
-                        now - stat.lastOff,
-                        wait);
+                        now - double(stat.lastOn) / 1000,
+                        now - double(stat.lastOff) / 1000,
+                        double(wait) / 1000
+            );
             stat.lastOn = static_cast<long int>(time(NULL));
             digitalWrite(COOL, LOW);
             stat.cooling = true;
         }
         else if (!stat.cooling)
         {
-            Log.verbose(F("DEBUG: [Waiting to cool] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %d seconds ago, last run ended %d seconds ago, diff is %d seconds." CR),
+            Log.verbose(F("DEBUG: [Waiting to cool] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, diff is %D seconds." CR),
                         stat.cooling,
                         device.sensor[config.temps.controlpoint].average,
                         config.temps.setpoint,
-                        now - stat.lastOn,
-                        now - stat.lastOff,
-                        wait);
+                        double(now - stat.lastOn) / 1000,
+                        double(now - stat.lastOff) / 1000,
+                        double(wait) / 1000
+            );
         }
         else
         {
-            Log.verbose(F("DEBUG: [Cooling] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %d seconds ago, last run ended %d seconds ago, runnning for %d seconds." CR),
+            Log.verbose(F("DEBUG: [Cooling] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, runnning for %D seconds." CR),
                         stat.cooling,
                         device.sensor[config.temps.controlpoint].average,
                         config.temps.setpoint,
-                        now - stat.lastOn,
-                        now - stat.lastOff,
-                        now - stat.lastOn);
+                        double(now - stat.lastOn) / 1000,
+                        double(now - stat.lastOff) / 1000,
+                        double(now - stat.lastOn) / 1000
+            );
         }
     }
     else
@@ -80,37 +82,40 @@ void controlLoop()
             int runtime = std::abs(now - stat.lastOn);
             if (runtime > MINON)
             {
-                Log.verbose(F("DEBUG: [No cooling needed] Cooling is %T, control point %D°F, setpoint,  %D°F. Last run started %d seconds ago, last run ended %d seconds ago." CR),
+                Log.verbose(F("DEBUG: [No cooling needed] Cooling is %T, control point %D°F, setpoint,  %D°F. Last run started %D seconds ago, last run ended %D seconds ago." CR),
                             stat.cooling,
                             device.sensor[config.temps.controlpoint].average,
                             config.temps.setpoint,
-                            now - stat.lastOn,
-                            now - stat.lastOff);
+                            double(now - stat.lastOn) / 1000,
+                            double(now - stat.lastOff) / 1000
+                );
                 stat.lastOff = now;
                 digitalWrite(COOL, HIGH);
                 stat.cooling = false;
             }
             else
             {
-                Log.verbose(F("DEBUG: [Waiting for peak] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %d seconds ago, last run ended %d seconds ago, running for %d seconds." CR),
+                Log.verbose(F("DEBUG: [Waiting for peak] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
                             stat.cooling,
                             device.sensor[config.temps.controlpoint].average,
                             config.temps.setpoint,
-                            now - stat.lastOn,
-                            now - stat.lastOff,
-                            runtime);
+                            double(now - stat.lastOn) / 1000,
+                            double(now - stat.lastOff) /1000,
+                            double(runtime) / 1000
+                );
                 digitalWrite(COOL, HIGH);
                 stat.cooling = false;
             }
         }
         else
         {
-            Log.verbose(F("DEBUG: [Idle] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %d seconds ago, last run ended %d seconds ago." CR),
+            Log.verbose(F("DEBUG: [Idle] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago." CR),
                         stat.cooling,
                         device.sensor[config.temps.controlpoint].average,
                         config.temps.setpoint,
-                        now - stat.lastOn,
-                        now - stat.lastOff);
+                        double (now - stat.lastOn) / 1000,
+                        double(now - stat.lastOff) /1000
+            );
         }
     }
 }

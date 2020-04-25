@@ -29,9 +29,9 @@ SOFTWARE. */
 
 struct Thermostat
 {
-    bool cooling;     // Cooling state
-    long int lastOff; // Timestamp for last off
-    long int lastOn;  // Timestamp for last on
+    bool cooling;           // Cooling state
+    unsigned long lastOff;  // Timestamp for last off
+    unsigned long lastOn;   // Timestamp for last on
 };
 
 void startControl();
