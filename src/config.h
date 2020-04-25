@@ -47,30 +47,30 @@ SOFTWARE. */
 //
 // Set verbosity of debug messages 0-6
 //
-//      * 0 - LOG_LEVEL_SILENT     no output 
-//      * 1 - LOG_LEVEL_FATAL      fatal errors 
-//      * 2 - LOG_LEVEL_ERROR      all errors  
-//      * 3 - LOG_LEVEL_WARNING    errors, and warnings 
-//      * 4 - LOG_LEVEL_NOTICE     errors, warnings and notices 
-//      * 5 - LOG_LEVEL_TRACE      errors, warnings, notices & traces 
-//      * 6 - LOG_LEVEL_VERBOSE    all 
+//      * 0 - LOG_LEVEL_SILENT     no output
+//      * 1 - LOG_LEVEL_FATAL      fatal errors
+//      * 2 - LOG_LEVEL_ERROR      all errors
+//      * 3 - LOG_LEVEL_WARNING    errors, and warnings
+//      * 4 - LOG_LEVEL_NOTICE     errors, warnings and notices
+//      * 5 - LOG_LEVEL_TRACE      errors, warnings, notices & traces
+//      * 6 - LOG_LEVEL_VERBOSE    all
 //
 // Uncomment #define for logging level desired.
 // Raspberry Pints compatibility will disable all logging in favor of
 // reporting via the serial connection.
 //
 #if RPINTS || !DEBUG
-    #define DISABLE_LOGGING // Disable all logging
+#define DISABLE_LOGGING // Disable all logging
 #else
-    #ifndef LOG_LEVEL
-        // #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
-        // #define LOG_LEVEL LOG_LEVEL_FATAL      // Fatal errors
-        // #define LOG_LEVEL LOG_LEVEL_ERROR      // All errors
-        // #define LOG_LEVEL LOG_LEVEL_WARNING    // Errors, and warnings
-        // #define LOG_LEVEL LOG_LEVEL_NOTICE     // Errors, warnings and notices
-        // #define LOG_LEVEL LOG_LEVEL_TRACE      // Errors, warnings, notices & traces
-        #define LOG_LEVEL LOG_LEVEL_VERBOSE    // All
-    #endif
+#ifndef LOG_LEVEL
+// #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
+// #define LOG_LEVEL LOG_LEVEL_FATAL      // Fatal errors
+// #define LOG_LEVEL LOG_LEVEL_ERROR      // All errors
+// #define LOG_LEVEL LOG_LEVEL_WARNING    // Errors, and warnings
+// #define LOG_LEVEL LOG_LEVEL_NOTICE     // Errors, warnings and notices
+// #define LOG_LEVEL LOG_LEVEL_TRACE      // Errors, warnings, notices & traces
+#define LOG_LEVEL LOG_LEVEL_VERBOSE // All
+#endif
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ SOFTWARE. */
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
- 
+
 //////////////////////////////////////////////////////////////////////////
 //
 // Define data KNAME (identifies sensor/keezer source to target)
@@ -94,7 +94,7 @@ SOFTWARE. */
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
- 
+
 //////////////////////////////////////////////////////////////////////////
 //
 // Define build version (Git tag from PIO Env)
@@ -104,7 +104,7 @@ SOFTWARE. */
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
- 
+
 //////////////////////////////////////////////////////////////////////////
 //
 // Define build commit (Git commit from PIO Env)

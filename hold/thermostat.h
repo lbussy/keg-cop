@@ -20,22 +20,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _MAIN_H
-#define _MAIN_H
+#ifndef _THERMOSTAT_H
+#define _THERMOSTAT_H
 
-#include "jsonconfig.h"
-#include "serialhandler.h"
 #include "config.h"
-#include "ntphandler.h"
-#include "wifihandler.h"
-#include "webpagehandler.h"
-#include "version.h"
-#include "mdnshandler.h"
 #include "tempsensors.h"
-// #include "thermostat.h"
-#include <ArduinoLog.h>
+#include "jsonconfig.h"
+
+struct Thermostat
+{
+    bool cooling;     // Cooling state
+    long int lastOff; // Timestamp for last off
+    long int lastOn;  // Timestamp for last on
+};
+
+void startControl();
+void controlLoop();
 
 extern struct Config config;
 extern struct Devices device;
 
-#endif // _MAIN_H
+#endif // _THERMOSTAT_H
