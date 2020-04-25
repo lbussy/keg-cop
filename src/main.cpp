@@ -51,12 +51,13 @@ void setup()
         doWiFi(false);
     }
 
-    setClock(); // Set NTP Time
-    //execspiffs();           // Check for pending SPIFFS update
-    mdnssetup();     // Set up mDNS responder
-    initWebServer(); // Turn on web server
-    sensorInit();
-    //doPoll();               // Get server version at startup
+    setClock();         // Set NTP Time
+    // execspiffs();           // Check for pending SPIFFS update
+    mdnssetup();        // Set up mDNS responder
+    initWebServer();    // Turn on web server
+    sensorInit();       // Initialize temperature sensors
+    // startControl();     // Initialize temperature control
+    // doPoll();               // Get server version at startup
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
@@ -65,6 +66,9 @@ void loop()
 {
     Ticker pollSensors;
     pollSensors.attach(TEMPLOOP, pollTemps);
+
+    // Ticker doControl;
+    // doControl.attach(TEMPLOOP, pollTemps);
 
     // HtmlServer *server = HtmlServer::getInstance();
 
