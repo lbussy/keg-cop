@@ -33,6 +33,7 @@ SOFTWARE. */
 #include "mdnshandler.h"
 #include "tempsensors.h"
 // #include "thermostat.h"
+#include "flowmeter.h"
 #include <ArduinoLog.h>
 
 extern struct Config config;
