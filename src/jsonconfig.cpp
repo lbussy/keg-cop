@@ -254,7 +254,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
 
     if (obj["kegeratorname"].isNull()) {
-        strlcpy(breweryname, KNAME, sizeof(kegeratorname));
+        strlcpy(kegeratorname, KNAME, sizeof(kegeratorname));
     } else {
         const char* kn = obj["kegeratorname"];
         strlcpy(kegeratorname, kn, sizeof(kegeratorname));
