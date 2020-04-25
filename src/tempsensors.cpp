@@ -22,7 +22,7 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
-const char * sensorName[5] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
+const char *sensorName[5] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
 int sensorPin[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
 Devices device;
 
@@ -66,12 +66,14 @@ void pollTemps()
         {
             // Create average
             float avg = 0.0;
-            for (int x = 0; x < device.sensor[i].buffer.size(); x++) {
+            for (int x = 0; x < device.sensor[i].buffer.size(); x++)
+            {
                 avg += device.sensor[i].buffer[x] / device.sensor[i].buffer.size();
             }
             device.sensor[i].average = avg;
         }
     }
+    // showTemps(); // DEBUG
 }
 
 double getTempC(uint8_t pin)
@@ -101,4 +103,18 @@ double convertCtoF(double C)
     double F;
     F = C * 1.8 + 32;
     return F;
+}
+
+void showTemps()
+{ // DEBUG: Show temperature values
+    for (int i = 0; i < device.size; i++)
+    {
+        Log.verbose(F("DEBUG: %S on pin %i is %D, average %D (%l in sample), calibration: %D." CR),
+                    device.sensor[i].name,
+                    device.sensor[i].pin,
+                    device.sensor[i].value,
+                    device.sensor[i].average,
+                    device.sensor[i].buffer.size(),
+                    device.sensor[i].calibration);
+    }
 }

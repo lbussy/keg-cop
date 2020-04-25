@@ -24,7 +24,6 @@ SOFTWARE. */
 
 void setup()
 {
-    // Setup serial connections
     serial();
 
     // Load configuration
@@ -55,31 +54,35 @@ void setup()
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, HIGH);
 
-    // Start controls
-    sensorInit();   // Set up temperature sensors
-    startControl(); // Start thermostat
+    if (digitalRead(RESETWIFI) == LOW)
+    {
+        Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
+        doWiFi(true);
+    }
+    else
+    {
+        Log.verbose(F("WiFi: Normal boot." CR));
+        doWiFi(false);
+    }
 
-    //setClock();             // Set NTP Time
-    //execspiffs();           // Check for pending SPIFFS update
-    //loadBpm() ;             // Get last BPM reading if it was a controlled reboot
-    //mdnssetup();            // Set up mDNS responder
-    //initWebServer();        // Turn on web server
-    //doPoll();               // Get server version at startup
-    //if (bubbles.start())    // Initialize bubble counter
-    //    Log.notice(F("Bubble counter initialized." CR));
+    setClock();         // Set NTP Time
+    // execspiffs();           // Check for pending SPIFFS update
+    mdnssetup();        // Set up mDNS responder
+    initWebServer();    // Turn on web server
+    sensorInit();       // Initialize temperature sensors
+    // startControl();     // Initialize temperature control
+    // doPoll();               // Get server version at startup
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
 
 void loop()
 {
-    // Poll Temperatures
-    Ticker sampleTemps;
-    sampleTemps.attach(TEMPLOOP, pollTemps);
+    Ticker pollSensors;
+    pollSensors.attach(TEMPLOOP, pollTemps);
 
-    // Handle temperature control
-    Ticker stat;
-    stat.attach(TEMPLOOP, controlLoop);
+    // Ticker doControl;
+    // doControl.attach(TEMPLOOP, pollTemps);
 
     // HtmlServer *server = HtmlServer::getInstance();
 
@@ -113,31 +116,15 @@ void loop()
     //     vTaskExitCritical(&mux);
     // });
 
-    // while (true) {
-    //     for (int i; sizeof(device); i++)
-    //     {
-    //         Log.verbose(F("DEBUG: %s's last value = %D°C, avterage = %D°C (%l readings)" CR),
-    //             device.sensor[i].name,
-    //             device.sensor[i].value,
-    //             device.sensor[i].average,
-    //             device.sensor[i].buffer.size()
-    //         );
-    //     }
+    // // Handle temperature control
+    // Ticker stat;
+    // stat.attach(TEMPLOOP, [](){
+    //     Thermostat *stat = Thermostat::getInstance();
+    //     stat->controlLoop();
+    // });
 
-    //     // server->htmlLoop();     // Handle HTML requests
-    // }
-}
-
-void showTemps()
-{ // DEBUG: Show temperature values
-    for (int i = 0; i < device.size; i++)
+    while (true)
     {
-        Log.verbose(F("DEBUG: %S on pin %i is %D, average %D (%l in sample), calibration: %D." CR),
-                    device.sensor[i].name,
-                    device.sensor[i].pin,
-                    device.sensor[i].value,
-                    device.sensor[i].average,
-                    device.sensor[i].buffer.size(),
-                    device.sensor[i].calibration);
+        // Do something?
     }
 }
