@@ -22,7 +22,8 @@ SOFTWARE. */
 
 #include "main.h"
 
-void setup() {
+void setup()
+{
     serial();
 
     if (loadConfig())
@@ -39,27 +40,32 @@ void setup() {
     pinMode(LED, OUTPUT);
     pinMode(RESETWIFI, INPUT_PULLUP);
 
-    if (digitalRead(RESETWIFI) == LOW) {
+    if (digitalRead(RESETWIFI) == LOW)
+    {
         Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
         doWiFi(true);
-    } else {
+    }
+    else
+    {
         Log.verbose(F("WiFi: Normal boot." CR));
         doWiFi(false);
     }
 
-    setClock();             // Set NTP Time
+    setClock(); // Set NTP Time
     //execspiffs();           // Check for pending SPIFFS update
-    //loadBpm() ;             // Get last BPM reading if it was a controlled reboot
-    mdnssetup();            // Set up mDNS responder
-    initWebServer();        // Turn on web server
+    mdnssetup();     // Set up mDNS responder
+    initWebServer(); // Turn on web server
+    sensorInit();
     //doPoll();               // Get server version at startup
-    //if (bubbles.start())    // Initialize bubble counter
-    //    Log.notice(F("Bubble counter initialized." CR));
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
 
-void loop() {
+void loop()
+{
+    Ticker pollSensors;
+    pollSensors.attach(TEMPLOOP, pollTemps);
+
     // HtmlServer *server = HtmlServer::getInstance();
 
     // // Log any pours
@@ -99,7 +105,7 @@ void loop() {
     //     stat->controlLoop();
     // });
 
-    // while (true) {
-    //     server->htmlLoop();     // Handle HTML requests
-    // }
+    while (true) {
+        // Do something?
+    }
 }

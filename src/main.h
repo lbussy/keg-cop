@@ -31,6 +31,7 @@ SOFTWARE. */
 #include "webpagehandler.h"
 #include "version.h"
 #include "mdnshandler.h"
+#include "tempsensors.h"
 #include <ArduinoLog.h>
 
 extern struct Config config;
