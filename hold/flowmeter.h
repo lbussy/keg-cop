@@ -30,42 +30,46 @@ SOFTWARE. */
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
-class Flow
+struct Keg
 {
-private:
-    // Class Private Methods
-    Flow(){};
-    static Flow *single;
-    void start();
-    void parse();
-    void save(int);
+    int tapid;            // Tap ID
+    int pin;              // μC Pin
+    long ppg;             // Pulses per Gallon
+    char name[33];        // Beer Name
+    long pulse;           // Unregistered Pulse Count
+    bool updated = false; // Semaphore for update needed
+    double capacity;      // Tap Capacity
+    double remaining;     // Tap remaining
 
-    // Class Private Properties
-    int kegPins[8] = {KEG0, KEG1, KEG2, KEG3, KEG4, KEG5, KEG6, KEG7};
-    struct keg
-    {
-        int tapid;            // Tap ID
-        int pin;              // μC Pin
-        long ppg;             // Pulses per Gallon
-        char name[33];        // Beer Name
-        long pulse;           // Unregistered Pulse Count
-        bool updated = false; // Semaphore for update needed
-        double capacity;      // Tap Capacity
-        double remaining;     // Tap remaining
-    } tapid, pin, ppg, name, count, capacity, remaining;
-
-public:
-    // Class Public Methods
-    static Flow *getInstance();
-    ~Flow() { single = NULL; }
-    void IRAM_ATTR handleInterrupts(int);
-
-    void logFlow(); // Apply deductions to volumes
-    void save();    // Save all taps
-
-    // Class Public Properties
-    keg kegs[8];
+    void load(JsonObjectConst, int);
+    void save(JsonObject) const;
 };
+
+class Flowmeter
+{
+    Keg keg[8];
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+// Flow methods
+void handleInterrupts(int);
+void startFlow();
+void logFlow();
+// JSON Methods
+bool deleteKegConfigFile();
+bool loadKegConfig();
+bool loadKegFile();
+bool saveKegConfig();
+bool saveKegFile();
+bool deserializeKegConfig(Stream &);
+bool serializeKegConfig(Print &);
+bool printKegFile();
+bool printKegConfig();
+bool mergeKegJsonString(String);
+bool mergeKegJsonObject(JsonVariantConst);
+bool mergeKeg(JsonVariant, JsonVariantConst);
 
 extern struct Config config;
 
