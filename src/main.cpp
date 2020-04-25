@@ -105,7 +105,8 @@ void loop()
     //     stat->controlLoop();
     // });
 
-    while (true) {
+    while (true)
+    {
         // Do something?
     }
 }

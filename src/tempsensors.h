@@ -31,7 +31,7 @@ SOFTWARE. */
 #include <DS18B20.h>
 
 // Device resolution
-#define TEMP_9_BIT  0x1F //  9 bit
+#define TEMP_9_BIT 0x1F  //  9 bit
 #define TEMP_10_BIT 0x3F // 10 bit
 #define TEMP_11_BIT 0x5F // 11 bit
 #define TEMP_12_BIT 0x7F // 12 bit
@@ -41,13 +41,14 @@ SOFTWARE. */
 #define DEVICE_DISCONNECTED_F -196.6
 #define DEVICE_DISCONNECTED_RAW -7040
 
-struct Sensor {
-    char name[32];                          // Name of sensor
-    int pin;                                // Sensor pin
-    double value;                           // Latest temp reading
-    double average;                         // Average reading (6 over 1 min)
-    double calibration;                     // Calibration offset
-    CircularBuffer<float, TEMPAVG> buffer;  // Circ buffer for avging
+struct Sensor
+{
+    char name[32];                         // Name of sensor
+    int pin;                               // Sensor pin
+    double value;                          // Latest temp reading
+    double average;                        // Average reading (6 over 1 min)
+    double calibration;                    // Calibration offset
+    CircularBuffer<float, TEMPAVG> buffer; // Circ buffer for avging
 };
 
 struct Devices
