@@ -24,7 +24,7 @@ SOFTWARE. */
 #define _TEMPSENSORS_H
 
 #include "config.h"
-// #include "jsonconfig.h" // DEBUG
+#include "jsonconfig.h"
 #include <ArduinoLog.h> // DEBUG
 #include <CircularBuffer.h>
 #include <OneWire.h>
@@ -62,6 +62,6 @@ double getTempC(uint8_t);
 double convertCtoF(double C);
 void showTemps();
 
-// extern struct Config config; // DEBUG
+extern struct Config config;
 
 #endif // _TEMPSENSORS_H

@@ -34,7 +34,7 @@ void sensorInit()
         device.sensor[i].pin = sensorPin[i];
         device.sensor[i].value = DEVICE_DISCONNECTED_C;
         device.sensor[i].average = DEVICE_DISCONNECTED_C;
-        device.sensor[i].calibration = 0.0; // DEBUG = config.temps.calibration[i];
+        device.sensor[i].calibration = config.temps.calibration[i];
     }
     pollTemps();
 }
@@ -72,6 +72,7 @@ void pollTemps()
             device.sensor[i].average = avg;
         }
     }
+    showTemps();
 }
 
 double getTempC(uint8_t pin)
