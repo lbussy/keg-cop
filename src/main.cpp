@@ -70,6 +70,7 @@ void setup()
     mdnssetup();        // Set up mDNS responder
     initWebServer();    // Turn on web server
     sensorInit();       // Initialize temperature sensors
+    initFlow();         // Initialize flowmeters
     // startControl();     // Initialize temperature control
     // doPoll();               // Get server version at startup
 
@@ -78,27 +79,17 @@ void setup()
 
 void loop()
 {
+    // Poll teperature sensors
     Ticker pollSensors;
     pollSensors.attach(TEMPLOOP, pollTemps);
 
+    // Update temperature control loop
     // Ticker doControl;
     // doControl.attach(TEMPLOOP, pollTemps);
 
-    // HtmlServer *server = HtmlServer::getInstance();
-
-    // // Log any pours
-    // Ticker logFlow;
-    // logFlow.attach(KEGLOOP, [](){
-    //     Flow *flow = Flow::getInstance();
-    //     flow->logFlow();
-    // });
-
-    // // Create sliding average of temps
-    // Ticker sampleTemps;
-    // sampleTemps.attach(TEMPLOOP, [](){
-    //     Temperature *temps = Temperature::getInstance();
-    //     temps->sampleTemps();
-    // });
+    // Log pours
+    Ticker logPour;
+    logPour.attach(KEGLOOP, logFlow);
 
     // // mDNS Reset Timer - Helps avoid the host not found issues
     // Ticker mDNSTimer;
@@ -114,13 +105,6 @@ void loop()
     //     vTaskEnterCritical(&mux);
     //     ESP.restart();
     //     vTaskExitCritical(&mux);
-    // });
-
-    // // Handle temperature control
-    // Ticker stat;
-    // stat.attach(TEMPLOOP, [](){
-    //     Thermostat *stat = Thermostat::getInstance();
-    //     stat->controlLoop();
     // });
 
     while (true)
