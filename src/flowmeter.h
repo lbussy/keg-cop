@@ -55,8 +55,9 @@ struct Flowmeter
 
 // Flow methods
 void handleInterrupts(int);
-void initFlow();
 void logFlow();
+// Control
+bool initFlow();
 // JSON Methods
 bool deleteKegConfigFile();
 bool loadKegConfig();
