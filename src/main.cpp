@@ -66,7 +66,7 @@ void setup()
     else
         Log.error(F("Unable to load flowmeters." CR));
 
-    // startControl();     // Initialize temperature control
+    startControl();     // Initialize temperature control
     // doPoll();               // Get server version at startup
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
@@ -79,8 +79,8 @@ void loop()
     pollSensors.attach(TEMPLOOP, pollTemps);
 
     // Update temperature control loop
-    // Ticker doControl;
-    // doControl.attach(TEMPLOOP, pollTemps);
+    Ticker doControl;
+    doControl.attach(TEMPLOOP, pollTemps);
 
     // Log pours
     Ticker logPour;
