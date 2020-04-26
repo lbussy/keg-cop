@@ -80,7 +80,7 @@ void handleInterrupts(int tap)
     flow.keg[tap].updated = true;
 }
 
-void initFlow()
+bool initFlow()
 {
     for (int i = 0; i < 8; i++)
     {
@@ -88,12 +88,12 @@ void initFlow()
         digitalWrite(kegPins[i], HIGH);
         attachInterrupt(digitalPinToInterrupt(kegPins[i]), pf[i], FALLING);
     }
-    loadKegConfig();
+    return loadKegConfig();
 }
 
 void logFlow()
 { // Save debits to keg and to file
-    for (int i = 0; i < config.copconfig.numtap; i++)
+    for (int i = 0; i < NUMTAPS; i++)
     {
         if (flow.keg[i].updated == true)
         {
@@ -117,14 +117,14 @@ bool deleteKegConfigFile()
 bool loadKegConfig()
 {
     // Manage loading the configuration
-    if (!loadFile())
+    if (!loadKegFile())
     {
+
         return false;
     }
     else
     {
-        saveFile();
-        return true;
+        return saveKegFile();
     }
 }
 
@@ -145,7 +145,7 @@ bool loadKegFile()
         // Existing configuration present
     }
 
-    if (!deserializeConfig(file))
+    if (!deserializeKegConfig(file))
     {
         file.close();
         return false;
@@ -159,7 +159,7 @@ bool loadKegFile()
 
 bool saveKegConfig()
 {
-    return saveFile();
+    return saveKegFile();
 }
 
 bool saveKegFile()
@@ -173,7 +173,7 @@ bool saveKegFile()
     }
 
     // Serialize JSON to file
-    if (!serializeConfig(file))
+    if (!serializeKegConfig(file))
     {
         file.close();
         return false;
@@ -192,12 +192,12 @@ bool deserializeKegConfig(Stream &src)
 
     if (err)
     {
-        config.load(doc.as<JsonObject>());
+        flow.load(doc.as<JsonObject>());
         return true;
     }
     else
     {
-        config.load(doc.as<JsonObject>());
+        flow.load(doc.as<JsonObject>());
         return true;
     }
     // TODO:  Can I return false here somehow?
@@ -212,7 +212,7 @@ bool serializeKegConfig(Print &dst)
     JsonObject root = doc.to<JsonObject>();
 
     // Fill the object
-    config.save(root);
+    flow.save(root);
 
     // Serialize JSON to file
     return serializeJsonPretty(doc, dst) > 0;
@@ -242,7 +242,7 @@ bool printKegConfig()
     JsonObject root = doc.to<JsonObject>();
 
     // Fill the object
-    config.save(root);
+    flow.save(root);
 
     // Serialize JSON to file
     bool retval = serializeJsonPretty(doc, Serial) > 0;
@@ -272,13 +272,13 @@ bool mergeKegJsonObject(JsonVariantConst src)
     JsonObject root = doc.to<JsonObject>();
 
     // Fill the object
-    config.save(root);
+    flow.save(root);
 
     // Merge in the configuration
     if (merge(root, src))
     {
         // Move new object to config
-        config.load(root);
+        flow.load(root);
         saveFile();
         return true;
     }
@@ -314,31 +314,14 @@ void Keg::save(JsonObject obj) const
     obj["remaining"] =  remaining;  // Tap remaining
 }
 
-void Keg::load(JsonObjectConst obj, int tapnum)
+void Keg::load(JsonObjectConst obj, int numtap)
 {
-    // Load Keg[tapnum] configuration
+    // Load Keg[numtap] configuration
     //
-    if (obj["tapid"].isNull())
-    {
-        tapid = tapnum;
-    }
-    else
-    {
-        int ti = obj["tapid"];
-        tapid = ti;
-    }
+    tapid = numtap;
+    pin = kegPins[numtap];
 
-    if (obj["pin"].isNull())
-    {
-        pin = kegPins[tapnum];
-    }
-    else
-    {
-        int pn = obj["pin"];
-        pin = pn;
-    }
-
-    if (obj["ppg"].isNull())
+    if (obj["ppg"].isNull() || obj["ppg"] == 0)
     {
         ppg = PPG;
     }
@@ -405,7 +388,7 @@ void Flowmeter::save(JsonObject obj) const
     JsonArray kegs = obj.createNestedArray("kegs");
 
     // Add each keg in the array
-    for (int i = 0; i < config.copconfig.numtap; i++)
+    for (int i = 0; i < NUMTAPS; i++)
         keg[i].save(kegs.createNestedObject());
 }
 
@@ -418,7 +401,7 @@ void Flowmeter::load(JsonObjectConst obj)
     {
         keg[numtap].load(ap, numtap);
         numtap++;
-        if (numtap >= config.copconfig.numtap)
+        if (numtap >= NUMTAPS)
             break;
     }
 }
