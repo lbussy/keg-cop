@@ -172,7 +172,7 @@ SOFTWARE. */
 // Access point password
 //
 #ifndef AP_PASSWD
-#define AP_PASSWD ""
+#define AP_PASSWD "kegcop"
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
