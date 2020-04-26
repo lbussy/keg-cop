@@ -55,7 +55,7 @@ void setup()
     digitalWrite(COOL, HIGH);
 
     setClock();         // Set NTP Time
-    //execspiffs();           // Check for pending SPIFFS update
+    //execspiffs();       // Check for pending SPIFFS update
     mdnssetup();        // Set up mDNS responder
     initWebServer();    // Turn on web server
     sensorInit();       // Initialize temperature sensors
