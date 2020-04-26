@@ -40,23 +40,6 @@ void setup()
     if (digitalRead(RESETWIFI) == LOW)
     {
         Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
-        //doWiFi(true);
-    }
-    else
-    {
-        Log.verbose(F("WiFi: Normal boot." CR));
-        //doWiFi(false);
-    }
-
-    // Set pins for solenoids
-    pinMode(SOLENOID, OUTPUT);
-    digitalWrite(SOLENOID, HIGH);
-    pinMode(COOL, OUTPUT);
-    digitalWrite(COOL, HIGH);
-
-    if (digitalRead(RESETWIFI) == LOW)
-    {
-        Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
         doWiFi(true);
     }
     else
@@ -65,12 +48,24 @@ void setup()
         doWiFi(false);
     }
 
+    // Set pins for solenoids
+    pinMode(SOLENOID, OUTPUT);
+    digitalWrite(SOLENOID, HIGH);
+    pinMode(COOL, OUTPUT);
+    digitalWrite(COOL, HIGH);
+
     setClock();         // Set NTP Time
-    // execspiffs();           // Check for pending SPIFFS update
+    //execspiffs();           // Check for pending SPIFFS update
     mdnssetup();        // Set up mDNS responder
     initWebServer();    // Turn on web server
     sensorInit();       // Initialize temperature sensors
-    initFlow();         // Initialize flowmeters
+
+    // Initialize flowmeters
+    if (initFlow())
+        Log.notice(F("Flowmeters loaded." CR));
+    else
+        Log.error(F("Unable to load flowmeters." CR));
+
     // startControl();     // Initialize temperature control
     // doPoll();               // Get server version at startup
 
