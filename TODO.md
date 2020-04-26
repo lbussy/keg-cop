@@ -13,7 +13,6 @@
     - Wifi
     - Wifi2
 - Add targets
-- Add thermostat
 - Add thatVersion
 - Add OTA
 
@@ -29,3 +28,4 @@
 - ~~Add thisVersion~~
 - ~~Add temp sensors~~
 - ~~Add flow meters~~
+- ~~Add thermostat~~
