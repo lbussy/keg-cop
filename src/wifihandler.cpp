@@ -87,7 +87,7 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
         myAsyncWifiManager.setConnectTimeout(30);
         myAsyncWifiManager.setConfigPortalTimeout(120);
         if (!myAsyncWifiManager.autoConnect(config.apconfig.ssid, config.apconfig.passphrase)) {
-            Log.warning(F("Failed to connect and hit timeout." CR));
+            Log.warning(F("Failed to connect and/or hit timeout." CR));
             blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
             _delay(3000);
