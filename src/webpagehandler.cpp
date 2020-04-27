@@ -28,8 +28,8 @@ void initWebServer()
 {
     setRegPageAliases();
     setActionPageHandlers();
-    // setJsonHandlers();
-    // setSettingsAliases();
+    setJsonHandlers();
+    setSettingsAliases();
 
     // File not found handler
 
@@ -76,12 +76,12 @@ void setActionPageHandlers()
 //         resetWifi(); // Wipe settings, reset controller
 //     });
 
-//     server.on("/reset/", HTTP_GET, [](AsyncWebServerRequest *request) {
-//         Log.verbose(F("Processing /reset/." CR));
-//         // Redirect to Reset page
-//         request->send(SPIFFS, "/reset.htm");
-//         setDoReset();
-//     });
+    server.on("/reset/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing /reset/." CR));
+        // Redirect to Reset page
+        request->send(SPIFFS, "/reset.htm");
+        setDoReset();
+    });
 
 //     server.on("/otastart/", HTTP_GET, [](AsyncWebServerRequest *request) {
 //         Log.verbose(F("Processing /otastart/." CR));
@@ -154,20 +154,20 @@ void setJsonHandlers()
 //         request->send(200, F("application/json"), json);
 //     });
 
-//     server.on("/config/", HTTP_GET, [](AsyncWebServerRequest *request) {
-//         // Used to provide the Config json
-//         Log.verbose(F("Serving /config/." CR));
+    server.on("/config/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // Used to provide the Config json
+        Log.verbose(F("Serving /config/." CR));
 
-//         // Serialize configuration
-//         DynamicJsonDocument doc(capacitySerial); // Create doc
-//         JsonObject root = doc.to<JsonObject>(); // Create JSON object
-//         config.save(root); // Fill the object with current config
-//         String json;
-//         serializeJsonPretty(doc, json); // Serialize JSON to String
+        // Serialize configuration
+        DynamicJsonDocument doc(capacitySerial); // Create doc
+        JsonObject root = doc.to<JsonObject>(); // Create JSON object
+        config.save(root); // Fill the object with current config
+        String json;
+        serializeJsonPretty(doc, json); // Serialize JSON to String
 
-//         request->header("Cache-Control: no-store");
-//         request->send(200, F("application/json"), json);
-//     });
+        request->header("Cache-Control: no-store");
+        request->send(200, F("application/json"), json);
+    });
 }
 
 void setSettingsAliases()
