@@ -129,7 +129,7 @@ void resetWifi() { // Wipe wifi settings and reset controller
     digitalWrite(LED, LOW); // Turn on LED
     _delay(3000);
     Log.warning(F("Restarting after clearing wifi settings." CR));
-    resetController();
+    setDoReset();
     _delay(1000);
 }
 

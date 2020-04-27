@@ -9,9 +9,9 @@
     - ~~Settings~~
     - Ota
     - Ota2
-    - Reset
-    - Wifi
-    - Wifi2
+    - ~~Reset~~
+    - ~~Wifi~~
+    - ~~Wifi2~~
 - Add targets
 - Add thatVersion
 - Add OTA
