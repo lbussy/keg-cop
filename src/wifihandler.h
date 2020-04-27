@@ -57,4 +57,9 @@ extern struct Config config;
 extern const size_t capacitySerial;
 extern const size_t capacityDeserial;
 
+struct tcp_pcb;
+extern struct tcp_pcb *tcp_tw_pcbs;
+extern "C" void tcp_abort(struct tcp_pcb *pcb);
+void tcpCleanup(void);
+
 #endif // _WIFI_H
