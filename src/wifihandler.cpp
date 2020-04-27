@@ -169,3 +169,11 @@ void saveParamsCallback() {
 void webServerCallback() {
     Log.verbose(F("[CALLBACK]: setWebServerCallback fired." CR));
 }
+
+void tcpCleanup(void)
+{
+    // Supposedly not needed, but we still get -8 errors on occasion
+    // https://github.com/esp8266/Arduino/tree/master/doc/faq#how-to-clear-tcp-pcbs-in-time-wait-state-
+    while (tcp_tw_pcbs)
+        tcp_abort(tcp_tw_pcbs);
+}
