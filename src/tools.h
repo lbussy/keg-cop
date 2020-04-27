@@ -29,6 +29,7 @@ SOFTWARE. */
 void _delay(unsigned long);
 void resetController();
 void setDoReset();
+void tickerLoop();
 
 static bool __attribute__((unused)) doReset = false;        // Semahore for reset
 

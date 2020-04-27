@@ -34,6 +34,7 @@ SOFTWARE. */
 #include "tempsensors.h"
 #include "thermostat.h"
 #include "flowmeter.h"
+#include "tools.h"
 #include <ArduinoLog.h>
 
 // extern struct Config config;

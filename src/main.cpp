@@ -105,6 +105,6 @@ void loop()
 
     while (true)
     {
-        // Do something?
+        tickerLoop();
     }
 }
