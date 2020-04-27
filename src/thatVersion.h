@@ -1,6 +1,6 @@
 /* Copyright (C) 2019-2020 Lee C. Bussy (@LBussy)
 
-This file is part of Lee Bussy's Brew Bubbbles (brew-bubbles).
+This file is part of Lee Bussy's Keg Cop (keg-cop).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,37 +20,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WEBPAGEHANDLER_H
-#define _WEBPAGEHANDLER_H
+#ifndef _THATVERSION_H
+#define _THATVERSION_H
 
-#include "wifihandler.h"
-// #include "execota.h"
-// #include "flowmeter.h"
-#include "jsonconfig.h"
-#include "version.h"
 #include "config.h"
-#include "thatVersion.h"
-// #include "pushhelper.h"
 #include <ArduinoLog.h>
+#include <AsyncTCP.h>
+#include <asyncHTTPrequest.h>
 #include <ArduinoJson.h>
-#include <AsyncJson.h>
-#include <FS.h>
-#include <ESPAsyncWebServer.h>
-// #include <ESP8266HTTPClient.h>
-// #include <ESP8266mDNS.h>
 #include <Arduino.h>
 
-void initWebServer();
-void setRegPageAliases();
-void setActionPageHandlers();
-void setJsonHandlers();
-void setSettingsAliases();
-void stopWebServer();
+struct ThatVersion {
+    char version[32] = {'0','.','0','.','0'};
+    
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
 
-extern struct Config config;
-extern struct ThatVersion thatVersion;
-// extern struct Flowmeter flow;
-extern const size_t capacityDeserial;
-extern const size_t capacitySerial;
+void doPoll();
+void sendRequest();
+void requestHandler(void*, asyncHTTPrequest*, int);
+bool serializeVersion(const ThatVersion &, Print &);
+bool deserializeVersion(const char * &, ThatVersion &);
 
-#endif // _WEBPAGEHANDLER_H
+#endif // _THATVERSION_H
