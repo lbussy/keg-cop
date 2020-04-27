@@ -70,11 +70,11 @@ void setActionPageHandlers()
         request->send(200, F("text/plain"), heap);
     });
 
-//     server.on("/wifi2/", HTTP_GET, [](AsyncWebServerRequest *request) {
-//         Log.verbose(F("Processing /wifi2/." CR));
-//         request->send(SPIFFS, "/wifi2.htm");
-//         resetWifi(); // Wipe settings, reset controller
-//     });
+    server.on("/wifi2/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing /wifi2/." CR));
+        request->send(SPIFFS, "/wifi2.htm");
+        resetWifi(); // Wipe settings, reset controller
+    });
 
     server.on("/reset/", HTTP_GET, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /reset/." CR));
