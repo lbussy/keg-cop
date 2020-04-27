@@ -13,7 +13,7 @@
     - ~~Wifi~~
     - ~~Wifi2~~
 - Add targets
-- Add thatVersion
+- ~~Add thatVersion~~
 - Add OTA
 
 # Done Items

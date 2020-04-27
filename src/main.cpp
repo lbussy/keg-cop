@@ -68,7 +68,7 @@ void setup()
         Log.error(F("Unable to load flowmeters." CR));
 
     startControl();     // Initialize temperature control
-    // doPoll();               // Get server version at startup
+    doPoll();           // Get server version at startup
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
@@ -86,6 +86,10 @@ void loop()
     // Log pours
     Ticker logPour;
     logPour.attach(KEGLOOP, logFlow);
+
+    // Poll for server version
+    Ticker getThatVersion;
+    getThatVersion.attach(POLLSERVERVERSION, doPoll);
 
     // // mDNS Reset Timer - Helps avoid the host not found issues
     // Ticker mDNSTimer;

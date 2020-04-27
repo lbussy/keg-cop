@@ -141,18 +141,18 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-//     server.on("/thatVersion/", HTTP_GET, [](AsyncWebServerRequest *request) {
-//         Log.verbose(F("Serving /thatVersion/." CR));
-//         const size_t capacity = JSON_OBJECT_SIZE(1);
-//         DynamicJsonDocument doc(capacity);
+    server.on("/thatVersion/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Serving /thatVersion/." CR));
+        const size_t capacity = JSON_OBJECT_SIZE(1);
+        DynamicJsonDocument doc(capacity);
 
-//         const char *version = thatVersion.version;
-//         doc["version"] = version;
+        const char *version = thatVersion.version;
+        doc["version"] = version;
 
-//         String json;
-//         serializeJsonPretty(doc, json);
-//         request->send(200, F("application/json"), json);
-//     });
+        String json;
+        serializeJsonPretty(doc, json);
+        request->send(200, F("application/json"), json);
+    });
 
     server.on("/config/", HTTP_GET, [](AsyncWebServerRequest *request) {
         // Used to provide the Config json
