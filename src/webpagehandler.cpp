@@ -31,6 +31,13 @@ void initWebServer()
     setJsonHandlers();
     setSettingsAliases();
 
+    // Setup SPIFFS editor
+#ifdef ESP32
+    server.addHandler(new SPIFFSEditor(SPIFFS, SPIFFSEDITUSER, SPIFFSEDITPW));
+#elif defined(ESP8266)
+    server.addHandler(new SPIFFSEditor(SPIFFSEDITUSER, SPIFFSEDITPW));
+#endif
+
     // File not found handler
 
     server.onNotFound([](AsyncWebServerRequest *request) {

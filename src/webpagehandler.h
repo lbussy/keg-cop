@@ -36,6 +36,7 @@ SOFTWARE. */
 #include <AsyncJson.h>
 #include <FS.h>
 #include <ESPAsyncWebServer.h>
+#include <SPIFFSEditor.h>
 // #include <ESP8266HTTPClient.h>
 // #include <ESP8266mDNS.h>
 #include <Arduino.h>
