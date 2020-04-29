@@ -102,7 +102,7 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             WiFi.setSleepMode(WIFI_NONE_SLEEP); // Make sure sleep is disabled
 #endif
             blinker.detach(); // Turn off blinker
-                digitalWrite(LED, HIGH); // Turn off LED
+            digitalWrite(LED, HIGH); // Turn off LED
 #ifdef ESP8266
             WiFi.hostname(config.hostname);
 #elif defined ESP32
