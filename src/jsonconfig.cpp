@@ -24,8 +24,8 @@ SOFTWARE. */
 
 const char *filename = "/config.json";
 Config config;
-extern const size_t capacityDeserial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9) + 820;
-extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9);
+extern const size_t capacityDeserial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9) + 970;
+extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9);
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -447,7 +447,7 @@ void Config::save(JsonObject obj) const
     obj["dospiffs1"] = dospiffs1;
     // Add dospiffs2 object
     obj["dospiffs2"] = dospiffs2;
-    // Add dospiffs1 object
+    // Add didupdate object
     obj["didupdate"] = didupdate;
 }
 
@@ -482,8 +482,7 @@ void Config::load(JsonObjectConst obj)
         dospiffs2 = obj["dospiffs2"];
     }
 
-    bool firstrun = obj["didupdate"].isNull();
-    if (firstrun) {
+    if (obj["didupdate"].isNull()) {
         didupdate = false;
     } else {
         didupdate = obj["didupdate"];
