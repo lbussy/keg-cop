@@ -37,6 +37,9 @@ void initWebServer()
 #elif defined(ESP8266)
     server.addHandler(new SPIFFSEditor(SPIFFSEDITUSER, SPIFFSEDITPW));
 #endif
+    server.on("/edit/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->redirect("/edit");
+    });
 
     // File not found handler
 
