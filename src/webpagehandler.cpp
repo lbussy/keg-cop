@@ -64,7 +64,7 @@ void setRegPageAliases()
     server.serveStatic("/index/", SPIFFS, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
     server.serveStatic("/about/", SPIFFS, "/").setDefaultFile("about.htm").setCacheControl("max-age=600");
     server.serveStatic("/help/", SPIFFS, "/").setDefaultFile("help.htm").setCacheControl("max-age=600");
-    server.serveStatic("/ota/", SPIFFS, "/").setDefaultFile("ota.htm").setCacheControl("max-age=600");
+    server.serveStatic("/ota1/", SPIFFS, "/").setDefaultFile("ota1.htm").setCacheControl("max-age=600");
     server.serveStatic("/ota2/", SPIFFS, "/").setDefaultFile("ota2.htm").setCacheControl("max-age=600");
     server.serveStatic("/settings/", SPIFFS, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
     server.serveStatic("/wifi/", SPIFFS, "/").setDefaultFile("wifi.htm").setCacheControl("max-age=600");
@@ -93,21 +93,21 @@ void setActionPageHandlers()
         setDoReset();
     });
 
-//     server.on("/otastart/", HTTP_GET, [](AsyncWebServerRequest *request) {
-//         Log.verbose(F("Processing /otastart/." CR));
-//         request->send(200, F("text/plain"), F("200: OTA started."));
-//         execfw(); // Trigger the OTA update
-//     });
+    server.on("/otastart/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing /otastart/." CR));
+        request->send(200, F("text/plain"), F("200: OTA started."));
+        execfw(); // Trigger the OTA update
+    });
 
-//     server.on("/clearupdate/", HTTP_GET, [](AsyncWebServerRequest *request) {
-//         Log.verbose(F("Processing /clearupdate/." CR));
-//         Log.verbose(F("Clearing any update flags." CR));
-//         config.dospiffs1 = false;
-//         config.dospiffs2 = false;
-//         config.didupdate = false;
-//         saveConfig();
-//         request->send(200, F("text/plain"), F("200: OK."));
-//     });
+    server.on("/clearupdate/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing /clearupdate/." CR));
+        Log.verbose(F("Clearing any update flags." CR));
+        config.dospiffs1 = false;
+        config.dospiffs2 = false;
+        config.didupdate = false;
+        saveConfig();
+        request->send(200, F("text/plain"), F("200: OK."));
+    });
 }
 
 void setJsonHandlers()

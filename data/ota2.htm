@@ -75,7 +75,8 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp"> <!-- Container -->
+        <div class="container" id="settingsapp">
+            <!-- Container -->
 
             <div class="page-header" id="banner">
                 <h1>Firmware Update In Progress</h1>
@@ -95,13 +96,13 @@
                     </p>
                     <p>
                         If you wish to observe your controller's LED during the process, the
-                        LED will flash as the update is in progress.  As soon as the LED is
+                        LED will flash as the update is in progress. As soon as the LED is
                         steady - either off if blocked or on if not blocked, the process is
                         complete.
                     </p>
                     <p>
                         When the update is complete, the controller will re-load your original
-                        application settings.  If this step fails, you will need to manually
+                        application settings. If this step fails, you will need to manually
                         reconfigure all application settings. WiFi settings will not be affected.
                     </p>
                     <p>
@@ -127,13 +128,13 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
+        </script>
 
     <script type="text/javascript">
         // Attach the event after the page loads
@@ -162,11 +163,11 @@
                         setTimeout(function(){window.location.href = "/";},5000);
                     }
                 });
-            }, 5000);
+            }, 10000);
         }
 
         function checkSemaphore(callback) { // Check to see if the update is complete
-            var jqxhr = $.getJSON("/config/")
+            var jqxhr = $.getJSON("/thisVersion/")
                 .done(function (data) {
                     callback(data.didupdate);
                 })
@@ -174,11 +175,10 @@
                     // This will fail while controller resets
                     callback({});
                 }
-            );
+                );
         }
 
     </script>
-
 </body>
 
 </html>

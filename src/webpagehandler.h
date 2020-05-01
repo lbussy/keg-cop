@@ -24,21 +24,17 @@ SOFTWARE. */
 #define _WEBPAGEHANDLER_H
 
 #include "wifihandler.h"
-// #include "execota.h"
-// #include "flowmeter.h"
+#include "execota.h"
 #include "jsonconfig.h"
 #include "version.h"
 #include "config.h"
 #include "thatVersion.h"
-// #include "pushhelper.h"
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 #include <FS.h>
 #include <ESPAsyncWebServer.h>
 #include <SPIFFSEditor.h>
-// #include <ESP8266HTTPClient.h>
-// #include <ESP8266mDNS.h>
 #include <Arduino.h>
 
 void initWebServer();

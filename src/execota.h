@@ -1,6 +1,6 @@
 /* Copyright (C) 2019-2020 Lee C. Bussy (@LBussy)
 
-This file is part of Lee Bussy's Keg Cop (keg-cop).
+This file is part of Lee Bussy's Brew Bubbbles (brew-bubbles).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,47 +20,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFI_H
-#define _WIFI_H
+#ifndef _EXECOTA_H
+#define _EXECOTA_H
 
-#define WM_ASYNC
-
-#include "config.h"
-#include "jsonconfig.h"
 #include "tools.h"
-
-#ifdef ESP8266
-#include <ESP8266WiFi.h>
-#include <WiFiManager.h>
-#endif
-#ifdef ESP32
-#include <WiFi.h>
-#include <AsyncWiFiManager.h>
-#endif
-
-#include <Ticker.h>
+#include "jsonconfig.h"
+#include "webpagehandler.h"
+#include "esp32ota.h"
+#include <LCBUrl.h>
 #include <ArduinoLog.h>
 
-void wifiBlinker();
-void doWiFi();
-void doWiFi(bool);
-void resetWifi();
+void execfw();
+void execspiffs();
 
-// WiFiManager Callbacks
-void apCallback(AsyncWiFiManager *myWiFiManager);
-void configResetCallback();
-void preSaveConfigCallback();
-void saveConfigCallback();
-void saveParamsCallback();
-void webServerCallback();
-
+extern bool saveConfig();
 extern struct Config config;
-extern const size_t capacitySerial;
-extern const size_t capacityDeserial;
 
-struct tcp_pcb;
-extern struct tcp_pcb *tcp_tw_pcbs;
-extern "C" void tcp_abort(struct tcp_pcb *pcb);
-void tcpCleanup(void);
-
-#endif // _WIFI_H
+#endif //_EXECOTA_H
