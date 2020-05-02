@@ -4,13 +4,8 @@
 - Add web page handlers
 - Add web page scripting
     - Index
-    - ~~About~~
     - Settings
-    - ~~Ota~~
-    - ~~Ota2~~
-    - ~~Reset~~
-    - ~~Wifi~~
-    - ~~Wifi2~~ <<<<<<<<<< Make sure this really loads (remember OTA issues)
+
 - Add targets
 
 # Done Items
@@ -29,3 +24,10 @@
 - ~~Add thatVersion~~
 - ~~Add OTA~~
 - ~~Design Index~~
+- Add web page scripting
+    - ~~Ota~~
+    - ~~Ota2~~
+    - ~~Reset~~
+    - ~~Wifi~~
+    - ~~Wifi2~~
+    - ~~About~~
