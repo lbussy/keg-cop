@@ -23,6 +23,7 @@ SOFTWARE. */
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
+// #include "execota.h"
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
@@ -31,6 +32,6 @@ void resetController();
 void setDoReset();
 void tickerLoop();
 
-static bool __attribute__((unused)) doReset = false;        // Semahore for reset
+static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
 
 #endif
