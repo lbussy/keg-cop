@@ -28,6 +28,7 @@ SOFTWARE. */
 #include "version.h"
 #include "config.h"
 #include "thatVersion.h"
+#include "execota.h"
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
