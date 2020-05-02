@@ -24,7 +24,6 @@ SOFTWARE. */
 
 void execfw() {
     Log.notice(F("Starting the Firmware OTA pull, will reboot without notice." CR));
-    _delay(5000); // Let page finish loading
 
     // Stop web server before OTA update - will restart on reset
     stopWebServer();
@@ -90,7 +89,7 @@ void execspiffs() {
         char host[64], path[64];
         strlcpy (host, lcburl.getHost().c_str(), sizeof(host));
         strlcpy(path, lcburl.getPath().c_str(), sizeof(path));
-        HTTPUpdateResult ret = execFirmwareOTA(host, lcburl.getPort(), path);
+        HTTPUpdateResult ret = execSPIFFSOTA(host, lcburl.getPort(), path);
 
         switch(ret) {
             case HTTP_UPDATE_FAILED:
@@ -116,4 +115,185 @@ void execspiffs() {
     } else {
         Log.verbose(F("No OTA pending." CR));
     }
+}
+
+// Utility to extract header value from headers
+String getHeaderValue(String header, String headerName)
+{
+    return header.substring(strlen(headerName.c_str()));
+}
+
+HTTPUpdateResult execFirmwareOTA(char * host, int port, char * path)
+{
+    return execOTA(host, port, path, U_FLASH);
+}
+
+HTTPUpdateResult execSPIFFSOTA(char * host, int port, char * path)
+{
+    return execOTA(host, port, path, U_SPIFFS);
+}
+
+// OTA updating of firmware or SPIFFS
+HTTPUpdateResult execOTA(char * host, int port, char * path, int cmd)
+{
+    WiFiClient client;
+    int contentLength = 0;
+    bool isValidContentType = false;
+    String header = "";
+    String get = "";
+
+    Log.notice(F("Connecting to: %s port %l." CR), host, port);
+    // Connect to Webserver
+    if (client.connect(host, port))
+    {
+        // Fecthing the path
+        Log.notice(F("Fetching path: /%s" CR), path);
+
+        // Get the contents of the bin file
+        get = String("GET /") + String(path) + String(" HTTP/1.1\r\nHost: ") + String(host) + String("\r\nCache-Control: no-cache\r\nConnection: close\r\n\r\n");
+        Log.notice(F("GET:" CR "%s"), get.c_str());
+        client.print(get.c_str());
+
+        unsigned long timeout = millis();
+        while (client.available() == 0)
+        {
+            if (millis() - timeout > 3000)
+            {
+                Log.error(F("Client timeout." CR));
+                client.stop(); // Free resources
+                return HTTP_UPDATE_FAILED;
+            }
+        }
+
+        while (client.available())
+        {
+            // Read line till /n
+            String line = client.readStringUntil('\n');
+            // Remove space, to check if the line is end of headers
+            line.trim();
+
+            if (!line.length())
+            {
+                // Headers ended and get the OTA started
+                break;
+            }
+
+            // Check if the HTTP Response is 200 else break and Exit Update
+            if (line.startsWith("HTTP/1.1"))
+            {
+                if (line.indexOf("200") < 0)
+                {
+                    Log.error(F("Received a non-200 status code from server. Exiting OTA Update." CR));
+                    client.stop();
+                    return HTTP_UPDATE_FAILED;
+                }
+            }
+
+            // Extract headers
+
+            // Content length
+            header = line.substring(0, 16);
+
+            if (header.equalsIgnoreCase("Content-Length: "))
+            {
+                contentLength = atoi((getHeaderValue(line, "Content-Length: ")).c_str());
+                Log.notice(F("Got %l bytes from server." CR), contentLength);
+            }
+
+            // Content type
+            header = line.substring(0, 14);
+            if (header.equalsIgnoreCase("Content-Type: "))
+            {
+                String contentType = getHeaderValue(line, header);
+                Log.notice(F("Received payload: %s" CR), contentType.c_str());
+                if (contentType == "application/octet-stream")
+                {
+                    isValidContentType = true;
+                }
+            }
+        }
+    }
+    else
+    {
+        // Connect to webserver failed
+        Log.error(F("Connection to %d failed, please check configuration." CR), host);
+        client.stop(); // Free resources
+        return HTTP_UPDATE_FAILED;
+    }
+
+    // Check what is the contentLength and if content type is `application/octet-stream`
+    Log.notice(F("Content length: %l; is valid content: %T" CR), contentLength, isValidContentType);
+
+    HTTPUpdateResult retVal;
+    // Check contentLength and content type
+    if (contentLength && isValidContentType)
+    {
+        // Check if there is enough to OTA Update and set the type of update FIRMWARE or SPIFFS
+        Log.notice(F("OTA type: %s" CR), (cmd == U_SPIFFS) ? String("SPIFFS").c_str() : String("FIRMWARE").c_str());
+        bool canBegin = Update.begin(contentLength, cmd);
+
+        // If yes, begin
+        if (canBegin)
+        {
+            Log.notice(F("Begin OTA. This may take 2 to 5 mins to complete. There will be no status updates during this time." CR));
+            size_t written = Update.writeStream(client);
+
+            if (written == contentLength)
+            {
+                Log.notice(F("Written : %l successfully." CR), written);
+            }
+            else
+            {
+                Log.error(F("Wrote %l of %l, please retry." CR), written, contentLength);
+                return HTTP_UPDATE_FAILED;
+            }
+
+            if (Update.end())
+            {
+                if (Update.isFinished())
+                {
+                    Log.notice(F("OTA update successful." CR));
+                    retVal = HTTP_UPDATE_OK;
+                }
+                else
+                {
+                    Log.error(F("OTA update reports it did not finish." CR));
+                    retVal = HTTP_UPDATE_FAILED;
+                }
+            }
+            else
+            {
+                Log.error(F("OTA error occurred. Error #: %l"), Update.getError());
+                retVal = HTTP_UPDATE_FAILED;
+            }
+        }
+        else
+        {
+            // Not enough space to begin OTA
+            Log.error(F("Not enough space to begin OTA." CR));
+            retVal = HTTP_UPDATE_FAILED;
+        }
+    }
+    else
+    {
+        Log.warning(F("There was no content in the response." CR));
+        retVal = HTTP_UPDATE_NO_UPDATES;
+    }
+
+    client.stop(); // Free resources
+    return retVal;
+}
+
+void setDoOTA() {
+    doOTA = true; // Semaphore required for reset in callback
+}
+
+void doOTALoop()
+{
+    // Do OTA update
+    if (doOTA)
+    {
+        doOTA = false;
+        execfw();
+    }    
 }

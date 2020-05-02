@@ -23,17 +23,36 @@ SOFTWARE. */
 #ifndef _EXECOTA_H
 #define _EXECOTA_H
 
-#include "tools.h"
 #include "jsonconfig.h"
 #include "webpagehandler.h"
-#include "esp32ota.h"
 #include <LCBUrl.h>
+#include <Update.h>
 #include <ArduinoLog.h>
+#include <HTTPClient.h>
+#include <Arduino.h>
 
 void execfw();
 void execspiffs();
 
+void setDoOTA();
+void doOTALoop();
+
+enum HTTPUpdateResult
+{
+    HTTP_UPDATE_FAILED,
+    HTTP_UPDATE_NO_UPDATES,
+    HTTP_UPDATE_OK
+};
+
+HTTPUpdateResult execFirmwareOTA(char * host, int port, char * path);
+HTTPUpdateResult execSPIFFSOTA(char * host, int port, char * path);
+
+HTTPUpdateResult execOTA(char * host, int port, char * path, int type);
+String getHeaderValue(String header, String headerName); // Return header value
+
 extern bool saveConfig();
 extern struct Config config;
+
+static bool __attribute__((unused)) doOTA = false;          // Semaphore for OTA
 
 #endif //_EXECOTA_H

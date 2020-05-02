@@ -96,7 +96,7 @@ void setActionPageHandlers()
     server.on("/otastart/", HTTP_GET, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /otastart/." CR));
         request->send(200, F("text/plain"), F("200: OTA started."));
-        execfw(); // Trigger the OTA update
+        setDoOTA(); // Trigger the OTA update
     });
 
     server.on("/clearupdate/", HTTP_GET, [](AsyncWebServerRequest *request) {
