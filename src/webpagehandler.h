@@ -24,7 +24,6 @@ SOFTWARE. */
 #define _WEBPAGEHANDLER_H
 
 #include "wifihandler.h"
-#include "execota.h"
 #include "jsonconfig.h"
 #include "version.h"
 #include "config.h"

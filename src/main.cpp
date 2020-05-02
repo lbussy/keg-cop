@@ -55,7 +55,7 @@ void setup()
     digitalWrite(COOL, HIGH);
 
     setClock();         // Set NTP Time
-    //execspiffs();       // Check for pending SPIFFS update
+    execspiffs();       // Check for pending SPIFFS update
     mdnssetup();        // Set up mDNS responder
     tcpCleanup();       // Get rid of -8 errors
     initWebServer();    // Turn on web server
@@ -110,5 +110,6 @@ void loop()
     while (true)
     {
         tickerLoop();
+        doOTALoop();
     }
 }
