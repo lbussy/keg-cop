@@ -1,12 +1,12 @@
 # TODO Items:
 
-- Design Settings
 - Add web page handlers
 - Add web page scripting
     - Index
     - Settings
-
 - Add targets
+- Decide on active/inactive vs numtaps
+- Add RPints compatibility
 
 # Done Items
 
@@ -31,3 +31,4 @@
     - ~~Wifi~~
     - ~~Wifi2~~
     - ~~About~~
+- ~~Design Settings~~
