@@ -54,14 +54,13 @@
                 aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <div class="collapse navbar-collapse" id="navbarColor01"> <!-- Nav Bar Links -->
+            <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/settings/">Settings <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/settings/">Settings  <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/help/">Help</a>
@@ -70,72 +69,198 @@
                         <a class="nav-link" href="/about/">About</a>
                     </li>
                 </ul>
-            </div> <!-- Nav Bar Links -->
-
-        </nav> <!-- Nav Bar -->
-
+            </div>
+        </nav>
     </header>
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp">
+        <div class="container" id="settingsapp"> <!-- Container -->
 
             <div class="page-header" id="banner">
                 <h1>Settings</h1>
             </div>
 
-            <!-- Tabs Header -->
-            <ul class="nav nav-tabs">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                        aria-haspopup="true" aria-expanded="false">Taps</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" data-toggle="tab" href="#tap1">Tap 1</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tap2">Tap 2</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tap3">Tap 3</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tap4">Tap 4</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tap5">Tap 5</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tap6">Tap 6</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tap7">Tap 7</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tap8">Tap 8</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#temps">Temps</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#system">System</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#targets">Targets</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#controller">Controller</a>
-                </li>
-            </ul>
-            <!-- Tab Header -->
+            <div class="card border-dark mb-3"> <!-- Keg Cop Settings -->
+            
+                <ul class="nav nav-tabs"> <!-- Navigation Tab navigation -->
 
-            <!-- Tab Content -->
-            <div id="myTabContent" class="tab-content">
+                    <li class="nav-item dropdown active">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Taps</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#tap0">Tap 1</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap1">Tap 2</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap2">Tap 3</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap3">Tap 4</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap4">Tap 5</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap5">Tap 6</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap6">Tap 7</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap7">Tap 8</a>
+                        </div>
+                    </li>
 
-                <!-- Taps Landing Card -->
-                <div class="tab-pane fade active show" id="taps">
-                    <div class="card border-dark mb-3">
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#controller">Controller</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Temperature</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#tempcontrol">Control</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tempcalibration">Calibration</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Targets</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#targeturl">URL</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#targetcloud">Cloud</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Advanced</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#reset">Reset Controller</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#update">Update Application</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#wifi">Reset WiFi</a>
+                        </div>
+                    </li>
+
+                </ul> <!-- Navigation tab navigation -->
+
+                <div id="myTabContent" class="tab-content"> <!-- Navigation Tab contents -->
+
+                    <div class="tab-pane fade active show" id="advanced"> <!-- Initial Page Tab -->
                         <div class="card-header">
-                            <h4 class="card-title">Tap Configutration</h4>
+                            <h4 class="card-title">Settings for Keg Cop</h4>
                         </div>
                         <div class="card-body">
-                            <p>Choose a tap to configure from the drop-down.</p>
+                            <p>
+                                Use the tabs above to navigate the various settings and customize Keg Cop for your own use. Be sure to use the
+                                update button after changing a field.
+                            </p>
                         </div>
-                    </div>
-                </div>
-                <!-- Taps Landing Card -->
+                    </div> <!-- Initial Page Tab -->
+                
+                    <div class="tab-pane fade" id="tap0"> <!-- Tap 0 Tab -->
 
-                <!-- Tap 1 Settings -->
-                <div class="tab-pane fade" id="tap1">
-                    <div class="card border-dark mb-3">
                         <div class="card-header">
                             <h4 class="card-title">Tap 1 Configuration</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <form id="tap0ppg" action="/settings/update/" method="POST">
+                                        <div class="form-group row">
+                                            <label for="tap0ppg" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
+                                                Pulses per Unit
+                                            </label>
+                                            <div class="col-sm-8">
+                                                <input type="number" class="form-control" name="tap0ppg" id="tap0ppg"
+                                                    min="10" max="99999" step=".01" placeholder="21120">
+                                            </div>
+                                            <div class="col-sm-2"><button class="btn btn-primary"
+                                                    id="submitSettings">Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form id="tap0beername" action="/settings/update/" method="POST">
+                                        <div class="form-group row">
+                                            <label for="tap0beername" class="col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Name of the beverage to display on this tap">
+                                                Beverage Name
+                                            </label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" name="tap0beername"
+                                                    id="tap0beername" minlength="3" maxlength="32"
+                                                    placeholder="Pudswiller Doors">
+                                            </div>
+                                            <div class="col-sm-2"><button class="btn btn-primary"
+                                                    id="submitSettings">Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form id="tap0cap" action="/settings/update/" method="POST">
+                                        <div class="form-group row">
+                                            <label for="tap0cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                                title="Capacity of this tap in gallons or liters depending on system configuration">
+                                                Capacity
+                                            </label>
+                                            <div class="col-sm-8">
+                                                <input type="number" class="form-control" name="tap0cap" id="tap0cap"
+                                                    min=".0001" max="999" step=".0001" placeholder="5">
+                                            </div>
+                                            <div class="col-sm-2"><button class="btn btn-primary"
+                                                    id="submitSettings">Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form id="tap0remain" action="/settings/update/" method="POST">
+                                        <div class="form-group row">
+                                            <label for="tap0remain" class="col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                                Remaining
+                                            </label>
+                                            <div class="col-sm-8">
+                                                <input type="number" class="form-control" name="tap0remain"
+                                                    id="tap0remain" min=".0001" max="999" step=".0001" placeholder="5">
+                                            </div>
+                                            <div class="col-sm-2"><button class="btn btn-primary"
+                                                    id="submitSettings">Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form id="tap0active" action="/settings/update/" method="POST">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col">
+                                                    <p>&nbsp;</p>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label"
+                                                            title="Tap not being used">
+                                                            <input type="radio" class="form-check-input" name="tap0active"
+                                                                id="false" value="option0">
+                                                            Inactive
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label"
+                                                            title="Tap is in use">
+                                                            <input type="radio" class="form-check-input" name="tap0active"
+                                                                id="true" value="option1" checked="">
+                                                            Active
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <p>&nbsp;</p>
+                                                </div>
+                                                <div class="col">
+                                                    <button class="btn btn-primary" id="submitSettings">Update</button>
+                                                </div>
+                                                <div class="col">
+                                                    <p>&nbsp;</p>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div> <!-- Tap 0 Tab -->
+
+                    <div class="tab-pane fade" id="tap1"> <!-- Tap 1 Tab -->
+
+                        <div class="card-header">
+                            <h4 class="card-title">Tap 2 Configuration</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -143,7 +268,7 @@
                                     <form id="tap1ppg" action="/settings/update/" method="POST">
                                         <div class="form-group row">
                                             <label for="tap1ppg" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depeding upn system configuration for your flowmeter and configuration">
+                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
                                                 Pulses per Unit
                                             </label>
                                             <div class="col-sm-8">
@@ -242,15 +367,13 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <!-- Tap 1 Settings -->
 
-                <!-- Tap 2 Settings -->
-                <div class="tab-pane fade" id="tap2">
-                    <div class="card border-dark mb-3">
+                    </div> <!-- Tap 1 Tab -->
+
+                    <div class="tab-pane fade" id="tap2"> <!-- Tap 2 Tab -->
+
                         <div class="card-header">
-                            <h4 class="card-title">Tap 2 Configuration</h4>
+                            <h4 class="card-title">Tap 3 Configuration</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -258,7 +381,7 @@
                                     <form id="tap2ppg" action="/settings/update/" method="POST">
                                         <div class="form-group row">
                                             <label for="tap2ppg" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depeding upn system configuration for your flowmeter and configuration">
+                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
                                                 Pulses per Unit
                                             </label>
                                             <div class="col-sm-8">
@@ -357,15 +480,13 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <!-- Tap 2 Settings -->
 
-                <!-- Tap 3 Settings -->
-                <div class="tab-pane fade" id="tap3">
-                    <div class="card border-dark mb-3">
+                    </div> <!-- Tap 2 Tab -->
+
+                    <div class="tab-pane fade" id="tap3"> <!-- Tap 3 Tab -->
+
                         <div class="card-header">
-                            <h4 class="card-title">Tap 3 Configuration</h4>
+                            <h4 class="card-title">Tap 4 Configuration</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -373,7 +494,7 @@
                                     <form id="tap3ppg" action="/settings/update/" method="POST">
                                         <div class="form-group row">
                                             <label for="tap3ppg" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depeding upn system configuration for your flowmeter and configuration">
+                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
                                                 Pulses per Unit
                                             </label>
                                             <div class="col-sm-8">
@@ -472,15 +593,13 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <!-- Tap 3 Settings -->
 
-                <!-- Tap 4 Settings -->
-                <div class="tab-pane fade" id="tap4">
-                    <div class="card border-dark mb-3">
+                    </div> <!-- Tap 3 Tab -->
+
+                    <div class="tab-pane fade" id="tap4"> <!-- Tap 4 Tab -->
+
                         <div class="card-header">
-                            <h4 class="card-title">Tap 4 Configuration</h4>
+                            <h4 class="card-title">Tap 5 Configuration</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -488,7 +607,7 @@
                                     <form id="tap4ppg" action="/settings/update/" method="POST">
                                         <div class="form-group row">
                                             <label for="tap4ppg" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depeding upn system configuration for your flowmeter and configuration">
+                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
                                                 Pulses per Unit
                                             </label>
                                             <div class="col-sm-8">
@@ -587,15 +706,13 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <!-- Tap 4 Settings -->
 
-                <!-- Tap 5 Settings -->
-                <div class="tab-pane fade" id="tap5">
-                    <div class="card border-dark mb-3">
+                    </div> <!-- Tap 4 Tab -->
+
+                    <div class="tab-pane fade" id="tap5"> <!-- Tap 5 Tab -->
+
                         <div class="card-header">
-                            <h4 class="card-title">Tap 5 Configuration</h4>
+                            <h4 class="card-title">Tap 6 Configuration</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -603,7 +720,7 @@
                                     <form id="tap5ppg" action="/settings/update/" method="POST">
                                         <div class="form-group row">
                                             <label for="tap5ppg" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depeding upn system configuration for your flowmeter and configuration">
+                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
                                                 Pulses per Unit
                                             </label>
                                             <div class="col-sm-8">
@@ -702,15 +819,13 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <!-- Tap 5 Settings -->
 
-                <!-- Tap 6 Settings -->
-                <div class="tab-pane fade" id="tap6">
-                    <div class="card border-dark mb-3">
+                    </div> <!-- Tap 5 Tab -->
+
+                    <div class="tab-pane fade" id="tap6"> <!-- Tap 6 Tab -->
+
                         <div class="card-header">
-                            <h4 class="card-title">Tap 6 Configuration</h4>
+                            <h4 class="card-title">Tap 7 Configuration</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -718,7 +833,7 @@
                                     <form id="tap6ppg" action="/settings/update/" method="POST">
                                         <div class="form-group row">
                                             <label for="tap6ppg" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depeding upn system configuration for your flowmeter and configuration">
+                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
                                                 Pulses per Unit
                                             </label>
                                             <div class="col-sm-8">
@@ -817,15 +932,13 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <!-- Tap 6 Settings -->
 
-                <!-- Tap 7 Settings -->
-                <div class="tab-pane fade" id="tap7">
-                    <div class="card border-dark mb-3">
+                    </div> <!-- Tap 7 Tab -->
+
+                    <div class="tab-pane fade" id="tap7"> <!-- Tap 7 Tab -->
+
                         <div class="card-header">
-                            <h4 class="card-title">Tap 7 Configuration</h4>
+                            <h4 class="card-title">Tap 8 Configuration</h4>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -833,7 +946,7 @@
                                     <form id="tap7ppg" action="/settings/update/" method="POST">
                                         <div class="form-group row">
                                             <label for="tap7ppg" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depeding upn system configuration for your flowmeter and configuration">
+                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
                                                 Pulses per Unit
                                             </label>
                                             <div class="col-sm-8">
@@ -932,180 +1045,33 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <!-- Tap 7 Settings -->
 
-                <!-- Tap 8 Settings -->
-                <div class="tab-pane fade" id="tap8">
-                    <div class="card border-dark mb-3">
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 8 Configuration</h4>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <form id="tap8ppg" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap8ppg" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depeding upn system configuration for your flowmeter and configuration">
-                                                Pulses per Unit
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap8ppg" id="tap8ppg"
-                                                    min="10" max="99999" step=".01" placeholder="21120">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap8beername" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap8beername" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Name of the beverage to display on this tap">
-                                                Beverage Name
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="tap8beername"
-                                                    id="tap8beername" minlength="3" maxlength="32"
-                                                    placeholder="Pudswiller Doors">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap8cap" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap8cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Capacity of this tap in gallons or liters depending on system configuration">
-                                                Capacity
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap8cap" id="tap8cap"
-                                                    min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap8remain" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap8remain" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                                Remaining
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap8remain"
-                                                    id="tap8remain" min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap8active" action="/settings/update/" method="POST">
-                                        <fieldset class="form-group">
-                                            <div class="row justify-content-center">
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label"
-                                                            title="Tap not being used">
-                                                            <input type="radio" class="form-check-input" name="tap8active"
-                                                                id="false" value="option0">
-                                                            Inactive
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label"
-                                                            title="Tap is in use">
-                                                            <input type="radio" class="form-check-input" name="tap8active"
-                                                                id="true" value="option1" checked="">
-                                                            Active
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary" id="submitSettings">Update</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Tap 8 Settings -->
-
-                <!-- Temps Card -->
-                <div class="tab-pane fade" id="temps">
-                    <div class="card border-dark mb-3">
-                        <div class="card-header">
-                            <h4 class="card-title">Temperature Control</h4>
-                        </div>
-                        <div class="card-body">
-                            <form id="setpoint" action="/settings/update/" method="POST">
-                                <div class="form-group row">
-                                    <label for="setpoint" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the temperature setpoint">
-                                        Set Point
-                                    </label>
-                                    <div class="col-sm-8">
-                                        <input type="number" class="form-control" name="setpoint" id="setpoint" min="0"
-                                            max="80" step=".1" placeholder="40">
-                                    </div>
-                                    <div class="col-sm-2"><button class="btn btn-primary"
-                                            id="submitSettings">Update</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <form id="controlpoint" action="/settings/update/" method="POST">
-                                <div class="form-group row">
-                                    <label for="controlpoint" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the control point to use for temp control">
-                                        Control Point
-                                    </label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" id="controlpoint">
-                                            <option>Room Temp Sensor</option>
-                                            <option>Tower Temp Sensor</option>
-                                            <option>Upper Chamber Temp Sensor</option>
-                                            <option>Lower Chamber Temp Sensor</option>
-                                            <option>Keg Temp Sensor</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-2"><button class="btn btn-primary"
-                                            id="submitSettings">Update</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- Temps Card -->
-
-                <!-- System Card -->
-                <div class="tab-pane fade" id="system">
-                    <div class="card border-dark mb-3">
+                    </div> <!-- Tap 7 Tab -->
+                
+                    <div class="tab-pane fade" id="controller"> <!-- Controller Tab -->
 
                         <div class="card-header">
                             <h4 class="card-title">Keg Cop Configuration</h4>
                         </div>
                         <div class="card-body">
+
+							<form id="hostname" action="/settings/update/" method="POST">
+								<div class="form-group row">
+									<label for="hostname" class="col-sm-2 col-form-label"
+										data-toggle="tooltip"
+										title="Host name for the controller to access during use (do not include the '.local' portion)">
+										Host Name
+									</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" name="hostname"
+											id="hostname" minlength="3" maxlength="32"
+											placeholder="kegcop">
+									</div>
+									<div class="col-sm-2"><button class="btn btn-primary"
+											id="submitSettings">Update</button>
+									</div>
+								</div>
+							</form>
 
 							<form id="breweryname" action="/settings/update/" method="POST">
 								<div class="form-group row">
@@ -1163,7 +1129,7 @@
 													title="Change the application display in Standard (&#8457 or Gallons)">
 													<input type="radio" class="form-check-input" name="units"
 														id="standard" value="option1" checked="">
-													Standard
+													Imperial
 												</label>
 											</div>
 										</div>
@@ -1181,30 +1147,139 @@
 							</form>
 							
                         </div>
-                    </div>
 
-					<div class="card border-dark mb-3">
-						<!-- Update Firmware -->
-						<div class="card-header">
-							<h4 class="card-title">Update Firmware</h4>
-						</div>
-						<div class="card-body">
-							<p class="card-text">
-								Your Keg Cop can be updated over the internet to the latest version of the Keg Cop
-								firmware by clicking the "Update Firmware" button below.
-							</p>
-							<p class="card-text">
-								<a href="/ota1/" class="btn btn-danger">Update Firmware</a>
-							</p>
-						</div>
-					</div> <!-- Update Firmware -->
+                    </div> <!-- Controller Tab -->
+                
+                    <div class="tab-pane fade" id="tempcontrol"> <!-- Temp Control Tab -->
+                        
+                        <div class="card-header">
+                            <h4 class="card-title">Temperature Control</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="setpoint" action="/settings/update/" method="POST">
+                                <div class="form-group row">
+                                    <label for="setpoint" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the temperature setpoint">
+                                        Set Point
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="number" class="form-control" name="setpoint" id="setpoint" min="0"
+                                            max="80" step=".1" placeholder="40">
+                                    </div>
+                                    <div class="col-sm-2"><button class="btn btn-primary"
+                                            id="submitSettings">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <form id="controlpoint" action="/settings/update/" method="POST">
+                                <div class="form-group row">
+                                    <label for="controlpoint" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the control point to use for temp control">
+                                        Control Point
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="controlpoint">
+                                            <option>Room Temp Sensor</option>
+                                            <option>Tower Temp Sensor</option>
+                                            <option>Upper Chamber Temp Sensor</option>
+                                            <option>Lower Chamber Temp Sensor</option>
+                                            <option>Keg Temp Sensor</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2"><button class="btn btn-primary"
+                                            id="submitSettings">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
 
-				</div>
-                <!-- System Card -->
+                    </div> <!-- Temp Control Tab -->
+                    <div class="tab-pane fade" id="tempcalibration"> <!-- Temp Calibration Tab -->
+                        <div class="card-header">
+                            <h4 class="card-title">Temperature Sensor Calibration</h4>
+                        </div>
+                        <div class="card-body">
 
-                <!-- Targets Card -->
-                <div class="tab-pane fade" id="targets">
-                    <div class="card border-dark mb-3">
+                            <form id="setcalroom" action="/settings/update/" method="POST"> <!-- Room Temperature Calibration Form-->
+                                <div class="form-group row">
+                                    <label for="calRoom" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Value by which the Room temperature display will be offset">Room</label>
+                                    <div class="col-sm-8">
+                                        <input type="number" class="form-control" name="calroom" id="calroom"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-primary" id="submitSettings">Update</button>
+                                    </div>
+                                </div>
+                            </form> <!-- Room Temperature Calibration Form-->
+
+                            <form id="setcalroom" action="/settings/update/" method="POST"> <!-- Tower Temperature Calibration Form-->
+                                <div class="form-group row">
+                                    <label for="calRoom" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Value by which the Tower temperature display will be offset">Tower</label>
+                                    <div class="col-sm-8">
+                                        <input type="number" class="form-control" name="caltower" id="caltower"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-primary" id="submitSettings">Update</button>
+                                    </div>
+                                </div>
+                            </form> <!-- Tower Temperature Calibration Form-->
+
+                            <form id="setcalroom" action="/settings/update/" method="POST"> <!-- Upper Chamber Temperature Calibration Form-->
+                                <div class="form-group row">
+                                    <label for="calRoom" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Value by which the Upper Chamber temperature display will be offset">Upper Chamber</label>
+                                    <div class="col-sm-8">
+                                        <input type="number" class="form-control" name="calupper" id="calupper"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-primary" id="submitSettings">Update</button>
+                                    </div>
+                                </div>
+                            </form> <!-- Upper Chamber Temperature Calibration Form-->
+
+                            <form id="setcalroom" action="/settings/update/" method="POST"> <!-- Lower Chamber Calibration Form-->
+                                <div class="form-group row">
+                                    <label for="calRoom" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Value by which the Lower Chamber temperature display will be offset">Lower Chamber</label>
+                                    <div class="col-sm-8">
+                                        <input type="number" class="form-control" name="callower" id="callower"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-primary" id="submitSettings">Update</button>
+                                    </div>
+                                </div>
+                            </form> <!-- Lower Chamber Calibration Form-->
+
+                            <form id="setcalroom" action="/settings/update/" method="POST"> <!-- Keg Temperature Calibration Form-->
+                                <div class="form-group row">
+                                    <label for="calRoom" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Value by which the Keg temperature display will be offset">Keg</label>
+                                    <div class="col-sm-8">
+                                        <input type="number" class="form-control" name="calkeg" id="calkeg"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-primary" id="submitSettings">Update</button>
+                                    </div>
+                                </div>
+                            </form> <!-- Keg Temperature Calibration Form-->
+
+                        </div>
+                    </div> <!-- Temp Calibration Tab -->
+                
+                    <div class="tab-pane fade" id="targeturl"> <!-- URL Target Tab -->
+
                         <div class="card-header">
                             <h4 class="card-title">Local Target Configuration</h4>
                         </div>
@@ -1228,24 +1303,6 @@
 								</div>
 							</form>
 
-							<form id="targetkey" action="/settings/update/" method="POST">
-								<div class="form-group row">
-									<label for="targetkey" class="col-sm-2 col-form-label"
-										data-toggle="tooltip"
-										title="full URL to target system">
-										Cloud Key
-									</label>
-									<div class="col-sm-8">
-										<input type="text" class="form-control" name="targetkey"
-											id="targetkey" minlength="3" maxlength="64"
-											placeholder="01234567890ABCDEF01234567890ABCDEF">
-									</div>
-									<div class="col-sm-2"><button class="btn btn-primary"
-											id="submitSettings">Update</button>
-									</div>
-								</div>
-							</form>
-
 							<form id="targetfreq" action="/settings/update/" method="POST">
 								<div class="form-group row">
 									<label for="targetfreq" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -1261,10 +1318,9 @@
 							</form>
 
                         </div>
-                    </div>
 
-
-                    <div class="card border-dark mb-3">
+                    </div> <!-- URL Target Tab -->
+                    <div class="tab-pane fade" id="targetcloud"> <!-- Cloud Target Tab -->
                         <div class="card-header">
                             <h4 class="card-title">Cloud Target Configuration</h4>
                         </div>
@@ -1324,79 +1380,37 @@
 							</form>
 
 						</div>
-                    </div>
-
-
-                </div>
-                <!-- Targets Card -->
-
-                <!-- Controller Card -->
-                <div class="tab-pane fade" id="controller">
-                    <div class="card border-dark mb-3">
-                        <div class="card-header">
-                            <h4 class="card-title">Controller Configuration</h4>
-                        </div>
-                        <div class="card-body">
-
-							<form id="ssid" action="/settings/update/" method="POST">
-								<div class="form-group row">
-									<label for="ssid" class="col-sm-2 col-form-label"
-										data-toggle="tooltip"
-										title="Access point name for the captive portal used during configuration">
-										Access Point Name
-									</label>
-									<div class="col-sm-8">
-										<input type="text" class="form-control" name="ssid"
-											id="ssid" minlength="3" maxlength="32"
-											placeholder="kegcop">
-									</div>
-									<div class="col-sm-2"><button class="btn btn-primary"
-											id="submitSettings">Update</button>
-									</div>
-								</div>
-							</form>
-
-							<form id="appwd" action="/settings/update/" method="POST">
-								<div class="form-group row">
-									<label for="appwd" class="col-sm-2 col-form-label"
-										data-toggle="tooltip"
-										title="Access point password for the captive portal used during configuration">
-										Access Point Password
-									</label>
-									<div class="col-sm-8">
-										<input type="text" class="form-control" name="appwd"
-											id="appwd" minlength="0" maxlength="32"
-											placeholder="">
-									</div>
-									<div class="col-sm-2"><button class="btn btn-primary"
-											id="submitSettings">Update</button>
-									</div>
-								</div>
-							</form>
-
-							<form id="hostname" action="/settings/update/" method="POST">
-								<div class="form-group row">
-									<label for="hostname" class="col-sm-2 col-form-label"
-										data-toggle="tooltip"
-										title="Host name for the controller to access during use (do not include the '.local' portion)">
-										Host Name
-									</label>
-									<div class="col-sm-8">
-										<input type="text" class="form-control" name="hostname"
-											id="hostname" minlength="3" maxlength="32"
-											placeholder="kegcop">
-									</div>
-									<div class="col-sm-2"><button class="btn btn-primary"
-											id="submitSettings">Update</button>
-									</div>
-								</div>
-							</form>
-
-                        </div>
-                    </div>
-
-					<div class="card border-dark mb-3">
-						<!-- Reset WiFi -->
+                    </div> <!-- Cloud Target Tab -->
+                
+                    <div class="tab-pane fade" id="reset"> <!-- Reset Controller Tab -->
+						<div class="card-header">
+							<h4 class="card-title">Reset Controller</h4>
+						</div>
+						<div class="card-body">
+							<p class="card-text">
+                                You can perform a simple reset on your Keg Cop by pressing the button below. This has the same effect as pressing the
+                                reset button on the controller, and will not harm your settings.
+							</p>
+							<p class="card-text">
+								<a href="/reset/" class="btn btn-danger">Reset Controller</a>
+							</p>
+						</div>
+                    </div> <!-- Reset Controller Tab -->
+                    <div class="tab-pane fade" id="update"> <!-- Update Application Tab -->
+						<div class="card-header">
+							<h4 class="card-title">Update Application</h4>
+						</div>
+						<div class="card-body">
+							<p class="card-text">
+								Your Keg Cop can be updated over the internet to the latest version of the Keg Cop
+								firmware by clicking the "Update Firmware" button below.
+							</p>
+							<p class="card-text">
+								<a href="/ota1/" class="btn btn-danger">Update Firmware</a>
+							</p>
+						</div>
+                    </div> <!-- Update Location Tab -->
+                    <div class="tab-pane fade" id="wifi"> <!-- Reset WiFi Tab -->
 						<div class="card-header">
 							<h4 class="card-title">Reset WiFi</h4>
 						</div>
@@ -1410,15 +1424,13 @@
 								<a href="/wifi/" class="btn btn-danger">Reset WiFi</a>
 							</p>
 						</div>
-					</div> <!-- Reset WiFi -->
+                    </div> <!-- Reset WiFi Tab -->
+                
+                </div> <!-- Navigation Tab contents -->
 
-                </div>
-                <!-- Controller Card -->
+            </div> <!-- Keg Cop Settings -->
 
-            </div>
-            <!-- Tabs Content -->
-
-        </div>
+        </div> <!-- Container -->
 
     </main>
 
@@ -1430,13 +1442,13 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-        </script>
+    </script>
 
     <script type="text/javascript">
         // Attach the event after the page loads
