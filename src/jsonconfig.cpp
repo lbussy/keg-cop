@@ -286,11 +286,11 @@ void Temperatures::save(JsonObject obj) const
 {
     obj["setpoint"] = setpoint;
     obj["controlpoint"] = controlpoint;
-    obj["roomcal"] = calibration[0];
-    obj["towercal"] = calibration[1];
-    obj["uppercal"] = calibration[2];
-    obj["lowercal"] = calibration[3];
-    obj["kegcal"] = calibration[4];
+    obj["room"] = calibration[0];
+    obj["tower"] = calibration[1];
+    obj["upper"] = calibration[2];
+    obj["lower"] = calibration[3];
+    obj["keg"] = calibration[4];
 }
 
 void Temperatures::load(JsonObjectConst obj)
@@ -311,38 +311,38 @@ void Temperatures::load(JsonObjectConst obj)
         controlpoint = cp;
     }
 
-    if (obj["roomcal"].isNull()) {
+    if (obj["room"].isNull()) {
         calibration[0] = 0.0;
     } else {
-        float rc = obj["roomcal"];
+        float rc = obj["room"];
         calibration[0] = rc;
     }
 
-    if (obj["towercal"].isNull()) {
+    if (obj["tower"].isNull()) {
         calibration[1] = 0.0;
     } else {
-        float tc = obj["towercal"];
+        float tc = obj["tower"];
         calibration[1] = tc;
     }
 
-    if (obj["uppercal"].isNull()) {
+    if (obj["upper"].isNull()) {
         calibration[2] = 0.0;
     } else {
-        float uc = obj["uppercal"];
+        float uc = obj["upper"];
         calibration[2] = uc;
     }
 
-    if (obj["lowercal"].isNull()) {
+    if (obj["lower"].isNull()) {
         calibration[3] = 0.0;
     } else {
-        float lc = obj["lowercal"];
+        float lc = obj["lower"];
         calibration[3] = lc;
     }
 
-    if (obj["kegcal"].isNull()) {
+    if (obj["keg"].isNull()) {
         calibration[4] = 0.0;
     } else {
-        float kc = obj["kegcal"];
+        float kc = obj["keg"];
         calibration[4] = kc;
     }
 }
@@ -366,7 +366,7 @@ void URLTarget::load(JsonObjectConst obj)
     }
 
     if (obj["freq"].isNull()) {
-        freq = 2;
+        freq = 30;
     } else {
         int f = obj["freq"];
         freq = f;
