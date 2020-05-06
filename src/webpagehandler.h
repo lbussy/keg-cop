@@ -29,6 +29,7 @@ SOFTWARE. */
 #include "config.h"
 #include "thatVersion.h"
 #include "execota.h"
+#include "flowmeter.h"
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
@@ -42,12 +43,15 @@ void setRegPageAliases();
 void setActionPageHandlers();
 void setJsonHandlers();
 void setSettingsAliases();
+void setEditor();
 void stopWebServer();
 
-extern struct Config config;
 extern struct ThatVersion thatVersion;
-// extern struct Flowmeter flow;
+extern struct Config config;
 extern const size_t capacityDeserial;
 extern const size_t capacitySerial;
+extern struct Flowmeter flow;
+extern const size_t capacityFlowDeserial;
+extern const size_t capacityFlowSerial;
 
 #endif // _WEBPAGEHANDLER_H
