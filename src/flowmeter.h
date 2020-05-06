@@ -30,7 +30,7 @@ SOFTWARE. */
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
-struct Keg
+struct Tap
 {
     int tapid;            // Tap ID
     int pin;              // μC Pin
@@ -40,6 +40,7 @@ struct Keg
     bool updated = false; // Semaphore for update needed
     double capacity;      // Tap Capacity
     double remaining;     // Tap remaining
+    bool active = false;  // Is tap active
 
     void load(JsonObjectConst, int);
     void save(JsonObject) const;
@@ -47,7 +48,7 @@ struct Keg
 
 struct Flowmeter
 {
-    Keg keg[8];
+    Tap tap[8];
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -59,18 +60,18 @@ void logFlow();
 // Control
 bool initFlow();
 // JSON Methods
-bool deleteKegConfigFile();
-bool loadKegConfig();
-bool loadKegFile();
-bool saveKegConfig();
-bool saveKegFile();
-bool deserializeKegConfig(Stream &);
-bool serializeKegConfig(Print &);
-bool printKegFile();
-bool printKegConfig();
-bool mergeKegJsonString(String);
-bool mergeKegJsonObject(JsonVariantConst);
-bool mergeKeg(JsonVariant, JsonVariantConst);
+bool deleteFlowConfigFile();
+bool loadFlowConfig();
+bool loadFlowFile();
+bool saveFlowConfig();
+bool saveFlowFile();
+bool deserializeFlowConfig(Stream &);
+bool serializeFlowConfig(Print &);
+bool printFlowFile();
+bool printFlowConfig();
+bool mergeFlowJsonString(String);
+bool mergeFlowJsonObject(JsonVariantConst);
+bool mergeFlow(JsonVariant, JsonVariantConst);
 
 extern struct Config config;
 
