@@ -30,16 +30,7 @@ void initWebServer()
     setActionPageHandlers();
     setJsonHandlers();
     setSettingsAliases();
-
-    // Setup SPIFFS editor
-#ifdef ESP32
-    server.addHandler(new SPIFFSEditor(SPIFFS, SPIFFSEDITUSER, SPIFFSEDITPW));
-#elif defined(ESP8266)
-    server.addHandler(new SPIFFSEditor(SPIFFSEDITUSER, SPIFFSEDITPW));
-#endif
-    server.on("/edit/", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->redirect("/edit");
-    });
+    setEditor();
 
     // File not found handler
 
@@ -172,6 +163,21 @@ void setJsonHandlers()
         DynamicJsonDocument doc(capacitySerial); // Create doc
         JsonObject root = doc.to<JsonObject>(); // Create JSON object
         config.save(root); // Fill the object with current config
+        String json;
+        serializeJsonPretty(doc, json); // Serialize JSON to String
+
+        request->header("Cache-Control: no-store");
+        request->send(200, F("application/json"), json);
+    });
+
+    server.on("/flow/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // Used to provide the Kegs json
+        Log.verbose(F("Serving /flow/." CR));
+
+        // Serialize configuration
+        DynamicJsonDocument doc(capacityFlowSerial); // Create doc
+        JsonObject root = doc.to<JsonObject>(); // Create JSON object
+        flow.save(root); // Fill the object with current kegs
         String json;
         serializeJsonPretty(doc, json); // Serialize JSON to String
 
@@ -607,6 +613,19 @@ void setSettingsAliases()
 //     //         }
 //     //     }
 //     // });
+}
+
+void setEditor()
+{
+    // Setup SPIFFS editor
+#ifdef ESP32
+    server.addHandler(new SPIFFSEditor(SPIFFS, SPIFFSEDITUSER, SPIFFSEDITPW));
+#elif defined(ESP8266)
+    server.addHandler(new SPIFFSEditor(SPIFFSEDITUSER, SPIFFSEDITPW));
+#endif
+    server.on("/edit/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->redirect("/edit");
+    });
 }
 
 void stopWebServer()
