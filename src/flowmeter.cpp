@@ -22,10 +22,10 @@ SOFTWARE. */
 
 #include "flowmeter.h"
 
-const char *kegfilename = "/kegs.json";
-extern const size_t capacityKegDeserial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(8) + 770;
-extern const size_t capacityKegSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(8);
-int kegPins[8] = {KEG0, KEG1, KEG2, KEG3, KEG4, KEG5, KEG6, KEG7};
+const char *flowfilename = "/flow.json";
+extern const size_t capacityFlowDeserial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9) + 830;
+extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9);
+int flowPins[8] = {KEG0, KEG1, KEG2, KEG3, KEG4, KEG5, KEG6, KEG7};
 Flowmeter flow;
 
 static IRAM_ATTR void HandleIntISR0(void)
@@ -74,69 +74,68 @@ static void (*pf[])(void) = { // ISR Function Pointers
     HandleIntISR4, HandleIntISR5,
     HandleIntISR6, HandleIntISR7};
 
-void handleInterrupts(int tap)
+void handleInterrupts(int tapNum)
 { // Increment pulse count
-    flow.keg[tap].pulse++;
-    flow.keg[tap].updated = true;
+    flow.tap[tapNum].pulse++;
+    flow.tap[tapNum].updated = true;
 }
 
 bool initFlow()
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < NUMTAPS; i++)
     {
-        pinMode(kegPins[i], INPUT_PULLUP);
-        digitalWrite(kegPins[i], HIGH);
-        attachInterrupt(digitalPinToInterrupt(kegPins[i]), pf[i], FALLING);
+        pinMode(flowPins[i], INPUT_PULLUP);
+        digitalWrite(flowPins[i], HIGH);
+        attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
     }
-    return loadKegConfig();
+    return loadFlowConfig();
 }
 
 void logFlow()
 { // Save debits to keg and to file
     for (int i = 0; i < NUMTAPS; i++)
     {
-        if (flow.keg[i].updated == true)
+        if (flow.tap[i].updated == true)
         {
-            flow.keg[i].remaining = flow.keg[i].remaining - (double(flow.keg[i].pulse) / (double(flow.keg[i].ppg)));
-            flow.keg[i].pulse = 0;
-            flow.keg[i].updated = false;
-            saveKegConfig();
+            flow.tap[i].remaining = flow.tap[i].remaining - (double(flow.tap[i].pulse) / (double(flow.tap[i].ppg)));
+            flow.tap[i].pulse = 0;
+            flow.tap[i].updated = false;
+            saveFlowConfig();
         }
     }
 }
 
-bool deleteKegConfigFile()
+bool deleteFlowConfigFile()
 {
     if (!SPIFFS.begin())
     {
         return false;
     }
-    return SPIFFS.remove(kegfilename);
+    return SPIFFS.remove(flowfilename);
 }
 
-bool loadKegConfig()
+bool loadFlowConfig()
 {
     // Manage loading the configuration
-    if (!loadKegFile())
+    if (!loadFlowFile())
     {
-
         return false;
     }
     else
     {
-        return saveKegFile();
+        return saveFlowFile();
     }
 }
 
-bool loadKegFile()
+bool loadFlowFile()
 {
     if (!SPIFFS.begin())
     {
         return false;
     }
     // Loads the configuration from a file on SPIFFS
-    File file = SPIFFS.open(kegfilename, "r");
-    if (!SPIFFS.exists(kegfilename) || !file)
+    File file = SPIFFS.open(flowfilename, "r");
+    if (!SPIFFS.exists(flowfilename) || !file)
     {
         // File does not exist or unable to read file
     }
@@ -145,7 +144,7 @@ bool loadKegFile()
         // Existing configuration present
     }
 
-    if (!deserializeKegConfig(file))
+    if (!deserializeFlowConfig(file))
     {
         file.close();
         return false;
@@ -157,15 +156,15 @@ bool loadKegFile()
     }
 }
 
-bool saveKegConfig()
+bool saveFlowConfig()
 {
-    return saveKegFile();
+    return saveFlowFile();
 }
 
-bool saveKegFile()
+bool saveFlowFile()
 {
     // Saves the configuration to a file on SPIFFS
-    File file = SPIFFS.open(kegfilename, "w");
+    File file = SPIFFS.open(flowfilename, "w");
     if (!file)
     {
         file.close();
@@ -173,7 +172,7 @@ bool saveKegFile()
     }
 
     // Serialize JSON to file
-    if (!serializeKegConfig(file))
+    if (!serializeFlowConfig(file))
     {
         file.close();
         return false;
@@ -182,10 +181,10 @@ bool saveKegFile()
     return true;
 }
 
-bool deserializeKegConfig(Stream &src)
+bool deserializeFlowConfig(Stream &src)
 {
     // Deserialize configuration
-    DynamicJsonDocument doc(capacityKegDeserial);
+    DynamicJsonDocument doc(capacityFlowDeserial);
 
     // Parse the JSON object in the file
     DeserializationError err = deserializeJson(doc, src);
@@ -203,10 +202,10 @@ bool deserializeKegConfig(Stream &src)
     // TODO:  Can I return false here somehow?
 }
 
-bool serializeKegConfig(Print &dst)
+bool serializeFlowConfig(Print &dst)
 {
     // Serialize configuration
-    DynamicJsonDocument doc(capacityKegSerial);
+    DynamicJsonDocument doc(capacityFlowSerial);
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -218,10 +217,10 @@ bool serializeKegConfig(Print &dst)
     return serializeJsonPretty(doc, dst) > 0;
 }
 
-bool printKegFile()
+bool printFlowFile()
 {
     // Prints the content of a file to the Serial
-    File file = SPIFFS.open(kegfilename, "r");
+    File file = SPIFFS.open(flowfilename, "r");
     if (!file)
         return false;
 
@@ -233,10 +232,10 @@ bool printKegFile()
     return true;
 }
 
-bool printKegConfig()
+bool printFlowConfig()
 {
     // Serialize configuration
-    DynamicJsonDocument doc(capacityKegSerial);
+    DynamicJsonDocument doc(capacityFlowSerial);
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -250,10 +249,10 @@ bool printKegConfig()
     return retval;
 }
 
-bool mergeKegJsonString(String newJson)
+bool mergeFlowJsonString(String newJson)
 {
     // Serialize configuration
-    DynamicJsonDocument doc(capacityKegDeserial);
+    DynamicJsonDocument doc(capacityFlowDeserial);
 
     // Parse directly from file
     DeserializationError err = deserializeJson(doc, newJson);
@@ -263,10 +262,10 @@ bool mergeKegJsonString(String newJson)
     return mergeJsonObject(doc);
 }
 
-bool mergeKegJsonObject(JsonVariantConst src)
+bool mergeFlowJsonObject(JsonVariantConst src)
 {
     // Serialize configuration
-    DynamicJsonDocument doc(capacityKegDeserial);
+    DynamicJsonDocument doc(capacityFlowDeserial);
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -286,7 +285,7 @@ bool mergeKegJsonObject(JsonVariantConst src)
     return false;
 }
 
-bool mergeKeg(JsonVariant dst, JsonVariantConst src)
+bool mergeFlow(JsonVariant dst, JsonVariantConst src)
 {
     if (src.is<JsonObject>())
     {
@@ -302,7 +301,7 @@ bool mergeKeg(JsonVariant dst, JsonVariantConst src)
     return true;
 }
 
-void Keg::save(JsonObject obj) const
+void Tap::save(JsonObject obj) const
 {
     obj["tapid"] = tapid;           // Tap ID
     obj["pin"] =  pin;              // μC Pin
@@ -312,14 +311,15 @@ void Keg::save(JsonObject obj) const
     obj["updated"] =  updated;      // Semaphore for update needed
     obj["capacity"] =  capacity;    // Tap Capacity
     obj["remaining"] =  remaining;  // Tap remaining
+    obj["active"] =  active;        // Tap active
 }
 
-void Keg::load(JsonObjectConst obj, int numtap)
+void Tap::load(JsonObjectConst obj, int numTap)
 {
     // Load Keg[numtap] configuration
     //
-    tapid = numtap;
-    pin = kegPins[numtap];
+    tapid = numTap;
+    pin = flowPins[numTap];
 
     if (obj["ppg"].isNull() || obj["ppg"] == 0)
     {
@@ -380,28 +380,38 @@ void Keg::load(JsonObjectConst obj, int numtap)
         double rm = obj["remaining"];
         remaining = rm;
     }
+
+    if (obj["active"].isNull())
+    {
+        active = false;
+    }
+    else
+    {
+        bool a = obj["active"];
+        active = a;
+    }
 }
 
 void Flowmeter::save(JsonObject obj) const
 {
-    // Add "kegs" array
-    JsonArray kegs = obj.createNestedArray("kegs");
+    // Add "taps" array
+    JsonArray taps = obj.createNestedArray("tap");
 
     // Add each keg in the array
     for (int i = 0; i < NUMTAPS; i++)
-        keg[i].save(kegs.createNestedObject());
+        tap[i].save(taps.createNestedObject());
 }
 
 void Flowmeter::load(JsonObjectConst obj)
 {
-    JsonArrayConst kegs = obj["kegs"];
+    JsonArrayConst kegs = obj["tap"];
 
-    int numtap = 0;
+    int numTap = 0;
     for (JsonObjectConst ap : kegs)
     {
-        keg[numtap].load(ap, numtap);
-        numtap++;
-        if (numtap >= NUMTAPS)
+        tap[numTap].load(ap, numTap);
+        numTap++;
+        if (numTap >= NUMTAPS)
             break;
     }
 }
