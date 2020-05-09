@@ -76,7 +76,7 @@ struct URLTarget
 struct CloudTarget
 {
     // Stores Cloud Target configuration
-    char type[32];
+    int type;
     char url[128];
     char key[64];
     int freq;

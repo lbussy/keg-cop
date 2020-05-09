@@ -394,10 +394,10 @@ void CloudTarget::load(JsonObjectConst obj)
     // Load Cloud configuration
     //
     if (obj["type"].isNull()) {
-        strlcpy(key, "", sizeof(type));
+        type = 0;
     } else {
-        const char* t = obj["type"];
-        strlcpy(type, t, sizeof(type));
+        int t = obj["type"];
+        type = t;
     }
 
     if (obj["url"].isNull()) {
