@@ -3,10 +3,12 @@
 - Add web page handlers
 - Add web page scripting
     - Index
-    - Settings
+    - OnLoad spinner
+    - ~~Settings~~
 - Add targets
 - Decide on active/inactive vs numtaps
 - Add RPints compatibility
+- Fix flow.json defaults
 
 # Done Items
 
