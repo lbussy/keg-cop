@@ -1046,7 +1046,7 @@
 												<label class="form-check-label"
 													title="Change the application display in Standard (&#8457 or Gallons)">
 													<input type="radio" class="form-check-input" name="units"
-														id="standard" value="option1" checked="">
+														id="imperial" value="option1" checked="">
 													Imperial
 												</label>
 											</div>
@@ -1097,11 +1097,11 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <select class="form-control" name="controlpoint" id="controlpoint">
-                                            <option>Room Temp Sensor</option>
-                                            <option>Tower Temp Sensor</option>
-                                            <option>Upper Chamber Temp Sensor</option>
-                                            <option>Lower Chamber Temp Sensor</option>
-                                            <option>Keg Temp Sensor</option>
+                                            <option value = "0">Room Temp Sensor</option>
+                                            <option value = "1">Tower Temp Sensor</option>
+                                            <option value = "2">Upper Chamber Temp Sensor</option>
+                                            <option value = "3">Lower Chamber Temp Sensor</option>
+                                            <option value = "4">Keg Temp Sensor</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-2"><button class="btn btn-primary"
@@ -1214,7 +1214,7 @@
 									<div class="col-sm-8">
 										<input type="text" class="form-control" name="targeturl"
 											id="targeturl" minlength="3" maxlength="128"
-											placeholder="http://kegscreen.local//taplist/api/pour/">
+											placeholder="http://kegscreen.local/taplist/api/pour/">
 									</div>
 									<div class="col-sm-2"><button class="btn btn-primary"
 											id="submitSettings">Update</button>
@@ -1254,11 +1254,11 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <select class="form-control" name="cloudtype" id="cloudtype">
-                                            <option>Cloud 1</option>
-                                            <option>Cloud 2</option>
-                                            <option>Cloud 3</option>
-                                            <option>Cloud 4</option>
-                                            <option>Cloud 5</option>
+                                            <option value = "0">Cloud 1</option>
+                                            <option value = "1">Cloud 2</option>
+                                            <option value = "2">Cloud 3</option>
+                                            <option value = "3">Cloud 4</option>
+                                            <option value = "4">Cloud 5</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-2"><button class="btn btn-primary"
@@ -1435,17 +1435,21 @@
                         $('input[name="hostname"]').val(config.hostname);
                         $('input[name="breweryname"]').val(config.copconfig.breweryname);
                         $('input[name="kegeratorname"]').val(config.copconfig.kegeratorname);
-                        // <!-- units -->
+                        if (config.copconfig.imperial) {
+                            $('input:radio[name="units"]')[1].checked = true;
+                        } else {
+                            $('input:radio[name="units"]')[0].checked = true;
+                        }
                         $('input[name="setpoint"]').val(parseFloat(config.temps.setpoint));
-                        // <!-- controlpoint -->
-                        $('input[name="calroom"]').val(parseFloat(config.temps.room));
-                        $('input[name="caltower"]').val(parseFloat(config.temps.tower));
-                        $('input[name="calupper"]').val(parseFloat(config.temps.upper));
-                        $('input[name="callower"]').val(parseFloat(config.temps.lower));
-                        $('input[name="calkeg"]').val(parseFloat(config.temps.keg));
+                        $('select[name="controlpoint"] option[value=' + parseInt(config.temps.controlpoint, 10) + ']').attr('selected', 'selected');
+                        $('input[name="calroom"]').val(parseFloat(config.temps.roomcal));
+                        $('input[name="caltower"]').val(parseFloat(config.temps.towercal));
+                        $('input[name="calupper"]').val(parseFloat(config.temps.uppercal));
+                        $('input[name="callower"]').val(parseFloat(config.temps.lowercal));
+                        $('input[name="calkeg"]').val(parseFloat(config.temps.kegcal));
                         $('input[name="targeturl"]').val(config.urltarget.url);
                         $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
-                        // <!-- cloudtype -->
+                        $('select[name="cloudtype"] option[value=' + parseInt(config.cloud.type, 10) + ']').attr('selected', 'selected');
                         $('input[name="cloudkey"]').val(config.cloud.key);
                         $('input[name="cloudfreq"]').val(parseInt(config.cloud.freq), 10);
                     }
