@@ -30,14 +30,15 @@ SOFTWARE. */
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
+volatile static long pulse[7];      // Unregistered pulse counter
+volatile static bool updated[7];    // Semaphore for update needed
+
 struct Tap
 {
     int tapid;            // Tap ID
     int pin;              // μC Pin
     long ppg;             // Pulses per Gallon
     char name[33];        // Beer Name
-    long pulse;           // Unregistered Pulse Count
-    bool updated = false; // Semaphore for update needed
     double capacity;      // Tap Capacity
     double remaining;     // Tap remaining
     bool active = false;  // Is tap active
