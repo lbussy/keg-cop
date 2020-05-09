@@ -76,8 +76,8 @@ static void (*pf[])(void) = { // ISR Function Pointers
 
 void handleInterrupts(int tapNum)
 { // Increment pulse count
-    flow.tap[tapNum].pulse++;
-    flow.tap[tapNum].updated = true;
+    pulse[tapNum]++;
+    updated[tapNum] = true;
 }
 
 bool initFlow()
@@ -87,6 +87,8 @@ bool initFlow()
         pinMode(flowPins[i], INPUT_PULLUP);
         digitalWrite(flowPins[i], HIGH);
         attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
+        pulse[i] = 0;
+        updated[i] = false;
     }
     return loadFlowConfig();
 }
@@ -95,11 +97,11 @@ void logFlow()
 { // Save debits to keg and to file
     for (int i = 0; i < NUMTAPS; i++)
     {
-        if (flow.tap[i].updated == true)
+        if (updated[i] == true)
         {
-            flow.tap[i].remaining = flow.tap[i].remaining - (double(flow.tap[i].pulse) / (double(flow.tap[i].ppg)));
-            flow.tap[i].pulse = 0;
-            flow.tap[i].updated = false;
+            flow.tap[i].remaining = flow.tap[i].remaining - (double(pulse[i]) / (double(flow.tap[i].ppg)));
+            pulse[i] = 0;
+            updated[i] = false;
             saveFlowConfig();
         }
     }
@@ -307,8 +309,6 @@ void Tap::save(JsonObject obj) const
     obj["pin"] =  pin;              // μC Pin
     obj["ppg"] =  ppg;              // Pulses per Gallon
     obj["name"] =  name;            // Beer Name
-    obj["pulse"] =  pulse;          // Unregistered Pulse Count
-    obj["updated"] =  updated;      // Semaphore for update needed
     obj["capacity"] =  capacity;    // Tap Capacity
     obj["remaining"] =  remaining;  // Tap remaining
     obj["active"] =  active;        // Tap active
@@ -339,26 +339,6 @@ void Tap::load(JsonObjectConst obj, int numTap)
     {
         const char *nm = obj["name"];
         strlcpy(name, nm, sizeof(name));
-    }
-
-    if (obj["pulse"].isNull())
-    {
-        pulse = 0;
-    }
-    else
-    {
-        long pl = obj["pulse"];
-        pulse = pl;
-    }
-
-    if (obj["updated"].isNull())
-    {
-        updated = false;
-    }
-    else
-    {
-        bool u = obj["updated"];
-        updated = u;
     }
 
     if (obj["capacity"].isNull())
