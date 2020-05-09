@@ -60,6 +60,7 @@ void setup()
     tcpCleanup();       // Get rid of -8 errors
     initWebServer();    // Turn on web server
     sensorInit();       // Initialize temperature sensors
+    doPoll();           // Get server version at startup
 
     // Initialize flowmeters
     if (initFlow())
@@ -68,7 +69,6 @@ void setup()
         Log.error(F("Unable to load flowmeters." CR));
 
     startControl();     // Initialize temperature control
-    doPoll();           // Get server version at startup
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
