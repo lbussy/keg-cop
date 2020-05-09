@@ -363,7 +363,7 @@ void Tap::load(JsonObjectConst obj, int numTap)
 
     if (obj["capacity"].isNull())
     {
-        capacity = 0;
+        capacity = KEGSIZE;
     }
     else
     {
