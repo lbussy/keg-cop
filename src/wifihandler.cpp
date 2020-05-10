@@ -26,6 +26,7 @@ bool shouldSaveConfig = false;
 Ticker blinker;
 
 void doWiFi() {
+    WiFi.begin("NETGEAR_11N", "idoxlr8!"); // DEBUG
     doWiFi(false);
 }
 
