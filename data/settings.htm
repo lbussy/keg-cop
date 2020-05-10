@@ -39,10 +39,54 @@
             padding-right: 15px;
             padding-left: 15px;
         }
+
+        .loader {
+            display: none;
+            position: absolute;
+            z-index: 9999;
+            top: 40%;
+            left: 42%;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: 16px solid #2FA4E7;
+            border-radius: 50%;
+            border-top: 16px solid #2FA4E7;
+            border-right: 16px solid #73A839;
+            border-bottom: 16px solid #DD5600;
+            border-left: 16px solid #C71C22;
+            width: 100px;
+            height: 100px;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+    
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+    
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body class="d-flex flex-column h-100">
+
+    <div class="loader" id="loader"></div>
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -73,7 +117,7 @@
         </nav>
     </header>
 
-    <main role="main" class="flex-shrink-0">
+    <main role="main" class="flex-shrink-0" style="visibility:hidden;">
 
         <div class="container" id="settingsapp"> <!-- Container -->
 
@@ -1373,6 +1417,7 @@
     </script>
 
     <script type="text/javascript">
+        var loaded = 0; // Hold data load status
         // Attach the event after the page loads
         if (window.addEventListener)
             window.addEventListener("load", loadPage, false);
@@ -1381,6 +1426,7 @@
         else window.onload = loadPage;
 
         function loadPage() {
+            toggleLoader("on");
             populateFlow();
             populateConfig();
             loadTab();
@@ -1423,6 +1469,10 @@
                 })
                 .always(function () {
                     // Can post-process here
+                    loaded++;
+                    if (loaded == 2) {
+                        toggleLoader("off");
+                    }
                 });
         }
 
@@ -1462,10 +1512,25 @@
                 })
                 .always(function () {
                     // Can post-process here
+                    loaded++;
+                    if (loaded == 2) {
+                        toggleLoader("off");
+                    }
                 });
         }
-        
-        </script>
+
+        function toggleLoader(status) {
+            var loader = document.getElementById("loader");
+            var settingsapp = document.getElementById("settingsapp");
+            if (status === "on") {
+                loader.style.display = "block";
+                settingsapp.style.visibility = "hidden";
+            } else {
+                loader.style.display = "none";
+                settingsapp.style.visibility = "visible";
+            }
+        }
+    </script>
 
 </body>
 
