@@ -1,48 +1,6 @@
-<!doctype html>
-<html lang="en" class="h-100">
-
-<head>
-    <meta charset="utf-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <meta name="description" content="Keg Cop, a Home Brewing application">
-    <meta name="author" content="Lee Bussy">
-
-    <title>Keg Cop</title>
-
-    <link rel="canonical" href="https://www.kegcop.com/">
-
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-
-    <style>
-        main>.container {
-            width: auto;
-            max-width: 1024px;
-            padding: 20px 15px 0;
-        }
-
-        .footer {
-            background-color: #f5f5f5;
-        }
-
-        .footer>.container {
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-    </style>
-</head>
-
 <body class="d-flex flex-column h-100">
+
+    <div class="loader" id="loader"></div>
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -75,70 +33,79 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="indexApp">
+        <div class="container" id="indexApp" style="visibility:hidden;">
             <!-- Container -->
 
             <div class="page-header" id="banner">
-                <h1>{Brewery Name}</h1>
+                <h1><span id="breweryname" name="breweryname"></span></h1>
             </div>
-            <div class="card border-dark mb-3"> <!-- Sensor Readings -->
+            <div class="card border-dark mb-3">
+                <!-- Sensor Readings -->
                 <div class="card-header">
                     <h4 class="card-title">Tap List</h4>
                 </div>
-                <div class="card-body" id=tap1display>
-                    Tap 1: {Beer Name}
+                <div class="card-body" id="tap0display">
+                    <span id="tap0name" name="tap0name"></span>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap0prog" id="tap0prog">
+                        </div>
                     </div>
                 </div>
-                <div class="card-body" id=tap2display>
-                    Tap 2: {Beer Name}
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 90%"
-                            aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-                <div class="card-body" id=tap3display>
-                    Tap 3: {Beer Name}
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 80%"
-                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-                <div class="card-body" id=tap4display>
-                    Tap 4: {Beer Name}
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 50%"
-                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-                <div class="card-body" id=tap5display>
-                    Tap 5: {Beer Name}
+                <div class="card-body" id="tap1display">
+                    <span id="tap1name" name="tap1name"></span>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap1prog" id="tap1prog">
+                        </div>
                     </div>
                 </div>
-                <div class="card-body" id=tap6display>
-                    Tap 6: {Beer Name}
+                <div class="card-body" id="tap2display">
+                    <span id="tap2name" name="tap2name"></span>
                     <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 20%"
-                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
+                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap2prog" id="tap2prog">
+                        </div>
                     </div>
                 </div>
-                <div class="card-body" id=tap7display>
-                    Tap 7: {Beer Name}
+                <div class="card-body" id="tap3display">
+                    <span id="tap3name" name="tap3name"></span>
                     <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 60%"
-                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
+                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="ta30prog" id="tap3prog">
+                        </div>
                     </div>
                 </div>
-                <div class="card-body" id=tap8display>
-                    Tap 8: {Beer Name}
+                <div class="card-body" id="tap4display">
+                    <span id="tap4name" name="tap4name"></span>
                     <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 50%"
-                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
+                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap4prog" id="tap4prog">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" id="tap5display">
+                    <span id="tap5name" name="tap0name"></span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
+                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap5prog" id="tap5prog">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" id="tap6display">
+                    <span id="tap6name" name="tap6name"></span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
+                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap6prog" id="tap6prog">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" id="tap7display">
+                    <span id="tap7name" name="tap7name"></span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
+                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap7prog" id="tap7prog">
+                        </div>
                     </div>
                 </div>
 
@@ -150,21 +117,22 @@
 
     <footer class="footer mt-auto py-3">
         <div class="container">
-            <span class="text-muted">Copyright &copy; 2019-2020, Lee C. Bussy</span>
+            <span class="text-muted">Copyright © 2019-2020, Lee C. Bussy</span>
         </div>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
+        </script>
 
     <script>
+        var loaded = 0; // Hold data load status
         // Attach the event after the page loads
         if (window.addEventListener)
             window.addEventListener("load", loadPage, false);
@@ -173,10 +141,88 @@
         else window.onload = loadPage;
 
         function loadPage() {
+            toggleLoader("on");
+            populateFlow();
+            populateConfig();
+        }
 
+        function populateFlow() { // Get flowmeter settings
+            var url = "/flow/";
+            var flow = $.getJSON(url, function () {
+            })
+                .done(function (flow) {
+                    // http://kegcop.local/settings/#tap0
+
+                    var numTaps = flow["tap"].length;
+                    try {
+                        for (var i = 0; i < numTaps; i++) {
+                            $('span[name="tap' + i + 'name"]').html(flow.tap[i].name);
+                            //         $('input[name="tap' + i + 'ppg"]').val(parseInt(flow.tap[i].ppg), 10);
+                            //         $('input[name="tap' + i + 'beername"]').val(flow.tap[i].name);
+                            //         $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.tap[i].capacity));
+                            //         $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.tap[i].remaining));
+                            //         $('input[name="tap' + i + 'active"]').prop("checked", flow.tap[i].active);
+                        }
+                    }
+                    catch {
+                        alert("Unable to parse configuration data from SPIFFS.");
+                    }
+                })
+                .fail(function () {
+                    alert("Unable to retrieve configuration data from SPIFFS.");
+                })
+                .always(function () {
+                    // Can post-process here
+                    loaded++;
+                    if (loaded == 2) {
+                        toggleLoader("off");
+                    }
+                });
+        }
+
+        function populateConfig() { // Get configuration settings
+            var url = "/config/";
+            var config = $.getJSON(url, function () {
+            })
+                .done(function (config) {
+                    try {
+                        // $('input[name="hostname"]').val(config.hostname);
+                        $('span[name="breweryname"]').html(config.copconfig.breweryname);
+                        // $('input[name="breweryname"]').val(config.copconfig.breweryname);
+                        // $('input[name="kegeratorname"]').val(config.copconfig.kegeratorname);
+                        // if (config.copconfig.imperial) {
+                        //     $('input:radio[name="units"]')[1].checked = true;
+                        // } else {
+                        //     $('input:radio[name="units"]')[0].checked = true;
+                        // }
+                        // $('input[name="setpoint"]').val(parseFloat(config.temps.setpoint));
+                        // $('select[name="controlpoint"] option[value=' + parseInt(config.temps.controlpoint, 10) + ']').attr('selected', 'selected');
+                        // $('input[name="calroom"]').val(parseFloat(config.temps.roomcal));
+                        // $('input[name="caltower"]').val(parseFloat(config.temps.towercal));
+                        // $('input[name="calupper"]').val(parseFloat(config.temps.uppercal));
+                        // $('input[name="callower"]').val(parseFloat(config.temps.lowercal));
+                        // $('input[name="calkeg"]').val(parseFloat(config.temps.kegcal));
+                        // $('input[name="targeturl"]').val(config.urltarget.url);
+                        // $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
+                        // $('select[name="cloudtype"] option[value=' + parseInt(config.cloud.type, 10) + ']').attr('selected', 'selected');
+                        // $('input[name="cloudkey"]').val(config.cloud.key);
+                        // $('input[name="cloudfreq"]').val(parseInt(config.cloud.freq), 10);
+                    }
+                    catch {
+                        alert("Unable to parse configuration data from SPIFFS.");
+                    }
+                })
+                .fail(function () {
+                    alert("Unable to retrieve configuration data from SPIFFS.");
+                })
+                .always(function () {
+                    // Can post-process here
+                    loaded++;
+                    if (loaded == 2) {
+                        toggleLoader("off");
+                    }
+                });
         }
     </script>
-
 </body>
-
 </html>
