@@ -3,7 +3,7 @@
 - Add web page handlers
 - Add web page scripting
     - Index
-    - OnLoad spinner
+    - ~~OnLoad spinner~~
     - ~~Settings~~
 - Add targets
 - Decide on active/inactive vs numtaps
