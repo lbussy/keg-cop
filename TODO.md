@@ -1,9 +1,9 @@
 # TODO Items:
 
 - Add web page handlers
-- Add targets
-- Decide on active/inactive vs numtaps
-- Add RPints compatibility
+- Add target pushes
+- Add RPints compatibility 
+- Add RPints report
 - Fix flow.json defaults
 - Allow graphics to load on controller reset
 
@@ -34,3 +34,4 @@
     - ~~OnLoad spinner~~
     - ~~Settings~~
 - ~~Design Settings~~
+- ~~Decide on active/inactive vs numtaps~~
