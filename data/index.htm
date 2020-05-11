@@ -64,83 +64,21 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="indexApp" style="visibility:hidden;">
-            <!-- Container -->
+        <div class="container" id="indexApp" style="visibility:hidden;"> <!-- Container -->
 
             <div class="page-header" id="banner">
-                <h1><span id="breweryname" name="breweryname"></span></h1>
+                <h1><span id="tapheader" name="tapheader"></span></h1>
             </div>
+
             <div class="card border-dark mb-3">
-                <!-- Sensor Readings -->
                 <div class="card-header">
                     <h4 class="card-title">Tap List</h4>
                 </div>
-                <div class="card-body" id="tap0display">
-                    <span id="tap0name" name="tap0name"></span>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap0prog" id="tap0prog">
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body" id="tap1display">
-                    <span id="tap1name" name="tap1name"></span>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap1prog" id="tap1prog">
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body" id="tap2display">
-                    <span id="tap2name" name="tap2name"></span>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap2prog" id="tap2prog">
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body" id="tap3display">
-                    <span id="tap3name" name="tap3name"></span>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="ta30prog" id="tap3prog">
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body" id="tap4display">
-                    <span id="tap4name" name="tap4name"></span>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap4prog" id="tap4prog">
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body" id="tap5display">
-                    <span id="tap5name" name="tap0name"></span>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap5prog" id="tap5prog">
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body" id="tap6display">
-                    <span id="tap6name" name="tap6name"></span>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap6prog" id="tap6prog">
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body" id="tap7display">
-                    <span id="tap7name" name="tap7name"></span>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%"
-                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" name="tap7prog" id="tap7prog">
-                        </div>
-                    </div>
-                </div>
 
-            </div> <!-- Sensor Readings -->
+                <!-- Sensor Readings -->
+                <div class="card-body"><span id="tapdisplay" name="tapdisplay"></span></div>
+                <!-- Sensor Readings -->
+            </div>
 
         </div> <!-- Container -->
 
@@ -164,6 +102,7 @@
 
     <script>
         var loaded = 0; // Hold data load status
+
         // Attach the event after the page loads
         if (window.addEventListener)
             window.addEventListener("load", loadPage, false);
@@ -178,6 +117,7 @@
         }
 
         function populateFlow() { // Get flowmeter settings
+            var tapHTML = ''; // Hold the taplist HTML
             var url = "/flow/";
             var flow = $.getJSON(url, function () {
             })
@@ -187,23 +127,49 @@
                     var numTaps = flow["tap"].length;
                     try {
                         for (var i = 0; i < numTaps; i++) {
-                            $('span[name="tap' + i + 'name"]').html(flow.tap[i].name);
-                            //         $('input[name="tap' + i + 'ppg"]').val(parseInt(flow.tap[i].ppg), 10);
-                            //         $('input[name="tap' + i + 'beername"]').val(flow.tap[i].name);
-                            //         $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.tap[i].capacity));
-                            //         $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.tap[i].remaining));
-                            //         $('input[name="tap' + i + 'active"]').prop("checked", flow.tap[i].active);
+                            if (flow.tap[i].active) { // Dynamically create tap list HTML
+                                tapHTML += '<div class="card-body" id="tap' + i + 'display">\n';
+                                tapHTML += '<span id="tap' + i + 'name" name="tap' + i + 'name">' + flow.tap[i].name + '</span>\n';
+                                tapHTML += '<div class="progress">\n';
+                                tapHTML += '<div class="progress-bar progress-bar-striped bg-warning" role="progressbar"\n';
+                                tapHTML += 'text="0%" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"\n';
+                                tapHTML += 'name="tap' + i + 'prog" id="tap' + i + 'prog" data-toggle="tooltip" title="';
+                                tapHTML += flow.tap[i].remaining.toFixed(1).toString() + ' of ' + flow.tap[i].capacity.toFixed(1).toString();
+                                tapHTML += ' remaining.';
+                                tapHTML += '">\n';
+                                tapHTML += '</div>\n</div>\n</div>\n';
+                            }
+                        }
+                        $('#tapdisplay').html(tapHTML); // Display taplist
+                        try {
+                            for (var i = 0; i < numTaps; i++) {
+                                if (flow.tap[i].active) { // Update tap list details
+                                    $('#tap' + i + 'name').html('<a href="/settings/#tap' + i + '" class="no-underline">Tap ' + (i + 1) + ': &nbsp;' + flow.tap[i].name + '</a>');
+                                    var remain = (flow.tap[i].remaining / flow.tap[i].capacity) * 100;
+                                    $('#tap' + i + 'prog')
+                                        .css("width", remain + "%")
+                                        .attr("aria-valuenow", remain)
+                                        .text(remain + "%");
+                                }
+                            }
+                        }
+                        catch {
+                            alert("Error while generating dynamic flowmeter content.");
                         }
                     }
                     catch {
-                        alert("Unable to parse configuration data from SPIFFS.");
+                        alert("Unable to parse flowmeter data from SPIFFS.");
                     }
                 })
                 .fail(function () {
-                    alert("Unable to retrieve configuration data from SPIFFS.");
+                    alert("Unable to retrieve flowmeter data from SPIFFS.");
                 })
                 .always(function () {
                     // Can post-process here
+                    $('[data-toggle="tooltip"]').tooltip({
+                        delay: { show: 200, hide: 300 },
+                        animation: true
+                    });
                     loaded++;
                     if (loaded == 2) {
                         toggleLoader("off");
@@ -217,27 +183,7 @@
             })
                 .done(function (config) {
                     try {
-                        // $('input[name="hostname"]').val(config.hostname);
-                        $('span[name="breweryname"]').html(config.copconfig.breweryname);
-                        // $('input[name="breweryname"]').val(config.copconfig.breweryname);
-                        // $('input[name="kegeratorname"]').val(config.copconfig.kegeratorname);
-                        // if (config.copconfig.imperial) {
-                        //     $('input:radio[name="units"]')[1].checked = true;
-                        // } else {
-                        //     $('input:radio[name="units"]')[0].checked = true;
-                        // }
-                        // $('input[name="setpoint"]').val(parseFloat(config.temps.setpoint));
-                        // $('select[name="controlpoint"] option[value=' + parseInt(config.temps.controlpoint, 10) + ']').attr('selected', 'selected');
-                        // $('input[name="calroom"]').val(parseFloat(config.temps.roomcal));
-                        // $('input[name="caltower"]').val(parseFloat(config.temps.towercal));
-                        // $('input[name="calupper"]').val(parseFloat(config.temps.uppercal));
-                        // $('input[name="callower"]').val(parseFloat(config.temps.lowercal));
-                        // $('input[name="calkeg"]').val(parseFloat(config.temps.kegcal));
-                        // $('input[name="targeturl"]').val(config.urltarget.url);
-                        // $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
-                        // $('select[name="cloudtype"] option[value=' + parseInt(config.cloud.type, 10) + ']').attr('selected', 'selected');
-                        // $('input[name="cloudkey"]').val(config.cloud.key);
-                        // $('input[name="cloudfreq"]').val(parseInt(config.cloud.freq), 10);
+                        $('#tapheader').html('Showing ' + config.copconfig.kegeratorname + ' for ' + config.copconfig.breweryname);
                     }
                     catch {
                         alert("Unable to parse configuration data from SPIFFS.");
