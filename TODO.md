@@ -1,14 +1,11 @@
 # TODO Items:
 
 - Add web page handlers
-- Add web page scripting
-    - Index
-    - ~~OnLoad spinner~~
-    - ~~Settings~~
 - Add targets
 - Decide on active/inactive vs numtaps
 - Add RPints compatibility
 - Fix flow.json defaults
+- Allow graphics to load on controller reset
 
 # Done Items
 
@@ -26,11 +23,14 @@
 - ~~Add thatVersion~~
 - ~~Add OTA~~
 - ~~Design Index~~
-- Add web page scripting
+- ~~Add web page scripting~~
     - ~~Ota~~
     - ~~Ota2~~
     - ~~Reset~~
     - ~~Wifi~~
     - ~~Wifi2~~
     - ~~About~~
+    - ~~Index~~
+    - ~~OnLoad spinner~~
+    - ~~Settings~~
 - ~~Design Settings~~
