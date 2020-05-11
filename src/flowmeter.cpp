@@ -333,7 +333,8 @@ void Tap::load(JsonObjectConst obj, int numTap)
 
     if (obj["name"].isNull())
     {
-        strlcpy(name, "", sizeof(name));
+        Log.verbose(F("DEBUG: Loading default beer name." CR));
+        strlcpy(name, DEFAULTBEER, sizeof(name));
     }
     else
     {
