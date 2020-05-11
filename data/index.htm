@@ -101,7 +101,9 @@
         </script>
 
     <script>
-        var loaded = 0; // Hold data load status
+        var loaded = 0;   // Hold data load status
+        var tapHTML = ''; // Hold the taplist HTML
+        var units;        // Gallons or Liters
 
         // Attach the event after the page loads
         if (window.addEventListener)
@@ -117,34 +119,36 @@
         }
 
         function populateFlow() { // Get flowmeter settings
-            var tapHTML = ''; // Hold the taplist HTML
             var url = "/flow/";
             var flow = $.getJSON(url, function () {
             })
                 .done(function (flow) {
-                    // http://kegcop.local/settings/#tap0
 
                     var numTaps = flow["tap"].length;
                     try {
                         for (var i = 0; i < numTaps; i++) {
                             if (flow.tap[i].active) { // Dynamically create tap list HTML
+                                var remain = (flow.tap[i].remaining / flow.tap[i].capacity) * 100;
                                 tapHTML += '<div class="card-body" id="tap' + i + 'display">\n';
-                                tapHTML += '<span id="tap' + i + 'name" name="tap' + i + 'name">' + flow.tap[i].name + '</span>\n';
+                                tapHTML += '<span id="tap' + i + 'name" name="tap' + i + 'name">';
+                                tapHTML += '<a href="/settings/#tap' + i + '" class="no-underline">Tap ';
+                                tapHTML += (i + 1) + ': &nbsp;' + flow.tap[i].name + '</a>';
+                                tapHTML += '</span>\n';
                                 tapHTML += '<div class="progress">\n';
-                                tapHTML += '<div class="progress-bar progress-bar-striped bg-warning" role="progressbar"\n';
-                                tapHTML += 'text="0%" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"\n';
+                                tapHTML += '<div\nclass="progress-bar progress-bar-striped bg-warning" role="progressbar"\n';
+                                tapHTML += 'style="width: ' + remain + '%" aria-valuenow="' + remain;
+                                tapHTML += '" aria-valuemin="' + remain + '" aria-valuemax="100"\n';
                                 tapHTML += 'name="tap' + i + 'prog" id="tap' + i + 'prog" data-toggle="tooltip" title="';
-                                tapHTML += flow.tap[i].remaining.toFixed(1).toString() + ' of ' + flow.tap[i].capacity.toFixed(1).toString();
-                                tapHTML += ' remaining.';
-                                tapHTML += '">\n';
+                                tapHTML += flow.tap[i].remaining.toFixed(1).toString() + ' of ';
+                                tapHTML += flow.tap[i].capacity.toFixed(1).toString();
+                                tapHTML += ' %UNITS% remaining.';
+                                tapHTML += '">' + remain + '%\n';
                                 tapHTML += '</div>\n</div>\n</div>\n';
                             }
                         }
-                        $('#tapdisplay').html(tapHTML); // Display taplist
                         try {
                             for (var i = 0; i < numTaps; i++) {
                                 if (flow.tap[i].active) { // Update tap list details
-                                    $('#tap' + i + 'name').html('<a href="/settings/#tap' + i + '" class="no-underline">Tap ' + (i + 1) + ': &nbsp;' + flow.tap[i].name + '</a>');
                                     var remain = (flow.tap[i].remaining / flow.tap[i].capacity) * 100;
                                     $('#tap' + i + 'prog')
                                         .css("width", remain + "%")
@@ -166,13 +170,15 @@
                 })
                 .always(function () {
                     // Can post-process here
-                    $('[data-toggle="tooltip"]').tooltip({
+                    $('[data-toggle="tooltip"]').tooltip({ // Enable tooltips
                         delay: { show: 200, hide: 300 },
                         animation: true
                     });
                     loaded++;
                     if (loaded == 2) {
-                        toggleLoader("off");
+                        tapHTML = tapHTML.replace(/%UNITS%/g, units); // Add in proper volume units
+                        $('#tapdisplay').html(tapHTML); // Display taplist
+                        toggleLoader("off");            // Turn off spinner and show page
                     }
                 });
         }
@@ -184,6 +190,11 @@
                 .done(function (config) {
                     try {
                         $('#tapheader').html('Showing ' + config.copconfig.kegeratorname + ' for ' + config.copconfig.breweryname);
+                        if (config.copconfig.imperial) {
+                            units = "gallons";
+                        } else {
+                            units = "liters";
+                        }
                     }
                     catch {
                         alert("Unable to parse configuration data from SPIFFS.");
@@ -196,7 +207,9 @@
                     // Can post-process here
                     loaded++;
                     if (loaded == 2) {
-                        toggleLoader("off");
+                        tapHTML = tapHTML.replace(/%UNITS%/g, units); // Add in proper volume units
+                        $('#tapdisplay').html(tapHTML); // Display taplist
+                        toggleLoader("off");            // Turn off spinner and show page
                     }
                 });
         }
