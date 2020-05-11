@@ -16,3 +16,7 @@ main>.container {
     padding-right: 15px;
     padding-left: 15px;
 }
+
+.no-underline {
+    text-decoration: none !important
+}
