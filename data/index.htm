@@ -124,23 +124,23 @@
             })
                 .done(function (flow) {
 
-                    var numTaps = flow["tap"].length;
+                    var numTaps = flow["taps"].length;
                     try {
                         for (var i = 0; i < numTaps; i++) {
-                            if (flow.tap[i].active) { // Dynamically create tap list HTML
-                                var remain = (flow.tap[i].remaining / flow.tap[i].capacity) * 100;
+                            if (flow.taps[i].active) { // Dynamically create tap list HTML
+                                var remain = (flow.taps[i].remaining / flow.taps[i].capacity) * 100;
                                 tapHTML += '<div class="card-body" id="tap' + i + 'display">\n';
                                 tapHTML += '<span id="tap' + i + 'name" name="tap' + i + 'name">';
                                 tapHTML += '<a href="/settings/#tap' + i + '" class="no-underline">Tap ';
-                                tapHTML += (i + 1) + ': &nbsp;' + flow.tap[i].name + '</a>';
+                                tapHTML += (i + 1) + ': &nbsp;' + flow.taps[i].name + '</a>';
                                 tapHTML += '</span>\n';
                                 tapHTML += '<div class="progress">\n';
                                 tapHTML += '<div\nclass="progress-bar progress-bar-striped bg-warning" role="progressbar"\n';
                                 tapHTML += 'style="width: ' + remain + '%" aria-valuenow="' + remain;
                                 tapHTML += '" aria-valuemin="' + remain + '" aria-valuemax="100"\n';
                                 tapHTML += 'name="tap' + i + 'prog" id="tap' + i + 'prog" data-toggle="tooltip" title="';
-                                tapHTML += flow.tap[i].remaining.toFixed(1).toString() + ' of ';
-                                tapHTML += flow.tap[i].capacity.toFixed(1).toString();
+                                tapHTML += flow.taps[i].remaining.toFixed(1).toString() + ' of ';
+                                tapHTML += flow.taps[i].capacity.toFixed(1).toString();
                                 tapHTML += ' %UNITS% remaining.';
                                 tapHTML += '">' + remain + '%\n';
                                 tapHTML += '</div>\n</div>\n</div>\n';
@@ -148,8 +148,8 @@
                         }
                         try {
                             for (var i = 0; i < numTaps; i++) {
-                                if (flow.tap[i].active) { // Update tap list details
-                                    var remain = (flow.tap[i].remaining / flow.tap[i].capacity) * 100;
+                                if (flow.taps[i].active) { // Update tap list details
+                                    var remain = (flow.taps[i].remaining / flow.taps[i].capacity) * 100;
                                     $('#tap' + i + 'prog')
                                         .css("width", remain + "%")
                                         .attr("aria-valuenow", remain)
