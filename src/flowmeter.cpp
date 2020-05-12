@@ -72,25 +72,13 @@ static void (*pf[])(void) = { // ISR Function Pointers
     HandleIntISR0, HandleIntISR1,
     HandleIntISR2, HandleIntISR3,
     HandleIntISR4, HandleIntISR5,
-    HandleIntISR6, HandleIntISR7};
+    HandleIntISR6, HandleIntISR7
+};
 
 void handleInterrupts(int tapNum)
 { // Increment pulse count
     pulse[tapNum]++;
     updated[tapNum] = true;
-}
-
-bool initFlow()
-{
-    for (int i = 0; i < NUMTAPS; i++)
-    {
-        pinMode(flowPins[i], INPUT_PULLUP);
-        digitalWrite(flowPins[i], HIGH);
-        attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
-        pulse[i] = 0;
-        updated[i] = false;
-    }
-    return loadFlowConfig();
 }
 
 void logFlow()
@@ -107,19 +95,21 @@ void logFlow()
     }
 }
 
-bool deleteFlowConfigFile()
-{
-    Log.verbose(F("DEBUG: deleteFlowConfigFile()" CR)); // DEBUG
-    if (!SPIFFS.begin())
+bool initFlow()
+{ // Set up flow meter pins
+    for (int i = 0; i < NUMTAPS; i++)
     {
-        return false;
+        pinMode(flowPins[i], INPUT_PULLUP);
+        digitalWrite(flowPins[i], HIGH);
+        attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
+        pulse[i] = 0;
+        updated[i] = false;
     }
-    return SPIFFS.remove(flowfilename);
+    return loadFlowConfig();
 }
 
 bool loadFlowConfig()
-{
-    // Manage loading the configuration
+{ // Manage loading the configuration
     if (!loadFlowFile())
     {
         return false;
@@ -128,6 +118,16 @@ bool loadFlowConfig()
     {
         return saveFlowFile();
     }
+}
+
+bool deleteFlowConfigFile()
+{
+    Log.verbose(F("DEBUG: deleteFlowConfigFile()" CR)); // DEBUG
+    if (!SPIFFS.begin())
+    {
+        return false;
+    }
+    return SPIFFS.remove(flowfilename);
 }
 
 bool loadFlowFile()
@@ -146,8 +146,6 @@ bool loadFlowFile()
     {
         // Existing configuration present
     }
-
-    // TODO:  Do we need to save first befor eloading?
 
     if (!deserializeFlowConfig(file))
     {
@@ -196,15 +194,26 @@ bool deserializeFlowConfig(Stream &src)
 
     if (err)
     {
+        // Create an object at the root
+        JsonObject root = doc.to<JsonObject>();
+
+        // Fill the object
+        flow.save(root);
+        
+        Log.verbose(F("DEBUG: Printing flow config." CR)); // DEBUG
+        saveFlowConfig();
         flow.load(doc.as<JsonObject>());
+        printFlowConfig(); // DEBUG
+        Serial.println(); // DEBUG
+
         return true;
+        // TODO:  Can/should I return false here somehow?
     }
     else
     {
         flow.load(doc.as<JsonObject>());
         return true;
     }
-    // TODO:  Can I return false here somehow?
 }
 
 bool serializeFlowConfig(Print &dst)
@@ -384,14 +393,21 @@ void Taps::load(JsonObjectConst obj, int numTap)
     }
 }
 
-void Flowmeter::load(JsonObjectConst obj) {
+void Flowmeter::load(JsonObjectConst obj)
+{
+    // Log.verbose(F("DEBUG: Dumping empty object." CR)); // DEBUG
+    // serializeJsonPretty(obj, Serial); // DEBUG
+    // Serial.println(); // DEBUG
+
 	// Get a reference to the taps array
 	JsonArrayConst _taps = obj["taps"];
 
 	// Extract each tap point
 	int i = 0;
-	for (JsonObjectConst tap : _taps) {
+	for (JsonObjectConst tap : _taps)
+    {
 		// Load the tap
+        Log.verbose(F("DEBUG: Flowmeter::load(%d)" CR), i); // DEBUG
 		taps[i].load(tap, i);
 
 		// Increment tap count
