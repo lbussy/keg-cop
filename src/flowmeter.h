@@ -33,7 +33,7 @@ SOFTWARE. */
 volatile static long pulse[7];      // Unregistered pulse counter
 volatile static bool updated[7];    // Semaphore for update needed
 
-struct Tap
+struct Taps
 {
     int tapid;            // Tap ID
     int pin;              // μC Pin
@@ -49,7 +49,7 @@ struct Tap
 
 struct Flowmeter
 {
-    Tap tap[8];
+    Taps taps[8];
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
