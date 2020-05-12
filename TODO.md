@@ -4,8 +4,7 @@
 - Add target pushes
 - Add RPints compatibility 
 - Add RPints report
-- Fix flow.json defaults
-- Allow graphics to load on controller reset
+- Fix flow.json defaults - All blanks on initial start, missing data subsequently
 
 # Done Items
 
@@ -35,3 +34,4 @@
     - ~~Settings~~
 - ~~Design Settings~~
 - ~~Decide on active/inactive vs numtaps~~
+- ~~Allow graphics to load on controller reset~~
