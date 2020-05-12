@@ -59,6 +59,7 @@ void setRegPageAliases()
     server.serveStatic("/ota2/", SPIFFS, "/").setDefaultFile("ota2.htm").setCacheControl("max-age=600");
     server.serveStatic("/settings/", SPIFFS, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
     server.serveStatic("/wifi/", SPIFFS, "/").setDefaultFile("wifi.htm").setCacheControl("max-age=600");
+    server.serveStatic("/reset/", SPIFFS, "/").setDefaultFile("reset.htm").setCacheControl("max-age=600");
 }
 
 void setActionPageHandlers()
@@ -77,11 +78,16 @@ void setActionPageHandlers()
         resetWifi(); // Wipe settings, reset controller
     });
 
-    server.on("/reset/", HTTP_GET, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /reset/." CR));
-        // Redirect to Reset page
-        request->send(SPIFFS, "/reset.htm");
+    server.on("/oktoreset/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing /oktoreset/." CR));
+        request->send(200, F("text/plain"), F("Ok."));
+        _delay(2000);
         setDoReset();
+    });
+
+    server.on("/ping/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing /ping/." CR));
+        request->send(200, F("text/plain"), F("Ok."));
     });
 
     server.on("/otastart/", HTTP_GET, [](AsyncWebServerRequest *request) {

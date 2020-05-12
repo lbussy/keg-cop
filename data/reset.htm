@@ -42,11 +42,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/settings/">Settings</a>
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/settings/">Settings  <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/help/">Help</a>
@@ -100,43 +100,70 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
 
-<script type="text/javascript">
-    // Attach the event after the page loads
-    if (window.addEventListener)
-        window.addEventListener("load", loadPage, false);
-    else if (window.attachEvent)
-        window.attachEvent("onload", loadPage);
-    else window.onload = loadPage;
+    <script type="text/javascript">
+        var okToReset = false;
+        // Attach the event after the page loads
+        if (window.addEventListener)
+            window.addEventListener("load", loadPage, false);
+        else if (window.attachEvent)
+            window.attachEvent("onload", loadPage);
+        else window.onload = loadPage;
 
-    function loadPage() { // Load the page's JS elements
-        // Wait for restart to complete
-        var running = false;
-        var intervalID = window.setInterval(function () { // Poll every 5 seconds
-            checkSemaphore(function (semaphore) {
-                didreset = semaphore;
-                if (didreset == true) {
-                    // Reset is complete
-                    $("#banner").replaceWith("<h1>Controller Reset Complete</h1>");
-                    $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Redirect Pending</h4>");
-                    $("#message").replaceWith("<p class='card-body'>The controller reset is complete.  You will be redirected momentarily.</p>");
-                    setTimeout(function () { window.location.href = "/"; }, 5000);
+        function loadPage() { // Make sure the page is 100% loaded
+            if(document.readyState === 'ready' || document.readyState === 'complete') {
+                console.log("Do Reset 1."); // DEBUG
+                doResetSignal();
+            } else {
+                document.onreadystatechange = function () {
+                        if (document.readyState == "complete") {
+                        console.log("Do Reset 2."); // DEBUG
+                        doResetSignal();
+                        }
                 }
-            });
-        }, 5000);
-    }
+            }
+        }
 
-    function checkSemaphore(callback) { // Check to see if the update is complete
-            var jqxhr = $.getJSON("/config/")
+        function doResetSignal() {
+            var jqxhr = $.get( "/oktoreset/")
+                .done(function() {
+                    myVar = setTimeout(watchReset, 5000);
+                })
+                .fail(function() {
+                    // Reset is complete
+                    $("#banner").replaceWith("<h1>Controller Reset Failed</h1>");
+                    $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Redirect Pending</h4>");
+                    $("#message").replaceWith("<p class='card-body'>The controller reset failed.You will be redirected momentarily.</p>");
+                    setTimeout(function () { window.location.href = "/"; }, 5000);
+                });
+        }
+
+        function watchReset() {
+            // Wait for restart to complete
+            var intervalID = window.setInterval(function () { // Poll every 5 seconds
+                checkSemaphore(function (semaphore) {
+                    didreset = semaphore;
+                    if (didreset == true) {
+                        // Reset is complete
+                        $("#banner").replaceWith("<h1>Controller Reset Complete</h1>");
+                        $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Redirect Pending</h4>");
+                        $("#message").replaceWith("<p class='card-body'>The controller reset is complete.  You will be redirected momentarily.</p>");
+                        setTimeout(function () { window.location.href = "/"; }, 5000);
+                    }
+                });
+            }, 5000);
+        }
+
+        function checkSemaphore(callback) { // Check to see if the update is complete
+            var jqxhr = $.get("/ping/")
                 .done(function (data) {
                     callback(true);
                 })
                 .fail(function () {
                     // This will fail while controller resets
                     callback({});
-                }
-            );
-    }
-</script>
+                });
+        }
+    </script>
 
 </body>
 
