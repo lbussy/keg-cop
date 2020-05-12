@@ -1394,14 +1394,14 @@
             var flow = $.getJSON(url, function () {
             })
                 .done(function (flow) {
-                    var numTaps = flow["tap"].length;
+                    var numTaps = flow["taps"].length;
                     try {
                         for (var i = 0; i < numTaps; i++) {
-                            $('input[name="tap' + i + 'ppg"]').val(parseInt(flow.tap[i].ppg), 10);
-                            $('input[name="tap' + i + 'beername"]').val(flow.tap[i].name);
-                            $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.tap[i].capacity));
-                            $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.tap[i].remaining));
-                            $('input[name="tap' + i + 'active"]').prop("checked", flow.tap[i].active);
+                            $('input[name="tap' + i + 'ppg"]').val(parseInt(flow.taps[i].ppg), 10);
+                            $('input[name="tap' + i + 'beername"]').val(flow.taps[i].name);
+                            $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity));
+                            $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.taps[i].remaining));
+                            $('input[name="tap' + i + 'active"]').prop("checked", flow.taps[i].active);
                         }
                     }
                     catch {
