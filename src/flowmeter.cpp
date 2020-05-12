@@ -99,7 +99,7 @@ void logFlow()
     {
         if (updated[i] == true)
         {
-            flow.tap[i].remaining = flow.tap[i].remaining - (double(pulse[i]) / (double(flow.tap[i].ppg)));
+            flow.taps[i].remaining = flow.taps[i].remaining - (double(pulse[i]) / (double(flow.taps[i].ppg)));
             pulse[i] = 0;
             updated[i] = false;
             saveFlowConfig();
@@ -109,6 +109,7 @@ void logFlow()
 
 bool deleteFlowConfigFile()
 {
+    Log.verbose(F("DEBUG: deleteFlowConfigFile()" CR)); // DEBUG
     if (!SPIFFS.begin())
     {
         return false;
@@ -145,6 +146,8 @@ bool loadFlowFile()
     {
         // Existing configuration present
     }
+
+    // TODO:  Do we need to save first befor eloading?
 
     if (!deserializeFlowConfig(file))
     {
@@ -303,7 +306,7 @@ bool mergeFlow(JsonVariant dst, JsonVariantConst src)
     return true;
 }
 
-void Tap::save(JsonObject obj) const
+void Taps::save(JsonObject obj) const
 {
     obj["tapid"] = tapid;           // Tap ID
     obj["pin"] =  pin;              // μC Pin
@@ -314,16 +317,21 @@ void Tap::save(JsonObject obj) const
     obj["active"] =  active;        // Tap active
 }
 
-void Tap::load(JsonObjectConst obj, int numTap)
+void Taps::load(JsonObjectConst obj, int numTap)
 {
-    // Load Keg[numtap] configuration
+    // Load Tap[numtap] configuration
     //
+    Log.verbose(F("DEBUG: Tap::load(%d) starting." CR), numTap); // DEBUG
+
     tapid = numTap;
+    Log.verbose(F("DEBUG: Tap::load(%d) tapid: %d" CR), numTap, tapid); // DEBUG
     pin = flowPins[numTap];
+    Log.verbose(F("DEBUG: Tap::load(%d) pin: %d" CR), numTap, pin); // DEBUG
 
     if (obj["ppg"].isNull() || obj["ppg"] == 0)
     {
         ppg = PPG;
+        Log.verbose(F("DEBUG: Tap::load(%d) ppg: %l" CR), numTap, ppg); // DEBUG
     }
     else
     {
@@ -333,8 +341,8 @@ void Tap::load(JsonObjectConst obj, int numTap)
 
     if (obj["name"].isNull())
     {
-        Log.verbose(F("DEBUG: Loading default beer name." CR));
         strlcpy(name, DEFAULTBEER, sizeof(name));
+        Log.verbose(F("DEBUG: Tap::load(%d) name: %s" CR), numTap, name); // DEBUG
     }
     else
     {
@@ -345,6 +353,7 @@ void Tap::load(JsonObjectConst obj, int numTap)
     if (obj["capacity"].isNull())
     {
         capacity = KEGSIZE;
+        Log.verbose(F("DEBUG: Tap::load(%d) capacity: %D" CR), numTap, capacity); // DEBUG
     }
     else
     {
@@ -355,6 +364,7 @@ void Tap::load(JsonObjectConst obj, int numTap)
     if (obj["remaining"].isNull())
     {
         remaining = 0;
+        Log.verbose(F("DEBUG: Tap::load(%d) : %D" CR), numTap, remaining); // DEBUG
     }
     else
     {
@@ -365,6 +375,7 @@ void Tap::load(JsonObjectConst obj, int numTap)
     if (obj["active"].isNull())
     {
         active = false;
+        Log.verbose(F("DEBUG: Tap::load(%d) active: %T" CR), numTap, active); // DEBUG
     }
     else
     {
@@ -373,26 +384,29 @@ void Tap::load(JsonObjectConst obj, int numTap)
     }
 }
 
-void Flowmeter::save(JsonObject obj) const
-{
-    // Add "taps" array
-    JsonArray taps = obj.createNestedArray("tap");
+void Flowmeter::load(JsonObjectConst obj) {
+	// Get a reference to the taps array
+	JsonArrayConst _taps = obj["taps"];
 
-    // Add each keg in the array
-    for (int i = 0; i < NUMTAPS; i++)
-        tap[i].save(taps.createNestedObject());
+	// Extract each tap point
+	int i = 0;
+	for (JsonObjectConst tap : _taps) {
+		// Load the tap
+		taps[i].load(tap, i);
+
+		// Increment tap count
+		i++;
+
+		// Max reached?
+		if (i >= NUMTAPS) break;
+	}
 }
 
-void Flowmeter::load(JsonObjectConst obj)
-{
-    JsonArrayConst kegs = obj["tap"];
+void Flowmeter::save(JsonObject obj) const {
+	// Add "taps" array
+	JsonArray _taps = obj.createNestedArray("taps");
 
-    int numTap = 0;
-    for (JsonObjectConst ap : kegs)
-    {
-        tap[numTap].load(ap, numTap);
-        numTap++;
-        if (numTap >= NUMTAPS)
-            break;
-    }
+	// Add each tap in the array
+	for (int i = 0; i < NUMTAPS; i++)
+		taps[i].save(_taps.createNestedObject());
 }
