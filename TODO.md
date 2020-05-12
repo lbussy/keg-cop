@@ -1,12 +1,21 @@
 # TODO Items:
 
-- Add web page handlers
+## Testing
+
+- ???
+
+## Features
+
+- Add POST handlers
 - Add target pushes
-- Add RPints compatibility 
+- Add RPints compatibility switches
 - Add RPints report
+
+## Bugs
+
 - Fix flow.json defaults - All blanks on initial start, missing data subsequently
 
-# Done Items
+# Complete
 
 - ~~Add web pages~~
 - ~~Add config~~
