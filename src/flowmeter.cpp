@@ -25,7 +25,7 @@ SOFTWARE. */
 const char *flowfilename = "/flow.json";
 extern const size_t capacityFlowDeserial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9) + 830;
 extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9);
-int flowPins[8] = {KEG0, KEG1, KEG2, KEG3, KEG4, KEG5, KEG6, KEG7};
+int flowPins[8] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7};
 Flowmeter flow;
 
 static IRAM_ATTR void HandleIntISR0(void)
@@ -112,12 +112,14 @@ bool loadFlowConfig()
 { // Manage loading the configuration
     if (!loadFlowFile())
     {
-        return false;
+        saveFlowFile(); // Save a blank config
+        if (!loadFlowFile()) // Try one more time to load the default config
+        {
+            Log.error(F("Error: Unable to generate default flowmeter configuration." CR));
+            return false;
+        }
     }
-    else
-    {
-        return saveFlowFile();
-    }
+    return saveFlowFile();
 }
 
 bool deleteFlowConfigFile()
@@ -140,7 +142,7 @@ bool loadFlowFile()
     File file = SPIFFS.open(flowfilename, "r");
     if (!SPIFFS.exists(flowfilename) || !file)
     {
-        // File does not exist or unable to read file
+        Log.verbose(F("Generating new %s." CR), flowfilename);
     }
     else
     {
@@ -194,19 +196,9 @@ bool deserializeFlowConfig(Stream &src)
 
     if (err)
     {
-        // Create an object at the root
-        JsonObject root = doc.to<JsonObject>();
-
-        // Fill the object
-        flow.save(root);
-        
-        Log.verbose(F("DEBUG: Printing flow config." CR)); // DEBUG
-        saveFlowConfig();
-        flow.load(doc.as<JsonObject>());
-        printFlowConfig(); // DEBUG
-        Serial.println(); // DEBUG
-
-        return true;
+        // serializeJson(doc, flow); // DEBUG TODO: Is this going to work?
+        // flow.load(doc.as<JsonObject>());
+        return false;
         // TODO:  Can/should I return false here somehow?
     }
     else
