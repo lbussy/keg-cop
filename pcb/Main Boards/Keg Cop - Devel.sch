@@ -3150,7 +3150,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="FLOW7" library="switch-omron" library_urn="urn:adsk.eagle:library:377" deviceset="10-XX" device="" package3d_urn="urn:adsk.eagle:package:27496/1"/>
 <part name="SOLENOID" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="LED" device="3MM" package3d_urn="urn:adsk.eagle:package:6240537/1"/>
 <part name="COOL" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="LED" device="3MM" package3d_urn="urn:adsk.eagle:package:6240537/1"/>
-<part name="R6" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="RESISTOR" device="AXIAL-0.3" package3d_urn="urn:adsk.eagle:package:39658/1" value="2.2kΩ"/>
+<part name="R6" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="RESISTOR" device="AXIAL-0.3" package3d_urn="urn:adsk.eagle:package:39658/1" value="200kΩ"/>
 <part name="KEG" library="SparkFun-Sensors" deviceset="DS18B20" device=""/>
 <part name="LOWER" library="SparkFun-Sensors" deviceset="DS18B20" device=""/>
 <part name="UPPER" library="SparkFun-Sensors" deviceset="DS18B20" device=""/>
