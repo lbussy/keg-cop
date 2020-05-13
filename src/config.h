@@ -311,8 +311,8 @@ SOFTWARE. */
 //
 // Input pin for keg 0 flow
 //
-#ifndef KEG0
-#define KEG0 0
+#ifndef FLOW0
+#define FLOW0 0
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -321,8 +321,8 @@ SOFTWARE. */
 //
 // Input pin for keg 1 flow
 //
-#ifndef KEG1
-#define KEG1 4
+#ifndef FLOW1
+#define FLOW1 4
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -331,8 +331,8 @@ SOFTWARE. */
 //
 // Input pin for keg 2 flow
 //
-#ifndef KEG2
-#define KEG2 17
+#ifndef FLOW2
+#define FLOW2 17
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -341,8 +341,8 @@ SOFTWARE. */
 //
 // Input pin for keg 3 flow
 //
-#ifndef KEG3
-#define KEG3 18
+#ifndef FLOW3
+#define FLOW3 18
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -351,8 +351,8 @@ SOFTWARE. */
 //
 // Input pin for keg 4 flow
 //
-#ifndef KEG4
-#define KEG4 19
+#ifndef FLOW4
+#define FLOW4 19
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -361,8 +361,8 @@ SOFTWARE. */
 //
 // Input pin for keg 5 flow
 //
-#ifndef KEG5
-#define KEG5 21
+#ifndef FLOW5
+#define FLOW5 21
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -371,8 +371,8 @@ SOFTWARE. */
 //
 // Input pin for keg 6 flow
 //
-#ifndef KEG6
-#define KEG6 22
+#ifndef FLOW6
+#define FLOW6 22
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -381,8 +381,8 @@ SOFTWARE. */
 //
 // Input pin for keg 7 flow
 //
-#ifndef KEG7
-#define KEG7 23
+#ifndef FLOW7
+#define FLOW7 23
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
