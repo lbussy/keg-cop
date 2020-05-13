@@ -63,7 +63,6 @@ void setup()
     doPoll();           // Get server version at startup
 
     // Initialize flowmeters
-    deleteFlowConfigFile(); // DEBUG
     if (initFlow())
         Log.notice(F("Flowmeters loaded." CR));
     else
