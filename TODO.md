@@ -10,10 +10,12 @@
 - Add target pushes
 - Add RPints compatibility switches
 - Add RPints report
+- Add solenoid status/use
 
 ## Bugs
 
 - Fix flow.json defaults - All blanks on initial start, missing data subsequently
+- Add temp sensor traces to Tallboy and regular board (check others)
 
 # Complete
 
