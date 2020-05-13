@@ -14,8 +14,7 @@
 
 ## Bugs
 
-- Fix flow.json defaults - All blanks on initial start, missing data subsequently
-- Add temp sensor traces to Tallboy and regular board (check others)
+- ???
 
 # Complete
 
@@ -46,3 +45,6 @@
 - ~~Design Settings~~
 - ~~Decide on active/inactive vs numtaps~~
 - ~~Allow graphics to load on controller reset~~
+- ~~Fix flow.json defaults - All blanks on initial start, missing data subsequently~~
+- ~~Add temp sensor traces to Tallboy and regular board (check others)~~
+- ~~Fix alignment on Tap 0~~
