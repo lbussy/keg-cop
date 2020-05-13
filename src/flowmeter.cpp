@@ -124,7 +124,6 @@ bool loadFlowConfig()
 
 bool deleteFlowConfigFile()
 {
-    Log.verbose(F("DEBUG: deleteFlowConfigFile()" CR)); // DEBUG
     if (!SPIFFS.begin())
     {
         return false;
@@ -196,10 +195,7 @@ bool deserializeFlowConfig(Stream &src)
 
     if (err)
     {
-        // serializeJson(doc, flow); // DEBUG TODO: Is this going to work?
-        // flow.load(doc.as<JsonObject>());
         return false;
-        // TODO:  Can/should I return false here somehow?
     }
     else
     {
@@ -322,17 +318,12 @@ void Taps::load(JsonObjectConst obj, int numTap)
 {
     // Load Tap[numtap] configuration
     //
-    Log.verbose(F("DEBUG: Tap::load(%d) starting." CR), numTap); // DEBUG
-
     tapid = numTap;
-    Log.verbose(F("DEBUG: Tap::load(%d) tapid: %d" CR), numTap, tapid); // DEBUG
     pin = flowPins[numTap];
-    Log.verbose(F("DEBUG: Tap::load(%d) pin: %d" CR), numTap, pin); // DEBUG
 
     if (obj["ppg"].isNull() || obj["ppg"] == 0)
     {
         ppg = PPG;
-        Log.verbose(F("DEBUG: Tap::load(%d) ppg: %l" CR), numTap, ppg); // DEBUG
     }
     else
     {
@@ -340,10 +331,9 @@ void Taps::load(JsonObjectConst obj, int numTap)
         ppg = pg;
     }
 
-    if (obj["name"].isNull())
+    if (obj["name"].isNull() || strlen(obj["name"]) == 0)
     {
         strlcpy(name, DEFAULTBEER, sizeof(name));
-        Log.verbose(F("DEBUG: Tap::load(%d) name: %s" CR), numTap, name); // DEBUG
     }
     else
     {
@@ -351,10 +341,9 @@ void Taps::load(JsonObjectConst obj, int numTap)
         strlcpy(name, nm, sizeof(name));
     }
 
-    if (obj["capacity"].isNull())
+    if (obj["capacity"].isNull() || obj["capacity"] == 0)
     {
         capacity = KEGSIZE;
-        Log.verbose(F("DEBUG: Tap::load(%d) capacity: %D" CR), numTap, capacity); // DEBUG
     }
     else
     {
@@ -365,7 +354,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
     if (obj["remaining"].isNull())
     {
         remaining = 0;
-        Log.verbose(F("DEBUG: Tap::load(%d) : %D" CR), numTap, remaining); // DEBUG
     }
     else
     {
@@ -376,7 +364,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
     if (obj["active"].isNull())
     {
         active = false;
-        Log.verbose(F("DEBUG: Tap::load(%d) active: %T" CR), numTap, active); // DEBUG
     }
     else
     {
@@ -387,10 +374,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
 void Flowmeter::load(JsonObjectConst obj)
 {
-    // Log.verbose(F("DEBUG: Dumping empty object." CR)); // DEBUG
-    // serializeJsonPretty(obj, Serial); // DEBUG
-    // Serial.println(); // DEBUG
-
 	// Get a reference to the taps array
 	JsonArrayConst _taps = obj["taps"];
 
@@ -399,7 +382,6 @@ void Flowmeter::load(JsonObjectConst obj)
 	for (JsonObjectConst tap : _taps)
     {
 		// Load the tap
-        Log.verbose(F("DEBUG: Flowmeter::load(%d)" CR), i); // DEBUG
 		taps[i].load(tap, i);
 
 		// Increment tap count

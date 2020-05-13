@@ -73,7 +73,6 @@ void pollTemps()
             device.sensor[i].average = avg;
         }
     }
-    // showTemps(); // DEBUG
 }
 
 double getTempC(uint8_t pin)
