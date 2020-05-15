@@ -45,16 +45,6 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Turn debug printing via serial on or off
-//
-#ifndef DEBUG
-#define DEBUG true
-#endif
-//
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-//
 // SPIFFS Editor Username
 //
 #ifndef SPIFFSEDITUSER
@@ -86,12 +76,7 @@ SOFTWARE. */
 //      * 6 - LOG_LEVEL_VERBOSE    all
 //
 // Uncomment #define for logging level desired.
-// Raspberry Pints compatibility will disable all logging in favor of
-// reporting via the serial connection.
 //
-#if RPINTS || !DEBUG
-#define DISABLE_LOGGING // Disable all logging
-#else
 #ifndef LOG_LEVEL
 // #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
 // #define LOG_LEVEL LOG_LEVEL_FATAL      // Fatal errors
