@@ -24,8 +24,8 @@ SOFTWARE. */
 
 const char *filename = "/config.json";
 Config config;
-extern const size_t capacityDeserial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9) + 970;
 extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9);
+extern const size_t capacityDeserial =  capacitySerial + 980;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -238,8 +238,8 @@ void CopConfig::save(JsonObject obj) const
     obj["breweryname"] = breweryname;
     obj["kegeratorname"] = kegeratorname;
     obj["imperial"] = imperial;
-    obj["numtap"] = numtap;
     obj["rpintscompat"] = rpintscompat;
+    obj["tapsolenoid"] = tapsolenoid;
 }
 
 void CopConfig::load(JsonObjectConst obj)
@@ -267,18 +267,18 @@ void CopConfig::load(JsonObjectConst obj)
         imperial = units;
     }
 
-    if (obj["numtap"].isNull()) {
-        numtap = NUMTAPS;
-    } else {
-        int nt = obj["numtap"];
-        numtap = nt;
-    }
-
     if (obj["rpintscompat"].isNull()) {
         rpintscompat = RPINTS;
     } else {
         bool rpints = obj["rpintscompat"];
         rpintscompat = rpints;
+    }
+
+    if (obj["tapsolenoid"].isNull()) {
+        tapsolenoid = TSOL;
+    } else {
+        bool tsol = obj["tapsolenoid"];
+        tapsolenoid = tsol;
     }
 }
 

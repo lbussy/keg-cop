@@ -44,8 +44,8 @@ struct CopConfig
     char breweryname[64];
     char kegeratorname[64];
     bool imperial;
-    int numtap;
-    int rpintscompat;
+    bool rpintscompat;
+    bool tapsolenoid;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
