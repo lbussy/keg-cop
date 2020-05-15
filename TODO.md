@@ -8,9 +8,8 @@
 
 - Add POST handlers
 - Add target pushes
-- Add RPints compatibility switches
+- Add serial configuration for RPints
 - Add RPints report
-- Add solenoid status/use
 
 ## Bugs
 
@@ -48,3 +47,5 @@
 - ~~Fix flow.json defaults - All blanks on initial start, missing data subsequently~~
 - ~~Add temp sensor traces to Tallboy and regular board (check others)~~
 - ~~Fix alignment on Tap 0~~
+- ~~Add RPints compatibility switches~~
+- ~~Add solenoid status/use~~
