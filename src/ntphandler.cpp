@@ -36,17 +36,13 @@ void setClock() {
                 Log.warning(F("Unable to get time hack from %s, rebooting." CR), TIMESERVER);
                 resetController();
             }
-#if LOG_LEVEL && !RPINTS
             Serial.println();
-#endif
             Log.verbose(F("Re-requesting time hack." CR));
             configTime(GMT, 0, TIMESERVER);
             startSecs = time(nullptr);
             cycle++;
         }
-#if LOG_LEVEL && !RPINTS
         Serial.print(F("."));
-#endif
         _delay(1000);
 #ifdef ESP8266
         yield();

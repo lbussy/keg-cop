@@ -26,7 +26,6 @@ bool shouldSaveConfig = false;
 Ticker blinker;
 
 void doWiFi() {
-    WiFi.begin("NETGEAR_11N", "idoxlr8!"); // DEBUG
     doWiFi(false);
 }
 
@@ -41,11 +40,7 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
     myAsyncWifiManager.setSaveParamsCallback(saveParamsCallback); // Called after parameters are saved via params menu or wifi config
     myAsyncWifiManager.setWebServerCallback(webServerCallback); // Called after webserver is setup
 
-#if DEBUG && !RPINTS
     myAsyncWifiManager.setDebugOutput(true); // Verbose debug is enabled by default
-#else
-    myAsyncWifiManager.setDebugOutput(false);
-#endif
 
     std::vector<const char *> _wfmPortalMenu = {
         "wifi",
