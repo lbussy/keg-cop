@@ -1052,8 +1052,65 @@
 										</div>
 									</div>
 								</fieldset>
-							</form>
-							
+                            </form>
+
+                            <form id="tapsolenoid" action="/settings/update/" method="POST">
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <p>&nbsp;</p>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-check">
+                                                <label class="form-check-label"
+                                                    data-toggle="tooltip" title="Solenoid relay is energized when checked"
+                                                >
+                                                    <input class="form-check-input" type="checkbox" id="tapsolenoid" name="tapsolenoid" checked>
+                                                    Solenoid
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <p>&nbsp;</p>
+                                        </div>
+                                        <div class="col">
+                                            <button class="btn btn-primary" id="submitSettings">Update</button>
+                                        </div>
+                                        <div class="col">
+                                            <p>&nbsp;</p>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                            <form id="rpintscompat" action="/settings/update/" method="POST">
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col">
+                                            <p>&nbsp;</p>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip"
+                                                    title="Toggles RaspberryPints-compatible operation. All serial status messages are disabled and RaspberryPints messages are sent over serial instead"
+                                                >
+                                                    <input class="form-check-input" type="checkbox" id="rpintscompat" name="rpintscompat" checked>
+                                                    Compatible
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <p>&nbsp;</p>
+                                        </div>
+                                        <div class="col">
+                                            <button class="btn btn-primary" id="submitSettings">Update</button>
+                                        </div>
+                                        <div class="col">
+                                            <p>&nbsp;</p>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
                         </div>
 
                     </div> <!-- Controller Tab -->
@@ -1436,6 +1493,8 @@
                         } else {
                             $('input:radio[name="units"]')[0].checked = true;
                         }
+                        $('input[name="tapsolenoid"]').prop("checked", config.copconfig.tapsolenoid);
+                        $('input[name="rpintscompat"]').prop("checked", config.copconfig.rpintscompat);
                         $('input[name="setpoint"]').val(parseFloat(config.temps.setpoint));
                         $('select[name="controlpoint"] option[value=' + parseInt(config.temps.controlpoint, 10) + ']').attr('selected', 'selected');
                         $('input[name="calroom"]').val(parseFloat(config.temps.roomcal));
