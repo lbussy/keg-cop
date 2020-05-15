@@ -24,13 +24,13 @@ SOFTWARE. */
 
 void setup()
 {
-    serial();
-
     // Load configuration
     if (loadConfig())
         Log.notice(F("Configuration loaded." CR));
     else
         Log.error(F("Unable to load cofiguration." CR));
+
+    serial();
 
     // Set wifi reset pin
     pinMode(RESETWIFI, INPUT_PULLUP);
@@ -69,6 +69,10 @@ void setup()
         Log.error(F("Unable to load flowmeters." CR));
 
     startControl();     // Initialize temperature control
+
+    Log.verbose(F("DEBUG: Turning off logging." CR)); // DEBUG
+    Log.setLevel(LOG_LEVEL_SILENT); // DEBUG
+    Serial.flush(); // DEBUG
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
