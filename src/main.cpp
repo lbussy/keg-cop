@@ -24,11 +24,15 @@ SOFTWARE. */
 
 void setup()
 {
-    // Load configuration
-    if (loadConfig())
-        Log.notice(F("Configuration loaded." CR));
-    else
-        Log.error(F("Unable to load cofiguration." CR));
+    if (!loadConfig())
+    { // If configuration does not load, sit and blink slowly like an idiot
+        pinMode(LED, OUTPUT);
+        Ticker blinker;
+        blinker.attach_ms(CONFIGBLINK, [](){
+            digitalWrite(LED, !(digitalRead(LED)));
+        });
+        while (true) {};
+    }
 
     serial();
 
@@ -71,8 +75,7 @@ void setup()
     startControl();     // Initialize temperature control
 
     Log.verbose(F("DEBUG: Turning off logging." CR)); // DEBUG
-    Log.setLevel(LOG_LEVEL_SILENT); // DEBUG
-    Serial.flush(); // DEBUG
+    toggleSerialLog(false); // DEBUG
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
