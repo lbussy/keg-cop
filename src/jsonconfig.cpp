@@ -24,8 +24,8 @@ SOFTWARE. */
 
 const char *filename = "/config.json";
 Config config;
-extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9);
-extern const size_t capacityDeserial =  capacitySerial + 980;
+extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9);
+extern const size_t capacityDeserial =  capacitySerial + 990;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -244,6 +244,7 @@ void CopConfig::save(JsonObject obj) const
     obj["kegeratorname"] = kegeratorname;
     obj["imperial"] = imperial;
     obj["rpintscompat"] = rpintscompat;
+    obj["randr"] = randr;
     obj["tapsolenoid"] = tapsolenoid;
 }
 
@@ -277,6 +278,13 @@ void CopConfig::load(JsonObjectConst obj)
     } else {
         bool rpints = obj["rpintscompat"];
         rpintscompat = rpints;
+    }
+
+    if (obj["randr"].isNull()) {
+        randr = false;
+    } else {
+        bool r = obj["randr"];
+        randr = r;
     }
 
     if (obj["tapsolenoid"].isNull()) {

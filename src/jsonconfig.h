@@ -46,6 +46,7 @@ struct CopConfig
     char kegeratorname[64];
     bool imperial;
     bool rpintscompat;
+    bool randr;
     bool tapsolenoid;
 
     void load(JsonObjectConst);
