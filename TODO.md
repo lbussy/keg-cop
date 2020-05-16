@@ -8,7 +8,6 @@
 
 - Add POST handlers
 - Add target pushes
-- Add serial configuration for RPints
 - Add RPints report
 
 ## Bugs
@@ -49,3 +48,4 @@
 - ~~Fix alignment on Tap 0~~
 - ~~Add RPints compatibility switches~~
 - ~~Add solenoid status/use~~
+- ~~Add serial configuration for RPints~~
