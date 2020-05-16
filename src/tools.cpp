@@ -75,5 +75,5 @@ void printDebug()
     max  = info.largest_free_block;
     frag = 100 - (max * 100) / free;   
 #endif
-    Log.verbose(F("[MEM] free: %l | max: %l | frag: %d%" CR), free, max, frag); 
+    Log.verbose(F("[MEM] Free: %l | Max: %l | Frag: %d%" CR CR), free, max, frag);
 }
