@@ -9,6 +9,7 @@
 - Add POST handlers
 - Add target pushes
 - Add a defer on reporting while pulling a pour
+- Figure out what the sendUpdateCount() report is (RandR+)
 - Add a kick trigger
 
 ## Bugs
