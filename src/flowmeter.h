@@ -32,9 +32,6 @@ SOFTWARE. */
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
-volatile static long pulse[7];      // Unregistered pulse counter
-volatile static bool updated[7];    // Semaphore for update needed
-
 struct Taps
 {
     int tapid;            // Tap ID

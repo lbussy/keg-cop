@@ -602,7 +602,7 @@ SOFTWARE. */
 // Loop time in seconds for flow meter registration
 //
 #ifndef TAPLOOP
-#define TAPLOOP 5
+#define TAPLOOP 1
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
