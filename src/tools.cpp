@@ -53,3 +53,27 @@ void tickerLoop() {
         resetController();
     }
 }
+
+void printDebug()
+{
+    uint32_t free;
+    uint16_t max;
+    uint8_t frag;
+#ifdef ESP8266
+    ESP.getHeapStats(&free, &max, &frag);
+#elif defined ESP32
+    // total_free_bytes;      ///<  Total free bytes in the heap. Equivalent to multi_free_heap_size().
+    // total_allocated_bytes; ///<  Total bytes allocated to data in the heap.
+    // largest_free_block;    ///<  Size of largest free block in the heap. This is the largest malloc-able size.
+    // minimum_free_bytes;    ///<  Lifetime minimum free heap size. Equivalent to multi_minimum_free_heap_size().
+    // allocated_blocks;      ///<  Number of (variable size) blocks allocated in the heap.
+    // free_blocks;           ///<  Number of (variable size) free blocks in the heap.
+    // total_blocks;          ///<  Total number of (variable size) blocks in the heap.
+    multi_heap_info_t info;
+    heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
+    free = info.total_free_bytes;
+    max  = info.largest_free_block;
+    frag = 100 - (max * 100) / free;   
+#endif
+    Log.verbose(F("[MEM] free: %l | max: %l | frag: %d%" CR), free, max, frag); 
+}

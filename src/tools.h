@@ -23,7 +23,6 @@ SOFTWARE. */
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
-// #include "execota.h"
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
@@ -31,6 +30,7 @@ void _delay(unsigned long);
 void resetController();
 void setDoReset();
 void tickerLoop();
+void printDebug();
 
 static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
 
