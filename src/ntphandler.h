@@ -29,6 +29,7 @@ SOFTWARE. */
 #include <WiFi.h>
 #endif
 
+#include "serialhandler.h"
 #include "jsonconfig.h"
 #include "tools.h"
 #include "config.h"

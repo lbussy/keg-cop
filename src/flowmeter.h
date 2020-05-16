@@ -23,6 +23,7 @@ SOFTWARE. */
 #ifndef _FLOWMETER_H
 #define _FLOWMETER_H
 
+#include "serialhandler.h"
 #include "config.h"
 #include "jsonconfig.h"
 #include <SPIFFS.h>

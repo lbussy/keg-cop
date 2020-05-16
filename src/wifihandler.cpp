@@ -36,11 +36,18 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
     myAsyncWifiManager.setAPCallback(apCallback); // Called after AP has started
     myAsyncWifiManager.setConfigResetCallback(configResetCallback); // Called after settings are reset
     myAsyncWifiManager.setPreSaveConfigCallback(preSaveConfigCallback); // Called before saving wifi creds 
-    myAsyncWifiManager.setSaveConfigCallback(saveConfigCallback);
+    myAsyncWifiManager.setSaveConfigCallback(saveConfigCallback); //  Called only if wifi is saved/changed, or setBreakAfterConfig(true)
     myAsyncWifiManager.setSaveParamsCallback(saveParamsCallback); // Called after parameters are saved via params menu or wifi config
     myAsyncWifiManager.setWebServerCallback(webServerCallback); // Called after webserver is setup
 
-    myAsyncWifiManager.setDebugOutput(true); // Verbose debug is enabled by default
+    if (!config.copconfig.rpintscompat)
+    {
+        myAsyncWifiManager.setDebugOutput(true); // Verbose debug is enabled by default
+    }
+    else
+    {
+        myAsyncWifiManager.setDebugOutput(false);
+    }
 
     std::vector<const char *> _wfmPortalMenu = {
         "wifi",

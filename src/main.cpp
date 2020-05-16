@@ -74,9 +74,6 @@ void setup()
 
     startControl();     // Initialize temperature control
 
-    Log.verbose(F("DEBUG: Turning off logging." CR)); // DEBUG
-    toggleSerialLog(false); // DEBUG
-
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
 
