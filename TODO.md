@@ -8,7 +8,8 @@
 
 - Add POST handlers
 - Add target pushes
-- Add RPints report
+- Add a defer on reporting while pulling a pour
+- Add a kick trigger
 
 ## Bugs
 
@@ -49,3 +50,4 @@
 - ~~Add RPints compatibility switches~~
 - ~~Add solenoid status/use~~
 - ~~Add serial configuration for RPints~~
+- ~~Add RPints report~~
