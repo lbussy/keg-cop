@@ -88,7 +88,7 @@ void loop()
 
     // Log pours
     Ticker logPour;
-    logPour.attach(KEGLOOP, logFlow);
+    logPour.attach(TAPLOOP, logFlow);
 
     // DEBUG: Print debug information
     printDebug(); // DEBUG

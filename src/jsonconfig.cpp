@@ -22,10 +22,10 @@ SOFTWARE. */
 
 #include "jsonconfig.h"
 
-const char *filename = "/config.json";
 Config config;
+const char *filename = FILENAME;
 extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9);
-extern const size_t capacityDeserial =  capacitySerial + 990;
+extern const size_t capacityDeserial = capacitySerial + 990;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
