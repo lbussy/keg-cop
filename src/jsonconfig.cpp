@@ -131,9 +131,9 @@ bool printFile()
         return false;
 
     while (file.available())
-        Serial.print((char)file.read());
+        printChar((const char *)file.read());
 
-    Serial.println();
+    printCR();
     file.close();
     return true;
 }
@@ -149,9 +149,11 @@ bool printConfig()
     // Fill the object
     config.save(root);
 
+    bool retval = true;
     // Serialize JSON to file
-    bool retval = serializeJsonPretty(doc, Serial) > 0;
-    Serial.println();
+    if (!config.copconfig.rpintscompat)
+        retval = serializeJsonPretty(doc, Serial) > 0;
+    printCR();
     return retval;
 }
 
@@ -163,7 +165,10 @@ bool mergeJsonString(String newJson)
     // Parse directly from file
     DeserializationError err = deserializeJson(doc, newJson);
     if (err)
-        Serial.println(err.c_str());
+    {
+        printChar(err.c_str());
+        printCR();
+    }
 
     return mergeJsonObject(doc);
 }

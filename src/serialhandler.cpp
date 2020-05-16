@@ -24,12 +24,44 @@ SOFTWARE. */
 
 void serial() {
     _delay(3000); // Delay to allow a monitor to start
-    Serial.begin(BAUD);
-    Serial.flush();
-    Serial.setDebugOutput(true);
-    Log.begin(LOG_LEVEL, &Serial, true);
-    Log.setPrefix(printTimestamp);
-    Log.notice(F("Serial logging started at %l." CR), BAUD);
+    if (!config.copconfig.rpintscompat)
+    {
+        Serial.begin(BAUD);
+        Serial.flush();
+        Serial.println();
+        Serial.setDebugOutput(true);
+        Log.begin(LOG_LEVEL, &Serial, true);
+        Log.setPrefix(printTimestamp);
+        Log.notice(F("Serial logging started at %l." CR), BAUD);
+    }
+    else
+    {
+        Serial.begin(RPBAUD);
+        Serial.flush();
+        Serial.println();
+        Serial.setDebugOutput(false);
+    }
+}
+
+void toggleRPCompat(bool enable)
+{
+    if (enable)
+    {
+        Log.verbose(F("Disabling serial logging." CR));
+        Serial.flush();
+        Serial.setDebugOutput(false);
+        Log.setLevel(LOG_LEVEL_SILENT);
+        Serial.updateBaudRate(RPBAUD);
+    }
+    else
+    {
+        Serial.updateBaudRate(BAUD);
+        Serial.flush();
+        Serial.setDebugOutput(true);
+        Log.begin(LOG_LEVEL, &Serial, true);
+        Log.setPrefix(printTimestamp);
+        Log.verbose(F("Serial logging enabled." CR));
+    }
 }
 
 void printTimestamp(Print* _logOutput) {
@@ -40,4 +72,28 @@ void printTimestamp(Print* _logOutput) {
     char locTime[prefLen] = {'\0'};
     strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
     _logOutput->print(locTime);
+}
+
+void printDot()
+{
+    if (!config.copconfig.rpintscompat)
+    {
+        Serial.print(F("."));
+    }
+}
+
+void printChar(const char * chr)
+{
+    if (!config.copconfig.rpintscompat)
+    {
+        Serial.println(chr);
+    }
+}
+
+void printCR()
+{
+    if (!config.copconfig.rpintscompat)
+    {
+        Serial.println();
+    }
 }

@@ -36,13 +36,13 @@ void setClock() {
                 Log.warning(F("Unable to get time hack from %s, rebooting." CR), TIMESERVER);
                 resetController();
             }
-            Serial.println();
+            printCR();
             Log.verbose(F("Re-requesting time hack." CR));
             configTime(GMT, 0, TIMESERVER);
             startSecs = time(nullptr);
             cycle++;
         }
-        Serial.print(F("."));
+        printDot();
         _delay(1000);
 #ifdef ESP8266
         yield();
@@ -50,9 +50,7 @@ void setClock() {
         nowSecs = time(nullptr);
     }
     blinker.detach();
-#ifdef LOG_LEVEL
-    Serial.println();
-#endif
+    printCR();
     Log.notice(F("NTP time set." CR));
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
