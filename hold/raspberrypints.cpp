@@ -1,3 +1,6 @@
+#include "serial.cpp"
+#include <Arduino.h>
+
 //This line is the number of flow sensors connected.
 const uint8_t numSensors = 4;
 //This line initializes an array with the pins connected to the flow sensors
