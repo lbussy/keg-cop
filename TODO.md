@@ -8,9 +8,7 @@
 
 - Add POST handlers
 - Add target pushes
-- Add a defer on reporting while pulling a pour
 - Figure out what the sendUpdateCount() report is (RandR+)
-- Add a kick trigger
 
 ## Bugs
 
@@ -52,3 +50,5 @@
 - ~~Add solenoid status/use~~
 - ~~Add serial configuration for RPints~~
 - ~~Add RPints report~~
+- ~~Add a defer on reporting while pulling a pour~~
+- ~~Add a kick trigger~~
