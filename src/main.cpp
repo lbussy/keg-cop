@@ -64,7 +64,6 @@ void setup()
     tcpCleanup();       // Get rid of -8 errors
     initWebServer();    // Turn on web server
     sensorInit();       // Initialize temperature sensors
-    doPoll();           // Get server version at startup
 
     // Initialize flowmeters
     if (initFlow())
@@ -91,7 +90,13 @@ void loop()
     Ticker logPour;
     logPour.attach(KEGLOOP, logFlow);
 
+    // DEBUG: Print debug information
+    printDebug(); // DEBUG
+    Ticker showDebug; // DEBUG
+    showDebug.attach(POLLSERVERVERSION, printDebug); // DEBUG
+
     // Poll for server version
+    doPoll();           // Get server version at startup
     Ticker getThatVersion;
     getThatVersion.attach(POLLSERVERVERSION, doPoll);
 
