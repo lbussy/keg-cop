@@ -26,7 +26,8 @@ Flowmeter flow;
 const char *flowfilename = FLOWFILENAME;
 int flowPins[8] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7};
 volatile static unsigned long pulse[NUMTAPS];           // Unregistered pulse counter
-volatile static unsigned long lastPourTime[NUMTAPS];    // Monitor ongoing pours
+volatile static unsigned long lastPulse[NUMTAPS];       // Pulses pending at last poll
+volatile static unsigned long lastPulseTime[NUMTAPS];    // Monitor ongoing pours
 extern const size_t capacityFlowDeserial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9) + 830;
 extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9);
 
@@ -79,28 +80,44 @@ static void (*pf[])(void) = { // ISR Function Pointers
 
 void handleInterrupts(int tapNum)
 { // Increment pulse count
-    lastPourTime[tapNum] = millis();
     pulse[tapNum]++;
+    lastPulse[tapNum] = pulse[tapNum];
+    lastPulseTime[tapNum] = millis();
 }
 
 void logFlow()
 { // Save debits to tap and to file
     for (int i = 0; i < NUMTAPS; i++)
     {
-        unsigned long nowTime = millis();
-        if ((nowTime - lastPourTime[i]) > POURDELAY && lastPourTime[i] > 0)
+        const unsigned long nowTime = millis();
+        if ((nowTime - lastPulseTime[i]) > POURDELAY && lastPulseTime[i] > 0)
         {
             // Only send pour messages after all taps have stopped serving
             noInterrupts();
-            lastPourTime[i] = 0;
-            unsigned int pulseCount = pulse[i];
-            flow.taps[i].remaining = flow.taps[i].remaining - (double(pulse[i]) / (double(flow.taps[i].ppg)));
+            const unsigned int pulseCount = pulse[i];
             pulse[i] = 0;
+            lastPulseTime[i] = 0;
             interrupts();
+            flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppg)));
             saveFlowConfig();
             if (config.copconfig.rpintscompat)
             {
                 sendPulseCount(i, flow.taps[i].pin, pulseCount);
+            }
+        }
+        else
+        {
+            // Kick detector - keg is blowing foam
+            const int secs = (nowTime - lastPulse[i]) / 1000;
+            const unsigned long pps = (pulse[i] - lastPulse[i]) / secs;
+            const unsigned long kickSpeed = (flow.taps[i].ppg / 128) * KICKSPEED;
+            if (pps > kickSpeed)
+            {
+                flow.taps[i].active = false;
+                if (config.copconfig.rpintscompat)
+                {
+                    sendKickedMsg(i, flow.taps[i].pin);
+                }
             }
         }
     }
@@ -114,7 +131,8 @@ bool initFlow()
         digitalWrite(flowPins[i], HIGH);
         attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
         pulse[i] = 0;
-        lastPourTime[i] = 0;
+        lastPulse[i] = 0;
+        lastPulseTime[i] = 0;
     }
     return loadFlowConfig();
 }
