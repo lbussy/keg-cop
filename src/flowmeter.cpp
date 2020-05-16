@@ -87,10 +87,17 @@ void logFlow()
     {
         if (updated[i] == true)
         {
+            noInterrupts();
+            unsigned int pulseCount = pulse[i];
             flow.taps[i].remaining = flow.taps[i].remaining - (double(pulse[i]) / (double(flow.taps[i].ppg)));
             pulse[i] = 0;
             updated[i] = false;
+            interrupts();
             saveFlowConfig();
+            if (config.copconfig.rpintscompat)
+            {
+                sendPulseCount(i, flow.taps[i].pin, pulseCount);
+            }
         }
     }
 }
