@@ -12,10 +12,8 @@
 - Handle Imperial/metric
     - Display (web)
     - Settings post
-- Change max on key progress bars to match settings
 - Filter small pours
-- Add demo tap list
-- Round display of percentage on progress bar
+- Display remaining in glasses? (pints or 0.5l)
 
 ## Bugs
 
@@ -60,3 +58,6 @@
 - ~~Add a defer on reporting while pulling a pour~~
 - ~~Add a kick trigger~~
 - ~~Add POST handlers~~
+- ~~Change max on key progress bars to match settings~~
+- ~~Add demo tap list~~
+- ~~Round display of percentage on progress bar~~
