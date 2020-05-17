@@ -100,6 +100,7 @@ void logFlow()
             interrupts();
             flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppg)));
             saveFlowConfig();
+            Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
             if (config.copconfig.rpintscompat)
             {
                 sendPulseCount(i, flow.taps[i].pin, pulseCount);
