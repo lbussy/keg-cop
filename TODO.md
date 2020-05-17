@@ -6,9 +6,16 @@
 
 ## Features
 
-- Add POST handlers
+- Add bulk POST handler
 - Add target pushes
 - Figure out what the sendUpdateCount() report is (RandR+)
+- Handle Imperial/metric
+    - Display (web)
+    - Settings post
+- Change max on key progress bars to match settings
+- Filter small pours
+- Add demo tap list
+- Round display of percentage on progress bar
 
 ## Bugs
 
@@ -52,3 +59,4 @@
 - ~~Add RPints report~~
 - ~~Add a defer on reporting while pulling a pour~~
 - ~~Add a kick trigger~~
+- ~~Add POST handlers~~
