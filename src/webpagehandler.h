@@ -30,6 +30,15 @@ SOFTWARE. */
 #include "thatVersion.h"
 #include "execota.h"
 #include "flowmeter.h"
+#include "mdnshandler.h"
+
+#ifdef ESP8266
+#include <ESP8266WiFi.h>
+#elif defined ESP32
+#include <WiFi.h>
+#endif
+
+#include <ESPmDNS.h>
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
