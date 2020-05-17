@@ -36,7 +36,7 @@ void initWebServer()
 
     server.onNotFound([](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving 404." CR));
-        request->send(404, F("text/plain"), F("404: File not found."));
+        request->redirect("/404/");
     });
 
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
@@ -60,6 +60,7 @@ void setRegPageAliases()
     server.serveStatic("/settings/", SPIFFS, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
     server.serveStatic("/wifi/", SPIFFS, "/").setDefaultFile("wifi.htm").setCacheControl("max-age=600");
     server.serveStatic("/reset/", SPIFFS, "/").setDefaultFile("reset.htm").setCacheControl("max-age=600");
+    server.serveStatic("/404/", SPIFFS, "/").setDefaultFile("404.htm").setCacheControl("max-age=600");
 }
 
 void setActionPageHandlers()
@@ -110,31 +111,6 @@ void setActionPageHandlers()
 void setJsonHandlers()
 {
 //     // JSON Handlers
-
-//     server.on("/bubble/", HTTP_GET, [](AsyncWebServerRequest *request) {
-//         // Used to provide the Bubbles json
-//         Log.verbose(F("Sending /bubble/." CR));
-
-//         const size_t capacity = JSON_OBJECT_SIZE(8) + 210;
-//         StaticJsonDocument<capacity> doc;
-
-//         doc[F("api_key")] = F(API_KEY);
-//         doc[F("device_source")] = F(SOURCE);
-//         doc[F("name")] = config.bubble.name;
-//         doc[F("bpm")] = bubbles.getAvgBpm();
-//         doc[F("ambient")] = bubbles.getAvgAmbient();
-//         doc[F("temp")] = bubbles.getAvgVessel();
-//         if (config.bubble.tempinf == true)
-//             doc[F("temp_unit")] = F("F");
-//         else
-//             doc[F("temp_unit")] = F("C");
-//         doc[F("datetime")] = bubbles.lastTime;
-
-//         String json;
-//         serializeJsonPretty(doc, json);
-
-//         request->send(200, F("application/json"), json);
-//     });
 
     server.on("/thisVersion/", HTTP_GET, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /thisVersion/." CR));
@@ -194,431 +170,570 @@ void setJsonHandlers()
 
 void setSettingsAliases()
 {
-//     server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) { // Settings Update Handler
-//         // Process POST configuration changes
-//         Log.verbose(F("Processing post to /settings/update/." CR));
-//         // Start to concatenate redurect URL
-//         char redirect[66];
-//         strcpy(redirect, "/settings/");
+    server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) { // Settings Update Handler
+        // Process POST configuration changes
+        Log.verbose(F("Processing post to /settings/update/." CR));
+        // Start to concatenate redurect URL
+        char redirect[66];
+        int madeChange = 0;
+        strcpy(redirect, "/settings/");
 
-//         //Scroll through all POSTed parameters
-//         int params = request->params();
-//         for (int i = 0; i < params; i++)
-//         {
-//             AsyncWebParameter *p = request->getParam(i);
-//             if (p->isPost())
-//             {
-//                 // Process any p->name().c_str() / p->value().c_str() pairs
-//                 const char * name = p->name().c_str();
-//                 const char * value = p->value().c_str();
-//                 Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+        //Scroll through all POSTed parameters
+        int params = request->params();
+        for (int i = 0; i < params; i++)
+        {
+            AsyncWebParameter *p = request->getParam(i);
+            if (p->isPost())
+            {
+                // Process any p->name().c_str() / p->value().c_str() pairs
+                const char * name = p->name().c_str();
+                const char * value = p->value().c_str();
+                Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
-//                 if (strcmp(name, "mdnsid") == 0) // Change Hostname
-//                 {
-//                     const char * hashloc = "#controller";
-//                     if ((strlen(value) < 3) || (strlen(value) > 32))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         strlcpy(config.hostname, value, sizeof(config.hostname));
-//                         saveConfig();
+                // Controller Settings
+                if (strcmp(name, "hostname") == 0) // Change hostname
+                {
+                    const char * hashloc = "#controller";
+                    if ((strlen(value) < 3) || (strlen(value) > 32))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        strlcpy(config.hostname, value, sizeof(config.hostname));
+                        saveConfig();
+                        madeChange++;
 
-//                         // Reset hostname
-//                         wifi_station_set_hostname(config.hostname);
-//                         MDNS.setHostname(config.hostname);
-//                         MDNS.notifyAPChange();
-//                         MDNS.announce();
+                        // Reset hostname
+                        #ifdef ESP8266
+                        wifi_station_set_hostname(config.hostname);
+                        MDNS.setHostname(config.hostname);
+                        MDNS.notifyAPChange();
+                        MDNS.announce();
+                        #elif defined ESP32
+                        tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA,config.hostname);
+                        mdnsreset();
+                        #endif
 
-//                         // Creeate a full URL for redirection
-//                         char hostname[45];
-//                         strcpy(hostname, "http://");
-//                         strcat(hostname, config.hostname);
-//                         strcat(hostname, ".local");
-//                         strcpy(redirect, hostname);
-//                         strcat(redirect, "/settings/");
-//                         strcat(redirect, hashloc); // Redirect to Controller box
-//                         Log.verbose(F("POSTed mdnsid, redirecting to %s." CR), redirect);
-//                     }
-//                 }
-//                 else if (strcmp(name, "bubname") == 0) // Change Bubble ID
-//                 {
-//                     const char * hashloc = "#controller";
-//                     if ((strlen(value) < 3) || (strlen(value) > 32))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         strlcpy(config.bubble.name, value, sizeof(config.bubble.name));
-//                         saveConfig();
-//                     }
-//                     strcat(redirect, hashloc); // Redirect to Controller box
-//                     Log.notice(F("POSTed bubname, redirecting to %s." CR), redirect);
-//                 }
-//                 else if (strcmp(name, "tempformat") == 0) // Change Temperature format
-//                 {
-//                     const char * hashloc = "#temperature";
-//                     char option[8];
-//                     strcpy(option, value);
-//                     if (strcmp(value, "option0") == 0)
-//                     {
-//                         config.bubble.tempinf = false;
-//                     }
-//                     else
-//                     {
-//                         config.bubble.tempinf = true;
-//                     }
-//                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                     saveConfig();
-//                     strcat(redirect, hashloc); // Redirect to Temp Control
-//                     Log.notice(F("POSTed tempformat, redirecting to %s." CR), redirect);
-//                 }
-//                 else if (strcmp(name, "calroom") == 0) // Change Room temp calibration
-//                 {
-//                     const char * hashloc = "#temperature";
-//                     if ((atof(value) < -25) || (atof(value) > 25))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         config.calibrate.room = atof(value);
-//                         saveConfig();
-//                     }
-//                     strcat(redirect, hashloc); // Redirect to Temp Control
-//                     Log.notice(F("POSTed calroom, redirecting to %s." CR), redirect);
-//                 }
-//                 else if (strcmp(name, "calvessel") == 0) // Change Vessel temp calibration
-//                 {
-//                     const char * hashloc = "#temperature";
-//                     if ((atof(value) < -25) || (atof(value) > 25))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         config.calibrate.vessel = atof(value);
-//                         saveConfig();
-//                     }
-//                     strcat(redirect, hashloc); // Redirect to Temp Control
-//                     Log.notice(F("POSTed calvessel, redirecting to %s." CR), redirect);
-//                 }
-//                 else if (strcmp(name, "urltargeturl") == 0) // Change Target URL
-//                 {
-//                     const char * hashloc = "#urltarget";
-//                     if (strlen(value) == 0)
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied.  Disabling Url Target." CR), name, value);
-//                         strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
-//                     }
-//                     else if ((strlen(value) < 3) || (strlen(value) > 128))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
-//                         saveConfig();
-//                     }
-//                     strcat(redirect, hashloc); // Redirect to Target Control
-//                     Log.notice(F("POSTed urltarget, redirecting to %s." CR), redirect);
-//                 }
-//                 else if (strcmp(name, "urlfreq") == 0) // Change Vessel temp calibration
-//                 {
-//                     const char * hashloc = "#urltarget";
-//                     if ((atoi(value) < 1) || (atoi(value) > 60))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         config.urltarget.freq = atoi(value);
-//                         config.urltarget.update = true;
-//                         saveConfig();
-//                     }
-//                     strcat(redirect, hashloc); // Redirect to Target Control
-//                     Log.notice(F("POSTed urlfreq, redirecting to %s." CR), redirect);
-//                 }
-//                 else if (strcmp(name, "brewersfriendkey") == 0) // Change Brewer's Friend key
-//                 {
-//                     const char * hashloc = "#brewersfriend";
-//                     if (strlen(value) == 0)
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied.  Disabling Brewer's Friend target." CR), name, value);
-//                         strlcpy(config.brewersfriend.key, value, sizeof(config.brewersfriend.key));
-//                     }
-//                     else if ((strlen(value) < 20) || (strlen(value) > 64))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         strlcpy(config.brewersfriend.key, value, sizeof(config.brewersfriend.key));
-//                         saveConfig();
-//                     }
-//                     strcat(redirect, hashloc); // Redirect to Brewer's Friend Control
-//                     Log.notice(F("POSTed brewersfriendkey, redirecting to %s." CR), redirect);
-//                 }
-//                 else if (strcmp(name, "brewersfriendfreq") == 0) // Change Vessel temp calibration
-//                 {
-//                     const char * hashloc = "#brewersfriend";
-//                     if ((atoi(value) < 15) || (atoi(value) > 120))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         config.brewersfriend.freq = atoi(value);
-//                         config.brewersfriend.update = true;
-//                         saveConfig();
-//                     }
-//                     strcat(redirect, hashloc); // Redirect to Brewer's Friend Control
-//                     Log.notice(F("POSTed brewersfriendfreq, redirecting to %s." CR), redirect);
-//                 }
-//                 else if (strcmp(name, "brewfatherkey") == 0) // Change Brewfather key
-//                 {
-//                     const char * hashloc = "#brewfather";
-//                     if (strlen(value) == 0)
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied.  Disabling Brewfather Target." CR), name, value);
-//                         strlcpy(config.brewfather.key, value, sizeof(config.brewfather.key));
-//                     }
-//                     else if ((strlen(value) < 10) || (strlen(value) > 64))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         strlcpy(config.brewfather.key, value, sizeof(config.brewfather.key));
-//                         saveConfig();
-//                     }
-//                     strcat(redirect, hashloc); // Redirect to Brewer's Friend Control
-//                     Log.notice(F("POSTed brewfatherkey, redirecting to %s." CR), redirect);
-//                 }
-//                 else if (strcmp(name, "brewfatherfreq") == 0) // Change Vessel temp calibration
-//                 {
-//                     const char * hashloc = "#brewfather";
-//                     if ((atoi(value) < 15) || (atoi(value) > 120))
-//                     {
-//                         Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                     }
-//                     else
-//                     {
-//                         Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-//                         config.brewfather.freq = atoi(value);
-//                         config.brewfather.update = true;
-//                         saveConfig();
-//                     }
-//                     strcat(redirect, hashloc); // Redirect to Brewfather Control
-//                     Log.notice(F("POSTed brewfatherfreq, redirecting to %s." CR), redirect);
-//                 }
-//                 else // Settings pair not found
-//                 {
-//                     Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-//                 }
-//             }
-//         }
+                        // Creeate a full URL for redirection
+                        char hostname[45];
+                        strcpy(hostname, "http://");
+                        strcat(hostname, config.hostname);
+                        strcat(hostname, ".local");
+                        strcpy(redirect, hostname);
+                        strcat(redirect, "/settings/");
+                        strcat(redirect, hashloc); // Redirect to Controller box
+                        Log.verbose(F("POSTed mdnsid, redirecting to %s." CR), redirect);
+                    }
+                }
+                if (strcmp(name, "breweryname") == 0) // Change brewery name
+                {
+                    const char * hashloc = "#controller";
+                    if ((strlen(value) < 1) || (strlen(value) > 64))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        strlcpy(config.copconfig.breweryname, value, sizeof(config.copconfig.breweryname));
+                        saveConfig();
+                        madeChange++;
+                    }
+                    strcat(redirect, hashloc); // Redirect to Controller box
+                    Log.notice(F("POSTed breweryname, redirecting to %s." CR), redirect);
+                }
+                if (strcmp(name, "kegeratorname") == 0) // Change kegerator name
+                {
+                    const char * hashloc = "#controller";
+                    if ((strlen(value) < 1) || (strlen(value) > 64))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        strlcpy(config.copconfig.kegeratorname, value, sizeof(config.copconfig.kegeratorname));
+                        saveConfig();
+                        madeChange++;
+                    }
+                    strcat(redirect, hashloc); // Redirect to Controller box
+                    Log.notice(F("POSTed kegeratorname, redirecting to %s." CR), redirect);
+                }
+                if (strcmp(name, "units") == 0) // Change units of measure
+                {
+                    const char * hashloc = "#controller";
+                    char option[8];
+                    strcpy(option, value);
+                    if (strcmp(value, "option0") == 0)
+                    {
+                        config.copconfig.imperial = false;
+                    }
+                    else
+                    {
+                        config.copconfig.imperial = true;
+                    }
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    saveConfig();
+                    madeChange++;
+                    // TODO:  Change all imperial/metric config units
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed units, redirecting to %s." CR), redirect);
+                }
+                if (strcmp(name, "tapsolenoid") == 0) // Change tap solenoid state
+                {
+                    const char * hashloc = "#controller";
+                    char option[8];
+                    strcpy(option, value);
+                    if (strcmp(value, "option0") == 0)
+                    {
+                        config.copconfig.tapsolenoid = true;
+                        digitalWrite(SOLENOID, LOW);
+                    }
+                    else
+                    {
+                        config.copconfig.tapsolenoid = false;
+                        digitalWrite(SOLENOID, HIGH);
+                    }
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    saveConfig();
+                    madeChange++;
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed tapsolenoid, redirecting to %s." CR), redirect);
+                }
+                if (strcmp(name, "rpintscompat") == 0) // Change RPints compatibility
+                {
+                    const char * hashloc = "#controller";
+                    char option[8];
+                    strcpy(option, value);
+                    if (strcmp(value, "option0") == 0)
+                    {
+                        config.copconfig.rpintscompat = false;
+                        config.copconfig.randr = false;
+                    }
+                    else if (strcmp(value, "option2") == 0)
+                    {
+                        config.copconfig.rpintscompat = true;
+                        config.copconfig.randr = true;
+                    }
+                    else
+                    {
+                        config.copconfig.rpintscompat = true;
+                        config.copconfig.randr = false;
+                    }
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    saveConfig();
+                    madeChange++;
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed rpintscompat, redirecting to %s." CR), redirect);
+                }
+                //
+                // Temperature Settings
+                if (strcmp(name, "setpoint") == 0) // Change Kegerator setpoint
+                {
+                    const char * hashloc = "#tempcontrol";
+                    double min, max;
+                    if (config.copconfig.imperial)
+                    {
+                        min = FMIN;
+                        max = FMAX;
+                    }
+                    else
+                    {
+                        min = CMIN;
+                        max = CMAX;
+                    }
+                    if ((atof(value) < min) || (atof(value) > max))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        config.temps.setpoint = atof(value);
+                        saveConfig();
+                        madeChange++;
+                    }
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed setpoint, redirecting to %s." CR), hashloc, redirect);
+                }
+                if (strcmp(name, "controlpoint") == 0) // Change the controlling sensor
+                {
+                    const char * hashloc = "#tempcontrol";
+                    const double val = atof(value);
+                    if ((val < 0) || (val > 4))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        config.temps.controlpoint = val;
+                        saveConfig();
+                        madeChange++;
+                    }
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed setpoint, redirecting to %s." CR), hashloc, redirect);
+                }
+                if (strcmp(name, "calroom") == 0) // Change room sensor calibration
+                {
+                    const char * hashloc = "#tempcalibration";
+                    if ((atof(value) < -25) || (atof(value) > 25))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        config.temps.calibration[0] = atof(value);
+                        saveConfig();
+                        madeChange++;
+                    }
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed calroom, redirecting to %s." CR), hashloc, redirect);
+                }
+                if (strcmp(name, "caltower") == 0) // Change tower sensor calibration
+                {
+                    const char * hashloc = "#tempcalibration";
+                    if ((atof(value) < -25) || (atof(value) > 25))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        config.temps.calibration[1] = atof(value);
+                        saveConfig();
+                        madeChange++;
+                    }
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed caltower, redirecting to %s." CR), hashloc, redirect);
+                }
+                if (strcmp(name, "calupper") == 0) // Change upper sensor calibration
+                {
+                    const char * hashloc = "#tempcalibration";
+                    if ((atof(value) < -25) || (atof(value) > 25))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        config.temps.calibration[2] = atof(value);
+                        saveConfig();
+                        madeChange++;
+                    }
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed calupper, redirecting to %s." CR), hashloc, redirect);
+                }
+                if (strcmp(name, "callower") == 0) // Change lower sensor calibration
+                {
+                    const char * hashloc = "#tempcalibration";
+                    if ((atof(value) < -25) || (atof(value) > 25))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        config.temps.calibration[3] = atof(value);
+                        saveConfig();
+                        madeChange++;
+                    }
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed callower, redirecting to %s." CR), hashloc, redirect);
+                }
+                if (strcmp(name, "calkeg") == 0) // Change keg sensor calibration
+                {
+                    const char * hashloc = "#tempcalibration";
+                    if ((atof(value) < -25) || (atof(value) > 25))
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        config.temps.calibration[4] = atof(value);
+                        saveConfig();
+                        madeChange++;
+                    }
+                    strcat(redirect, hashloc); // Redirect to Temp Control
+                    Log.notice(F("POSTed calkeg, redirecting to %s." CR), hashloc, redirect);
+                }
+                //
+                // Taps Settings
+                if ((String(name).startsWith("tap")) && (strlen(name) > 3) && (!strcmp(name, "tapsolenoid") == 0)) // Change tap settings
+                {
+                    const int tapNum = ((int) name[3]) - 48;
+                    char hashloc[5];
+                    bool didChange = false;
+                    if ((tapNum >= 0) && (tapNum <= (NUMTAPS - 1))) // Valid tap number
+                    {
+                        if (String(name).endsWith("ppg") && (atol(value) > 0 && atol(value) < 99999)) // Set ppg
+                        {
+                            flow.taps[tapNum].ppg = atol(value);
+                            didChange = true;
+                            Log.notice(F("POSTed tap%dppg, redirecting to %s." CR), tapNum, redirect);
+                        }
+                        else if (String(name).endsWith("beername") && ((strlen(value) > 0) || (strlen(value) < 65))) // Set beername
+                        {
+                            strlcpy(flow.taps[tapNum].name, value, sizeof(flow.taps[tapNum].name));
+                            didChange = true;
+                            Log.notice(F("POSTed tap%dbeername, redirecting to %s." CR), tapNum, redirect);
+                        }
+                        else if ((String(name).endsWith("cap")) && ((atof(value) > 0) && (atof(value) < 99999))) // Set capacity
+                        {
+                            flow.taps[tapNum].capacity = atof(value);
+                            didChange = true;
+                            Log.notice(F("POSTed tap%dcap, redirecting to %s." CR), tapNum, redirect);
+                        }
+                        else if ((String(name).endsWith("remain")) && ((atof(value) > 0) && (atof(value) < 99999))) // Set remaining
+                        {
+                            flow.taps[tapNum].remaining = atof(value);
+                            didChange = true;
+                            Log.notice(F("POSTed tap%dremain, redirecting to %s." CR), tapNum, redirect);
+                        }
+                        else if (String(name).endsWith("active")) // Set active/inactive
+                        {
+                            char option[8];
+                            strcpy(option, value);
+                            if (strcmp(value, "option0") == 0)
+                            {
+                                flow.taps[tapNum].active = true;
+                            }
+                            else
+                            {
+                                flow.taps[tapNum].active = false;
+                            }
+                            didChange = true;
+                            Log.notice(F("POSTed tap%dactive, redirecting to %s." CR), tapNum, redirect);
+                        }
+                        sprintf(hashloc, "#tap%d", tapNum);
+                        strcat(redirect, hashloc); // Redirect to Temp Control
+                    }
+                    else // Invalid tap number
+                    {
+                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    }
+                    if (didChange) // Made a change, save and redirect
+                    {
+                        saveConfig();
+                        madeChange++;
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    }
+                }
+                //
+                if (!madeChange) // No change made
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
+                }
+            }
+        }
 
-//         // Redirect to Settings page
-//         request->redirect(redirect);
-//     });
+        // Redirect to Settings page
+        //
+        if (madeChange > 1) // We made more than one change
+        {
+            request->redirect("/settings/");
+        }
+        else // We made a single change
+        {
+            request->redirect(redirect);
+        }
+    });
 
-//     server.on("/config/apply/", HTTP_POST, [](AsyncWebServerRequest *request) { // Process JSON POST configuration changes (bulk)
-//         Log.verbose(F("Processing post to /config/apply/." CR));
-//         String input = request->arg(F("plain"));
-//         DynamicJsonDocument doc(capacityDeserial);
-//         DeserializationError err = deserializeJson(doc, input);
-//         if (!err)
-//         {
-//             bool updated = false;
+    // server.on("/config/apply/", HTTP_POST, [](AsyncWebServerRequest *request) { // Process JSON POST configuration changes (bulk)
+    //     Log.verbose(F("Processing post to /config/apply/." CR));
+    //     String input = request->arg(F("plain"));
+    //     DynamicJsonDocument doc(capacityDeserial);
+    //     DeserializationError err = deserializeJson(doc, input);
+    //     if (!err)
+    //     {
+    //         bool updated = false;
 
-//             // Parse JSON
+    //         // Parse JSON
 
-//             // TODO:  Use NULL checks from jsonconfig
-//             // TODO:  Can I use jsonconfig to handle this?
+    //         // TODO:  Use NULL checks from jsonconfig
+    //         // TODO:  Can I use jsonconfig to handle this?
 
-//             // Parse Access Point Settings Object
-//             const char *ssid = doc["apconfig"]["ssid"];
-//             if ((ssid) && (strcmp(ssid, config.apconfig.ssid) != 0))
-//             {
-//                 updated = true;
-//                 strlcpy(config.apconfig.ssid, ssid, sizeof(config.apconfig.ssid));
-//             }
-//             const char *appwd = doc["apconfig"]["appwd"];
-//             if ((appwd) && (strcmp(appwd, config.apconfig.passphrase) != 0))
-//             {
-//                 updated = true;
-//                 strlcpy(config.apconfig.passphrase, appwd, sizeof(config.apconfig.passphrase));
-//             }
+    //         // Parse Access Point Settings Object
+    //         const char *ssid = doc["apconfig"]["ssid"];
+    //         if ((ssid) && (strcmp(ssid, config.apconfig.ssid) != 0))
+    //         {
+    //             updated = true;
+    //             strlcpy(config.apconfig.ssid, ssid, sizeof(config.apconfig.ssid));
+    //         }
+    //         const char *appwd = doc["apconfig"]["appwd"];
+    //         if ((appwd) && (strcmp(appwd, config.apconfig.passphrase) != 0))
+    //         {
+    //             updated = true;
+    //             strlcpy(config.apconfig.passphrase, appwd, sizeof(config.apconfig.passphrase));
+    //         }
 
-//             // Parse Hostname Settings Object
-//             const char *hostname = doc["hostname"];
-//             bool hostNameChanged = false;
-//             if ((hostname) && (strcmp(hostname, config.hostname) != 0))
-//             {
-//                 updated = true;
-//                 hostNameChanged = true;
-//                 strlcpy(config.hostname, hostname, sizeof(config.hostname));
-//             }
+    //         // Parse Hostname Settings Object
+    //         const char *hostname = doc["hostname"];
+    //         bool hostNameChanged = false;
+    //         if ((hostname) && (strcmp(hostname, config.hostname) != 0))
+    //         {
+    //             updated = true;
+    //             hostNameChanged = true;
+    //             strlcpy(config.hostname, hostname, sizeof(config.hostname));
+    //         }
 
-//             // Parse Bubble Settings Object
-//             const char *bubname = doc["bubbleconfig"]["name"];
-//             if ((bubname) && (strcmp(bubname, config.bubble.name) != 0))
-//             {
-//                 updated = true;
-//                 strlcpy(config.bubble.name, bubname, sizeof(config.bubble.name));
-//             }
+    //         // Parse Bubble Settings Object
+    //         const char *bubname = doc["bubbleconfig"]["name"];
+    //         if ((bubname) && (strcmp(bubname, config.bubble.name) != 0))
+    //         {
+    //             updated = true;
+    //             strlcpy(config.bubble.name, bubname, sizeof(config.bubble.name));
+    //         }
 
-//             JsonVariant tempinf = doc["bubbleconfig"]["tempinf"];
-//             if ((!tempinf.isNull()) && (!config.bubble.tempinf == tempinf))
-//             {
-//                 updated = true;
-//                 config.bubble.tempinf = tempinf;
-//             }
+    //         JsonVariant tempinf = doc["bubbleconfig"]["tempinf"];
+    //         if ((!tempinf.isNull()) && (!config.bubble.tempinf == tempinf))
+    //         {
+    //             updated = true;
+    //             config.bubble.tempinf = tempinf;
+    //         }
 
-//             // Parse temperature calibration
-//             double calAmbient = doc["calibrate"]["room"];
-//             if ((calAmbient) && (!calAmbient == config.calibrate.room))
-//             {
-//                 updated = true;
-//                 config.calibrate.room = calAmbient;
-//             }
+    //         // Parse temperature calibration
+    //         double calAmbient = doc["calibrate"]["room"];
+    //         if ((calAmbient) && (!calAmbient == config.calibrate.room))
+    //         {
+    //             updated = true;
+    //             config.calibrate.room = calAmbient;
+    //         }
 
-//             double calVessel = doc["calibrate"]["vessel"];
-//             if ((calVessel) && (!calVessel == config.calibrate.vessel))
-//             {
-//                 updated = true;
-//                 config.calibrate.vessel = calVessel;
-//             }
+    //         double calVessel = doc["calibrate"]["vessel"];
+    //         if ((calVessel) && (!calVessel == config.calibrate.vessel))
+    //         {
+    //             updated = true;
+    //             config.calibrate.vessel = calVessel;
+    //         }
 
-//             // Parse Target Settings Object
-//             const char *targeturl = doc["targetconfig"]["targeturl"];
-//             if ((targeturl) && (strcmp(targeturl, config.urltarget.url) != 0))
-//             {
-//                 updated = true;
-//                 strlcpy(config.urltarget.url, doc["targetconfig"]["targeturl"], sizeof(config.urltarget.url));
-//             }
+    //         // Parse Target Settings Object
+    //         const char *targeturl = doc["targetconfig"]["targeturl"];
+    //         if ((targeturl) && (strcmp(targeturl, config.urltarget.url) != 0))
+    //         {
+    //             updated = true;
+    //             strlcpy(config.urltarget.url, doc["targetconfig"]["targeturl"], sizeof(config.urltarget.url));
+    //         }
 
-//             unsigned long targetfreq = doc["targetconfig"]["targetfreq"];
-//             if ((targetfreq) && (!targetfreq == config.urltarget.freq))
-//             {
-//                 updated = true;
-//                 config.urltarget.freq = targetfreq;
-//             }
+    //         unsigned long targetfreq = doc["targetconfig"]["targetfreq"];
+    //         if ((targetfreq) && (!targetfreq == config.urltarget.freq))
+    //         {
+    //             updated = true;
+    //             config.urltarget.freq = targetfreq;
+    //         }
 
-//             // Parse Brewer's Friend Settings Object
-//             const char *bfkey = doc["bfconfig"]["bfkey"];
-//             if ((bfkey) && (strcmp(bfkey, config.brewersfriend.key) != 0))
-//             {
-//                 updated = true;
-//                 strlcpy(config.brewersfriend.key, bfkey, sizeof(config.brewersfriend.key));
-//             }
+    //         // Parse Brewer's Friend Settings Object
+    //         const char *bfkey = doc["bfconfig"]["bfkey"];
+    //         if ((bfkey) && (strcmp(bfkey, config.brewersfriend.key) != 0))
+    //         {
+    //             updated = true;
+    //             strlcpy(config.brewersfriend.key, bfkey, sizeof(config.brewersfriend.key));
+    //         }
 
-//             unsigned long bffreq = doc["bfconfig"]["freq"];
-//             if ((bffreq) && (!bffreq == config.brewersfriend.freq))
-//             {
-//                 updated = true;
-//                 config.brewersfriend.freq = bffreq;
-//             }
+    //         unsigned long bffreq = doc["bfconfig"]["freq"];
+    //         if ((bffreq) && (!bffreq == config.brewersfriend.freq))
+    //         {
+    //             updated = true;
+    //             config.brewersfriend.freq = bffreq;
+    //         }
 
-//             // Parse SPIFFS OTA update choice
-//             JsonVariant dospiffs1 = doc["dospiffs1"];
-//             if ((!dospiffs1.isNull()) && (!dospiffs1 == config.dospiffs1))
-//             {
-//                 updated = true;
-//                 config.dospiffs1 = dospiffs1;
-//             }
+    //         // Parse SPIFFS OTA update choice
+    //         JsonVariant dospiffs1 = doc["dospiffs1"];
+    //         if ((!dospiffs1.isNull()) && (!dospiffs1 == config.dospiffs1))
+    //         {
+    //             updated = true;
+    //             config.dospiffs1 = dospiffs1;
+    //         }
 
-//             // Parse SPIFFS OTA update choice
-//             JsonVariant dospiffs2 = doc["dospiffs2"];
-//             if ((!dospiffs2.isNull()) && (!dospiffs2 == config.dospiffs2))
-//             {
-//                 updated = true;
-//                 config.dospiffs2 = dospiffs2;
-//             }
+    //         // Parse SPIFFS OTA update choice
+    //         JsonVariant dospiffs2 = doc["dospiffs2"];
+    //         if ((!dospiffs2.isNull()) && (!dospiffs2 == config.dospiffs2))
+    //         {
+    //             updated = true;
+    //             config.dospiffs2 = dospiffs2;
+    //         }
 
-//             // Parse OTA update semaphore choice
-//             JsonVariant didupdate = doc["didupdate"];
-//             if ((!didupdate.isNull()) && (!didupdate == config.didupdate))
-//             {
-//                 updated = true;
-//                 config.didupdate = didupdate;
-//             }
+    //         // Parse OTA update semaphore choice
+    //         JsonVariant didupdate = doc["didupdate"];
+    //         if ((!didupdate.isNull()) && (!didupdate == config.didupdate))
+    //         {
+    //             updated = true;
+    //             config.didupdate = didupdate;
+    //         }
 
-//             if (updated)
-//             {
-//                 // Save configuration to file
-//                 saveConfig();
+    //         if (updated)
+    //         {
+    //             // Save configuration to file
+    //             saveConfig();
 
-//                 // Reset hostname
-//                 if (hostNameChanged)
-//                 {
-//                     wifi_station_set_hostname(hostname);
-//                     MDNS.setHostname(hostname);
-//                     MDNS.notifyAPChange();
-//                     MDNS.announce();
+    //             // Reset hostname
+    //             if (hostNameChanged)
+    //             {
+    //                 wifi_station_set_hostname(hostname);
+    //                 MDNS.setHostname(hostname);
+    //                 MDNS.notifyAPChange();
+    //                 MDNS.announce();
 
-//                     char hostredirect[39];
-//                     strcpy(hostredirect, config.hostname);
-//                     strcat(hostredirect, ".local");
-//                     Log.notice(F("Redirecting to new URL: http://%s.local/" CR), hostname);
+    //                 char hostredirect[39];
+    //                 strcpy(hostredirect, config.hostname);
+    //                 strcat(hostredirect, ".local");
+    //                 Log.notice(F("Redirecting to new URL: http://%s.local/" CR), hostname);
 
-//                     // Send redirect information
-//                     Log.verbose(F("Sending %s for redirect." CR), hostredirect);
-//                     request->redirect(hostredirect);
-//                 }
-//                 else
-//                 {
-//                     request->send(200, F("text/html"), F("Ok."));
-//                 }
-//             }
-//         }
-//         else
-//         {
-//             request->send(500, F("text/json"), err.c_str());
-//         }
-//     });
+    //                 // Send redirect information
+    //                 Log.verbose(F("Sending %s for redirect." CR), hostredirect);
+    //                 request->redirect(hostredirect);
+    //             }
+    //             else
+    //             {
+    //                 request->send(200, F("text/html"), F("Ok."));
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         request->send(500, F("text/json"), err.c_str());
+    //     }
+    // });
 
-//     // server.on("/json/", HTTP_POST, [](AsyncWebServerRequest *request) { // New bulk JSON handler
-//     //     Log.verbose(F("Processing /json/ POST." CR));
+    // server.on("/json/", HTTP_POST, [](AsyncWebServerRequest *request) { // New bulk JSON handler
+    //     Log.verbose(F("Processing /json/ POST." CR));
 
-//     //     String input = request->arg(F("plain"));
-//     //     DynamicJsonDocument doc(capacityDeserial);
-//     //     DeserializationError error = deserializeJson(doc, input);
+    //     String input = request->arg(F("plain"));
+    //     DynamicJsonDocument doc(capacityDeserial);
+    //     DeserializationError error = deserializeJson(doc, input);
 
-//     //     // TODO:  Can't receive a full JSON file (yet) - crashes
-//     //     Log.verbose(F("DEBUG:  Received JSON:" CR));
-//     //     serializeJsonPretty(doc, Serial);
-//     //     Serial.println();
+    //     // TODO:  Can't receive a full JSON file (yet) - crashes
+    //     Log.verbose(F("DEBUG:  Received JSON:" CR));
+    //     serializeJsonPretty(doc, Serial);
+    //     Serial.println();
 
-//     //     if (error) {
-//     //         Log.verbose(F("Error while processing /apply/: %s" CR), error.c_str());
-//     //         request->send(500, "text/plain", error.c_str());
-//     //     } else {
-//     //         if (mergeJsonObject(doc)) {
+    //     if (error)
+    //     {
+    //         Log.verbose(F("Error while processing /apply/: %s" CR), error.c_str());
+    //         request->send(500, "text/plain", error.c_str());
+    //     }
+    //     else
+    //     {
+    //         if (mergeJsonObject(doc))
+    //         {
 
-//     //             Log.verbose(F("DEBUG:  Merged JSON file:" CR));
-//     //             printFile();
+    //             Log.verbose(F("DEBUG:  Merged JSON file:" CR));
+    //             printFile();
 
-//     //             request->send(200, "text/plain", "Ok");
-//     //             // TODO:  Check for doc.containsKey("foo") and do follow-up processing
-//     //             // Hostname as well as URL, Brewer's Friend and Brewfather Frequencies
-//     //         } else {
-//     //             request->send(500, "text/plain", "Unable to merge JSON.");
-//     //         }
-//     //     }
-//     // });
+    //             request->send(200, "text/plain", "Ok");
+    //             // TODO:  Check for doc.containsKey("foo") and do follow-up processing
+    //             // Hostname as well as URL, Brewer's Friend and Brewfather Frequencies
+    //         }
+    //         else
+    //         {
+    //             request->send(500, "text/plain", "Unable to merge JSON.");
+    //         }
+    //     }
+    // });
 }
 
 void setEditor()
