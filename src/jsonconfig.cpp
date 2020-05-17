@@ -281,7 +281,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
 
     if (obj["randr"].isNull()) {
-        randr = false;
+        randr = RANDR;
     } else {
         bool r = obj["randr"];
         randr = r;
@@ -289,9 +289,14 @@ void CopConfig::load(JsonObjectConst obj)
 
     if (obj["tapsolenoid"].isNull()) {
         tapsolenoid = TSOL;
+        digitalWrite(SOLENOID, HIGH);
     } else {
         bool tsol = obj["tapsolenoid"];
         tapsolenoid = tsol;
+        if (tapsolenoid)
+            digitalWrite(SOLENOID, HIGH);
+        else
+            digitalWrite(SOLENOID, LOW);
     }
 }
 
