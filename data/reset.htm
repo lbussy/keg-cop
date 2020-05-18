@@ -111,14 +111,12 @@
 
         function loadPage() { // Make sure the page is 100% loaded
             if(document.readyState === 'ready' || document.readyState === 'complete') {
-                console.log("Do Reset 1."); // DEBUG
                 doResetSignal();
             } else {
                 document.onreadystatechange = function () {
-                        if (document.readyState == "complete") {
-                        console.log("Do Reset 2."); // DEBUG
+                    if (document.readyState == "complete") {
                         doResetSignal();
-                        }
+                    }
                 }
             }
         }
