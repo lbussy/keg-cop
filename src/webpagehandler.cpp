@@ -176,6 +176,7 @@ void setSettingsAliases()
         // Start to concatenate redurect URL
         char redirect[66];
         int madeChange = 0;
+        bool hostNameChange = false;
         strcpy(redirect, "/settings/");
 
         //Scroll through all POSTed parameters
@@ -204,27 +205,16 @@ void setSettingsAliases()
                         strlcpy(config.hostname, value, sizeof(config.hostname));
                         saveConfig();
                         madeChange++;
+                        hostNameChange = true;
 
-                        // Reset hostname
-                        #ifdef ESP8266
-                        wifi_station_set_hostname(config.hostname);
-                        MDNS.setHostname(config.hostname);
-                        MDNS.notifyAPChange();
-                        MDNS.announce();
-                        #elif defined ESP32
-                        tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA,config.hostname);
-                        mdnsreset();
-                        #endif
-
-                        // Creeate a full URL for redirection
+                        // Creeate a full URL for redirection to new hostname
                         char hostname[45];
                         strcpy(hostname, "http://");
                         strcat(hostname, config.hostname);
                         strcat(hostname, ".local");
                         strcpy(redirect, hostname);
                         strcat(redirect, "/settings/");
-                        strcat(redirect, hashloc); // Redirect to Controller box
-                        Log.verbose(F("POSTed mdnsid, redirecting to %s." CR), redirect);
+                        strcat(redirect, hashloc); 
                     }
                 }
                 if (strcmp(name, "breweryname") == 0) // Change brewery name
@@ -533,12 +523,26 @@ void setSettingsAliases()
 
         // Redirect to Settings page
         //
-        if (madeChange > 1) // We made more than one change
-        {
-            request->redirect("/settings/");
+        if (hostNameChange)
+        { // We reset hostname, process
+            #ifdef ESP8266
+            wifi_station_set_hostname(config.hostname);
+            MDNS.setHostname(config.hostname);
+            MDNS.notifyAPChange();
+            MDNS.announce();
+            #elif defined ESP32
+            tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA,config.hostname);
+            mdnsreset();
+            #endif
+            if (!madeChange > 1)
+                Log.verbose(F("POSTed mdnsid, redirecting to %s." CR), redirect);
         }
-        else // We made a single change
-        {
+        else if (madeChange > 1) // 
+        { // We made more than one change, assume automation
+            request->send(200, F("text/html"), F("Ok."));
+        }
+        else
+        { // We made a single change, should be user-driven
             request->redirect(redirect);
         }
     });
