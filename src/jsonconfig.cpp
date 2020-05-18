@@ -287,6 +287,10 @@ void CopConfig::load(JsonObjectConst obj)
         randr = r;
     }
 
+    // Need to instantiate solenoid here
+    pinMode(SOLENOID, OUTPUT);
+    digitalWrite(SOLENOID, HIGH);
+
     if (obj["tapsolenoid"].isNull()) {
         tapsolenoid = TSOL;
         digitalWrite(SOLENOID, HIGH);
@@ -294,9 +298,13 @@ void CopConfig::load(JsonObjectConst obj)
         bool tsol = obj["tapsolenoid"];
         tapsolenoid = tsol;
         if (tapsolenoid)
-            digitalWrite(SOLENOID, HIGH);
-        else
+        {
             digitalWrite(SOLENOID, LOW);
+        }
+        else
+        {
+            digitalWrite(SOLENOID, HIGH);
+        }
     }
 }
 

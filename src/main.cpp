@@ -52,9 +52,7 @@ void setup()
         doWiFi(false);
     }
 
-    // Set pins for solenoids
-    pinMode(SOLENOID, OUTPUT);
-    digitalWrite(SOLENOID, HIGH);
+    // Set pin for relay
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, HIGH);
 
