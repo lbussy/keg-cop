@@ -174,7 +174,7 @@ void setSettingsAliases()
         // Process POST configuration changes
         Log.verbose(F("Processing post to /settings/update/." CR));
         // Start to concatenate redirect URL
-        char redirect[66];
+        char redirect[67];
         int madeChange = 0;
         bool hostNameChange = false;
         strcpy(redirect, "/settings/");
@@ -194,7 +194,7 @@ void setSettingsAliases()
                 // Controller Settings
                 if (strcmp(name, "hostname") == 0) // Change hostname
                 {
-                    const char * hashloc = "#controller";
+                    // const char * hashloc = "#controller"; // Get this at end
                     if ((strlen(value) < 3) || (strlen(value) > 32))
                     {
                         Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
@@ -206,15 +206,6 @@ void setSettingsAliases()
                         saveConfig();
                         madeChange++;
                         hostNameChange = true;
-
-                        // Creeate a full URL for redirection to new hostname
-                        char hostname[45];
-                        strcpy(hostname, "http://");
-                        strcat(hostname, config.hostname);
-                        strcat(hostname, ".local");
-                        strcpy(redirect, hostname);
-                        strcat(redirect, "/settings/");
-                        strcat(redirect, hashloc); 
                     }
                 }
                 if (strcmp(name, "breweryname") == 0) // Change brewery name
@@ -523,7 +514,11 @@ void setSettingsAliases()
 
         // Redirect to Settings page
         //
-        if (hostNameChange)
+        if (madeChange > 1)
+        { // We made more than one change, assume automation
+            request->send(200, F("text/html"), F("Ok."));
+        }
+        else if (hostNameChange)
         { // We reset hostname, process
             #ifdef ESP8266
             wifi_station_set_hostname(config.hostname);
@@ -534,12 +529,14 @@ void setSettingsAliases()
             tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA,config.hostname);
             mdnsreset();
             #endif
-            if (!(madeChange > 1))
-                Log.verbose(F("POSTed mdnsid, redirecting to %s." CR), redirect);
-        }
-        else if (madeChange > 1) // 
-        { // We made more than one change, assume automation
-            request->send(200, F("text/html"), F("Ok."));
+            // Creeate a full URL for redirection to new hostname
+            strcpy(redirect, "http://");
+            strcat(redirect, config.hostname);
+            strcat(redirect, ".local");
+            strcat(redirect, "/settings/");
+            strcat(redirect, "#controller");
+            Log.verbose(F("POSTed mDNSid, redirecting to %s." CR), redirect);
+            request->redirect(redirect);
         }
         else
         { // We made a single change, should be user-driven
