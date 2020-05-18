@@ -129,6 +129,7 @@
                         for (var i = 0; i < numTaps; i++) {
                             if (flow.taps[i].active) { // Dynamically create tap list HTML
                                 var remain = (flow.taps[i].remaining / flow.taps[i].capacity) * 100;
+                                var ozremain = flow.taps[i].remaining * 128;
                                 tapHTML += '<div class="card-body" id="tap' + i + 'display">\n';
                                 tapHTML += '<span id="tap' + i + 'name" name="tap' + i + 'name">';
                                 tapHTML += '<a href="/settings/#tap' + i + '" class="no-underline">Tap ';
@@ -141,7 +142,8 @@
                                 tapHTML += 'name="tap' + i + 'prog" id="tap' + i + 'prog" data-toggle="tooltip" title="';
                                 tapHTML += flow.taps[i].remaining.toFixed(1).toString() + ' of ';
                                 tapHTML += flow.taps[i].capacity.toFixed(1).toString();
-                                tapHTML += ' %UNITS% remaining.';
+                                tapHTML += ' %UNITS% remaining (';
+                                tapHTML += ozremain.toFixed(0).toString() + " oz)."
                                 tapHTML += '">' + remain.toFixed(1).toString() + '%\n';
                                 tapHTML += '</div>\n</div>\n</div>\n';
                             }
