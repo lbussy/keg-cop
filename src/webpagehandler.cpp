@@ -173,7 +173,7 @@ void setSettingsAliases()
     server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) { // Settings Update Handler
         // Process POST configuration changes
         Log.verbose(F("Processing post to /settings/update/." CR));
-        // Start to concatenate redurect URL
+        // Start to concatenate redirect URL
         char redirect[66];
         int madeChange = 0;
         bool hostNameChange = false;
@@ -534,7 +534,7 @@ void setSettingsAliases()
             tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA,config.hostname);
             mdnsreset();
             #endif
-            if (!madeChange > 1)
+            if (!(madeChange > 1))
                 Log.verbose(F("POSTed mdnsid, redirecting to %s." CR), redirect);
         }
         else if (madeChange > 1) // 
