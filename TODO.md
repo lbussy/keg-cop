@@ -6,14 +6,13 @@
 
 ## Features
 
-- Add bulk POST handler
+- Allow update of firmware to re-apply flow.json
 - Add target pushes
 - Figure out what the sendUpdateCount() report is (RandR+)
 - Handle Imperial/metric
     - Display (web)
     - Settings post
 - Filter small pours
-- Display remaining in glasses? (pints or 0.5l)
 
 ## Bugs
 
@@ -61,3 +60,5 @@
 - ~~Change max on key progress bars to match settings~~
 - ~~Add demo tap list~~
 - ~~Round display of percentage on progress bar~~
+- ~~Add bulk POST handler~~
+- ~~Display remaining in glasses? (pints or 0.5l)~~
