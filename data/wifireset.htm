@@ -71,9 +71,9 @@
 
                 <!-- WiFi Reset Information -->
                 <div class="card-header">
-                    <h4 class="card-title">Resetting Configuration</h4>
+                    <h4 class="card-title" id="subtitle">Resetting Configuration</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="message">
                     <p class="card-text">
                         Your Keg Cop's WiFi connection settings are being
                         reset which will cause it to forget your network
@@ -129,44 +129,7 @@
         }
 
         function doResetSignal() {
-            var jqxhr = $.get( "/oktoreset/")
-                .done(function() {
-                    myVar = setTimeout(watchReset, 5000);
-                })
-                .fail(function() {
-                    // Reset is complete
-                    $("#banner").replaceWith("<h1>Controller Reset Failed</h1>");
-                    $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Redirect Pending</h4>");
-                    $("#message").replaceWith("<p class='card-body'>The controller reset failed. You will be redirected momentarily.</p>");
-                    setTimeout(function () { window.location.href = "/"; }, 5000);
-                });
-        }
-
-        function watchReset() {
-            // Wait for restart to complete
-            var intervalID = window.setInterval(function () { // Poll every 5 seconds
-                checkSemaphore(function (semaphore) {
-                    didreset = semaphore;
-                    if (didreset == true) {
-                        // Reset is complete
-                        $("#banner").replaceWith("<h1>Controller Reset Complete</h1>");
-                        $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Redirect Pending</h4>");
-                        $("#message").replaceWith("<p class='card-body'>The controller reset is complete. You will be redirected momentarily.</p>");
-                        setTimeout(function () { window.location.href = "/"; }, 5000);
-                    }
-                });
-            }, 5000);
-        }
-
-        function checkSemaphore(callback) { // Check to see if the update is complete
-            var jqxhr = $.get("/ping/")
-                .done(function (data) {
-                    callback(true);
-                })
-                .fail(function () {
-                    // This will fail while controller resets
-                    callback(false);
-                });
+            $.get("/oktowifireset/", function(data){}); // Nuke the WiFi settings
         }
     </script>
 
