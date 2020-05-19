@@ -106,6 +106,7 @@ void execspiffs() {
                 config.dospiffs2 = false;
                 config.didupdate = true;
                 saveConfig(); // This not only saves the flags, it (re)saves the whole config after SPIFFS wipes it
+                saveFlowConfig(); // Save previous flowmeter data
                 _delay(1000);
                 Log.notice(F("HTTP SPIFFS OTA Update complete, restarting." CR));
                 ESP.restart();

@@ -57,18 +57,19 @@ void setup()
     digitalWrite(COOL, HIGH);
 
     setClock();         // Set NTP Time
-    execspiffs();       // Check for pending SPIFFS update
-    mdnssetup();        // Set up mDNS responder
-    tcpCleanup();       // Get rid of -8 errors
-    initWebServer();    // Turn on web server
-    sensorInit();       // Initialize temperature sensors
 
-    // Initialize flowmeters
+    // Initialize flowmeters before checking for SPIFFS update
     if (initFlow())
         Log.notice(F("Flowmeters loaded." CR));
     else
         Log.error(F("Unable to load flowmeters." CR));
 
+    execspiffs();       // Check for pending SPIFFS update
+
+    mdnssetup();        // Set up mDNS responder
+    tcpCleanup();       // Get rid of -8 errors
+    initWebServer();    // Turn on web server
+    sensorInit();       // Initialize temperature sensors
     startControl();     // Initialize temperature control
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
