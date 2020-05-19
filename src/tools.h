@@ -29,6 +29,7 @@ SOFTWARE. */
 
 void _delay(unsigned long);
 void resetController();
+void setDoWiFiReset();
 void setDoReset();
 void tickerLoop();
 void printDebug();
