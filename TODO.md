@@ -7,10 +7,12 @@
 ## Features
 
 - Add target pushes
-- Figure out what the sendUpdateCount() report is (RandR+)
+- sendUpdateCount() report is sent when sendPulseCount() is not warranted (RandR+)
 - Handle Imperial/metric
     - Display (web)
-    - Settings post
+      - Index
+      - Settings
+    - Settings posting
 - Filter small pours
 
 ## Bugs
