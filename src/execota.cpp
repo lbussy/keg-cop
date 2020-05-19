@@ -151,7 +151,6 @@ HTTPUpdateResult execOTA(char * host, int port, char * path, int cmd)
 
         // Get the contents of the bin file
         get = String("GET /") + String(path) + String(" HTTP/1.1\r\nHost: ") + String(host) + String("\r\nCache-Control: no-cache\r\nConnection: close\r\n\r\n");
-        client.print(get.c_str());
 
         unsigned long timeout = millis();
         while (client.available() == 0)
