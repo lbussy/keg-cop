@@ -126,14 +126,11 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
 
 void resetWifi() { // Wipe wifi settings and reset controller
     AsyncWiFiManager myAsyncWifiManager;
-    _delay(3000); // Allow page to load
     myAsyncWifiManager.resetSettings();
     blinker.detach(); // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
-    _delay(3000);
     Log.warning(F("Restarting after clearing wifi settings." CR));
     setDoReset();
-    _delay(1000);
 }
 
 void wifiBlinker() { // Invert Current State of LED

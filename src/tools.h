@@ -23,6 +23,7 @@ SOFTWARE. */
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
+#include "wifihandler.h"
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
@@ -33,5 +34,6 @@ void tickerLoop();
 void printDebug();
 
 static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
+static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset
 
 #endif

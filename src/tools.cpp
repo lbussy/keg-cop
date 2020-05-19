@@ -45,12 +45,18 @@ void setDoReset() {
     doReset = true; // Semaphore required for reset in callback
 }
 
+void setDoWiFiReset() {
+    doWiFiReset = true; // Semaphore required for wifi reset in web page
+}
+
 void tickerLoop() {
-    // Check for Reset Pending
     // Necessary because we cannot delay in a callback
-    if (doReset) {
+    if (doReset) { // Check for Reset Pending
         doReset = false;
         resetController();
+    }
+    if (doWiFiReset) { // Need to do this to prevent WDT
+        resetWifi();
     }
 }
 
