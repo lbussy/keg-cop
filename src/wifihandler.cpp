@@ -129,8 +129,8 @@ void resetWifi() { // Wipe wifi settings and reset controller
     myAsyncWifiManager.resetSettings();
     blinker.detach(); // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
-    Log.warning(F("Restarting after clearing wifi settings." CR));
-    setDoReset();
+    Log.notice(F("Restarting after clearing wifi settings." CR));
+    ESP.restart();
 }
 
 void wifiBlinker() { // Invert Current State of LED

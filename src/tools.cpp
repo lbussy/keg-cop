@@ -56,6 +56,7 @@ void tickerLoop() {
         resetController();
     }
     if (doWiFiReset) { // Need to do this to prevent WDT
+        doWiFiReset = false;
         resetWifi();
     }
 }

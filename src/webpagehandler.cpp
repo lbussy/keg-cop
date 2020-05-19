@@ -58,8 +58,8 @@ void setRegPageAliases()
     server.serveStatic("/ota1/", SPIFFS, "/").setDefaultFile("ota1.htm").setCacheControl("max-age=600");
     server.serveStatic("/ota2/", SPIFFS, "/").setDefaultFile("ota2.htm").setCacheControl("max-age=600");
     server.serveStatic("/settings/", SPIFFS, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
-    server.serveStatic("/wifireset/", SPIFFS, "/").setDefaultFile("/wifireset.htm").setCacheControl("max-age=600");
     server.serveStatic("/reset/", SPIFFS, "/").setDefaultFile("reset.htm").setCacheControl("max-age=600");
+    server.serveStatic("/wifireset/", SPIFFS, "/").setDefaultFile("wifireset.htm").setCacheControl("max-age=600");
     server.serveStatic("/404/", SPIFFS, "/").setDefaultFile("404.htm").setCacheControl("max-age=600");
 }
 
@@ -75,8 +75,9 @@ void setActionPageHandlers()
 
     server.on("/oktowifireset/", HTTP_GET, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /wifireset/." CR));
-        request->send(SPIFFS, "/wifireset.htm");
-        resetWifi(); // Wipe settings, reset controller
+        request->send(200, F("text/plain"), F("Ok."));
+        _delay(2000);
+        setDoWiFiReset(); // Wipe settings, reset controller
     });
 
     server.on("/oktoreset/", HTTP_GET, [](AsyncWebServerRequest *request) {
