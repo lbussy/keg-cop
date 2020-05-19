@@ -25,6 +25,7 @@ SOFTWARE. */
 
 #include "jsonconfig.h"
 #include "webpagehandler.h"
+#include "flowmeter.h"
 #include <LCBUrl.h>
 #include <Update.h>
 #include <ArduinoLog.h>
