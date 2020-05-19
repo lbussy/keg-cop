@@ -79,7 +79,7 @@
                         device back to your local WiFi network.
                     </p>
                     <p class="card-text">
-                        <a href="/wifi2/" class="btn btn-danger">Reset WiFi</a>
+                        <a href="/wifitwo/" class="btn btn-danger">Reset WiFi</a>
                     </p>
                 </div>
             </div> <!-- Reset WiFi Information -->
