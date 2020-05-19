@@ -6,7 +6,6 @@
 
 ## Features
 
-- Allow update of firmware to re-apply flow.json
 - Add target pushes
 - Figure out what the sendUpdateCount() report is (RandR+)
 - Handle Imperial/metric
@@ -63,3 +62,4 @@
 - ~~Add bulk POST handler~~
 - ~~Display remaining in glasses? (pints or 0.5l)~~
 - ~~WiFi Reset does not work properly~~
+- ~~Allow update of firmware to re-apply flow.json~~

@@ -33,6 +33,7 @@ void execfw() {
     config.dospiffs2 = false;
     config.didupdate = false;
     saveConfig();
+    saveFlowConfig();
 
     LCBUrl lcburl;
     lcburl.setUrl(FIRMWAREURL);
@@ -49,6 +50,8 @@ void execfw() {
             config.dospiffs2 = false;
             config.didupdate = false;
             saveConfig();
+            saveFlowConfig();
+            ESP.restart();
             break;
 
         case HTTP_UPDATE_NO_UPDATES:
@@ -58,12 +61,13 @@ void execfw() {
             config.dospiffs2 = false;
             config.didupdate = false;
             saveConfig();
+            saveFlowConfig();
+            ESP.restart();
             break;
         
         case HTTP_UPDATE_OK:
             Log.notice(F("HTTP Firmware OTA Update complete, restarting." CR));
             ESP.restart();
-            _delay(1000);
             break;
     }
 }
@@ -75,6 +79,7 @@ void execspiffs() {
         config.dospiffs2 = true;
         config.didupdate = false;
         saveConfig();
+        saveFlowConfig();
         _delay(3000);
         ESP.restart();
         _delay(1000);
@@ -152,6 +157,7 @@ HTTPUpdateResult execOTA(char * host, int port, char * path, int cmd)
 
         // Get the contents of the bin file
         get = String("GET /") + String(path) + String(" HTTP/1.1\r\nHost: ") + String(host) + String("\r\nCache-Control: no-cache\r\nConnection: close\r\n\r\n");
+        client.print(get.c_str());
 
         unsigned long timeout = millis();
         while (client.available() == 0)
