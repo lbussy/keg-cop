@@ -48,6 +48,7 @@ struct Taps
 
 struct Flowmeter
 {
+    bool imperial;
     Taps taps[8];
 
     void load(JsonObjectConst);

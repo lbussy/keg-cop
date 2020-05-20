@@ -1,4 +1,5 @@
 {
+  "imperial": true,
   "taps": [
     {
       "tapid": 0,
