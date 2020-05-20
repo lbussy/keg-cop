@@ -117,5 +117,8 @@ bool deserializeConfig(Stream &);
 bool merge(JsonVariant, JsonVariantConst);
 bool mergeJsonObject(JsonVariantConst);
 bool mergeJsonString(String);
+// Conversions
+void convertConfigtoImperial();
+void convertConfigtoMetric();
 
 #endif // _JSONCONFIG_H

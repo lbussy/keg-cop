@@ -435,8 +435,8 @@ SOFTWARE. */
 //
 // Pulses per gallon default (based on SF-800)
 //
-#ifndef PPG
-#define PPG 21120
+#ifndef PPU
+#define PPU 21120
 #endif
 //
 //////////////////////////////////////////////////////////////////////////

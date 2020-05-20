@@ -98,7 +98,7 @@ void logFlow()
             pulse[i] = 0;
             lastPulseTime[i] = 0;
             interrupts();
-            flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppg)));
+            flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppu)));
             saveFlowConfig();
             Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
             if (config.copconfig.rpintscompat)
@@ -111,7 +111,7 @@ void logFlow()
             // Kick detector - keg is blowing foam
             const int secs = (nowTime - lastPulse[i]) / 1000;
             const unsigned long pps = (pulse[i] - lastPulse[i]) / secs;
-            const unsigned long kickSpeed = (flow.taps[i].ppg / 128) * KICKSPEED;
+            const unsigned long kickSpeed = (flow.taps[i].ppu / 128) * KICKSPEED;
             if (pps > kickSpeed)
             {
                 flow.taps[i].active = false;
@@ -337,11 +337,43 @@ bool mergeFlow(JsonVariant dst, JsonVariantConst src)
     return true;
 }
 
+void convertFlowtoImperial()
+{
+    // TODO:  Loop through all flow numbers and convert to Imperial
+    if (!flow.imperial)
+    {
+        flow.imperial = true;
+        for (int i; i++; i < NUMTAPS)
+        {
+            flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu);
+            flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
+            flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
+        }
+        saveFlowConfig();
+    }
+}
+
+void convertFlowtoMetric()
+{
+    // Loop through all flow numbers and convert to Metric
+    if (flow.imperial)
+    {
+        flow.imperial = false;
+        for (int i; i++; i < NUMTAPS)
+        {
+            flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu);
+            flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
+            flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
+        }
+        saveFlowConfig();
+    }
+}
+
 void Taps::save(JsonObject obj) const
 {
     obj["tapid"] = tapid;           // Tap ID
     obj["pin"] =  pin;              // μC Pin
-    obj["ppg"] =  ppg;              // Pulses per Gallon
+    obj["ppu"] =  ppu;              // Pulses per Gallon
     obj["name"] =  name;            // Beer Name
     obj["capacity"] =  capacity;    // Tap Capacity
     obj["remaining"] =  remaining;  // Tap remaining
@@ -355,14 +387,14 @@ void Taps::load(JsonObjectConst obj, int numTap)
     tapid = numTap;
     pin = flowPins[numTap];
 
-    if (obj["ppg"].isNull() || obj["ppg"] == 0)
+    if (obj["ppu"].isNull() || obj["ppu"] == 0)
     {
-        ppg = PPG;
+        ppu = PPU;
     }
     else
     {
-        long pg = obj["ppg"];
-        ppg = pg;
+        long pg = obj["ppu"];
+        ppu = pg;
     }
 
     if (obj["name"].isNull() || strlen(obj["name"]) == 0)
