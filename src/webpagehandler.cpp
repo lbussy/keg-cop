@@ -251,13 +251,16 @@ void setSettingsAliases()
                     if (strcmp(value, "option0") == 0)
                     {
                         config.copconfig.imperial = false;
+                        flow.imperial = false;
                     }
                     else
                     {
                         config.copconfig.imperial = true;
+                        flow.imperial = true;
                     }
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     saveConfig();
+                    saveFlowConfig();
                     madeChange++;
                     // TODO:  Change all imperial/metric config units
                     strcat(redirect, hashloc); // Redirect to Temp Control

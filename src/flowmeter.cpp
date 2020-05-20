@@ -27,9 +27,9 @@ const char *flowfilename = FLOWFILENAME;
 int flowPins[8] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7};
 volatile static unsigned long pulse[NUMTAPS];           // Unregistered pulse counter
 volatile static unsigned long lastPulse[NUMTAPS];       // Pulses pending at last poll
-volatile static unsigned long lastPulseTime[NUMTAPS];    // Monitor ongoing pours
-extern const size_t capacityFlowDeserial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9) + 830;
-extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9);
+volatile static unsigned long lastPulseTime[NUMTAPS];   // Monitor ongoing pours
+extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(7);
+extern const size_t capacityFlowDeserial = capacityFlowSerial + 1000;
 
 static IRAM_ATTR void HandleIntISR0(void)
 {
@@ -408,7 +408,10 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
 void Flowmeter::load(JsonObjectConst obj)
 {
-	// Get a reference to the taps array
+    // Save units here because it's easier in the web/JS
+    imperial = config.copconfig.imperial;
+
+    // Get a reference to the taps array
 	JsonArrayConst _taps = obj["taps"];
 
 	// Extract each tap point
@@ -427,6 +430,9 @@ void Flowmeter::load(JsonObjectConst obj)
 }
 
 void Flowmeter::save(JsonObject obj) const {
+    // Save units here because it's easier in the web/JS
+    obj["imperial"] = imperial; // Units in Imperial
+
 	// Add "taps" array
 	JsonArray _taps = obj.createNestedArray("taps");
 
