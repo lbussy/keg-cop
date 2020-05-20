@@ -346,7 +346,8 @@ void convertFlowtoImperial()
         flow.imperial = true;
         for (int i = 0; i < NUMTAPS; i++)
         {
-            flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu);
+            // flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu);
+            flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu); // Reverse for pulses
             flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
             flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
         }
@@ -363,7 +364,8 @@ void convertFlowtoMetric()
         flow.imperial = false;
         for (int i = 0; i < NUMTAPS; i++)
         {
-            flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu);
+            // flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu);
+            flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu); // Reverse for pulses
             flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
             flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
         }
