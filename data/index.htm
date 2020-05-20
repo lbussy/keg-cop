@@ -101,10 +101,6 @@
         </script>
 
     <script>
-        var loaded = 0;   // Hold data load status
-        var tapHTML = ''; // Hold the taplist HTML
-        var units;        // Gallons or Liters
-
         // Attach the event after the page loads
         if (window.addEventListener)
             window.addEventListener("load", loadPage, false);
@@ -115,11 +111,11 @@
         function loadPage() {
             toggleLoader("on");
             populateFlow();
-            populateConfig();
         }
 
         function populateFlow() { // Get flowmeter settings
             var url = "/flow/";
+            var tapHTML = ''; // Hold the taplist HTML
             var flow = $.getJSON(url, function () {
             })
                 .done(function (flow) {
@@ -141,26 +137,15 @@
                                 tapHTML += '" aria-valuemin="' + remain + '" aria-valuemax="100"\n';
                                 tapHTML += 'name="tap' + i + 'prog" id="tap' + i + 'prog" data-toggle="tooltip" title="';
                                 tapHTML += flow.taps[i].remaining.toFixed(1).toString() + ' of ';
-                                tapHTML += flow.taps[i].capacity.toFixed(1).toString();
-                                tapHTML += ' %UNITS% remaining (';
-                                tapHTML += ozremain.toFixed(0).toString() + " oz)."
+                                tapHTML += flow.taps[i].capacity.toFixed(1).toString() + ' ';
+                                if (flow.imperial === true) {
+                                    tapHTML += 'gallons remaining (' + (flow.taps[i].remaining * 128).toFixed(0).toString() + ' oz.)';
+                                } else {
+                                    tapHTML += 'liters remaining (' + (flow.taps[i].remaining * 1000).toFixed(0).toString() + ' ml.)'
+                                }
                                 tapHTML += '">' + remain.toFixed(1).toString() + '%\n';
                                 tapHTML += '</div>\n</div>\n</div>\n';
                             }
-                        }
-                        try {
-                            for (var i = 0; i < numTaps; i++) {
-                                if (flow.taps[i].active) { // Update tap list details
-                                    var remain = (flow.taps[i].remaining / flow.taps[i].capacity) * 100;
-                                    $('#tap' + i + 'prog')
-                                        .css("width", remain + "%")
-                                        .attr("aria-valuenow", remain)
-                                        .text(remain + "%");
-                                }
-                            }
-                        }
-                        catch {
-                            alert("Error while generating dynamic flowmeter content.");
                         }
                     }
                     catch {
@@ -176,43 +161,8 @@
                         delay: { show: 200, hide: 300 },
                         animation: true
                     });
-                    loaded++;
-                    if (loaded == 2) {
-                        tapHTML = tapHTML.replace(/%UNITS%/g, units); // Add in proper volume units
-                        $('#tapdisplay').html(tapHTML); // Display taplist
-                        toggleLoader("off");            // Turn off spinner and show page
-                    }
-                });
-        }
-
-        function populateConfig() { // Get configuration settings
-            var url = "/config/";
-            var config = $.getJSON(url, function () {
-            })
-                .done(function (config) {
-                    try {
-                        $('#tapheader').html('Showing ' + config.copconfig.kegeratorname + ' for ' + config.copconfig.breweryname);
-                        if (config.copconfig.imperial) {
-                            units = "gallons";
-                        } else {
-                            units = "liters";
-                        }
-                    }
-                    catch {
-                        alert("Unable to parse configuration data from SPIFFS.");
-                    }
-                })
-                .fail(function () {
-                    alert("Unable to retrieve configuration data from SPIFFS.");
-                })
-                .always(function () {
-                    // Can post-process here
-                    loaded++;
-                    if (loaded == 2) {
-                        tapHTML = tapHTML.replace(/%UNITS%/g, units); // Add in proper volume units
-                        $('#tapdisplay').html(tapHTML); // Display taplist
-                        toggleLoader("off");            // Turn off spinner and show page
-                    }
+                    $('#tapdisplay').html(tapHTML); // Display taplist
+                    toggleLoader("off");            // Turn off spinner and show page
                 });
         }
     </script>
