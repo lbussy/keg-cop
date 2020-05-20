@@ -1549,8 +1549,8 @@
                         for (var i = 0; i < numTaps; i++) {
                             $('input[name="tap' + i + 'ppu"]').val(parseInt(flow.taps[i].ppu), 10);
                             $('input[name="tap' + i + 'beername"]').val(flow.taps[i].name);
-                            $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity));
-                            $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.taps[i].remaining));
+                            $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity).toFixed(4));
+                            $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.taps[i].remaining).toFixed(4));
                             if (flow.taps[i].active) {
                                 $('input[name="tap' + i + 'active"]')[0].checked = true;
                             } else {
