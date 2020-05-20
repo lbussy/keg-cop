@@ -84,3 +84,27 @@ void printDebug()
 #endif
     Log.verbose(F("[MEM] Free: %l | Max: %l | Frag: %d%" CR CR), free, max, frag);
 }
+
+double convertFtoC(double F)
+{
+    // T(°C) = (T(°F) - 32) × 5/9
+    return (F - 32) / 1.8;
+}
+
+double convertCtoF(double C)
+{
+    // T(°F) = T(°C) × 9/5 + 32
+    return (C * 1.8) + 32;
+}
+
+double convertGtoL(double G)
+{
+    // L = G / 0.26417
+    return G / 0.26417;
+}
+
+double convertLtoG(double L)
+{
+    // G = L * 0.26417
+    return L * 0.26417;
+}

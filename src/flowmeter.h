@@ -36,7 +36,7 @@ struct Taps
 {
     int tapid;            // Tap ID
     int pin;              // μC Pin
-    long ppg;             // Pulses per Gallon
+    long ppu;             // Pulses per Gallon
     char name[65];        // Beer Name
     double capacity;      // Tap Capacity
     double remaining;     // Tap remaining
@@ -73,6 +73,9 @@ bool printFlowConfig();
 bool mergeFlowJsonString(String);
 bool mergeFlowJsonObject(JsonVariantConst);
 bool mergeFlow(JsonVariant, JsonVariantConst);
+// Conversions
+void convertFlowtoImperial();
+void convertFlowtoMetric();
 
 extern struct Config config;
 
