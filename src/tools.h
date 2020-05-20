@@ -35,6 +35,8 @@ void tickerLoop();
 void printDebug();
 double convertFtoC(double);
 double convertCtoF(double);
+double convertOneFtoC(double);
+double convertOneCtoF(double);
 double convertGtoL(double);
 double convertLtoG(double);
 

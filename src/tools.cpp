@@ -97,6 +97,18 @@ double convertCtoF(double C)
     return (C * 1.8) + 32;
 }
 
+double convertOneFtoC(double F)
+{
+    // T(°C) = (T(°F) X (5/9)) - (32/9))
+    return F * 0.555;
+}
+
+double convertOneCtoF(double C)
+{
+    // T(°F) = T(°C) × 9/5 + 32
+    return C * 1.8;
+}
+
 double convertGtoL(double G)
 {
     // L = G / 0.26417
