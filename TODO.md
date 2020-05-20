@@ -8,11 +8,12 @@
 
 - Add target pushes
 - sendUpdateCount() report is sent when sendPulseCount() is not warranted (RandR+)
-- Handle Imperial/metric
-    - Display (web)
-      - Index
-      - Settings
-    - Settings posting
+- ~~Handle Imperial/metric~~
+    - ~~Display (web)~~
+      - ~~Index~~
+      - ~~Settings~~
+    - ~~Settings posting~~
+    - Thermostat
 - Filter small pours
 
 ## Bugs
