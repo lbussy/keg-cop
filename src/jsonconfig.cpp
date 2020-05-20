@@ -223,7 +223,7 @@ void convertConfigtoImperial()
         for (int i = 0; i < 5; i++)
         {
             if (!config.temps.calibration[i] == 0)
-                config.temps.calibration[i] = convertCtoF(config.temps.calibration[i]);
+                config.temps.calibration[i] = convertOneCtoF(config.temps.calibration[i]);
         }
         saveConfig();
     }
@@ -240,7 +240,7 @@ void convertConfigtoMetric()
         for (int i = 0; i < 5; i++)
         {
             if (!config.temps.calibration[i] == 0)
-                config.temps.calibration[i] = convertFtoC(config.temps.calibration[i]);
+                config.temps.calibration[i] = convertOneFtoC(config.temps.calibration[i]);
         }
         saveConfig();
     }

@@ -342,6 +342,7 @@ void convertFlowtoImperial()
     // TODO:  Loop through all flow numbers and convert to Imperial
     if (!flow.imperial)
     {
+        Log.verbose(F("Converting metric flow data to imperial." CR));
         flow.imperial = true;
         for (int i = 0; i < NUMTAPS; i++)
         {
@@ -358,6 +359,7 @@ void convertFlowtoMetric()
     // Loop through all flow numbers and convert to Metric
     if (flow.imperial)
     {
+        Log.verbose(F("Converting imperial flow data to metric." CR));
         flow.imperial = false;
         for (int i = 0; i < NUMTAPS; i++)
         {
