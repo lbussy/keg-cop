@@ -96,14 +96,6 @@ double getTempC(uint8_t pin)
     return retVal;
 }
 
-double convertCtoF(double C)
-{
-    // T(°F) = T(°C) × 1.8 + 32
-    double F;
-    F = C * 1.8 + 32;
-    return F;
-}
-
 void showTemps()
 { // DEBUG: Show temperature values
     for (int i = 0; i < device.size; i++)
