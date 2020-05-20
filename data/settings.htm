@@ -207,7 +207,7 @@
                                         <fieldset class="form-group">
                                             <div class="row justify-content-center">
                                                 <div class="col">
-                                                    <p>Active</p>
+                                                    <p title="Turn tap display on or off">Active</p>
                                                 </div>
                                                 <div class="col">
                                                     <div class="col">
@@ -1093,17 +1093,17 @@
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col">
-                                            <p>Units</p>
+                                            <p title="Toggle between metric or imperial units">Units</p>
                                         </div>
                                         <div class="col">
                                             <div class="form-check">
-                                                <label class="form-check-label" title="Change the application display in Metric (℃ or Liters)">
+                                                <label class="form-check-label" title="Change the application to use metric units (℃ or Liters)">
                                                     <input type="radio" class="form-check-input" name="units" id="metric" value="option0">
                                                     Metric
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <label class="form-check-label" title="Change the application display in Standard (℉ or Gallons)">
+                                                <label class="form-check-label" title="Change the to use imperial units (℉ or Gallons)">
                                                     <input type="radio" class="form-check-input" name="units" id="imperial" value="option1"
                                                         checked="">
                                                     Imperial
@@ -1127,7 +1127,7 @@
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col">
-                                            <p>Solenoid Relay</p>
+                                            <p title="Turn solenoid on or off">Solenoid Relay</p>
                                         </div>
                                         <div class="col">
                                             <div class="form-check">
@@ -1161,7 +1161,7 @@
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col">
-                                            <p>Functionality</p>
+                                            <p title="Turn on legacy functionality">Functionality</p>
                                         </div>
                                         <div class="col">
                                             <div class="form-check">
@@ -1209,7 +1209,7 @@
                             <form id="setpoint" action="/settings/update/" method="POST">
                                 <div class="form-group row">
                                     <label for="setpoint" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the temperature setpoint">
+                                        title="Enter the temperature setpoint in your selected units (℃ or ℉)">
                                         Set Point
                                     </label>
                                     <div class="col-sm-8">
