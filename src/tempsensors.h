@@ -60,7 +60,6 @@ struct Devices
 void sensorInit();
 void pollTemps();
 double getTempC(uint8_t);
-double convertCtoF(double C);
 
 extern struct Config config;
 
