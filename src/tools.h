@@ -33,6 +33,12 @@ void setDoWiFiReset();
 void setDoReset();
 void tickerLoop();
 void printDebug();
+double convertFtoC(double);
+double convertCtoF(double);
+double convertOneFtoC(double);
+double convertOneCtoF(double);
+double convertGtoL(double);
+double convertLtoG(double);
 
 static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset

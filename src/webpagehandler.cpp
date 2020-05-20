@@ -250,14 +250,15 @@ void setSettingsAliases()
                     strcpy(option, value);
                     if (strcmp(value, "option0") == 0)
                     {
-                        config.copconfig.imperial = false;
+                        convertConfigtoMetric();
+                        convertFlowtoMetric();
                     }
                     else
                     {
-                        config.copconfig.imperial = true;
+                        convertConfigtoImperial();
+                        convertFlowtoImperial();
                     }
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    saveConfig();
                     madeChange++;
                     // TODO:  Change all imperial/metric config units
                     strcat(redirect, hashloc); // Redirect to Temp Control
@@ -452,9 +453,9 @@ void setSettingsAliases()
                     bool didChange = false;
                     if ((tapNum >= 0) && (tapNum <= (NUMTAPS - 1))) // Valid tap number
                     {
-                        if (String(name).endsWith("ppg") && (atol(value) > 0 && atol(value) < 99999)) // Set ppg
+                        if (String(name).endsWith("ppu") && (atol(value) > 0 && atol(value) < 99999)) // Set ppu
                         {
-                            flow.taps[tapNum].ppg = atol(value);
+                            flow.taps[tapNum].ppu = atol(value);
                             didChange = true;
                             Log.notice(F("POSTed tap%dppg, redirecting to %s." CR), tapNum, redirect);
                         }

@@ -27,9 +27,9 @@ const char *flowfilename = FLOWFILENAME;
 int flowPins[8] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7};
 volatile static unsigned long pulse[NUMTAPS];           // Unregistered pulse counter
 volatile static unsigned long lastPulse[NUMTAPS];       // Pulses pending at last poll
-volatile static unsigned long lastPulseTime[NUMTAPS];    // Monitor ongoing pours
-extern const size_t capacityFlowDeserial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9) + 830;
-extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1) + 8*JSON_OBJECT_SIZE(9);
+volatile static unsigned long lastPulseTime[NUMTAPS];   // Monitor ongoing pours
+extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(7);
+extern const size_t capacityFlowDeserial = capacityFlowSerial + 1000;
 
 static IRAM_ATTR void HandleIntISR0(void)
 {
@@ -98,7 +98,7 @@ void logFlow()
             pulse[i] = 0;
             lastPulseTime[i] = 0;
             interrupts();
-            flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppg)));
+            flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppu)));
             saveFlowConfig();
             Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
             if (config.copconfig.rpintscompat)
@@ -111,7 +111,7 @@ void logFlow()
             // Kick detector - keg is blowing foam
             const int secs = (nowTime - lastPulse[i]) / 1000;
             const unsigned long pps = (pulse[i] - lastPulse[i]) / secs;
-            const unsigned long kickSpeed = (flow.taps[i].ppg / 128) * KICKSPEED;
+            const unsigned long kickSpeed = (flow.taps[i].ppu / 128) * KICKSPEED;
             if (pps > kickSpeed)
             {
                 flow.taps[i].active = false;
@@ -337,11 +337,47 @@ bool mergeFlow(JsonVariant dst, JsonVariantConst src)
     return true;
 }
 
+void convertFlowtoImperial()
+{
+    // TODO:  Loop through all flow numbers and convert to Imperial
+    if (!flow.imperial)
+    {
+        Log.verbose(F("Converting metric flow data to imperial." CR));
+        flow.imperial = true;
+        for (int i = 0; i < NUMTAPS; i++)
+        {
+            // flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu);
+            flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu); // Reverse for pulses
+            flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
+            flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
+        }
+        saveFlowConfig();
+    }
+}
+
+void convertFlowtoMetric()
+{
+    // Loop through all flow numbers and convert to Metric
+    if (flow.imperial)
+    {
+        Log.verbose(F("Converting imperial flow data to metric." CR));
+        flow.imperial = false;
+        for (int i = 0; i < NUMTAPS; i++)
+        {
+            // flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu);
+            flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu); // Reverse for pulses
+            flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
+            flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
+        }
+        saveFlowConfig();
+    }
+}
+
 void Taps::save(JsonObject obj) const
 {
     obj["tapid"] = tapid;           // Tap ID
     obj["pin"] =  pin;              // μC Pin
-    obj["ppg"] =  ppg;              // Pulses per Gallon
+    obj["ppu"] =  ppu;              // Pulses per Gallon
     obj["name"] =  name;            // Beer Name
     obj["capacity"] =  capacity;    // Tap Capacity
     obj["remaining"] =  remaining;  // Tap remaining
@@ -355,14 +391,14 @@ void Taps::load(JsonObjectConst obj, int numTap)
     tapid = numTap;
     pin = flowPins[numTap];
 
-    if (obj["ppg"].isNull() || obj["ppg"] == 0)
+    if (obj["ppu"].isNull() || obj["ppu"] == 0)
     {
-        ppg = PPG;
+        ppu = PPU;
     }
     else
     {
-        long pg = obj["ppg"];
-        ppg = pg;
+        long pg = obj["ppu"];
+        ppu = pg;
     }
 
     if (obj["name"].isNull() || strlen(obj["name"]) == 0)
@@ -408,7 +444,10 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
 void Flowmeter::load(JsonObjectConst obj)
 {
-	// Get a reference to the taps array
+    // Save units here because it's easier in the web/JS
+    imperial = config.copconfig.imperial;
+
+    // Get a reference to the taps array
 	JsonArrayConst _taps = obj["taps"];
 
 	// Extract each tap point
@@ -427,6 +466,9 @@ void Flowmeter::load(JsonObjectConst obj)
 }
 
 void Flowmeter::save(JsonObject obj) const {
+    // Save units here because it's easier in the web/JS
+    obj["imperial"] = imperial; // Units in Imperial
+
 	// Add "taps" array
 	JsonArray _taps = obj.createNestedArray("taps");
 
