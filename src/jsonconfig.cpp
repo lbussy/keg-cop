@@ -220,7 +220,7 @@ void convertConfigtoImperial()
         Log.verbose(F("Converting metric config to imperial." CR));
         config.copconfig.imperial = true;
         config.temps.setpoint = convertCtoF(config.temps.setpoint);
-        for (int i; i++; i < 5)
+        for (int i = 0; i < 5; i++)
         {
             if (!config.temps.calibration[i] == 0)
                 config.temps.calibration[i] = convertCtoF(config.temps.calibration[i]);
@@ -237,7 +237,7 @@ void convertConfigtoMetric()
         Log.verbose(F("Converting imperial config to metric." CR));
         config.copconfig.imperial = false;
         config.temps.setpoint = convertFtoC(config.temps.setpoint);
-        for (int i; i++; i < 5)
+        for (int i = 0; i < 5; i++)
         {
             if (!config.temps.calibration[i] == 0)
                 config.temps.calibration[i] = convertFtoC(config.temps.calibration[i]);
