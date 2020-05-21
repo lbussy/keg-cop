@@ -31,6 +31,8 @@ SOFTWARE. */
 #include "execota.h"
 #include "flowmeter.h"
 #include "mdnshandler.h"
+#include "tempsensors.h"
+#include "thermostat.h"
 
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
@@ -62,5 +64,9 @@ extern const size_t capacitySerial;
 extern struct Flowmeter flow;
 extern const size_t capacityFlowDeserial;
 extern const size_t capacityFlowSerial;
+extern struct Devices device;
+extern const size_t capacityTempsDeserial;
+extern const size_t capacityTempsSerial;
+extern struct Thermostat tstat;
 
 #endif // _WEBPAGEHANDLER_H

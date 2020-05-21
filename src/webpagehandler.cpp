@@ -171,18 +171,34 @@ void setJsonHandlers()
 
     server.on("/temperatures/", HTTP_GET, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /temperatures/." CR));
-        // TODO:  Return temperatures in JSON
-        // const size_t capacity = JSON_OBJECT_SIZE(1);
-        // DynamicJsonDocument doc(capacity);
+        DynamicJsonDocument doc(capacityTempsSerial);
 
-        // doc["version"] = version();
+        doc["imperial"] = config.copconfig.imperial;
+        doc["controlpoint"] = config.temps.controlpoint;
+        doc["setting"] = config.temps.setpoint;
+        doc["status"] = tstat.state;
+        if (config.copconfig.imperial)
+        {
+            doc["sensor"]["room"] = convertCtoF(device.sensor[0].average);
+            doc["sensor"]["tower"] = convertCtoF(device.sensor[1].average);
+            doc["sensor"]["upper"] = convertCtoF(device.sensor[2].average);
+            doc["sensor"]["lower"] = convertCtoF(device.sensor[3].average);
+            doc["sensor"]["keg"] = convertCtoF(device.sensor[4].average);
+        }
+        else
+        {
+            doc["sensor"]["room"] = device.sensor[0].average;
+            doc["sensor"]["tower"] = device.sensor[1].average;
+            doc["sensor"]["upper"] = device.sensor[2].average;
+            doc["sensor"]["lower"] = device.sensor[3].average;
+            doc["sensor"]["keg"] = device.sensor[4].average;
+        }
 
-        // String json;
-        // serializeJsonPretty(doc, json);
-        // request->send(200, F("application/json"), json);
+        String json;
+        serializeJsonPretty(doc, json);
+        request->send(200, F("application/json"), json);
         request->send(200, F("text/html"), F("Ok."));
     });
-
 }
 
 void setSettingsAliases()
