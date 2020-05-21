@@ -8,13 +8,9 @@
 
 - Add target pushes
 - sendUpdateCount() report is sent when sendPulseCount() is not warranted (RandR+)
-- ~~Handle Imperial/metric~~
-    - ~~Display (web)~~
-      - ~~Index~~
-      - ~~Settings~~
-    - ~~Settings posting~~
-    - Thermostat
 - Filter small pours
+- Add temp control status to web UI
+- Add temps display to web UI
 
 ## Bugs
 
@@ -66,3 +62,9 @@
 - ~~Display remaining in glasses? (pints or 0.5l)~~
 - ~~WiFi Reset does not work properly~~
 - ~~Allow update of firmware to re-apply flow.json~~
+- ~~Handle Imperial/metric~~
+    - ~~Display (web)~~
+      - ~~Index~~
+      - ~~Settings~~
+    - ~~Settings posting~~
+    - ~~Thermostat~~
