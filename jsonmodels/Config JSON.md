@@ -1,6 +1,10 @@
-JSON Definition:
-================
+Config Report JSON Model:
+=========================
 
+JSON Definition:
+----------------
+
+```
 {
 	"apconfig": {
 		"ssid": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -40,17 +44,20 @@ JSON Definition:
 	"dospiffs2": false,
 	"didupdate": false
 }
+```
 
 Size:
 -----
 
+```
 JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9) + 990;
 512+884 = 1396
-
+```
 
 Parsing:
 --------
 
+```
 const size_t capacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9) + 990;
 DynamicJsonDocument doc(capacity);
 
@@ -95,11 +102,12 @@ bool cloud_update = cloud["update"]; // false
 bool dospiffs1 = doc["dospiffs1"]; // false
 bool dospiffs2 = doc["dospiffs2"]; // false
 bool didupdate = doc["didupdate"]; // false
-
+```
 
 Serializing:
 ------------
 
+```
 const size_t capacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9);
 DynamicJsonDocument doc(capacity);
 
@@ -141,3 +149,4 @@ doc["dospiffs2"] = false;
 doc["didupdate"] = false;
 
 serializeJson(doc, Serial);
+```

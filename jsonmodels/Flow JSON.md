@@ -1,6 +1,10 @@
-JSON Definition:
-================
+Flow Report JSON Model:
+=======================
 
+JSON Definition:
+----------------
+
+```
 {
 	"imperial": false,
 	"taps": [
@@ -78,18 +82,20 @@ JSON Definition:
 		}
 	]
 }
-
+```
 
 Size:
 -----
 
+```
 const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(7) + 1000;
 1056+894 = 1950
-
+```
 
 Deserializing / Parsing / Loading:
---------
+----------------------------------
 
+```
 const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(7) + 1000;
 DynamicJsonDocument doc(capacity);
 
@@ -172,11 +178,12 @@ const char* taps_7_name = taps_7["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 float taps_7_capacity = taps_7["capacity"]; // 999.9999
 float taps_7_remaining = taps_7["remaining"]; // 999.9999
 bool taps_7_active = taps_7["active"]; // false
-
+```
 
 Serializing / Saving:
-------------
+---------------------
 
+```
 const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(7);
 DynamicJsonDocument doc(capacity);
 
@@ -257,3 +264,4 @@ taps_7["remaining"] = 999.9999;
 taps_7["active"] = false;
 
 serializeJson(doc, Serial);
+```
