@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description" content="Keg Cop, a Home Brewing application">
+    <meta name="author" content="Lee Bussy">
+
+    <title>Keg Cop</title>
+
+    <link rel="canonical" href="https://www.kegcop.com/">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link rel="stylesheet" href="/common.css">
+    <link rel="stylesheet" href="/loader.css">
+    <script src="/loader.js"></script>
+</head>
+
+<body class="d-flex flex-column h-100">
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="/">
+                <img src="mstile-150x150.png" style="width:25px;height:25px;">
+                &nbsp;Keg Cop
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/settings/">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/help/">Help</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">About</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="flex-shrink-0">
+
+        <div class="container" id="settingsapp"> <!-- Container -->
+
+            <div class="page-header" id="banner">
+                <h1>Temperatures</h1>
+            </div>
+            <div class="card border-dark mb-3"> <!-- Temperature Information -->
+                <div class="card-header">
+                    <h4 class="card-title">Sensor Readings</h4>
+                </div>
+                <div class="card-body">
+                    <p>Put temperature information here.</p>
+                </div>
+            </div> <!-- Temperature Information -->
+
+        </div> <!-- Container -->
+
+    </main>
+
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+            <span class="text-muted">Copyright &copy; 2019-2020, Lee C. Bussy</span>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+        </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+        </script>
+
+    <script type="text/javascript">
+        // Attach the event after the page loads
+        if (window.addEventListener)
+            window.addEventListener("load", loadPage, false);
+        else if (window.attachEvent)
+            window.attachEvent("onload", loadPage);
+        else window.onload = loadPage;
+
+        function loadPage() { // Load the page's JS elements
+            loadThisVersion(); // Populate form with controller settings
+        }
+
+        function loadThisVersion() { // Get current parameters
+            var thisVersionJson = "/thisVersion/";
+            var thisVersion = $.getJSON(thisVersionJson, function () {
+            })
+                .done(function (thisVersion) {
+                    try {
+                        $('#thisVersion').text("v" + thisVersion.version);
+                    }
+                    catch {
+                        alert("Unable to parse current version from controller.");
+                        $('#thisVersion').text("(Error loading version.)");
+                    }
+                })
+                .fail(function () {
+                    alert("Failed getting current version from controller.");
+                    $('#thisVersion').text("(Error loading version.)");
+                })
+                .always(function () {
+                    // Can post-process here
+                });
+        }
+    </script>
+
+</body>
+
+</html>
