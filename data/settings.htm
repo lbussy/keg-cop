@@ -1643,6 +1643,8 @@
             }
             $(':button').prop('disabled', true);
             $(':button').html('<i class="fa fa-spinner fa-spin"></i> Updating');
+            $(element).parents('form').submit()
+            return (true);
         }
 
         function isIP(hostname) {
