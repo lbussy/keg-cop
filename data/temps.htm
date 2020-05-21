@@ -70,9 +70,13 @@
                 <div class="card-header">
                     <h4 class="card-title">Sensor Readings</h4>
                 </div>
+
                 <div class="card-body">
-                    <p>Put temperature information here.</p>
+
+                    <canvas id="tempChart"></canvas>
+
                 </div>
+
             </div> <!-- Temperature Information -->
 
         </div> <!-- Container -->
@@ -95,39 +99,78 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
 
-    <script type="text/javascript">
-        // Attach the event after the page loads
-        if (window.addEventListener)
-            window.addEventListener("load", loadPage, false);
-        else if (window.attachEvent)
-            window.attachEvent("onload", loadPage);
-        else window.onload = loadPage;
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="https://rawgit.com/chartjs/chartjs-plugin-annotation/master/chartjs-plugin-annotation.js"></script>
 
-        function loadPage() { // Load the page's JS elements
-            loadThisVersion(); // Populate form with controller settings
-        }
+    <script>
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(231,233,237)'
+        };
 
-        function loadThisVersion() { // Get current parameters
-            var thisVersionJson = "/thisVersion/";
-            var thisVersion = $.getJSON(thisVersionJson, function () {
-            })
-                .done(function (thisVersion) {
-                    try {
-                        $('#thisVersion').text("v" + thisVersion.version);
-                    }
-                    catch {
-                        alert("Unable to parse current version from controller.");
-                        $('#thisVersion').text("(Error loading version.)");
-                    }
-                })
-                .fail(function () {
-                    alert("Failed getting current version from controller.");
-                    $('#thisVersion').text("(Error loading version.)");
-                })
-                .always(function () {
-                    // Can post-process here
-                });
-        }
+        var ctx = document.getElementById("tempChart").getContext("2d");
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Room", "Tower", "Upper", "Lower", "keg"],
+                datasets: [{
+                    label: 'Temperature',
+                    borderColor: window.chartColors.blue,
+                    borderWidth: 2,
+                    fill: false,
+                    data: [70, 39, 38, 33, 36],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 159, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                legend: false,
+                responsive: true,
+                title: {
+                    display: true,
+                    text: "Donnie's Temperature Sensors"
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                annotation: {
+                    annotations: [{
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y-axis-0',
+                        value: 36,
+                        borderColor: 'rgb(75, 192, 192)',
+                        borderWidth: 4,
+                        label: {
+                            enabled: true,
+                            content: 'Setpoint'
+                        }
+                    }]
+                }
+            }
+        });
     </script>
 
 </body>
