@@ -55,6 +55,7 @@ void setRegPageAliases()
     server.serveStatic("/index/", SPIFFS, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
     server.serveStatic("/about/", SPIFFS, "/").setDefaultFile("about.htm").setCacheControl("max-age=600");
     server.serveStatic("/help/", SPIFFS, "/").setDefaultFile("help.htm").setCacheControl("max-age=600");
+    server.serveStatic("/temps/", SPIFFS, "/").setDefaultFile("temps.htm").setCacheControl("max-age=600");
     server.serveStatic("/ota1/", SPIFFS, "/").setDefaultFile("ota1.htm").setCacheControl("max-age=600");
     server.serveStatic("/ota2/", SPIFFS, "/").setDefaultFile("ota2.htm").setCacheControl("max-age=600");
     server.serveStatic("/settings/", SPIFFS, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
@@ -167,6 +168,21 @@ void setJsonHandlers()
         request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
     });
+
+    server.on("/temperatures/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Serving /temperatures/." CR));
+        // TODO:  Return temperatures in JSON
+        // const size_t capacity = JSON_OBJECT_SIZE(1);
+        // DynamicJsonDocument doc(capacity);
+
+        // doc["version"] = version();
+
+        // String json;
+        // serializeJsonPretty(doc, json);
+        // request->send(200, F("application/json"), json);
+        request->send(200, F("text/html"), F("Ok."));
+    });
+
 }
 
 void setSettingsAliases()
