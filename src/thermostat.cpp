@@ -133,11 +133,11 @@ void tstatReport()
 	switch (tstat.state)
 	{
 		case TSTAT_INACTIVE:
-            Log.verbose(F("DEBUG: [Off] Cooling is disabled." CR));
+            Log.verbose(F("[TSTAT] [Off] Cooling is disabled." CR));
             break;
 
 		case TSTAT_COOL_BEGIN:
-            Log.verbose(F("DEBUG: [Switching to cool] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, diff is %D seconds." CR),
+            Log.verbose(F("[TSTAT] [Switching to cool] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, diff is %D seconds." CR),
                 tstat.cooling,
                 device.sensor[config.temps.controlpoint].average,
                 setpoint,
@@ -148,7 +148,7 @@ void tstatReport()
             break;
 
 		case TSTAT_COOL_MINOFF:
-            Log.verbose(F("DEBUG: [Waiting to cool] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, diff is %D seconds." CR),
+            Log.verbose(F("[TSTAT] [Waiting to cool] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, diff is %D seconds." CR),
                 tstat.cooling,
                 device.sensor[config.temps.controlpoint].average,
                 setpoint,
@@ -159,7 +159,7 @@ void tstatReport()
             break;
 
 		case TSTAT_COOL_ACTIVE:
-			Log.verbose(F("DEBUG: [Cooling] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, runnning for %D seconds." CR),
+			Log.verbose(F("[TSTAT] [Cooling] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, runnning for %D seconds." CR),
                         tstat.cooling,
                         device.sensor[config.temps.controlpoint].average,
                         setpoint,
@@ -170,7 +170,7 @@ void tstatReport()
             break;
 
 		case TSTAT_IDLE_END:
-			Log.verbose(F("DEBUG: [No cooling needed] Cooling is %T, control point %D°F, setpoint,  %D°F. Last run started %D seconds ago, last run ended %D seconds ago." CR),
+			Log.verbose(F("[TSTAT] [No cooling needed] Cooling is %T, control point %D°F, setpoint,  %D°F. Last run started %D seconds ago, last run ended %D seconds ago." CR),
 						tstat.cooling,
 						device.sensor[config.temps.controlpoint].average,
 						setpoint,
@@ -180,7 +180,7 @@ void tstatReport()
             break;
 
 		case TSTAT_IDLE_MINON:
-			Log.verbose(F("DEBUG: [Waiting for min on] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
+			Log.verbose(F("[TSTAT] [Waiting for min on] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
 						tstat.cooling,
 						device.sensor[config.temps.controlpoint].average,
 						setpoint,
@@ -191,7 +191,7 @@ void tstatReport()
             break;
 
 		case TSTAT_IDLE_INACTIVE:
-            Log.verbose(F("DEBUG: [Idle] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago." CR),
+            Log.verbose(F("[TSTAT] [Idle] Cooling is %T, control point %D°F, setpoint %D°F. Last run started %D seconds ago, last run ended %D seconds ago." CR),
                         tstat.cooling,
                         device.sensor[config.temps.controlpoint].average,
                         setpoint,
@@ -201,7 +201,7 @@ void tstatReport()
             break;
 
 		case TSTAT_UNKNOWN:
-            Log.verbose(F("DEBUG: [Unknown] Thermostat is in an unknown state." CR));
+            Log.verbose(F("[TSTAT] [Unknown] Thermostat is in an unknown state." CR));
             break;
 	}
 }
