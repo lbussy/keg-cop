@@ -99,14 +99,6 @@ void loop()
     Ticker getThatVersion;
     getThatVersion.attach(POLLSERVERVERSION, doPoll);
 
-    // DEBUG: Print temps
-    Ticker getTemp; // DEBUG
-    getTemp.attach(30, showTemps); // DEBUG
-
-    // DEBUG: Print control status
-    Ticker getControl; // DEBUG
-    getControl.attach(5, tstatReport); // DEBUG
-
     // // mDNS Reset Timer - Helps avoid the host not found issues
     // Ticker mDNSTimer;
     // mDNSTimer.attach(MDNSTIMER, mdnsreset);
