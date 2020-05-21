@@ -125,7 +125,6 @@
                         for (var i = 0; i < numTaps; i++) {
                             if (flow.taps[i].active) { // Dynamically create tap list HTML
                                 var remain = (flow.taps[i].remaining / flow.taps[i].capacity) * 100;
-                                var ozremain = flow.taps[i].remaining * 128;
                                 tapHTML += '<div class="card-body" id="tap' + i + 'display">\n';
                                 tapHTML += '<span id="tap' + i + 'name" name="tap' + i + 'name">';
                                 tapHTML += '<a href="/settings/#tap' + i + '" class="no-underline">Tap ';
@@ -139,7 +138,7 @@
                                 tapHTML += flow.taps[i].remaining.toFixed(1).toString() + ' of ';
                                 tapHTML += flow.taps[i].capacity.toFixed(1).toString() + ' ';
                                 if (flow.imperial === true) {
-                                    tapHTML += 'gallons remaining (' + (flow.taps[i].remaining * 128).toFixed(0).toString() + ' oz.)';
+                                    tapHTML += 'gallons remaining (' + (flow.taps[i].remaining * 128).toFixed(0).toString() + ' fl oz.)';
                                 } else {
                                     tapHTML += 'liters remaining (' + (flow.taps[i].remaining * 1000).toFixed(0).toString() + ' ml.)'
                                 }
