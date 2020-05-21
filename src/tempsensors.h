@@ -38,8 +38,8 @@ SOFTWARE. */
 
 // Error Codes
 #define DEVICE_DISCONNECTED_C -127
-#define DEVICE_DISCONNECTED_F -196.6
-#define DEVICE_DISCONNECTED_RAW -7040
+// #define DEVICE_DISCONNECTED_F -196.6
+// #define DEVICE_DISCONNECTED_RAW -7040
 
 struct Sensor
 {
@@ -60,6 +60,7 @@ struct Devices
 void sensorInit();
 void pollTemps();
 double getTempC(uint8_t);
+void showTemps(); // DEBUG
 
 extern struct Config config;
 

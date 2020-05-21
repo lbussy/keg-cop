@@ -27,8 +27,22 @@ SOFTWARE. */
 #include "tempsensors.h"
 #include "jsonconfig.h"
 
+enum ThermostatState
+{
+    TSTAT_INACTIVE,
+    TSTAT_COOL_BEGIN,
+    TSTAT_COOL_MINOFF,
+    TSTAT_COOL_ACTIVE,
+    TSTAT_IDLE_END,
+    TSTAT_IDLE_MINON,
+    TSTAT_IDLE_INACTIVE,
+    TSTAT_UNKNOWN
+};
+
 struct Thermostat
 {
+    bool control;           // Turn on/off temp control
+    ThermostatState state;  // Holds return value from control
     bool cooling;           // Cooling state
     unsigned long lastOff;  // Timestamp for last off
     unsigned long lastOn;   // Timestamp for last on
@@ -36,6 +50,7 @@ struct Thermostat
 
 void startControl();
 void controlLoop();
+void tstatReport();
 
 extern struct Config config;
 extern struct Devices device;

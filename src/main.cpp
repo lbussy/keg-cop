@@ -71,6 +71,7 @@ void setup()
     initWebServer();    // Turn on web server
     sensorInit();       // Initialize temperature sensors
     startControl();     // Initialize temperature control
+    doPoll();           // Get server version at startup
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
@@ -83,7 +84,7 @@ void loop()
 
     // Update temperature control loop
     Ticker doControl;
-    doControl.attach(TEMPLOOP, pollTemps);
+    doControl.attach(TEMPLOOP, controlLoop);
 
     // Log pours
     Ticker logPour;
@@ -95,9 +96,16 @@ void loop()
     showDebug.attach(POLLSERVERVERSION, printDebug); // DEBUG
 
     // Poll for server version
-    doPoll();           // Get server version at startup
     Ticker getThatVersion;
     getThatVersion.attach(POLLSERVERVERSION, doPoll);
+
+    // DEBUG: Print temps
+    Ticker getTemp; // DEBUG
+    getTemp.attach(30, showTemps); // DEBUG
+
+    // DEBUG: Print control status
+    Ticker getControl; // DEBUG
+    getControl.attach(5, tstatReport); // DEBUG
 
     // // mDNS Reset Timer - Helps avoid the host not found issues
     // Ticker mDNSTimer;
@@ -117,7 +125,7 @@ void loop()
 
     while (true)
     {
-        tickerLoop();
         doOTALoop();
+        tickerLoop();
     }
 }

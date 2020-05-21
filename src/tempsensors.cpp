@@ -35,6 +35,7 @@ void sensorInit()
         device.sensor[i].value = DEVICE_DISCONNECTED_C;
         device.sensor[i].average = DEVICE_DISCONNECTED_C;
         device.sensor[i].calibration = config.temps.calibration[i];
+        device.sensor[i].buffer.clear();
     }
     pollTemps();
 }
@@ -100,12 +101,25 @@ void showTemps()
 { // DEBUG: Show temperature values
     for (int i = 0; i < device.size; i++)
     {
-        Log.verbose(F("DEBUG: %S on pin %i is %D, average %D (%l in sample), calibration: %D." CR),
-                    device.sensor[i].name,
-                    device.sensor[i].pin,
-                    device.sensor[i].value,
-                    device.sensor[i].average,
-                    device.sensor[i].buffer.size(),
-                    device.sensor[i].calibration);
+        if (config.copconfig.imperial)
+        {
+            Log.verbose(F("DEBUG: %S on pin %i is %D, average %D (%l in sample), calibration: %D." CR),
+                        device.sensor[i].name,
+                        device.sensor[i].pin,
+                        convertCtoF(device.sensor[i].value),
+                        convertCtoF(device.sensor[i].average),
+                        device.sensor[i].buffer.size(),
+                        device.sensor[i].calibration);            
+        }
+        else
+        {          
+            Log.verbose(F("DEBUG: %S on pin %i is %D, average %D (%l in sample), calibration: %D." CR),
+                        device.sensor[i].name,
+                        device.sensor[i].pin,
+                        device.sensor[i].value,
+                        device.sensor[i].average,
+                        device.sensor[i].buffer.size(),
+                        device.sensor[i].calibration);
+        }
     }
 }
