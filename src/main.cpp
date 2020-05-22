@@ -90,11 +90,6 @@ void loop()
     Ticker logPour;
     logPour.attach(TAPLOOP, logFlow);
 
-    // DEBUG: Print debug information
-    printDebug(); // DEBUG
-    Ticker showDebug; // DEBUG
-    showDebug.attach(POLLSERVERVERSION, printDebug); // DEBUG
-
     // Poll for server version
     Ticker getThatVersion;
     getThatVersion.attach(POLLSERVERVERSION, doPoll);
