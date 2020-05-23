@@ -1,5 +1,4 @@
-<!doctype html>
-<html lang="en" class="h-100">
+<html class="h-100" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -43,10 +42,10 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/settings/">Settings</a>
+                        <a class="nav-link active" href="/settings/">Settings <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/help/">Help</a>
@@ -61,21 +60,27 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp"> <!-- Container -->
+        <div class="container" id="tempsApp"> <!-- Container -->
 
-            <div class="page-header" id="banner">
-                <h1>Temperatures</h1>
-            </div>
             <div class="card border-dark mb-3"> <!-- Temperature Information -->
-                <div class="card-header">
-                    <h4 class="card-title">Sensor Readings</h4>
-                </div>
 
-                <div class="card-body">
+                <div class="card-header"> <!-- Double Header -->
+                    <div class="float-left">
+                        <h4><span id="templistName"></span></h4>
+                    </div>
+                    <div class="float-right">
+                        <h5 class="text-right">
+                            <a class="no-underline" href="/settings/#tempcontrol">
+                                Control point: <span id="controlPoint"></span> Sensor
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="clearfix"></div>
+                </div> <!-- Double Header -->
 
+                <div class="card-body"> <!-- Chart Container -->
                     <canvas id="tempChart"></canvas>
-
-                </div>
+                </div> <!-- Chart Container -->
 
             </div> <!-- Temperature Information -->
 
@@ -85,7 +90,7 @@
 
     <footer class="footer mt-auto py-3">
         <div class="container">
-            <span class="text-muted">Copyright &copy; 2019-2020, Lee C. Bussy</span>
+            <span class="text-muted">Copyright © 2019-2020, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -99,78 +104,210 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-    <script src="https://rawgit.com/chartjs/chartjs-plugin-annotation/master/chartjs-plugin-annotation.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+        integrity="sha384-i+dHPTzZw7YVZOx9lbH5l6lP74sLRtMtwN2XjVqjf3uAGAREAF4LMIUDTWEVs4LI" crossorigin="anonymous">
+        </script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"
+        integrity="sha384-fIE8wIddxI8s1yO253uBKjQyxNZ5UuilW9rx7H4ePN7XS7Z9ukIeK+ECX5B8jDAj" crossorigin="anonymous">
+        </script>
 
     <script>
-        window.chartColors = {
-            red: 'rgb(255, 99, 132)',
-            orange: 'rgb(255, 159, 64)',
-            yellow: 'rgb(255, 205, 86)',
-            green: 'rgb(75, 192, 192)',
-            blue: 'rgb(54, 162, 235)',
-            purple: 'rgb(153, 102, 255)',
-            grey: 'rgb(231,233,237)'
-        };
+        toggleLoader("on");
+        var imperial;
+        var loaded = 0;
+        var numReq = 2;
+        var labels = [];
+        var temperatures = [];
+        var scaleTemps = [];
+        var setpoint = 0;
 
-        var ctx = document.getElementById("tempChart").getContext("2d");
+        // Attach the event after the page loads
+        if (window.addEventListener)
+            window.addEventListener("load", loadPage, false);
+        else if (window.attachEvent)
+            window.attachEvent("onload", loadPage);
+        else window.onload = loadPage;
 
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Room", "Tower", "Upper", "Lower", "keg"],
-                datasets: [{
-                    label: 'Temperature',
-                    borderColor: window.chartColors.blue,
-                    borderWidth: 2,
-                    fill: false,
-                    data: [70, 39, 38, 33, 36],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(255, 159, 1)',
-                        'rgba(255, 205, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(153, 102, 255, 1)'
-                    ],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                legend: false,
-                responsive: true,
-                title: {
-                    display: true,
-                    text: "Donnie's Temperature Sensors"
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: true
-                },
-                annotation: {
-                    annotations: [{
-                        type: 'line',
-                        mode: 'horizontal',
-                        scaleID: 'y-axis-0',
-                        value: 36,
-                        borderColor: 'rgb(75, 192, 192)',
-                        borderWidth: 4,
-                        label: {
-                            enabled: true,
-                            content: 'Setpoint'
-                        }
-                    }]
+        function loadPage() { // Make sure the page is 100% loaded
+            if (document.readyState === 'ready' || document.readyState === 'complete') {
+                populatePage();
+            } else {
+                document.onreadystatechange = function () {
+                    if (document.readyState == "complete") {
+                        populatePage();
+                    }
                 }
             }
-        });
+        }
+
+        function populatePage() { // Get page data
+            toggleLoader("on");
+            populateTemps();
+            populateConfig();
+        }
+
+        function populateConfig() { // Get configuration settings
+            var url = "/config/";
+            var config = $.getJSON(url, function () {
+            })
+                .done(function (config) {
+                    try {
+                        // Header text
+                        var headerText = "Temperature Sensors for " + config.copconfig.kegeratorname;
+                        $('#templistName').text(headerText);
+
+                        loaded++;
+                        if (loaded == numReq) {
+                            finishPage();
+                        }
+                    }
+                    catch {
+                        alert("Unable to parse configuration data from SPIFFS.");
+                    }
+                })
+                .fail(function () {
+                    alert("Unable to retrieve configuration data from SPIFFS.");
+                })
+                .always(function () {
+                    // Can post-process here
+                });
+        }
+
+        function populateTemps() { // Get configuration settings
+            var url = "/temperatures/";
+            var config = $.getJSON(url, function () {
+            })
+                .done(function (temps) {
+                    try {
+                        if (temps.imperial) {
+                            imperial = true;
+                        } else {
+                            imperial = false;
+                        }
+
+                        $.each(temps.sensor, function( index, value ) {
+                            labels.push(index.charAt(0).toUpperCase() + index.slice(1));
+                            temperatures.push(parseFloat(value));
+                        });
+
+                        $('#controlPoint').text(labels[temps.controlpoint]);
+
+                        setpoint = parseFloat(temps.setting).toFixed(1);
+                        setpointLabel = "Setpoint: " + setpoint;
+                        if (imperial) {
+                            setpointLabel += " ℉";
+                        } else {
+                            setpointLabel += " ℃";
+                        }
+
+                        scaleTemps = temperatures;
+                        scaleTemps.push(parseFloat(setpoint));
+
+                        loaded++;
+                        if (loaded == numReq) {
+                            finishPage();
+                        }
+                    }
+                    catch {
+                        alert("Unable to parse temperature data from SPIFFS.");
+                    }
+                })
+                .fail(function () {
+                    alert("Unable to retrieve temperature data from SPIFFS.");
+                })
+                .always(function () {
+                    // Can post-process here
+                });
+        }
+
+        function doChart() { // Draw chart.js chart
+            var ctx = document.getElementById("tempChart").getContext("2d");
+
+            var tempChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: temperatures,
+                        borderColor: 'rgba(221, 86, 0, 1)',
+                        backgroundColor: 'rgba(221, 86, 0, 0.2)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    legend: false,
+                    responsive: true,
+
+                    title: {
+                        display: false
+                    },
+
+                    onClick: barClick,
+
+                    tooltips: {
+                        yAlign: 'top',
+                        displayColors: false,
+
+                        callbacks: {
+                            label: toolTip
+                        }
+                    },
+
+                    scales: {
+						yAxes: [{
+							display: true,
+							ticks: {
+                                min: Math.floor(Math.min.apply(this, scaleTemps) - 2),
+                                max: Math.ceil(Math.max.apply(this, scaleTemps) + 1)
+							}
+						}]
+                    },
+
+                    annotation: {
+                        annotations: [{
+                            type: 'line',
+                            mode: 'horizontal',
+                            scaleID: 'y-axis-0',
+                            value: setpoint,
+                            borderColor: 'rgb(75, 192, 192)',
+                            borderWidth: 4,
+                            label: {
+                                enabled: true,
+                                content: setpointLabel
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        function toolTip(tooltipItem, data) { // Callback for tool tips
+            var index = tooltipItem.index;
+            var label = [];
+
+            var tempLine = ''
+            tempLine = (temperatures[index]).toFixed(1);
+            if (imperial) {
+                tempLine += " ℉"
+            } else {
+                tempLine += " ℃"
+            }
+            label.push(tempLine);
+
+            return label;
+        }
+
+        function barClick(event, array) { // Bar click handler
+            var tapNum = array[0]._index;
+            var url = "/settings/#tempcalibration";
+            window.open(url, "_self")
+        }
+
+        function finishPage() { // Display page
+            toggleLoader("off");
+            doChart();
+        }
     </script>
 
 </body>
