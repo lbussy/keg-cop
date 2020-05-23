@@ -16,7 +16,7 @@
 },
     "temps":{
         "setpoint":36,
-        "controlpoint":2,
+        "controlpoint":4,
         "room":1,
         "tower":2,
         "upper":-1,
