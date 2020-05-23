@@ -42,9 +42,9 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="/settings/">Settings</a>
                     </li>
                     <li class="nav-item">
@@ -60,26 +60,28 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp"> <!-- Container -->
+        <div class="container" id="indexApp"> <!-- Container -->
 
             <div class="card border-dark mb-3"> <!-- Taps Information -->
 
-                <div class="card-header">                     <!-- Double Header -->
+                <div class="card-header"> <!-- Double Header -->
                     <div class="float-left">
                         <h4><span id="taplistName"></span></h4>
                     </div>
                     <div class="float-right">
                         <h5 class="text-right">
-                            <span id="controlPoint"></span>:
-                            <span id="controlTemp"></span>
-                            <span id="tempFormat"></span>
+                            <a class="no-underline" href="/temps/">
+                                <span id="controlPoint"></span>:
+                                <span id="controlTemp"></span>
+                                <span id="tempFormat"></span>
+                            </a>
                         </h5>
                     </div>
                     <div class="clearfix"></div>
                 </div> <!-- Double Header -->
 
                 <div class="card-body"> <!-- Chart Container -->
-                    <canvas id="tempChart"></canvas>
+                    <canvas id="tapChart"></canvas>
                 </div> <!-- Chart Container -->
 
             </div> <!-- Taps Information -->
@@ -89,7 +91,7 @@
     </main>
 
     <footer class="footer mt-auto py-3">
-        <div class="container text-center">
+        <div class="container">
             <span class="text-muted">Copyright © 2019-2020, Lee C. Bussy</span>
         </div>
     </footer>
@@ -113,6 +115,7 @@
         </script>
 
     <script>
+        toggleLoader("on");
         var imperial;
         var loaded = 0;
         var labels = [];
@@ -270,9 +273,9 @@
         }
 
         function doChart() { // Draw chart.js chart
-            var ctx = document.getElementById("tempChart").getContext("2d");
+            var ctx = document.getElementById("tapChart").getContext("2d");
 
-            var tempChart = new Chart(ctx, {
+            var tapChart = new Chart(ctx, {
                 type: 'horizontalBar',
                 data: {
                     labels: labels,
