@@ -49,7 +49,7 @@ void setup()
     else
     {
         Log.verbose(F("WiFi: Normal boot." CR));
-        doWiFi(false);
+        doWiFi();
     }
 
     // Set pin for relay
