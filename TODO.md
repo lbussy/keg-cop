@@ -6,6 +6,7 @@
 
 ## Features
 
+- Make page load spinner work on Temps and Index
 - Add target pushes
 - Filter small pours
 - Update page data on timer
