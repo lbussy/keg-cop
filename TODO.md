@@ -9,6 +9,9 @@
 - Add target pushes
 - sendUpdateCount() report is sent when sendPulseCount() is not warranted (RandR+)
 - Filter small pours
+- Update page data on timer
+  - Temps
+  - Flow
 
 ## Bugs
 
