@@ -71,7 +71,6 @@ bool deserializeVersion(const char * &src, ThatVersion &thatVersion) {
         thatVersion.load(doc.as<JsonObject>());
         return true;        
     }
-    // TODO:  Can/should I return false here somehow?
 }
 
 void doPoll() {

@@ -13,6 +13,7 @@
   - Temps
   - Flow
 - Add cooling indicator to temp display
+- Move JS to separate files
 
 ## Bugs
 

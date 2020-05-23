@@ -105,7 +105,6 @@ bool deserializeConfig(Stream &src)
         config.load(doc.as<JsonObject>());
         return true;
     }
-    // TODO:  Can I return false here somehow?
 }
 
 bool serializeConfig(Print &dst)
