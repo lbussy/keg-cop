@@ -12,6 +12,7 @@
 - Update page data on timer - https://www.chartjs.org/docs/latest/developers/updates.html
   - Temps
   - Flow
+- Add cooling indicator to temp display
 
 ## Bugs
 
