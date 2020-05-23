@@ -64,14 +64,11 @@
         <div class="container" id="settingsapp">
             <!-- Container -->
 
-            <div class="page-header" id="banner">
-                <h1>Firmware Update In Progress</h1>
-            </div>
             <div class="card border-dark mb-3">
 
                 <!-- OTA In Progress Information -->
                 <div id="subtitle" class="card-header">
-                    <h4 class="card-title">Please Wait ...</h4>
+                    <h4 class="card-title">Firmware Update In Progress, Please Wait ...</h4>
                 </div>
                 <div id="message" class="card-body">
                     <p>
@@ -143,8 +140,7 @@
                         running = true;
                         // Update is complete
                         $.get("/clearupdate/", function(data){});
-                        $("#banner").replaceWith("<h1>Firmware Update Complete</h1>");
-                        $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Redirect Pending</h4>");
+                        $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
                         $("#message").replaceWith("<p class='card-body'>The firmware update is complete.  You will be redirected momentarily.</p>");
                         setTimeout(function(){window.location.href = "/";},5000);
                     }
