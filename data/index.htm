@@ -1,5 +1,4 @@
-<!doctype html>
-<html lang="en" class="h-100">
+<html class="h-100" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -26,12 +25,9 @@
     <link rel="stylesheet" href="/common.css">
     <link rel="stylesheet" href="/loader.css">
     <script src="/loader.js"></script>
-
 </head>
 
 <body class="d-flex flex-column h-100">
-
-    <div class="loader" id="loader"></div>
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -45,10 +41,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
                         <a class="nav-link" href="/settings/">Settings</a>
                     </li>
                     <li class="nav-item">
@@ -64,29 +60,37 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="indexApp" style="visibility:hidden;"> <!-- Container -->
+        <div class="container" id="settingsapp"> <!-- Container -->
 
-            <div class="page-header" id="banner">
-                <h1><span id="tapheader" name="tapheader"></span></h1>
-            </div>
+            <div class="card border-dark mb-3"> <!-- Taps Information -->
 
-            <div class="card border-dark mb-3">
-                <div class="card-header">
-                    <h4 class="card-title">Tap List</h4>
-                </div>
+                <div class="card-header">                     <!-- Double Header -->
+                    <div class="float-left">
+                        <h4><span id="taplistName"></span></h4>
+                    </div>
+                    <div class="float-right">
+                        <h5 class="text-right">
+                            <span id="controlPoint"></span>:
+                            <span id="controlTemp"></span>
+                            <span id="tempFormat"></span>
+                        </h5>
+                    </div>
+                    <div class="clearfix"></div>
+                </div> <!-- Double Header -->
 
-                <!-- Sensor Readings -->
-                <div class="card-body"><span id="tapdisplay" name="tapdisplay"></span></div>
-                <!-- Sensor Readings -->
-            </div>
+                <div class="card-body"> <!-- Chart Container -->
+                    <canvas id="tempChart"></canvas>
+                </div> <!-- Chart Container -->
+
+            </div> <!-- Taps Information -->
 
         </div> <!-- Container -->
 
     </main>
 
     <footer class="footer mt-auto py-3">
-        <div class="container">
-            <span class="text-muted">Copyright &copy; 2019-2020, Lee C. Bussy</span>
+        <div class="container text-center">
+            <span class="text-muted">Copyright © 2019-2020, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -100,70 +104,261 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+        integrity="sha384-i+dHPTzZw7YVZOx9lbH5l6lP74sLRtMtwN2XjVqjf3uAGAREAF4LMIUDTWEVs4LI" crossorigin="anonymous">
+        </script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"
+        integrity="sha384-fIE8wIddxI8s1yO253uBKjQyxNZ5UuilW9rx7H4ePN7XS7Z9ukIeK+ECX5B8jDAj" crossorigin="anonymous">
+        </script>
+
     <script>
+        var imperial;
+        var loaded = 0;
+        var labels = [];
+        var percent = [];
+        var capacity = [];
+        var remaining = [];
+
         // Attach the event after the page loads
         if (window.addEventListener)
-            window.addEventListener("load", loadPage, false);
+            window.addEventListener("load", startLoad, false);
         else if (window.attachEvent)
-            window.attachEvent("onload", loadPage);
-        else window.onload = loadPage;
+            window.attachEvent("onload", startLoad);
+        else window.onload = startLoad;
 
-        function loadPage() {
-            toggleLoader("on");
-            populateFlow();
+        function startLoad() { // Make sure the page is 100% loaded
+            if (document.readyState === 'ready' || document.readyState === 'complete') {
+                populatePage();
+            } else {
+                document.onreadystatechange = function () {
+                    if (document.readyState == "complete") {
+                        populatePage();
+                    }
+                }
+            }
         }
 
-        function populateFlow() { // Get flowmeter settings
+        function populatePage() { // Get page data
+            toggleLoader("on");
+            populateFlow();
+            populateConfig();
+            populateTemps();
+        }
+
+        function populateFlow() { // Get flowmeter data
             var url = "/flow/";
-            var tapHTML = ''; // Hold the taplist HTML
             var flow = $.getJSON(url, function () {
             })
                 .done(function (flow) {
-
                     var numTaps = flow["taps"].length;
+                    if (flow.imperial) {
+                        imperial = true;
+                    } else {
+                        imperial = false;
+                    }
                     try {
                         for (var i = 0; i < numTaps; i++) {
-                            if (flow.taps[i].active) { // Dynamically create tap list HTML
-                                var remain = (flow.taps[i].remaining / flow.taps[i].capacity) * 100;
-                                tapHTML += '<div class="card-body" id="tap' + i + 'display">\n';
-                                tapHTML += '<span id="tap' + i + 'name" name="tap' + i + 'name">';
-                                tapHTML += '<a href="/settings/#tap' + i + '" class="no-underline">Tap ';
-                                tapHTML += (i + 1) + ': &nbsp;' + flow.taps[i].name + '</a>';
-                                tapHTML += '</span>\n';
-                                tapHTML += '<div class="progress">\n';
-                                tapHTML += '<div\nclass="progress-bar progress-bar-striped bg-warning" role="progressbar"\n';
-                                tapHTML += 'style="width: ' + remain + '%" aria-valuenow="' + remain;
-                                tapHTML += '" aria-valuemin="' + remain + '" aria-valuemax="100"\n';
-                                tapHTML += 'name="tap' + i + 'prog" id="tap' + i + 'prog" data-toggle="tooltip" title="';
-                                tapHTML += flow.taps[i].remaining.toFixed(1).toString() + ' of ';
-                                tapHTML += flow.taps[i].capacity.toFixed(1).toString() + ' ';
-                                if (flow.imperial === true) {
-                                    tapHTML += 'gallons remaining (' + (flow.taps[i].remaining * 128).toFixed(0).toString() + ' fl oz.)';
-                                } else {
-                                    tapHTML += 'liters remaining (' + (flow.taps[i].remaining * 1000).toFixed(0).toString() + ' ml.)'
-                                }
-                                tapHTML += '">' + remain.toFixed(1).toString() + '%\n';
-                                tapHTML += '</div>\n</div>\n</div>\n';
+                            if (flow.taps[i].active) {
+                                labels.push("Tap " + (i + 1) + ": " + flow.taps[i].name);
+                                percent.push(((parseFloat(flow.taps[i].remaining) / parseFloat(flow.taps[i].capacity)) * 100));
+                                capacity.push(parseFloat(flow.taps[i].capacity));
+                                remaining.push(parseFloat(flow.taps[i].remaining));
                             }
+                        }
+                        loaded++;
+                        if (loaded == 3) {
+                            finishPage();
                         }
                     }
                     catch {
-                        alert("Unable to parse flowmeter data from SPIFFS.");
+                        alert("Unable to parse configuration data from SPIFFS.");
                     }
                 })
                 .fail(function () {
-                    alert("Unable to retrieve flowmeter data from SPIFFS.");
+                    alert("Unable to retrieve configuration data from SPIFFS.");
                 })
                 .always(function () {
                     // Can post-process here
-                    $('[data-toggle="tooltip"]').tooltip({ // Enable tooltips
-                        delay: { show: 200, hide: 300 },
-                        animation: true
-                    });
-                    $('#tapdisplay').html(tapHTML); // Display taplist
-                    toggleLoader("off");            // Turn off spinner and show page
                 });
         }
+
+        function populateConfig() { // Get configuration settings
+            var url = "/config/";
+            var config = $.getJSON(url, function () {
+            })
+                .done(function (config) {
+                    try {
+                        // Header text
+                        var headerText = "Taplist for " + config.copconfig.kegeratorname;
+                        if (config.copconfig.breweryname) {
+                            headerText += " in " + config.copconfig.breweryname;
+                        }
+                        $('#taplistName').text(headerText);
+
+                        loaded++;
+                        if (loaded == 3) {
+                            finishPage();
+                        }
+                    }
+                    catch {
+                        alert("Unable to parse configuration data from SPIFFS.");
+                    }
+                })
+                .fail(function () {
+                    alert("Unable to retrieve configuration data from SPIFFS.");
+                })
+                .always(function () {
+                    // Can post-process here
+                });
+        }
+
+        function populateTemps() { // Get configuration settings
+            var url = "/temperatures/";
+            var config = $.getJSON(url, function () {
+            })
+                .done(function (temps) {
+                    try {
+                        switch (temps.controlpoint) {
+                            case 0:
+                                $('#controlPoint').text("Room");
+                                $('#controlTemp').text(parseFloat(temps.sensor.room).toFixed(1));
+                                break;
+                            case 1:
+                                $('#controlPoint').text("Tower");
+                                $('#controlTemp').text(parseFloat(temps.sensor.tower).toFixed(1));
+                                break;
+                            case 2:
+                                $('#controlPoint').text("Upper Chamber");
+                                $('#controlTemp').text(parseFloat(temps.sensor.upper).toFixed(1));
+                                break;
+                            case 3:
+                                $('#controlPoint').text("Lower Chamber");
+                                $('#controlTemp').text(parseFloat(temps.sensor.lower).toFixed(1));
+                                break;
+                            case 4:
+                                $('#controlPoint').text("Keg");
+                                $('#controlTemp').text(parseFloat(temps.sensor.keg).toFixed(1));
+                                break;
+                            default:
+                                $('#controlPoint').text("");
+                                $('#controlTemp').text("");
+                                break;
+                        }
+
+                        if (temps.imperial) {
+                            $('#tempFormat').html("&#x2109;");
+                        } else {
+                            $('#tempFormat').html("&#x2103;");
+                        }
+
+                        loaded++;
+                        if (loaded == 3) {
+                            finishPage();
+                        }
+                    }
+                    catch {
+                        alert("Unable to parse temperature data from SPIFFS.");
+                    }
+                })
+                .fail(function () {
+                    alert("Unable to retrieve temperature data from SPIFFS.");
+                })
+                .always(function () {
+                    // Can post-process here
+                });
+        }
+
+        function doChart() { // Draw chart.js chart
+            var ctx = document.getElementById("tempChart").getContext("2d");
+
+            var tempChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: percent,
+                        borderColor: 'rgba(221, 86, 0, 1)',
+                        backgroundColor: 'rgba(221, 86, 0, 0.2)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    legend: false,
+                    responsive: true,
+
+                    title: {
+                        display: false
+                    },
+
+                    onClick: barClick,
+
+                    tooltips: {
+                        //yAlign: 'top', (using this hides the bottom-most tooltip)
+                        displayColors: false,
+
+                        callbacks: {
+                            label: toolTip
+                        }
+                    },
+
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        function toolTip(tooltipItem, data) { // Callback for tool tips
+            var index = tooltipItem.index;
+            var label = [];
+
+            // Line 1
+            var pct = parseFloat(percent[index]).toFixed(1) + '%:';
+            label.push(pct);
+
+            // Line 2
+            var large = '';
+            large += parseFloat(remaining[index]).toFixed(2);
+            large += " of ";
+            large += parseFloat(capacity[index]).toFixed(2);
+            if (imperial) {
+                large += " gallons ";
+            } else {
+                large += " liters ";
+            }
+            label.push(large);
+
+            // Line 3
+            var small = '';
+            small += "(";
+            if (imperial) {
+                small += (parseFloat(remaining[index]) * 128).toFixed(0);
+                small += " fl oz)";
+            } else {
+                small += (parseFloat(remaining[index]) * 1000).toFixed(0);
+                small += " ml)";
+            }
+            label.push(small);
+
+            return label;
+        }
+
+        function barClick(event, array) { // Bar click handler
+            var tapNum = array[0]._index;
+            var url = "/settings/#tap" + tapNum;
+            window.open(url, "_self")
+        }
+
+        function finishPage() { // Display page
+            toggleLoader("off");
+            doChart();
+        }
+
     </script>
 
 </body>
