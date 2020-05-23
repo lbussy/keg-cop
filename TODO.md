@@ -15,7 +15,8 @@
 
 ## Bugs
 
-- ???
+- Wifi credentials get erased on reset
+- Sometimes will not connect after setting credentials
 
 # Complete
 
