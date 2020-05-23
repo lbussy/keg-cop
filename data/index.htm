@@ -60,6 +60,8 @@
 
     <main role="main" class="flex-shrink-0">
 
+        <div class="loader" id="loader"></div> <!-- Loading Spinner Container -->
+
         <div class="container" id="indexApp"> <!-- Container -->
 
             <div class="card border-dark mb-3"> <!-- Taps Information -->
@@ -116,6 +118,7 @@
 
     <script>
         toggleLoader("on");
+        var numReq = 3;
         var imperial;
         var loaded = 0;
         var labels = [];
@@ -143,7 +146,6 @@
         }
 
         function populatePage() { // Get page data
-            toggleLoader("on");
             populateFlow();
             populateConfig();
             populateTemps();
@@ -170,7 +172,7 @@
                             }
                         }
                         loaded++;
-                        if (loaded == 3) {
+                        if (loaded == numReq) {
                             finishPage();
                         }
                     }
@@ -200,7 +202,7 @@
                         $('#taplistName').text(headerText);
 
                         loaded++;
-                        if (loaded == 3) {
+                        if (loaded == numReq) {
                             finishPage();
                         }
                     }
@@ -256,7 +258,7 @@
                         }
 
                         loaded++;
-                        if (loaded == 3) {
+                        if (loaded == numReq) {
                             finishPage();
                         }
                     }
@@ -309,7 +311,7 @@
                         xAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                callback: function(value, index, values) {
+                                callback: function (value, index, values) {
                                     return value + "%";
                                 }
                             }
