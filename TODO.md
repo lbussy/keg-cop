@@ -9,8 +9,6 @@
 - Add target pushes
 - sendUpdateCount() report is sent when sendPulseCount() is not warranted (RandR+)
 - Filter small pours
-- Add temp control status to web UI
-- Add temps display to web UI
 
 ## Bugs
 
@@ -68,3 +66,5 @@
       - ~~Settings~~
     - ~~Settings posting~~
     - ~~Thermostat~~
+- ~~Add temp control status to web UI~~
+- ~~Add temps display to web UI~~
