@@ -259,7 +259,10 @@
 							display: true,
 							ticks: {
                                 min: Math.floor(Math.min.apply(this, scaleTemps) - 2),
-                                max: Math.ceil(Math.max.apply(this, scaleTemps) + 1)
+                                max: Math.ceil(Math.max.apply(this, scaleTemps) + 1),
+                                callback: function(value, index, values) {
+                                  return value + "°";
+                                }
 							}
 						}]
                     },
