@@ -9,7 +9,7 @@
 - Make page load spinner work on Temps and Index
 - Add target pushes
 - Filter small pours
-- Update page data on timer
+- Update page data on timer - https://www.chartjs.org/docs/latest/developers/updates.html
   - Temps
   - Flow
 
