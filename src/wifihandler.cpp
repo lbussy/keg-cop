@@ -25,20 +25,22 @@ SOFTWARE. */
 bool shouldSaveConfig = false;
 Ticker blinker;
 
-void doWiFi() {
+void doWiFi()
+{
     doWiFi(false);
 }
 
-void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current config
+void doWiFi(bool dontUseStoredCreds)
+{ // Handle WiFi and optionally ignore current config
     AsyncWiFiManager myAsyncWifiManager;
 
     // AsyncWiFiManager Callbacks
     myAsyncWifiManager.setAPCallback(apCallback); // Called after AP has started
-    myAsyncWifiManager.setConfigResetCallback(configResetCallback); // Called after settings are reset
-    myAsyncWifiManager.setPreSaveConfigCallback(preSaveConfigCallback); // Called before saving wifi creds 
-    myAsyncWifiManager.setSaveConfigCallback(saveConfigCallback); //  Called only if wifi is saved/changed, or setBreakAfterConfig(true)
-    myAsyncWifiManager.setSaveParamsCallback(saveParamsCallback); // Called after parameters are saved via params menu or wifi config
-    myAsyncWifiManager.setWebServerCallback(webServerCallback); // Called after webserver is setup
+    // myAsyncWifiManager.setConfigResetCallback(configResetCallback); // Called after settings are reset
+    // myAsyncWifiManager.setPreSaveConfigCallback(preSaveConfigCallback); // Called before saving wifi creds
+    // myAsyncWifiManager.setSaveConfigCallback(saveConfigCallback); //  Called only if wifi is saved/changed, or setBreakAfterConfig(true)
+    // myAsyncWifiManager.setSaveParamsCallback(saveParamsCallback); // Called after parameters are saved via params menu or wifi config
+    // myAsyncWifiManager.setWebServerCallback(webServerCallback); // Called after webserver is setup
 
     if (!config.copconfig.rpintscompat)
     {
@@ -59,24 +61,27 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
         //"sep",
         "erase",
         "restart",
-        "exit"
-    };
+        "exit"};
 
-    myAsyncWifiManager.setMenu(_wfmPortalMenu);   // Set menu items
-    myAsyncWifiManager.setClass(F("invert"));     // Set dark theme
+    myAsyncWifiManager.setMenu(_wfmPortalMenu); // Set menu items
+    myAsyncWifiManager.setClass(F("invert"));   // Set dark theme
 
     myAsyncWifiManager.setCountry(WIFI_COUNTRY);    // Setting wifi country seems to improve OSX soft ap connectivity
     myAsyncWifiManager.setWiFiAPChannel(WIFI_CHAN); // Set WiFi channel
 
-    myAsyncWifiManager.setShowStaticFields(true); // force show static ip fields
-    myAsyncWifiManager.setShowDnsFields(true);    // force show dns field always
+    myAsyncWifiManager.setShowStaticFields(true); // Force show static ip fields
+    myAsyncWifiManager.setShowDnsFields(true);    // Force show dns field always
 
-    if (ignore) { // Voluntary portal
+    if (dontUseStoredCreds)
+    { // Voluntary portal
         blinker.attach_ms(APBLINK, wifiBlinker);
         myAsyncWifiManager.setConfigPortalTimeout(120);
-        if (myAsyncWifiManager.startConfigPortal(config.apconfig.ssid, config.apconfig.passphrase)) {
+        if (myAsyncWifiManager.startConfigPortal(config.apconfig.ssid, config.apconfig.passphrase))
+        {
             // We finished with portal, do we need this?
-        } else {
+        }
+        else
+        {
             // Hit timeout on voluntary portal
             blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
@@ -85,11 +90,14 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             Log.notice(F("Hit timeout for on-demand portal, exiting." CR));
             setDoReset();
         }
-    } else { // Normal WiFi connection attempt
+    }
+    else
+    { // Normal WiFi connection attempt
         blinker.attach_ms(STABLINK, wifiBlinker);
         myAsyncWifiManager.setConnectTimeout(30);
         myAsyncWifiManager.setConfigPortalTimeout(120);
-        if (!myAsyncWifiManager.autoConnect(config.apconfig.ssid, config.apconfig.passphrase)) {
+        if (!myAsyncWifiManager.autoConnect(config.apconfig.ssid, config.apconfig.passphrase))
+        {
             Log.warning(F("Failed to connect and/or hit timeout." CR));
             blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
@@ -98,13 +106,15 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
             Log.warning(F("Hit timeout on connect, restarting." CR));
             resetController();
             _delay(1000); // Just a hack to give it time to reset
-        } else {
+        }
+        else
+        {
             // We finished with portal (configured)
             WiFi.mode(WIFI_STA); // Explicitly set mode, esp defaults to STA+AP
 #ifdef ESP8266
             WiFi.setSleepMode(WIFI_NONE_SLEEP); // Make sure sleep is disabled
 #endif
-            blinker.detach(); // Turn off blinker
+            blinker.detach();        // Turn off blinker
             digitalWrite(LED, HIGH); // Turn off LED
 #ifdef ESP8266
             WiFi.hostname(config.hostname);
@@ -115,60 +125,63 @@ void doWiFi(bool ignore = false) { // Handle WiFi and optionally ignore current 
     }
 
     // if (shouldSaveConfig) { // Save configuration
-        // Log.notice(F("Saving configuration." CR));
-        // 
+    // Log.notice(F("Saving configuration." CR));
+    //
     // }
 
     Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());
-    blinker.detach(); // Turn off blinker
+    blinker.detach();        // Turn off blinker
     digitalWrite(LED, HIGH); // Turn off LED
 }
 
-void resetWifi() { // Wipe wifi settings and reset controller
+void resetWifi()
+{ // Wipe wifi settings and reset controller
     AsyncWiFiManager myAsyncWifiManager;
     myAsyncWifiManager.resetSettings();
-    blinker.detach(); // Turn off blinker
+    blinker.detach();       // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
     Log.notice(F("Restarting after clearing wifi settings." CR));
     ESP.restart();
 }
 
-void wifiBlinker() { // Invert Current State of LED
+void wifiBlinker()
+{ // Invert Current State of LED
     digitalWrite(LED, !(digitalRead(LED)));
 }
 
 // AsyncWiFiManager Callbacks
 
-void apCallback(AsyncWiFiManager *asyncWiFiManager) { // Entered Access Point mode
+void apCallback(AsyncWiFiManager *asyncWiFiManager)
+{ // Entered Access Point mode
     Log.verbose(F("[CALLBACK]: setAPCallback fired." CR));
     blinker.detach(); // Turn off blinker
     blinker.attach_ms(APBLINK, wifiBlinker);
     Log.notice(F("Entered portal mode; name: %s, IP: %s." CR),
-        asyncWiFiManager->getConfigPortalSSID().c_str(),
-        WiFi.localIP().toString().c_str());
+               asyncWiFiManager->getConfigPortalSSID().c_str(),
+               WiFi.localIP().toString().c_str());
 }
 
-void configResetCallback() {
-    Log.verbose(F("[CALLBACK]: setConfigResetCallback fired." CR));
-}
+// void configResetCallback() {
+//     Log.verbose(F("[CALLBACK]: setConfigResetCallback fired." CR));
+// }
 
-void preSaveConfigCallback() {
-    Log.verbose(F("[CALLBACK]: preSaveConfigCallback fired." CR));
-}
+// void preSaveConfigCallback() {
+//     Log.verbose(F("[CALLBACK]: preSaveConfigCallback fired." CR));
+// }
 
-void saveConfigCallback() {
-    Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
-    shouldSaveConfig = true;
-}
+// void saveConfigCallback() {
+//     Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
+//     //shouldSaveConfig = true;
+// }
 
-void saveParamsCallback() {
-    Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CR));
-    shouldSaveConfig = true;
-}
+// void saveParamsCallback() {
+//     Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CR));
+//     //shouldSaveConfig = true;
+// }
 
-void webServerCallback() {
-    Log.verbose(F("[CALLBACK]: setWebServerCallback fired." CR));
-}
+// void webServerCallback() {
+//     Log.verbose(F("[CALLBACK]: setWebServerCallback fired." CR));
+// }
 
 void tcpCleanup(void)
 {
