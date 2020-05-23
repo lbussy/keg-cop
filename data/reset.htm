@@ -63,14 +63,11 @@
 
         <div class="container" id="settingsapp"> <!-- Container -->
 
-            <div class="page-header" id="banner">
-                <h1>Resetting</h1>
-            </div>
             <div class="card border-dark mb-3">
 
                 <!-- Controller Reset Information -->
                 <div class="card-header" id="subtitle">
-                    <h4 class="card-title">Controller Reset</h4>
+                    <h4 class="card-title">Controller Reset In Progress</h4>
                 </div>
                 <div class="card-body" id="message">
                     <p class="card-text">
@@ -128,8 +125,7 @@
                 })
                 .fail(function() {
                     // Reset is complete
-                    $("#banner").replaceWith("<h1>Controller Reset Failed</h1>");
-                    $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Redirect Pending</h4>");
+                    $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Failed; Redirect Pending</h4>");
                     $("#message").replaceWith("<p class='card-body'>The controller reset failed. You will be redirected momentarily.</p>");
                     setTimeout(function () { window.location.href = "/"; }, 5000);
                 });
@@ -142,8 +138,7 @@
                     didreset = semaphore;
                     if (didreset == true) {
                         // Reset is complete
-                        $("#banner").replaceWith("<h1>Controller Reset Complete</h1>");
-                        $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Redirect Pending</h4>");
+                        $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Complete; Redirect Pending</h4>");
                         $("#message").replaceWith("<p class='card-body'>The controller reset is complete. You will be redirected momentarily.</p>");
                         setTimeout(function () { window.location.href = "/"; }, 5000);
                     }
