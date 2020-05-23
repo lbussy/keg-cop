@@ -60,6 +60,8 @@
 
     <main role="main" class="flex-shrink-0">
 
+        <div class="loader" id="loader"></div> <!-- Loading Spinner Container -->
+
         <div class="container" id="tempsApp"> <!-- Container -->
 
             <div class="card border-dark mb-3"> <!-- Temperature Information -->
@@ -142,7 +144,6 @@
         }
 
         function populatePage() { // Get page data
-            toggleLoader("on");
             populateTemps();
             populateConfig();
         }
