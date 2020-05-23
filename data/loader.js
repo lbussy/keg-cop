@@ -10,7 +10,7 @@ function toggleLoader(status) {
             loader.style.display = "block";
         }
         if (tempsApp) {
-            settingsApp.style.visibility = "hidden";
+            tempsApp.style.visibility = "hidden";
         }
         if (settingsApp) {
             settingsApp.style.visibility = "hidden";
@@ -23,7 +23,7 @@ function toggleLoader(status) {
             loader.style.display = "none";
         }
         if (tempsApp) {
-            settingsApp.style.visibility = "visible";
+            tempsApp.style.visibility = "visible";
         }
         if (settingsApp) {
             settingsApp.style.visibility = "visible";
