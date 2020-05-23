@@ -7,7 +7,6 @@
 ## Features
 
 - Add target pushes
-- sendUpdateCount() report is sent when sendPulseCount() is not warranted (RandR+)
 - Filter small pours
 - Update page data on timer
   - Temps
@@ -71,3 +70,4 @@
     - ~~Thermostat~~
 - ~~Add temp control status to web UI~~
 - ~~Add temps display to web UI~~
+- ~~sendUpdateCount() report is sent when sendPulseCount() is not warranted (RandR+)~~
