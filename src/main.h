@@ -36,7 +36,6 @@ SOFTWARE. */
 #include "flowmeter.h"
 #include "tools.h"
 #include "execota.h"
-#include "tempsensors.h" // DEBUG
 #include <ArduinoLog.h>
 
 // extern struct Config config;

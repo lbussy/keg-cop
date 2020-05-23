@@ -25,7 +25,6 @@ SOFTWARE. */
 
 #include "config.h"
 #include "jsonconfig.h"
-#include <ArduinoLog.h> // DEBUG
 #include <CircularBuffer.h>
 #include <OneWire.h>
 #include <DS18B20.h>
@@ -60,7 +59,6 @@ struct Devices
 void sensorInit();
 void pollTemps();
 double getTempC(uint8_t);
-void showTemps(); // DEBUG
 
 extern struct Config config;
 

@@ -99,30 +99,3 @@ double getTempC(uint8_t pin)
     }
     return retVal;
 }
-
-void showTemps()
-{ // Show temperature values
-    for (int i = 0; i < device.size; i++)
-    {
-        if (config.copconfig.imperial)
-        {
-            Log.verbose(F("[SENSOR] %S on pin %i is %D, average %D (%l in sample), calibration: %D." CR),
-                        device.sensor[i].name,
-                        device.sensor[i].pin,
-                        convertCtoF(device.sensor[i].value),
-                        convertCtoF(device.sensor[i].average),
-                        device.sensor[i].buffer.size(),
-                        device.sensor[i].calibration);            
-        }
-        else
-        {          
-            Log.verbose(F("[SENSOR] %S on pin %i is %D, average %D (%l in sample), calibration: %D." CR),
-                        device.sensor[i].name,
-                        device.sensor[i].pin,
-                        device.sensor[i].value,
-                        device.sensor[i].average,
-                        device.sensor[i].buffer.size(),
-                        device.sensor[i].calibration);
-        }
-    }
-}

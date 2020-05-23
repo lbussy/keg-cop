@@ -339,7 +339,6 @@ bool mergeFlow(JsonVariant dst, JsonVariantConst src)
 
 void convertFlowtoImperial()
 {
-    // TODO:  Loop through all flow numbers and convert to Imperial
     if (!flow.imperial)
     {
         Log.verbose(F("Converting metric flow data to imperial." CR));
