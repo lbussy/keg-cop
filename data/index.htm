@@ -125,6 +125,7 @@
         var percent = [];
         var capacity = [];
         var remaining = [];
+        var tapChart;
 
         // Attach the event after the page loads
         if (window.addEventListener)
@@ -149,6 +150,7 @@
             populateFlow();
             populateConfig();
             populateTemps();
+            pollComplete();
         }
 
         function populateFlow() { // Get flowmeter data
@@ -172,9 +174,6 @@
                             }
                         }
                         loaded++;
-                        if (loaded == numReq) {
-                            finishPage();
-                        }
                     }
                     catch {
                         alert("Unable to parse configuration data from SPIFFS.");
@@ -202,9 +201,6 @@
                         $('#taplistName').text(headerText);
 
                         loaded++;
-                        if (loaded == numReq) {
-                            finishPage();
-                        }
                     }
                     catch {
                         alert("Unable to parse configuration data from SPIFFS.");
@@ -258,9 +254,6 @@
                         }
 
                         loaded++;
-                        if (loaded == numReq) {
-                            finishPage();
-                        }
                     }
                     catch {
                         alert("Unable to parse temperature data from SPIFFS.");
@@ -275,9 +268,15 @@
         }
 
         function doChart() { // Draw chart.js chart
+            if (tapChart) {
+                console.log("tapChart exists.");
+            } else {
+                console.log("tapChart dpes not exist.");
+            }
+
             var ctx = document.getElementById("tapChart").getContext("2d");
 
-            var tapChart = new Chart(ctx, {
+            tapChart = new Chart(ctx, {
                 type: 'horizontalBar',
                 data: {
                     labels: labels,
@@ -360,6 +359,14 @@
             var tapNum = array[0]._index;
             var url = "/settings/#tap" + tapNum;
             window.open(url, "_self")
+        }
+
+        function pollComplete() {
+            if (loaded == numReq) {
+                finishPage();
+            } else {
+                setTimeout(pollComplete, 300); // try again in 300 milliseconds
+            }
         }
 
         function finishPage() { // Display page
