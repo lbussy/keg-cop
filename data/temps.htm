@@ -123,6 +123,7 @@
         var temperatures = [];
         var scaleTemps = [];
         var setpoint = 0;
+        var tempChart;
 
         // Attach the event after the page loads
         if (window.addEventListener)
@@ -146,6 +147,7 @@
         function populatePage() { // Get page data
             populateTemps();
             populateConfig();
+            pollComplete();
         }
 
         function populateConfig() { // Get configuration settings
@@ -159,9 +161,6 @@
                         $('#templistName').text(headerText);
 
                         loaded++;
-                        if (loaded == numReq) {
-                            finishPage();
-                        }
                     }
                     catch {
                         alert("Unable to parse configuration data from SPIFFS.");
@@ -206,9 +205,6 @@
                         scaleTemps.push(parseFloat(setpoint));
 
                         loaded++;
-                        if (loaded == numReq) {
-                            finishPage();
-                        }
                     }
                     catch {
                         alert("Unable to parse temperature data from SPIFFS.");
@@ -225,7 +221,7 @@
         function doChart() { // Draw chart.js chart
             var ctx = document.getElementById("tempChart").getContext("2d");
 
-            var tempChart = new Chart(ctx, {
+            tempChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -308,9 +304,23 @@
             window.open(url, "_self")
         }
 
+        function pollComplete() {
+            if (loaded == numReq) {
+                finishPage();
+            } else {
+                setTimeout(pollComplete, 300); // try again in 300 milliseconds
+            }
+        }
+
+        function chartReload() {
+            console.log("chartReload()");
+            setTimeout(chartReload, 5000);
+        }
+
         function finishPage() { // Display page
             toggleLoader("off");
             doChart();
+            chartReload();
         }
     </script>
 
