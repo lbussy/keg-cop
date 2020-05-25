@@ -8,9 +8,10 @@
 
 - Add target pushes
 - Filter small pours
-- Add cooling indicator to temp display
 - Move JS to separate files
-- Look into why solenoic chatters on flash
+- Look into why solenoid chatters on flash
+- Calculate center for spinner
+- Figure out what to do with tstat.control (if anything)
 
 ## Bugs
 
@@ -79,3 +80,4 @@
 - ~~Sometimes will not connect after setting credentials~~
 - ~~Make page load spinner work on Temps and Index~~
 - ~~Add hotlink back to main page on temps~~
+- ~~Add cooling indicator to temp display~~
