@@ -126,6 +126,8 @@
         var capacity = [];
         var remaining = [];
         var tapChart;
+        var flowReloadTimer = 5000;
+        var tempsReloadTimer = 10000;
 
         // Attach the event after the page loads
         if (window.addEventListener)
@@ -153,11 +155,21 @@
             pollComplete();
         }
 
-        function populateFlow() { // Get flowmeter data
+        function populateFlow(callback = null) { // Get flowmeter data
             var url = "/flow/";
+            var okToClear = false;
+            if (labels.length) { // Clear arrays if we are re-running
+                okToClear = true;
+            }
             var flow = $.getJSON(url, function () {
             })
                 .done(function (flow) {
+                    if (okToClear) {
+                        labels = [];
+                        percent = [];
+                        capacity = [];
+                        remaining = [];
+                    }
                     var numTaps = flow["taps"].length;
                     if (flow.imperial) {
                         imperial = true;
@@ -173,7 +185,12 @@
                                 remaining.push(parseFloat(flow.taps[i].remaining));
                             }
                         }
-                        loaded++;
+                        if (loaded < numReq) {
+                            loaded++;
+                        }
+                        if (typeof callback == "function") {
+                            callback();
+                        }
                     }
                     catch {
                         alert("Unable to parse configuration data from SPIFFS.");
@@ -214,7 +231,7 @@
                 });
         }
 
-        function populateTemps() { // Get configuration settings
+        function populateTemps(callback = null) { // Get configuration settings
             var url = "/temperatures/";
             var config = $.getJSON(url, function () {
             })
@@ -253,7 +270,12 @@
                             $('#tempFormat').html("&#x2103;");
                         }
 
-                        loaded++;
+                        if (loaded < numReq) {
+                            loaded++;
+                        }
+                        if (typeof callback == "function") {
+                            callback();
+                        }
                     }
                     catch {
                         alert("Unable to parse temperature data from SPIFFS.");
@@ -269,55 +291,63 @@
 
         function doChart() { // Draw chart.js chart
             if (tapChart) {
-                console.log("tapChart exists.");
-            } else {
-                console.log("tapChart dpes not exist.");
-            }
+                console.log("Exists.");
 
-            var ctx = document.getElementById("tapChart").getContext("2d");
-
-            tapChart = new Chart(ctx, {
-                type: 'horizontalBar',
-                data: {
+                tapChart.data = {
                     labels: labels,
                     datasets: [{
                         data: percent,
-                        borderColor: 'rgba(221, 86, 0, 1)',
-                        backgroundColor: 'rgba(221, 86, 0, 0.2)',
-                        borderWidth: 2
                     }]
-                },
-                options: {
-                    legend: false,
-                    responsive: true,
+                };
 
-                    title: {
-                        display: false
-                    },
+                tapChart.update();
+            } else {
+                console.log("Creating.");
+                var ctx = document.getElementById("tapChart").getContext("2d");
 
-                    onClick: barClick,
-
-                    tooltips: {
-                        //yAlign: 'top', (using this hides the bottom-most tooltip)
-                        displayColors: false,
-
-                        callbacks: {
-                            label: toolTip
-                        }
-                    },
-
-                    scales: {
-                        xAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                                callback: function (value, index, values) {
-                                    return value + "%";
-                                }
-                            }
+                tapChart = new Chart(ctx, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: percent,
+                            borderColor: 'rgba(221, 86, 0, 1)',
+                            backgroundColor: 'rgba(221, 86, 0, 0.2)',
+                            borderWidth: 2
                         }]
+                    },
+                    options: {
+                        legend: false,
+                        responsive: true,
+
+                        title: {
+                            display: false
+                        },
+
+                        onClick: barClick,
+
+                        tooltips: {
+                            displayColors: false,
+
+                            callbacks: {
+                                label: toolTip
+                            }
+                        },
+
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 100,
+                                    callback: function (value, index, values) {
+                                        return value + "%";
+                                    }
+                                }
+                            }]
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         function toolTip(tooltipItem, data) { // Callback for tool tips
@@ -369,9 +399,24 @@
             }
         }
 
+        function flowReload() {
+            populateFlow(function callFunction() {
+                doChart();
+                setTimeout(flowReload, flowReloadTimer);
+            });
+        }
+
+        function tempsReload() {
+            populateTemps(function callFunction() {
+                setTimeout(tempsReload, tempsReloadTimer);
+            });
+        }
+
         function finishPage() { // Display page
             toggleLoader("off");
             doChart();
+            setTimeout(tempsReload, tempsReloadTimer);
+            setTimeout(flowReload, flowReloadTimer);
         }
 
     </script>
