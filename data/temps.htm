@@ -124,6 +124,7 @@
         var scaleTemps = [];
         var setpoint = 0;
         var tempChart;
+        var chartReloadTimer = 10000;
 
         // Attach the event after the page loads
         if (window.addEventListener)
@@ -160,7 +161,9 @@
                         var headerText = "Temperature Sensors for " + config.copconfig.kegeratorname;
                         $('#templistName').text(headerText);
 
-                        loaded++;
+                        if (loaded < numReq) {
+                            loaded++;
+                        }
                     }
                     catch {
                         alert("Unable to parse configuration data from SPIFFS.");
@@ -174,19 +177,29 @@
                 });
         }
 
-        function populateTemps() { // Get configuration settings
+        function populateTemps(callback = null) { // Get configuration settings
             var url = "/temperatures/";
+            var okToClear = false;
+            if (labels.length) { // Clear arrays if we are re-running
+                console.log((new Date).toUTCString() + " Clearing arrays.");
+                okToClear = true;
+            }
             var config = $.getJSON(url, function () {
             })
                 .done(function (temps) {
                     try {
+                        if (okToClear) {
+                            labels = [];
+                            temperatures = [];
+                            scaleTemps = [];
+                        }
                         if (temps.imperial) {
                             imperial = true;
                         } else {
                             imperial = false;
                         }
 
-                        $.each(temps.sensor, function( index, value ) {
+                        $.each(temps.sensor, function (index, value) {
                             labels.push(index.charAt(0).toUpperCase() + index.slice(1));
                             temperatures.push(parseFloat(value));
                         });
@@ -204,7 +217,12 @@
                         scaleTemps = temperatures;
                         scaleTemps.push(parseFloat(setpoint));
 
-                        loaded++;
+                        if (loaded < numReq) {
+                            loaded++;
+                        }
+                        if (typeof callback == "function") {
+                            callback();
+                        }
                     }
                     catch {
                         alert("Unable to parse temperature data from SPIFFS.");
@@ -219,81 +237,94 @@
         }
 
         function doChart() { // Draw chart.js chart
-            var ctx = document.getElementById("tempChart").getContext("2d");
-
-            tempChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: temperatures,
-                        borderColor: 'rgba(221, 86, 0, 1)',
-                        backgroundColor: 'rgba(221, 86, 0, 0.2)',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    legend: false,
-                    responsive: true,
-
-                    title: {
-                        display: false
-                    },
-
-                    onClick: barClick,
-
-                    tooltips: {
-                        yAlign: 'top',
-                        displayColors: false,
-
-                        callbacks: {
-                            label: toolTip
-                        }
-                    },
-
-                    scales: {
-						yAxes: [{
-							display: true,
-							ticks: {
-                                min: Math.floor(Math.min.apply(this, scaleTemps) - 2),
-                                max: Math.ceil(Math.max.apply(this, scaleTemps) + 1),
-                                callback: function(value, index, values) {
-                                  return value + "°";
-                                }
-							}
-						}]
-                    },
-
-                    annotation: {
-                        annotations: [{
-                            type: 'line',
-                            mode: 'horizontal',
-                            scaleID: 'y-axis-0',
-                            value: setpoint,
-                            borderColor: 'rgb(75, 192, 192)',
-                            borderWidth: 4,
-                            label: {
-                                enabled: true,
-                                content: setpointLabel
-                            }
-                        }]
-                    }
+            if (tempChart) {
+                console.log((new Date).toUTCString() + " Chart exists."); // DEBUG
+                if (labels.length) {
+                    console.log((new Date).toUTCString() + " Updating chart."); // DEBUG
+                    tempChart.update(1000);
+                } else {
+                    console.log((new Date).toUTCString() + " Failure: labels[] is empty."); // DEBUG
                 }
-            });
+            } else {
+                console.log((new Date).toUTCString() + " Writing chart.");
+                var ctx = document.getElementById("tempChart").getContext("2d");
+
+                tempChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: temperatures,
+                            borderColor: 'rgba(221, 86, 0, 1)',
+                            backgroundColor: 'rgba(221, 86, 0, 0.2)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        legend: false,
+                        responsive: true,
+
+                        title: {
+                            display: false
+                        },
+
+                        onClick: barClick,
+
+                        tooltips: {
+                            yAlign: 'top',
+                            displayColors: false,
+
+                            callbacks: {
+                                label: toolTip
+                            }
+                        },
+
+                        scales: {
+                            yAxes: [{
+                                display: true,
+                                ticks: {
+                                    min: Math.floor(Math.min.apply(this, scaleTemps) - 2),
+                                    max: Math.ceil(Math.max.apply(this, scaleTemps) + 1),
+                                    callback: function (value, index, values) {
+                                        return value + "°";
+                                    }
+                                }
+                            }]
+                        },
+
+                        annotation: {
+                            annotations: [{
+                                type: 'line',
+                                mode: 'horizontal',
+                                scaleID: 'y-axis-0',
+                                value: setpoint,
+                                borderColor: 'rgb(75, 192, 192)',
+                                borderWidth: 4,
+                                label: {
+                                    enabled: true,
+                                    content: setpointLabel
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
         }
 
         function toolTip(tooltipItem, data) { // Callback for tool tips
             var index = tooltipItem.index;
             var label = [];
 
-            var tempLine = ''
-            tempLine = (temperatures[index]).toFixed(1);
-            if (imperial) {
-                tempLine += " ℉"
-            } else {
-                tempLine += " ℃"
+            var tempLine = '';
+            if (temperatures[index]) {
+                tempLine = (temperatures[index]).toFixed(1);
+                if (imperial) {
+                    tempLine += " ℉";
+                } else {
+                    tempLine += " ℃";
+                }
+                label.push(tempLine);
             }
-            label.push(tempLine);
 
             return label;
         }
@@ -301,7 +332,7 @@
         function barClick(event, array) { // Bar click handler
             var tapNum = array[0]._index;
             var url = "/settings/#tempcalibration";
-            window.open(url, "_self")
+            window.open(url, "_self");
         }
 
         function pollComplete() {
@@ -313,16 +344,20 @@
         }
 
         function chartReload() {
-            console.log("chartReload()");
-            setTimeout(chartReload, 5000);
+            populateTemps(function callFunction() {
+                doChart();
+                setTimeout(chartReload, chartReloadTimer);
+            });
         }
 
         function finishPage() { // Display page
             toggleLoader("off");
             doChart();
-            chartReload();
+            setTimeout(chartReload, chartReloadTimer);
         }
     </script>
+
+
 
 </body>
 
