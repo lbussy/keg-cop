@@ -6,11 +6,11 @@
 
 ## Features
 
-- Make page load spinner work on Temps and Index
 - Add target pushes
 - Filter small pours
 - Add cooling indicator to temp display
 - Move JS to separate files
+- Look into why solenoic chatters on flash
 
 ## Bugs
 
@@ -77,3 +77,5 @@
   - ~~Y-Axis scale~~
 - ~~Wifi credentials get erased on reset~~
 - ~~Sometimes will not connect after setting credentials~~
+- ~~Make page load spinner work on Temps and Index~~
+- ~~Add hotlink back to main page on temps~~

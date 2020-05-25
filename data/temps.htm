@@ -158,8 +158,9 @@
                 .done(function (config) {
                     try {
                         // Header text
-                        var headerText = "Temperature Sensors for " + config.copconfig.kegeratorname;
-                        $('#templistName').text(headerText);
+                        var headerText = 'Temperature Sensors for <a class="no-underline" href="/">';
+                        headerText += config.copconfig.kegeratorname + '</a>';
+                        $('#templistName').html(headerText);
 
                         if (loaded < numReq) {
                             loaded++;
