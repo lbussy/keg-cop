@@ -181,7 +181,6 @@
             var url = "/temperatures/";
             var okToClear = false;
             if (labels.length) { // Clear arrays if we are re-running
-                console.log((new Date).toUTCString() + " Clearing arrays.");
                 okToClear = true;
             }
             var config = $.getJSON(url, function () {
@@ -238,15 +237,12 @@
 
         function doChart() { // Draw chart.js chart
             if (tempChart) {
-                console.log((new Date).toUTCString() + " Chart exists."); // DEBUG
-                if (labels.length) {
-                    console.log((new Date).toUTCString() + " Updating chart."); // DEBUG
-                    tempChart.update(1000);
-                } else {
-                    console.log((new Date).toUTCString() + " Failure: labels[] is empty."); // DEBUG
-                }
+                tempChart.data.datasets.forEach((dataset) => {
+                    dataset.data = [];
+                    dataset.data = temperatures;
+                });
+                tempChart.update();
             } else {
-                console.log((new Date).toUTCString() + " Writing chart.");
                 var ctx = document.getElementById("tempChart").getContext("2d");
 
                 tempChart = new Chart(ctx, {

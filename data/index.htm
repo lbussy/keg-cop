@@ -307,17 +307,12 @@
 
         function doChart() { // Draw chart.js chart
             if (tapChart) {
-                console.log("Exists.");
-                console.log("Exists.");
-
                 tapChart.data.datasets.forEach((dataset) => {
                     dataset.data = [];
                     dataset.data = percent;
                 });
                 tapChart.update();
-                
             } else {
-                console.log("Creating.");
                 var ctx = document.getElementById("tapChart").getContext("2d");
 
                 tapChart = new Chart(ctx, {
