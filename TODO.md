@@ -9,9 +9,12 @@
 - Add target pushes
 - Filter small pours
 - Move JS to separate files
-- Look into why solenoid chatters on flash
+- Look into why solenoid chatters on flash (On, Off, On)
 - Calculate center for spinner
-- Figure out what to do with tstat.control (if anything)
+- Deal with disconnected sensors
+  - Web display
+  - Control point
+- Add units display to PPU (and maybe others)
 
 ## Bugs
 
@@ -81,3 +84,5 @@
 - ~~Make page load spinner work on Temps and Index~~
 - ~~Add hotlink back to main page on temps~~
 - ~~Add cooling indicator to temp display~~
+- ~~Figure out Tstat logic~~
+- ~~Figure out what to do with tstat.control (if anything)~~
