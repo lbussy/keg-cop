@@ -1210,7 +1210,7 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <input type="number" class="form-control" name="setpoint" id="setpoint" min="0"
-                                            max="80" step=".01" placeholder="40">
+                                            max="80" step=".1" placeholder="40">
                                     </div>
                                     <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
                                             id="submitSettings">Update</button>
@@ -1598,7 +1598,7 @@
                         } else {
                             $('input:radio[name="rpintscompat"]')[0].checked = true;
                         }
-                        $('input[name="setpoint"]').val(parseFloat(config.temps.setpoint).toFixed(2));
+                        $('input[name="setpoint"]').val(parseFloat(config.temps.setpoint).toFixed(1));
                         $('select[name="controlpoint"] option[value=' + parseInt(config.temps.controlpoint, 10) + ']').attr('selected', 'selected');
                         $('input[name="calroom"]').val(parseFloat(config.temps.room).toFixed(2));
                         $('input[name="caltower"]').val(parseFloat(config.temps.tower).toFixed(2));
