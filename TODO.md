@@ -14,7 +14,6 @@
 - Deal with disconnected sensors
   - Web display
   - Control point
-- Add units display to PPU (and maybe others)
 
 ## Bugs
 
@@ -86,3 +85,4 @@
 - ~~Add cooling indicator to temp display~~
 - ~~Figure out Tstat logic~~
 - ~~Figure out what to do with tstat.control (if anything)~~
+- ~~Add units display to PPU (and maybe others)~~
