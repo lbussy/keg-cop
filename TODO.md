@@ -12,6 +12,7 @@
 - Look into why solenoid chatters on flash (On, Off, On)
 - Calculate center for spinner
 - Deal with disconnected sensors
+  - Allow enable/disable sensors
   - Web display
   - Control point
 
