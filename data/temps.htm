@@ -235,12 +235,31 @@
                 });
         }
 
+        function updateScales(chart) {
+            var yScale = chart.scales['y-axis-0'];
+            chart.options.scales = {
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        min: Math.floor(Math.min.apply(this, scaleTemps) - 2),
+                        max: Math.ceil(Math.max.apply(this, scaleTemps) + 1),
+                        callback: function (value, index, values) {
+                            return value + "°";
+                        }
+                    }
+                }]
+            };
+            chart.update();
+            yScale = chart.scales['y-axis-0'];
+        }
+
         function doChart() { // Draw chart.js chart
             if (tempChart) {
                 tempChart.data.datasets.forEach((dataset) => {
                     dataset.data = [];
                     dataset.data = temperatures;
                 });
+                updateScales(tempChart);
                 tempChart.update();
             } else {
                 var ctx = document.getElementById("tempChart").getContext("2d");
