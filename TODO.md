@@ -9,17 +9,12 @@
 - Make page load spinner work on Temps and Index
 - Add target pushes
 - Filter small pours
-- Update page data on timer
-  - ~~Temps~~
-  - ~~Flow~~
-  - Y-Axis scale
 - Add cooling indicator to temp display
 - Move JS to separate files
 
 ## Bugs
 
-- Wifi credentials get erased on reset
-- Sometimes will not connect after setting credentials
+- ???
 
 # Complete
 
@@ -76,3 +71,9 @@
 - ~~Add temp control status to web UI~~
 - ~~Add temps display to web UI~~
 - ~~sendUpdateCount() report is sent when sendPulseCount() is not warranted (RandR+)~~
+- ~~Update page data on timer~~
+  - ~~Temps~~
+  - ~~Flow~~
+  - ~~Y-Axis scale~~
+- ~~Wifi credentials get erased on reset~~
+- ~~Sometimes will not connect after setting credentials~~
