@@ -24,8 +24,8 @@ SOFTWARE. */
 
 Config config;
 const char *filename = FILENAME;
-extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(9);
-extern const size_t capacityDeserial = capacitySerial + 990;
+extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(12);
+extern const size_t capacityDeserial = capacitySerial + 1050;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -345,10 +345,15 @@ void Temperatures::save(JsonObject obj) const
 {
     obj["setpoint"] = setpoint;
     obj["controlpoint"] = controlpoint;
+    obj["roomenabled"] = enabled[0];
     obj["room"] = calibration[0];
+    obj["towerenabled"] = enabled[1];
     obj["tower"] = calibration[1];
+    obj["upperenabled"] = enabled[2];
     obj["upper"] = calibration[2];
+    obj["lowerenabled"] = enabled[3];
     obj["lower"] = calibration[3];
+    obj["kegenabled"] = enabled[4];
     obj["keg"] = calibration[4];
 }
 
@@ -370,11 +375,25 @@ void Temperatures::load(JsonObjectConst obj)
         controlpoint = cp;
     }
 
+    if (obj["roomenabled"].isNull()) {
+        enabled[0] = true;
+    } else {
+        bool en = obj["roomenabled"];
+        enabled[0] = en;
+    }
+
     if (obj["room"].isNull()) {
         calibration[0] = 0.0;
     } else {
         float rc = obj["room"];
         calibration[0] = rc;
+    }
+
+    if (obj["towerenabled"].isNull()) {
+        enabled[1] = true;
+    } else {
+        bool en = obj["towerenabled"];
+        enabled[1] = en;
     }
 
     if (obj["tower"].isNull()) {
@@ -384,6 +403,13 @@ void Temperatures::load(JsonObjectConst obj)
         calibration[1] = tc;
     }
 
+    if (obj["upperenabled"].isNull()) {
+        enabled[2] = true;
+    } else {
+        bool en = obj["upperenabled"];
+        enabled[2] = en;
+    }
+
     if (obj["upper"].isNull()) {
         calibration[2] = 0.0;
     } else {
@@ -391,11 +417,25 @@ void Temperatures::load(JsonObjectConst obj)
         calibration[2] = uc;
     }
 
+    if (obj["lowerenabled"].isNull()) {
+        enabled[3] = true;
+    } else {
+        bool en = obj["lowerenabled"];
+        enabled[3] = en;
+    }
+
     if (obj["lower"].isNull()) {
         calibration[3] = 0.0;
     } else {
         float lc = obj["lower"];
         calibration[3] = lc;
+    }
+
+    if (obj["kegenabled"].isNull()) {
+        enabled[4] = true;
+    } else {
+        bool en = obj["kegenabled"];
+        enabled[4] = en;
     }
 
     if (obj["keg"].isNull()) {
