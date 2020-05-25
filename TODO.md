@@ -9,9 +9,10 @@
 - Make page load spinner work on Temps and Index
 - Add target pushes
 - Filter small pours
-- Update page data on timer - https://www.chartjs.org/docs/latest/developers/updates.html
-  - Temps
-  - Flow
+- Update page data on timer
+  - ~~Temps~~
+  - ~~Flow~~
+  - Y-Axis scale
 - Add cooling indicator to temp display
 - Move JS to separate files
 
