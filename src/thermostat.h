@@ -29,14 +29,14 @@ SOFTWARE. */
 
 enum ThermostatState
 {
-    TSTAT_INACTIVE,
-    TSTAT_COOL_BEGIN,
-    TSTAT_COOL_MINOFF,
-    TSTAT_COOL_ACTIVE,
-    TSTAT_IDLE_END,
-    TSTAT_IDLE_MINON,
-    TSTAT_IDLE_INACTIVE,
-    TSTAT_UNKNOWN
+    TSTAT_INACTIVE,         // Thermostat inactive
+    TSTAT_COOL_BEGIN,       // Turning on cooling
+    TSTAT_COOL_MINOFF,      // Waiting to cool because of MINOFF
+    TSTAT_COOL_ACTIVE,      // Actively cooling
+    TSTAT_OFF_END,          // Turning off cooling
+    TSTAT_OFF_MINON,        // Temp => Setpoint, still running because of MINON
+    TSTAT_OFF_INACTIVE,     // Not cooling
+    TSTAT_UNKNOWN           // Should never get this
 };
 
 struct Thermostat
