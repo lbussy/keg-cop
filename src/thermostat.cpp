@@ -30,6 +30,7 @@ void startControl()
     tstat.lastOn = millis();
     tstat.cooling = false;
     tstat.state = TSTAT_UNKNOWN;
+    tstat.control = true; // DEBUG TODO:  Figure out how to control this
 }
 
 void controlLoop()
@@ -153,7 +154,7 @@ void tstatReport()
                 device.sensor[config.temps.controlpoint].average,
                 setpoint,
                 double(now - tstat.lastOn) / 1000,
-                double(now - tstat.lastOff) / 1000,
+                double(now - tstat.lastOff) / 1000, // TODO:  Figure out why last run (start and end) is weird
                 double(wait) / 1000
             );
             break;
