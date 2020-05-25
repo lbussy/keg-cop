@@ -70,9 +70,9 @@
                     <div class="float-left">
                         <h4><span id="taplistName"></span></h4>
                     </div>
-                        <div id="coolstatetooltip" data-toggle="tooltip" data-placement="right" class="float-right">
+                        <div class="float-right">
                             <h5 id="coolstate" class="text-right alert">
-                                <a class="no-underline" href="/temps/">
+                                <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="/temps/">
                                     <span id="controlPoint"></span>:
                                     <span id="controlTemp"></span>
                                     <span id="tempFormat"></span>
@@ -149,9 +149,14 @@
         }
 
         function populatePage() { // Get page data
+            $(document).tooltip({
+                'selector': '[data-toggle=tooltip]',
+                'placement': 'left',
+                'toggleEnabled': true
+            });
             populateFlow();
-            populateConfig();
             populateTemps();
+            populateConfig();
             pollComplete();
         }
 
