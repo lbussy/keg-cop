@@ -448,7 +448,7 @@ SOFTWARE. */
 #ifndef IMPERIAL
 #define IMPERIAL true
 #define FMIN (double)33
-#define FMAX (double)68
+#define FMAX (double)80
 #define CMIN (double)1
 #define CMAX (double).5
 #endif
@@ -591,20 +591,20 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Cooling Delay - Default 10 mins (in millis())
+// Cooling Delay - Default 5 mins (in millis())
 //
 #ifndef COOLDELAY
-#define COOLDELAY 10 * 60 * 1000
+#define COOLDELAY 2 * 60 * 1000
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Minimum on time - Default 2 mins (in seconds)
+// Minimum on time - Default 2 mins (in millis())
 //
 #ifndef MINON
-#define MINON 2 * 60
+#define MINON 1 * 60 * 1000
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
