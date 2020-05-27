@@ -57,6 +57,8 @@ void setSettingsAliases();
 void setEditor();
 void stopWebServer();
 
+std::string handleSensorPost(AsyncWebServerRequest *);
+
 extern struct ThatVersion thatVersion;
 extern struct Config config;
 extern const size_t capacityDeserial;

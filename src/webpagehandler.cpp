@@ -203,22 +203,33 @@ void setJsonHandlers()
 
 void setSettingsAliases()
 {
+    server.on("/settings/sensorcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /settings/sensorcontrol/." CR));
+        std::string redirect;
+        redirect = handleSensorPost(request);
+        Log.verbose(F("Redirecting to %s." CR), redirect.c_str());
+        request->redirect(redirect.c_str());
+    });
+
     server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) { // Settings Update Handler
         // Process POST configuration changes
         Log.verbose(F("Processing post to /settings/update/." CR));
+
         // Start to concatenate redirect URL
         char redirect[67];
         int madeChange = 0;
         bool hostNameChange = false;
         strcpy(redirect, "/settings/");
 
-        //Scroll through all POSTed parameters
+        // Scroll through all POSTed parameters
         int params = request->params();
         for (int i = 0; i < params; i++)
         {
             AsyncWebParameter *p = request->getParam(i);
             if (p->isPost())
             {
+                handleSensorPost(request); // Sensor calibration and activation
+
                 // Process any p->name().c_str() / p->value().c_str() pairs
                 const char * name = p->name().c_str();
                 const char * value = p->value().c_str();
@@ -390,91 +401,7 @@ void setSettingsAliases()
                     strcat(redirect, hashloc); // Redirect to Temp Control
                     Log.notice(F("POSTed setpoint, redirecting to %s." CR), hashloc, redirect);
                 }
-                if (strcmp(name, "calroom") == 0) // Change room sensor calibration
-                {
-                    const char * hashloc = "#tempcalibration";
-                    if ((atof(value) < -25) || (atof(value) > 25))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        config.temps.calibration[0] = atof(value);
-                        saveConfig();
-                        madeChange++;
-                    }
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed calroom, redirecting to %s." CR), hashloc, redirect);
-                }
-                if (strcmp(name, "caltower") == 0) // Change tower sensor calibration
-                {
-                    const char * hashloc = "#tempcalibration";
-                    if ((atof(value) < -25) || (atof(value) > 25))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        config.temps.calibration[1] = atof(value);
-                        saveConfig();
-                        madeChange++;
-                    }
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed caltower, redirecting to %s." CR), hashloc, redirect);
-                }
-                if (strcmp(name, "calupper") == 0) // Change upper sensor calibration
-                {
-                    const char * hashloc = "#tempcalibration";
-                    if ((atof(value) < -25) || (atof(value) > 25))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        config.temps.calibration[2] = atof(value);
-                        saveConfig();
-                        madeChange++;
-                    }
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed calupper, redirecting to %s." CR), hashloc, redirect);
-                }
-                if (strcmp(name, "callower") == 0) // Change lower sensor calibration
-                {
-                    const char * hashloc = "#tempcalibration";
-                    if ((atof(value) < -25) || (atof(value) > 25))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        config.temps.calibration[3] = atof(value);
-                        saveConfig();
-                        madeChange++;
-                    }
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed callower, redirecting to %s." CR), hashloc, redirect);
-                }
-                if (strcmp(name, "calkeg") == 0) // Change keg sensor calibration
-                {
-                    const char * hashloc = "#tempcalibration";
-                    if ((atof(value) < -25) || (atof(value) > 25))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        config.temps.calibration[4] = atof(value);
-                        saveConfig();
-                        madeChange++;
-                    }
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed calkeg, redirecting to %s." CR), hashloc, redirect);
-                }
+
                 //
                 // Taps Settings
                 if ((String(name).startsWith("tap")) && (strlen(name) > 3) && (!strcmp(name, "tapsolenoid") == 0)) // Change tap settings
@@ -596,4 +523,198 @@ void stopWebServer()
     server.reset();
     server.end();
     Log.notice(F("Web server stopped." CR));
+}
+
+std::string handleSensorPost(AsyncWebServerRequest *request) // Handle Sensor Control settings
+{
+    // Start to concatenate redirect URL
+    std::string redirect;
+    redirect = "/settings/";
+
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char * name = p->name().c_str();
+            const char * value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Sensor calibration
+            //
+            if (strcmp(name, "sensorcontrol") == 0) // Get hashloc
+            {
+                if ((strlen(value) < 1) || (strlen(value) > 32))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    redirect = redirect + value; // Concat hashloc to URI
+                    Log.verbose(F("Redirect is now: %s" CR), redirect.c_str());
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+            }
+            if (strcmp(name, "enableroom") == 0) // Get hashloc
+            {
+                if (strcmp(value, "option0") == 0)
+                {
+                    // Enabled
+                    config.temps.enabled[0] = true;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else if (strcmp(value, "option0") == 1)
+                {
+                    // Disabled
+                    config.temps.enabled[0] = false;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "calroom") == 0) // Change room sensor calibration
+            {
+                if ((atof(value) < -25) || (atof(value) > 25))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.calibration[0] = atof(value);
+                }
+            }
+            if (strcmp(name, "enabletower") == 0) // Get hashloc
+            {
+                if (strcmp(value, "option0") == 0)
+                {
+                    // Enabled
+                    config.temps.enabled[1] = true;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else if (strcmp(value, "option0") == 1)
+                {
+                    // Disabled
+                    config.temps.enabled[1] = false;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "caltower") == 0) // Change tower sensor calibration
+            {
+                if ((atof(value) < -25) || (atof(value) > 25))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.calibration[1] = atof(value);
+                }
+            }
+            if (strcmp(name, "enableupper") == 0) // Get hashloc
+            {
+                if (strcmp(value, "option0") == 0)
+                {
+                    // Enabled
+                    config.temps.enabled[2] = true;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else if (strcmp(value, "option0") == 1)
+                {
+                    // Disabled
+                    config.temps.enabled[2] = false;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "calupper") == 0) // Change upper sensor calibration
+            {
+                if ((atof(value) < -25) || (atof(value) > 25))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.calibration[2] = atof(value);
+                }
+            }
+            if (strcmp(name, "enablelower") == 0) // Get hashloc
+            {
+                if (strcmp(value, "option0") == 0)
+                {
+                    // Enabled
+                    config.temps.enabled[3] = true;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else if (strcmp(value, "option0") == 1)
+                {
+                    // Disabled
+                    config.temps.enabled[3] = false;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "callower") == 0) // Change lower sensor calibration
+            {
+                if ((atof(value) < -25) || (atof(value) > 25))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.calibration[3] = atof(value);
+                }
+            }
+            if (strcmp(name, "enablekeg") == 0) // Get hashloc
+            {
+                if (strcmp(value, "option0") == 0)
+                {
+                    // Enabled
+                    config.temps.enabled[4] = true;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else if (strcmp(value, "option0") == 1)
+                {
+                    // Disabled
+                    config.temps.enabled[4] = false;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "calkeg") == 0) // Change keg sensor calibration
+            {
+                if ((atof(value) < -25) || (atof(value) > 25))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.calibration[4] = atof(value);
+                }
+            }
+        }
+    }
+    saveConfig();
+    return redirect;
 }
