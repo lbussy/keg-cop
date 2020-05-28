@@ -1031,63 +1031,51 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="hostname" action="/settings/update/" method="POST">
+                            <form id="controller" action="/settings/controller" method="POST">
+                                <input type="hidden" id="controller" name="controller" value="#controller">
+
                                 <div class="form-group row">
-                                    <label for="hostname" class="col-sm-2 col-form-label"
+                                    <label for="hostname" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Host name for the controller to access during use (do not include the '.local' portion)">
                                         Host Name
                                     </label>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="hostname"
                                             id="hostname" minlength="3" maxlength="32"
                                             placeholder="kegcop">
                                     </div>
-                                    <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                            id="submitSettings" value="hostname">Update</button>
-                                    </div>
                                 </div>
-                            </form>
 
-                            <form id="breweryname" action="/settings/update/" method="POST">
                                 <div class="form-group row">
-                                    <label for="breweryname" class="col-sm-2 col-form-label"
+                                    <label for="breweryname" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the brewery or brewer to be displayed">
                                         Brewery Name
                                     </label>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="breweryname"
                                             id="breweryname" minlength="3" maxlength="32"
                                             placeholder="My Homebrew">
                                     </div>
-                                    <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                            id="submitSettings">Update</button>
-                                    </div>
                                 </div>
-                            </form>
 
-                            <form id="kegeratorname" action="/settings/update/" method="POST">
                                 <div class="form-group row">
-                                    <label for="kegeratorname" class="col-sm-2 col-form-label"
+                                    <label for="kegeratorname" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the kegerator or controller">
                                         Kegerator Name
                                     </label>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="kegeratorname"
                                             id="kegeratorname" minlength="3" maxlength="32"
                                             placeholder="My Kegerator">
                                     </div>
-                                    <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                            id="submitSettings">Update</button>
-                                    </div>
                                 </div>
-                            </form>
 
-                            <form id="units" action="/settings/update/" method="POST">
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
+										<div class="col-sm-2">&nbsp;</div>
                                         <div class="col">
                                             <p data-toggle="tooltip" title="Toggle between metric or imperial units">Units</p>
                                         </div>
@@ -1106,22 +1094,12 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <p>&nbsp;</p>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                        </div>
-                                        <div class="col">
-                                            <p>&nbsp;</p>
-                                        </div>
                                     </div>
                                 </fieldset>
-                            </form>
 
-                            <form id="tapsolenoid" action="/settings/update/" method="POST">
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
+										<div class="col-sm-2">&nbsp;</div>
                                         <div class="col">
                                             <p data-toggle="tooltip" title="Turn solenoid on or off">Solenoid Relay</p>
                                         </div>
@@ -1140,22 +1118,12 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <p>&nbsp;</p>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                        </div>
-                                        <div class="col">
-                                            <p>&nbsp;</p>
-                                        </div>
                                     </div>
                                 </fieldset>
-                            </form>
 
-                            <form id="rpintscompat" action="/settings/update/" method="POST">
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
+										<div class="col-sm-2">&nbsp;</div>
                                         <div class="col">
                                             <p data-toggle="tooltip" title="Turn on legacy functionality">Functionality</p>
                                         </div>
@@ -1179,17 +1147,13 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <p>&nbsp;</p>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                        </div>
-                                        <div class="col">
-                                            <p>&nbsp;</p>
-                                        </div>
                                     </div>
+
+									<div class="row justify-content-center col-sm-12 form-group"><button class="btn btn-primary" onclick="return killButtons(this);"
+										id="submitSettings" value="hostname">Update</button>
+									</div>
                                 </fieldset>
+
                             </form>
 
                         </div>
