@@ -12,9 +12,28 @@
 - Look into why solenoid chatters on flash (On, Off, On)
 - Calculate center for spinner
 - Deal with disconnected sensors
-  - Allow enable/disable sensors
+  - ~~Allow enable/disable sensors~~
   - Web display
   - Control point
+- See if new POST processor can handle larger form submits (less buttons)
+  - Taps
+    - Tap 1
+    - Tap 2
+    - Tap 3
+    - Tap 4
+    - Tap 5
+    - Tap 6
+    - Tap 7
+    - Tap 8
+  - Controller
+  - Temperature
+    - ~~Control~~
+    - ~~Sensors~~
+  - Targets
+    - URL
+    - Cloud
+  - ~~Advanced~~
+- Allow accepting IP or not local in settings
 
 ## Bugs
 

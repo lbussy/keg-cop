@@ -15,6 +15,7 @@
     "temps": {
         "setpoint": 35,
         "controlpoint": 4,
+        "controlenabled": true,
         "roomenabled": true,
         "room": 1,
         "towerenabled": true,

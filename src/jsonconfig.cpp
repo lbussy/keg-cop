@@ -24,8 +24,8 @@ SOFTWARE. */
 
 Config config;
 const char *filename = FILENAME;
-extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(12);
-extern const size_t capacityDeserial = capacitySerial + 1050;
+extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13);
+extern const size_t capacityDeserial = capacitySerial + 1070;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -345,6 +345,7 @@ void Temperatures::save(JsonObject obj) const
 {
     obj["setpoint"] = setpoint;
     obj["controlpoint"] = controlpoint;
+    obj["controlenabled"] = controlenabled;
     obj["roomenabled"] = enabled[0];
     obj["room"] = calibration[0];
     obj["towerenabled"] = enabled[1];
@@ -373,6 +374,13 @@ void Temperatures::load(JsonObjectConst obj)
     } else {
         int cp = obj["controlpoint"];
         controlpoint = cp;
+    }
+
+    if (obj["controlenabled"].isNull()) {
+        controlenabled = true;
+    } else {
+        bool ce = obj["controlenabled"];
+        controlenabled = ce;
     }
 
     if (obj["roomenabled"].isNull()) {

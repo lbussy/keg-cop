@@ -58,6 +58,7 @@ void setEditor();
 void stopWebServer();
 
 std::string handleSensorPost(AsyncWebServerRequest *);
+std::string handleControlPost(AsyncWebServerRequest *);
 
 extern struct ThatVersion thatVersion;
 extern struct Config config;
