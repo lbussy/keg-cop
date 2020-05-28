@@ -203,6 +203,14 @@ void setJsonHandlers()
 
 void setSettingsAliases()
 {
+    server.on("/settings/tapcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /settings/tapcontrol/." CR));
+        std::string redirect;
+        redirect = handleTapPost(request);
+        Log.verbose(F("Redirecting to %s." CR), redirect.c_str());
+        request->redirect(redirect.c_str());
+    });
+
     server.on("/settings/controller/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/sensorcontrol/." CR));
         std::string redirect;
@@ -227,111 +235,17 @@ void setSettingsAliases()
         request->redirect(redirect.c_str());
     });
 
-    server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) { // Settings Update Handler
-        // Process POST configuration changes
+    server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        // Process settings update (bulk POST)
         Log.verbose(F("Processing post to /settings/update/." CR));
 
-        // Start to concatenate redirect URL
-        char redirect[67];
-        int madeChange = 0;
-        bool hostNameChange = false;
-        strcpy(redirect, "/settings/");
-
-        // Scroll through all POSTed parameters
-        int params = request->params();
-        for (int i = 0; i < params; i++)
-        {
-            AsyncWebParameter *p = request->getParam(i);
-            if (p->isPost())
-            {
-                handleControllerPost(request); // Controller parameters
-                handleControlPost(request); // Temperature control and activation
-                handleSensorPost(request); // Sensor calibration and activation
-
-                // Process any p->name().c_str() / p->value().c_str() pairs
-                const char * name = p->name().c_str();
-                const char * value = p->value().c_str();
-                Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
-
-                // Taps Settings
-                if ((String(name).startsWith("tap")) && (strlen(name) > 3) && (!strcmp(name, "tapsolenoid") == 0)) // Change tap settings
-                {
-                    const int tapNum = ((int) name[3]) - 48;
-                    char hashloc[5];
-                    bool didChange = false;
-                    if ((tapNum >= 0) && (tapNum <= (NUMTAPS - 1))) // Valid tap number
-                    {
-                        if (String(name).endsWith("ppu") && (atol(value) > 0 && atol(value) < 99999)) // Set ppu
-                        {
-                            flow.taps[tapNum].ppu = atol(value);
-                            didChange = true;
-                            Log.notice(F("POSTed tap%dppg, redirecting to %s." CR), tapNum, redirect);
-                        }
-                        else if (String(name).endsWith("beername") && ((strlen(value) > 0) || (strlen(value) < 65))) // Set beername
-                        {
-                            strlcpy(flow.taps[tapNum].name, value, sizeof(flow.taps[tapNum].name));
-                            didChange = true;
-                            Log.notice(F("POSTed tap%dbeername, redirecting to %s." CR), tapNum, redirect);
-                        }
-                        else if ((String(name).endsWith("cap")) && ((atof(value) > 0) && (atof(value) < 99999))) // Set capacity
-                        {
-                            flow.taps[tapNum].capacity = atof(value);
-                            didChange = true;
-                            Log.notice(F("POSTed tap%dcap, redirecting to %s." CR), tapNum, redirect);
-                        }
-                        else if ((String(name).endsWith("remain")) && ((atof(value) > 0) && (atof(value) < 99999))) // Set remaining
-                        {
-                            flow.taps[tapNum].remaining = atof(value);
-                            didChange = true;
-                            Log.notice(F("POSTed tap%dremain, redirecting to %s." CR), tapNum, redirect);
-                        }
-                        else if (String(name).endsWith("active")) // Set active/inactive
-                        {
-                            char option[8];
-                            strcpy(option, value);
-                            if (strcmp(value, "option0") == 0)
-                            {
-                                flow.taps[tapNum].active = true;
-                            }
-                            else
-                            {
-                                flow.taps[tapNum].active = false;
-                            }
-                            didChange = true;
-                            Log.notice(F("POSTed tap%dactive, redirecting to %s." CR), tapNum, redirect);
-                        }
-                        sprintf(hashloc, "#tap%d", tapNum);
-                        strcat(redirect, hashloc); // Redirect to Temp Control
-                    }
-                    else // Invalid tap number
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    if (didChange) // Made a change, save and redirect
-                    {
-                        saveConfig();
-                        madeChange++;
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    }
-                }
-                //
-                if (!madeChange) // No change made
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not applied." CR), name, value);
-                }
-            }
-        }
+        handleTapPost(request); // Tap parameters
+        handleControllerPost(request); // Controller parameters
+        handleControlPost(request); // Temperature control and activation
+        handleSensorPost(request); // Sensor calibration and activation
 
         // Redirect to Settings page
-        //
-        if (madeChange > 1)
-        { // We made more than one change, assume automation
-            request->send(200, F("text/html"), F("Ok."));
-        }
-        else
-        { // We made a single change, should be user-driven
-            request->redirect(redirect);
-        }
+        request->redirect("/settings/");
     });
 }
 
@@ -353,6 +267,102 @@ void stopWebServer()
     server.reset();
     server.end();
     Log.notice(F("Web server stopped." CR));
+}
+
+std::string handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
+{
+    // Start to concatenate redirect URL
+    std::string redirect;
+    redirect = "/settings/";
+
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char * name = p->name().c_str();
+            const char * value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            int tapNum = name[strcspn(name, "1234567890")]; // Check for digit in string
+            std::string _temp = name;
+            std::string tapEffect = _temp.substr(4, _temp.length()); // Get text after digit
+            std::string tap = _temp.substr(0, 3); // Get prefix ("tap")
+
+            if (tapNum && (tap.find("tap") != std::string::npos)) // Begins with tap and has a number
+            {
+                tapNum = tapNum - 48; // Convert ASCII to integer
+                Log.verbose(F("Processing %s for tap number: %l." CR), tapEffect.c_str(), tapNum);
+
+                // Taps Settings
+                if ((tapNum >= 0) && (tapNum <= (NUMTAPS - 1))) // Valid tap number
+                {
+                    if (tapEffect == "hashloc") // Get hashloc
+                    {
+                        if ((strlen(value) < 1) || (strlen(value) > 32))
+                        {
+                            Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                        }
+                        else
+                        {
+                            redirect = redirect + value; // Concat hashloc to URI
+                            Log.verbose(F("Redirect is now: %s" CR), redirect.c_str());
+                            Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        }
+                    }
+                    if ((tapEffect == "ppu") && (atol(value) > 0 && atol(value) < 99999)) // Set ppu
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        flow.taps[tapNum].ppu = atol(value);
+                    }
+                    else if ((tapEffect == "beername") && ((strlen(value) > 0) || (strlen(value) < 65))) // Set beername
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        strlcpy(flow.taps[tapNum].name, value, sizeof(flow.taps[tapNum].name));
+                    }
+                    else if ((tapEffect == "cap") && ((atof(value) > 0) && (atof(value) < 99999))) // Set capacity
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        flow.taps[tapNum].capacity = atof(value);
+                    }
+                    else if ((tapEffect == "remain") && ((atof(value) > 0) && (atof(value) < 99999))) // Set remaining
+                    {
+                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                        flow.taps[tapNum].remaining = atof(value);
+                    }
+                    else if (tapEffect == "active") // Set active/inactive
+                    {
+                        char option[8];
+                        strcpy(option, value);
+                        if (strcmp(value, "option0") == 0)
+                        {
+                            Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                            flow.taps[tapNum].active = true;
+                        }
+                        else if (strcmp(value, "option1") == 0)
+                        {
+                            Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                            flow.taps[tapNum].active = false;
+                        }
+                        else
+                        {
+                            Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                        }
+                        Log.notice(F("POSTed tap%dactive, redirecting to %s." CR), tapNum, redirect.c_str());
+                    }
+                }
+                else // Invalid tap number
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+        }
+    }
+    saveConfig();
+    return redirect;
 }
 
 std::string handleControllerPost(AsyncWebServerRequest *request) // Handle Controller settings

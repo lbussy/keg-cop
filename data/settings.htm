@@ -128,117 +128,101 @@
                         </div>
                     </div> <!-- Initial Page Tab -->
                 
-                    <div class="tab-pane fade" id="tap0"> <!-- Tap 0 Tab -->
+                    <!-- Tap 0 Tab -->
+                    <div class="tab-pane fade" id="tap0">
 
                         <div class="card-header">
                             <h4 class="card-title">Tap 1 Configuration</h4>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <form id="tap0ppu" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap0ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                                Pulses per Unit
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap0ppu" id="tap0ppu"
-                                                    min="10" max="99999" step="1" placeholder="21120">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
+
+                            <form id="tap0" action="/settings/tapcontrol/" method="POST">
+                                <input type="hidden" id="tap0hashloc" name="tap0hashloc" value="#tap0">
+                            
+                                <div class="form-group row">
+                                    <label for="tap0ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
+                                        Pulses per Unit
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap0ppu" id="tap0ppu"
+                                            min="10" max="99999" step="1" placeholder="21120">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap0beername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="tap0beername"
+                                            id="tap0beername" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap0cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        Capacity
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap0cap" id="tap0cap"
+                                            min=".0001" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap0remain" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        Remaining
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap0remain"
+                                            id="tap0remain" min=".000" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap0active" id="active" value="option0">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap0active" id="inactive" value="option1"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
-                                    <form id="tap0beername" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap0beername" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Name of the beverage to display on this tap">
-                                                Beverage Name
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="tap0beername"
-                                                    id="tap0beername" minlength="1" maxlength="64"
-                                                    placeholder="Pudswiller Doors">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap0cap" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap0cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Capacity of this tap in gallons or liters depending on system configuration">
-                                                Capacity
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap0cap" id="tap0cap"
-                                                    min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap0remain" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap0remain" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                                Remaining
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap0remain"
-                                                    id="tap0remain" min=".000" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap0active" action="/settings/update/" method="POST">
-                                        <fieldset class="form-group">
-                                            <div class="row justify-content-center">
-                                                <div class="col">
-                                                    <p data-toggle="tooltip" title="Turn tap display on or off">Active</p>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="col">
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                                <input type="radio" class="form-check-input" name="tap0active" id="active" value="option0">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                                <input type="radio" class="form-check-input" name="tap0active" id="inactive" value="option1"
-                                                                    checked="">
-                                                                Inactive
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </li>
-                            </ul>
+                                    </div>
+                                </fieldset>
+                            
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
+                                </div>
+                            
+                            </form>                            
+
                         </div>
 
-                    </div> <!-- Tap 0 Tab -->
+                    </div>
+                    <!-- Tap 0 Tab -->
 
                     <div class="tab-pane fade" id="tap1"> <!-- Tap 1 Tab -->
 
@@ -246,108 +230,90 @@
                             <h4 class="card-title">Tap 2 Configuration</h4>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <form id="tap1ppu" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap1ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                                Pulses per Unit
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap1ppu" id="tap1ppu"
-                                                    min="10" max="99999" step="1" placeholder="21120">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
+
+                            <form id="tap1" action="/settings/tapcontrol/" method="POST">
+                                <input type="hidden" id="tap1hashloc" name="tap1hashloc" value="#tap1">
+                            
+                                <div class="form-group row">
+                                    <label for="tap1ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
+                                        Pulses per Unit
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap1ppu" id="tap1ppu"
+                                            min="10" max="99999" step="1" placeholder="21120">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap1beername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="tap1beername"
+                                            id="tap1beername" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap1cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        Capacity
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap1cap" id="tap1cap"
+                                            min=".0001" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap1remain" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        Remaining
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap1remain"
+                                            id="tap1remain" min=".000" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap1active" id="active" value="option0">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap1active" id="inactive" value="option1"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
-                                    <form id="tap1beername" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap1beername" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Name of the beverage to display on this tap">
-                                                Beverage Name
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="tap1beername"
-                                                    id="tap1beername" minlength="1" maxlength="64"
-                                                    placeholder="Pudswiller Doors">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap1cap" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap1cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Capacity of this tap in gallons or liters depending on system configuration">
-                                                Capacity
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap1cap" id="tap1cap"
-                                                    min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap1remain" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap1remain" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                                Remaining
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap1remain"
-                                                    id="tap1remain" min=".000" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap1active" action="/settings/update/" method="POST">
-                                        <fieldset class="form-group">
-                                            <div class="row justify-content-center">
-                                                <div class="col">
-                                                    <p>Active</p>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="col">
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                                <input type="radio" class="form-check-input" name="tap1active" id="active" value="option0">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                                <input type="radio" class="form-check-input" name="tap1active" id="inactive" value="option1"
-                                                                    checked="">
-                                                                Inactive
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </li>
-                            </ul>
+                                    </div>
+                                </fieldset>
+                            
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
+                                </div>
+                            
+                            </form>                            
+
                         </div>
 
                     </div> <!-- Tap 1 Tab -->
@@ -358,108 +324,90 @@
                             <h4 class="card-title">Tap 3 Configuration</h4>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <form id="tap2ppu" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap2ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                                Pulses per Unit
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap2ppu" id="tap2ppu"
-                                                    min="10" max="99999" step="1" placeholder="21120">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
+
+                            <form id="tap2" action="/settings/tapcontrol/" method="POST">
+                                <input type="hidden" id="tap2hashloc" name="tap2hashloc" value="#tap2">
+                            
+                                <div class="form-group row">
+                                    <label for="tap2ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
+                                        Pulses per Unit
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap2ppu" id="tap2ppu"
+                                            min="10" max="99999" step="1" placeholder="21120">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap2beername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="tap2beername"
+                                            id="tap2beername" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap2cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        Capacity
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap2cap" id="tap2cap"
+                                            min=".0001" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap2remain" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        Remaining
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap2remain"
+                                            id="tap2remain" min=".000" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap2active" id="active" value="option0">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap2active" id="inactive" value="option1"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
-                                    <form id="tap2beername" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap2beername" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Name of the beverage to display on this tap">
-                                                Beverage Name
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="tap2beername"
-                                                    id="tap2beername" minlength="1" maxlength="64"
-                                                    placeholder="Pudswiller Doors">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap2cap" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap2cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Capacity of this tap in gallons or liters depending on system configuration">
-                                                Capacity
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap2cap" id="tap2cap"
-                                                    min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap2remain" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap2remain" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                                Remaining
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap2remain"
-                                                    id="tap2remain" min=".000" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap2active" action="/settings/update/" method="POST">
-                                        <fieldset class="form-group">
-                                            <div class="row justify-content-center">
-                                                <div class="col">
-                                                    <p>Active</p>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="col">
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                                <input type="radio" class="form-check-input" name="tap2active" id="active" value="option0">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                                <input type="radio" class="form-check-input" name="tap2active" id="inactive" value="option1"
-                                                                    checked="">
-                                                                Inactive
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </li>
-                            </ul>
+                                    </div>
+                                </fieldset>
+                            
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
+                                </div>
+                            
+                            </form>
+
                         </div>
 
                     </div> <!-- Tap 2 Tab -->
@@ -470,108 +418,90 @@
                             <h4 class="card-title">Tap 4 Configuration</h4>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <form id="tap3ppu" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap3ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                                Pulses per Unit
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap3ppu" id="tap3ppu"
-                                                    min="10" max="99999" step="1" placeholder="21120">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
+
+                            <form id="tap3" action="/settings/tapcontrol/" method="POST">
+                                <input type="hidden" id="tap3hashloc" name="tap3hashloc" value="#tap3">
+                            
+                                <div class="form-group row">
+                                    <label for="tap3ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
+                                        Pulses per Unit
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap3ppu" id="tap3ppu"
+                                            min="10" max="99999" step="1" placeholder="21120">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap3beername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="tap3beername"
+                                            id="tap3beername" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap3cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        Capacity
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap3cap" id="tap3cap"
+                                            min=".0001" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap3remain" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        Remaining
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap3remain"
+                                            id="tap3remain" min=".000" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap3active" id="active" value="option0">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap3active" id="inactive" value="option1"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
-                                    <form id="tap3beername" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap3beername" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Name of the beverage to display on this tap">
-                                                Beverage Name
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="tap3beername"
-                                                    id="tap3beername" minlength="1" maxlength="64"
-                                                    placeholder="Pudswiller Doors">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap3cap" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap3cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Capacity of this tap in gallons or liters depending on system configuration">
-                                                Capacity
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap3cap" id="tap3cap"
-                                                    min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap3remain" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap3remain" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                                Remaining
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap3remain"
-                                                    id="tap3remain" min=".000" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap3active" action="/settings/update/" method="POST">
-                                        <fieldset class="form-group">
-                                            <div class="row justify-content-center">
-                                                <div class="col">
-                                                    <p>Active</p>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="col">
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                                <input type="radio" class="form-check-input" name="tap3active" id="active" value="option0">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                                <input type="radio" class="form-check-input" name="tap3active" id="inactive" value="option1"
-                                                                    checked="">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </li>
-                            </ul>
+                                    </div>
+                                </fieldset>
+                            
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
+                                </div>
+                            
+                            </form>
+                            
                         </div>
 
                     </div> <!-- Tap 3 Tab -->
@@ -582,108 +512,90 @@
                             <h4 class="card-title">Tap 5 Configuration</h4>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <form id="tap4ppu" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap4ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                                Pulses per Unit
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap4ppu" id="tap4ppu"
-                                                    min="10" max="99999" step="1" placeholder="21120">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
+
+                            <form id="tap4" action="/settings/tapcontrol/" method="POST">
+                                <input type="hidden" id="tap4hashloc" name="tap4hashloc" value="#tap4">
+                            
+                                <div class="form-group row">
+                                    <label for="tap4ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
+                                        Pulses per Unit
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap4ppu" id="tap4ppu"
+                                            min="10" max="99999" step="1" placeholder="21120">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap4beername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="tap4beername"
+                                            id="tap4beername" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap4cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        Capacity
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap4cap" id="tap4cap"
+                                            min=".0001" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap4remain" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        Remaining
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap4remain"
+                                            id="tap4remain" min=".000" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap4active" id="active" value="option0">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap4active" id="inactive" value="option1"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
-                                    <form id="tap4beername" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap4beername" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Name of the beverage to display on this tap">
-                                                Beverage Name
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="tap4beername"
-                                                    id="tap4beername" minlength="1" maxlength="64"
-                                                    placeholder="Pudswiller Doors">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap4cap" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap4cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Capacity of this tap in gallons or liters depending on system configuration">
-                                                Capacity
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap4cap" id="tap4cap"
-                                                    min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap4remain" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap4remain" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                                Remaining
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap4remain"
-                                                    id="tap4remain" min=".000" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap4active" action="/settings/update/" method="POST">
-                                        <fieldset class="form-group">
-                                            <div class="row justify-content-center">
-                                                <div class="col">
-                                                    <p>Active</p>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="col">
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                                <input type="radio" class="form-check-input" name="tap4active" id="active" value="option0">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                                <input type="radio" class="form-check-input" name="tap4active" id="inactive" value="option1"
-                                                                    checked="">
-                                                                Inactive
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </li>
-                            </ul>
+                                    </div>
+                                </fieldset>
+                            
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
+                                </div>
+                            
+                            </form>
+                            
                         </div>
 
                     </div> <!-- Tap 4 Tab -->
@@ -694,108 +606,90 @@
                             <h4 class="card-title">Tap 6 Configuration</h4>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <form id="tap5ppu" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap5ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                                Pulses per Unit
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap5ppu" id="tap5ppu"
-                                                    min="10" max="99999" step="1" placeholder="21120">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
+
+                            <form id="tap5" action="/settings/tapcontrol/" method="POST">
+                                <input type="hidden" id="tap5hashloc" name="tap5hashloc" value="#tap5">
+                            
+                                <div class="form-group row">
+                                    <label for="tap5ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
+                                        Pulses per Unit
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap5ppu" id="tap5ppu"
+                                            min="10" max="99999" step="1" placeholder="21120">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap5beername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="tap5beername"
+                                            id="tap5beername" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap5cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        Capacity
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap5cap" id="tap5cap"
+                                            min=".0001" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap5remain" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        Remaining
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap5remain"
+                                            id="tap5remain" min=".000" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap5active" id="active" value="option0">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap5active" id="inactive" value="option1"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
-                                    <form id="tap5beername" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap5beername" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Name of the beverage to display on this tap">
-                                                Beverage Name
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="tap5beername"
-                                                    id="tap5beername" minlength="1" maxlength="64"
-                                                    placeholder="Pudswiller Doors">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap5cap" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap5cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Capacity of this tap in gallons or liters depending on system configuration">
-                                                Capacity
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap5cap" id="tap5cap"
-                                                    min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap5remain" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap5remain" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                                Remaining
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap5remain"
-                                                    id="tap5remain" min=".000" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap5active" action="/settings/update/" method="POST">
-                                        <fieldset class="form-group">
-                                            <div class="row justify-content-center">
-                                                <div class="col">
-                                                    <p>Active</p>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="col">
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                                <input type="radio" class="form-check-input" name="tap5active" id="active" value="option0">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                                <input type="radio" class="form-check-input" name="tap5active" id="inactive" value="option1"
-                                                                    checked="">
-                                                                Inactive
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </li>
-                            </ul>
+                                    </div>
+                                </fieldset>
+                            
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
+                                </div>
+                            
+                            </form>
+                            
                         </div>
 
                     </div> <!-- Tap 5 Tab -->
@@ -806,108 +700,90 @@
                             <h4 class="card-title">Tap 7 Configuration</h4>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <form id="tap6ppu" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap6ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                                Pulses per Unit
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap6ppu" id="tap6ppu"
-                                                    min="10" max="99999" step="1" placeholder="21120">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
+
+                            <form id="tap6" action="/settings/tapcontrol/" method="POST">
+                                <input type="hidden" id="tap6hashloc" name="tap6hashloc" value="#tap6">
+                            
+                                <div class="form-group row">
+                                    <label for="tap6ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
+                                        Pulses per Unit
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap6ppu" id="tap6ppu"
+                                            min="10" max="99999" step="1" placeholder="21120">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap6beername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="tap6beername"
+                                            id="tap6beername" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap6cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        Capacity
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap6cap" id="tap6cap"
+                                            min=".0001" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap6remain" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        Remaining
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap6remain"
+                                            id="tap6remain" min=".000" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap6active" id="active" value="option0">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap6active" id="inactive" value="option1"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
-                                    <form id="tap6beername" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap6beername" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Name of the beverage to display on this tap">
-                                                Beverage Name
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="tap6beername"
-                                                    id="tap6beername" minlength="1" maxlength="64"
-                                                    placeholder="Pudswiller Doors">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap6cap" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap6cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Capacity of this tap in gallons or liters depending on system configuration">
-                                                Capacity
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap6cap" id="tap6cap"
-                                                    min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap6remain" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap6remain" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                                Remaining
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap6remain"
-                                                    id="tap6remain" min=".000" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap6active" action="/settings/update/" method="POST">
-                                        <fieldset class="form-group">
-                                            <div class="row justify-content-center">
-                                                <div class="col">
-                                                    <p>Active</p>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="col">
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                                <input type="radio" class="form-check-input" name="tap6active" id="active" value="option0">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                                <input type="radio" class="form-check-input" name="tap6active" id="inactive" value="option1"
-                                                                    checked="">
-                                                                Inactive
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </li>
-                            </ul>
+                                    </div>
+                                </fieldset>
+                            
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
+                                </div>
+                            
+                            </form>
+                            
                         </div>
 
                     </div> <!-- Tap 7 Tab -->
@@ -918,108 +794,90 @@
                             <h4 class="card-title">Tap 8 Configuration</h4>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <form id="tap7ppu" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap7ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                                Pulses per Unit
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap7ppu" id="tap7ppu"
-                                                    min="10" max="99999" step="1" placeholder="21120">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
+
+                            <form id="tap7" action="/settings/tapcontrol/" method="POST">
+                                <input type="hidden" id="tap7hashloc" name="tap7hashloc" value="#tap7">
+                            
+                                <div class="form-group row">
+                                    <label for="tap7ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
+                                        Pulses per Unit
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap7ppu" id="tap7ppu"
+                                            min="10" max="99999" step="1" placeholder="21120">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap7beername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="tap7beername"
+                                            id="tap7beername" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap7cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        Capacity
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap7cap" id="tap7cap"
+                                            min=".0001" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap7remain" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        Remaining
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="tap7remain"
+                                            id="tap7remain" min=".000" max="999" step=".0001" placeholder="5">
+                                    </div>
+                                </div>
+                            
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap7active" id="active" value="option0">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap7active" id="inactive" value="option1"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
-                                    <form id="tap7beername" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap7beername" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Name of the beverage to display on this tap">
-                                                Beverage Name
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="tap7beername"
-                                                    id="tap7beername" minlength="1" maxlength="64"
-                                                    placeholder="Pudswiller Doors">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap7cap" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap7cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                                title="Capacity of this tap in gallons or liters depending on system configuration">
-                                                Capacity
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap7cap" id="tap7cap"
-                                                    min=".0001" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap7remain" action="/settings/update/" method="POST">
-                                        <div class="form-group row">
-                                            <label for="tap7remain" class="col-sm-2 col-form-label"
-                                                data-toggle="tooltip"
-                                                title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                                Remaining
-                                            </label>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="form-control" name="tap7remain"
-                                                    id="tap7remain" min=".000" max="999" step=".0001" placeholder="5">
-                                            </div>
-                                            <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                                    id="submitSettings">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form id="tap7active" action="/settings/update/" method="POST">
-                                        <fieldset class="form-group">
-                                            <div class="row justify-content-center">
-                                                <div class="col">
-                                                    <p>Active</p>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="col">
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                                <input type="radio" class="form-check-input" name="tap7active" id="active" value="option0">
-                                                                Active
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                                <input type="radio" class="form-check-input" name="tap7active" id="inactive" value="option1"
-                                                                    checked="">
-                                                                Inactive
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <div class="col">
-                                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </li>
-                            </ul>
+                                    </div>
+                                </fieldset>
+                            
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
+                                </div>
+                            
+                            </form>
+                            
                         </div>
 
                     </div> <!-- Tap 7 Tab -->
@@ -1035,12 +893,12 @@
                                 <input type="hidden" id="controller" name="controller" value="#controller">
 
                                 <div class="form-group row">
-                                    <label for="hostname" class="col-sm-3 col-form-label"
+                                    <label for="hostname" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
                                         title="Host name for the controller to access during use (do not include the '.local' portion)">
                                         Host Name
                                     </label>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" name="hostname"
                                             id="hostname" minlength="3" maxlength="32"
                                             placeholder="kegcop">
@@ -1048,12 +906,12 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="breweryname" class="col-sm-3 col-form-label"
+                                    <label for="breweryname" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the brewery or brewer to be displayed">
                                         Brewery Name
                                     </label>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" name="breweryname"
                                             id="breweryname" minlength="3" maxlength="32"
                                             placeholder="My Homebrew">
@@ -1061,12 +919,12 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="kegeratorname" class="col-sm-3 col-form-label"
+                                    <label for="kegeratorname" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the kegerator or controller">
                                         Kegerator Name
                                     </label>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" name="kegeratorname"
                                             id="kegeratorname" minlength="3" maxlength="32"
                                             placeholder="My Kegerator">
@@ -1076,10 +934,10 @@
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
 										<div class="col-sm-2">&nbsp;</div>
-                                        <div class="col">
+                                        <div class="col-sm-2">
                                             <p data-toggle="tooltip" title="Toggle between metric or imperial units">Units</p>
                                         </div>
-                                        <div class="col">
+                                        <div class="col-sm-8">
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="Change the application to use metric units (℃ or Liters)">
                                                     <input type="radio" class="form-check-input" name="units" id="metric" value="option0">
@@ -1100,10 +958,10 @@
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
 										<div class="col-sm-2">&nbsp;</div>
-                                        <div class="col">
+                                        <div class="col-sm-2">
                                             <p data-toggle="tooltip" title="Turn solenoid on or off">Solenoid Relay</p>
                                         </div>
-                                        <div class="col">
+                                        <div class="col-sm-8">
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="Energize the solenoid relay">
                                                     <input type="radio" class="form-check-input" name="tapsolenoid" id="energized" value="option0">
@@ -1124,10 +982,10 @@
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
 										<div class="col-sm-2">&nbsp;</div>
-                                        <div class="col">
+                                        <div class="col-sm-2">
                                             <p data-toggle="tooltip" title="Turn on legacy functionality">Functionality</p>
                                         </div>
-                                        <div class="col">
+                                        <div class="col-sm-8">
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="Standard Keg Cop functionality">
                                                     <input type="radio" class="form-check-input" name="rpintscompat" id="kegcop" value="option0" checked="">
@@ -1149,11 +1007,11 @@
                                         </div>
                                     </div>
 
-									<div class="row justify-content-center col-sm-12 form-group"><button class="btn btn-primary" onclick="return killButtons(this);"
-										id="submitSettings" value="hostname">Update</button>
-									</div>
                                 </fieldset>
 
+                                <div class="row justify-content-center col-sm-12 form-group"><button class="btn btn-primary" onclick="return killButtons(this);"
+                                    id="submitSettings" value="hostname">Update</button>
+                                </div>
                             </form>
 
                         </div>
@@ -1222,9 +1080,9 @@
                                         </fieldset>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row col-12">
-                                    <div class="row col-12 justify-content-center">
+                                    <div class="row col-12 justify-content-center form-group">
                                         <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
                                     </div>
                                 </div>

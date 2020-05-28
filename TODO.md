@@ -7,31 +7,17 @@
 ## Features
 
 - Add target pushes
+- Create single-form submits for Targets
+  - URL
+  - Cloud
 - Filter small pours
 - Move JS to separate files
-- Look into why solenoid chatters on flash (On, Off, On)
+- ~~Look into why solenoid chatters on flash (On, Off, On) (from controller resetting due to PIO terminal)~~
 - Calculate center for spinner
 - Deal with disconnected sensors
   - ~~Allow enable/disable sensors~~
   - Web display
   - Control point
-- See if new POST processor can handle larger form submits (less buttons)
-  - Taps
-    - Tap 1
-    - Tap 2
-    - Tap 3
-    - Tap 4
-    - Tap 5
-    - Tap 6
-    - Tap 7
-    - Tap 8
-  - ~~Controller~~
-  - ~~Temperature~~
-    - ~~Control~~
-    - ~~Sensors~~
-  - Targets
-    - URL
-    - Cloud
 - Allow accepting IP or not local in settings
 
 ## Bugs
@@ -105,3 +91,17 @@
 - ~~Figure out Tstat logic~~
 - ~~Figure out what to do with tstat.control (if anything)~~
 - ~~Add units display to PPU (and maybe others)~~
+- ~~See if new POST processor can handle larger form submits (less buttons)~~
+  - ~~Taps~~
+    - ~~Tap 1~~
+    - ~~Tap 2~~
+    - ~~Tap 3~~
+    - ~~Tap 4~~
+    - ~~Tap 5~~
+    - ~~Tap 6~~
+    - ~~Tap 7~~
+    - ~~Tap 8~~
+  - ~~Controller~~
+  - ~~Temperature~~
+    - ~~Control~~
+    - ~~Sensors~~

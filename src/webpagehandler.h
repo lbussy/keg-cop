@@ -57,6 +57,7 @@ void setSettingsAliases();
 void setEditor();
 void stopWebServer();
 
+std::string handleTapPost(AsyncWebServerRequest *);
 std::string handleControllerPost(AsyncWebServerRequest *);
 std::string handleControlPost(AsyncWebServerRequest *);
 std::string handleSensorPost(AsyncWebServerRequest *);
