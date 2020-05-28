@@ -22,6 +22,7 @@ JSON Definition:
 	"temps": {
 		"setpoint": 100,
 		"controlpoint": 99,
+		"controlenabled": false,
 		"roomenable": false,
 		"roomcal": 99.99,
 		"towerenable": false,
@@ -55,18 +56,18 @@ Size:
 -----
 
 ```
-JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(12) + 1050;
-592+941 = 1533
+JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13) + 1070;
+608+956 = 1564
 ```
 
 Parsing:
 --------
 
 ```
-const size_t capacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(12) + 1050;
+const size_t capacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13) + 1070;
 DynamicJsonDocument doc(capacity);
 
-const char* json = "{\"apconfig\":{\"ssid\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"passphrase\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"},\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"copconfig\":{\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"imperial\":false,\"rpintscompat\":false,\"randr\":false,\"tapsolenoid\":false},\"temps\":{\"setpoint\":100,\"controlpoint\":99,\"roomenable\":false,\"roomcal\":99.99,\"towerenable\":false,\"towercal\":-99.99,\"upperenable\":false,\"uppercal\":99.99,\"lowerenable\":false,\"lowercal\":-99.99,\"kegenable\":false,\"kegcal\":99.99},\"urltarget\":{\"url\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"freq\":999,\"update\":false},\"cloud\":{\"type\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"url\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"key\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"freq\":999,\"update\":false},\"dospiffs1\":false,\"dospiffs2\":false,\"didupdate\":false}";
+const char* json = "{\"apconfig\":{\"ssid\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"passphrase\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"},\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"copconfig\":{\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"imperial\":false,\"rpintscompat\":false,\"randr\":false,\"tapsolenoid\":false},\"temps\":{\"setpoint\":100,\"controlpoint\":99,\"controlenabled\":false,\"roomenable\":false,\"roomcal\":99.99,\"towerenable\":false,\"towercal\":-99.99,\"upperenable\":false,\"uppercal\":99.99,\"lowerenable\":false,\"lowercal\":-99.99,\"kegenable\":false,\"kegcal\":99.99},\"urltarget\":{\"url\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"freq\":999,\"update\":false},\"cloud\":{\"type\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"url\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"key\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"freq\":999,\"update\":false},\"dospiffs1\":false,\"dospiffs2\":false,\"didupdate\":false}";
 
 deserializeJson(doc, json);
 
@@ -86,6 +87,7 @@ bool copconfig_tapsolenoid = copconfig["tapsolenoid"]; // false
 JsonObject temps = doc["temps"];
 int temps_setpoint = temps["setpoint"]; // 100
 int temps_controlpoint = temps["controlpoint"]; // 99
+bool temps_controlenabled = temps["controlenabled"]; // false
 bool temps_roomenable = temps["roomenable"]; // false
 float temps_roomcal = temps["roomcal"]; // 99.99
 bool temps_towerenable = temps["towerenable"]; // false
@@ -118,7 +120,7 @@ Serializing:
 ------------
 
 ```
-const size_t capacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(12);
+const size_t capacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13);
 DynamicJsonDocument doc(capacity);
 
 JsonObject apconfig = doc.createNestedObject("apconfig");
@@ -137,6 +139,7 @@ copconfig["tapsolenoid"] = false;
 JsonObject temps = doc.createNestedObject("temps");
 temps["setpoint"] = 100;
 temps["controlpoint"] = 99;
+temps["controlenabled"] = false;
 temps["roomenable"] = false;
 temps["roomcal"] = 99.99;
 temps["towerenable"] = false;

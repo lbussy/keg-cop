@@ -58,6 +58,7 @@ struct Temperatures
     // Stores Temp Probe configuration
     float setpoint;
     int controlpoint;
+    bool controlenabled;
     bool enabled[5];
     float calibration[5];
 

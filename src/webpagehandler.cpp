@@ -211,6 +211,14 @@ void setSettingsAliases()
         request->redirect(redirect.c_str());
     });
 
+    server.on("/settings/tempcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /settings/tempcontrol/." CR));
+        std::string redirect;
+        redirect = handleControlPost(request);
+        Log.verbose(F("Redirecting to %s." CR), redirect.c_str());
+        request->redirect(redirect.c_str());
+    });
+
     server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) { // Settings Update Handler
         // Process POST configuration changes
         Log.verbose(F("Processing post to /settings/update/." CR));
@@ -229,6 +237,7 @@ void setSettingsAliases()
             if (p->isPost())
             {
                 handleSensorPost(request); // Sensor calibration and activation
+                handleControlPost(request); // Temperature control and activation
 
                 // Process any p->name().c_str() / p->value().c_str() pairs
                 const char * name = p->name().c_str();
@@ -353,55 +362,6 @@ void setSettingsAliases()
                     strcat(redirect, hashloc); // Redirect to Temp Control
                     Log.notice(F("POSTed rpintscompat, redirecting to %s." CR), redirect);
                 }
-                //
-                // Temperature Settings
-                if (strcmp(name, "setpoint") == 0) // Change Kegerator setpoint
-                {
-                    const char * hashloc = "#tempcontrol";
-                    double min, max;
-                    if (config.copconfig.imperial)
-                    {
-                        min = FMIN;
-                        max = FMAX;
-                    }
-                    else
-                    {
-                        min = CMIN;
-                        max = CMAX;
-                    }
-                    if ((atof(value) < min) || (atof(value) > max))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        config.temps.setpoint = atof(value);
-                        saveConfig();
-                        madeChange++;
-                    }
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed setpoint, redirecting to %s." CR), hashloc, redirect);
-                }
-                if (strcmp(name, "controlpoint") == 0) // Change the controlling sensor
-                {
-                    const char * hashloc = "#tempcontrol";
-                    const double val = atof(value);
-                    if ((val < 0) || (val > 4))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        config.temps.controlpoint = val;
-                        saveConfig();
-                        madeChange++;
-                    }
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed setpoint, redirecting to %s." CR), hashloc, redirect);
-                }
-
                 //
                 // Taps Settings
                 if ((String(name).startsWith("tap")) && (strlen(name) > 3) && (!strcmp(name, "tapsolenoid") == 0)) // Change tap settings
@@ -711,6 +671,114 @@ std::string handleSensorPost(AsyncWebServerRequest *request) // Handle Sensor Co
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     config.temps.calibration[4] = atof(value);
+                }
+            }
+        }
+    }
+    saveConfig();
+    return redirect;
+}
+
+std::string handleControlPost(AsyncWebServerRequest *request) // Handle Temperature Control settings
+{
+    // Start to concatenate redirect URL
+    std::string redirect;
+    redirect = "/settings/";
+
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char * name = p->name().c_str();
+            const char * value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Temperature control
+            //
+            if (strcmp(name, "tempcontrol") == 0) // Get hashloc
+            {
+                if ((strlen(value) < 1) || (strlen(value) > 32))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    redirect = redirect + value; // Concat hashloc to URI
+                    Log.verbose(F("Redirect is now: %s" CR), redirect.c_str());
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+            }
+            // Temperature Settings
+            if (strcmp(name, "setpoint") == 0) // Change Kegerator setpoint
+            {
+                double min, max;
+                if (config.copconfig.imperial)
+                {
+                    min = FMIN;
+                    max = FMAX;
+                }
+                else
+                {
+                    min = CMIN;
+                    max = CMAX;
+                }
+                if ((atof(value) < min) || (atof(value) > max))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.setpoint = atof(value);
+                }
+            }
+            if (strcmp(name, "controlpoint") == 0) // Change the controlling sensor
+            {
+                const double val = atof(value);
+                if ((val < 0) || (val > 4))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.controlpoint = val;
+                }
+            }
+            if (strcmp(name, "controlpoint") == 0) // Change the controlling sensor
+            {
+                const double val = atof(value);
+                if ((val < 0) || (val > 4))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.controlpoint = val;
+                }
+            }
+            if (strcmp(name, "enablecontrol") == 0) // Get hashloc
+            {
+                if (strcmp(value, "option0") == 0)
+                {
+                    // Enabled
+                    config.temps.controlenabled = true;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else if (strcmp(value, "option0") == 1)
+                {
+                    // Disabled
+                    config.temps.controlenabled = false;
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }

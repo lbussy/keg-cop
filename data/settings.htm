@@ -1196,50 +1196,79 @@
 
                     </div> <!-- Controller Tab -->
 
-                    <div class="tab-pane fade" id="tempcontrol"> <!-- Temp Control Tab -->
-                        
+                    <!-- Temp Control Tab -->
+					<div class="tab-pane fade" id="tempcontrol">
                         <div class="card-header">
                             <h4 class="card-title">Temperature Control</h4>
                         </div>
                         <div class="card-body">
-                            <form id="setpoint" action="/settings/update/" method="POST">
-                                <div class="form-group row">
-                                    <label for="setpoint" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the temperature setpoint in your selected units (℃ or ℉)">
-                                        Set Point
-                                    </label>
-                                    <div class="col-sm-8">
-                                        <input type="number" class="form-control" name="setpoint" id="setpoint" min="0"
-                                            max="80" step=".1" placeholder="40">
-                                    </div>
-                                    <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                            id="submitSettings">Update</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <form id="controlpoint" action="/settings/update/" method="POST">
-                                <div class="form-group row">
-                                    <label for="controlpoint" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the control point to use for temp control">
-                                        Control Point
-                                    </label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" name="controlpoint" id="controlpoint">
-                                            <option value = "0">Room Temp Sensor</option>
-                                            <option value = "1">Tower Temp Sensor</option>
-                                            <option value = "2">Upper Chamber Temp Sensor</option>
-                                            <option value = "3">Lower Chamber Temp Sensor</option>
-                                            <option value = "4">Keg Temp Sensor</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                            id="submitSettings">Update</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
 
-                    </div> <!-- Temp Control Tab -->
+                            <form class="form-group" id="tempcontrol" action="/settings/tempcontrol/" method="POST">
+                                <input type="hidden" id="tempcontrol" name="tempcontrol" value="#tempcontrol">
+
+                                <div class="row col-12">
+                                    <div class="col-2">
+                                        <div class="row form-group">
+                                            <label for="setpoint" class="col-form-label" data-toggle="tooltip"
+                                                title="Enter the temperature setpoint in your selected units &#x2109; or &#x2103;)"> Set Point
+                                            </label>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label for="controlpoint" class="col-form-label" data-toggle="tooltip"
+                                                title="Enter the control point to use for temp control">Control Point
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="row form-group">
+                                            <input type="number" class="form-control" name="setpoint" id="setpoint" min="0" max="80"
+                                                step=".1" placeholder="40">
+                                        </div>
+                                        <div class="row form-group">
+                                            <select class="form-control" name="controlpoint" id="controlpoint">
+                                                <option value="0">Room Temp Sensor</option>
+                                                <option value="1">Tower Temp Sensor</option>
+                                                <option value="2">Upper Chamber Temp Sensor</option>
+                                                <option value="3">Lower Chamber Temp Sensor</option>
+                                                <option value="4">Keg Temp Sensor</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                    </div>
+                                    <div class="col-2">
+                                        <label for="setpoint" class="col-form-label" data-toggle="tooltip"
+                                            title="Enable or disable temperature control">Temperature Control
+                                        </label>
+                                    </div>
+                                    <div class="col-2 form-group">
+                                        <fieldset>
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Control enabled">
+                                                    <input type="radio" class="form-check-input" name="enablecontrol" id="enabled"
+                                                        value="option0" checked="">Enabled
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Control disabled">
+                                                    <input type="radio" class="form-check-input" name="enablecontrol" id="disabled"
+                                                        value="option1">Disabled
+                                                </label>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                
+                                <div class="row col-12">
+                                    <div class="row col-12 justify-content-center">
+                                        <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+					<!-- Temp Control Tab -->
 
                     <!-- Sensor Control Tab -->
                     <div class="tab-pane fade" id="sensorcontrol">
@@ -1764,6 +1793,11 @@
                         }
                         $('input[name="setpoint"]').val(parseFloat(config.temps.setpoint).toFixed(1));
                         $('select[name="controlpoint"] option[value=' + parseInt(config.temps.controlpoint, 10) + ']').attr('selected', 'selected');
+                        if (config.temps.controlenabled) {
+                            $('input:radio[name="enablecontrol"]')[0].checked = true;
+                        } else {
+                            $('input:radio[name="enablecontrol"]')[1].checked = true;
+                        }
 
                         if (config.temps.roomenabled) {
                             $('input:radio[name="enableroom"]')[0].checked = true;
