@@ -25,14 +25,13 @@
     - Tap 6
     - Tap 7
     - Tap 8
-  - Controller
-  - Temperature
+  - ~~Controller~~
+  - ~~Temperature~~
     - ~~Control~~
     - ~~Sensors~~
   - Targets
     - URL
     - Cloud
-  - ~~Advanced~~
 - Allow accepting IP or not local in settings
 
 ## Bugs
