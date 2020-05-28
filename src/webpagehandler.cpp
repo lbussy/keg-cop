@@ -203,6 +203,14 @@ void setJsonHandlers()
 
 void setSettingsAliases()
 {
+    server.on("/settings/controller/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /settings/sensorcontrol/." CR));
+        std::string redirect;
+        redirect = handleControllerPost(request);
+        Log.verbose(F("Redirecting to %s." CR), redirect.c_str());
+        request->redirect(redirect.c_str());
+    });
+
     server.on("/settings/sensorcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/sensorcontrol/." CR));
         std::string redirect;
@@ -236,133 +244,15 @@ void setSettingsAliases()
             AsyncWebParameter *p = request->getParam(i);
             if (p->isPost())
             {
-                handleSensorPost(request); // Sensor calibration and activation
+                handleControllerPost(request); // Controller parameters
                 handleControlPost(request); // Temperature control and activation
+                handleSensorPost(request); // Sensor calibration and activation
 
                 // Process any p->name().c_str() / p->value().c_str() pairs
                 const char * name = p->name().c_str();
                 const char * value = p->value().c_str();
                 Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
-                // Controller Settings
-                if (strcmp(name, "hostname") == 0) // Change hostname
-                {
-                    // const char * hashloc = "#controller"; // Get this at end
-                    if ((strlen(value) < 3) || (strlen(value) > 32))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        strlcpy(config.hostname, value, sizeof(config.hostname));
-                        saveConfig();
-                        madeChange++;
-                        hostNameChange = true;
-                    }
-                }
-                if (strcmp(name, "breweryname") == 0) // Change brewery name
-                {
-                    const char * hashloc = "#controller";
-                    if ((strlen(value) < 1) || (strlen(value) > 64))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        strlcpy(config.copconfig.breweryname, value, sizeof(config.copconfig.breweryname));
-                        saveConfig();
-                        madeChange++;
-                    }
-                    strcat(redirect, hashloc); // Redirect to Controller box
-                    Log.notice(F("POSTed breweryname, redirecting to %s." CR), redirect);
-                }
-                if (strcmp(name, "kegeratorname") == 0) // Change kegerator name
-                {
-                    const char * hashloc = "#controller";
-                    if ((strlen(value) < 1) || (strlen(value) > 64))
-                    {
-                        Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                    }
-                    else
-                    {
-                        Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                        strlcpy(config.copconfig.kegeratorname, value, sizeof(config.copconfig.kegeratorname));
-                        saveConfig();
-                        madeChange++;
-                    }
-                    strcat(redirect, hashloc); // Redirect to Controller box
-                    Log.notice(F("POSTed kegeratorname, redirecting to %s." CR), redirect);
-                }
-                if (strcmp(name, "units") == 0) // Change units of measure
-                {
-                    const char * hashloc = "#controller";
-                    char option[8];
-                    strcpy(option, value);
-                    if (strcmp(value, "option0") == 0)
-                    {
-                        convertConfigtoMetric();
-                        convertFlowtoMetric();
-                    }
-                    else
-                    {
-                        convertConfigtoImperial();
-                        convertFlowtoImperial();
-                    }
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    madeChange++;
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed units, redirecting to %s." CR), redirect);
-                }
-                if (strcmp(name, "tapsolenoid") == 0) // Change tap solenoid state
-                {
-                    const char * hashloc = "#controller";
-                    char option[8];
-                    strcpy(option, value);
-                    if (strcmp(value, "option0") == 0)
-                    {
-                        config.copconfig.tapsolenoid = true;
-                        digitalWrite(SOLENOID, LOW);
-                    }
-                    else
-                    {
-                        config.copconfig.tapsolenoid = false;
-                        digitalWrite(SOLENOID, HIGH);
-                    }
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    saveConfig();
-                    madeChange++;
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed tapsolenoid, redirecting to %s." CR), redirect);
-                }
-                if (strcmp(name, "rpintscompat") == 0) // Change RPints compatibility
-                {
-                    const char * hashloc = "#controller";
-                    char option[8];
-                    strcpy(option, value);
-                    if (strcmp(value, "option0") == 0)
-                    {
-                        config.copconfig.rpintscompat = false;
-                        config.copconfig.randr = false;
-                    }
-                    else if (strcmp(value, "option2") == 0)
-                    {
-                        config.copconfig.rpintscompat = true;
-                        config.copconfig.randr = true;
-                    }
-                    else
-                    {
-                        config.copconfig.rpintscompat = true;
-                        config.copconfig.randr = false;
-                    }
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    saveConfig();
-                    madeChange++;
-                    strcat(redirect, hashloc); // Redirect to Temp Control
-                    Log.notice(F("POSTed rpintscompat, redirecting to %s." CR), redirect);
-                }
-                //
                 // Taps Settings
                 if ((String(name).startsWith("tap")) && (strlen(name) > 3) && (!strcmp(name, "tapsolenoid") == 0)) // Change tap settings
                 {
@@ -438,26 +328,6 @@ void setSettingsAliases()
         { // We made more than one change, assume automation
             request->send(200, F("text/html"), F("Ok."));
         }
-        else if (hostNameChange)
-        { // We reset hostname, process
-            #ifdef ESP8266
-            wifi_station_set_hostname(config.hostname);
-            MDNS.setHostname(config.hostname);
-            MDNS.notifyAPChange();
-            MDNS.announce();
-            #elif defined ESP32
-            tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA,config.hostname);
-            mdnsreset();
-            #endif
-            // Creeate a full URL for redirection to new hostname
-            strcpy(redirect, "http://");
-            strcat(redirect, config.hostname);
-            strcat(redirect, ".local");
-            strcat(redirect, "/settings/");
-            strcat(redirect, "#controller");
-            Log.verbose(F("POSTed mDNSid, redirecting to %s." CR), redirect);
-            request->redirect(redirect);
-        }
         else
         { // We made a single change, should be user-driven
             request->redirect(redirect);
@@ -483,6 +353,175 @@ void stopWebServer()
     server.reset();
     server.end();
     Log.notice(F("Web server stopped." CR));
+}
+
+std::string handleControllerPost(AsyncWebServerRequest *request) // Handle Controller settings
+{
+    // Start to concatenate redirect URL
+    std::string redirect, redirecthash;
+    redirect = "/settings/";
+    bool hostnamechange = false;
+
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char * name = p->name().c_str();
+            const char * value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Temperature control
+            //
+            if (strcmp(name, "controller") == 0) // Get hashloc
+            {
+                if ((strlen(value) < 1) || (strlen(value) > 32))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    redirecthash = value;
+                    redirect = redirect + value; // Concat hashloc to URI
+                    Log.verbose(F("Redirect is now: %s" CR), redirect.c_str());
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+            }
+            // Controller Settings
+            if (strcmp(name, "hostname") == 0) // Change hostname
+            {
+                if ((strlen(value) < 3) || (strlen(value) > 32))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    if (!strcmp(value, (const char *)config.hostname) == 0)
+                    {
+                        strlcpy(config.hostname, value, sizeof(config.hostname));
+                        hostnamechange = true;
+                    }
+                }
+            }
+            if (strcmp(name, "breweryname") == 0) // Change brewery name
+            {
+                if ((strlen(value) < 1) || (strlen(value) > 64))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    strlcpy(config.copconfig.breweryname, value, sizeof(config.copconfig.breweryname));
+                }
+            }
+            if (strcmp(name, "kegeratorname") == 0) // Change kegerator name
+            {
+                if ((strlen(value) < 1) || (strlen(value) > 64))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    strlcpy(config.copconfig.kegeratorname, value, sizeof(config.copconfig.kegeratorname));
+                }
+            }
+            if (strcmp(name, "units") == 0) // Change units of measure
+            {
+                char option[8];
+                strcpy(option, value);
+                if (strcmp(value, "option0") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    convertConfigtoMetric();
+                    convertFlowtoMetric();
+                }
+                else if (strcmp(value, "option1") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    convertConfigtoImperial();
+                    convertFlowtoImperial();
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "tapsolenoid") == 0) // Change tap solenoid state
+            {
+                char option[8];
+                strcpy(option, value);
+                if (strcmp(value, "option0") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.copconfig.tapsolenoid = true;
+                    digitalWrite(SOLENOID, LOW);
+                }
+                else if (strcmp(value, "option1") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.copconfig.tapsolenoid = false;
+                    digitalWrite(SOLENOID, HIGH);
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "rpintscompat") == 0) // Change RPints compatibility
+            {
+                char option[8];
+                strcpy(option, value);
+                if (strcmp(value, "option0") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.copconfig.rpintscompat = false;
+                    config.copconfig.randr = false;
+                }
+                else if (strcmp(value, "option1") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.copconfig.rpintscompat = true;
+                    config.copconfig.randr = false;
+
+                }
+                else if (strcmp(value, "option2") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.copconfig.rpintscompat = true;
+                    config.copconfig.randr = true;
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+        }
+    }
+    saveConfig();
+
+    if (hostnamechange)
+    { // We reset hostname, process
+        #ifdef ESP8266
+        wifi_station_set_hostname(config.hostname);
+        MDNS.setHostname(config.hostname);
+        MDNS.notifyAPChange();
+        MDNS.announce();
+        #elif defined ESP32
+        tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.hostname);
+        mdnsreset();
+        #endif
+        // Create a full URL for redirection to new hostname
+        redirect = "http://" + (std::string)config.hostname + ".local" + "/settings/" + redirecthash;
+        Log.verbose(F("POSTed mDNSid, redirecting to %s." CR), redirect);
+    }
+
+    return redirect;
 }
 
 std::string handleSensorPost(AsyncWebServerRequest *request) // Handle Sensor Control settings
