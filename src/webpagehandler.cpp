@@ -33,7 +33,6 @@ void initWebServer()
     setEditor();
 
     // File not found handler
-
     server.onNotFound([](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving 404." CR));
         request->redirect("/404/");
@@ -177,6 +176,15 @@ void setJsonHandlers()
         doc["controlpoint"] = config.temps.controlpoint;
         doc["setting"] = config.temps.setpoint;
         doc["status"] = tstat.state;
+        // If the assigned control point is disabled, disable temp control and display
+        if (config.temps.enabled[config.temps.controlpoint])
+        {
+            doc["displaydisabled"] = false;
+        }
+        else
+        {
+            doc["displaydisabled"] = true;
+        }
         if (config.copconfig.imperial)
         {
             doc["sensor"]["room"] = convertCtoF(device.sensor[0].average);
