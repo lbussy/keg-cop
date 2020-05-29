@@ -34,8 +34,15 @@ void initWebServer()
 
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request) {
-        Log.verbose(F("Serving 404." CR));
-        request->redirect("/404/");
+        if (request->method() == HTTP_OPTIONS)
+        {
+            request->send(200);
+        }
+        else
+        {
+            Log.verbose(F("Serving 404." CR));
+            request->redirect("/404/");
+        }
     });
 
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
