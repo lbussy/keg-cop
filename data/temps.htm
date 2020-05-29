@@ -205,8 +205,10 @@
                         }
 
                         $.each(temps.sensor, function (index, value) {
-                            labels.push(index.charAt(0).toUpperCase() + index.slice(1));
-                            temperatures.push(parseFloat(value));
+                            if (true) { // TODO: Allow skipping disabled sensors
+                                labels.push(index.charAt(0).toUpperCase() + index.slice(1));
+                                temperatures.push(parseFloat(value));
+                            }
                         });
 
                         $('#controlPoint').text(labels[temps.controlpoint]);
@@ -352,7 +354,7 @@
 
         function barClick(event, array) { // Bar click handler
             var tapNum = array[0]._index;
-            var url = "/settings/#tempcalibration";
+            var url = "/settings/#sensorcontrol";
             window.open(url, "_self");
         }
 
