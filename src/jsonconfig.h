@@ -59,8 +59,8 @@ struct Temperatures
     float setpoint;
     int controlpoint;
     bool controlenabled;
-    bool enabled[5];
-    float calibration[5];
+    bool enabled[NUMSENSOR];
+    float calibration[NUMSENSOR];
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
