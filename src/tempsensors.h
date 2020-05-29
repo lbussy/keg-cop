@@ -52,8 +52,7 @@ struct Sensor
 
 struct Devices
 {
-    int size = 5;
-    Sensor sensor[5];
+    Sensor sensor[NUMSENSOR];
 };
 
 void sensorInit();
