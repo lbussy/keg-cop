@@ -78,7 +78,7 @@
                         <div class="float-right">
                             <h5 id="coolstate" class="text-right alert">
                                 <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="/temps/">
-                                    <span id="controlPoint"></span>:
+                                    <span id="controlPoint"></span>
                                     <span id="controlTemp"></span>
                                     <span id="tempFormat"></span>
                                 </a>
@@ -247,89 +247,90 @@
             })
                 .done(function (temps) {
                     try {
+                        if (!temps.displaydisabled) {
+                            // Set control point display
+                            switch (temps.controlpoint) {
+                                case 0:
+                                    $('#controlPoint').text("Room:");
+                                    $('#controlTemp').text(parseFloat(temps.sensor.room).toFixed(1));
+                                    break;
+                                case 1:
+                                    $('#controlPoint').text("Tower:");
+                                    $('#controlTemp').text(parseFloat(temps.sensor.tower).toFixed(1));
+                                    break;
+                                case 2:
+                                    $('#controlPoint').text("Upper Chamber:");
+                                    $('#controlTemp').text(parseFloat(temps.sensor.upper).toFixed(1));
+                                    break;
+                                case 3:
+                                    $('#controlPoint').text("Lower Chamber:");
+                                    $('#controlTemp').text(parseFloat(temps.sensor.lower).toFixed(1));
+                                    break;
+                                case 4:
+                                    $('#controlPoint').text("Keg:");
+                                    $('#controlTemp').text(parseFloat(temps.sensor.keg).toFixed(1));
+                                    break;
+                                default:
+                                    $('#controlPoint').text("");
+                                    $('#controlTemp').text("");
+                                    break;
+                            }
 
-                        // Set control point display
-                        switch (temps.controlpoint) {
-                            case 0:
-                                $('#controlPoint').text("Room");
-                                $('#controlTemp').text(parseFloat(temps.sensor.room).toFixed(1));
-                                break;
-                            case 1:
-                                $('#controlPoint').text("Tower");
-                                $('#controlTemp').text(parseFloat(temps.sensor.tower).toFixed(1));
-                                break;
-                            case 2:
-                                $('#controlPoint').text("Upper Chamber");
-                                $('#controlTemp').text(parseFloat(temps.sensor.upper).toFixed(1));
-                                break;
-                            case 3:
-                                $('#controlPoint').text("Lower Chamber");
-                                $('#controlTemp').text(parseFloat(temps.sensor.lower).toFixed(1));
-                                break;
-                            case 4:
-                                $('#controlPoint').text("Keg");
-                                $('#controlTemp').text(parseFloat(temps.sensor.keg).toFixed(1));
-                                break;
-                            default:
-                                $('#controlPoint').text("");
-                                $('#controlTemp').text("");
-                                break;
-                        }
+                            // Set F or C
+                            if (temps.imperial) {
+                                $('#tempFormat').html("&#x2109;");
+                            } else {
+                                $('#tempFormat').html("&#x2103;");
+                            }
 
-                        // Set F or C
-                        if (temps.imperial) {
-                            $('#tempFormat').html("&#x2109;");
-                        } else {
-                            $('#tempFormat').html("&#x2103;");
-                        }
-
-                        // Set indicator button
-                        switch (temps.status) {
-                            case 0: // TSTAT_INACTIVE
-                                clearState();
-                                $("#coolstate").addClass("alert-secondary");
-                                $("#coolstatetooltip").prop("title", "Thermostat is disabled");
-                                break;
-                            case 1: // TSTAT_COOL_BEGIN
-                                clearState();
-                                $("#coolstate").addClass("alert-info");
-                                $("#coolstatetooltip").prop("title", "Thermostat is starting to cool");
-                                break;
-                            case 2: // TSTAT_COOL_MINOFF
-                                clearState();
-                                $("#coolstate").addClass("alert-danger");
-                                $("#coolstatetooltip").prop("title", "Thermostat is calling for cooling but in minimum off time");
-                                break;
-                            case 3: // TSTAT_COOL_ACTIVE
-                                clearState();
-                                $("#coolstate").addClass("alert-primary");
-                                $("#coolstatetooltip").prop("title", "Thermostat is actively cooling");
-                                break;
-                            case 4: // TSTAT_IDLE_END
-                                clearState();
-                                $("#coolstate").addClass("alert-warning");
-                                $("#coolstatetooltip").prop("title", "Thermostat is not calling for cooling, mininum off time ending");
-                                break;
-                            case 5: // TSTAT_IDLE_MINON
-                                clearState();
-                                $("#coolstate").addClass("alert-success");
-                                $("#coolstatetooltip").prop("title", "Thermostat is not calling for cooling but in minimum on time");
-                                break;
-                            case 6: // TSTAT_IDLE_INACTIVE
-                                clearState();
-                                $("#coolstate").addClass("alert-light");
-                                $("#coolstatetooltip").prop("title", "Thermostat is not calling for cooling, in idle mode");
-                                break;
-                            case 7: // TSTAT_UNKNOWN
-                                clearState();
-                                $("#coolstate").addClass("alert-light");
-                                $("#coolstatetooltip").prop("title", "Thermostat is in an unknown state");
-                                break;
-                            default: // TSTAT_UNKNOWN
-                                clearState();
-                                $("#coolstate").addClass("alert-light");
-                                $("#coolstatetooltip").prop("title", "Thermostat is in an unknown state");
-                                break;
+                            // Set indicator button
+                            switch (temps.status) {
+                                case 0: // TSTAT_INACTIVE
+                                    clearState();
+                                    $("#coolstate").addClass("alert-secondary");
+                                    $("#coolstatetooltip").prop("title", "Thermostat is disabled");
+                                    break;
+                                case 1: // TSTAT_COOL_BEGIN
+                                    clearState();
+                                    $("#coolstate").addClass("alert-info");
+                                    $("#coolstatetooltip").prop("title", "Thermostat is starting to cool");
+                                    break;
+                                case 2: // TSTAT_COOL_MINOFF
+                                    clearState();
+                                    $("#coolstate").addClass("alert-danger");
+                                    $("#coolstatetooltip").prop("title", "Thermostat is calling for cooling but in minimum off time");
+                                    break;
+                                case 3: // TSTAT_COOL_ACTIVE
+                                    clearState();
+                                    $("#coolstate").addClass("alert-primary");
+                                    $("#coolstatetooltip").prop("title", "Thermostat is actively cooling");
+                                    break;
+                                case 4: // TSTAT_IDLE_END
+                                    clearState();
+                                    $("#coolstate").addClass("alert-warning");
+                                    $("#coolstatetooltip").prop("title", "Thermostat is not calling for cooling, mininum off time ending");
+                                    break;
+                                case 5: // TSTAT_IDLE_MINON
+                                    clearState();
+                                    $("#coolstate").addClass("alert-success");
+                                    $("#coolstatetooltip").prop("title", "Thermostat is not calling for cooling but in minimum on time");
+                                    break;
+                                case 6: // TSTAT_IDLE_INACTIVE
+                                    clearState();
+                                    $("#coolstate").addClass("alert-light");
+                                    $("#coolstatetooltip").prop("title", "Thermostat is not calling for cooling, in idle mode");
+                                    break;
+                                case 7: // TSTAT_UNKNOWN
+                                    clearState();
+                                    $("#coolstate").addClass("alert-light");
+                                    $("#coolstatetooltip").prop("title", "Thermostat is in an unknown state");
+                                    break;
+                                default: // TSTAT_UNKNOWN
+                                    clearState();
+                                    $("#coolstate").addClass("alert-light");
+                                    $("#coolstatetooltip").prop("title", "Thermostat is in an unknown state");
+                                    break;
+                            }
                         }
 
                         if (loaded < numReq) {

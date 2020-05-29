@@ -35,16 +35,26 @@ void startControl()
 
 void controlLoop()
 {
-    if (!tstat.control)
-    {
-        // No control active
-        tstat.state = TSTAT_INACTIVE;
-        return;
-    }
-
     unsigned long now = millis();
     double setpoint;
     double tempNow = device.sensor[config.temps.controlpoint].average;
+
+    // If the assigned control point or temp control is disabled
+    if (!config.temps.enabled[config.temps.controlpoint] || (!tstat.control))
+    {
+        // If cooling, turn off cooling
+        if (tstat.cooling)
+        {
+            tstat.lastOff = now;
+            digitalWrite(COOL, HIGH);
+            tstat.cooling = false;
+        }
+
+        // Disable temp control and display
+        tstat.control = false;
+        tstat.state = TSTAT_INACTIVE;
+        return;
+    }
 
     if (config.copconfig.imperial)
     {
