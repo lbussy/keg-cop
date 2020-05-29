@@ -12,7 +12,6 @@
   - Cloud
 - Filter small pours
 - Move JS to separate files
-- ~~Look into why solenoid chatters on flash (On, Off, On) (from controller resetting due to PIO terminal)~~
 - Calculate center for spinner
 - Deal with disconnected sensors
   - ~~Allow enable/disable sensors~~
@@ -105,3 +104,4 @@
   - ~~Temperature~~
     - ~~Control~~
     - ~~Sensors~~
+- ~~Look into why solenoid chatters on flash (On, Off, On) (from controller resetting due to PIO terminal)~~
