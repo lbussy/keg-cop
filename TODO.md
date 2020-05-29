@@ -7,21 +7,21 @@
 ## Features
 
 - Add target pushes
+- Add links to context help
 - Create single-form submits for Targets
   - URL
   - Cloud
 - Filter small pours
 - Move JS to separate files
 - Calculate center for spinner
-- Deal with disconnected sensors
-  - ~~Allow enable/disable sensors~~
-  - Web display
-  - Control point
 - Allow accepting IP or not local in settings
+- Re-do justification on Temperature Control page
+- Refresh settings on timer?
+- Don't show disabled sensors in temps (/temperatures/)
 
 ## Bugs
 
-- ???
+- Seeem to be losing first tap on each flash
 
 # Complete
 
@@ -105,3 +105,9 @@
     - ~~Control~~
     - ~~Sensors~~
 - ~~Look into why solenoid chatters on flash (On, Off, On) (from controller resetting due to PIO terminal)~~
+- ~~Deal with disconnected sensors~~
+  - ~~Allow enable/disable sensors~~
+  - ~~Remove the sensor display from the main page if the selected control point is disabled~~
+  - ~~Web display~~
+  - ~~Control point~~
+- ~~Make clicks on temps go to settings for that sensor~~
