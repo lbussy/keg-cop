@@ -176,6 +176,13 @@ void setJsonHandlers()
         doc["controlpoint"] = config.temps.controlpoint;
         doc["setting"] = config.temps.setpoint;
         doc["status"] = tstat.state;
+
+        doc["sensor"]["roomenable"] = config.temps.enabled[0];
+        doc["sensor"]["towerenable"] = config.temps.enabled[0];
+        doc["sensor"]["upperenable"] = config.temps.enabled[0];
+        doc["sensor"]["lowerenable"] = config.temps.enabled[0];
+        doc["sensor"]["kegenable"] = config.temps.enabled[0];
+
         // If the assigned control point is disabled, disable temp control and display
         if (config.temps.enabled[config.temps.controlpoint])
         {
