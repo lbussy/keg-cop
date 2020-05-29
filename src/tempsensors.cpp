@@ -22,16 +22,16 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
-const char *sensorName[5] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
-int sensorPin[5] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
-extern const size_t capacityTempsSerial = JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6);
-extern const size_t capacityTempsDeserial = capacityTempsSerial + 120;
+extern const char *sensorName[] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
+int sensorPin[NUMSENSOR] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
+extern const size_t capacityTempsSerial = JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(10);
+extern const size_t capacityTempsDeserial = capacityTempsSerial + 190;
 
 Devices device;
 
 void sensorInit()
 {
-    for (int i = 0; i < device.size; i++)
+    for (int i = 0; i < NUMSENSOR; i++)
     {
         strlcpy(device.sensor[i].name, sensorName[i], sizeof(device.sensor[i].name));
         device.sensor[i].pin = sensorPin[i];
@@ -45,7 +45,7 @@ void sensorInit()
 
 void pollTemps()
 {
-    for (int i = 0; i < device.size; i++)
+    for (int i = 0; i < NUMSENSOR; i++)
     {
         device.sensor[i].value = getTempC(device.sensor[i].pin);
         if (device.sensor[i].value == DEVICE_DISCONNECTED_C)
