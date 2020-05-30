@@ -6,9 +6,7 @@
 
 ## Features
 
-- Re-do justification on Temperature Control page
 - Add target pushes
-- Refresh settings on timer?
 - Add links to context help
 - Calculate center for spinner
 - Allow accepting IP or not local in settings
@@ -16,8 +14,7 @@
 
 ## Bugs
 
-- Seeem to be losing first tap on each flash
-- When POST is blocked by form, buttons are disabled
+- ??
 
 # Complete
 
@@ -112,3 +109,7 @@
 - ~~Create single-form submits for Targets~~
   - ~~URL~~
   - ~~Cloud~~
+- ~~Re-do justification on Temperature Control page~~
+- ~~Refresh flow settings on timer~~
+- ~~When POST is blocked by form, buttons are disabled~~
+- ~~Seeem to be losing first tap on each flash occasionally~~
