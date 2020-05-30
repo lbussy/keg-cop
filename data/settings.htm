@@ -1448,13 +1448,16 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="cloudtype" action="/settings/update/" method="POST">
+                            <form id="cloudtype" action="/settings/cloudurl/" method="POST">
+
+								<input type="hidden" id="cloudhashloc" name="cloudhashloc" value="#targetcloud">
+
                                 <div class="form-group row">
                                     <label for="cloudtype" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Select the cloud target to use">
+                                        title="Select the cloud target to which the system will post data">
                                         Cloud Target
                                     </label>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-10">
                                         <select class="form-control" name="cloudtype" id="cloudtype">
                                             <option value = "0">Cloud 1</option>
                                             <option value = "1">Cloud 2</option>
@@ -1463,64 +1466,40 @@
                                             <option value = "4">Cloud 5</option>
                                         </select>
                                     </div>
-
-                                    <div class="row col-sm-12 justify-content-center">
-                                        <button
-                                            class="btn btn-primary"
-                                            onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                            id="submitSettings">
-                                                Update
-                                        </button>
-                                    </div>
-
                                 </div>
-                            </form>
 
-                            <form id="cloudkey" action="/settings/update/" method="POST">
                                 <div class="form-group row">
                                     <label for="cloudkey" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
-                                        title="full URL to target system">
+                                        title="Key supplied by cloud system">
                                         Cloud Key
                                     </label>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" name="cloudkey"
                                             id="cloudkey" minlength="3" maxlength="64"
                                             placeholder="01234567890ABCDEF01234567890ABCDEF">
                                     </div>
+								</div>
 
-                                    <div class="row col-sm-12 justify-content-center">
-                                        <button
-                                            class="btn btn-primary"
-                                            onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                            id="submitSettings">
-                                                Update
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </form>
-
-                             <form id="cloudfreq" action="/settings/update/" method="POST">
                                 <div class="form-group row">
                                     <label for="cloudfreq" class="col-sm-2 col-form-label" data-toggle="tooltip"
                                         title="Frequency in minutes to update the target (15 to 60 minutes)">Post Frequency</label>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-10">
                                         <input type="number" class="form-control" id="cloudfreq" name="cloudfreq"
                                             min="15" max="60" step="1" placeholder="15">
                                     </div>
-
-                                    <div class="row col-sm-12 justify-content-center">
-                                        <button
-                                            class="btn btn-primary"
-                                            onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                            id="submitSettings">
-                                                Update
-                                        </button>
-                                    </div>
-
                                 </div>
-                            </form>
+
+								<div class="row col-sm-12 justify-content-center">
+									<button
+										class="btn btn-primary"
+										onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
+										id="submitSettings">
+											Update
+									</button>
+								</div>
+
+							</form>
 
                         </div>
                     </div> <!-- Cloud Target Tab -->
@@ -1737,6 +1716,7 @@
                         }
                         $('input[name="calkeg"]').val(parseFloat(config.temps.keg).toFixed(2));
 
+                        console.log(JSON.stringify(config.cloud));
                         $('input[name="targeturl"]').val(config.urltarget.url);
                         $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
                         $('select[name="cloudtype"] option[value=' + parseInt(config.cloud.type, 10) + ']').attr('selected', 'selected');

@@ -249,6 +249,22 @@ void setSettingsAliases()
         request->redirect(redirect.c_str());
     });
 
+    server.on("/settings/targeturl/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /settings/targeturl/." CR));
+        std::string redirect;
+        redirect = handleTargetUrlPost(request);
+        Log.verbose(F("Redirecting to %s." CR), redirect.c_str());
+        request->redirect(redirect.c_str());
+    });
+
+    server.on("/settings/cloudurl/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /settings/targeturl/." CR));
+        std::string redirect;
+        redirect = handleCloudUrlPost(request);
+        Log.verbose(F("Redirecting to %s." CR), redirect.c_str());
+        request->redirect(redirect.c_str());
+    });
+
     server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) {
         // Process settings update (bulk POST)
         Log.verbose(F("Processing post to /settings/update/." CR));
@@ -257,6 +273,7 @@ void setSettingsAliases()
         handleControllerPost(request); // Controller parameters
         handleControlPost(request); // Temperature control and activation
         handleSensorPost(request); // Sensor calibration and activation
+        handleTargetUrlPost(request); // Target URL settings
 
         // Redirect to Settings page
         request->redirect("/settings/");
@@ -842,6 +859,150 @@ std::string handleControlPost(AsyncWebServerRequest *request) // Handle Temperat
                 else
                 {
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+        }
+    }
+    saveConfig();
+    return redirect;
+}
+
+std::string handleTargetUrlPost(AsyncWebServerRequest *request) // Handle Temperature Control settings
+{
+    // Start to concatenate redirect URL
+    std::string redirect;
+    redirect = "/settings/";
+
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char * name = p->name().c_str();
+            const char * value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Target URL control
+            //
+            if (strcmp(name, "targeturlhashloc") == 0) // Get hashloc
+            {
+                if ((strlen(value) < 1) || (strlen(value) > 32))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    redirect = redirect + value; // Concat hashloc to URI
+                    Log.verbose(F("Redirect is now: %s" CR), redirect.c_str());
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+            }
+            // Target URL Settings
+            if (strcmp(name, "targeturl") == 0) // Change Target URL
+            {
+                if ((strlen(value) < 3) || (strlen(value) > 128))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
+                }
+            }
+            if (strcmp(name, "targetfreq") == 0) // Change the push frequency
+            {
+                const double val = atof(value);
+                if ((val < 10) || (val > 900))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.urltarget.freq = val;
+                }
+            }
+        }
+    }
+    saveConfig();
+    return redirect;
+}
+
+std::string handleCloudUrlPost(AsyncWebServerRequest *request) // Handle Temperature Control settings
+{
+    // Start to concatenate redirect URL
+    std::string redirect;
+    redirect = "/settings/";
+
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char * name = p->name().c_str();
+            const char * value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Cloud URL control
+            //
+            if (strcmp(name, "cloudhashloc") == 0) // Get hashloc
+            {
+                if ((strlen(value) < 1) || (strlen(value) > 32))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    redirect = redirect + value; // Concat hashloc to URI
+                    Log.verbose(F("Redirect is now: %s" CR), redirect.c_str());
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                }
+            }
+            // Target URL Settings
+            if (strcmp(name, "cloudtype") == 0) // Change Cloud Target
+            {
+                const double val = atof(value);
+                if ((val < 0) || (val > 4))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.cloud.type = val;
+                    // TODO: Apply URLs
+                }
+            }
+            if (strcmp(name, "cloudkey") == 0) // Change the Cloud key
+            {
+                if ((strlen(value) < 3) || (strlen(value) > 64))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    strlcpy(config.cloud.key, value, sizeof(config.cloud.key));
+                }
+            }
+            if (strcmp(name, "cloudfreq") == 0) // Change the Cloud push frequency
+            {
+                const double val = atof(value);
+                if ((val < 15) || (val > 60))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.cloud.freq = val;
                 }
             }
         }

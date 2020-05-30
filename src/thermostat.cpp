@@ -30,7 +30,7 @@ void startControl()
     tstat.lastOn = millis();
     tstat.cooling = false;
     tstat.state = TSTAT_UNKNOWN;
-    tstat.control = true; // DEBUG TODO:  Figure out how to/if we control this
+    tstat.control = true;
 }
 
 void controlLoop()

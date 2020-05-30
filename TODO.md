@@ -6,20 +6,18 @@
 
 ## Features
 
+- Re-do justification on Temperature Control page
 - Add target pushes
+- Refresh settings on timer?
 - Add links to context help
-- Create single-form submits for Targets
-  - URL
-  - Cloud
-- Move JS to separate files
 - Calculate center for spinner
 - Allow accepting IP or not local in settings
-- Re-do justification on Temperature Control page
-- Refresh settings on timer?
+- Move JS to separate files
 
 ## Bugs
 
 - Seeem to be losing first tap on each flash
+- When POST is blocked by form, buttons are disabled
 
 # Complete
 
@@ -111,3 +109,6 @@
 - ~~Make clicks on temps go to settings for that sensor~~
 - ~~Don't show disabled sensors in temps (/temperatures/)~~
 - ~~Filter small pours~~
+- ~~Create single-form submits for Targets~~
+  - ~~URL~~
+  - ~~Cloud~~
