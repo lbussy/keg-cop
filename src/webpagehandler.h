@@ -61,6 +61,8 @@ std::string handleTapPost(AsyncWebServerRequest *);
 std::string handleControllerPost(AsyncWebServerRequest *);
 std::string handleControlPost(AsyncWebServerRequest *);
 std::string handleSensorPost(AsyncWebServerRequest *);
+std::string handleTargetUrlPost(AsyncWebServerRequest *);
+std::string handleCloudUrlPost(AsyncWebServerRequest *);
 
 extern struct ThatVersion thatVersion;
 extern struct Config config;
