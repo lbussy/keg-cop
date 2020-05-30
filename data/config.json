@@ -1,0 +1,45 @@
+{
+    "apconfig": {
+        "ssid": "kegcop",
+        "passphrase": "kegcop12"
+    },
+    "hostname": "kegcop",
+    "copconfig": {
+        "breweryname": "Keg Cop Brewery",
+        "kegeratorname": "Keezer",
+        "imperial": true,
+        "rpintscompat": false,
+        "randr": false,
+        "tapsolenoid": true
+    },
+    "temps": {
+        "setpoint": 35,
+        "controlpoint": 4,
+        "controlenabled": true,
+        "roomenabled": true,
+        "room": 1,
+        "towerenabled": true,
+        "tower": 2,
+        "upperenabled": true,
+        "upper": -1,
+        "lowerenabled": true,
+        "lower": -2,
+        "kegenabled": true,
+        "keg": 1
+    },
+    "urltarget": {
+        "url": "",
+        "freq": 30,
+        "update": false
+    },
+    "cloud": {
+        "type": 0,
+        "url": "",
+        "key": "",
+        "freq": 15,
+        "update": false
+    },
+    "dospiffs1": false,
+    "dospiffs2": false,
+    "didupdate": false
+}
