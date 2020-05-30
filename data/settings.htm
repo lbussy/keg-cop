@@ -1076,10 +1076,12 @@
                         <div class="card-body">
 
                             <form class="form-group" id="tempcontrol" action="/settings/tempcontrol/" method="POST">
+                                
                                 <input type="hidden" id="tempcontrol" name="tempcontrol" value="#tempcontrol">
 
                                 <div class="row col-12">
-                                    <div class="col-2">
+								
+                                    <div class="col-3">
                                         <div class="row form-group">
                                             <label for="setpoint" class="col-form-label" data-toggle="tooltip"
                                                 title="Enter the temperature setpoint in your selected units &#x2109; or &#x2103;)"> Set Point
@@ -1091,6 +1093,7 @@
                                             </label>
                                         </div>
                                     </div>
+									
                                     <div class="col-5">
                                         <div class="row form-group">
                                             <input type="number" class="form-control" name="setpoint" id="setpoint" min="0" max="80"
@@ -1106,29 +1109,31 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-1">
-                                    </div>
-                                    <div class="col-2">
-                                        <label for="setpoint" class="col-form-label" data-toggle="tooltip"
-                                            title="Enable or disable temperature control">Temperature Control
-                                        </label>
-                                    </div>
-                                    <div class="col-2 form-group">
-                                        <fieldset>
-                                            <div class="form-check">
-                                                <label class="form-check-label" data-toggle="tooltip" title="Control enabled">
-                                                    <input type="radio" class="form-check-input" name="enablecontrol" id="enabled"
-                                                        value="option0" checked="">Enabled
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <label class="form-check-label" data-toggle="tooltip" title="Control disabled">
-                                                    <input type="radio" class="form-check-input" name="enablecontrol" id="disabled"
-                                                        value="option1">Disabled
-                                                </label>
+
+									<div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Temperature control enabled">
+                                                            <input type="radio" class="form-check-input" name="enablecontrol" id="enabled"
+															value="option0">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Temperature control disabled">
+                                                            <input type="radio" class="form-check-input" name="enablecontrol" id="disabled"
+															value="option1">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </fieldset>
                                     </div>
+
+									
                                 </div>
 
                                 <div class="row col-sm-12 justify-content-center">
