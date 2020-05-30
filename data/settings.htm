@@ -1347,36 +1347,41 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="targeturl" action="/settings/update/" method="POST">
+                            <form id="targeturl" action="/settings/targeturl/" method="POST">
+
+                                <input type="hidden" id="targeturlhashloc" name="targeturlhashloc" value="#targeturl">
+
                                 <div class="form-group row">
                                     <label for="targeturl" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
                                         title="Full URL to target system">
                                         Target URL
                                     </label>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" name="targeturl"
                                             id="targeturl" minlength="3" maxlength="128"
                                             placeholder="http://kegscreen.local/taplist/api/pour/">
                                     </div>
-                                    <div class="col-sm-2"><button class="btn btn-primary" onclick="return killButtons(this);"
-                                            id="submitSettings">Update</button>
-                                    </div>
                                 </div>
-                            </form>
 
-                            <form id="targetfreq" action="/settings/update/" method="POST">
                                 <div class="form-group row">
                                     <label for="targetfreq" class="col-sm-2 col-form-label" data-toggle="tooltip"
                                         title="Frequency in seconds to update the target (10 to 900 seconds)">Post Frequency</label>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-10">
                                         <input type="number" class="form-control" id="targetfreq" name="targetfreq"
                                             min="10" max="900" step="1" placeholder="30">
                                     </div>
-                                    <div class="col-sm-2">
-                                        <button class="btn btn-primary" onclick="return killButtons(this);" id="submitSettings">Update</button>
-                                    </div>
                                 </div>
+								
+                                <div class="row col-sm-12 justify-content-center">
+									<button
+										class="btn btn-primary"
+										onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
+										id="submitSettings">
+											Update
+									</button>
+                                </div>
+								
                             </form>
 
                         </div>
