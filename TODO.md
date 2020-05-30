@@ -2,7 +2,7 @@
 
 ## Testing
 
-- ???
+- Test all settings flow/application
 
 ## Features
 
@@ -17,7 +17,6 @@
 - Allow accepting IP or not local in settings
 - Re-do justification on Temperature Control page
 - Refresh settings on timer?
-- Don't show disabled sensors in temps (/temperatures/)
 
 ## Bugs
 
@@ -111,3 +110,4 @@
   - ~~Web display~~
   - ~~Control point~~
 - ~~Make clicks on temps go to settings for that sensor~~
+- ~~Don't show disabled sensors in temps (/temperatures/)~~
