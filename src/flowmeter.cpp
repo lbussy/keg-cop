@@ -91,29 +91,34 @@ void logFlow()
     {
         const unsigned long nowTime = millis();
         if ((nowTime - lastPulseTime[i]) > POURDELAY && lastPulseTime[i] > 0)
-        {
-            // Only send pour messages after all taps have stopped serving
+        { // No pulses past POURDELAY = we stopped serving
             noInterrupts();
             const unsigned int pulseCount = pulse[i];
             pulse[i] = 0;
             lastPulseTime[i] = 0;
             interrupts();
-            flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppu)));
-            saveFlowConfig();
-            Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
-            if (config.copconfig.rpintscompat)
-            {
-                sendPulseCount(i, flow.taps[i].pin, pulseCount);
+            if (pulse[i] < SMALLPOUR)
+            { // Discard a small pour
+                Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+            }
+            else
+            { // Log a pour
+                flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppu)));
+                saveFlowConfig();
+                Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+                if (config.copconfig.rpintscompat)
+                {
+                    sendPulseCount(i, flow.taps[i].pin, pulseCount);
+                }
             }
         }
         else
         {
-            // Kick detector - keg is blowing foam
             const int secs = (nowTime - lastPulse[i]) / 1000;
             const unsigned long pps = (pulse[i] - lastPulse[i]) / secs;
-            const unsigned long kickSpeed = (flow.taps[i].ppu / 128) * KICKSPEED;
+            const unsigned long kickSpeed = (flow.taps[i].ppu / 128) * KICKSPEED; // TODO: Address PPL vs PPU
             if (pps > kickSpeed)
-            {
+            { // Kick detector - keg is blowing foam
                 flow.taps[i].active = false;
                 if (config.copconfig.rpintscompat)
                 {
