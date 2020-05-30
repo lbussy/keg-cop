@@ -22,10 +22,10 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
-extern const char *sensorName[] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
+const char *sensorName[NUMSENSOR] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
 int sensorPin[NUMSENSOR] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
-extern const size_t capacityTempsSerial = JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(10);
-extern const size_t capacityTempsDeserial = capacityTempsSerial + 190;
+extern const size_t capacityTempsSerial = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6);
+extern const size_t capacityTempsDeserial = capacityTempsSerial + 360;
 
 Devices device;
 

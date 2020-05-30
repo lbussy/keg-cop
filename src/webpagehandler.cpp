@@ -175,20 +175,14 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-    server.on("/temperatures/", HTTP_GET, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Serving /temperatures/." CR));
-        DynamicJsonDocument doc(capacityTempsSerial);
+    server.on("/sensors/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Serving /sensors/." CR));
+        DynamicJsonDocument doc(2048U);//capacityTempsSerial);
 
         doc["imperial"] = config.copconfig.imperial;
         doc["controlpoint"] = config.temps.controlpoint;
         doc["setting"] = config.temps.setpoint;
         doc["status"] = tstat.state;
-
-        doc["sensor"]["roomenable"] = config.temps.enabled[0];
-        doc["sensor"]["towerenable"] = config.temps.enabled[0];
-        doc["sensor"]["upperenable"] = config.temps.enabled[0];
-        doc["sensor"]["lowerenable"] = config.temps.enabled[0];
-        doc["sensor"]["kegenable"] = config.temps.enabled[0];
 
         // If the assigned control point is disabled, disable temp control and display
         if (config.temps.enabled[config.temps.controlpoint])
@@ -199,21 +193,19 @@ void setJsonHandlers()
         {
             doc["displaydisabled"] = true;
         }
-        if (config.copconfig.imperial)
+
+        for (int i = 0; i < NUMSENSOR; i++)
         {
-            doc["sensor"]["room"] = convertCtoF(device.sensor[0].average);
-            doc["sensor"]["tower"] = convertCtoF(device.sensor[1].average);
-            doc["sensor"]["upper"] = convertCtoF(device.sensor[2].average);
-            doc["sensor"]["lower"] = convertCtoF(device.sensor[3].average);
-            doc["sensor"]["keg"] = convertCtoF(device.sensor[4].average);
-        }
-        else
-        {
-            doc["sensor"]["room"] = device.sensor[0].average;
-            doc["sensor"]["tower"] = device.sensor[1].average;
-            doc["sensor"]["upper"] = device.sensor[2].average;
-            doc["sensor"]["lower"] = device.sensor[3].average;
-            doc["sensor"]["keg"] = device.sensor[4].average;
+            doc["sensors"][i]["name"] = device.sensor[i].name;
+            doc["sensors"][i]["enable"] = config.temps.enabled[i];
+            if (config.copconfig.imperial)
+            {
+                doc["sensors"][i]["value"] = convertCtoF(device.sensor[i].average);
+            }
+            else
+            {
+                doc["sensors"][i]["value"] = device.sensor[i].average;
+            }
         }
 
         String json;

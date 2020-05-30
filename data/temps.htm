@@ -184,7 +184,7 @@
         }
 
         function populateTemps(callback = null) { // Get configuration settings
-            var url = "/temperatures/";
+            var url = "/sensors/";
             var okToClear = false;
             if (labels.length) { // Clear arrays if we are re-running
                 okToClear = true;
@@ -204,14 +204,18 @@
                             imperial = false;
                         }
 
-                        $.each(temps.sensor, function (index, value) {
-                            if (true) { // TODO: Allow skipping disabled sensors
-                                labels.push(index.charAt(0).toUpperCase() + index.slice(1));
-                                temperatures.push(parseFloat(value));
-                            }
-                        });
+                        // console.log(JSON.stringify(temps, null, 4)); // DEBUG
 
-                        $('#controlPoint').text(labels[temps.controlpoint]);
+                        var length = Object.keys(temps.sensors).length
+                        var i;
+                        for (i = 0; i < length; i++) {
+                            if (temps.sensors[i].enable) {
+                                labels.push(temps.sensors[i].name);
+                                temperatures.push(parseFloat(temps.sensors[i].value));
+                            }
+                        }
+
+                        $('#controlPoint').text(temps.sensors[temps.controlpoint].name);
 
                         setpoint = parseFloat(temps.setting).toFixed(1);
                         setpointLabel = "Setpoint: " + setpoint;
