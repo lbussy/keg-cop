@@ -226,7 +226,7 @@ void setSettingsAliases()
     });
 
     server.on("/settings/controller/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/sensorcontrol/." CR));
+        Log.verbose(F("Processing post to /settings/controller/." CR));
         std::string redirect;
         redirect = handleControllerPost(request);
         Log.verbose(F("Redirecting to %s." CR), redirect.c_str());
@@ -559,7 +559,7 @@ std::string handleControllerPost(AsyncWebServerRequest *request) // Handle Contr
         #endif
         // Create a full URL for redirection to new hostname
         redirect = "http://" + (std::string)config.hostname + ".local" + "/settings/" + redirecthash;
-        Log.verbose(F("POSTed mDNSid, redirecting to %s." CR), redirect);
+        Log.verbose(F("POSTed mDNSid, redirecting to %s." CR), redirect.c_str());
     }
 
     return redirect;
