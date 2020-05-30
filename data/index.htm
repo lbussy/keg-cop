@@ -242,39 +242,15 @@
         }
 
         function populateTemps(callback = null) { // Get configuration settings
-            var url = "/temperatures/";
+            var url = "/sensors/";
             var config = $.getJSON(url, function () {
             })
                 .done(function (temps) {
                     try {
                         if (!temps.displaydisabled) {
                             // Set control point display
-                            switch (temps.controlpoint) {
-                                case 0:
-                                    $('#controlPoint').text("Room:");
-                                    $('#controlTemp').text(parseFloat(temps.sensor.room).toFixed(1));
-                                    break;
-                                case 1:
-                                    $('#controlPoint').text("Tower:");
-                                    $('#controlTemp').text(parseFloat(temps.sensor.tower).toFixed(1));
-                                    break;
-                                case 2:
-                                    $('#controlPoint').text("Upper Chamber:");
-                                    $('#controlTemp').text(parseFloat(temps.sensor.upper).toFixed(1));
-                                    break;
-                                case 3:
-                                    $('#controlPoint').text("Lower Chamber:");
-                                    $('#controlTemp').text(parseFloat(temps.sensor.lower).toFixed(1));
-                                    break;
-                                case 4:
-                                    $('#controlPoint').text("Keg:");
-                                    $('#controlTemp').text(parseFloat(temps.sensor.keg).toFixed(1));
-                                    break;
-                                default:
-                                    $('#controlPoint').text("");
-                                    $('#controlTemp').text("");
-                                    break;
-                            }
+                            $('#controlPoint').text(temps.sensors[temps.controlpoint].name + ":");
+                            $('#controlTemp').text(parseFloat(temps.sensors[temps.controlpoint].value).toFixed(1));
 
                             // Set F or C
                             if (temps.imperial) {
