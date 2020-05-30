@@ -1585,6 +1585,8 @@
     </script>
 
     <script type="text/javascript">
+        toggleLoader("on");
+        var flowReloadTimer = 10000; // Reload flow details every 10 seconds
         var loaded = 0; // Hold data load status
         var numReq = 2; // Number of JSON required
         var hostname = window.location.hostname;
@@ -1596,18 +1598,30 @@
         else window.onload = loadPage;
 
         function loadPage() {
+            if (document.readyState === 'ready' || document.readyState === 'complete') {
+                populatePage();
+            } else {
+                document.onreadystatechange = function () {
+                    if (document.readyState == "complete") {
+                        populatePage();
+                    }
+                }
+            }
+        }
+
+        function populatePage() { // Get page data
             $(document).tooltip({
                 'selector': '[data-toggle=tooltip]',
                 'toggleEnabled': true
             });
-            toggleLoader("on");
             populateFlow();
             populateConfig();
-            loadTab();
+            loadHash();
+            pollComplete();
         }
 
-        function loadTab() {
-            // Javascript to enable linking to tab
+        function loadHash() {
+            // Link to tab via hash value
             var url = document.location.toString();
             if (url.match('#')) {
                 $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
@@ -1619,7 +1633,7 @@
             });
         }
 
-        function populateFlow() { // Get flowmeter settings
+        function populateFlow(callback = null) { // Get flowmeter settings
             var url = "/flow/";
             var flow = $.getJSON(url, function () {
             })
@@ -1647,9 +1661,11 @@
                 })
                 .always(function () {
                     // Can post-process here
-                    loaded++;
-                    if (loaded == numReq) {
-                        toggleLoader("off");
+                    if (loaded < numReq) {
+                        loaded++;
+                    }
+                    if (typeof callback == "function") {
+                        callback();
                     }
                 });
         }
@@ -1721,7 +1737,6 @@
                         }
                         $('input[name="calkeg"]').val(parseFloat(config.temps.keg).toFixed(2));
 
-                        console.log(JSON.stringify(config.cloud));
                         $('input[name="targeturl"]').val(config.urltarget.url);
                         $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
                         $('select[name="cloudtype"] option[value=' + parseInt(config.cloud.type, 10) + ']').attr('selected', 'selected');
@@ -1737,9 +1752,8 @@
                 })
                 .always(function () {
                     // Can post-process here
-                    loaded++;
-                    if (loaded == numReq) {
-                        toggleLoader("off");
+                    if (loaded < numReq) {
+                        loaded++;
                     }
                 });
         }
@@ -1775,6 +1789,26 @@
                 return (false);
             }
         }
+
+        function pollComplete() {
+            if (loaded == numReq) {
+                finishPage();
+            } else {
+                setTimeout(pollComplete, 300); // try again in 300 milliseconds
+            }
+        }
+
+        function flowReload() {
+            populateFlow(function callFunction() {
+                setTimeout(flowReload, flowReloadTimer);
+            });
+        }
+
+        function finishPage() { // Display page
+            toggleLoader("off");
+            setTimeout(flowReload, flowReloadTimer);
+        }
+
     </script>
 
 </body>
