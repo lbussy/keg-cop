@@ -11,7 +11,6 @@
 - Create single-form submits for Targets
   - URL
   - Cloud
-- Filter small pours
 - Move JS to separate files
 - Calculate center for spinner
 - Allow accepting IP or not local in settings
@@ -111,3 +110,4 @@
   - ~~Control point~~
 - ~~Make clicks on temps go to settings for that sensor~~
 - ~~Don't show disabled sensors in temps (/temperatures/)~~
+- ~~Filter small pours~~
