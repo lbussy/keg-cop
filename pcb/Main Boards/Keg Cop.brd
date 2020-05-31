@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.5.2">
+<eagle version="9.6.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -700,7 +700,7 @@ design rules under a new name.</description>
 <element name="C4" library="Donnie" package="CAP_PTH-2.54" value="1.0μF" x="28.31" y="14.03" smashed="yes">
 <attribute name="NAME" x="25.435" y="14.03" size="0.8128" layer="25" align="center-right"/>
 </element>
-<element name="U$1" library="holes" library_urn="urn:adsk.eagle:library:237" package="3,0" package3d_urn="urn:adsk.eagle:package:14277/1" value="" x="4.5" y="33" smashed="yes"/>
+<element name="U$1" library="holes" library_urn="urn:adsk.eagle:library:237" package="3,0" package3d_urn="urn:adsk.eagle:package:14277/1" value="" x="4.5" y="32" smashed="yes"/>
 <element name="U$2" library="holes" library_urn="urn:adsk.eagle:library:237" package="3,0" package3d_urn="urn:adsk.eagle:package:14277/1" value="" x="32.5" y="4.5" smashed="yes"/>
 <element name="U$3" library="holes" library_urn="urn:adsk.eagle:library:237" package="3,0" package3d_urn="urn:adsk.eagle:package:14277/1" value="" x="60.5" y="46.5" smashed="yes"/>
 <element name="X2" library="con-tycoelectronics" library_urn="urn:adsk.eagle:library:193" package="RJ45-NO-SHIELD" package3d_urn="urn:adsk.eagle:package:10660/1" value="RJ45-8X" x="55" y="5.5" smashed="yes">
@@ -792,7 +792,7 @@ design rules under a new name.</description>
 <wire x1="19.6" y1="9.6" x2="22.3" y2="9.6" width="1.016" layer="1"/>
 <wire x1="22.3" y1="9.6" x2="23.8" y2="11.1" width="1.016" layer="1"/>
 <wire x1="23.8" y1="11.1" x2="28.8" y2="11.1" width="1.016" layer="1"/>
-<wire x1="2.4" y1="11.28975" x2="2.4" y2="23.6" width="1.016" layer="16"/>
+<wire x1="2.4" y1="11.28975" x2="2.4" y2="23.4" width="1.016" layer="16"/>
 <wire x1="2.4" y1="11.28975" x2="5.48975" y2="8.2" width="1.016" layer="16"/>
 <wire x1="13.175" y1="10.375" x2="13.175" y2="11.85" width="1.016" layer="16"/>
 <wire x1="5.48975" y1="8.2" x2="11" y2="8.2" width="1.016" layer="16"/>
@@ -826,8 +826,8 @@ design rules under a new name.</description>
 <wire x1="9.707" y1="47.429975" x2="9.707" y2="42" width="1.016" layer="16"/>
 <wire x1="9.707" y1="36.4" x2="9.707" y2="36.6" width="1.016" layer="16"/>
 <wire x1="9.707" y1="36.6" x2="9.707" y2="42" width="1.016" layer="16"/>
-<wire x1="9.707" y1="30.907" x2="9.707" y2="36.6" width="1.016" layer="16"/>
-<wire x1="2.4" y1="23.6" x2="9.707" y2="30.907" width="1.016" layer="16"/>
+<wire x1="9.707" y1="30.707" x2="9.707" y2="36.4" width="1.016" layer="16"/>
+<wire x1="2.4" y1="23.4" x2="9.707" y2="30.707" width="1.016" layer="16"/>
 </signal>
 <signal name="RDAT">
 <contactref element="R1" pad="P$2"/>
