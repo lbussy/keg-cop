@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.5.2">
+<eagle version="9.6.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -1712,6 +1712,68 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 </deviceset>
 </devicesets>
 </library>
+<library name="SamacSys_Parts">
+<description>&lt;b&gt;https://componentsearchengine.com&lt;/b&gt;&lt;p&gt;
+&lt;author&gt;Created by SamacSys&lt;/author&gt;</description>
+<packages>
+<package name="TO-92">
+<description>&lt;b&gt;TO-92&lt;/b&gt;&lt;br&gt;
+</description>
+<pad name="1" x="0" y="-1.8" drill="0.81" diameter="1.51"/>
+<pad name="2" x="0" y="0" drill="0.81" diameter="1.51"/>
+<pad name="3" x="0" y="1.8" drill="0.81" diameter="1.51"/>
+<text x="1.5" y="-0.6" size="1.27" layer="27" align="center">&gt;VALUE</text>
+<text x="1.6" y="-0.2" size="1.27" layer="25" align="center">&gt;NAME</text>
+<wire x1="0" y1="3" x2="0" y2="-3" width="0.05" layer="21" curve="181.1"/>
+<wire x1="1.3" y1="-2.7" x2="0" y2="-3" width="0.05" layer="21"/>
+<wire x1="0" y1="3" x2="1.3" y2="2.7" width="0.05" layer="21"/>
+<wire x1="1.3" y1="2.7" x2="1.3" y2="-2.7" width="0.05" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="DS18B20+">
+<wire x1="5.08" y1="2.54" x2="17.78" y2="2.54" width="0.254" layer="94"/>
+<wire x1="17.78" y1="-7.62" x2="17.78" y2="2.54" width="0.254" layer="94"/>
+<wire x1="17.78" y1="-7.62" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="5.08" y1="2.54" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
+<text x="19.05" y="7.62" size="1.778" layer="95" align="center-left">&gt;NAME</text>
+<text x="19.05" y="5.08" size="1.778" layer="96" align="center-left">&gt;VALUE</text>
+<pin name="GND" x="0" y="-5.08" length="middle" direction="pwr"/>
+<pin name="DQ" x="0" y="-2.54" length="middle"/>
+<pin name="VDD" x="0" y="0" length="middle" direction="pwr"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="DS18B20+" prefix="IC">
+<description>&lt;b&gt;DS18B20 prog thermometer 1-Wire, TO92&lt;/b&gt;&lt;p&gt;
+Source: &lt;a href="http://docs-emea.rs-online.com/webdocs/078b/0900766b8078b130.pdf"&gt; Datasheet &lt;/a&gt;</description>
+<gates>
+<gate name="G$1" symbol="DS18B20+" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TO-92">
+<connects>
+<connect gate="G$1" pin="DQ" pad="2"/>
+<connect gate="G$1" pin="GND" pad="1"/>
+<connect gate="G$1" pin="VDD" pad="3"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="ARROW_PART_NUMBER" value="DS18B20+" constant="no"/>
+<attribute name="ARROW_PRICE-STOCK" value="" constant="no"/>
+<attribute name="DESCRIPTION" value="DS18B20 prog thermometer 1-Wire, TO92" constant="no"/>
+<attribute name="HEIGHT" value="mm" constant="no"/>
+<attribute name="MANUFACTURER_NAME" value="Maxim Integrated" constant="no"/>
+<attribute name="MANUFACTURER_PART_NUMBER" value="DS18B20+" constant="no"/>
+<attribute name="MOUSER_PART_NUMBER" value="700-DS18B20+" constant="no"/>
+<attribute name="MOUSER_PRICE-STOCK" value="https://www.mouser.co.uk/ProductDetail/Maxim-Integrated/DS18B20%2b?qs=7H2Jq%252ByxpJKegCKabDbglA%3D%3D" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -1745,6 +1807,7 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <part name="X2" library="con-tycoelectronics" library_urn="urn:adsk.eagle:library:193" deviceset="RJ45" device="" package3d_urn="urn:adsk.eagle:package:10660/1" technology="-8X"/>
 <part name="X1" library="con-tycoelectronics" library_urn="urn:adsk.eagle:library:193" deviceset="RJ45" device="" package3d_urn="urn:adsk.eagle:package:10660/1" technology="-8X"/>
 <part name="ROOM" library="Donnie" deviceset="HDR-3" device="" value="3-PIN"/>
+<part name="IC1" library="SamacSys_Parts" deviceset="DS18B20+" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1815,6 +1878,10 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <instance part="ROOM" gate="G$1" x="-66.04" y="15.24" smashed="yes">
 <attribute name="VALUE" x="-67.31" y="10.16" size="1.778" layer="96"/>
 <attribute name="NAME" x="-67.31" y="23.622" size="1.778" layer="95"/>
+</instance>
+<instance part="IC1" gate="G$1" x="-48.26" y="12.7" smashed="yes" rot="R270">
+<attribute name="NAME" x="-40.64" y="-6.35" size="1.778" layer="95" rot="R270" align="center-left"/>
+<attribute name="VALUE" x="-43.18" y="-6.35" size="1.778" layer="96" rot="R270" align="center-left"/>
 </instance>
 </instances>
 <busses>
@@ -1892,7 +1959,11 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <wire x1="-5.08" y1="22.86" x2="-45.72" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="-45.72" y1="22.86" x2="-45.72" y2="17.78" width="0.1524" layer="91"/>
 <pinref part="ROOM" gate="G$1" pin="2"/>
-<wire x1="-45.72" y1="17.78" x2="-58.42" y2="17.78" width="0.1524" layer="91"/>
+<wire x1="-45.72" y1="17.78" x2="-48.26" y2="17.78" width="0.1524" layer="91"/>
+<wire x1="-48.26" y1="17.78" x2="-58.42" y2="17.78" width="0.1524" layer="91"/>
+<pinref part="IC1" gate="G$1" pin="VDD"/>
+<wire x1="-48.26" y1="12.7" x2="-48.26" y2="17.78" width="0.1524" layer="91"/>
+<junction x="-48.26" y="17.78"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -1943,7 +2014,11 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <wire x1="-43.18" y1="20.32" x2="-43.18" y2="15.24" width="0.1524" layer="91"/>
 <junction x="-15.24" y="20.32"/>
 <pinref part="ROOM" gate="G$1" pin="1"/>
-<wire x1="-43.18" y1="15.24" x2="-58.42" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="-43.18" y1="15.24" x2="-53.34" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="-53.34" y1="15.24" x2="-58.42" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="IC1" gate="G$1" pin="GND"/>
+<wire x1="-53.34" y1="12.7" x2="-53.34" y2="15.24" width="0.1524" layer="91"/>
+<junction x="-53.34" y="15.24"/>
 </segment>
 </net>
 <net name="RDAT" class="0">
@@ -1955,9 +2030,13 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <wire x1="-48.26" y1="30.48" x2="-38.1" y2="30.48" width="0.1524" layer="91"/>
 <pinref part="X1" gate="G$1" pin="1"/>
 <pinref part="ROOM" gate="G$1" pin="3"/>
-<wire x1="-58.42" y1="20.32" x2="-48.26" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="-58.42" y1="20.32" x2="-50.8" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="-50.8" y1="20.32" x2="-48.26" y2="20.32" width="0.1524" layer="91"/>
 <wire x1="-48.26" y1="20.32" x2="-48.26" y2="30.48" width="0.1524" layer="91"/>
 <junction x="-48.26" y="30.48"/>
+<pinref part="IC1" gate="G$1" pin="DQ"/>
+<wire x1="-50.8" y1="12.7" x2="-50.8" y2="20.32" width="0.1524" layer="91"/>
+<junction x="-50.8" y="20.32"/>
 </segment>
 <segment>
 <pinref part="D32" gate="G$1" pin="IO32"/>
