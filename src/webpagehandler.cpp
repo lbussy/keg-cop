@@ -129,6 +129,7 @@ void setJsonHandlers()
 
         String json;
         serializeJsonPretty(doc, json);
+        request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
     });
 
@@ -142,6 +143,7 @@ void setJsonHandlers()
 
         String json;
         serializeJsonPretty(doc, json);
+        request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
     });
 
@@ -153,9 +155,9 @@ void setJsonHandlers()
         DynamicJsonDocument doc(capacitySerial); // Create doc
         JsonObject root = doc.to<JsonObject>(); // Create JSON object
         config.save(root); // Fill the object with current config
+
         String json;
         serializeJsonPretty(doc, json); // Serialize JSON to String
-
         request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
     });
@@ -168,9 +170,9 @@ void setJsonHandlers()
         DynamicJsonDocument doc(capacityFlowSerial); // Create doc
         JsonObject root = doc.to<JsonObject>(); // Create JSON object
         flow.save(root); // Fill the object with current kegs
+
         String json;
         serializeJsonPretty(doc, json); // Serialize JSON to String
-
         request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
     });
@@ -210,8 +212,8 @@ void setJsonHandlers()
 
         String json;
         serializeJsonPretty(doc, json);
+        request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
-        request->send(200, F("text/html"), F("Ok."));
     });
 }
 
