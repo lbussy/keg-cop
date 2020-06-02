@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.5.2">
+<eagle version="9.6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -172,8 +172,8 @@
 4 - KEG4</text>
 <text x="33.4" y="17.7" size="0.8128" layer="26" rot="MR0">5 - KEG5
 6 - KEG6
-7 - KEG7
-8 - KEG8</text>
+7 - 5V
+8 - GND</text>
 </plain>
 <libraries>
 <library name="Donnie">
