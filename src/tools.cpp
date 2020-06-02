@@ -82,7 +82,7 @@ void printDebug()
     max  = info.largest_free_block;
     frag = 100 - (max * 100) / free;   
 #endif
-    Log.verbose(F("[MEM] Free: %l | Max: %l | Frag: %d%" CR CR), free, max, frag);
+    Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d" CR), free, max, frag);
 }
 
 double convertFtoC(double F)
@@ -119,4 +119,23 @@ double convertLtoG(double L)
 {
     // G = L * 0.26417
     return L * 0.26417;
+}
+
+std::string addThousandSeparators(std::string value, char thousandSep = ',', char decimalSep = '.', char sourceDecimalSep = '.')
+{
+    int len = value.length();
+    int negative = ((len && value[0] == '-') ? 1: 0);
+    int dpos = value.find_last_of(sourceDecimalSep);
+    int dlen = 3 + (dpos == std::string::npos ? 0 : (len - dpos));
+
+    if (dpos != std::string::npos && decimalSep != sourceDecimalSep) {
+        value[dpos] = decimalSep;
+    }
+
+    while ((len - negative) > dlen) {
+        value.insert(len - dlen, 1, thousandSep);
+        dlen += 4;
+        len += 1;
+    }
+    return value;
 }
