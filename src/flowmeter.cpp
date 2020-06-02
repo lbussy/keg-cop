@@ -97,7 +97,7 @@ void logFlow()
             pulse[i] = 0;
             lastPulseTime[i] = 0;
             interrupts();
-            if (pulse[i] < SMALLPOUR)
+            if (pulseCount < SMALLPOUR)
             { // Discard a small pour
                 Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
             }
