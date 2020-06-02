@@ -15,7 +15,14 @@ import sys
 #sys.path.insert(0, os.path.abspath('.'))
 import subprocess
 import recommonmark
+
+# for MarkdownParser
 from recommonmark.transform import AutoStructify
+from sphinx_markdown_parser.parser import MarkdownParser
+
+# At top on conf.py (with other import statements)
+from sphinx_markdown_parser.transform import AutoStructify
+
 import sphinx_bootstrap_theme
 
 # -- Project information -----------------------------------------------------
@@ -69,7 +76,7 @@ html_static_path = ['_static/']
 
 # (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
 # Path should be relative to the ``_static`` files directory.
-html_logo = "_static/police.png"
+html_logo = "_static/bubblegum_icon.png"
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.
@@ -141,5 +148,5 @@ html_theme_options = {
 
     # Choose Bootstrap version.
     # Values: "3" (default) or "2" (in quotes)
-    'bootstrap_version': "3",
+    'bootstrap_version': "4",
 }
