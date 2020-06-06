@@ -124,3 +124,4 @@
 - ~~Changing metric/imperial, reload settings?~~
 - ~~Shorten up switch in settings.htm with tapNum~~
 - ~~Don't let a kick disable a tap in RPints compat~~
+- ~~Look into "unable to retrieve" error when changing pages~~

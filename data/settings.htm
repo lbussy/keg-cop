@@ -1530,6 +1530,7 @@
 
     <script type="text/javascript">
         toggleLoader("on");
+        var unloadingState = false;
         var loaded = 0; // Hold data load status
         var numReq = 2; // Number of JSON required
         var hostname = window.location.hostname;
@@ -1537,6 +1538,11 @@
         var imperial;
         var hashLoc;
         var posted = false;
+
+        // Handle unloading page when making a getJSON call
+        $(window).bind("beforeunload", function () {
+            unloadingState = true;
+        });
 
         // Attach the event after the page loads (multi-browser)
         if (window.addEventListener)
@@ -1612,11 +1618,15 @@
                         }
                     }
                     catch {
-                        alert("Unable to parse configuration data from SPIFFS.");
+                        if (!unloadingState) {
+                            alert("Unable to parse configuration data from SPIFFS.");
+                        }
                     }
                 })
                 .fail(function () {
-                    alert("Unable to retrieve configuration data from SPIFFS.");
+                    if (!unloadingState) {
+                        alert("Unable to retrieve configuration data from SPIFFS.");
+                    }
                 })
                 .always(function () {
                     // Can post-process here
@@ -1706,11 +1716,15 @@
                         $('input[name="cloudfreq"]').val(parseInt(config.cloud.freq), 10);
                     }
                     catch {
-                        alert("Unable to parse configuration data from SPIFFS.");
+                        if (!unloadingState) {
+                            alert("Unable to parse configuration data from SPIFFS.");
+                        }
                     }
                 })
                 .fail(function () {
-                    alert("Unable to retrieve configuration data from SPIFFS.");
+                    if (!unloadingState) {
+                        alert("Unable to retrieve configuration data from SPIFFS.");
+                    }
                 })
                 .always(function () {
                     // Can post-process here
@@ -1765,8 +1779,51 @@
             $("button[id='submitSettings']").prop('disabled', true);
             $("button[id='submitSettings']").html('<i class="fa fa-spinner fa-spin"></i> Updating');
 
-            tapnum = $form.find("input[name='tapnum']").val();
-            processTapPost(url, obj, tapnum);
+            // Switch here for hashLoc
+            switch (hashLoc) {
+                case "#tap0":
+                    processTapPost(url, obj, 0);
+                    break;
+                case "#tap1":
+                    processTapPost(url, obj, 1);
+                    break;
+                case "#tap2":
+                    processTapPost(url, obj, 2);
+                    break;
+                case "#tap3":
+                    processTapPost(url, obj, 3);
+                    break;
+                case "#tap4":
+                    processTapPost(url, obj, 4);
+                    break;
+                case "#tap5":
+                    processTapPost(url, obj, 5);
+                    break;
+                case "#tap6":
+                    processTapPost(url, obj, 6);
+                    break;
+                case "#tap7":
+                    processTapPost(url, obj, 7);
+                    break;
+                case "#tempcontrol":
+                    processTempControlPost(url, obj);
+                    break;
+                case "#sensorcontrol":
+                    processSensorControlPost(url, obj);
+                    break;
+                case "#targeturl":
+                    processTargetUrlPost(url, obj);
+                    break;
+                case "#targetcloud":
+                    processTargetCloudPost(url, obj);
+                    break;
+                case "#controller":
+                    processControllerPost(url, obj);
+                    break;
+                default:
+                    console.log("Unknown hash location on submission: " + hashLoc)
+                    break;
+            }
             buttonClearDelay();
         }
 
@@ -1836,6 +1893,7 @@
                 return;
             } else {
                 // Process post
+                toggleLoader("on");
                 originalHostnameConfig = hostnameVal; // Pick up changed host name
                 data = {
                     hostname: hostnameVal,
@@ -1846,6 +1904,7 @@
                     rpintscompat: rpintscompatVal
                 }
                 if (hostnamechanged && reloadpage) {
+
                     var protocol = window.location.protocol;
                     var path = window.location.pathname;
                     var newpage = protocol + "//" + hostnameVal + ".local" + path + hashLoc;
