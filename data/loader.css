@@ -2,16 +2,14 @@
     Spinning loader graphic setup
 */
 
-.loader {
+div.loader {
     display: none;
     position: absolute;
     z-index: 9999;
     top: 25%;
-    left: 46%;
+    left: 45%;
     bottom: 0;
     right: 0;
-    width: 100%;
-    height: 100%;
     border: 16px solid #2FA4E7;
     border-radius: 50%;
     border-top: 16px solid #2FA4E7;
