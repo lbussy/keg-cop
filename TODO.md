@@ -10,7 +10,6 @@
 - Add links to context help
 - Move JS to separate files
 - Don't let a kick disable a tap in RPints compat
-- Shorten up switch in settings.htm with tapNum
 
 ## Bugs
 
@@ -124,3 +123,4 @@
 - ~~Allow accepting IP or not local in settings~~
 - ~~Update remaining after tap pull?  If not, remove refresh timer~~
 - ~~Changing metric/imperial, reload settings?~~
+- ~~Shorten up switch in settings.htm with tapNum~~
