@@ -119,11 +119,16 @@ void logFlow()
             const unsigned long kickSpeed = (flow.taps[i].ppu / 128) * KICKSPEED; // TODO: Address PPL vs PPU
             if (pps > kickSpeed)
             { // Kick detector - keg is blowing foam
-                flow.taps[i].active = false;
                 if (config.copconfig.rpintscompat)
                 {
                     sendKickedMsg(i, flow.taps[i].pin);
                 }
+                else
+                {
+                    flow.taps[i].active = false;
+                    saveFlowConfig();
+                }
+                
             }
         }
     }
