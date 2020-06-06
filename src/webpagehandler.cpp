@@ -500,13 +500,23 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
             {
                 if (strcmp(value, "true") == 0)
                 {
+                    if (!config.copconfig.imperial == true)
+                    {
+                        config.copconfig.imperial = true;
+                        convertConfigtoImperial();
+                        convertFlowtoImperial();
+                    }
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.copconfig.imperial = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
+                    if (!config.copconfig.imperial == false)
+                    {
+                        config.copconfig.imperial = false;
+                        convertConfigtoMetric();
+                        convertFlowtoMetric();
+                    }
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.copconfig.imperial = false;
                 }
                 else
                 {

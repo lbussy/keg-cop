@@ -8,17 +8,19 @@
 
 - Add target pushes
 - Add links to context help
-- Calculate center for spinner
-- Allow accepting IP or not local in settings
 - Move JS to separate files
-- Examine hostname test, try to reload without a page reload
-- On hostname change, make page refresh to new name
-- Changing metric/imperial, reload settings?
-- Update remaining after tap pull?  If not, remove refresh timer
+- Don't let a kick disable a tap in RPints compat
+- Shorten up switch in settings.htm with tapNum
 
 ## Bugs
 
 - ??
+
+## Before Release
+
+- Remove /edit/
+- Update tag
+- Update website
 
 # Complete
 
@@ -117,3 +119,8 @@
 - ~~Refresh flow settings on timer~~
 - ~~When POST is blocked by form, buttons are disabled~~
 - ~~Seeem to be losing first tap on each flash occasionally~~
+- ~~Examine hostname test, try to reload without a page reload~~
+- ~~On hostname change, make page refresh to new name~~
+- ~~Allow accepting IP or not local in settings~~
+- ~~Update remaining after tap pull?  If not, remove refresh timer~~
+- ~~Changing metric/imperial, reload settings?~~

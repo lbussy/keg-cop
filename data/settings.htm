@@ -1514,11 +1514,11 @@
 
     <script type="text/javascript">
         toggleLoader("on");
-        var flowReloadTimer = 60000; // Reload flow details every 60 seconds
         var loaded = 0; // Hold data load status
         var numReq = 2; // Number of JSON required
         var hostname = window.location.hostname;
         var originalHostnameConfig;
+        var imperial;
         var hashLoc;
         var posted = false;
 
@@ -1551,6 +1551,16 @@
             populateFlow();
             populateConfig();
             loadHash();
+            pollComplete();
+        }
+
+        function repopulatePage(doSpinner = false) { // Reload data if we need it
+            if (doSpinner) {
+                toggleLoader("on");
+            }
+            loaded = 0;
+            populateFlow();
+            populateConfig();
             pollComplete();
         }
 
@@ -1603,7 +1613,7 @@
                 });
         }
 
-        function populateConfig() { // Get configuration settings
+        function populateConfig(callback = null) { // Get configuration settings
             var url = "/config/";
             var config = $.getJSON(url, function () {
             })
@@ -1614,8 +1624,10 @@
                         $('input[name="breweryname"]').val(config.copconfig.breweryname);
                         $('input[name="kegeratorname"]').val(config.copconfig.kegeratorname);
                         if (config.copconfig.imperial) {
+                            imperial = true;
                             $('input:radio[name="imperial"]')[1].checked = true;
                         } else {
+                            imperial = false;
                             $('input:radio[name="imperial"]')[0].checked = true;
                         }
                         if (config.copconfig.tapsolenoid) {
@@ -1689,6 +1701,9 @@
                     if (loaded < numReq) {
                         loaded++;
                     }
+                    if (typeof callback == "function") {
+                        callback();
+                    }
                 });
         }
 
@@ -1710,21 +1725,15 @@
 
         function pollComplete() { // Poll to see if entire page is loaded
             if (loaded == numReq) {
+                posted = true;
                 finishPage();
             } else {
                 setTimeout(pollComplete, 300); // try again in 300 milliseconds
             }
         }
 
-        function finishPage() { // Display page, start reload loop
+        function finishPage() { // Display page
             toggleLoader("off");
-            setTimeout(flowReload, flowReloadTimer);
-        }
-
-        function flowReload() { // Reload loop
-            populateFlow(function callFunction() {
-                setTimeout(flowReload, flowReloadTimer);
-            });
         }
 
         // POST Handlers:
@@ -1822,18 +1831,30 @@
                     tapsolenoidVal = $("[name='tapsolenoid']:checked").val(),
                     rpintscompatVal = $("[name='rpintscompat']:checked").val();
 
+            // Hold some data about what we changed
+            var reloadpage = false;
+            var hostnamechanged = false;
+            var unitschanged = false;
+
+            // Decide if we changed units   
+            if ((imperial) != (imperialVal == 'true')) {
+                unitschanged = true;
+            } else {
+                unitschanged = false;
+            }
+
             // Decide if we accessed via IP or non-mDNS name
             var confirmText = '';
-            var hostnamechanged = false;
-            var reloadpage = true;
             if (!(hostnameVal == originalHostnameConfig)) {
                 hostnamechanged = true;
                 if (isIP(hostname)) {
-                    reloadpage = false;
                     confirmText = 'You have connected with an IP address. Changing the hostname may have unintended consequences. Do you want to proceed?';
-                } else if (!isMDNS(hostname)) {
                     reloadpage = false;
-                    confirmText = 'You are not using an mDNS name. Changing the hostname may have unintended consequences. Do you want to proceed?';
+                } else if (!isMDNS(hostname)) {
+                    reloadpage = 'You are not using an mDNS name. Changing the hostname may have unintended consequences. Do you want to proceed?';
+                    reloadpage = false;
+                } else {
+                    reloadpage = true;
                 }
             }
             if (confirmText && (!confirm(confirmText))) {
@@ -1850,13 +1871,15 @@
                     tapsolenoid: tapsolenoidVal,
                     rpintscompat: rpintscompatVal
                 }
-                var protocol = window.location.protocol;
-                var path = window.location.pathname;
-                var newpage = protocol + "//" + hostnameVal + ".local" + path + hashLoc;
                 if (hostnamechanged && reloadpage) {
+                    var protocol = window.location.protocol;
+                    var path = window.location.pathname;
+                    var newpage = protocol + "//" + hostnameVal + ".local" + path + hashLoc;
                     postData(url, data, newpage);
+                } else if (unitschanged) {
+                    postData(url, data, false, true);
                 } else {
-                    postData(url, data);
+                    postData(url, data, false, false);
                 }
             }
         }
@@ -1945,7 +1968,7 @@
             postData(url, data);
         }
 
-        function postData(url, data, newpage = false) {
+        function postData(url, data, newpage = false, newdata = false) {
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -1958,10 +1981,9 @@
                 },
                 complete: function (data) {
                     if (newpage) {
-                        toggleLoader("on");
                         window.location.href = newpage;
-                    } else {
-                        posted = true;
+                    } else if (newdata) {
+                        repopulatePage(true);
                     }
                     posted = true;
                 }
