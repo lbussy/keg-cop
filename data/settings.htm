@@ -142,6 +142,8 @@
                         <div class="card-body">
 
                             <form id="tap0" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="0">
                             
                                 <div class="form-group row">
                                     <label for="tap0ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -237,6 +239,8 @@
                         <div class="card-body">
 
                             <form id="tap1" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="1">
                             
                                 <div class="form-group row">
                                     <label for="tap1ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -331,6 +335,8 @@
                         <div class="card-body">
 
                             <form id="tap2" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="2">
                             
                                 <div class="form-group row">
                                     <label for="tap2ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -425,6 +431,8 @@
                         <div class="card-body">
 
                             <form id="tap3" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="3">
                             
                                 <div class="form-group row">
                                     <label for="tap3ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -519,6 +527,8 @@
                         <div class="card-body">
 
                             <form id="tap4" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="4">
                             
                                 <div class="form-group row">
                                     <label for="tap4ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -613,6 +623,8 @@
                         <div class="card-body">
 
                             <form id="tap5" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="5">
                             
                                 <div class="form-group row">
                                     <label for="tap5ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -707,6 +719,8 @@
                         <div class="card-body">
 
                             <form id="tap6" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="6">
                             
                                 <div class="form-group row">
                                     <label for="tap6ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -801,6 +815,8 @@
                         <div class="card-body">
 
                             <form id="tap7" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="7">
                             
                                 <div class="form-group row">
                                     <label for="tap7ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -1039,7 +1055,7 @@
                                     <div class="col-3">
                                         <div class="row form-group">
                                             <label for="setpoint" class="col-form-label" data-toggle="tooltip"
-                                                title="Enter the temperature setpoint in your selected units &#x2109; or &#x2103;)"> Set Point
+                                                title="Enter the temperature setpoint in your selected units (&#x2109; or &#x2103;)"> Set Point
                                             </label>
                                         </div>
                                         <div class="row form-group">
@@ -1743,56 +1759,14 @@
             event.preventDefault();
             hashLoc = window.location.hash;
             var $form = $(obj);
+            var tapnum;
             url = $form.attr("action");
 
             $("button[id='submitSettings']").prop('disabled', true);
             $("button[id='submitSettings']").html('<i class="fa fa-spinner fa-spin"></i> Updating');
 
-            // Switch here for hashLoc
-            switch (hashLoc) {
-                case "#tap0":
-                    processTapPost(url, obj, 0);
-                    break;
-                case "#tap1":
-                    processTapPost(url, obj, 1);
-                    break;
-                case "#tap2":
-                    processTapPost(url, obj, 2);
-                    break;
-                case "#tap3":
-                    processTapPost(url, obj, 3);
-                    break;
-                case "#tap4":
-                    processTapPost(url, obj, 4);
-                    break;
-                case "#tap5":
-                    processTapPost(url, obj, 5);
-                    break;
-                case "#tap6":
-                    processTapPost(url, obj, 6);
-                    break;
-                case "#tap7":
-                    processTapPost(url, obj, 7);
-                    break;
-                case "#tempcontrol":
-                    processTempControlPost(url, obj);
-                    break;
-                case "#sensorcontrol":
-                    processSensorControlPost(url, obj);
-                    break;
-                case "#targeturl":
-                    processTargetUrlPost(url, obj);
-                    break;
-                case "#targetcloud":
-                    processTargetCloudPost(url, obj);
-                    break;
-                case "#controller":
-                    processControllerPost(url, obj);
-                    break;
-                default:
-                    console.log("Unknown hash location on submission: " + hashLoc)
-                    break;
-            }
+            tapnum = $form.find("input[name='tapnum']").val();
+            processTapPost(url, obj, tapnum);
             buttonClearDelay();
         }
 
