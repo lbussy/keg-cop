@@ -9,7 +9,6 @@
 - Add target pushes
 - Add links to context help
 - Move JS to separate files
-- Don't let a kick disable a tap in RPints compat
 
 ## Bugs
 
@@ -124,3 +123,4 @@
 - ~~Update remaining after tap pull?  If not, remove refresh timer~~
 - ~~Changing metric/imperial, reload settings?~~
 - ~~Shorten up switch in settings.htm with tapNum~~
+- ~~Don't let a kick disable a tap in RPints compat~~
