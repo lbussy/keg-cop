@@ -1692,22 +1692,6 @@
                 });
         }
 
-        function killButtons(element) { // TODO:  Don't think we need this anymore
-            if ($(element).attr("value") === "hostname") {
-                if (isIP(hostname)) {
-                    alert("You have accessed the application with an IP address.");
-                    return (false);
-                } else if (!isLocal(hostname)) {
-                    alert("You have accessed the application with other than a .local address.");
-                    return (false);
-                }
-            }
-            $(':button').prop('disabled', true);
-            $(':button').html('<i class="fa fa-spinner fa-spin"></i> Updating');
-            $(element).parents('form').submit()
-            return (true);
-        }
-
         function isIP(hostname) { // Bool: is this an IP address
             if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(hostname)) {
                 return (true)
@@ -1840,10 +1824,15 @@
 
             // Decide if we accessed via IP or non-mDNS name
             var confirmText = '';
+            var hostnamechanged = false;
+            var reloadpage = true;
             if (!(hostnameVal == originalHostnameConfig)) {
+                hostnamechanged = true;
                 if (isIP(hostname)) {
+                    reloadpage = false;
                     confirmText = 'You have connected with an IP address. Changing the hostname may have unintended consequences. Do you want to proceed?';
                 } else if (!isMDNS(hostname)) {
+                    reloadpage = false;
                     confirmText = 'You are not using an mDNS name. Changing the hostname may have unintended consequences. Do you want to proceed?';
                 }
             }
@@ -1861,7 +1850,14 @@
                     tapsolenoid: tapsolenoidVal,
                     rpintscompat: rpintscompatVal
                 }
-                postData(url, data);
+                var protocol = window.location.protocol;
+                var path = window.location.pathname;
+                var newpage = protocol + "//" + hostnameVal + ".local" + path + hashLoc;
+                if (hostnamechanged && reloadpage) {
+                    postData(url, data, newpage);
+                } else {
+                    postData(url, data);
+                }
             }
         }
 
@@ -1949,7 +1945,7 @@
             postData(url, data);
         }
 
-        function postData(url, data) {
+        function postData(url, data, newpage = false) {
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -1961,6 +1957,11 @@
                     alert('POST failed.');
                 },
                 complete: function (data) {
+                    if (newpage) {
+                        window.location.href = newpage;
+                    } else {
+                        posted = true;
+                    }
                     posted = true;
                 }
             });
