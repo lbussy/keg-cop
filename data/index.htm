@@ -123,6 +123,7 @@
 
     <script>
         toggleLoader("on");
+        var unloadingState = false;
         var numReq = 3;
         var loaded = 0;
         var imperial;
@@ -133,6 +134,11 @@
         var tapChart;
         var flowReloadTimer = 5000;
         var tempsReloadTimer = 10000;
+
+        // Detect unloading state during getJSON
+        $(window).bind("beforeunload", function () {
+            unloadingState = true;
+        });
 
         // Attach the event after the page loads
         if (window.addEventListener)
@@ -203,11 +209,15 @@
                         }
                     }
                     catch {
-                        alert("Unable to parse configuration data from SPIFFS.");
+                        if (!unloadingState) {
+                           alert("Unable to parse configuration data from SPIFFS."); 
+                        }
                     }
                 })
                 .fail(function () {
-                    alert("Unable to retrieve configuration data from SPIFFS.");
+                    if (!unloadingState) {
+                        alert("Unable to retrieve configuration data from SPIFFS.");
+                    }
                 })
                 .always(function () {
                     // Can post-process here
@@ -234,7 +244,9 @@
                     }
                 })
                 .fail(function () {
-                    alert("Unable to retrieve configuration data from SPIFFS.");
+                    if (!unloadingState) {
+                        alert("Unable to retrieve configuration data from SPIFFS.");
+                    }
                 })
                 .always(function () {
                     // Can post-process here
@@ -317,11 +329,15 @@
                         }
                     }
                     catch {
-                        alert("Unable to parse temperature data from SPIFFS.");
+                        if (!unloadingState) {
+                            alert("Unable to parse temperature data from SPIFFS.");
+                        }
                     }
                 })
                 .fail(function () {
-                    alert("Unable to retrieve temperature data from SPIFFS.");
+                    if (!unloadingState) {
+                        alert("Unable to retrieve temperature data from SPIFFS.");
+                    }
                 })
                 .always(function () {
                     // Can post-process here

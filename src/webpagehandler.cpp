@@ -523,7 +523,25 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "rpintscompat") == 0) // Set compatability
+            if (strcmp(name, "tapsolenoid") == 0) // Set active
+            {
+                if (strcmp(value, "energized") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    digitalWrite(SOLENOID, LOW);
+                    config.copconfig.tapsolenoid = true;
+                }
+                else if (strcmp(value, "deenergized") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    digitalWrite(SOLENOID, HIGH);
+                    config.copconfig.tapsolenoid = false;
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }            if (strcmp(name, "rpintscompat") == 0) // Set compatability
             {
                 if (strcmp(value, "kegcop") == 0)
                 {
