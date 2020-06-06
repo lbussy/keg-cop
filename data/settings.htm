@@ -1958,6 +1958,7 @@
                 },
                 complete: function (data) {
                     if (newpage) {
+                        toggleLoader("on");
                         window.location.href = newpage;
                     } else {
                         posted = true;
