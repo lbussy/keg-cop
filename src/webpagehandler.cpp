@@ -441,6 +441,7 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
 
 bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller settings
 {
+    bool hostnamechanged = false;
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
@@ -463,6 +464,10 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                 }
                 else
                 {
+                    if (!strcmp(config.hostname, value) == 0)
+                    {
+                        hostnamechanged=true;
+                    }
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     strlcpy(config.hostname, value, sizeof(config.hostname));
                 }
@@ -533,6 +538,20 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
+        }
+        if (hostnamechanged)
+        { // We reset hostname, process
+            hostnamechanged = false;
+            #ifdef ESP8266
+            wifi_station_set_hostname(config.hostname);
+            MDNS.setHostname(config.hostname);
+            MDNS.notifyAPChange();
+            MDNS.announce();
+            #elif defined ESP32
+            tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.hostname);
+            mdnsreset();
+            #endif
+            Log.verbose(F("POSTed new mDNSid, reset mDNS stack." CR));
         }
     }
     if (saveConfig())
