@@ -11,6 +11,10 @@
 - Calculate center for spinner
 - Allow accepting IP or not local in settings
 - Move JS to separate files
+- Examine hostname test, try to reload without a page reload
+- On hostname change, make page refresh to new name
+- Changing metric/imperial, reload settings?
+- Update remaining after tap pull?  If not, remove refresh timer
 
 ## Bugs
 
