@@ -57,12 +57,12 @@ void setSettingsAliases();
 void setEditor();
 void stopWebServer();
 
-std::string handleTapPost(AsyncWebServerRequest *);
-std::string handleControllerPost(AsyncWebServerRequest *);
-std::string handleControlPost(AsyncWebServerRequest *);
-std::string handleSensorPost(AsyncWebServerRequest *);
-std::string handleTargetUrlPost(AsyncWebServerRequest *);
-std::string handleCloudUrlPost(AsyncWebServerRequest *);
+bool handleTapPost(AsyncWebServerRequest *);
+bool handleControllerPost(AsyncWebServerRequest *);
+bool handleControlPost(AsyncWebServerRequest *);
+bool handleSensorPost(AsyncWebServerRequest *);
+bool handleUrlTargetPost(AsyncWebServerRequest *);
+bool handleCloudTargetPost(AsyncWebServerRequest *);
 
 extern struct ThatVersion thatVersion;
 extern struct Config config;

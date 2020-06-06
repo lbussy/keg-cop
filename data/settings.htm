@@ -141,8 +141,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap0" action="/settings/tapcontrol/" method="POST">
-                                <input type="hidden" id="tap0hashloc" name="tap0hashloc" value="#tap0">
+                            <form id="tap0" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
                             
                                 <div class="form-group row">
                                     <label for="tap0ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -202,13 +201,13 @@
                                             <div class="col">
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                        <input type="radio" class="form-check-input" name="tap0active" id="active" value="option0">
+                                                        <input type="radio" class="form-check-input" name="tap0active" id="tap0active" value="active">
                                                         Active
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                        <input type="radio" class="form-check-input" name="tap0active" id="inactive" value="option1"
+                                                        <input type="radio" class="form-check-input" name="tap0active" id="tap0active" value="inactive"
                                                             checked="">
                                                         Inactive
                                                     </label>
@@ -219,12 +218,8 @@
                                 </fieldset>
                             
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
                             
                             </form>                            
@@ -241,8 +236,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap1" action="/settings/tapcontrol/" method="POST">
-                                <input type="hidden" id="tap1hashloc" name="tap1hashloc" value="#tap1">
+                            <form id="tap1" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
                             
                                 <div class="form-group row">
                                     <label for="tap1ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -302,13 +296,13 @@
                                             <div class="col">
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                        <input type="radio" class="form-check-input" name="tap1active" id="active" value="option0">
+                                                        <input type="radio" class="form-check-input" name="tap1active" id="tap1active" value="active">
                                                         Active
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                        <input type="radio" class="form-check-input" name="tap1active" id="inactive" value="option1"
+                                                        <input type="radio" class="form-check-input" name="tap1active" id="tap1active" value="inactive"
                                                             checked="">
                                                         Inactive
                                                     </label>
@@ -319,12 +313,8 @@
                                 </fieldset>
                             
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
                             
                             </form>                            
@@ -340,8 +330,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap2" action="/settings/tapcontrol/" method="POST">
-                                <input type="hidden" id="tap2hashloc" name="tap2hashloc" value="#tap2">
+                            <form id="tap2" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
                             
                                 <div class="form-group row">
                                     <label for="tap2ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -401,13 +390,13 @@
                                             <div class="col">
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                        <input type="radio" class="form-check-input" name="tap2active" id="active" value="option0">
+                                                        <input type="radio" class="form-check-input" name="tap2active" id="tap2active" value="active">
                                                         Active
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                        <input type="radio" class="form-check-input" name="tap2active" id="inactive" value="option1"
+                                                        <input type="radio" class="form-check-input" name="tap2active" id="tap2active" value="inactive"
                                                             checked="">
                                                         Inactive
                                                     </label>
@@ -418,12 +407,8 @@
                                 </fieldset>
                             
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
                             
                             </form>
@@ -439,8 +424,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap3" action="/settings/tapcontrol/" method="POST">
-                                <input type="hidden" id="tap3hashloc" name="tap3hashloc" value="#tap3">
+                            <form id="tap3" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
                             
                                 <div class="form-group row">
                                     <label for="tap3ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -500,13 +484,13 @@
                                             <div class="col">
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                        <input type="radio" class="form-check-input" name="tap3active" id="active" value="option0">
+                                                        <input type="radio" class="form-check-input" name="tap3active" id="tap3active" value="active">
                                                         Active
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                        <input type="radio" class="form-check-input" name="tap3active" id="inactive" value="option1"
+                                                        <input type="radio" class="form-check-input" name="tap3active" id="tap3active" value="inactive"
                                                             checked="">
                                                         Inactive
                                                     </label>
@@ -517,12 +501,8 @@
                                 </fieldset>
                             
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
                             
                             </form>
@@ -538,8 +518,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap4" action="/settings/tapcontrol/" method="POST">
-                                <input type="hidden" id="tap4hashloc" name="tap4hashloc" value="#tap4">
+                            <form id="tap4" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
                             
                                 <div class="form-group row">
                                     <label for="tap4ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -599,13 +578,13 @@
                                             <div class="col">
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                        <input type="radio" class="form-check-input" name="tap4active" id="active" value="option0">
+                                                        <input type="radio" class="form-check-input" name="tap4active" id="tap4active" value="active">
                                                         Active
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                        <input type="radio" class="form-check-input" name="tap4active" id="inactive" value="option1"
+                                                        <input type="radio" class="form-check-input" name="tap4active" id="tap4active" value="inactive"
                                                             checked="">
                                                         Inactive
                                                     </label>
@@ -616,12 +595,8 @@
                                 </fieldset>
                             
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
                             
                             </form>
@@ -637,8 +612,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap5" action="/settings/tapcontrol/" method="POST">
-                                <input type="hidden" id="tap5hashloc" name="tap5hashloc" value="#tap5">
+                            <form id="tap5" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
                             
                                 <div class="form-group row">
                                     <label for="tap5ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -698,13 +672,13 @@
                                             <div class="col">
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                        <input type="radio" class="form-check-input" name="tap5active" id="active" value="option0">
+                                                        <input type="radio" class="form-check-input" name="tap5active" id="tap5active" value="active">
                                                         Active
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                        <input type="radio" class="form-check-input" name="tap5active" id="inactive" value="option1"
+                                                        <input type="radio" class="form-check-input" name="tap5active" id="tap5active" value="inactive"
                                                             checked="">
                                                         Inactive
                                                     </label>
@@ -715,12 +689,8 @@
                                 </fieldset>
                             
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
                             
                             </form>
@@ -736,8 +706,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap6" action="/settings/tapcontrol/" method="POST">
-                                <input type="hidden" id="tap6hashloc" name="tap6hashloc" value="#tap6">
+                            <form id="tap6" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
                             
                                 <div class="form-group row">
                                     <label for="tap6ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -797,13 +766,13 @@
                                             <div class="col">
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                        <input type="radio" class="form-check-input" name="tap6active" id="active" value="option0">
+                                                        <input type="radio" class="form-check-input" name="tap6active" id="tap6active" value="active">
                                                         Active
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                        <input type="radio" class="form-check-input" name="tap6active" id="inactive" value="option1"
+                                                        <input type="radio" class="form-check-input" name="tap6active" id="tap6active" value="inactive"
                                                             checked="">
                                                         Inactive
                                                     </label>
@@ -814,12 +783,8 @@
                                 </fieldset>
                             
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
                             
                             </form>
@@ -835,8 +800,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap7" action="/settings/tapcontrol/" method="POST">
-                                <input type="hidden" id="tap7hashloc" name="tap7hashloc" value="#tap7">
+                            <form id="tap7" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
                             
                                 <div class="form-group row">
                                     <label for="tap7ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -896,13 +860,13 @@
                                             <div class="col">
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
-                                                        <input type="radio" class="form-check-input" name="tap7active" id="active" value="option0">
+                                                        <input type="radio" class="form-check-input" name="tap7active" id="tap7active" value="active">
                                                         Active
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
-                                                        <input type="radio" class="form-check-input" name="tap7active" id="inactive" value="option1"
+                                                        <input type="radio" class="form-check-input" name="tap7active" id="tap7active" value="inactive"
                                                             checked="">
                                                         Inactive
                                                     </label>
@@ -913,12 +877,8 @@
                                 </fieldset>
                             
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
                             
                             </form>
@@ -934,8 +894,8 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="controller" action="/settings/controller/" method="POST">
-                                <input type="hidden" id="controller" name="controller" value="#controller">
+                            <!-- <form id="controller" action="/settings/controller/" method="POST"> -->
+                            <form id="controller" action="/settings/controller/" method="POST" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="hostname" class="col-sm-2 col-form-label"
@@ -985,13 +945,13 @@
                                         <div class="col-sm-8">
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="Change the application to use metric units (℃ or Liters)">
-                                                    <input type="radio" class="form-check-input" name="units" id="metric" value="option0">
+                                                    <input type="radio" class="form-check-input" name="imperial" id="imperial" value="false">
                                                     Metric
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="Change the to use imperial units (℉ or Gallons)">
-                                                    <input type="radio" class="form-check-input" name="units" id="imperial" value="option1"
+                                                    <input type="radio" class="form-check-input" name="imperial" id="imperial" value="true"
                                                         checked="">
                                                     Imperial
                                                 </label>
@@ -1009,13 +969,13 @@
                                         <div class="col-sm-8">
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="Energize the solenoid relay">
-                                                    <input type="radio" class="form-check-input" name="tapsolenoid" id="energized" value="option0">
+                                                    <input type="radio" class="form-check-input" name="tapsolenoid" id="tapsolenoid" value="energized">
                                                     Energized
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="De-energize the solenoid relay">
-                                                    <input type="radio" class="form-check-input" name="tapsolenoid" id="deenergized" value="option1"
+                                                    <input type="radio" class="form-check-input" name="tapsolenoid" id="tapsolenoid" value="deenergized"
                                                         checked="">
                                                     De-energized
                                                 </label>
@@ -1033,19 +993,19 @@
                                         <div class="col-sm-8">
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="Standard Keg Cop functionality">
-                                                    <input type="radio" class="form-check-input" name="rpintscompat" id="kegcop" value="option0" checked="">
+                                                    <input type="radio" class="form-check-input" name="rpintscompat" id="rpintscompat" value="kegcop" checked="">
                                                     Keg Cop
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="RaspberryPints 2.0 compatible">
-                                                    <input type="radio" class="form-check-input" name="rpintscompat" id="rpintscompat" value="option1">
+                                                    <input type="radio" class="form-check-input" name="rpintscompat" id="rpintscompat" value="rpintscompat">
                                                     RaspberryPints
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="RaspberryPints 2.0 with RandR+ mods compatible">
-                                                    <input type="radio" class="form-check-input" name="rpintscompat" id="randr" value="option2">
+                                                    <input type="radio" class="form-check-input" name="rpintscompat" id="rpintscompat" value="randr">
                                                     RPints RandR+
                                                 </label>
                                             </div>
@@ -1055,13 +1015,10 @@
                                 </fieldset>
 
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity(this)){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings" value="hostname")>
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
+
                             </form>
 
                         </div>
@@ -1075,9 +1032,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form class="form-group" id="tempcontrol" action="/settings/tempcontrol/" method="POST">
-                                
-                                <input type="hidden" id="tempcontrol" name="tempcontrol" value="#tempcontrol">
+                            <form class="form-group" id="tempcontrol" action="/settings/tempcontrol/" method="POST" onsubmit="return processPost(this);">
 
                                 <div class="row col-12">
 								
@@ -1116,15 +1071,15 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Temperature control enabled">
-                                                            <input type="radio" class="form-check-input" name="enablecontrol" id="enabled"
-															value="option0">
+                                                            <input type="radio" class="form-check-input" name="enablecontrol" id="enablecontrol"
+															value="true">
                                                             Enabled
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Temperature control disabled">
-                                                            <input type="radio" class="form-check-input" name="enablecontrol" id="disabled"
-															value="option1">
+                                                            <input type="radio" class="form-check-input" name="enablecontrol" id="enablecontrol"
+															value="false">
                                                             Disabled
                                                         </label>
                                                     </div>
@@ -1133,16 +1088,11 @@
                                         </fieldset>
                                     </div>
 
-									
                                 </div>
 
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
 
                             </form>
@@ -1159,9 +1109,7 @@
                         <div class="card-body">
 
                             <!-- Sensor Control Form-->
-                            <form class="form-group" id="sensorcontrol" action="/settings/sensorcontrol/" method="POST">
-                            
-                                <input type="hidden" id="sensorcontrol" name="sensorcontrol" value="#sensorcontrol">
+                            <form class="form-group" id="sensorcontrol" action="/settings/sensorcontrol/" method="POST" onsubmit="return processPost(this);">
 
                                 <!-- Room Sensor Control -->
                                 <div class="row col-sm-12 justify-content-center">
@@ -1186,14 +1134,13 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
-                                                            <input type="radio" class="form-check-input" name="enableroom" id="enabled" value="option0">
+                                                            <input type="radio" class="form-check-input" name="enableroom" id="enableroom" value="true">
                                                             Enabled
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
-                                                            <input type="radio" class="form-check-input" name="enableroom" id="disabled" value="option1"
-                                                                checked="">
+                                                            <input type="radio" class="form-check-input" name="enableroom" id="enableroom" value="false">
                                                             Disabled
                                                         </label>
                                                     </div>
@@ -1231,14 +1178,13 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
-                                                            <input type="radio" class="form-check-input" name="enabletower" id="enabled" value="option0">
+                                                            <input type="radio" class="form-check-input" name="enabletower" id="enabletower" value="true">
                                                             Enabled
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
-                                                            <input type="radio" class="form-check-input" name="enabletower" id="disabled" value="option1"
-                                                                checked="">
+                                                            <input type="radio" class="form-check-input" name="enabletower" id="enabletower" value="false">
                                                             Disabled
                                                         </label>
                                                     </div>
@@ -1276,14 +1222,13 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
-                                                            <input type="radio" class="form-check-input" name="enableupper" id="enabled" value="option0">
+                                                            <input type="radio" class="form-check-input" name="enableupper" id="enableupper" value="true">
                                                             Enabled
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
-                                                            <input type="radio" class="form-check-input" name="enableupper" id="disabled" value="option1"
-                                                                checked="">
+                                                            <input type="radio" class="form-check-input" name="enableupper" id="enableupper" value="false">
                                                             Disabled
                                                         </label>
                                                     </div>
@@ -1321,14 +1266,13 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
-                                                            <input type="radio" class="form-check-input" name="enablelower" id="enabled" value="option0">
+                                                            <input type="radio" class="form-check-input" name="enablelower" id="enablelower" value="true">
                                                             Enabled
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
-                                                            <input type="radio" class="form-check-input" name="enablelower" id="disabled" value="option1"
-                                                                checked="">
+                                                            <input type="radio" class="form-check-input" name="enablelower" id="enablelower" value="false">
                                                             Disabled
                                                         </label>
                                                     </div>
@@ -1366,13 +1310,13 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
-                                                            <input type="radio" class="form-check-input" name="enablekeg" id="enabled" value="option0">
+                                                            <input type="radio" class="form-check-input" name="enablekeg" id="enablekeg" value="true">
                                                             Enabled
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
-                                                            <input type="radio" class="form-check-input" name="enablekeg" id="disabled" value="option1"
+                                                            <input type="radio" class="form-check-input" name="enablekeg" id="enablekeg" value="false"
                                                                 checked="">
                                                             Disabled
                                                         </label>
@@ -1385,12 +1329,8 @@
                                 <!-- Keg Temperature Sensor Control -->
 
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
 
                             </form> <!-- Sensor Control Form-->
@@ -1406,9 +1346,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="targeturl" action="/settings/targeturl/" method="POST">
-
-                                <input type="hidden" id="targeturlhashloc" name="targeturlhashloc" value="#targeturl">
+                            <form id="targeturl" action="/settings/targeturl/" method="POST" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="targeturl" class="col-sm-2 col-form-label"
@@ -1433,12 +1371,8 @@
                                 </div>
 								
                                 <div class="row col-sm-12 justify-content-center">
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-                                        id="submitSettings">
-                                            Update
-                                    </button>
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
                                 </div>
 								
                             </form>
@@ -1453,9 +1387,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="cloudtype" action="/settings/cloudurl/" method="POST">
-
-								<input type="hidden" id="cloudhashloc" name="cloudhashloc" value="#targetcloud">
+                            <form id="cloudtype" action="/settings/cloudurl/" method="POST" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="cloudtype" class="col-sm-2 col-form-label" data-toggle="tooltip"
@@ -1495,14 +1427,10 @@
                                     </div>
                                 </div>
 
-								<div class="row col-sm-12 justify-content-center">
-									<button
-										class="btn btn-primary"
-										onclick="if(this.form.checkValidity()){this.disabled=true;return killButtons(this);}"
-										id="submitSettings">
-											Update
-									</button>
-								</div>
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                </div>
 
 							</form>
 
@@ -1590,14 +1518,20 @@
         var loaded = 0; // Hold data load status
         var numReq = 2; // Number of JSON required
         var hostname = window.location.hostname;
-        // Attach the event after the page loads
+        var originalHostnameConfig;
+        var hashLoc;
+        var posted = false;
+
+        // Attach the event after the page loads (multi-browser)
         if (window.addEventListener)
             window.addEventListener("load", loadPage, false);
         else if (window.attachEvent)
             window.attachEvent("onload", loadPage);
         else window.onload = loadPage;
 
-        function loadPage() {
+        // Page data load
+
+        function loadPage() { // Make triple sure the whole DOM loaded
             if (document.readyState === 'ready' || document.readyState === 'complete') {
                 populatePage();
             } else {
@@ -1620,8 +1554,7 @@
             pollComplete();
         }
 
-        function loadHash() {
-            // Link to tab via hash value
+        function loadHash() { // Link to tab via hash value
             var url = document.location.toString();
             if (url.match('#')) {
                 $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
@@ -1677,12 +1610,13 @@
                 .done(function (config) {
                     try {
                         $('input[name="hostname"]').val(config.hostname);
+                        originalHostnameConfig = $('input[name="hostname"]').val();
                         $('input[name="breweryname"]').val(config.copconfig.breweryname);
                         $('input[name="kegeratorname"]').val(config.copconfig.kegeratorname);
                         if (config.copconfig.imperial) {
-                            $('input:radio[name="units"]')[1].checked = true;
+                            $('input:radio[name="imperial"]')[1].checked = true;
                         } else {
-                            $('input:radio[name="units"]')[0].checked = true;
+                            $('input:radio[name="imperial"]')[0].checked = true;
                         }
                         if (config.copconfig.tapsolenoid) {
                             $('input:radio[name="tapsolenoid"]')[0].checked = true;
@@ -1758,7 +1692,7 @@
                 });
         }
 
-        function killButtons(element) {
+        function killButtons(element) { // TODO:  Don't think we need this anymore
             if ($(element).attr("value") === "hostname") {
                 if (isIP(hostname)) {
                     alert("You have accessed the application with an IP address.");
@@ -1774,7 +1708,7 @@
             return (true);
         }
 
-        function isIP(hostname) {
+        function isIP(hostname) { // Bool: is this an IP address
             if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(hostname)) {
                 return (true)
             } else {
@@ -1782,7 +1716,7 @@
             }
         }
 
-        function isLocal(hostname) {
+        function isMDNS(hostname) { // Bool: Is this an mDNS host name
             if (hostname.endsWith(".local")) {
                 return (true);
             } else {
@@ -1790,7 +1724,7 @@
             }
         }
 
-        function pollComplete() {
+        function pollComplete() { // Poll to see if entire page is loaded
             if (loaded == numReq) {
                 finishPage();
             } else {
@@ -1798,15 +1732,248 @@
             }
         }
 
-        function flowReload() {
+        function finishPage() { // Display page, start reload loop
+            toggleLoader("off");
+            setTimeout(flowReload, flowReloadTimer);
+        }
+
+        function flowReload() { // Reload loop
             populateFlow(function callFunction() {
                 setTimeout(flowReload, flowReloadTimer);
             });
         }
 
-        function finishPage() { // Display page
-            toggleLoader("off");
-            setTimeout(flowReload, flowReloadTimer);
+        // POST Handlers:
+
+        function processPost(obj) {
+            posted = false;
+            event.preventDefault();
+            hashLoc = window.location.hash;
+            var $form = $(obj);
+            url = $form.attr("action");
+
+            $("button[id='submitSettings']").prop('disabled', true);
+            $("button[id='submitSettings']").html('<i class="fa fa-spinner fa-spin"></i> Updating');
+
+            // Switch here for hashLoc
+            switch (hashLoc) {
+                case "#tap0":
+                    processTapPost(url, obj, 0);
+                    break;
+                case "#tap1":
+                    processTapPost(url, obj, 1);
+                    break;
+                case "#tap2":
+                    processTapPost(url, obj, 2);
+                    break;
+                case "#tap3":
+                    processTapPost(url, obj, 3);
+                    break;
+                case "#tap4":
+                    processTapPost(url, obj, 4);
+                    break;
+                case "#tap5":
+                    processTapPost(url, obj, 5);
+                    break;
+                case "#tap6":
+                    processTapPost(url, obj, 6);
+                    break;
+                case "#tap7":
+                    processTapPost(url, obj, 7);
+                    break;
+                case "#tempcontrol":
+                    processTempControlPost(url, obj);
+                    break;
+                case "#sensorcontrol":
+                    processSensorControlPost(url, obj);
+                    break;
+                case "#targeturl":
+                    processTargetUrlPost(url, obj);
+                    break;
+                case "#targetcloud":
+                    processTargetCloudPost(url, obj);
+                    break;
+                case "#controller":
+                    processControllerPost(url, obj);
+                    break;
+                default:
+                    console.log("Unknown hash location on submission: " + hashLoc)
+                    break;
+            }
+            buttonClearDelay();
+        }
+
+        function processTapPost(url, obj, tapNum) {
+            // Handle tap posts
+
+            // Get form data
+            var $form = $(obj),
+                ppu = $form.find("input[name='tap" + tapNum + "ppu']").val(),
+                beername = $form.find("input[name='tap" + tapNum + "beername']").val(),
+                cap = $form.find("input[name='tap" + tapNum + "cap']").val(),
+                remain = $form.find("input[name='tap" + tapNum + "remain']").val(),
+                active = $form.find("input[name='tap" + tapNum + "active']:checked").val();
+
+			// Process post
+			data = {
+                tap: tapNum,
+                ppu: ppu,
+                beername: beername,
+                cap: cap,
+                remain: remain,
+                active: active
+			}
+			postData(url, data);
+        }
+
+        function processControllerPost(url, obj) {
+            // Handle controller posts
+
+            // Get form data
+            var $form = $(obj),
+                    hostnameVal = $form.find("input[name='hostname']").val(),
+                    brewerynameVal = $form.find("input[name='breweryname']").val(),
+                    kegeratornameVal = $form.find("input[name='kegeratorname']").val()
+                    imperialVal = $("[name='imperial']:checked").val(),
+                    tapsolenoidVal = $("[name='tapsolenoid']:checked").val(),
+                    rpintscompatVal = $("[name='rpintscompat']:checked").val();
+
+            // Decide if we accessed via IP or non-mDNS name
+            var confirmText = '';
+            if (!(hostnameVal == originalHostnameConfig)) {
+                if (isIP(hostname)) {
+                    confirmText = 'You have connected with an IP address. Changing the hostname may have unintended consequences. Do you want to proceed?';
+                } else if (!isMDNS(hostname)) {
+                    confirmText = 'You are not using an mDNS name. Changing the hostname may have unintended consequences. Do you want to proceed?';
+                }
+            }
+            if (confirmText && (!confirm(confirmText))) {
+                // Bail out on post
+                return;
+            } else {
+                // Process post
+                originalHostnameConfig = hostnameVal; // Pick up changed host name
+                data = {
+                    hostname: hostnameVal,
+                    breweryname: brewerynameVal,
+                    kegeratorname: kegeratornameVal,
+                    imperial: imperialVal,
+                    tapsolenoid: tapsolenoidVal,
+                    rpintscompat: rpintscompatVal
+                }
+                postData(url, data);
+            }
+        }
+
+        function processTempControlPost(url, obj) {
+            // Handle temperature control posts
+
+            // Get form data
+            var $form = $(obj),
+                setpoint = $form.find("input[name='setpoint']").val(),
+                controlpoint = $form.find("select[name='controlpoint']").val(),
+                enablecontrol = $form.find("input[name='enablecontrol']:checked").val();
+
+			// Process post
+			data = {
+                setpoint: setpoint,
+                controlpoint: controlpoint,
+                enablecontrol: enablecontrol
+			}
+			postData(url, data);
+        }
+
+        function processSensorControlPost(url, obj) {
+            // Handle sensor control posts
+
+            // Get form data
+            var $form = $(obj),
+                calroom = $form.find("input[name='calroom']").val(),
+                enableroom = $form.find("input[name='enableroom']:checked").val(),
+                caltower = $form.find("input[name='caltower']").val(),
+                enabletower = $form.find("input[name='enabletower']:checked").val(),
+                calupper = $form.find("input[name='calupper']").val(),
+                enableupper = $form.find("input[name='enableupper']:checked").val(),
+                callower = $form.find("input[name='callower']").val(),
+                enablelower = $form.find("input[name='enablelower']:checked").val(),
+                calkeg = $form.find("input[name='calkeg']").val(),
+                enablekeg = $form.find("input[name='enablekeg']:checked").val();
+
+			// Process post
+			data = {
+                calroom: calroom,
+                enableroom: enableroom,
+                caltower: caltower,
+                enabletower: enabletower,
+                calupper: calupper,
+                enableupper: enableupper,
+                callower: callower,
+                enablelower: enablelower,
+                calkeg: calkeg,
+                enablekeg: enablekeg
+			}
+            postData(url, data);
+        }
+
+        function processTargetUrlPost(url, obj) {
+            // Handle target URL posts
+
+            // Get form data
+            var $form = $(obj),
+            targeturl = $form.find("input[name='targeturl']").val(),
+            targetfreq = $form.find("input[name='targetfreq']").val();
+
+			// Process post
+			data = {
+                targeturl: targeturl,
+                targetfreq: targetfreq
+			}
+            postData(url, data);
+        }
+
+        function processTargetCloudPost(url, obj) {
+            // Handle target cloud posts
+
+            // Get form data
+            var $form = $(obj),
+                cloudtype = $form.find("select[name='cloudtype']").val(),
+                cloudkey = $form.find("input[name='cloudkey']").val(),
+                cloudfreq = $form.find("input[name='cloudfreq']").val()
+
+            // Process post
+			data = {
+                cloudtype: cloudtype,
+                cloudkey: cloudkey,
+                cloudfreq: cloudfreq
+            }
+            postData(url, data);
+        }
+
+        function postData(url, data) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function (data) {
+                    //
+                },
+                error: function (data) {
+                    alert('POST failed.');
+                },
+                complete: function (data) {
+                    posted = true;
+                }
+            });
+        }
+        
+        function buttonClearDelay() { // Poll to see if entire page is loaded
+            if (posted) {
+                $("button[id='submitSettings']").prop('disabled', false);
+                $("button[id='submitSettings']").html('Update');
+                posted = false;
+            } else {
+                setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
+            }
         }
 
     </script>
