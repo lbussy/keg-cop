@@ -1,5 +1,5 @@
 .. image:: keg_cop.png
-   :scale: 3%
+   :scale: 100%
    :align: center
    :alt: Keg Cop Logo
 
