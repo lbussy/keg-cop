@@ -1,6 +1,5 @@
-.. figure:: _static/keg_cop.png
-   :height: 400px
-   :width: 400px
+.. image:: keg_cop.png
+   :scale: 3%
    :align: center
    :alt: Keg Cop Logo
 
