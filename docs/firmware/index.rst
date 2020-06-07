@@ -32,7 +32,7 @@ It handles everything - locating the correct firmware, downloading it, setting t
 
 You may download BrewFlasher_ from its GitHub release page or BrewFlasher.com_.
 
-.. image:: brewflasher.JPG
+.. image:: brewflasher.jpg
    :scale: 100%
    :align: center
    :alt: Brewflasher UI
