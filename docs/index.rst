@@ -27,6 +27,12 @@ For spelling/grammatical errors, or if you would like to improve the documentati
    :caption: Table of Contents:
 
    planning/index
+   assembly/index
+   firmware/index
+   networking/index
+   operations/index
+   api/index
+   troubleshooting/index
    context/index
 
 .. _open an issue on GitHub: https://github.com/lbussy/keg-cop/issues
