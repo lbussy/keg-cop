@@ -4,10 +4,9 @@ Project Planning
 It would be best if you did a little planning before you begin.  Keg Cop is configurable and extensible, and as such, you should know what you hope to achieve. The flowchart below should help you decide on the PCB configuration that best supports your system.
 
 .. image:: board_choice_flowchart.png
-   :height: 400px
-   :width: 400px
+   :scale: 100%
    :align: center
-   :alt: Board Choice Flowchart
+   :alt: Choosing System Boards
 
 - **Tap Number Choice**: This is the most basic and most important decision. The controller choice for this project allowed up to eight pins for flow meters. While the somewhat obsessive part inside me forced me to allow up to eight taps, this system works most optimally with one through six. This is a result of choosing easily-sourced Ethernet cables as the connectivity between boards.  You may always choose to edit any of the supplied PCB designs to meet your own needs.
 - **Temp Sensor Choice**: Since this system provides temperature control of your keg chamber, temperature sensors are naturally supported and required for temperature control. Keg Cop supports up to five temperature sensors, including one for room temperature.

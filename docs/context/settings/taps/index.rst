@@ -7,4 +7,3 @@ The first choice on the ~Settings~ screen is a drop-down tab labeled ~Taps~.  Cl
    :scale: 100%
    :align: center
    :alt: Tap UI
-

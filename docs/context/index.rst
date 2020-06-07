@@ -9,6 +9,7 @@ The following are links to context help for the web pages controlling the Keg Co
 
     home/index.rst
     temperatures/index.rst
+    settings/index.rst
     settings/taps/index.rst
     settings/controller/index.rst
     settings/temperature/control/index.rst
