@@ -3,7 +3,7 @@ Project Planning
 
 It would be best if you did a little planning before you begin.  Keg Cop is configurable and extensible, and as such, you should know what you hope to achieve. The flowchart below should help you decide on the PCB configuration that best supports your system.
 
-.. figure:: _static/board_choice_flowchart.png
+.. image:: board_choice_flowchart.png
    :height: 400px
    :width: 400px
    :align: center

@@ -26,6 +26,7 @@ For spelling/grammatical errors, or if you would like to improve the documentati
    :maxdepth: 2
    :caption: Table of Contents:
 
-    planning/index.rst
+   planning/index
+   context/index
 
 .. _open an issue on GitHub: https://github.com/lbussy/keg-cop/issues
