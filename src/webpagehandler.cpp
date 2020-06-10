@@ -650,12 +650,12 @@ bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control se
                 if (strcmp(value, "true") == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.copconfig.imperial = true;
+                    config.temps.controlenabled = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.copconfig.imperial = false;
+                    config.temps.controlenabled = false;
                 }
                 else
                 {
