@@ -30,17 +30,18 @@ void startControl()
     tstat.lastOn = millis();
     tstat.cooling = false;
     tstat.state = TSTAT_UNKNOWN;
-    tstat.control = true;
+    config.temps.controlenabled = config.temps.controlenabled;
 }
 
 void controlLoop()
 {
+    tstatReport();
     unsigned long now = millis();
     double setpoint;
     double tempNow = device.sensor[config.temps.controlpoint].average;
 
     // If the assigned control point or temp control is disabled
-    if (!config.temps.enabled[config.temps.controlpoint] || (!tstat.control))
+    if (!config.temps.enabled[config.temps.controlpoint] || (!config.temps.controlenabled))
     {
         // If cooling, turn off cooling
         if (tstat.cooling)
@@ -51,7 +52,7 @@ void controlLoop()
         }
 
         // Disable temp control and display
-        tstat.control = false;
+        config.temps.controlenabled = false;
         tstat.state = TSTAT_INACTIVE;
         return;
     }
