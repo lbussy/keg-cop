@@ -2,6 +2,8 @@ Reset Controller
 =====================
 
 .. image:: reset.png
-   :scale: 100%
+   :scale: 50%
    :align: center
    :alt: Reset Controller
+
+Clicking the "Reset Controller" button in this UI will perform the same function as pressing the reset button on the controller. All settings will be retained.
