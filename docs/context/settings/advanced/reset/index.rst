@@ -1,5 +1,5 @@
 Reset Controller
-=====================
+################
 
 .. image:: reset.png
    :scale: 50%

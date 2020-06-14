@@ -1,5 +1,5 @@
 Cloud Target
-===============
+###################
 
 .. image:: cloud.png
    :scale: 100%

@@ -1,5 +1,5 @@
 Settings Page
-===============
+######################
 
 .. image:: settings.png
    :scale: 100%

@@ -1,5 +1,5 @@
 Reset WiFi
-================
+##############
 
 .. image:: wifi.png
    :scale: 50%

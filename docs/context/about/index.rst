@@ -1,5 +1,5 @@
 About Keg Cop
-===============
+###############
 
 .. image:: about.png
    :scale: 100%
