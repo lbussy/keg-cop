@@ -36,13 +36,45 @@ Printed Circuit Boards
 This configuration will use the following three boards:
 
 - `Tall Boy main board <https://dirtypcbs.com/store/designer/details/4818/6457/keg-cop-tallboy>`_
-- `Sensor board <https://dirtypcbs.com/store/designer/details/4818/6459/keg-cop-sensor-breakout>`_
+- `Sensor board <https://dirtypcbs.com/store/designer/details/4818/6460/keg-cop-sensor-breakout>`_
 - 3 x `Daisy Chain boards <https://dirtypcbs.com/store/designer/details/4818/6458/keg-cop-daisy-chain>`_
+
+These links will allow you to order boards in increments of ±10.  Sometimes you might get 11, sometimes nine, it's cheap and from China and that's how it works. If you end up with extras, I encourage you to share with others.
 
 The links in the above list will take you to DirtyPCBs where I have uploaded the designs.  When you purchase the boards there, you are paying a small premium (10%) which goes into my account. That credit is used in the development of these and other projects. Anyone who has done development like this can tell you how many boards we go through, and the cost is not insignificant. You may absolutely take the files from GitHub and upload them yourself to avoid that small markup if you choose. If you do purchase them here, it's only fair I tell you about it, and what I will do with the credits.
 
 Components
 ================
+
+For this configuration, we will use the following components:
+
+**Tallboy Main Board:**
+
+- 2 x 0.1μF Ceramic Capacitor (C1, 3)
+- 2 x 1.0μF Ceramic Capacitor (C2, C4)
+- *1 x DS18B20 PCB-mount sensor (IC1)
+- 5 x 2.2kΩ 1/4W 5% Axial Resistor (R1-R5)
+- 2 x RJ45 8-pin 90° no shield PCM-mount jack
+- 1 x 1-pin Straight Male Header (POWER)
+- *1 x 3-pin Straight Male Header (ROOM)
+- 1 x 1-pin Straight Male Header (RELAY)
+
+**Sensor Board:**
+
+- 1 x RJ45 8-pin 90° no shield PCM-mount jack
+- 4 x 3-pin terminal block
+
+**Daisy Chain Boards (multiply all numbers x 3 for three flowmeters):**
+
+- 2 x RJ45 8-pin 90° no shield PCM-mount jack
+- 1 x 3-pin terminal block
+
+(*) - Optional items for use when a room temperature sensor is desired. Either a DS18B20 sensor with a lead is used, or a PCB-mount sensor is employed.
+
+Soldering
+===========
+
+Flux, both sides, cleanup
 
 Modifications
 ================
