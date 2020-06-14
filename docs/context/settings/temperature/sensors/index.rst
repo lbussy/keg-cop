@@ -1,5 +1,5 @@
 Sensor Control
-=======================
+#######################
 
 .. image:: sensors.png
    :scale: 100%

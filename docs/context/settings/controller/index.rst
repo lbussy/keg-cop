@@ -1,7 +1,7 @@
 .. _settings-controller:
 
 Controller Settings
-=====================
+######################
 
 .. image:: controller.png
    :scale: 50%

@@ -1,5 +1,5 @@
 Update Controller
-====================
+########################
 
 .. image:: update.png
    :scale: 50%

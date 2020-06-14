@@ -1,5 +1,5 @@
 Context Help
-===================
+##################
 
 The following are links to context help for the web pages controlling the Keg Cop application.
 

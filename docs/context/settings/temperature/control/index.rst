@@ -1,5 +1,5 @@
 Temperature Control
-=========================
+#####################
 
 .. image:: control.png
    :scale: 100%

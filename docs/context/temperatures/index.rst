@@ -1,5 +1,5 @@
 Temperatures
-======================
+####################
 
 .. image:: temperatures.png
    :scale: 100%

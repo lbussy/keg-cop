@@ -1,10 +1,10 @@
 Troubleshooting
-=================
+######################
 
 .. _faq-mdns:
 
 Cannot open Keg Cop by Name
-````````````````````````````````
+*****************************
 
 If someone is having problems with Windows 10 and the Arduino IDE is not finding IP address (Arduino UNO Wifi), try the following:
 
