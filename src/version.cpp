@@ -22,6 +22,7 @@ SOFTWARE. */
 
 #include "version.h"
 
+const char* project() {return stringify(PIO_SRC_NAM);}
 const char* build() {return stringify(PIO_SRC_REV);}
 const char* branch() {return stringify(PIO_SRC_BRH);}
 const char* version() {return stringify(PIO_SRC_TAG);}
