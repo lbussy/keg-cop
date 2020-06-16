@@ -73,7 +73,7 @@ void setup()
     startControl();     // Initialize temperature control
     doPoll();           // Get server version at startup
 
-    Log.notice(F("Started %s version %s (%s) [%s]." CR), project(), version(), branch(), build());
+    Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
 
 void loop()
