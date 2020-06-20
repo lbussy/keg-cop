@@ -1,3 +1,5 @@
+.. _resetwifi:
+
 Reset WiFi
 ##############
 
