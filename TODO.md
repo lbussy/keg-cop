@@ -9,6 +9,10 @@
 - Add target pushes
 - Add links to context help
 - Move JS to separate files
+- Documentation
+  - Operations
+  - API
+  - Troubleshooting
 
 ## Bugs
 
