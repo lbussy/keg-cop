@@ -55,6 +55,11 @@ Alternative Methods for Windows and Macs
 
 There are other methods to accomplish this. If you choose one of them, the information on this page should be sufficient. You are, however, on your own.
 
+Flashing Firmware - Upgrade
+*****************************
+
+For upgrades after the initial setup, you may use the :ref:`update <update>` function in the Settings page.
+
 .. _firmware.bin: https://github.com/lbussy/keg-cop/raw/master/firmware/firmware.bin
 .. _spiffs.bin: https://github.com/lbussy/keg-cop/raw/master/firmware/spiffs.bin
 .. _partitions.bin: https://github.com/lbussy/keg-cop/raw/master/firmware/spiffs.bin

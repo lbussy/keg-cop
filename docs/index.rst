@@ -19,9 +19,10 @@ Keg Cop is a completely Free and Open Source offering.  I have provided all sour
    :caption: Table of Contents:
 
    planning/index
-   assembly/index
+   pcbassembly/index
    firmware/index
    networking/index
+   sysassembly/index
    operations/index
    api/index
    troubleshooting/index
