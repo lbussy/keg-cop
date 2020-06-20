@@ -8,3 +8,4 @@ The first choice on the ~Settings~ screen is a drop-down tab labeled ~Taps~.  Cl
    :align: center
    :alt: Tap UI
 
+See the page for :ref:`flowmeter <flowmeter>` calibration.
