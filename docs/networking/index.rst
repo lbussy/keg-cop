@@ -56,12 +56,12 @@ The controller will attempt to connect to the network. If the connection is succ
 
 If all goes as expected, the controller's LED will flash as it performs various configuration steps, and finally, the LED will remain off. Here you may proceed. If you have issues, check the :ref:`troubleshooting <troubleshooting>` page for more information.
 
-Change Settings
+Settings Change
 **************************
 
 At some point, you may need to change your WiFi settings. This is easier if you remember to do it while you are still able to connect to the application. However, you may raise the access point without being able to access the Keg Cop Application.
 
-Change Settings
+Reset Settings
 ================
 
 The easiest way to change settings is to access the Keg Cop web page.  In Settings > Advanced > Reset Wifi you may :ref:`reset wifi settings <resetwifi>`.  After that is done, you can re-join the Keg Cop soft AP and configure a new network.
