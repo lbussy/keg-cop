@@ -1,3 +1,5 @@
+.. _update:
+
 Update Controller
 ########################
 
