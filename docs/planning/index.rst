@@ -21,6 +21,27 @@ It would be best if you did a little planning before you begin.  Keg Cop is conf
     - Daisy-Chain Boards: These small boards, one per flowmeter, are used to connect the flowmeter(2) into the system. There is an "In" and an "Out" port, creating a chain of up to six sensors. The first on the chain is always number one, and so on.
     - Sensor Board: This is a breakout board for connecting up to five temperature sensors.
 
+Flowmeters
+*************
+
+The flowmeter is probably the single most important and yet the most challenging part to source. It's not because flowmeters are hard to find, it's because there are so many choices. Your choices will dictate some of the operations choices for the application.
+
+Keg Cop will support a different flowmeter on each tap if that's how you want to go.
+
+You are free to choose from any of a number of flowmeters using a single data (pulse/frequency) line, and able to be powered from 3V3. Some choices used by the homebrewing community include:
+
+- Swissflow SF800_ Low Pressure Flow Meter
+- YF-S401_ Water Flow Sensor Meter Flowmeter Coffee Dispenser Counter 0.3-6 L/min (eBay)
+- Liquid Flow Meter - Plastic 1/2" NPS Threaded ID: 828_ (Adafruit)
+
+While one or two the above links may eventualy grow stale, what is listed should give you enough information to find a suitable device. The Swissflow is probably the most expensive device, however, it is likely the most accurate one I have found. To be completely transparent, they did help my development by defraying a portion of my expenses for meters. I would have purchased them at list price if they had not.
+
+Buy once, cry once, as my grandfather used to say.
+
+.. _SF800: http://www.swissflow.com/sf800.html
+.. _YF-S401: https://www.ebay.com/itm/YF-S401-Water-Flow-Sensor-Meter-Flowmeter-Coffee-Dispenser-Counter-0-3-6-L-min/282112630770
+.. _828: https://www.adafruit.com/product/828
+
 A Practical Example
 ***********************
 
@@ -28,7 +49,7 @@ Take, for example, my three-tap kegerator. Using the above flowchart, I see that
 
 - One Tall Boy main board
 - One Sensors board
-- Three Daisy Chain boards
+- Three Daisy Chain boards with flowmeters
 
 If you have a similar setup, you may always add additional Daisy Chain boards as needed, up to a total of six in this configuration. The most appropriate installation uses one Keg Cop per kegerator/keezer, so if you are fortunate enough to have more than one, plan for additional systems.
 

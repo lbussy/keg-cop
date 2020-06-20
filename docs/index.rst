@@ -17,6 +17,8 @@ Keg Cop is an entirely Free and Open Source offering.  I have provided all sourc
 .. toctree::
    :maxdepth: 1
    :caption: Table of Contents:
+   :titlesonly:
+   :glob:
 
    planning/index
    pcbassembly/index
