@@ -134,6 +134,9 @@
         var tapChart;
         var flowReloadTimer = 5000;
         var tempsReloadTimer = 10000;
+        // Calibration mode variables
+        calValue = 0;
+        calLineType = '';
 
         // Detect unloading state during getJSON
         $(window).bind("beforeunload", function () {
@@ -192,6 +195,7 @@
                     } else {
                         imperial = false;
                     }
+                    calLineType = ''; // Clear calibration mode
                     try {
                         for (var i = 0; i < numTaps; i++) {
                             if (flow.taps[i].active) {
@@ -199,6 +203,10 @@
                                 percent.push(((parseFloat(flow.taps[i].remaining) / parseFloat(flow.taps[i].capacity)) * 100));
                                 capacity.push(parseFloat(flow.taps[i].capacity));
                                 remaining.push(parseFloat(flow.taps[i].remaining));
+                            }
+                            if (flow.taps[i].calibrating) { // Tap is calibrating
+                                calLineType = 'line';
+                                calValue = i;
                             }
                         }
                         if (loaded < numReq) {
@@ -373,8 +381,14 @@
         function doChart() { // Draw chart.js chart
             if (tapChart) {
                 tapChart.data.datasets.forEach((dataset) => {
+                    // Update data
                     dataset.data = [];
                     dataset.data = percent;
+                });
+                tapChart.options.annotation.annotations.forEach((annotations) => {
+                    // Update annotations
+                    annotations.type = calLineType;
+                    annotations.value = calValue;
                 });
                 tapChart.update();
             } else {
@@ -417,6 +431,21 @@
                                     callback: function (value, index, values) {
                                         return value + "%";
                                     }
+                                }
+                            }]
+                        },
+
+                        annotation: {
+                            annotations: [{
+                                type: calLineType,
+                                mode: 'horizontal',
+                                scaleID: 'y-axis-0',
+                                value: calValue,
+                                borderColor: 'rgb(199, 28, 34)',
+                                borderWidth: 4,
+                                label: {
+                                    enabled: true,
+                                    content: "In Calibration Mode"
                                 }
                             }]
                         }
