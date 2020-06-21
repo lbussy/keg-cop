@@ -63,6 +63,7 @@ bool handleControlPost(AsyncWebServerRequest *);
 bool handleSensorPost(AsyncWebServerRequest *);
 bool handleUrlTargetPost(AsyncWebServerRequest *);
 bool handleCloudTargetPost(AsyncWebServerRequest *);
+bool handleSetCalMode(AsyncWebServerRequest *);
 
 extern struct ThatVersion thatVersion;
 extern struct Config config;
