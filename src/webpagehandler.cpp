@@ -75,38 +75,38 @@ void setActionPageHandlers()
 {
     // Action Page Handlers
 
-    server.on("/heap/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/heap/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         uint32_t _heap = ESP.getFreeHeap();
         String heap = "Current heap: " + String(_heap);
         request->send(200, F("text/plain"), heap);
     });
 
-    server.on("/oktowifireset/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/oktowifireset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /wifireset/." CR));
         request->send(200, F("text/plain"), F("Ok."));
         _delay(2000);
         setDoWiFiReset(); // Wipe settings, reset controller
     });
 
-    server.on("/oktoreset/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/oktoreset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /oktoreset/." CR));
         request->send(200, F("text/plain"), F("Ok."));
         _delay(2000);
         setDoReset();
     });
 
-    server.on("/ping/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/ping/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /ping/." CR));
         request->send(200, F("text/plain"), F("Ok."));
     });
 
-    server.on("/otastart/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/otastart/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /otastart/." CR));
         request->send(200, F("text/plain"), F("200: OTA started."));
         setDoOTA(); // Trigger the OTA update
     });
 
-    server.on("/clearupdate/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/clearupdate/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /clearupdate/." CR));
         Log.verbose(F("Clearing any update flags." CR));
         config.dospiffs1 = false;
@@ -115,13 +115,24 @@ void setActionPageHandlers()
         saveConfig();
         request->send(200, F("text/plain"), F("200: OK."));
     });
+
+    server.on("/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing /clearcalmode/." CR));
+        Log.verbose(F("Clearing any calibration flags." CR));
+        for (int i = 0; i < NUMTAPS; i++)
+        {
+            flow.taps[i].calibrating = false;
+        }
+        saveFlowConfig();
+        request->send(200, F("text/plain"), F("200: OK."));
+    });
 }
 
 void setJsonHandlers()
 {
-//     // JSON Handlers
+    // JSON Handlers
 
-    server.on("/thisVersion/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/thisVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /thisVersion/." CR));
         const size_t capacity = JSON_OBJECT_SIZE(1);
         DynamicJsonDocument doc(capacity);
@@ -134,7 +145,7 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-    server.on("/thatVersion/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/thatVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /thatVersion/." CR));
         const size_t capacity = JSON_OBJECT_SIZE(1);
         DynamicJsonDocument doc(capacity);
@@ -148,7 +159,7 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-    server.on("/config/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/config/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the Config json
         Log.verbose(F("Serving /config/." CR));
 
@@ -163,7 +174,7 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-    server.on("/flow/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/flow/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the Kegs json
         Log.verbose(F("Serving /flow/." CR));
 
@@ -178,7 +189,7 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-    server.on("/sensors/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /sensors/." CR));
         DynamicJsonDocument doc(2048U);//capacityTempsSerial);
 
@@ -232,6 +243,11 @@ void setSettingsAliases()
         }
     });
 
+    server.on("/settings/tapcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/tapcontrol/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
+    });
+
     server.on("/settings/controller/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/controller/." CR));
         if (handleControllerPost(request))
@@ -242,6 +258,11 @@ void setSettingsAliases()
         {
             request->send(500, F("text/plain"), F("Unable to process data"));
         }
+    });
+
+    server.on("/settings/controller/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/controller/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/tempcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
@@ -256,6 +277,11 @@ void setSettingsAliases()
         }
     });
 
+    server.on("/settings/tempcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/tempcontrol/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
+    });
+
     server.on("/settings/sensorcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/sensorcontrol/." CR));
         if (handleSensorPost(request))
@@ -266,6 +292,11 @@ void setSettingsAliases()
         {
             request->send(500, F("text/plain"), F("Unable to process data"));
         }
+    });
+
+    server.on("/settings/sensorcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/sensorcontrol/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/targeturl/", HTTP_POST, [](AsyncWebServerRequest *request) {
@@ -280,6 +311,11 @@ void setSettingsAliases()
         }
     });
 
+    server.on("/settings/targeturl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/targeturl/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
+    });
+
     server.on("/settings/cloudurl/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/targeturl/." CR));
         if (handleCloudTargetPost(request))
@@ -290,6 +326,11 @@ void setSettingsAliases()
         {
             request->send(500, F("text/plain"), F("Unable to process data"));
         }
+    });
+
+    server.on("/settings/cloudurl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/cloudurl/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) {
@@ -305,6 +346,28 @@ void setSettingsAliases()
 
         // Redirect to Settings page
         request->redirect("/settings/");
+    });
+
+    server.on("/settings/update/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/update/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
+    });
+
+    server.on("/calibrate/setcalmode/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /calibrate/setcalmode/." CR));
+        if (handleSetCalMode(request))
+        {
+            request->send(200, F("text/plain"), F("Ok"));
+        }
+        else
+        {
+            request->send(500, F("text/plain"), F("Unable to process data"));
+        }
+    });
+
+    server.on("/calibrate/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /calibrate/setcalmode/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
     });
 }
 
@@ -960,6 +1023,51 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     config.cloud.freq = val;
+                }
+            }
+        }
+    }
+    if (saveFlowConfig())
+    {
+        return true;
+    }
+    else
+    {
+        Log.error(F("Error: Unable to save tap configuration data." CR));
+        return false;
+    }
+}
+
+bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibration mode
+{
+    Log.verbose(F("DEBUG: Made it here (0)" CR));
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        Log.verbose(F("DEBUG: Made it here (1)" CR));
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            Log.verbose(F("DEBUG: Made it here (2)" CR));
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char * name = p->name().c_str();
+            const char * value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Calibration Mode Set
+            //
+            if (strcmp(name, "setcalmode") == 0)
+            {
+                const int val = atof(value);
+                if ((val < 0) || (val >= NUMTAPS))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    flow.taps[val].calibrating = true;
                 }
             }
         }
