@@ -268,8 +268,14 @@
         function doChart() { // Draw chart.js chart
             if (tempChart) {
                 tempChart.data.datasets.forEach((dataset) => {
+                    // Update data
                     dataset.data = [];
                     dataset.data = temperatures;
+                });
+                tempChart.options.annotation.annotations.forEach((annotations) => {
+                    // Update annotations
+                    annotations.label.content = setpointLabel;
+                    annotations.value = setpoint;
                 });
                 updateScales(tempChart);
                 tempChart.update();
