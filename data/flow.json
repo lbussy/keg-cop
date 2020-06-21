@@ -8,7 +8,8 @@
             "name":"Pudswiller Doors",
             "capacity":5,
             "remaining":4.2,
-            "active":true
+            "active":true,
+            "calibrating":false
         },
         {
             "tapid":1,
@@ -17,7 +18,8 @@
             "name":"Bug's House Ale",
             "capacity":5,
             "remaining":3.3,
-            "active":true
+            "active":true,
+            "calibrating":false
         },
         {
             "tapid":2,
@@ -26,7 +28,8 @@
             "name":"Navelgazer IPA",
             "capacity":5,
             "remaining":1.5,
-            "active":true
+            "active":true,
+            "calibrating":false
         },
         {
             "tapid":3,
@@ -35,7 +38,8 @@
             "name":"Tanked 7",
             "capacity":5,
             "remaining":2.2,
-            "active":true
+            "active":true,
+            "calibrating":false
         },
         {
             "tapid":4,
@@ -44,7 +48,8 @@
             "name":"Ringaling Lager",
             "capacity":15.5,
             "remaining":13.1,
-            "active":true
+            "active":true,
+            "calibrating":false
         },
         {
             "tapid":5,
@@ -53,7 +58,8 @@
             "name":"Peter Skee",
             "capacity":5,
             "remaining":4.1,
-            "active":true
+            "active":true,
+            "calibrating":false
         },
         {
             "tapid":6,
@@ -62,7 +68,8 @@
             "name":"Undead Guy",
             "capacity":5,
             "remaining":3.9,
-            "active":true
+            "active":true,
+            "calibrating":false
         },
         {
             "tapid":7,
@@ -71,7 +78,8 @@
             "name":"Who's Garden",
             "capacity":5,
             "remaining":1.2,
-            "active":true
+            "active":true,
+            "calibrating":false
         }
     ]
 }
