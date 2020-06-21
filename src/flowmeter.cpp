@@ -28,8 +28,8 @@ int flowPins[8] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7};
 volatile static unsigned long pulse[NUMTAPS];           // Unregistered pulse counter
 volatile static unsigned long lastPulse[NUMTAPS];       // Pulses pending at last poll
 volatile static unsigned long lastPulseTime[NUMTAPS];   // Monitor ongoing pours
-extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(7);
-extern const size_t capacityFlowDeserial = capacityFlowSerial + 1000;
+extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(8);
+extern const size_t capacityFlowDeserial = capacityFlowSerial + 1100;
 
 static IRAM_ATTR void HandleIntISR0(void)
 {
@@ -89,46 +89,57 @@ void logFlow()
 { // Save debits to tap and to file
     for (int i = 0; i < NUMTAPS; i++)
     {
-        const unsigned long nowTime = millis();
-        if ((nowTime - lastPulseTime[i]) > POURDELAY && lastPulseTime[i] > 0)
-        { // No pulses past POURDELAY = we stopped serving
-            noInterrupts();
-            const unsigned int pulseCount = pulse[i];
-            pulse[i] = 0;
-            lastPulseTime[i] = 0;
-            interrupts();
-            if (pulseCount < SMALLPOUR)
-            { // Discard a small pour
-                Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
-            }
-            else
-            { // Log a pour
-                flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppu)));
-                saveFlowConfig();
-                Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
-                if (config.copconfig.rpintscompat)
-                {
-                    sendPulseCount(i, flow.taps[i].pin, pulseCount);
+        if (!flow.taps[i].calibrating)
+        { // Skip on calibrate
+            const unsigned long nowTime = millis();
+            if ((nowTime - lastPulseTime[i]) > POURDELAY && lastPulseTime[i] > 0)
+            { // No pulses past POURDELAY = we stopped serving
+                noInterrupts();
+                const unsigned int pulseCount = pulse[i];
+                pulse[i] = 0;
+                lastPulseTime[i] = 0;
+                interrupts();
+                if (pulseCount < SMALLPOUR)
+                { // Discard a small pour
+                    Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+                }
+                else
+                { // Log a pour
+                    flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppu)));
+                    saveFlowConfig();
+                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+                    if (config.copconfig.rpintscompat)
+                    {
+                        sendPulseCount(i, flow.taps[i].pin, pulseCount);
+                    }
                 }
             }
-        }
-        else
-        {
-            const int secs = (nowTime - lastPulse[i]) / 1000;
-            const unsigned long pps = (pulse[i] - lastPulse[i]) / secs;
-            const unsigned long kickSpeed = (flow.taps[i].ppu / 128) * KICKSPEED; // TODO: Address PPL vs PPU
-            if (pps > kickSpeed)
-            { // Kick detector - keg is blowing foam
-                if (config.copconfig.rpintscompat)
+            else
+            {
+                const int secs = (nowTime - lastPulse[i]) / 1000;
+                const unsigned long pps = (pulse[i] - lastPulse[i]) / secs;
+                double divisor;
+                if (config.copconfig.imperial)
                 {
-                    sendKickedMsg(i, flow.taps[i].pin);
+                    divisor = 128; // Ounces per gallon
                 }
                 else
                 {
-                    flow.taps[i].active = false;
-                    saveFlowConfig();
+                    divisor = 33.8; // Ounces per liter
                 }
-                
+                const double kickSpeed = (flow.taps[i].ppu / divisor) * KICKSPEED;
+                if (pps > kickSpeed)
+                { // Kick detector - keg is blowing foam > KICKSPEED oz/sec
+                    if (config.copconfig.rpintscompat)
+                    {
+                        sendKickedMsg(i, flow.taps[i].pin);
+                    }
+                    else
+                    {
+                        flow.taps[i].active = false;
+                        saveFlowConfig();
+                    }
+                }
             }
         }
     }
@@ -384,13 +395,14 @@ void convertFlowtoMetric()
 
 void Taps::save(JsonObject obj) const
 {
-    obj["tapid"] = tapid;           // Tap ID
-    obj["pin"] =  pin;              // μC Pin
-    obj["ppu"] =  ppu;              // Pulses per Gallon
-    obj["name"] =  name;            // Beer Name
-    obj["capacity"] =  capacity;    // Tap Capacity
-    obj["remaining"] =  remaining;  // Tap remaining
-    obj["active"] =  active;        // Tap active
+    obj["tapid"] = tapid;               // Tap ID
+    obj["pin"] =  pin;                  // μC Pin
+    obj["ppu"] =  ppu;                  // Pulses per Gallon
+    obj["name"] =  name;                // Beer Name
+    obj["capacity"] =  capacity;        // Tap Capacity
+    obj["remaining"] =  remaining;      // Tap remaining
+    obj["active"] =  active;            // Tap active
+    obj["calibrating"] =  calibrating;  // Tap calibrating
 }
 
 void Taps::load(JsonObjectConst obj, int numTap)
@@ -448,6 +460,16 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         bool a = obj["active"];
         active = a;
+    }
+
+    if (obj["calibrating"].isNull())
+    {
+        calibrating = false;
+    }
+    else
+    {
+        bool c = obj["calibrating"];
+        calibrating = c;
     }
 }
 

@@ -16,6 +16,25 @@
   - Troubleshooting
   - Context
 
+## Calibration Mode:
+
+~~Add a "configuration mode" for flowmeter calibration~~
+	~~Do not reset count during calibration~~
+	~~Notify that device is in calibration mode on home page?~~
+	Timeout of calibration mode?
+	Display count via endpoint / timer / JSON report
+	Deduct/reset count on "write" or exit
+	Select cal in Metric or imperial
+	Cal by Weight
+		Enter SG
+		Enter weight poured
+		Display PPG/L
+		Update configuration?
+	Cal by Volume
+		Enter volume poured
+		Display PPG/L
+		Update Configuration?
+
 ## Bugs
 
 - ??
