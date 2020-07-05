@@ -6,7 +6,6 @@
 
 ## Features
 
-- Add calibration page
 - Add target pushes
 - Add links to context help
 - Move JS to separate files
@@ -15,25 +14,6 @@
   - API
   - Troubleshooting
   - Context
-
-## Calibration Mode:
-
-~~Add a "configuration mode" for flowmeter calibration~~
-	~~Do not reset count during calibration~~
-	~~Notify that device is in calibration mode on home page?~~
-	~~Timeout of calibration mode?~~
-	~~Display count via endpoint / timer / JSON report~~
-	~~Deduct/reset count on "write" or exit~~
-	~~Select cal in Metric or imperial~~
-	Cal by Weight
-		~~Enter SG~~
-		~~Enter weight poured~~
-		~~Display PPG/L~~
-		~~Update configuration~~
-	Cal by Volume
-		Enter volume poured
-		Display PPG/L
-		Update Configuration
 
 ## Bugs
 
@@ -151,3 +131,4 @@
 - ~~Shorten up switch in settings.htm with tapNum~~
 - ~~Don't let a kick disable a tap in RPints compat~~
 - ~~Look into "unable to retrieve" error when changing pages~~
+- ~~Add calibration page~~
