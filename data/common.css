@@ -21,3 +21,8 @@ main>.container {
 .no-underline {
     text-decoration: none !important
 }
+
+.plain-link {
+    text-decoration: none !important;
+    color: #000000;
+}
