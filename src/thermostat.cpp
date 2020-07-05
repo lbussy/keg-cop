@@ -35,7 +35,6 @@ void startControl()
 
 void controlLoop()
 {
-    tstatReport();
     unsigned long now = millis();
     double setpoint;
     double tempNow = device.sensor[config.temps.controlpoint].average;
