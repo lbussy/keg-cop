@@ -196,12 +196,12 @@ void setJsonHandlers()
         // Serialize pulses
         DynamicJsonDocument doc(capacityPulseSerial); // Create doc
         // Add "pulses" array
-        JsonArray pulses = doc.createNestedArray("pulses");
+        JsonArray _pulse = doc.createNestedArray("pulses");
 
         // Add each tap in the array
         for (int i = 0; i < NUMTAPS; i++)
         {
-            pulses[i] = getPulseCount(i);
+            _pulse[i] = getPulseCount(i);
         }
 
         String json;
@@ -520,7 +520,7 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
                 else if (strcmp(value, "inactive") == 0)
                 {
                     Log.notice(F("Settings update [%d], [%s]:(%s) (F) applied." CR), tapNum, name, value);
-                    flow.taps[tapNum].remaining = false;
+                    flow.taps[tapNum].active = false;
                 }
                 else
                 {
