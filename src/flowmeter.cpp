@@ -30,6 +30,8 @@ volatile static unsigned long lastPulse[NUMTAPS];       // Pulses pending at las
 volatile static unsigned long lastPulseTime[NUMTAPS];   // Monitor ongoing pours
 extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(8);
 extern const size_t capacityFlowDeserial = capacityFlowSerial + 1100;
+extern const size_t capacityPulseSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1);
+extern const size_t capacityPulseDeserial = capacityPulseSerial + 10;
 
 static IRAM_ATTR void HandleIntISR0(void)
 {
@@ -78,11 +80,23 @@ static void (*pf[])(void) = { // ISR Function Pointers
     HandleIntISR6, HandleIntISR7
 };
 
-void handleInterrupts(int tapNum)
+void IRAM_ATTR handleInterrupts(int tapNum)
 { // Increment pulse count
     pulse[tapNum]++;
     lastPulse[tapNum] = pulse[tapNum];
     lastPulseTime[tapNum] = millis();
+}
+
+unsigned long getPulseCount(int tap)
+{
+    if (tap >= 0 && tap <= NUMTAPS)
+    {
+        return pulse[tap];
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 void logFlow()
@@ -142,6 +156,13 @@ void logFlow()
                 }
             }
         }
+        else
+        {
+            if (pulse[i] > 10)
+            {
+                Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CR), pulse[i], i, flow.taps[i].pin);
+            }
+        }
     }
 }
 
@@ -163,6 +184,7 @@ bool loadFlowConfig()
 { // Manage loading the configuration
     if (!loadFlowFile())
     {
+        Log.warning(F("Warning: Unable to load flowmeter configuration." CR));
         saveFlowFile(); // Save a blank config
         if (!loadFlowFile()) // Try one more time to load the default config
         {
@@ -186,13 +208,14 @@ bool loadFlowFile()
 {
     if (!SPIFFS.begin())
     {
+        Log.error(F("Error: Unable to start SPIFFS." CR));
         return false;
     }
     // Loads the configuration from a file on SPIFFS
     File file = SPIFFS.open(flowfilename, "r");
     if (!SPIFFS.exists(flowfilename) || !file)
     {
-        Log.verbose(F("Generating new %s." CR), flowfilename);
+        Log.warning(F("Warning: Flow json does not exist, generating new %s." CR), flowfilename);
     }
     else
     {
@@ -201,6 +224,7 @@ bool loadFlowFile()
 
     if (!deserializeFlowConfig(file))
     {
+        Log.error(F("Error: Unable to deserialize flow config." CR));
         file.close();
         return false;
     }
@@ -414,6 +438,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["ppu"].isNull() || obj["ppu"] == 0)
     {
+        Log.verbose(F("DEBUG: Taps::load(%d) ppu [%d] isNull() || == 0, loading default" CR), tapid, obj["ppu"]);
         ppu = PPU;
     }
     else
@@ -424,6 +449,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["name"].isNull() || strlen(obj["name"]) == 0)
     {
+        Log.verbose(F("DEBUG: Taps::load(%d) name [%s] isNull() || == 0, loading default" CR), tapid, obj["name"]);
         strlcpy(name, DEFAULTBEER, sizeof(name));
     }
     else
@@ -434,6 +460,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["capacity"].isNull() || obj["capacity"] == 0)
     {
+        Log.verbose(F("DEBUG: Taps::load(%d) capacity [%D] isNull() || == 0, loading default" CR), tapid, obj["capacity"]);
         capacity = KEGSIZE;
     }
     else
@@ -444,6 +471,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["remaining"].isNull())
     {
+        Log.verbose(F("DEBUG: Taps::load(%d) remaining [%D] isNull() || == 0, loading default" CR), tapid, obj["remaining"]);
         remaining = 0;
     }
     else
@@ -454,6 +482,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["active"].isNull())
     {
+        Log.verbose(F("DEBUG: Taps::load(%d) ppu [%T] isNull() || == 0, loading default" CR), tapid, obj["active"]);
         active = false;
     }
     else
@@ -464,6 +493,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["calibrating"].isNull())
     {
+        Log.verbose(F("DEBUG: Taps::load(%d) calibrating [%T] isNull() || == 0, loading default" CR), tapid, obj["calibrating"]);
         calibrating = false;
     }
     else

@@ -59,6 +59,7 @@ struct Flowmeter
 // Flow methods
 void handleInterrupts(int);
 void logFlow();
+unsigned long getPulseCount(int);
 // Control
 bool initFlow();
 // JSON Methods
