@@ -143,6 +143,7 @@
                     didreset = semaphore;
                     if (didreset == true) {
                         // Reset is complete
+                        window.clearInterval(intervalID);
                         $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Complete; Redirect Pending</h4>");
                         $("#message").replaceWith("<p class='card-body'>The controller reset is complete. You will be redirected momentarily.</p>");
                         setTimeout(function () { window.location.href = "/"; }, 5000);
