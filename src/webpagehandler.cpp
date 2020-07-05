@@ -116,20 +116,9 @@ void setActionPageHandlers()
         request->send(200, F("text/plain"), F("200: OK."));
     });
 
-    server.on("/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /setcalmode/." CR));
-        Log.verbose(F("Setting calibration flags." CR));
-        for (int i = 0; i < NUMTAPS; i++)
-        {
-            flow.taps[i].calibrating = true;
-        }
-        saveFlowConfig();
-        request->send(200, F("text/plain"), F("200: OK."));
-    });
-
     server.on("/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /clearcalmode/." CR));
-        Log.verbose(F("Clearing any calibration flags." CR));
+        Log.verbose(F("Clearing all calibration flags." CR));
         for (int i = 0; i < NUMTAPS; i++)
         {
             flow.taps[i].calibrating = false;
@@ -402,8 +391,8 @@ void setSettingsAliases()
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
-    server.on("/calibrate/setcalmode/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /calibrate/setcalmode/." CR));
+    server.on("/setcalmode/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /setcalmode/." CR));
         if (handleSetCalMode(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -414,8 +403,8 @@ void setSettingsAliases()
         }
     });
 
-    server.on("/calibrate/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /calibrate/setcalmode/." CR));
+    server.on("/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /setcalmode/." CR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 }
@@ -1144,6 +1133,13 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
 
 bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibration mode
 {
+    Log.verbose(F("Clearing any calibration flags before settign new flags." CR));
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        flow.taps[i].calibrating = false;
+    }
+    saveFlowConfig();
+
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
@@ -1158,7 +1154,7 @@ bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibrat
 
             // Calibration Mode Set
             //
-            if (strcmp(name, "setcalmode") == 0)
+            if (strcmp(name, "tapnum") == 0)
             {
                 const int val = atof(value);
                 if ((val < 0) || (val >= NUMTAPS))
