@@ -70,7 +70,8 @@ static IRAM_ATTR void HandleIntISR6(void)
 
 static IRAM_ATTR void HandleIntISR7(void)
 {
-    handleInterrupts(7);
+    // handleInterrupts(7); // DEBUG
+    assert(false);          // DEBUG: Crash on pulse(7)
 }
 
 static void (*pf[])(void) = { // ISR Function Pointers
@@ -526,7 +527,8 @@ void Flowmeter::load(JsonObjectConst obj)
 	}
 }
 
-void Flowmeter::save(JsonObject obj) const {
+void Flowmeter::save(JsonObject obj) const
+{
     // Save units here because it's easier in the web/JS
     obj["imperial"] = imperial; // Units in Imperial
 
@@ -536,4 +538,15 @@ void Flowmeter::save(JsonObject obj) const {
 	// Add each tap in the array
 	for (int i = 0; i < NUMTAPS; i++)
 		taps[i].save(_taps.createNestedObject());
+}
+
+void printActive() // DEBUG
+{
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        if (!flow.taps[i].active)
+        {
+            Log.verbose(F("***** DEBUG: Tap %d is %T!" CR), i, flow.taps[i].active);
+        }
+    }
 }
