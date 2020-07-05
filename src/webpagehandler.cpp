@@ -116,6 +116,17 @@ void setActionPageHandlers()
         request->send(200, F("text/plain"), F("200: OK."));
     });
 
+    server.on("/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing /setcalmode/." CR));
+        Log.verbose(F("Setting calibration flags." CR));
+        for (int i = 0; i < NUMTAPS; i++)
+        {
+            flow.taps[i].calibrating = true;
+        }
+        saveFlowConfig();
+        request->send(200, F("text/plain"), F("200: OK."));
+    });
+
     server.on("/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /clearcalmode/." CR));
         Log.verbose(F("Clearing any calibration flags." CR));
@@ -189,6 +200,27 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
+    server.on("/pulses/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        // Used to provide the pulses json
+        Log.verbose(F("Serving /pulses/." CR));
+
+        // Serialize pulses
+        DynamicJsonDocument doc(capacityPulseSerial); // Create doc
+        // Add "pulses" array
+        JsonArray pulses = doc.createNestedArray("pulses");
+
+        // Add each tap in the array
+        for (int i = 0; i < NUMTAPS; i++)
+        {
+            pulses[i] = getPulseCount(i);
+        }
+
+        String json;
+        serializeJsonPretty(doc, json); // Serialize JSON to String
+        request->header("Cache-Control: no-store");
+        request->send(200, F("application/json"), json);
+    });
+
     server.on("/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /sensors/." CR));
         DynamicJsonDocument doc(2048U);//capacityTempsSerial);
@@ -245,6 +277,23 @@ void setSettingsAliases()
 
     server.on("/settings/tapcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Invalid method to /settings/tapcontrol/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
+    });
+
+    server.on("/settings/tapcal/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /settings/tapcal/." CR));
+        if (handleTapCal(request))
+        {
+            request->send(200, F("text/plain"), F("Ok"));
+        }
+        else
+        {
+            request->send(500, F("text/plain"), F("Unable to process data"));
+        }
+    });
+
+    server.on("/settings/tapcal/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/tapcal/." CR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
@@ -393,7 +442,7 @@ void stopWebServer()
 
 bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
 {
-    int tapNum = -1; // TODO: This is specific to tap posts only
+    int tapNum = -1;
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
@@ -476,12 +525,12 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
             {
                 if (strcmp(value, "active") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update [%d], [%s]:(%s) (T) applied." CR), tapNum, name, value);
                     flow.taps[tapNum].active = true;
                 }
                 else if (strcmp(value, "inactive") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update [%d], [%s]:(%s) (F) applied." CR), tapNum, name, value);
                     flow.taps[tapNum].remaining = false;
                 }
                 else
@@ -493,11 +542,68 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
     }
     if (saveFlowConfig())
     {
+        Log.verbose(F("DEBUG: Tap active = %T" CR), flow.taps[tapNum].active);
         return true;
     }
     else
     {
         Log.error(F("Error: Unable to save tap configuration data." CR));
+        return false;
+    }
+}
+
+bool handleTapCal(AsyncWebServerRequest *request) // Handle tap settings
+{
+    int tapNum = -1;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char * name = p->name().c_str();
+            const char * value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Tap Calibration
+            //
+            if (strcmp(name, "tapnum") == 0) // Get tap number first
+            {
+                const int val = atof(value);
+                if ((val < 0) || (val > NUMTAPS))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
+                    tapNum = val;
+                }
+            }
+            if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
+            {
+                const int val = atof(value);
+                if ((val < 0) || (val > 999999))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    flow.taps[tapNum].ppu = val;
+                }
+            }
+        }
+    }
+    if (saveFlowConfig())
+    {
+        return true;
+    }
+    else
+    {
+        Log.error(F("Error: Unable to save tap calibration data." CR));
         return false;
     }
 }
@@ -565,7 +671,6 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                 {
                     if (!config.copconfig.imperial == true)
                     {
-                        config.copconfig.imperial = true;
                         convertConfigtoImperial();
                         convertFlowtoImperial();
                     }
@@ -575,7 +680,6 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                 {
                     if (!config.copconfig.imperial == false)
                     {
-                        config.copconfig.imperial = false;
                         convertConfigtoMetric();
                         convertFlowtoMetric();
                     }
@@ -1040,16 +1144,13 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
 
 bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibration mode
 {
-    Log.verbose(F("DEBUG: Made it here (0)" CR));
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
     {
-        Log.verbose(F("DEBUG: Made it here (1)" CR));
         AsyncWebParameter *p = request->getParam(i);
         if (p->isPost())
         {
-            Log.verbose(F("DEBUG: Made it here (2)" CR));
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
@@ -1078,7 +1179,7 @@ bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibrat
     }
     else
     {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
+        Log.error(F("Error: Unable to save tap calibration mode." CR));
         return false;
     }
 }

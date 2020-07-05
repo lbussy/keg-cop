@@ -58,6 +58,7 @@ void setEditor();
 void stopWebServer();
 
 bool handleTapPost(AsyncWebServerRequest *);
+bool handleTapCal(AsyncWebServerRequest *);
 bool handleControllerPost(AsyncWebServerRequest *);
 bool handleControlPost(AsyncWebServerRequest *);
 bool handleSensorPost(AsyncWebServerRequest *);
@@ -72,6 +73,8 @@ extern const size_t capacitySerial;
 extern struct Flowmeter flow;
 extern const size_t capacityFlowDeserial;
 extern const size_t capacityFlowSerial;
+extern const size_t capacityPulseDeserial;
+extern const size_t capacityPulseSerial;
 extern struct Devices device;
 extern const size_t capacityTempsDeserial;
 extern const size_t capacityTempsSerial;
