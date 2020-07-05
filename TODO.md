@@ -21,23 +21,24 @@
 ~~Add a "configuration mode" for flowmeter calibration~~
 	~~Do not reset count during calibration~~
 	~~Notify that device is in calibration mode on home page?~~
-	Timeout of calibration mode?
-	Display count via endpoint / timer / JSON report
-	Deduct/reset count on "write" or exit
-	Select cal in Metric or imperial
+	~~Timeout of calibration mode?~~
+	~~Display count via endpoint / timer / JSON report~~
+	~~Deduct/reset count on "write" or exit~~
+	~~Select cal in Metric or imperial~~
 	Cal by Weight
-		Enter SG
-		Enter weight poured
-		Display PPG/L
-		Update configuration?
+		~~Enter SG~~
+		~~Enter weight poured~~
+		~~Display PPG/L~~
+		~~Update configuration~~
 	Cal by Volume
 		Enter volume poured
 		Display PPG/L
-		Update Configuration?
+		Update Configuration
 
 ## Bugs
 
-- ??
+- #controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?)
+- Crashes cause flow.json to go away
 
 ## Before Release
 

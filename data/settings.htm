@@ -74,8 +74,8 @@
 
                 <ul class="nav nav-tabs"> <!-- Navigation Tab navigation -->
 
-                    <li class="nav-item dropdown active">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Taps</a>
+                    <li class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Taps</span>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#tap0">Tap 1</a>
                             <a class="dropdown-item" data-toggle="tab" href="#tap1">Tap 2</a>
@@ -89,11 +89,11 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#controller">Controller</a>
+                        <a class="nav-link plain-link" data-toggle="tab" href="#controller">Controller</a>
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Temperature</a>
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Temperature</span>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#tempcontrol">Control</a>
                             <a class="dropdown-item" data-toggle="tab" href="#sensorcontrol">Sensors</a>
@@ -101,7 +101,7 @@
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Targets</a>
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Targets</span>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#targeturl">URL</a>
                             <a class="dropdown-item" data-toggle="tab" href="#targetcloud">Cloud</a>
@@ -109,8 +109,9 @@
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Advanced</a>
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Advanced</span>
                         <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#flowcal">Calibrate Flowmeters</a>
                             <a class="dropdown-item" data-toggle="tab" href="#reset">Reset Controller</a>
                             <a class="dropdown-item" data-toggle="tab" href="#update">Update Application</a>
                             <a class="dropdown-item" data-toggle="tab" href="#wifi">Reset WiFi</a>
@@ -132,9 +133,8 @@
                             </p>
                         </div>
                     </div> <!-- Initial Page Tab -->
-                
-                    <!-- Tap 0 Tab -->
-                    <div class="tab-pane fade" id="tap0">
+
+                    <div class="tab-pane fade" id="tap0"> <!-- Tap 0 Tab -->
 
                         <div class="card-header">
                             <h4 class="card-title">Tap 1 Configuration</h4>
@@ -146,23 +146,23 @@
                                 <input type="hidden" id="tapnum" name="tapnum" value="0">
                             
                                 <div class="form-group row">
-                                    <label for="tap0ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                        Pulses per Unit
+                                    <label for="tap0ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap0ppu" id="tap0ppu"
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap0beername" class="col-sm-2 col-form-label"
+                                    <label for="tap0beername" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the beverage to display on this tap">
                                         Beverage Name
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="tap0beername"
                                             id="tap0beername" minlength="1" maxlength="64"
                                             placeholder="Pudswiller Doors" required>
@@ -170,23 +170,23 @@
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap0cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                    <label for="tap0cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
-                                        Capacity
+                                        <span class="caplong">Capacity</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap0cap" id="tap0cap"
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap0remain" class="col-sm-2 col-form-label"
+                                    <label for="tap0remain" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                        Remaining
+                                        <span class="remlong">Remaining</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap0remain"
                                             id="tap0remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
@@ -197,7 +197,7 @@
                                         <div class="col-sm-4">
                                         </div>
                                         <div class="col-sm-2">
-                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap Usage</p>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="col">
@@ -228,8 +228,7 @@
 
                         </div>
 
-                    </div>
-                    <!-- Tap 0 Tab -->
+                    </div> <!-- Tap 0 Tab -->
 
                     <div class="tab-pane fade" id="tap1"> <!-- Tap 1 Tab -->
 
@@ -243,23 +242,23 @@
                                 <input type="hidden" id="tapnum" name="tapnum" value="1">
                             
                                 <div class="form-group row">
-                                    <label for="tap1ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                        Pulses per Unit
+                                    <label for="tap1ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap1ppu" id="tap1ppu"
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap1beername" class="col-sm-2 col-form-label"
+                                    <label for="tap1beername" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the beverage to display on this tap">
                                         Beverage Name
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="tap1beername"
                                             id="tap1beername" minlength="1" maxlength="64"
                                             placeholder="Pudswiller Doors" required>
@@ -267,23 +266,23 @@
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap1cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                    <label for="tap1cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
-                                        Capacity
+                                        <span class="caplong">Capacity</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap1cap" id="tap1cap"
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap1remain" class="col-sm-2 col-form-label"
+                                    <label for="tap1remain" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                        Remaining
+                                        <span class="remlong">Remaining</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap1remain"
                                             id="tap1remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
@@ -339,23 +338,23 @@
                                 <input type="hidden" id="tapnum" name="tapnum" value="2">
                             
                                 <div class="form-group row">
-                                    <label for="tap2ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                        Pulses per Unit
+                                    <label for="tap2ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap2ppu" id="tap2ppu"
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap2beername" class="col-sm-2 col-form-label"
+                                    <label for="tap2beername" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the beverage to display on this tap">
                                         Beverage Name
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="tap2beername"
                                             id="tap2beername" minlength="1" maxlength="64"
                                             placeholder="Pudswiller Doors" required>
@@ -363,23 +362,23 @@
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap2cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                    <label for="tap2cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
-                                        Capacity
+                                        <span class="caplong">Capacity</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap2cap" id="tap2cap"
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap2remain" class="col-sm-2 col-form-label"
+                                    <label for="tap2remain" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                        Remaining
+                                        <span class="remlong">Remaining</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap2remain"
                                             id="tap2remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
@@ -435,23 +434,23 @@
                                 <input type="hidden" id="tapnum" name="tapnum" value="3">
                             
                                 <div class="form-group row">
-                                    <label for="tap3ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                        Pulses per Unit
+                                    <label for="tap3ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap3ppu" id="tap3ppu"
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap3beername" class="col-sm-2 col-form-label"
+                                    <label for="tap3beername" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the beverage to display on this tap">
                                         Beverage Name
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="tap3beername"
                                             id="tap3beername" minlength="1" maxlength="64"
                                             placeholder="Pudswiller Doors" required>
@@ -459,23 +458,23 @@
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap3cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                    <label for="tap3cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
-                                        Capacity
+                                        <span class="caplong">Capacity</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap3cap" id="tap3cap"
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap3remain" class="col-sm-2 col-form-label"
+                                    <label for="tap3remain" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                        Remaining
+                                        <span class="remlong">Remaining</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap3remain"
                                             id="tap3remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
@@ -531,23 +530,23 @@
                                 <input type="hidden" id="tapnum" name="tapnum" value="4">
                             
                                 <div class="form-group row">
-                                    <label for="tap4ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                        Pulses per Unit
+                                    <label for="tap4ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap4ppu" id="tap4ppu"
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap4beername" class="col-sm-2 col-form-label"
+                                    <label for="tap4beername" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the beverage to display on this tap">
                                         Beverage Name
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="tap4beername"
                                             id="tap4beername" minlength="1" maxlength="64"
                                             placeholder="Pudswiller Doors" required>
@@ -555,23 +554,23 @@
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap4cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                    <label for="tap4cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
-                                        Capacity
+                                        <span class="caplong">Capacity</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap4cap" id="tap4cap"
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap4remain" class="col-sm-2 col-form-label"
+                                    <label for="tap4remain" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                        Remaining
+                                        <span class="remlong">Remaining</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap4remain"
                                             id="tap4remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
@@ -627,23 +626,23 @@
                                 <input type="hidden" id="tapnum" name="tapnum" value="5">
                             
                                 <div class="form-group row">
-                                    <label for="tap5ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                        Pulses per Unit
+                                    <label for="tap5ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap5ppu" id="tap5ppu"
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap5beername" class="col-sm-2 col-form-label"
+                                    <label for="tap5beername" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the beverage to display on this tap">
                                         Beverage Name
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="tap5beername"
                                             id="tap5beername" minlength="1" maxlength="64"
                                             placeholder="Pudswiller Doors" required>
@@ -651,23 +650,23 @@
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap5cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                    <label for="tap5cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
-                                        Capacity
+                                        <span class="caplong">Capacity</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap5cap" id="tap5cap"
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap5remain" class="col-sm-2 col-form-label"
+                                    <label for="tap5remain" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                        Remaining
+                                        <span class="remlong">Remaining</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap5remain"
                                             id="tap5remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
@@ -723,23 +722,23 @@
                                 <input type="hidden" id="tapnum" name="tapnum" value="6">
                             
                                 <div class="form-group row">
-                                    <label for="tap6ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                        Pulses per Unit
+                                    <label for="tap6ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap6ppu" id="tap6ppu"
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap6beername" class="col-sm-2 col-form-label"
+                                    <label for="tap6beername" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the beverage to display on this tap">
                                         Beverage Name
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="tap6beername"
                                             id="tap6beername" minlength="1" maxlength="64"
                                             placeholder="Pudswiller Doors" required>
@@ -747,23 +746,23 @@
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap6cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                    <label for="tap6cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
-                                        Capacity
+                                        <span class="caplong">Capacity</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap6cap" id="tap6cap"
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap6remain" class="col-sm-2 col-form-label"
+                                    <label for="tap6remain" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                        Remaining
+                                        <span class="remlong">Remaining</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap6remain"
                                             id="tap6remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
@@ -819,23 +818,23 @@
                                 <input type="hidden" id="tapnum" name="tapnum" value="7">
                             
                                 <div class="form-group row">
-                                    <label for="tap7ppu" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Enter the pulses per gallon or liter depending upon system configuration for your flowmeter and layout">
-                                        Pulses per Unit
+                                    <label for="tap7ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap7ppu" id="tap7ppu"
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap7beername" class="col-sm-2 col-form-label"
+                                    <label for="tap7beername" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Name of the beverage to display on this tap">
                                         Beverage Name
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="tap7beername"
                                             id="tap7beername" minlength="1" maxlength="64"
                                             placeholder="Pudswiller Doors" required>
@@ -843,23 +842,23 @@
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap7cap" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                    <label for="tap7cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
-                                        Capacity
+                                        <span class="caplong">Capacity</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap7cap" id="tap7cap"
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
                             
                                 <div class="form-group row">
-                                    <label for="tap7remain" class="col-sm-2 col-form-label"
+                                    <label for="tap7remain" class="col-sm-3 col-form-label"
                                         data-toggle="tooltip"
                                         title="Contents remaining in this tap in gallons or liters depending on system configuration">
-                                        Remaining
+                                        <span class="remlong">Remaining</span>
                                     </label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap7remain"
                                             id="tap7remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
@@ -910,7 +909,6 @@
                         </div>
                         <div class="card-body">
 
-
                             <form id="controller" action="/settings/controller/" method="POST" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
@@ -960,13 +958,13 @@
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="form-check">
-                                                <label class="form-check-label" data-toggle="tooltip" title="Change the application to use metric units (℃ or Liters)">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change the application to use metric units (℃ and Liters)">
                                                     <input type="radio" class="form-check-input" name="imperial" id="imperial" value="false">
                                                     Metric
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <label class="form-check-label" data-toggle="tooltip" title="Change the to use imperial units (℉ or Gallons)">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change the to use imperial units (℉ and Gallons)">
                                                     <input type="radio" class="form-check-input" name="imperial" id="imperial" value="true"
                                                         checked="">
                                                     Imperial
@@ -1041,8 +1039,7 @@
 
                     </div> <!-- Controller Tab -->
 
-                    <!-- Temp Control Tab -->
-					<div class="tab-pane fade" id="tempcontrol">
+					<div class="tab-pane fade" id="tempcontrol"> <!-- Temp Control Tab -->
                         <div class="card-header">
                             <h4 class="card-title">Temperature Control</h4>
                         </div>
@@ -1055,12 +1052,14 @@
                                     <div class="col-3">
                                         <div class="row form-group">
                                             <label for="setpoint" class="col-form-label" data-toggle="tooltip"
-                                                title="Enter the temperature setpoint in your selected units (&#x2109; or &#x2103;)"> Set Point
+                                                title="Enter the temperature setpoint in your selected units (&#x2109; or &#x2103;)">
+                                                <span class="setfarcel">Set Point</span>
                                             </label>
                                         </div>
                                         <div class="row form-group">
                                             <label for="controlpoint" class="col-form-label" data-toggle="tooltip"
-                                                title="Enter the control point to use for temp control">Control Point
+                                                title="Enter the control point to use for temp control">
+                                                Control Point
                                             </label>
                                         </div>
                                     </div>
@@ -1114,11 +1113,10 @@
                             </form>
 
                         </div>
-                    </div>
-					<!-- Temp Control Tab -->
 
-                    <!-- Sensor Control Tab -->
-                    <div class="tab-pane fade" id="sensorcontrol">
+                    </div> <!-- Temp Control Tab -->
+
+                    <div class="tab-pane fade" id="sensorcontrol"> <!-- Sensor Control Tab -->
                         <div class="card-header">
                             <h4 class="card-title">Temperature Sensor Control</h4>
                         </div>
@@ -1350,10 +1348,10 @@
                                 </div>
 
                             </form> <!-- Sensor Control Form-->
+
                         </div>
 
-                    </div>
-                    <!-- Sensor Control Tab -->
+                    </div> <!-- Sensor Control Tab -->
                 
                     <div class="tab-pane fade" id="targeturl"> <!-- URL Target Tab -->
 
@@ -1451,8 +1449,180 @@
 							</form>
 
                         </div>
+
                     </div> <!-- Cloud Target Tab -->
-                
+
+                    <div class="tab-pane fade" id="flowcal"> <!-- Calibrate Flowmeters Tab -->
+                        <div class="card-header">
+                            <h4 class="card-title">Calibrate Flowmeters</h4>
+                        </div>
+                        
+                        <div class="card-body">
+                        
+                            <div class="row col-12"> <!-- Pre-Flight Selection -->
+                    
+                                <div class="col-3">
+                                    <div class="row form-group">
+                                        <label for="setpoint" class="col-form-label" data-toggle="tooltip"
+                                            title="Select flowmeter and weight or volume calibration basis"> Select Flowmeter and Method
+                                        </label>
+                                    </div>
+                                </div>
+                    
+                                <div class="col-3">
+                                    <div class="row form-group">
+                                        <select class="form-control" name="flowmeter" id="flowmeter">
+                                            <option value="0">1</option>
+                                            <option value="1">2</option>
+                                            <option value="2">3</option>
+                                            <option value="3">4</option>
+                                            <option value="4">5</option>
+                                            <option value="5">6</option>
+                                            <option value="6">7</option>
+                                            <option value="7">8</option>
+                                        </select>
+                                    </div>
+                                </div>
+                    
+                                <div class="col-sm-3">
+                                    <fieldset class="form-group">
+                                        <div class="row justify-content-center">
+                                            <div class="col-sm-3">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Calibrate by weight">
+                                                        <input type="radio" class="form-check-input" name="calbyvolume" id="calbyweight"
+                                                            value="false">
+                                                        Weight
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Calibrate by volume">
+                                                        <input type="radio" class="form-check-input" name="calbyvolume" id="calbyvolume"
+                                                            value="true">
+                                                        Volume
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <div class="col-sm-3 justify-content-center" id="byunspecified">
+                                    <label class="btn btn-primary disabled">Choose Mode</label>
+                                </div>
+
+                                <div class="col-sm-3 justify-content-center" id="byweight" style="display: none">
+                                    <label class="btn btn-primary" id="byweightlabel">Select Config by Weight</label>
+                                </div>
+
+                                <div class="col-sm-3 justify-content-center" id="byvolume" style="display: none">
+                                    <label class="btn btn-primary" id="byvolumelabel">Select Config by Volume</label>
+                                </div>
+
+                            </div> <!-- Pre-Flight Selection -->
+
+                            <div id="calsubmit" style="display: none"> <!-- Calibration Form -->
+
+                                <form class="form-group" id="flowcal" action="/settings/tapcal/" method="POST" onsubmit="return processPost(this);">
+
+                                    <div class="row col-sm-12 justify-content-center" id="calbyvolumeblock" style="display: none"> <!-- Cal by volume -->
+                                        <div class="row col-sm-12 justify-content-center">
+                                            <p>
+                                                The flowmeter for this tap is now locked into calibration mode.
+                                                Pull a measured amount of beverage through this tap and record
+                                                it below. The "Pulses" field will update every<span
+                                                class="updatepulsesecs">10</span> seconds, the pulses per unit will
+                                                update each interval according to the amount entered. When you are
+                                                finished, select "Update" and the <span class="ppu">PPU</span> will
+                                                be updated. You may select "Reset" if you wish to start over. In any
+                                                case, accumulated pulses will be debited from the keg according to
+                                                the configured pulse value. 
+                                            </p>
+                                        </div>
+                                    </div> <!-- Cal by volume -->
+
+                                    <div class="row col-sm-12 justify-content-center" id="calbyweightblock" style="display: none"> <!-- Cal by weight -->
+                                        <div class="row col-sm-12 justify-content-center">
+                                            <p>
+                                                The flowmeter for this tap is now locked into calibration mode.
+                                                Enter the beverage's Specific Gravity if known. If not, a good
+                                                value to use would be 1.015. Tare your scale with a container and
+                                                pull a reasonable amount of beverage through this tap. Weigh it
+                                                and record the net weight below. The "Pulses" field will update
+                                                every <span class="updatepulsesecs">10</span> seconds, the pulses
+                                                per unit will update every <span class="updatepulsesecs">10</span>.
+                                                When you are finished, select "Update" and the <span class="ppu">
+                                                PPU</span> will be updated. You may select "Reset" if you wish to
+                                                start over. In any case, accumulated pulses will be debited from
+                                                the keg according to the currently configured <span class="ppu">
+                                                PPU</span> value. 
+                                            </p>
+                                        </div>
+                                        <div class="row col-sm-12 justify-content-center">
+                                            <label for="sg" class="col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Specific gravity of beverage">
+                                                S.G.
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="sg"
+                                                    id="sg" min=".990" max="1.200" step=".0001" placeholder="1.015">
+                                            </div>
+                                            <label for="weight" class="ozgrams col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Weight of pour">
+                                                Units
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="weight"
+                                                    id="weight" min="1" max="6000" step=".0001" placeholder="11.82">
+                                            </div>
+                                        </div> <!-- Cal by weight -->
+
+                                        <div class="row col-sm-12 justify-content-center">&nbsp;</div>
+
+                                        <div class="row col-sm-12 justify-content-center"> <!-- Calibration Calculations -->
+                                            <label for="pulses" class="col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Specific gravity of beverage">
+                                                Pulses
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="pulses" readonly
+                                                    id="pulses" min="0" max="99999" step="1" required>
+                                            </div>
+                                            <label for="ppu" class="col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Pulses per unit of calibration">
+                                                <span class="ppu">PPU</span>
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="ppu" readonly
+                                                    id="ppu" min="1" max="99999" step="1" required>
+                                            </div>
+                                        </div><!-- Calibration Calculations -->
+
+                                    </div>
+
+                                    <div class="row col-sm-12 justify-content-center">&nbsp;</div>
+                                    
+                                    <div class="row col-sm-12 justify-content-center">
+
+                                        <button disabled class="setppu btn btn-primary" id="submitSettings"
+                                            onclick="if(!this.form.checkValidity(this)){return (false);}">Set PPU</button>
+
+                                        &nbsp;<input type="reset" class="btn btn-outline-primary" value="Reset">
+
+                                    </div>
+
+                                </form>
+
+                            </div> <!-- Calibration Form -->
+
+                        </div>
+
+                    </div> <!-- Calibrate Flowmeters Tab -->    
+
                     <div class="tab-pane fade" id="reset"> <!-- Reset Controller Tab -->
                         <div class="card-header">
                             <h4 class="card-title">Reset Controller</h4>
@@ -1544,11 +1714,17 @@
         var imperial;
         var hashLoc;
         var posted = false;
-
-        // Handle unloading page when making a getJSON call
-        $(window).bind("beforeunload", function () {
-            unloadingState = true;
-        });
+        // Pulses for Tap Calibration
+        var doFollowPulse = false;
+        var calSetting = false; // Keep track of whether we are toggling calibration mode
+        var inCalMode = false;
+        var pulseReloadTimer = 2000;
+        var byWeight = false;
+        var byVolume = false;
+        // Tab tracking
+        var previousTab = "";
+        var currentTab = "";
+        var clearCalibrate = false;
 
         // Attach the event after the page loads (multi-browser)
         if (window.addEventListener)
@@ -1557,9 +1733,69 @@
             window.attachEvent("onload", loadPage);
         else window.onload = loadPage;
 
-        // Page data load
+        // Handle unloading page while making a getJSON call
+        $(window).bind("beforeunload", function () {
+            unloadingState = true;
+        });
 
-        function loadPage() { // Make triple sure the whole DOM loaded
+        // Turn off tooltips on radio button change {" "}
+        $('input[type=radio]').change(function () {
+            $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
+        });
+
+        // Flowmeter Calibration Events
+        //
+        // Toggle by weight/volume controls
+        $('input[type=radio][name=calbyvolume]').change(function () {
+            if (!$("#calbyweight").hasClass("disabled")) {
+                if ($('#byunspecified').is(':visible')) {
+                    $('#byunspecified').toggle(); // If unspecified visible turn it off
+                }
+                if (this.value == 'true') { // If we are by volume
+                    if ($('#byweight').is(':visible')) {
+                        $('#byweight').toggle(); // If weight visible turn it off
+                    }
+                    if (!$('#byvolume').is(':visible')) {
+                        $('#byvolume').toggle(); // If volume not visible, turn it on
+                    }
+                }
+                else if (this.value == 'false') {  // If we are by weight
+                    if ($('#byvolume').is(':visible')) {
+                        $('#byvolume').toggle(); // If volume visible turn it off
+                    }
+                    if (!$('#byweight').is(':visible')) {
+                        $('#byweight').toggle(); // If not visible, turn it on
+                    }
+                }
+            }
+        });
+        // Handle click on calibration label
+        $('#byvolume').on('click', function (event) {
+            clickByVolume();
+        });
+        $('#byweight').on('click', function (event) {
+            clickByWeight();
+        });
+        //
+        $("input[type='reset']").closest('form').on('reset', function(event) { // Reset flow cal form
+            resetFlowCalForm();
+        });
+
+        // Handle resetting the calibration form if we leave it
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+            previousTab = currentTab;
+            currentTab = $(event.target).text();
+            if (previousTab == "Calibrate Flowmeters") {
+                doFollowPulse = false; // Turn off calibration mode
+                clearCalibrate = true; // Set flag to reset form
+            } else if (currentTab == "Calibrate Flowmeters" && clearCalibrate == true) {
+                // Clear the calibration form if we were here before
+                clearCalibrate = false;
+                resetFlowCalForm();
+            }
+        });
+
+        function loadPage() { // Page data load - make triple sure the whole DOM loaded
             if (document.readyState === 'ready' || document.readyState === 'complete') {
                 populatePage();
             } else {
@@ -1571,11 +1807,214 @@
             }
         }
 
+        function clickByWeight() {
+            // Hide previous blocks
+            $("#flowmeter").attr("disabled", "disabled");
+            $("#calbyweight").attr("disabled", "disabled");
+            $("#calbyvolume").attr("disabled", "disabled");
+            $("#byweightlabel").addClass("disabled");
+            $("#byvolumelabel").addClass("disabled");
+            if (!$('#calbyweightblock').is(':visible')) {
+                $('#calbyweightblock').toggle(); // Turn on weight calibration
+            }
+            if (!$('#calsubmit').is(':visible')) {
+                $('#calsubmit').toggle(); // Turn on Form
+                // Put controller in calibration mode, read pulse count
+                doFollowPulse = true;
+                followPulses();
+            }
+            byWeight = true;
+            byVolume = false;
+        }
+
+        function clickByVolume() {
+            // Hide previous blocks
+            $("#flowmeter").attr("disabled", "disabled");
+            $("#calbyweight").attr("disabled", "disabled");
+            $("#calbyvolume").attr("disabled", "disabled");
+            $("#byweightlabel").addClass("disabled");
+            $("#byvolumelabel").addClass("disabled");
+            if (!$('#calbyvolumeblock').is(':visible')) {
+                $('#calbyvolumeblock').toggle(); // Turn on volume calibration
+            }
+            if (!$('#calsubmit').is(':visible')) {
+                $('#calsubmit').toggle(); // Turn on Form
+                // Put controller in calibration mode, read pulse count
+                doFollowPulse = true;
+                followPulses();
+            }
+            byWeight = false;
+            byVolume = true;
+        }
+
+        function followPulses() {
+            if (doFollowPulse) {
+                if (inCalMode) {
+                    pulseReload(function callFunction() { // Reload pulses
+                        setTimeout(followPulses, pulseReloadTimer);
+                    });
+                } else { 
+                    var intervalID = window.setInterval(function () { // Poll every pulseReloadTimer/2 seconds
+                        if (calSetting == false) {
+                            calSetting = true; // Make sure we only run this once
+                            toggleCalMode(true, function (semaphore) {
+                                if (semaphore == true) {
+                                    calSetting = false;
+                                    inCalMode = true;
+                                    window.clearInterval(intervalID); // Stop checking
+                                    followPulses();
+                                }
+                            });
+                        }
+                    }, pulseReloadTimer / 2);
+                }
+            } else {
+                toggleCalMode(false, function (semaphore) {
+                    if (semaphore == true) {
+                        calSetting = false;
+                        inCalMode = false;
+                        window.clearInterval(intervalID); // Stop checking
+                    }
+                });
+            }
+        }
+
+        function toggleCalMode(inCal = false, callback = null) {
+			var url;
+            if (inCal) {
+                url = "/setcalmode/";
+            } else {
+                url = "/clearcalmode/";
+            }
+            $.ajax({
+                url: url,
+                type: 'POST',
+                success: function (data) {
+                    if (typeof callback == "function") {
+                        callback(true);
+                    }
+                },
+                error: function (data) {
+                    if (typeof callback == "function") {
+                        callback(false);
+                    }
+                },
+                complete: function (data) {
+                    //
+                }
+            });
+        }
+
+        function resetFlowCalForm() {
+            doFollowPulse = false; // Turn off calibration mode
+            // Set flowmeter to 1 and enable
+            $('#flowmeter').prop('selectedIndex', 0);
+            $('#flowmeter').attr("disabled", false);
+            // Clear radio and enable
+            $('input[id="calbyvolume"]').prop('checked', false);
+            $('input[id="calbyvolume"]').attr("disabled", false);
+            $('input[id="calbyweight"]').prop('checked', false);
+            $('input[id="calbyweight"]').attr("disabled", false);
+            // Hide Config by * and show choose mode
+            if (!$('#byunspecified').is(':visible')) {
+                $('#byunspecified').toggle(); // Turn on disabled button
+            }
+            if ($('#byweight').is(':visible')) {
+                $('#byweight').toggle(); // Turn off weight calibration
+            }
+            if ($('#byvolume').is(':visible')) {
+                $('#byvolume').toggle(); // Turn off volume calibration
+            }
+            $("#byweightlabel").removeClass("disabled");
+            $("#byvolumelabel").removeClass("disabled");
+            // Hide form block
+            if ($('#calbyweightblock').is(':visible')) {
+                $('#calbyweightblock').toggle(); // Turn off weight calibration
+            }
+            if ($('#calbyvolumeblock').is(':visible')) {
+                $('#calbyvolumeblock').toggle(); // Turn off weight calibration
+            }
+            if ($('#calsubmit').is(':visible')) {
+                $('#calsubmit').toggle(); // Turn off Form
+            }
+            $('#weight').val('');
+            // TODO:  Blank out volume
+            byWeight = false;
+            byVolume = false;
+        }
+
+        function pulseReload(callback = null) { // Get pulses
+            var selectedIndex = $('#flowmeter').prop('selectedIndex');
+            var url = "/pulses/";
+            var pulses = $.getJSON(url, function () {
+            })
+                .done(function (pulses) {
+                    var numTaps = pulses.pulses.length;
+                    try {
+                        for (var i = 0; i < numTaps; i++) {
+                            if (i == selectedIndex) {
+                                var pulses = pulses.pulses[i];
+                                var weight = $('#weight').val();
+                                var unit = 0;
+                                var sg = $('#sg').val();
+
+                                $('#pulses').val(parseInt(pulses), 10);
+
+                                if (byWeight) {
+                                    if (sg == 0) sg = 1;    // Use SG of 1.000 if blank
+                                    weight = weight / sg;   // Weight adjusted for SG
+
+                                    if (imperial && weight > 0) {         // Imperial
+                                        // Gallon = 8.33 lbs
+                                        // 8.88 * 16 = 133.28 ounces wt per gallon
+                                        // 133.28 / 128 = 1.04125 oz wt:oz liquid
+                                        // 1.04125 / 128
+                                        unit = (weight / 1.04125) / 128;  // Convert to fl oz then gallons
+                                        var ppg = pulses / unit;
+                                        $('#ppu').val(parseInt(ppg));
+                                    } else if (!imperial && weight > 0) { // Metric
+
+                                    }
+                                }
+                                if (byVolume) {
+                                    if (imperial) { // Imperial
+
+                                    } else {        // Metric
+
+                                    }
+                                }
+                                if ((pulses > 0) && ($('#ppu').val() > 0)) {
+                                    // Enable Submit button
+                                    $('.setppu').prop("disabled", false);
+                                }
+                            }
+                        }
+                        if (typeof callback == "function") {
+						    callback();
+					    }
+                    }
+                    catch {
+                        if (!unloadingState) {
+                            alert("Unable to parse flow data from controller.");
+                        }
+                    }
+                })
+                .fail(function () {
+                    if (!unloadingState) {
+                        alert("Unable to retrieve flow data from controller.");
+                    }
+                })
+                .always(function () {
+                    // Can post-process here
+                });
+        }
+
         function populatePage() { // Get page data
             $(document).tooltip({
                 'selector': '[data-toggle=tooltip]',
                 'toggleEnabled': true
             });
+            toggleCalMode(false);
             populateFlow();
             populateConfig();
             loadHash();
@@ -1734,6 +2173,7 @@
                 })
                 .always(function () {
                     // Can post-process here
+                    doUnits(); // Set proper units on page
                     if (loaded < numReq) {
                         loaded++;
                     }
@@ -1741,6 +2181,27 @@
                         callback();
                     }
                 });
+        }
+
+        function doUnits() { // Change names on page according to units in place
+            // Set Gallon / Liter
+            if (imperial) {
+                $('.setppu').text('Set PPG'); // Flow cal set button
+                $('.galliter').text('Gallon'); // Tap config pages
+                $('.ozgrams').text("Ounces");
+                $('.caplong').text('Capacity in Gallons'); // Tap config pages
+                $('.remlong').text('Remaining in Gallons'); // Tap config pages
+                $('.setfarcel').text('Set point in °F'); // Temp control pages
+                $('.ppu').text('PPG'); // Flowmeter calibration pages
+            } else {
+                $('.setppu').text('Set PPL'); // Flow cal set button
+                $('.galliter').text('Liter'); // Tap config pages
+                $('.ozgrams').text("Grams");
+                $('.caplong').text('Capacity in Liters'); // Tap config pages
+                $('.remlong').text('Remaining in Liters'); // Tap config pages
+                $('.setfarcel').text('Set point in °C'); // Temp control pages
+                $('.ppu').text('PPL'); // Flowmeter calibration pages
+            }
         }
 
         function isIP(hostname) { // Bool: is this an IP address
@@ -1769,6 +2230,7 @@
         }
 
         function finishPage() { // Display page
+            $('.updatepulsesecs').text(pulseReloadTimer / 1000);
             toggleLoader("off");
         }
 
@@ -1825,6 +2287,9 @@
                     break;
                 case "#controller":
                     processControllerPost(url, obj);
+                    break;
+                case "#flowcal":
+                    processTapCalPost(url, obj);
                     break;
                 default:
                     console.log("Unknown hash location on submission: " + hashLoc)
@@ -1978,14 +2443,14 @@
 
             // Get form data
             var $form = $(obj),
-            targeturl = $form.find("input[name='targeturl']").val(),
-            targetfreq = $form.find("input[name='targetfreq']").val();
+                targeturl = $form.find("input[name='targeturl']").val(),
+                targetfreq = $form.find("input[name='targetfreq']").val();
 
-			// Process post
-			data = {
+            // Process post
+            data = {
                 targeturl: targeturl,
                 targetfreq: targetfreq
-			}
+            };
             postData(url, data);
         }
 
@@ -1999,12 +2464,28 @@
                 cloudfreq = $form.find("input[name='cloudfreq']").val()
 
             // Process post
-			data = {
+            data = {
                 cloudtype: cloudtype,
                 cloudkey: cloudkey,
                 cloudfreq: cloudfreq
             }
             postData(url, data);
+        }
+
+        function processTapCalPost(url, obj) {
+            // Handle tap calibration posts
+
+            // Get form data
+            tapnum = $('#flowmeter').val();
+            ppu = $('#ppu').val();
+
+            // Process post
+            data = {
+                tapnum: tapnum,
+                ppu: ppu
+            }
+            postData(url, data, false, true);
+            resetFlowCalForm();
         }
 
         function postData(url, data, newpage = false, newdata = false) {
