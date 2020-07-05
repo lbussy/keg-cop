@@ -1456,11 +1456,11 @@
                         <div class="card-header">
                             <h4 class="card-title">Calibrate Flowmeters</h4>
                         </div>
-                        
+
                         <div class="card-body">
-                        
+
                             <div class="row col-12"> <!-- Pre-Flight Selection -->
-                    
+
                                 <div class="col-3">
                                     <div class="row form-group">
                                         <label for="setpoint" class="col-form-label" data-toggle="tooltip"
@@ -1468,7 +1468,7 @@
                                         </label>
                                     </div>
                                 </div>
-                    
+
                                 <div class="col-3">
                                     <div class="row form-group">
                                         <select class="form-control" name="flowmeter" id="flowmeter">
@@ -1536,7 +1536,7 @@
                                                 finished, select "Update" and the <span class="ppu">PPU</span> will
                                                 be updated. You may select "Reset" if you wish to start over. In any
                                                 case, accumulated pulses will be debited from the keg according to
-                                                the configured pulse value. 
+                                                the configured pulse value.
                                             </p>
                                         </div>
                                     </div> <!-- Cal by volume -->
@@ -1555,7 +1555,7 @@
                                                 PPU</span> will be updated. You may select "Reset" if you wish to
                                                 start over. In any case, accumulated pulses will be debited from
                                                 the keg according to the currently configured <span class="ppu">
-                                                PPU</span> value. 
+                                                PPU</span> value.
                                             </p>
                                         </div>
                                         <div class="row col-sm-12 justify-content-center">
@@ -1605,13 +1605,15 @@
                                     </div>
 
                                     <div class="row col-sm-12 justify-content-center">&nbsp;</div>
-                                    
+
                                     <div class="row col-sm-12 justify-content-center">
 
                                         <button disabled class="setppu btn btn-primary" id="submitSettings"
                                             onclick="if(!this.form.checkValidity(this)){return (false);}">Set PPU</button>
 
-                                        &nbsp;<input type="reset" class="btn btn-outline-primary" value="Reset">
+                                        &nbsp;
+
+                                        <input type="reset" class="btn btn-outline-primary" value="Reset">
 
                                     </div>
 
@@ -1973,14 +1975,14 @@
                                         var ppg = pulses / unit;
                                         $('#ppu').val(parseInt(ppg));
                                     } else if (!imperial && weight > 0) { // Metric
-
+                                        // TODO: Add Metric weight calibration
                                     }
                                 }
                                 if (byVolume) {
                                     if (imperial) { // Imperial
-
+                                        // TODO: Add Imperial volume calibration
                                     } else {        // Metric
-
+                                        // TODO: Add Metric volume calibration
                                     }
                                 }
                                 if ((pulses > 0) && ($('#ppu').val() > 0)) {
