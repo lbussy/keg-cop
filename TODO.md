@@ -7,8 +7,9 @@
 ## Features
 
 - Add target pushes
+- Change cal mode to single flowmeter
 - Add links to context help
-- Move JS to separate files
+- ~~Move JS to separate files~~
 - Documentation
   - Operations
   - API
