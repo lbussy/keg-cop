@@ -7,7 +7,6 @@
 ## Features
 
 - Add target pushes
-- Change cal mode to single flowmeter
 - Add links to context help
 - Documentation
   - Operations
@@ -18,8 +17,7 @@
 ## Bugs
 
 - #controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?)
-- Crashes cause flow.json to go away
-- Keeps setting tap 1 to inactive
+- Crashes cause flow.json to go away / or / Keeps setting tap 1 to inactive
 
 ## Before Release
 
@@ -134,3 +132,4 @@
 - ~~Look into "unable to retrieve" error when changing pages~~
 - ~~Add calibration page~~
 - ~~Move JS to separate files~~
+- ~~Change cal mode to single flowmeter~~
