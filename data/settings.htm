@@ -1459,64 +1459,68 @@
 
                         <div class="card-body">
 
-                            <div class="row col-12"> <!-- Pre-Flight Selection -->
+                            <div class="row col-sm-12 justify-content-center"> <!-- Pre-Flight Selection -->
 
-                                <div class="col-3">
-                                    <div class="row form-group">
-                                        <label for="setpoint" class="col-form-label" data-toggle="tooltip"
-                                            title="Select flowmeter and weight or volume calibration basis"> Select Flowmeter and Method
-                                        </label>
-                                    </div>
-                                </div>
+                                <div class="row col-sm-12 justify-content-center">
 
-                                <div class="col-3">
-                                    <div class="row form-group">
-                                        <select class="form-control" name="flowmeter" id="flowmeter">
-                                            <option value="0">1</option>
-                                            <option value="1">2</option>
-                                            <option value="2">3</option>
-                                            <option value="3">4</option>
-                                            <option value="4">5</option>
-                                            <option value="5">6</option>
-                                            <option value="6">7</option>
-                                            <option value="7">8</option>
-                                        </select>
+                                    <div class="col-3">
+                                        <div class="row form-group">
+                                            <label for="setpoint" class="col-form-label" data-toggle="tooltip"
+                                                title="Select flowmeter and weight or volume calibration basis"> Select Flowmeter and Method
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                    
-                                <div class="col-sm-3">
-                                    <fieldset class="form-group">
-                                        <div class="row justify-content-center">
-                                            <div class="col-sm-3">
-                                                <div class="form-check">
-                                                    <label class="form-check-label" data-toggle="tooltip" title="Calibrate by weight">
-                                                        <input type="radio" class="form-check-input" name="calbyvolume" id="calbyweight"
-                                                            value="false">
-                                                        Weight
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <label class="form-check-label" data-toggle="tooltip" title="Calibrate by volume">
-                                                        <input type="radio" class="form-check-input" name="calbyvolume" id="calbyvolume"
-                                                            value="true">
-                                                        Volume
-                                                    </label>
+
+                                    <div class="col-3">
+                                        <div class="row form-group">
+                                            <select class="form-control" name="flowmeter" id="flowmeter">
+                                                <option value="0">1</option>
+                                                <option value="1">2</option>
+                                                <option value="2">3</option>
+                                                <option value="3">4</option>
+                                                <option value="4">5</option>
+                                                <option value="5">6</option>
+                                                <option value="6">7</option>
+                                                <option value="7">8</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                        
+                                    <div class="col-sm-3">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Calibrate by weight">
+                                                            <input type="radio" class="form-check-input" name="calbyvolume" id="calbyweight"
+                                                                value="false">
+                                                            Weight
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Calibrate by volume">
+                                                            <input type="radio" class="form-check-input" name="calbyvolume" id="calbyvolume"
+                                                                value="true">
+                                                            Volume
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
+                                        </fieldset>
+                                    </div>
 
-                                <div class="col-sm-3 justify-content-center" id="byunspecified">
-                                    <label class="btn btn-primary disabled">Choose Mode</label>
-                                </div>
+                                    <div class="col-sm-3 justify-content-center" id="byunspecified">
+                                        <label class="btn btn-primary disabled">Choose Mode</label>
+                                    </div>
 
-                                <div class="col-sm-3 justify-content-center" id="byweight" style="display: none">
-                                    <label class="btn btn-primary" id="byweightlabel">Select Config by Weight</label>
-                                </div>
+                                    <div class="col-sm-3 justify-content-center" id="byweight" style="display: none">
+                                        <label class="btn btn-primary" id="byweightlabel">Do Config by Weight</label>
+                                    </div>
 
-                                <div class="col-sm-3 justify-content-center" id="byvolume" style="display: none">
-                                    <label class="btn btn-primary" id="byvolumelabel">Select Config by Volume</label>
+                                    <div class="col-sm-3 justify-content-center" id="byvolume" style="display: none">
+                                        <label class="btn btn-primary" id="byvolumelabel">Do Config by Volume</label>
+                                    </div>
+
                                 </div>
 
                             </div> <!-- Pre-Flight Selection -->
@@ -1528,34 +1532,40 @@
                                     <div class="row col-sm-12 justify-content-center" id="calbyvolumeblock" style="display: none"> <!-- Cal by volume -->
                                         <div class="row col-sm-12 justify-content-center">
                                             <p>
-                                                The flowmeter for this tap is now locked into calibration mode.
-                                                Pull a measured amount of beverage through this tap and record
-                                                it below. The "Pulses" field will update every<span
-                                                class="updatepulsesecs">10</span> seconds, the pulses per unit will
-                                                update each interval according to the amount entered. When you are
-                                                finished, select "Update" and the <span class="ppu">PPU</span> will
-                                                be updated. You may select "Reset" if you wish to start over. In any
-                                                case, accumulated pulses will be debited from the keg according to
-                                                the configured pulse value.
+                                                The flowmeter for this tap is now locked into calibration mode. Pull a measured
+                                                amount of beverage through this tap and record the volume below. The "Pulses" and
+                                                the <span class="ppu">PPU </span> fields will update every <span
+                                                class="updatepulsesecs">10</span> seconds. When you are finished, select "Update"
+                                                and the <span class="ppu">PPU</span> will be updated. You may select "Reset" if you
+                                                wish to start over. In any case, accumulated pulses will be debited from the keg
+                                                according to the currently configured <span class="ppu">PPU</span> value.
                                             </p>
+                                        </div>
+                                        <div class="row col-sm-12 justify-content-center">
+                                            <label for="volume" class="ozml col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Volume of pour">
+                                                Units
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <input type="number" class="form-control" name="volume"
+                                                    id="volume" min="1" max="6000" step=".0001">
+                                            </div>
                                         </div>
                                     </div> <!-- Cal by volume -->
 
                                     <div class="row col-sm-12 justify-content-center" id="calbyweightblock" style="display: none"> <!-- Cal by weight -->
                                         <div class="row col-sm-12 justify-content-center">
                                             <p>
-                                                The flowmeter for this tap is now locked into calibration mode.
-                                                Enter the beverage's Specific Gravity if known. If not, a good
-                                                value to use would be 1.015. Tare your scale with a container and
-                                                pull a reasonable amount of beverage through this tap. Weigh it
-                                                and record the net weight below. The "Pulses" field will update
-                                                every <span class="updatepulsesecs">10</span> seconds, the pulses
-                                                per unit will update every <span class="updatepulsesecs">10</span>.
-                                                When you are finished, select "Update" and the <span class="ppu">
-                                                PPU</span> will be updated. You may select "Reset" if you wish to
-                                                start over. In any case, accumulated pulses will be debited from
-                                                the keg according to the currently configured <span class="ppu">
-                                                PPU</span> value.
+                                                The flowmeter for this tap is now locked into calibration mode. Enter the beverage's
+                                                Specific Gravity if known. If not, a good value for beer would be 1.015. Tare your
+                                                scale with a container and pull a reasonable amount of beverage through this tap.
+                                                Weigh it and record the net weight below. The "Pulses" and the <span class="ppu">PPU
+                                                </span> fields will update every <span class="updatepulsesecs">10</span> seconds.
+                                                When you are finished, select "Update" and the <span class="ppu">PPU</span> will be
+                                                updated. You may select "Reset" if you wish to start over. In any case, accumulated
+                                                pulses will be debited from the keg according to the currently configured <span
+                                                class="ppu">PPU</span> value.
                                             </p>
                                         </div>
                                         <div class="row col-sm-12 justify-content-center">
@@ -1566,7 +1576,7 @@
                                             </label>
                                             <div class="col-sm-4">
                                                 <input type="number" class="form-control" name="sg"
-                                                    id="sg" min=".990" max="1.200" step=".0001" placeholder="1.015">
+                                                    id="sg" min=".990" max="1.200" step=".0001">
                                             </div>
                                             <label for="weight" class="ozgrams col-sm-2 col-form-label"
                                                 data-toggle="tooltip"
@@ -1575,16 +1585,17 @@
                                             </label>
                                             <div class="col-sm-4">
                                                 <input type="number" class="form-control" name="weight"
-                                                    id="weight" min="1" max="6000" step=".0001" placeholder="11.82">
+                                                    id="weight" min="1" max="6000" step=".0001">
                                             </div>
-                                        </div> <!-- Cal by weight -->
+                                        </div>
+                                    </div> <!-- Cal by weight -->
 
+                                    <div class="row col-sm-12 justify-content-center"> <!-- Calibration Row -->
                                         <div class="row col-sm-12 justify-content-center">&nbsp;</div>
-
-                                        <div class="row col-sm-12 justify-content-center"> <!-- Calibration Calculations -->
+                                        <div class="row col-sm-12 justify-content-center">
                                             <label for="pulses" class="col-sm-2 col-form-label"
                                                 data-toggle="tooltip"
-                                                title="Specific gravity of beverage">
+                                                title="Pulses recorded by flowmeter">
                                                 Pulses
                                             </label>
                                             <div class="col-sm-4">
@@ -1600,22 +1611,16 @@
                                                 <input type="number" class="form-control" name="ppu" readonly
                                                     id="ppu" min="1" max="99999" step="1" required>
                                             </div>
-                                        </div><!-- Calibration Calculations -->
+                                        </div>
+                                    </div><!-- Calibration Row -->
 
-                                    </div>
-
-                                    <div class="row col-sm-12 justify-content-center">&nbsp;</div>
-
-                                    <div class="row col-sm-12 justify-content-center">
-
+                                    <div class="row col-sm-12 justify-content-center"> <!-- Button Bar -->
+                                        <div class="row col-sm-12 justify-content-center">&nbsp;</div>
                                         <button disabled class="setppu btn btn-primary" id="submitSettings"
                                             onclick="if(!this.form.checkValidity(this)){return (false);}">Set PPU</button>
-
                                         &nbsp;
-
                                         <input type="reset" class="btn btn-outline-primary" value="Reset">
-
-                                    </div>
+                                    </div> <!-- Button Bar -->
 
                                 </form>
 
@@ -1957,6 +1962,7 @@
                             if (i == selectedIndex) {
                                 var pulses = pulses.pulses[i];
                                 var weight = $('#weight').val();
+                                var volume = $('#volume').val();
                                 var unit = 0;
                                 var sg = $('#sg').val();
 
@@ -1966,23 +1972,25 @@
                                     if (sg == 0) sg = 1;    // Use SG of 1.000 if blank
                                     weight = weight / sg;   // Weight adjusted for SG
 
-                                    if (imperial && weight > 0) {         // Imperial
-                                        // Gallon = 8.33 lbs
-                                        // 8.88 * 16 = 133.28 ounces wt per gallon
-                                        // 133.28 / 128 = 1.04125 oz wt:oz liquid
-                                        // 1.04125 / 128
-                                        unit = (weight / 1.04125) / 128;  // Convert to fl oz then gallons
+                                    if (imperial && weight > 0) { // Imperial
+                                        unit = (weight / 1.040842838) / 128; // Convert to fl oz then gallons
                                         var ppg = pulses / unit;
                                         $('#ppu').val(parseInt(ppg));
                                     } else if (!imperial && weight > 0) { // Metric
-                                        // TODO: Add Metric weight calibration
+                                        unit = weight / 1000; // Convert to liters
+                                        var ppl = pulses / unit;
+                                        $('#ppu').val(parseInt(ppl));
                                     }
                                 }
                                 if (byVolume) {
                                     if (imperial) { // Imperial
-                                        // TODO: Add Imperial volume calibration
+                                        unit = volume / 128; // Convert to gallons
+                                        var ppg = pulses / unit;
+                                        $('#ppu').val(parseInt(ppg));
                                     } else {        // Metric
-                                        // TODO: Add Metric volume calibration
+                                        unit = volume / 1000; // Convert to liters
+                                        var ppl = pulses / unit;
+                                        $('#ppu').val(parseInt(ppl));
                                     }
                                 }
                                 if ((pulses > 0) && ($('#ppu').val() > 0)) {
@@ -2190,7 +2198,9 @@
             if (imperial) {
                 $('.setppu').text('Set PPG'); // Flow cal set button
                 $('.galliter').text('Gallon'); // Tap config pages
+                $('.galliterlower').text('gallon'); // Tap config pages
                 $('.ozgrams').text("Ounces");
+                $('.ozml').text("Milliliters");
                 $('.caplong').text('Capacity in Gallons'); // Tap config pages
                 $('.remlong').text('Remaining in Gallons'); // Tap config pages
                 $('.setfarcel').text('Set point in °F'); // Temp control pages
@@ -2198,7 +2208,9 @@
             } else {
                 $('.setppu').text('Set PPL'); // Flow cal set button
                 $('.galliter').text('Liter'); // Tap config pages
+                $('.galliterlower').text('liter'); // Tap config pages
                 $('.ozgrams').text("Grams");
+                $('.ozml').text("Milliliters");
                 $('.caplong').text('Capacity in Liters'); // Tap config pages
                 $('.remlong').text('Remaining in Liters'); // Tap config pages
                 $('.setfarcel').text('Set point in °C'); // Temp control pages
@@ -2475,6 +2487,7 @@
         }
 
         function processTapCalPost(url, obj) {
+            toggleLoader("on");
             // Handle tap calibration posts
 
             // Get form data
