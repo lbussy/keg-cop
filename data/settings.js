@@ -491,7 +491,7 @@ function processTargetCloudPost(url, obj) {
     postData(url, data);
 }
 
-function postData(url, data, newpage = false, newdata = false) {
+function postData(url, data, newpage = false, newdata = false, callback = null) {
     $.ajax({
         url: url,
         type: 'POST',
@@ -509,6 +509,9 @@ function postData(url, data, newpage = false, newdata = false) {
                 repopulatePage(true);
             }
             posted = true;
+            if (typeof callback == "function") {
+                callback();
+            }
         }
     });
 }

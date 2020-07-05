@@ -103,15 +103,16 @@ function clickByVolume() {
 
 function followPulses() {
     if (doFollowPulse) {
-        if (inCalMode) {
+        if (inCalMode) { // If we are already in calibration mode
             pulseReload(function callFunction() { // Reload pulses
                 setTimeout(followPulses, pulseReloadTimer);
             });
-        } else {
+        } else { // We are not yet in calibration mode
             var intervalID = window.setInterval(function () { // Poll every pulseReloadTimer/2 seconds
-                if (calSetting == false) {
+                if (calSetting == false) { // Run only if we have not run it once
                     calSetting = true; // Make sure we only run this once
-                    toggleCalMode(true, function (semaphore) {
+                    var selectedIndex = $('#flowmeter').prop('selectedIndex');
+                    toggleCalMode(true, selectedIndex, function (semaphore) {
                         if (semaphore == true) {
                             calSetting = false;
                             inCalMode = true;
@@ -123,7 +124,7 @@ function followPulses() {
             }, pulseReloadTimer / 2);
         }
     } else {
-        toggleCalMode(false, function (semaphore) {
+        toggleCalMode(false, 0, function (semaphore) {
             if (semaphore == true) {
                 calSetting = false;
                 inCalMode = false;
@@ -133,28 +134,25 @@ function followPulses() {
     }
 }
 
-function toggleCalMode(inCal = false, callback = null) {
-    var url;
+function toggleCalMode(inCal = false, meter, callback = null) {
+    var url = '';
+    var data = {};
     if (inCal) {
         url = "/setcalmode/";
+        // Get form data
+        tapnum = $('#flowmeter').val();
+        data = {
+            tapnum: tapnum
+        }
     } else {
         url = "/clearcalmode/";
     }
-    $.ajax({
-        url: url,
-        type: 'POST',
-        success: function (data) {
-            if (typeof callback == "function") {
-                callback(true);
-            }
-        },
-        error: function (data) {
-            if (typeof callback == "function") {
-                callback(false);
-            }
-        },
-        complete: function (data) {
-            //
+
+    console.log("DEBUG: toggleCalMode() POST data: " + JSON.stringify(data));
+
+    postData(url, data, false, false, function () {
+        if (typeof callback == "function") {
+            callback(true);
         }
     });
 }
