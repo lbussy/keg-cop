@@ -10,6 +10,7 @@
 - Add links to context help
 - Documentation
   - Operations
+  - Calibration
   - API
   - Troubleshooting
   - Context
