@@ -23,6 +23,10 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
+// Define assert
+// #define NDEBUG       // DEBUG: Voids assertions when defined
+#include <assert.h>     // DEBUG
+
 #include "jsonconfig.h"
 #include "serialhandler.h"
 #include "config.h"
@@ -37,9 +41,5 @@ SOFTWARE. */
 #include "tools.h"
 #include "execota.h"
 #include <ArduinoLog.h>
-
-// extern struct Config config;
-// extern struct Devices device;
-// extern struct Thermostat tstat;
 
 #endif // _MAIN_H

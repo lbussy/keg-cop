@@ -81,4 +81,6 @@ void convertFlowtoMetric();
 
 extern struct Config config;
 
+void printActive(); // DEBUG
+
 #endif // _FLOWMETER_H

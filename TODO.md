@@ -9,7 +9,6 @@
 - Add target pushes
 - Change cal mode to single flowmeter
 - Add links to context help
-- ~~Move JS to separate files~~
 - Documentation
   - Operations
   - API
@@ -20,6 +19,7 @@
 
 - #controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?)
 - Crashes cause flow.json to go away
+- Keeps setting tap 1 to inactive
 
 ## Before Release
 
@@ -133,3 +133,4 @@
 - ~~Don't let a kick disable a tap in RPints compat~~
 - ~~Look into "unable to retrieve" error when changing pages~~
 - ~~Add calibration page~~
+- ~~Move JS to separate files~~
