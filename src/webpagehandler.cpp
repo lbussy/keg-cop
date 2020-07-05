@@ -1133,7 +1133,7 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
 
 bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibration mode
 {
-    Log.verbose(F("Clearing any calibration flags before settign new flags." CR));
+    Log.verbose(F("Clearing any calibration flags before setting new flags." CR));
     for (int i = 0; i < NUMTAPS; i++)
     {
         flow.taps[i].calibrating = false;
