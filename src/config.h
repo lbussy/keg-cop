@@ -644,7 +644,7 @@ SOFTWARE. */
 // Delay time in milleseconds for detecting a constant pour
 //
 #ifndef POURDELAY
-#define POURDELAY 300
+#define POURDELAY 500
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
