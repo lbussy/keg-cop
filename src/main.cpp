@@ -94,10 +94,6 @@ void loop()
     Ticker getThatVersion;
     getThatVersion.attach(POLLSERVERVERSION, doPoll);
 
-    // DEBUG: Print any inactive taps
-    Ticker printBad;
-    printBad.attach(5, printActive);
-
     while (true)
     {
         doOTALoop();
