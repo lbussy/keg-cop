@@ -67,7 +67,6 @@ void setRegPageAliases()
     server.serveStatic("/settings/", SPIFFS, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
     server.serveStatic("/reset/", SPIFFS, "/").setDefaultFile("reset.htm").setCacheControl("max-age=600");
     server.serveStatic("/wifireset/", SPIFFS, "/").setDefaultFile("wifireset.htm").setCacheControl("max-age=600");
-    server.serveStatic("/test/", SPIFFS, "/").setDefaultFile("test.htm").setCacheControl("max-age=600"); // DEBUG
     server.serveStatic("/404/", SPIFFS, "/").setDefaultFile("404.htm").setCacheControl("max-age=600");
 }
 
@@ -531,7 +530,6 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
     }
     if (saveFlowConfig())
     {
-        Log.verbose(F("DEBUG: Tap active = %T" CR), flow.taps[tapNum].active);
         return true;
     }
     else
@@ -1053,7 +1051,7 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
             }
         }
     }
-    if (saveFlowConfig())
+    if (saveConfig())
     {
         return true;
     }
@@ -1120,7 +1118,7 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
             }
         }
     }
-    if (saveFlowConfig())
+    if (saveConfig())
     {
         return true;
     }
