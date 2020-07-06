@@ -6,7 +6,6 @@
 
 ## Features
 
-- Fix kick detect
 - Add target pushes
 - Add links to context help
 - Documentation
@@ -18,9 +17,11 @@
 
 ## Bugs
 
-- #controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?)
-- Reload data does not reset active/inactive
+- #controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?).  Keeps spinning loader.
+- Reload data does not reset active/inactive on tap
 - Reset form does not handle ppu
+- Main page tooltip for temp does not change as status changes
+- Fix kick detect
 
 ## Before Release
 
