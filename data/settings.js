@@ -41,8 +41,8 @@ function repopulatePage(doSpinner = false) { // Reload data if we need it
         toggleLoader("on");
     }
     loaded = 0;
-    populateFlow();
     populateConfig();
+    populateFlow();
     pollComplete();
 }
 
@@ -174,6 +174,7 @@ function populateConfig(callback = null) { // Get configuration settings
                 $('select[name="cloudtype"] option[value=' + parseInt(config.cloud.type, 10) + ']').attr('selected', 'selected');
                 $('input[name="cloudkey"]').val(config.cloud.key);
                 $('input[name="cloudfreq"]').val(parseInt(config.cloud.freq), 10);
+                $('.updatepulsesecs').text(pulseReloadTimer / 1000);
             }
             catch {
                 if (!unloadingState) {
@@ -249,7 +250,6 @@ function pollComplete() { // Poll to see if entire page is loaded
 }
 
 function finishPage() { // Display page
-    $('.updatepulsesecs').text(pulseReloadTimer / 1000);
     toggleLoader("off");
 }
 

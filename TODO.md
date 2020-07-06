@@ -6,6 +6,7 @@
 
 ## Features
 
+- Fix kick detect
 - Add target pushes
 - Add links to context help
 - Documentation
@@ -18,7 +19,8 @@
 ## Bugs
 
 - #controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?)
-- Crashes cause flow.json to go away / or / Keeps setting tap 1 to inactive
+- Reload data does not reset active/inactive
+- Reset form does not handle ppu
 
 ## Before Release
 
@@ -133,4 +135,8 @@
 - ~~Look into "unable to retrieve" error when changing pages~~
 - ~~Add calibration page~~
 - ~~Move JS to separate files~~
-- ~~Change cal mode to single flowmeter~~
+- ~~Crashes cause flow.json to go away~~
+- ~~Keeps setting tap 1 to inactive (flowmeter.cpp line 148)~~
+- ~~Setting tap config does not set active/inactive~~
+- ~~Setting tap other than 1(0) does not put things in cal mode~~
+- ~~saveFlowConfig() is not saving Tap 1 active/inactive~~
