@@ -70,8 +70,7 @@ static IRAM_ATTR void HandleIntISR6(void)
 
 static IRAM_ATTR void HandleIntISR7(void)
 {
-    // handleInterrupts(7); // DEBUG
-    assert(false);          // DEBUG: Crash on pulse(7)
+    handleInterrupts(7);
 }
 
 static void (*pf[])(void) = { // ISR Function Pointers
@@ -84,8 +83,8 @@ static void (*pf[])(void) = { // ISR Function Pointers
 void IRAM_ATTR handleInterrupts(int tapNum)
 { // Increment pulse count
     pulse[tapNum]++;
-    lastPulse[tapNum] = pulse[tapNum];
-    lastPulseTime[tapNum] = millis();
+    lastPulse[tapNum] = pulse[tapNum];  // TODO: DO I need to move this into the flow loop to support kick detect?
+    lastPulseTime[tapNum] = millis();   // TODO: DO I need to move this into the flow loop to support kick detect?
 }
 
 unsigned long getPulseCount(int tap)
@@ -100,73 +99,6 @@ unsigned long getPulseCount(int tap)
     }
 }
 
-void logFlow()
-{ // Save debits to tap and to file
-    for (int i = 0; i < NUMTAPS; i++)
-    {
-        if (!flow.taps[i].calibrating)
-        { // Skip on calibrate
-            const unsigned long nowTime = millis();
-            if ((nowTime - lastPulseTime[i]) > POURDELAY && lastPulseTime[i] > 0)
-            { // No pulses past POURDELAY = we stopped serving
-                noInterrupts();
-                const unsigned int pulseCount = pulse[i];
-                pulse[i] = 0;
-                lastPulseTime[i] = 0;
-                interrupts();
-                if (pulseCount < SMALLPOUR)
-                { // Discard a small pour
-                    Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
-                }
-                else
-                { // Log a pour
-                    flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppu)));
-                    saveFlowConfig();
-                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
-                    if (config.copconfig.rpintscompat)
-                    {
-                        sendPulseCount(i, flow.taps[i].pin, pulseCount);
-                    }
-                }
-            }
-            else
-            {
-                const int secs = (nowTime - lastPulse[i]) / 1000;
-                const unsigned long pps = (pulse[i] - lastPulse[i]) / secs;
-                double divisor;
-                if (config.copconfig.imperial)
-                {
-                    divisor = 128; // Ounces per gallon
-                }
-                else
-                {
-                    divisor = 33.8; // Ounces per liter
-                }
-                const double kickSpeed = (flow.taps[i].ppu / divisor) * KICKSPEED;
-                if (pps > kickSpeed)
-                { // Kick detector - keg is blowing foam > KICKSPEED oz/sec
-                    if (config.copconfig.rpintscompat)
-                    {
-                        sendKickedMsg(i, flow.taps[i].pin);
-                    }
-                    else
-                    {
-                        flow.taps[i].active = false;
-                        saveFlowConfig();
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (pulse[i] > 10)
-            {
-                Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CR), pulse[i], i, flow.taps[i].pin);
-            }
-        }
-    }
-}
-
 bool initFlow()
 { // Set up flow meter pins
     for (int i = 0; i < NUMTAPS; i++)
@@ -174,11 +106,91 @@ bool initFlow()
         pinMode(flowPins[i], INPUT_PULLUP);
         digitalWrite(flowPins[i], HIGH);
         attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
-        pulse[i] = 0;
-        lastPulse[i] = 0;
-        lastPulseTime[i] = 0;
+        pulse[i] = 0;           // Hold current pour
+        lastPulse[i] = 0;       // For kick detector
+        lastPulseTime[i] = 0;   // For pour detector
     }
     return loadFlowConfig();
+}
+
+void logFlow()
+{ // Save debits to tap and to file
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        if (!flow.taps[i].calibrating) // Skip on calibrate
+        {
+			if (isKicked(i) && flow.taps[i].active)
+			{  // If the keg is blowing foam and active
+				if (config.copconfig.rpintscompat)
+				{
+					sendKickedMsg(i, flow.taps[i].pin);
+				}
+				else
+				{ // Disable flowmeter if kicked and !RPints
+					flow.taps[i].active = false;
+					saveFlowConfig();
+				}
+			}
+			else if ((millis() - lastPulseTime[i] > POURDELAY) && (pulse[i] > 0))
+			{ // If we have stopped pouring, and there's something to log
+				noInterrupts();
+				const unsigned int pulseCount = pulse[i];
+				pulse[i] = 0;
+				lastPulse[i] = 0;
+				lastPulseTime[i] = millis();
+				interrupts();
+
+                if (pulseCount < SMALLPOUR)
+                { // Discard a small pour
+                    Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+					// Since we don't do anything with pulseCount here, we're ignoring it
+                }
+				else
+				{ // Log a pour
+                    flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppu)));
+                    saveFlowConfig();
+                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+                    if (config.copconfig.rpintscompat)
+                    { // Do RPints message
+                        sendPulseCount(i, flow.taps[i].pin, pulseCount);
+                    }
+				}
+			}
+			else
+			{ // Either we are not finished pouring, or there's no pulses to log
+				// Do I care?
+			}
+        }
+        else
+        {
+            Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CR), pulse[i], i, flow.taps[i].pin);
+        }
+    }
+}
+
+bool isKicked(int meter) // TODO:  Think through this
+{ // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
+    return false; // DEBUG
+	const int secs = (millis() - lastPulseTime[meter]) / 1000;
+	const unsigned long pps = (pulse[meter] - lastPulse[meter]) / secs;
+	double divisor;
+	if (config.copconfig.imperial)
+	{
+		divisor = 128; // Ounces per gallon
+	}
+	else
+	{
+		divisor = 33.8; // Ounces per liter
+	}
+	const double kickSpeed = (flow.taps[meter].ppu / divisor) * KICKSPEED;
+	if (pps > kickSpeed)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool loadFlowConfig()
@@ -186,14 +198,14 @@ bool loadFlowConfig()
     if (!loadFlowFile())
     {
         Log.warning(F("Warning: Unable to load flowmeter configuration." CR));
-        saveFlowFile(); // Save a blank config
+        saveFlowConfig(); // Save a blank config
         if (!loadFlowFile()) // Try one more time to load the default config
         {
             Log.error(F("Error: Unable to generate default flowmeter configuration." CR));
             return false;
         }
     }
-    return saveFlowFile();
+    return saveFlowConfig();
 }
 
 bool deleteFlowConfigFile()
@@ -237,11 +249,6 @@ bool loadFlowFile()
 }
 
 bool saveFlowConfig()
-{
-    return saveFlowFile();
-}
-
-bool saveFlowFile()
 {
     // Saves the configuration to a file on SPIFFS
     File file = SPIFFS.open(flowfilename, "w");
@@ -439,7 +446,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["ppu"].isNull() || obj["ppu"] == 0)
     {
-        Log.verbose(F("DEBUG: Taps::load(%d) ppu [%d] isNull() || == 0, loading default" CR), tapid, obj["ppu"]);
         ppu = PPU;
     }
     else
@@ -450,7 +456,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["name"].isNull() || strlen(obj["name"]) == 0)
     {
-        Log.verbose(F("DEBUG: Taps::load(%d) name [%s] isNull() || == 0, loading default" CR), tapid, obj["name"]);
         strlcpy(name, DEFAULTBEER, sizeof(name));
     }
     else
@@ -461,7 +466,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["capacity"].isNull() || obj["capacity"] == 0)
     {
-        Log.verbose(F("DEBUG: Taps::load(%d) capacity [%D] isNull() || == 0, loading default" CR), tapid, obj["capacity"]);
         capacity = KEGSIZE;
     }
     else
@@ -472,7 +476,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["remaining"].isNull())
     {
-        Log.verbose(F("DEBUG: Taps::load(%d) remaining [%D] isNull() || == 0, loading default" CR), tapid, obj["remaining"]);
         remaining = 0;
     }
     else
@@ -483,7 +486,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["active"].isNull())
     {
-        Log.verbose(F("DEBUG: Taps::load(%d) ppu [%T] isNull() || == 0, loading default" CR), tapid, obj["active"]);
         active = false;
     }
     else
@@ -494,7 +496,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["calibrating"].isNull())
     {
-        Log.verbose(F("DEBUG: Taps::load(%d) calibrating [%T] isNull() || == 0, loading default" CR), tapid, obj["calibrating"]);
         calibrating = false;
     }
     else
@@ -538,15 +539,4 @@ void Flowmeter::save(JsonObject obj) const
 	// Add each tap in the array
 	for (int i = 0; i < NUMTAPS; i++)
 		taps[i].save(_taps.createNestedObject());
-}
-
-void printActive() // DEBUG
-{
-    for (int i = 0; i < NUMTAPS; i++)
-    {
-        if (!flow.taps[i].active)
-        {
-            Log.verbose(F("***** DEBUG: Tap %d is %T!" CR), i, flow.taps[i].active);
-        }
-    }
 }

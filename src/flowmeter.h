@@ -60,6 +60,7 @@ struct Flowmeter
 void handleInterrupts(int);
 void logFlow();
 unsigned long getPulseCount(int);
+bool isKicked(int);
 // Control
 bool initFlow();
 // JSON Methods
@@ -67,7 +68,6 @@ bool deleteFlowConfigFile();
 bool loadFlowConfig();
 bool loadFlowFile();
 bool saveFlowConfig();
-bool saveFlowFile();
 bool deserializeFlowConfig(Stream &);
 bool serializeFlowConfig(Print &);
 bool printFlowFile();
@@ -80,7 +80,5 @@ void convertFlowtoImperial();
 void convertFlowtoMetric();
 
 extern struct Config config;
-
-void printActive(); // DEBUG
 
 #endif // _FLOWMETER_H
