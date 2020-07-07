@@ -17,8 +17,6 @@
 
 ## Bugs
 
-- #controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?).  Keeps spinning loader.
-- Reload data does not reset active/inactive on tap
 - Main page tooltip for temp does not change as status changes
 - Fix kick detect
 
@@ -141,3 +139,5 @@
 - ~~Setting tap other than 1(0) does not put things in cal mode~~
 - ~~saveFlowConfig() is not saving Tap 1 active/inactive~~
 - ~~Reset form does not handle ppu~~
+- ~~Reload data does not reset active/inactive on tap~~
+- ~~#controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?).  Keeps spinning loader.~~
