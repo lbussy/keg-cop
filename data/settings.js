@@ -206,7 +206,7 @@ function doUnits() { // Change names on page according to units in place
         $('.galliter').text('Gallon'); // Tap config pages
         $('.galliterlower').text('gallon'); // Tap config pages
         $('.ozgrams').text("Ounces");
-        $('.ozml').text("Milliliters");
+        $('.ozml').text("Ounces");
         $('.caplong').text('Capacity in Gallons'); // Tap config pages
         $('.remlong').text('Remaining in Gallons'); // Tap config pages
         $('.setfarcel').text('Set point in °F'); // Temp control pages
@@ -527,4 +527,3 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
         setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
     }
 }
-
