@@ -402,7 +402,9 @@ function processControllerPost(url, obj) {
         } else if (unitschanged) {
             postData(url, data, false, true);
         } else {
-            postData(url, data, false, false);
+            postData(url, data, false, false, function () {
+                toggleLoader("off");
+            });
         }
     }
 }
