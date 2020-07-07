@@ -190,6 +190,8 @@ function resetFlowCalForm() {
         $('#calsubmit').toggle(); // Turn off Form
     }
     $('#weight').val('');
+    $('#ppu').val('');
+    $('#pulses').val('');
     // TODO:  Blank out volume
     byWeight = false;
     byVolume = false;
