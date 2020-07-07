@@ -172,25 +172,33 @@ void logFlow()
 bool isKicked(int meter)
 { // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
 	const int secs = (millis() - lastLoopTime[meter]) / 1000;
-	const unsigned long pps = (pulse[meter] - lastPulse[meter]) / secs;
-	double divisor;
-	if (config.copconfig.imperial)
-	{
-		divisor = 128; // Ounces per gallon
-	}
-	else
-	{
-		divisor = 33.8; // Ounces per liter
-	}
-	const double kickSpeed = (flow.taps[meter].ppu / divisor) * KICKSPEED;
-	if (pps > kickSpeed)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    if (secs > 0 && (pulse[meter] - lastPulse[meter] > 0))
+    {
+        const unsigned long pps = (pulse[meter] - lastPulse[meter]) / secs;
+        double divisor;
+        if (config.copconfig.imperial)
+        {
+            divisor = 128; // Ounces per gallon
+        }
+        else
+        {
+            divisor = 33.8; // Ounces per liter
+        }
+        const double kickSpeed = (flow.taps[meter].ppu / divisor) * KICKSPEED;
+        if (pps > kickSpeed)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+    
 }
 
 bool loadFlowConfig()
