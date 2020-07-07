@@ -284,47 +284,47 @@
                                 case 0: // TSTAT_INACTIVE
                                     clearState();
                                     $("#coolstate").addClass("alert-secondary");
-                                    $("#coolstatetooltip").prop("title", "Thermostat is disabled");
+                                    $("#coolstatetooltip").attr("data-original-title", "Thermostat is disabled");
                                     break;
                                 case 1: // TSTAT_COOL_BEGIN
                                     clearState();
                                     $("#coolstate").addClass("alert-info");
-                                    $("#coolstatetooltip").prop("title", "Thermostat is starting to cool");
+                                    $("#coolstatetooltip").attr("data-original-title", "Thermostat is starting to cool");
                                     break;
                                 case 2: // TSTAT_COOL_MINOFF
                                     clearState();
                                     $("#coolstate").addClass("alert-danger");
-                                    $("#coolstatetooltip").prop("title", "Thermostat is calling for cooling but in minimum off time");
+                                    $("#coolstatetooltip").attr("data-original-title", "Thermostat is calling for cooling but in minimum off time");
                                     break;
                                 case 3: // TSTAT_COOL_ACTIVE
                                     clearState();
                                     $("#coolstate").addClass("alert-primary");
-                                    $("#coolstatetooltip").prop("title", "Thermostat is actively cooling");
+                                    $("#coolstatetooltip").attr("data-original-title", "Thermostat is actively cooling");
                                     break;
                                 case 4: // TSTAT_IDLE_END
                                     clearState();
                                     $("#coolstate").addClass("alert-warning");
-                                    $("#coolstatetooltip").prop("title", "Thermostat is not calling for cooling, mininum off time ending");
+                                    $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, mininum off time ending");
                                     break;
                                 case 5: // TSTAT_IDLE_MINON
                                     clearState();
                                     $("#coolstate").addClass("alert-success");
-                                    $("#coolstatetooltip").prop("title", "Thermostat is not calling for cooling but in minimum on time");
+                                    $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling but in minimum on time");
                                     break;
                                 case 6: // TSTAT_IDLE_INACTIVE
                                     clearState();
                                     $("#coolstate").addClass("alert-light");
-                                    $("#coolstatetooltip").prop("title", "Thermostat is not calling for cooling, in idle mode");
+                                    $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, in idle mode");
                                     break;
                                 case 7: // TSTAT_UNKNOWN
                                     clearState();
                                     $("#coolstate").addClass("alert-light");
-                                    $("#coolstatetooltip").prop("title", "Thermostat is in an unknown state");
+                                    $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
                                     break;
                                 default: // TSTAT_UNKNOWN
                                     clearState();
                                     $("#coolstate").addClass("alert-light");
-                                    $("#coolstatetooltip").prop("title", "Thermostat is in an unknown state");
+                                    $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
                                     break;
                             }
                         }

@@ -17,7 +17,6 @@
 
 ## Bugs
 
-- Main page tooltip for temp does not change as status changes
 - Fix kick detect
 
 ## Before Release
@@ -141,3 +140,4 @@
 - ~~Reset form does not handle ppu~~
 - ~~Reload data does not reset active/inactive on tap~~
 - ~~#controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?).  Keeps spinning loader.~~
+- ~~Main page tooltip for temp does not change as status changes~~
