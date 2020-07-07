@@ -27,7 +27,8 @@ const char *flowfilename = FLOWFILENAME;
 int flowPins[8] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7};
 volatile static unsigned long pulse[NUMTAPS];           // Unregistered pulse counter
 volatile static unsigned long lastPulse[NUMTAPS];       // Pulses pending at last poll
-volatile static unsigned long lastPulseTime[NUMTAPS];   // Monitor ongoing pours
+volatile static unsigned long lastPulseTime[NUMTAPS];   // Monitor ongoing active pours
+volatile static unsigned long lastLoopTime[NUMTAPS];   // Monitor ongoing active pours
 extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(8);
 extern const size_t capacityFlowDeserial = capacityFlowSerial + 1100;
 extern const size_t capacityPulseSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1);
@@ -83,8 +84,7 @@ static void (*pf[])(void) = { // ISR Function Pointers
 void IRAM_ATTR handleInterrupts(int tapNum)
 { // Increment pulse count
     pulse[tapNum]++;
-    lastPulse[tapNum] = pulse[tapNum];  // TODO: DO I need to move this into the flow loop to support kick detect?
-    lastPulseTime[tapNum] = millis();   // TODO: DO I need to move this into the flow loop to support kick detect?
+    lastPulseTime[tapNum] = millis();   // Reset while we are pouring
 }
 
 unsigned long getPulseCount(int tap)
@@ -108,6 +108,7 @@ bool initFlow()
         attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
         pulse[i] = 0;           // Hold current pour
         lastPulse[i] = 0;       // For kick detector
+        lastLoopTime[i] = 0;    // For kick detector
         lastPulseTime[i] = 0;   // For pour detector
     }
     return loadFlowConfig();
@@ -136,7 +137,6 @@ void logFlow()
 				noInterrupts();
 				const unsigned int pulseCount = pulse[i];
 				pulse[i] = 0;
-				lastPulse[i] = 0;
 				lastPulseTime[i] = millis();
 				interrupts();
 
@@ -158,7 +158,8 @@ void logFlow()
 			}
 			else
 			{ // Either we are not finished pouring, or there's no pulses to log
-				// Do I care?
+				lastPulse[i] = pulse[i];    // Hold to compare for kickdetect
+                lastLoopTime[i] = millis(); // Hold to compare for kickdetect
 			}
         }
         else
@@ -168,10 +169,9 @@ void logFlow()
     }
 }
 
-bool isKicked(int meter) // TODO:  Think through this
+bool isKicked(int meter)
 { // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
-    return false; // DEBUG
-	const int secs = (millis() - lastPulseTime[meter]) / 1000;
+	const int secs = (millis() - lastLoopTime[meter]) / 1000;
 	const unsigned long pps = (pulse[meter] - lastPulse[meter]) / secs;
 	double divisor;
 	if (config.copconfig.imperial)
