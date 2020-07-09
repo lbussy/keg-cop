@@ -1,4 +1,4 @@
-.. _settings-controller:
+.. _controller:
 
 Controller Settings
 ######################

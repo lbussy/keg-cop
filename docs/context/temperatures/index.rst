@@ -1,3 +1,5 @@
+.. _temperatures:
+
 Temperatures
 ####################
 

@@ -1,3 +1,5 @@
+.. _context:
+
 Context Help
 ##################
 
@@ -13,7 +15,6 @@ The following are links to context help for the web pages controlling the Keg Co
     settings/index
     settings/controller/index
     settings/taps/index
-    settings/flowmeters/index
     settings/temperature/control/index
     settings/temperature/sensors/index
     settings/targets/url/index
