@@ -17,7 +17,7 @@
 
 ## Bugs
 
-- ??
+- Add an on unload event to all pages (temps for sure)
 
 ## Before Release
 
