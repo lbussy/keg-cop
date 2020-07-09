@@ -8,6 +8,7 @@ var pulseReloadTimer = 2000;
 var byWeight = false;
 var byVolume = false;
 var clearCalibrate = false;
+var unloadingState = false;
 
 // Flowmeter Calibration Events
 //
@@ -147,8 +148,6 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     } else {
         url = "/clearcalmode/";
     }
-
-    console.log("DEBUG: toggleCalMode() POST data: " + JSON.stringify(data));
 
     postData(url, data, false, false, function () {
         if (typeof callback == "function") {

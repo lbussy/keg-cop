@@ -3,7 +3,7 @@
 toggleLoader("on");
 var unloadingState = false;
 var loaded = 0; // Hold data load status
-var numReq = 2; // Number of JSON required
+var numReq = 3; // Number of JSON required
 var hostname = window.location.hostname;
 var originalHostnameConfig;
 var imperial;
@@ -30,8 +30,9 @@ function populatePage() { // Get page data
         'toggleEnabled': true
     });
     toggleCalMode(false);
-    populateFlow();
     populateConfig();
+    populateFlow();
+    populateTemps();
     loadHash();
     pollComplete();
 }
@@ -43,6 +44,7 @@ function repopulatePage(doSpinner = false) { // Reload data if we need it
     loaded = 0;
     populateConfig();
     populateFlow();
+    populateTemps();
     pollComplete();
 }
 
@@ -198,6 +200,46 @@ function populateConfig(callback = null) { // Get configuration settings
             }
         });
 }
+
+function populateTemps(callback = null) { // Get configuration settings
+    var url = "/sensors/";
+    var config = $.getJSON(url, function () {
+    })
+        .done(function (temps) {
+            try {
+                if (temps.displayenabled == true) {
+                    if (!$('#displaytemplink').is(':visible')) {
+                        $('#displaytemplink').toggle();
+                    }
+                } else {
+                    if ($('#displaytemplink').is(':visible')) {
+                        $('#displaytemplink').toggle();
+                    }
+                }
+
+                if (loaded < numReq) {
+                    loaded++;
+                }
+                if (typeof callback == "function") {
+                    callback();
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    alert("Unable to parse temperature data from SPIFFS.");
+                }
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                alert("Unable to retrieve temperature data from SPIFFS.");
+            }
+        })
+        .always(function () {
+            // Can post-process here
+        });
+}
+
 
 function doUnits() { // Change names on page according to units in place
     // Set Gallon / Liter
@@ -456,7 +498,7 @@ function processSensorControlPost(url, obj) {
         calkeg: calkeg,
         enablekeg: enablekeg
     }
-    postData(url, data);
+    postData(url, data, true, true);
 }
 
 function processTargetUrlPost(url, obj) {

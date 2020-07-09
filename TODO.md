@@ -142,3 +142,4 @@
 - ~~#controller > Solenoid Relay and Functionality does not refresh page (has to do with refreshing data functionality?).  Keeps spinning loader.~~
 - ~~Main page tooltip for temp does not change as status changes~~
 - ~~Fix kick detect~~
+- ~~Add temp menu~~

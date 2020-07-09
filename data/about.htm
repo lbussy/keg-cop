@@ -45,6 +45,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
+                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
+                        <a class="nav-link" href="/temps/">Temperatures</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/settings/">Settings</a>
                     </li>
@@ -102,39 +105,31 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
 
+    <script src="/about.js"></script>
+
     <script type="text/javascript">
+
         // Attach the event after the page loads
         if (window.addEventListener)
-            window.addEventListener("load", loadPage, false);
+            window.addEventListener("load", startLoad, false);
         else if (window.attachEvent)
-            window.attachEvent("onload", loadPage);
-        else window.onload = loadPage;
+            window.attachEvent("onload", startLoad);
+        else window.onload = startLoad;
 
-        function loadPage() { // Load the page's JS elements
-            loadThisVersion(); // Populate form with controller settings
+        function startLoad() { // Make sure the page is 100% loaded
+            if (document.readyState === 'ready' || document.readyState === 'complete') {
+                populatePage();
+            } else {
+                document.onreadystatechange = function () {
+                    if (document.readyState == "complete") {
+                        populatePage();
+                    }
+                }
+            }
         }
 
-        function loadThisVersion() { // Get current parameters
-            var thisVersionJson = "/thisVersion/";
-            var thisVersion = $.getJSON(thisVersionJson, function () {
-            })
-                .done(function (thisVersion) {
-                    try {
-                        $('#thisVersion').text("v" + thisVersion.version);
-                    }
-                    catch {
-                        alert("Unable to parse current version from controller.");
-                        $('#thisVersion').text("(Error loading version.)");
-                    }
-                })
-                .fail(function () {
-                    alert("Failed getting current version from controller.");
-                    $('#thisVersion').text("(Error loading version.)");
-                })
-                .always(function () {
-                    // Can post-process here
-                });
-        }
+
+
     </script>
 
 </body>

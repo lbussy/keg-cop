@@ -211,36 +211,46 @@ void setJsonHandlers()
 
     server.on("/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /sensors/." CR));
-        DynamicJsonDocument doc(2048U);//capacityTempsSerial);
+        DynamicJsonDocument doc(capacityTempsSerial);
 
         doc["imperial"] = config.copconfig.imperial;
         doc["controlpoint"] = config.temps.controlpoint;
         doc["setting"] = config.temps.setpoint;
         doc["status"] = tstat.state;
+        doc["controlenabled"] = config.temps.enabled[config.temps.controlpoint];
 
-        // If the assigned control point is disabled, disable temp control and display
-        if (config.temps.enabled[config.temps.controlpoint])
+        int numEnabled = 0;
+        char * sensorName[NUMSENSOR];
+        double sensorAverage[NUMSENSOR];
+
+        for (int i = 0; i < NUMSENSOR; i++)
         {
-            doc["displaydisabled"] = false;
-        }
-        else
-        {
-            doc["displaydisabled"] = true;
+            sensorName[i] = device.sensor[i].name;
+            doc["sensors"][i]["enable"] = config.temps.enabled[i];
+
+            if (config.temps.enabled[i])
+            {
+                numEnabled++;
+            }
+            if (config.copconfig.imperial)
+            {
+                sensorAverage[i] = convertCtoF(device.sensor[i].average);
+            }
+            else
+            {
+                sensorAverage[i] = device.sensor[i].average;
+            }
         }
 
         for (int i = 0; i < NUMSENSOR; i++)
         {
-            doc["sensors"][i]["name"] = device.sensor[i].name;
-            doc["sensors"][i]["enable"] = config.temps.enabled[i];
-            if (config.copconfig.imperial)
-            {
-                doc["sensors"][i]["value"] = convertCtoF(device.sensor[i].average);
-            }
-            else
-            {
-                doc["sensors"][i]["value"] = device.sensor[i].average;
-            }
+            doc["sensors"][i]["name"] = (const char*)sensorName[i];
+            doc["sensors"][i]["value"] = (const float)sensorAverage[i];
         }
+
+        // If we have at least one temp sensor, display link in menu
+        const bool displayenabled = (numEnabled > 0);
+        doc["displayenabled"] = displayenabled;
 
         String json;
         serializeJsonPretty(doc, json);
