@@ -10,7 +10,8 @@ JSON Definition:
   "controlpoint": 99,
   "setting": 999.999,
   "status": 99,
-  "displaydisabled": false,
+  "controlenabled": false,
+  "displayenabled": false,
   "sensors": [
     {
       "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -45,18 +46,18 @@ Size:
 -----
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6) + 250;
-416+221 = 637
+const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(7) + 370;
+432+330 = 762
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6) + 360;
+const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(7) + 370;
 DynamicJsonDocument doc(capacity);
 
-const char* json = "{\"imperial\":false,\"controlpoint\":99,\"setting\":999.999,\"status\":99,\"displaydisabled\":false,\"sensors\":[{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999}]}";
+const char* json = "{\"imperial\":false,\"controlpoint\":99,\"setting\":999.999,\"status\":99,\"controlenabled\":false,\"displayenabled\":false,\"sensors\":[{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999}]}";
 
 deserializeJson(doc, json);
 
@@ -64,7 +65,8 @@ bool imperial = doc["imperial"]; // false
 int controlpoint = doc["controlpoint"]; // 99
 float setting = doc["setting"]; // 999.999
 int status = doc["status"]; // 99
-bool displaydisabled = doc["displaydisabled"]; // false
+bool controlenabled = doc["controlenabled"]; // false
+bool displayenabled = doc["displayenabled"]; // false
 
 JsonArray sensors = doc["sensors"];
 
@@ -98,14 +100,15 @@ Serializing / Saving:
 ---------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6) + 360;
+const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(7);
 DynamicJsonDocument doc(capacity);
 
 doc["imperial"] = false;
 doc["controlpoint"] = 99;
 doc["setting"] = 999.999;
 doc["status"] = 99;
-doc["displaydisabled"] = false;
+doc["controlenabled"] = false;
+doc["displayenabled"] = false;
 
 JsonArray sensors = doc.createNestedArray("sensors");
 

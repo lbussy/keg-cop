@@ -22,7 +22,7 @@ $(window).bind("beforeunload", function () {
 });
 
 function populatePage() { // Get page data
-    $(document).tooltip({
+    $(document).tooltip({ // Enable tooltips
         'selector': '[data-toggle=tooltip]',
         'placement': 'left',
         'toggleEnabled': true
@@ -126,7 +126,12 @@ function populateTemps(callback = null) { // Get configuration settings
     })
         .done(function (temps) {
             try {
-                if (!temps.displaydisabled) {
+                if (temps.displayenabled == true) {
+                    $('#displaytemplink').show();
+                } else {
+                    $('#displaytemplink').hide();
+                }
+                if (temps.controlenabled) {
                     // Set control point display
                     $('#controlPoint').text(temps.sensors[temps.controlpoint].name + ":");
                     $('#controlTemp').text(parseFloat(temps.sensors[temps.controlpoint].value).toFixed(1));
@@ -221,21 +226,21 @@ function clearState() {
     $("#coolstate").removeClass("alert-light");         
 }
 
-    function addData(chart, label, data) {
-        //chart.data.labels.push(label);
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data = data;
-        });
-        chart.update();
-    }
+function addData(chart, label, data) {
+    //chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data = data;
+    });
+    chart.update();
+}
 
-    function removeData(chart) {
-        //chart.data.labels.pop();
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data.pop();
-        });
-        chart.update();
-    }
+function removeData(chart) {
+    //chart.data.labels.pop();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+    chart.update();
+}
 
 function doChart() { // Draw chart.js chart
     if (tapChart) {

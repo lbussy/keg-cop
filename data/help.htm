@@ -45,6 +45,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
+                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
+                        <a class="nav-link" href="/temps/">Temperatures</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/settings/">Settings</a>
                     </li>
@@ -81,7 +84,7 @@
                             <li><span class="fa-li"><i class="fas fa-bug"></i></span>Report an <a
                                     href="https://github.com/lbussy/keg-cop/issues">issue or bug</a></li>
                             <li><span class="fa-li"><i class="fas fa-hands-helping"></i></span>Get support or chat with
-                                other users on the <a href="http://support.kegcop.com/">HomeBrewTalk Thread</a>
+                                other users on the <a href="http://support.kegcop.com/">HomebrewTalk Thread</a>
                             </li>
                         </ul>
                     </p>
@@ -106,6 +109,31 @@
     </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+    <script src="/help.js"></script>
+
+    <script>
+
+    // Attach the event after the page loads
+    if (window.addEventListener)
+        window.addEventListener("load", startLoad, false);
+    else if (window.attachEvent)
+        window.attachEvent("onload", startLoad);
+    else window.onload = startLoad;
+
+    function startLoad() { // Make sure the page is 100% loaded
+        if (document.readyState === 'ready' || document.readyState === 'complete') {
+            populatePage();
+        } else {
+            document.onreadystatechange = function () {
+                if (document.readyState == "complete") {
+                    populatePage();
+                }
+            }
+        }
+    }
+
     </script>
 
 </body>
