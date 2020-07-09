@@ -8,12 +8,7 @@
 
 - Add target pushes
 - Add links to context help
-- Documentation
-  - Operations
-  - Calibration
-  - API
-  - Troubleshooting
-  - Context
+- Document API
 
 ## Bugs
 
@@ -73,17 +68,17 @@
 - ~~Allow update of firmware to re-apply flow.json~~
 - ~~Handle Imperial/metric~~
     - ~~Display (web)~~
-      - ~~Index~~
-      - ~~Settings~~
+        - ~~Index~~
+        - ~~Settings~~
     - ~~Settings posting~~
     - ~~Thermostat~~
 - ~~Add temp control status to web UI~~
 - ~~Add temps display to web UI~~
 - ~~sendUpdateCount() report is sent when sendPulseCount() is not warranted (RandR+)~~
 - ~~Update page data on timer~~
-  - ~~Temps~~
-  - ~~Flow~~
-  - ~~Y-Axis scale~~
+    - ~~Temps~~
+    - ~~Flow~~
+    - ~~Y-Axis scale~~
 - ~~Wifi credentials get erased on reset~~
 - ~~Sometimes will not connect after setting credentials~~
 - ~~Make page load spinner work on Temps and Index~~
@@ -93,19 +88,19 @@
 - ~~Figure out what to do with tstat.control (if anything)~~
 - ~~Add units display to PPU (and maybe others)~~
 - ~~See if new POST processor can handle larger form submits (less buttons)~~
-  - ~~Taps~~
-    - ~~Tap 1~~
-    - ~~Tap 2~~
-    - ~~Tap 3~~
-    - ~~Tap 4~~
-    - ~~Tap 5~~
-    - ~~Tap 6~~
-    - ~~Tap 7~~
-    - ~~Tap 8~~
-  - ~~Controller~~
-  - ~~Temperature~~
-    - ~~Control~~
-    - ~~Sensors~~
+    - ~~Taps~~
+        - ~~Tap 1~~
+        - ~~Tap 2~~
+        - ~~Tap 3~~
+        - ~~Tap 4~~
+        - ~~Tap 5~~
+        - ~~Tap 6~~
+        - ~~Tap 7~~
+        - ~~Tap 8~~
+    - ~~Controller~~
+    - ~~Temperature~~
+        - ~~Control~~
+        - ~~Sensors~~
 - ~~Look into why solenoid chatters on flash (On, Off, On) (from controller resetting due to PIO terminal)~~
 - ~~Deal with disconnected sensors~~
   - ~~Allow enable/disable sensors~~
@@ -143,3 +138,8 @@
 - ~~Main page tooltip for temp does not change as status changes~~
 - ~~Fix kick detect~~
 - ~~Add temp menu~~
+- Documentation
+    - ~~Context~~
+    - ~~Calibration~~
+    - ~~Troubleshooting~~
+    - ~~Operations~~
