@@ -17,7 +17,6 @@ The settings page provides a tabbed sub-menu for applicatoin settings and config
 
     controller/index
     taps/index
-    flowmeters/index
     temperature/control/index
     temperature/sensors/index
     targets/url/index
