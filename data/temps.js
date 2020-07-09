@@ -1,6 +1,7 @@
 // Supports temps page
 
 toggleLoader("on");
+var unloadingState = false;
 var imperial;
 var loaded = 0;
 var numReq = 2;
@@ -10,6 +11,11 @@ var scaleTemps = [];
 var setpoint = 0;
 var tempChart;
 var chartReloadTimer = 10000; // Reload every 10 seconds
+
+// Detect unloading state during getJSON
+$(window).bind("beforeunload", function () {
+    unloadingState = true;
+});
 
 function populatePage() { // Get page data
     populateTemps();
@@ -33,11 +39,15 @@ function populateConfig() { // Get configuration settings
                 }
             }
             catch {
-                alert("Unable to parse configuration data from SPIFFS.");
+                if (!unloadingState) {
+                    alert("Unable to parse configuration data from SPIFFS.");
+                }
             }
         })
         .fail(function () {
-            alert("Unable to retrieve configuration data from SPIFFS.");
+            if (!unloadingState) {
+                alert("Unable to retrieve configuration data from SPIFFS.");
+            }
         })
         .always(function () {
             // Can post-process here
@@ -106,11 +116,15 @@ function populateTemps(callback = null) { // Get configuration settings
                 }
             }
             catch {
-                alert("Unable to parse temperature data from SPIFFS.");
+                if (!unloadingState) {
+                    alert("Unable to parse temperature data from SPIFFS.");
+                }
             }
         })
         .fail(function () {
-            alert("Unable to retrieve temperature data from SPIFFS.");
+            if (!unloadingState) {
+                alert("Unable to retrieve temperature data from SPIFFS.");
+            }
         })
         .always(function () {
             // Can post-process here

@@ -45,6 +45,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
+                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
+                        <a class="nav-link" href="/temps/">Temperatures</a>
+                    </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="/settings/">Settings  <span class="sr-only">(current)</span></a>
                     </li>
@@ -130,63 +133,16 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
 
+    <script src="/ota1.js"></script>
+
     <script type="text/javascript">
         // Attach the event after the page loads
         if (window.addEventListener)
-            window.addEventListener("load", loadPage, false);
+            window.addEventListener("load", populatePage, false);
         else if (window.attachEvent)
-            window.attachEvent("onload", loadPage);
-        else window.onload = loadPage;
+            window.attachEvent("onload", populatePage);
+        else window.onload = populatePage;
 
-        function loadPage() { // Load the page's JS elements
-            loadThisVersion(); // Populate form with controller settings
-            loadThatVersion(); // Populate form with controller settings
-        }
-
-        function loadThisVersion() { // Get current parameters
-            var thisVersionJson = "/thisVersion/";
-            var thisVersion = $.getJSON(thisVersionJson, function () {
-            })
-                .done(function (thisVersion) {
-                    try {
-                        $('#thisVersion').text(thisVersion.version);
-                    }
-                    catch {
-                        alert("Unable to parse current version from controller.");
-                        $('#thisVersion').text("Error loading.");
-                    }
-                })
-                .fail(function () {
-                    alert("Failed getting current version from controller.");
-                    $('#thisVersion').text("Error loading.");
-                })
-                .always(function () {
-                    // Can post-process here
-                });
-        }
-
-        function loadThatVersion() { // Get current parameters
-            var thatVersionJson = "/thatVersion/";
-            var thatVersion = $.getJSON(thatVersionJson, function () {
-            })
-                .done(function (thatVersion) {
-                    try {
-                        $('#thatVersion').text(thatVersion.version);
-                        document.getElementById("proceed").disabled = false;
-                    }
-                    catch {
-                        alert("Unable to parse available version from web repository.");
-                        $('#thatVersion').text("Error loading.");
-                    }
-                })
-                .fail(function () {
-                    alert("Failed getting available version from web repository.");
-                    $('#thatVersion').text("Error loading.");
-                })
-                .always(function () {
-                    // Can post-process here
-                });
-        }
     </script>
 
 </body>
