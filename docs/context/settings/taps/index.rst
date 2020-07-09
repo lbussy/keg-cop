@@ -1,3 +1,5 @@
+.. _taps:
+
 Tap Settings
 ##############
 
@@ -7,5 +9,7 @@ The first choice on the ~Settings~ screen is a drop-down tab labeled ~Taps~.  Cl
    :scale: 50%
    :align: center
    :alt: Tap UI
+
+#TODO
 
 See the page for :ref:`flowmeter <flowmeter>` calibration.

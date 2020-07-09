@@ -1,3 +1,5 @@
+.. _reset:
+
 Reset Controller
 ################
 

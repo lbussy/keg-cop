@@ -3,7 +3,7 @@ Set Up Networking
 
 After flashing the firmware for the first time or erasing network settings, your controller will not participate in any WiFi networks. It starts in what is called "Access Point (AP) Mode," where it serves as a sort of stand-alone wireless network. The on-board LED will flash at 0.5Hz, or one second on, one second off.
 
-Initial Settings
+Initial Network Settings
 **************************
 
 You may use any wireless-capable device to connect to the access point, however best results are often obtained using a mobile device. In the following examples, I use an iPhone; however, any device should be very similar. Be aware that using the same machine on which you follow these instructions may result in you not being able to read the instructions when you connect to the Keg Cop AP. No Internet will be available to your phone or laptop while you go through the process.
@@ -56,7 +56,7 @@ The controller will attempt to connect to the network. If the connection is succ
 
 If all goes as expected, the controller's LED will flash as it performs various configuration steps, and finally, the LED will remain off. Here you may proceed. If you have issues, check the :ref:`troubleshooting <troubleshooting>` page for more information.
 
-Settings Change
+Network Settings Change
 **************************
 
 At some point, you may need to change your WiFi settings. This is easier if you remember to do it while you are still able to connect to the application. However, you may raise the access point without being able to access the Keg Cop Application.
@@ -72,3 +72,4 @@ Re-Raise AP
 If the Keg Cop controller is unable to access the configured WiFi network, it should drop into AP mode and allow configuration. It will indicate this by the AP-mode flashing (0.5Hz) of the on-board LED.
 
 If this does not work, or if you prefer, you may raise the AP by an electrical connection. Take a piece of wire and short pin 13 to ground. Then, reset the controller by pressing the reset button or cycling power. The controller will detect pin 13 being low on startup and enter AP mode.
+

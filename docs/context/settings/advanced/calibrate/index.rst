@@ -1,3 +1,5 @@
+.. _calibrate:
+
 Calibrate Flowmeters
 ######################
 
