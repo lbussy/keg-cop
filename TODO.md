@@ -6,6 +6,7 @@
 
 ## Features
 
+- Add "Keg Screen Host" target
 - Add target pushes
 - Add links to context help
 - Document API
