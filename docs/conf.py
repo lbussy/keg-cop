@@ -78,6 +78,9 @@ html_static_path = ['_static/']
 # Path should be relative to the ``_static`` files directory.
 html_logo = "_static/bubblegum_icon.png"
 
+# Favicon
+html_favicon = 'favicon.png'
+
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.
 html_theme_options = {
