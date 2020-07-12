@@ -34,13 +34,14 @@ void initWebServer()
 
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request) {
+
         if (request->method() == HTTP_OPTIONS)
         {
             request->send(200);
         }
         else
         {
-            Log.verbose(F("Serving 404." CR));
+            Log.verbose(F("Serving 404 for request to %s." CR), request->url().c_str());
             request->redirect("/404/");
         }
     });
