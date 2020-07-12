@@ -403,7 +403,6 @@ void setSettingsAliases()
         Log.verbose(F("Processing post to /settings/update/." CR));
 
         handleTapPost(request); // Tap parameters
-        handleSetCalMode(request); // Tap calibration parameters
         handleControllerPost(request); // Controller parameters
         handleControlPost(request); // Temperature control and activation
         handleSensorPost(request); // Sensor calibration and activation
