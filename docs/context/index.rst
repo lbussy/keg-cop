@@ -17,6 +17,7 @@ The following are links to context help for the web pages controlling the Keg Co
     settings/taps/index
     settings/temperature/control/index
     settings/temperature/sensors/index
+    settings/targets/kegscreen/index
     settings/targets/url/index
     settings/targets/cloud/index
     settings/advanced/calibrate/index
