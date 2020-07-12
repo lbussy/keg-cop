@@ -19,6 +19,22 @@ $(window).bind("beforeunload", function () {
     unloadingState = true;
 });
 
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+    previousTab = currentTab;
+    currentTab = $(event.target).text();
+    updateHelp(); // Set context-sensitive help
+
+    // Handle resetting the calibration form if we leave it
+    if (previousTab == "Calibrate Flowmeters") {
+        doFollowPulse = false; // Turn off calibration mode
+        clearCalibrate = true; // Set flag to reset form
+    } else if (currentTab == "Calibrate Flowmeters" && clearCalibrate == true) {
+        // Clear the calibration form if we were here before
+        clearCalibrate = false;
+        resetFlowCalForm();
+    }
+});
+
 // Turn off tooltips on radio button change {" "}
 $('input[type=radio]').change(function () {
     $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
@@ -340,6 +356,9 @@ function processPost(obj) {
         case "#sensorcontrol":
             processSensorControlPost(url, obj);
             break;
+        case "#kegscreen":
+            processKegScreenPost(url, obj);
+            break;
         case "#targeturl":
             processTargetUrlPost(url, obj);
             break;
@@ -501,6 +520,20 @@ function processSensorControlPost(url, obj) {
     postData(url, data, true, true);
 }
 
+function processKegScreenPost(url, obj) {
+    // Handle Keg Screen Name
+
+    // Get form data
+    var $form = $(obj),
+        kegscreen = $form.find("input[name='kegscreen']").val(),
+
+    // Process post
+    data = {
+        kegscreen: kegscreen
+    };
+    postData(url, data);
+}
+
 function processTargetUrlPost(url, obj) {
     // Handle target URL posts
 
@@ -568,4 +601,48 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
     } else {
         setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
     }
+}
+
+function updateHelp() {
+    hashLoc = window.location.hash;
+    var url="https://docs.kegcop.com"
+
+    // Switch here for hashLoc
+    switch (hashLoc) {
+        case "#tap0":
+        case "#tap1":
+        case "#tap2":
+        case "#tap3":
+        case "#tap4":
+        case "#tap5":
+        case "#tap6":
+        case "#tap7":
+            url = url + "/en/latest/context/settings/taps/index.html";
+            break;
+        case "#tempcontrol":
+            url = url + "/en/latest/context/settings/temperature/control/index.html";
+            break;
+        case "#sensorcontrol":
+            url = url + "/en/latest/context/settings/temperature/sensors/index.html";
+            break;
+        case "#kegscreen":
+            url = url + "/en/latest/context/settings/targets/kegscreen/index.html";
+            break;
+        case "#targeturl":
+            url = url + "/en/latest/context/settings/targets/url/index.html";
+            break;
+        case "#targetcloud":
+            url = url + "/en/latest/context/settings/targets/cloud/index.html";
+            break;
+        case "#controller":
+            url = url + "/en/latest/context/settings/controller/index.html";
+            break;
+        case "#flowcal":
+            url = url + "/en/latest/context/settings/advanced/calibrate/index.html";
+            break;
+        default:
+            // Unknown hash location passed
+            break;
+    }
+    $("#contexthelp").prop("href", url)
 }

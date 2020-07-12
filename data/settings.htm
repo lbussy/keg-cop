@@ -62,7 +62,8 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com">?</a>
+                        <a id="contexthelp" name="contexthelp" class="navbar-brand nav-link active" target="_blank"
+                        href="https://docs.kegcop.com/en/latest/context/settings/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -106,6 +107,7 @@
                     <li class="nav-item dropdown">
                         <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Targets</span>
                         <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#kegscreen">Keg Screen</a>
                             <a class="dropdown-item" data-toggle="tab" href="#targeturl">URL</a>
                             <a class="dropdown-item" data-toggle="tab" href="#targetcloud">Cloud</a>
                         </div>
@@ -1355,7 +1357,40 @@
                         </div>
 
                     </div> <!-- Sensor Control Tab -->
-                
+
+                    <div class="tab-pane fade" id="kegscreen"> <!-- Keg Screen Tab -->
+
+                        <div class="card-header">
+                            <h4 class="card-title">Keg Screen Configuration</h4>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="kegscreen" action="/settings/kegscreen/" method="POST" onsubmit="return processPost(this);">
+
+                                <div class="form-group row">
+                                    <label for="kegscreen" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Host name of Keg Screen system (not URL). Do not include the .local portion">
+                                        Keg Screen System Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="kegscreen"
+                                            id="kegscreen" minlength="3" maxlength="32"
+                                            placeholder="kegscreen">
+                                    </div>
+                                </div>
+
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                </div>
+								
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Keg Screen Tab -->
+
                     <div class="tab-pane fade" id="targeturl"> <!-- URL Target Tab -->
 
                         <div class="card-header">
@@ -1386,7 +1421,7 @@
                                             min="10" max="900" step="1" placeholder="30">
                                     </div>
                                 </div>
-								
+
                                 <div class="row col-sm-12 justify-content-center">
                                     <button class="btn btn-primary" id="submitSettings"
                                         onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
