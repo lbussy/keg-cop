@@ -10,6 +10,7 @@ The first choice on the ~Settings~ screen is a drop-down tab labeled ~Taps~.  Cl
    :align: center
    :alt: Tap UI
 
-#TODO
+PPG/PPL Calibration
+*********************
 
-See the page for :ref:`flowmeter <flowmeter>` calibration.
+See the :ref:`flowmeter calibration <calibrate>` page for more information on calculating the PPG/PPL.

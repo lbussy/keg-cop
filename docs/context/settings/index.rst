@@ -8,7 +8,7 @@ Settings Page
    :align: center
    :alt: Settings Page
 
-The settings page provides a tabbed sub-menu for applicatoin settings and configuration:
+The settings page provides a tabbed sub-menu for application settings and configuration:
 
 .. toctree::
     :maxdepth: 1
