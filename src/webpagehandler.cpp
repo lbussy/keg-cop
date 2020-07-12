@@ -376,31 +376,6 @@ void setSettingsAliases()
         }
     });
 
-    server.on("/settings/cloudurl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/cloudurl/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
-
-    server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        // Process settings update (bulk POST)
-        Log.verbose(F("Processing post to /settings/update/." CR));
-
-        handleTapPost(request); // Tap parameters
-        handleControllerPost(request); // Controller parameters
-        handleControlPost(request); // Temperature control and activation
-        handleSensorPost(request); // Sensor calibration and activation
-        handleUrlTargetPost(request); // Target URL settings
-        handleCloudTargetPost(request); // Target URL settings
-
-        // Redirect to Settings page
-        request->redirect("/settings/");
-    });
-
-    server.on("/settings/update/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/update/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
-
     server.on("/setcalmode/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /setcalmode/." CR));
         if (handleSetCalMode(request))
@@ -415,6 +390,32 @@ void setSettingsAliases()
 
     server.on("/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Invalid method to /setcalmode/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
+    });
+
+    server.on("/settings/cloudurl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/cloudurl/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
+    });
+
+    server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        // Process settings update (bulk POST)
+        Log.verbose(F("Processing post to /settings/update/." CR));
+
+        handleTapPost(request); // Tap parameters
+        handleSetCalMode(request); // Tap calibration parameters
+        handleControllerPost(request); // Controller parameters
+        handleControlPost(request); // Temperature control and activation
+        handleSensorPost(request); // Sensor calibration and activation
+        handleUrlTargetPost(request); // Target URL settings
+        handleCloudTargetPost(request); // Target URL settings
+        
+        // Redirect to Settings page
+        request->redirect("/settings/");
+    });
+
+    server.on("/settings/update/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/update/." CR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 }
