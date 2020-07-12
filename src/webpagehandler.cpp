@@ -347,6 +347,23 @@ void setSettingsAliases()
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
+    server.on("/settings/kegscreen/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /settings/kegscreen/." CR));
+        if (handleKegScreenPost(request))
+        {
+            request->send(200, F("text/plain"), F("Ok"));
+        }
+        else
+        {
+            request->send(500, F("text/plain"), F("Unable to process data"));
+        }
+    });
+
+    server.on("/settings/kegscreen/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Invalid method to /settings/kegscreen/." CR));
+        request->send(405, F("text/plain"), F("Method not allowed."));
+    });
+
     server.on("/settings/targeturl/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/targeturl/." CR));
         if (handleUrlTargetPost(request))
@@ -402,12 +419,13 @@ void setSettingsAliases()
         // Process settings update (bulk POST)
         Log.verbose(F("Processing post to /settings/update/." CR));
 
-        handleTapPost(request); // Tap parameters
-        handleControllerPost(request); // Controller parameters
-        handleControlPost(request); // Temperature control and activation
-        handleSensorPost(request); // Sensor calibration and activation
-        handleUrlTargetPost(request); // Target URL settings
-        handleCloudTargetPost(request); // Target URL settings
+        handleTapPost(request);         // Tap parameters
+        handleControllerPost(request);  // Controller parameters
+        handleControlPost(request);     // Temperature control and activation
+        handleSensorPost(request);      // Sensor calibration and activation
+        handleKegScreenPost(request);   // Keg Screen settings
+        handleUrlTargetPost(request);   // Target URL settings
+        handleCloudTargetPost(request); // Cloud Target settings
         
         // Redirect to Settings page
         request->redirect("/settings/");
@@ -1069,6 +1087,47 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
     else
     {
         Log.error(F("Error: Unable to save tap configuration data." CR));
+        return false;
+    }
+}
+
+bool handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL target
+{
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char * name = p->name().c_str();
+            const char * value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Target url settings
+            //
+            if (strcmp(name, "kegscreen") == 0) // Set Keg Screen hostname
+            {
+                if ((strlen(value) < 3) || (strlen(value) > 128))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    strlcpy(config.kegscreen.name, value, sizeof(config.kegscreen.name));
+                }
+            }
+        }
+    }
+    if (saveConfig())
+    {
+        return true;
+    }
+    else
+    {
+        Log.error(F("Error: Unable to save Keg Screen configuration data." CR));
         return false;
     }
 }
