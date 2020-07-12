@@ -48,20 +48,6 @@ $("input[type='reset']").closest('form').on('reset', function (event) { // Reset
     resetFlowCalForm();
 });
 
-// Handle resetting the calibration form if we leave it
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
-    previousTab = currentTab;
-    currentTab = $(event.target).text();
-    if (previousTab == "Calibrate Flowmeters") {
-        doFollowPulse = false; // Turn off calibration mode
-        clearCalibrate = true; // Set flag to reset form
-    } else if (currentTab == "Calibrate Flowmeters" && clearCalibrate == true) {
-        // Clear the calibration form if we were here before
-        clearCalibrate = false;
-        resetFlowCalForm();
-    }
-});
-
 function clickByWeight() {
     // Hide previous blocks
     $("#flowmeter").attr("disabled", "disabled");
