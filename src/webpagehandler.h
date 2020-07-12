@@ -62,6 +62,7 @@ bool handleTapCal(AsyncWebServerRequest *);
 bool handleControllerPost(AsyncWebServerRequest *);
 bool handleControlPost(AsyncWebServerRequest *);
 bool handleSensorPost(AsyncWebServerRequest *);
+bool handleKegScreenPost(AsyncWebServerRequest *);
 bool handleUrlTargetPost(AsyncWebServerRequest *);
 bool handleCloudTargetPost(AsyncWebServerRequest *);
 bool handleSetCalMode(AsyncWebServerRequest *);
