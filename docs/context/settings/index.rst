@@ -19,6 +19,7 @@ The settings page provides a tabbed sub-menu for applicatoin settings and config
     taps/index
     temperature/control/index
     temperature/sensors/index
+    targets/kegscreen/index
     targets/url/index
     targets/cloud/index
     advanced/calibrate/index

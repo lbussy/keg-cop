@@ -25,3 +25,4 @@ The following are links to context help for the web pages controlling the Keg Co
     settings/advanced/wifi/index
     help/index
     about/index
+    about/license
