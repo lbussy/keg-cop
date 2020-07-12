@@ -22,7 +22,6 @@ $(window).bind("beforeunload", function () {
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
     previousTab = currentTab;
     currentTab = $(event.target).text();
-    updateHelp(); // Set context-sensitive help
 
     // Handle resetting the calibration form if we leave it
     if (previousTab == "Calibrate Flowmeters") {
@@ -33,6 +32,9 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
         clearCalibrate = false;
         resetFlowCalForm();
     }
+    var url = $(event.target).attr("href") // URL of activated tab
+    var hashLoc = url.substring(url.indexOf('#')); // Get hash
+    updateHelp(hashLoc); // Set context-sensitive help
 });
 
 // Turn off tooltips on radio button change {" "}
@@ -603,8 +605,8 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
     }
 }
 
-function updateHelp() {
-    hashLoc = window.location.hash;
+function updateHelp(hashLoc) {
+    console.log("DEBUG: hashloc = " + hashLoc);
     var url="https://docs.kegcop.com"
 
     // Switch here for hashLoc
