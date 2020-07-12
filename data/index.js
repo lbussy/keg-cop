@@ -168,7 +168,7 @@ function populateTemps(callback = null) { // Get configuration settings
                         case 4: // TSTAT_IDLE_END
                             clearState();
                             $("#coolstate").addClass("alert-warning");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, mininum off time ending");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, minimum off time ending");
                             break;
                         case 5: // TSTAT_IDLE_MINON
                             clearState();
