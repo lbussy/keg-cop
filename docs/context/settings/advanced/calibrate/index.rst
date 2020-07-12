@@ -41,3 +41,8 @@ Tare your scale with the container you will be using. Pull an amount of beverage
 As you draw a beverage during calibration, the Pulses field will update with the pulses measured. If you have entered a weight, the pulses per unit (PPG or PPL) will be calculated. Both the Pulses and pulses per unit will update every two seconds.
 
 When you are satisfied, use the Set PPG/PPL button to lock in the calibration. If you wish to reset the calculation back to its default, use the Reset button instead of saving. The pulses collected will be debited according to the new rate if you save, or the previously configured rate if you reset.
+
+Tap Setup
+*********************
+
+See the :ref:`Taps <taps>` settings page for other tap settings.
