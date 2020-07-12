@@ -9,10 +9,12 @@
 - Add target pushes
 - Add links to context help
 - Document API
+- Maybe add a "ping" after page failure to recover
+- Look at "other pages" with JS to split them out?
 
 ## Bugs
 
-- ??
+- "Serving 404 for request to /settings/true" when POSTing to /settings/#sensorcontrol
 
 ## Before Release
 
