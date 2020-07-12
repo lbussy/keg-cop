@@ -24,8 +24,8 @@ SOFTWARE. */
 
 Config config;
 const char *filename = FILENAME;
-extern const size_t capacitySerial = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13);
-extern const size_t capacityDeserial = capacitySerial + 1070;
+extern const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(10) + JSON_OBJECT_SIZE(13);
+extern const size_t capacityDeserial = capacitySerial + 1130;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -454,6 +454,31 @@ void Temperatures::load(JsonObjectConst obj)
     }
 }
 
+void KegScreen::save(JsonObject obj) const
+{
+    obj["name"] = name;
+    obj["update"] = update;
+}
+
+void KegScreen::load(JsonObjectConst obj)
+{
+    // Load Keg Screen configuration
+    //
+    if (obj["name"].isNull()) {
+        strlcpy(name, "", sizeof(name));
+    } else {
+        const char* nm = obj["name"];
+        strlcpy(name, nm, sizeof(name));
+    }
+
+    if (obj["update"].isNull()) {
+        update = false;
+    } else {
+        bool u = obj["update"];
+        update = u;
+    }
+}
+
 void URLTarget::save(JsonObject obj) const
 {
     obj["url"] = url;
@@ -546,6 +571,8 @@ void Config::save(JsonObject obj) const
     copconfig.save(obj.createNestedObject("copconfig"));
     // Add Calibration object
     temps.save(obj.createNestedObject("temps"));
+    // Add Keg Screen object
+    urltarget.save(obj.createNestedObject("kegscreen"));
     // Add Target object
     urltarget.save(obj.createNestedObject("urltarget"));
     // Add Cloud object
@@ -574,6 +601,7 @@ void Config::load(JsonObjectConst obj)
 
     copconfig.load(obj["copconfig"]);
     temps.load(obj["temps"]);
+    kegscreen.load(obj["kegscreen"]);
     urltarget.load(obj["urltarget"]);
     cloud.load(obj["cloud"]);
 

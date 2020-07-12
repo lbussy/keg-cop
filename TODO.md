@@ -8,7 +8,14 @@
 
 - Add "Keg Screen Host" target
 - Add target pushes
-- Add links to context help
+    - Target URL (mega report)
+    - Cloud (or disable)
+- Add KegScreen Reports:
+    - Push complete tap info (singe tap) when tap is flipped to active or the data is changed
+    - Send pulse report when a pour is done
+    - Send a kick report when keg kicks
+    - Send temp status when a cooling state changes
+    - Send a temp report on timer
 - Document API
 - Maybe add a "ping" after page failure to recover
 - Look at "other pages" with JS to split them out?

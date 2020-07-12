@@ -27,6 +27,10 @@
         "kegenabled": true,
         "keg": 3
     },
+    "kegscreen": {
+        "name": "",
+        "update": false
+    },
     "urltarget": {
         "url": "",
         "freq": 30,

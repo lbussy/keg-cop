@@ -66,6 +66,16 @@ struct Temperatures
     void save(JsonObject) const;
 };
 
+struct KegScreen
+{
+    // Stores Keg Screen configuration
+    char name[32];
+    bool update;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
 struct URLTarget
 {
     // Stores URL Target configuration
@@ -97,6 +107,7 @@ struct Config
     char hostname[32];
     CopConfig copconfig;
     Temperatures temps;
+    KegScreen kegscreen;
     URLTarget urltarget;
     CloudTarget cloud;
     bool dospiffs1;
