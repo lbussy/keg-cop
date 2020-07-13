@@ -48,3 +48,6 @@ Advanced
 - :ref:`Reset controller <reset>`
 - :ref:`Update application <update>`
 - :ref:`Reset WiFi <resetwifi>`
+
+.. todo::
+    Spellcheck!

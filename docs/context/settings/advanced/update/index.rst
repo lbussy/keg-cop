@@ -23,3 +23,6 @@ Regardless of the version available, pressing the "Update Firmware" button on th
    :alt: Do Update
 
 The process will take five or more minutes, depending upon your network configuration. When complete, the page will refresh to the home page.
+
+.. todo::
+   Spellcheck!

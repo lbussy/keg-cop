@@ -72,3 +72,6 @@ Solenoid
 =========
 
 Solenoids come in a wide variety of configurations. This system is designed to provide a single relay to control one or more solenoids simultaneously. The solenoids should be powered with a separate, dedicated power supply of sufficient amperage and proper voltage for the relays being implemented.  Run them in parallel, through the COM1 and NO1 terminals on Relay #1.
+
+.. todo::
+    Spellcheck!

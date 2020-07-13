@@ -21,3 +21,6 @@ The Controller Settings page allows configuration of settings which control the 
    - **Keg Cop**: The controller will operate in stand-alone mode or report to upstream systems as Keg Cop.
    - **RaspberryPints**: The controller will disable all serial communication except for that which is compatible with the RaspberryPints 2.x systems. This setting should allow it to be a direct replacement for the Arduino or AlaMode.
    - **RPints RandR+**: The controller will disable all serial communication except for that which is compatible with the RandR+ fork of the RaspberryPints 2.x systems. This setting should allow it to be a direct replacement for the Arduino or AlaMode.
+
+.. todo::
+   Spellcheck!

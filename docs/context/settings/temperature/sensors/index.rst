@@ -7,3 +7,9 @@ Sensor Control
    :scale: 100%
    :align: center
    :alt: Temperature Sensor Settings
+
+.. todo::
+   Finish this page
+
+.. todo::
+   Spellcheck!

@@ -15,3 +15,6 @@ In the top-left side of the main container is a title concatenated from the :ref
 On the right side of this container is the current control point temperature if used.  The block around the temperature indicates the temperature control status. You may also hover over this section for a tooltip explaining the state.
 
 Within the page, you will see a list of the active taps on your system.  The bars will show the relative amount of beverage remaining for each tap.  The bars themselves have a mouseover effect that will display a tooltip containing detailed information.
+
+.. todo::
+   Spellcheck!

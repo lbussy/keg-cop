@@ -7,3 +7,9 @@ Temperature Control
    :scale: 100%
    :align: center
    :alt: Temperature Control
+
+.. todo::
+   Finish this page
+
+.. todo::
+   Spellcheck!

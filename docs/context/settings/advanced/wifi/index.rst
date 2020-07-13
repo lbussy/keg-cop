@@ -16,3 +16,6 @@ When you plan to move your Keg Cop to a new location or connect to a new network
    :alt: WiFi Reset
 
 After this action, you will need to reconnect to the *kegcop* access point to reconfigure the WiFi settings.
+
+.. todo::
+   Spellcheck!

@@ -24,6 +24,7 @@ from sphinx_markdown_parser.parser import MarkdownParser
 from sphinx_markdown_parser.transform import AutoStructify
 
 import sphinx_bootstrap_theme
+from sphinx.ext import todo
 
 # -- Project information -----------------------------------------------------
 
@@ -45,7 +46,7 @@ release = version
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['recommonmark']
+extensions = ['recommonmark', 'sphinx.ext.todo']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -153,3 +154,9 @@ html_theme_options = {
     # Values: "3" (default) or "2" (in quotes)
     'bootstrap_version': "4",
 }
+
+# -- TODO Options ------------------------------------------------------------
+
+todo_include_todos = True   # If this is True, todo and todolist produce output, else they produce nothing. The default is False.
+todo_emit_warnings = False   # If this is True, todo emits a warning for each TODO entries. The default is False.
+todo_link_only = False      # If this is True, todolist produce output without file path and line, The default is False.

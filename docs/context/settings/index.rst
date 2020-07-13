@@ -26,3 +26,6 @@ The settings page provides a tabbed sub-menu for application settings and config
     advanced/reset/index
     advanced/update/index
     advanced/wifi/index
+
+.. todo::
+   Spellcheck!

@@ -10,6 +10,7 @@ Keg Cop uses a combination of API types:
 - `Settings Handlers (POST)`_
 - `POSTed JSON Report`_
 - `Serial Reports`_
+- `Keg Screen Reports`_
 
 Action Pages
 *************
@@ -414,9 +415,25 @@ Entries POSTed to this endpoint will pass through the control routines for all o
 POSTed JSON Report
 *******************
 
-TODO:  Figure this format out
+.. todo::
+    Mega-Report: Figure this format out 
 
 Serial Reports
 ****************
 
-TODO: Get this too
+.. todo::
+    Include RaspberryPints reports
+
+Keg Screen Reports
+*******************
+
+.. todo::
+    Get all Keg Screen reports:
+    void sendTapInfo(int);        // Push complete tap info (single tap)
+    void sendPulseReport(int);    // Send pulse report when a pour is done (single tap)
+    void sendKickReport(int);     // Send a kick report when keg kicks
+    void sendCoolingState();      // Send temp status when a cooling state changes
+    void sendTempReport();        // Send a temp report on timer
+
+.. todo::
+   Spellcheck!

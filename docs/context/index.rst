@@ -27,3 +27,6 @@ The following are links to context help for the web pages controlling the Keg Co
     help/index
     about/index
     about/license
+
+.. todo::
+   Spellcheck!
