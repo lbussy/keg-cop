@@ -46,3 +46,6 @@ Tap Setup
 *********************
 
 See the :ref:`Taps <taps>` settings page for other tap settings.
+
+.. todo::
+   Spellcheck!

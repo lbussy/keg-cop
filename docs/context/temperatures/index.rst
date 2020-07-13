@@ -15,3 +15,6 @@ There is a link to the Temperature page via the temperature display and cooling 
 The Temperature Sensors page displays a bar for each active temperature sensor.  If you have configured the system to control temperatures, a horizontal bar will appear across the chart showing the setpoint.
 
 The selected control point will appear in the top-right of the box and link to the Temperature Control settings page.
+
+.. todo::
+   Spellcheck!

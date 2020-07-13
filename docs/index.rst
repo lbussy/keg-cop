@@ -30,3 +30,7 @@ Keg Cop is an entirely Free and Open Source offering.  I have provided all sourc
    troubleshooting/index
    context/index
    contributions/index
+   todo
+
+.. todo::
+   Spellcheck!

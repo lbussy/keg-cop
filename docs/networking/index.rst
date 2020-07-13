@@ -1,3 +1,5 @@
+.. _networking:
+
 Set Up Networking
 #####################
 
@@ -73,3 +75,5 @@ If the Keg Cop controller is unable to access the configured WiFi network, it sh
 
 If this does not work, or if you prefer, you may raise the AP by an electrical connection. Take a piece of wire and short pin 13 to ground. Then, reset the controller by pressing the reset button or cycling power. The controller will detect pin 13 being low on startup and enter AP mode.
 
+.. todo::
+    Spellcheck!

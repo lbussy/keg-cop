@@ -1,3 +1,5 @@
+.. _firmware:
+
 Installing the Firmware
 ##########################
 
@@ -66,3 +68,6 @@ For upgrades after the initial setup, you may use the :ref:`update <update>` fun
 .. _BrewFlasher: https://github.com/thorrak/brewflasher
 .. _BrewFlasher.com: https://www.brewflasher.com/
 .. _Here: https://youtu.be/7KZiRoxn-z8
+
+.. todo::
+    Spellcheck!

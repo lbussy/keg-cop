@@ -89,3 +89,6 @@ There are also some practical considerations to these design constraints:
 Some of the pins available to us are not appropriate for all uses. Some pins, for instance, will prevent the controller from booting if it is held high or low as it would be if it were connected to a sensor or flow meter. Some pins will be set high or low during the boot process regardless of what the program will do when it starts. Such a pin attached to the cooling relay may cause the refrigerator compressor to short-cycle.
 
 I do not doubt that some crafty person might look at this and devise a more glamorous approach. For instance, there are I2C boards that would extend the system's capabilities. My final criteria for this design is to have a simple, compact design, capable of providing a prescriptive path to success for the average DIYer. Taking a very simplistic, 1:1 approach to interfacing software to the physical world meets this goal. If you are one of those people who think you can do it better, you have my blessing to fork the project and do your best.
+
+.. todo::
+    Spellcheck!

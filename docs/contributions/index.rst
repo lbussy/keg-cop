@@ -1,3 +1,5 @@
+.. _contributions:
+
 Contributions
 ###################
 
@@ -6,3 +8,6 @@ This documentation remains a work in progress, in that I depend on *you* to help
 For spelling/grammatical errors, or if you would like to improve the documentation, please feel free to issue a pull request with the update.  For technical issues with the documentation, please  `open an issue on GitHub`_.
 
 .. _open an issue on GitHub: https://github.com/lbussy/keg-cop/issues
+
+.. todo::
+   Spellcheck!
