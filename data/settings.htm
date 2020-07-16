@@ -1370,13 +1370,13 @@
                                 <div class="form-group row">
                                     <label for="kegscreen" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
-                                        title="Host name of Keg Screen system (not URL). Do not include the .local portion">
+                                        title="Full URL to the Keg Screen system handler. To stop reporting, clear this field">
                                         Keg Screen System Name
                                     </label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" name="kegscreen"
-                                            id="kegscreen" minlength="3" maxlength="32"
-                                            placeholder="kegscreen">
+                                            id="kegscreen" minlength="3" maxlength="128"
+                                            placeholder="http://kegscreen.local/tapinfo.php">
                                     </div>
                                 </div>
 
@@ -1409,7 +1409,7 @@
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" name="targeturl"
                                             id="targeturl" minlength="3" maxlength="128"
-                                            placeholder="http://kegscreen.local/taplist/api/pour/">
+                                            placeholder="http://raspberrypi.local/">
                                     </div>
                                 </div>
 
