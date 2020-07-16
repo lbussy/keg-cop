@@ -22,40 +22,49 @@ SOFTWARE. */
 
 #include "tools.h"
 
-void _delay(unsigned long ulDelay) {
+void _delay(unsigned long ulDelay)
+{
     // Safe semi-blocking delay
 #ifdef ESP32
     vTaskDelay(ulDelay); // Builtin to ESP32
 #elif defined ESP8266
     unsigned long ulNow = millis();
     unsigned long ulThen = ulNow + ulDelay;
-    while (ulThen > millis()) {
+    while (ulThen > millis())
+    {
         yield(); // ESP8266 needs to yield()
     }
 #endif
 }
 
-void resetController() {
+void resetController()
+{
     Log.notice(F("Reboot request - rebooting system." CR));
     _delay(5000);
     ESP.restart();
 }
 
-void setDoReset() {
+void setDoReset()
+{
     doReset = true; // Semaphore required for reset in callback
 }
 
-void setDoWiFiReset() {
+void setDoWiFiReset()
+{
     doWiFiReset = true; // Semaphore required for wifi reset in web page
 }
 
-void tickerLoop() {
-    // Necessary because we cannot delay in a callback
-    if (doReset) { // Check for Reset Pending
+void tickerLoop()
+{
+    // Necessary because we cannot delay or do radio work in a callback
+    //
+    if (doReset)
+    { // Check for Reset Pending
         doReset = false;
         resetController();
     }
-    if (doWiFiReset) { // Need to do this to prevent WDT
+    if (doWiFiReset)
+    { // Need to do this to prevent WDT
         doWiFiReset = false;
         resetWifi();
     }
@@ -79,8 +88,8 @@ void printDebug()
     multi_heap_info_t info;
     heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
     free = info.total_free_bytes;
-    max  = info.largest_free_block;
-    frag = 100 - (max * 100) / free;   
+    max = info.largest_free_block;
+    frag = 100 - (max * 100) / free;
 #endif
     Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d" CR), free, max, frag);
 }
@@ -124,15 +133,17 @@ double convertLtoG(double L)
 std::string addThousandSeparators(std::string value, char thousandSep = ',', char decimalSep = '.', char sourceDecimalSep = '.')
 {
     int len = value.length();
-    int negative = ((len && value[0] == '-') ? 1: 0);
+    int negative = ((len && value[0] == '-') ? 1 : 0);
     int dpos = value.find_last_of(sourceDecimalSep);
     int dlen = 3 + (dpos == std::string::npos ? 0 : (len - dpos));
 
-    if (dpos != std::string::npos && decimalSep != sourceDecimalSep) {
+    if (dpos != std::string::npos && decimalSep != sourceDecimalSep)
+    {
         value[dpos] = decimalSep;
     }
 
-    while ((len - negative) > dlen) {
+    while ((len - negative) > dlen)
+    {
         value.insert(len - dlen, 1, thousandSep);
         dlen += 4;
         len += 1;
