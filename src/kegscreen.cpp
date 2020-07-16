@@ -22,172 +22,661 @@ SOFTWARE. */
 
 #include "kegscreen.h"
 
-asyncHTTPrequest tapinfo, pulsereport, kickreport, coolstate, tempreport;
+asyncHTTPrequest tapinfo;
+asyncHTTPrequest pourreport;
+asyncHTTPrequest kickreport;
+asyncHTTPrequest coolstate;
+asyncHTTPrequest tempreport;
 
-void sendTapInfo(int tapid)
+bool sendTapInfo(int tapid)
 { // Push complete tap info (single tap) when tap is flipped to active or the data is changed
-    const char * TODO = ""; // TODO: Create the JSON document
-    tapinfo.onData(postHandler);
-    sendRequest(tapinfo, TODO);
+    const char * reporttype = "tapinfo";
+    const char * reportname = "Tap Info";
+    if (tapid >= 0 && tapid <= NUMTAPS)
+    {
+        if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+        {
+            if (tapinfo.readyState() == 0 || tapinfo.readyState() == 4)
+            {
+                TapInfo tap;
+                strlcpy(tap.api, API_KEY, sizeof(tap.api));
+                strlcpy(tap.breweryname, config.copconfig.breweryname, sizeof(tap.breweryname));
+                strlcpy(tap.kegeratorname, config.copconfig.kegeratorname, sizeof(tap.kegeratorname));
+                strlcpy(tap.reporttype, reporttype, sizeof(tap.reporttype));
+                tap.imperial = config.copconfig.imperial;
+                tap.tapid = tapid;
+                strlcpy(tap.name, flow.taps[tapid].name, sizeof(tap.name));
+                tap.ppu = flow.taps[tapid].ppu;
+                tap.remaining = flow.taps[tapid].remaining;
+                tap.capacity = flow.taps[tapid].capacity;
+                tap.active = flow.taps[tapid].active;
+                tap.calibrating = flow.taps[tapid].calibrating;
+
+                const size_t capacity = JSON_OBJECT_SIZE(12);
+                DynamicJsonDocument doc(capacity);
+
+                doc["api"] = (const char*)tap.api;
+                doc["breweryname"] = (const char*)tap.breweryname;
+                doc["kegeratorname"] = (const char*)tap.kegeratorname;
+                doc["reporttype"] = (const char*)tap.reporttype;
+                doc["imperial"] = (const int)tap.imperial;
+                doc["tapid"] = (const int)tapid;
+                doc["name"] = (const char*)tap.name;
+                doc["ppu"] = (const int)tap.ppu;
+                doc["remaining"] = (const float)tap.remaining;
+                doc["capacity"] = (const float)tap.capacity;
+                doc["active"] = tap.active;
+                doc["calibrating"] = tap.calibrating;
+
+                std::string json;
+                serializeJson(doc, json);
+
+                LCBUrl url;
+                url.setUrl(config.kegscreen.url);
+
+                String connection = "";
+                if (url.isMDNS())
+                { // Is mDNS / .local
+                    Log.verbose(F("%s: mDNS URL detected: %s (%s)" CR), reportname, url.getUrl().c_str(), url.getIP().toString().c_str());
+                    connection = url.getIPUrl();
+                }
+                else
+                {   // Not mDNS/.local
+                    Log.verbose(F("%s: Non-mDNS URL detected: %s" CR), reportname, url.getUrl().c_str());
+                    connection = url.getUrl();
+                }
+                
+                if (connection.length() > 0)
+                {
+                    tapinfo.onData(resultHandler);
+                    tapinfo.setTimeout(10);
+                    if (tapinfo.open("POST", connection.c_str()))
+                    {
+                        tapinfo.setReqHeader("Content-Type","application/json");
+                        if (!tapinfo.send(json.c_str()))
+                        {
+                            Log.warning(F("Warning: Failed to send POST to %s." CR), connection.c_str());
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Log.warning(F("Warning: Failed to open %s." CR), connection.c_str());
+                        return false;
+                    }
+                }
+                else
+                {
+                    Log.error(F("Error: Unable to parse URL." CR));
+                    return false;
+                }
+            }
+            else
+            {
+                const int elapsed = tapinfo.elapsedTime();
+                const int state = tapinfo.readyState();
+                switch(state)
+                {
+                    case 1 ... 3:
+                        Log.warning(F("Warning: Previous info post for %s is still in progress(%dms)." CR), reportname, elapsed);
+                        break;
+                    default:
+                        Log.warning(F("Warning: Previous info post for %s is in an unknown state (%d)." CR), reportname, state);
+                        break;
+                }
+                return false;
+            }
+        }
+        else
+        {
+            Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+            return false;
+        }
+    }
+    else
+    {
+        Log.error(F("Error: Invalid tap submitted to %s (%d)." CR), reportname, tapid);
+    }
+    return true;
 }
 
-void sendPulseReport(int tapid)
-{ // Send pulse report when a pour is done (single tap)
-    const char * TODO = ""; // TODO: Create the JSON document
-    pulsereport.onData(postHandler);
-    sendRequest(pulsereport, TODO);
+bool sendPourReport(int tapid, float dispensed)
+{ // Send pour report when a pour is done (single tap)
+    const char * reporttype = "pourreport";
+    const char * reportname = "Pour Report";
+    if (tapid >= 0 && tapid <= NUMTAPS)
+    {
+        if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+        {
+            if (tapinfo.readyState() == 0 || tapinfo.readyState() == 4)
+            {
+                PourInfo pour;
+                strlcpy(pour.api, API_KEY, sizeof(pour.api));
+                strlcpy(pour.breweryname, config.copconfig.breweryname, sizeof(pour.breweryname));
+                strlcpy(pour.kegeratorname, config.copconfig.kegeratorname, sizeof(pour.kegeratorname));
+                strlcpy(pour.reporttype, reporttype, sizeof(pour.reporttype));
+                pour.tapid = tapid;
+                pour.dispensed = dispensed;
+                pour.remaining = flow.taps[tapid].remaining;
+
+                const size_t capacity = JSON_OBJECT_SIZE(11);
+                DynamicJsonDocument doc(capacity);
+
+                doc["api"] = (const char*)pour.api;
+                doc["breweryname"] = (const char*)pour.breweryname;
+                doc["kegeratorname"] = (const char*)pour.kegeratorname;
+                doc["reporttype"] = (const char*)pour.reporttype;
+                doc["tapid"] = (const int)tapid;
+                doc["dispensed"] = (const float)pour.dispensed;
+                doc["remaining"] = (const float)pour.remaining;
+
+                std::string json;
+                serializeJson(doc, json);
+
+                LCBUrl url;
+                url.setUrl(config.kegscreen.url);
+
+                String connection = "";
+                if (url.isMDNS())
+                { // Is mDNS / .local
+                    Log.verbose(F("%s: mDNS URL detected: %s (%s)" CR), reportname, url.getUrl().c_str(), url.getIP().toString().c_str());
+                    connection = url.getIPUrl();
+                }
+                else
+                {   // Not mDNS/.local
+                    Log.verbose(F("%s: Non-mDNS URL detected: %s" CR), reportname, url.getUrl().c_str());
+                    connection = url.getUrl();
+                }
+                
+                if (connection.length() > 0)
+                {
+                    pourreport.onData(resultHandler);
+                    pourreport.setTimeout(10);
+                    if (pourreport.open("POST", connection.c_str()))
+                    {
+                        pourreport.setReqHeader("Content-Type","application/json");
+                        if (!pourreport.send(json.c_str()))
+                        {
+                            Log.warning(F("Warning: Failed to send POST to %s." CR), connection.c_str());
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Log.warning(F("Warning: Failed to open %s." CR), connection.c_str());
+                        return false;
+                    }
+                }
+                else
+                {
+                    Log.error(F("Error: Unable to parse URL." CR));
+                    return false;
+                }
+            }
+            else
+            {
+                const int elapsed = pourreport.elapsedTime();
+                const int state = pourreport.readyState();
+                switch(state)
+                {
+                    case 1 ... 3:
+                        Log.warning(F("Warning: Previous info post for %s is still in progress(%dms)." CR), reportname, elapsed);
+                        break;
+                    default:
+                        Log.warning(F("Warning: Previous info post for %s is in an unknown state (%d)." CR), reportname, state);
+                        break;
+                }
+                return false;
+            }
+        }
+        else
+        {
+            Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+            return false;
+        }
+    }
+    else
+    {
+        Log.error(F("Error: Invalid tap submitted to %s (%d)." CR), reportname, tapid);
+    }
+    return true;
 }
 
-void sendKickReport(int tapid)
+bool sendKickReport(int tapid)
 { // Send a kick report when keg kicks
-    const char * TODO = ""; // TODO: Create the JSON document
-    kickreport.onData(postHandler);
-    sendRequest(kickreport, TODO);
+    const char * reporttype = "kickreport";
+    const char * reportname = "Kick Report";
+    if (tapid >= 0 && tapid <= NUMTAPS)
+    {
+        if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+        {
+            if (tapinfo.readyState() == 0 || tapinfo.readyState() == 4)
+            {
+                KickReport kick;
+                strlcpy(kick.api, API_KEY, sizeof(kick.api));
+                strlcpy(kick.breweryname, config.copconfig.breweryname, sizeof(kick.breweryname));
+                strlcpy(kick.kegeratorname, config.copconfig.kegeratorname, sizeof(kick.kegeratorname));
+                strlcpy(kick.reporttype, reporttype, sizeof(kick.reporttype));
+                kick.tapid = tapid;
+
+                const size_t capacity = JSON_OBJECT_SIZE(5);
+                DynamicJsonDocument doc(capacity);
+
+                doc["api"] = (const char*)kick.api;
+                doc["breweryname"] = (const char*)kick.breweryname;
+                doc["kegeratorname"] = (const char*)kick.kegeratorname;
+                doc["reporttype"] = (const char*)kick.reporttype;
+                doc["tapid"] = (const int)tapid;
+
+                std::string json;
+                serializeJson(doc, json);
+
+                LCBUrl url;
+                url.setUrl(config.kegscreen.url);
+
+                String connection = "";
+                if (url.isMDNS())
+                { // Is mDNS / .local
+                    Log.verbose(F("%s: mDNS URL detected: %s (%s)" CR), reportname, url.getUrl().c_str(), url.getIP().toString().c_str());
+                    connection = url.getIPUrl();
+                }
+                else
+                {   // Not mDNS/.local
+                    Log.verbose(F("%s: Non-mDNS URL detected: %s" CR), reportname, url.getUrl().c_str());
+                    connection = url.getUrl();
+                }
+                
+                if (connection.length() > 0)
+                {
+                    kickreport.onData(resultHandler);
+                    kickreport.setTimeout(10);
+                    if (kickreport.open("POST", connection.c_str()))
+                    {
+                        kickreport.setReqHeader("Content-Type","application/json");
+                        if (!kickreport.send(json.c_str()))
+                        {
+                            Log.warning(F("Warning: Failed to send POST to %s." CR), connection.c_str());
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Log.warning(F("Warning: Failed to open %s." CR), connection.c_str());
+                        return false;
+                    }
+                }
+                else
+                {
+                    Log.error(F("Error: Unable to parse URL." CR));
+                    return false;
+                }
+            }
+            else
+            {
+                const int elapsed = kickreport.elapsedTime();
+                const int state = kickreport.readyState();
+                switch(state)
+                {
+                    case 1 ... 3:
+                        Log.warning(F("Warning: Previous info post for %s is still in progress(%dms)." CR), reportname, elapsed);
+                        break;
+                    default:
+                        Log.warning(F("Warning: Previous info post for %s is in an unknown state (%d)." CR), reportname, state);
+                        break;
+                }
+                return false;
+            }
+        }
+        else
+        {
+            Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+            return false;
+        }
+    }
+    else
+    {
+        Log.error(F("Error: Invalid tap submitted to %s (%d)." CR), reportname, tapid);
+    }
+    return true;
 }
 
-void sendCoolingState()
-{ // Send temp status when a cooling state changes
-    const char * TODO = ""; // TODO: Create the JSON document
-    coolstate.onData(postHandler);
-    sendRequest(coolstate, TODO);
-}
+bool sendCoolState()
+{ // Send cooling status when a cooling state changes
+    const char * reporttype = "coolstate";
+    const char * reportname = "Cooling State";
+    if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+    {
+        if (tapinfo.readyState() == 0 || tapinfo.readyState() == 4)
+        {
+            CoolState cool;
+            strlcpy(cool.api, API_KEY, sizeof(cool.api));
+            strlcpy(cool.breweryname, config.copconfig.breweryname, sizeof(cool.breweryname));
+            strlcpy(cool.kegeratorname, config.copconfig.kegeratorname, sizeof(cool.kegeratorname));
+            strlcpy(cool.reporttype, reporttype, sizeof(cool.reporttype));
+            cool.coolstate = tstat.state;
 
-void sendTempReport()
-{ // Send a temp report on timer
-    const char * TODO = ""; // TODO: Create the JSON document
-    tempreport.onData(postHandler);
-    sendRequest(tempreport, TODO);
-}
+            const size_t capacity = JSON_OBJECT_SIZE(5);
+            DynamicJsonDocument doc(capacity);
 
-void sendRequest(asyncHTTPrequest report, const char * doc) {
-    if (report.readyState() == 0 || report.readyState() == 4) {
-        // readyStateUnsent = 0            // Client created, open() not yet called
-        // readyStateOpened =  1           // Called open(), connected
-        // readyStateHdrsRecvd = 2         // Called send(), response headers available
-        // readyStateLoading = 3           // Receiving, partial data available
-        // readyStateDone = 4              // Request complete, all data available.
-        report.setTimeout(10);
-        report.open("POST", doc);
-        report.setReqHeader("Content-Type","application/json");
-        report.send();
+            doc["api"] = (const char*)cool.api;
+            doc["breweryname"] = (const char*)cool.breweryname;
+            doc["kegeratorname"] = (const char*)cool.kegeratorname;
+            doc["reporttype"] = (const char*)cool.reporttype;
+            doc["state"] = (const int)cool.coolstate;
+
+            std::string json;
+            serializeJson(doc, json);
+
+            LCBUrl url;
+            url.setUrl(config.kegscreen.url);
+
+            String connection = "";
+            if (url.isMDNS())
+            { // Is mDNS / .local
+                Log.verbose(F("%s: mDNS URL detected: %s (%s)" CR), reportname, url.getUrl().c_str(), url.getIP().toString().c_str());
+                connection = url.getIPUrl();
+            }
+            else
+            {   // Not mDNS/.local
+                Log.verbose(F("%s: Non-mDNS URL detected: %s" CR), reportname, url.getUrl().c_str());
+                connection = url.getUrl();
+            }
+            
+            if (connection.length() > 0)
+            {
+                coolstate.onData(resultHandler);
+                coolstate.setTimeout(10);
+                if (coolstate.open("POST", connection.c_str()))
+                {
+                    coolstate.setReqHeader("Content-Type","application/json");
+                    if (!coolstate.send(json.c_str()))
+                    {
+                        Log.warning(F("Warning: Failed to send POST to %s." CR), connection.c_str());
+                        return false;
+                    }
+                }
+                else
+                {
+                    Log.warning(F("Warning: Failed to open %s." CR), connection.c_str());
+                    return false;
+                }
+            }
+            else
+            {
+                Log.error(F("Error: Unable to parse URL." CR));
+                return false;
+            }
+        }
+        else
+        {
+            const int elapsed = coolstate.elapsedTime();
+            const int state = coolstate.readyState();
+            switch(state)
+            {
+                case 1 ... 3:
+                    Log.warning(F("Warning: Previous info post for %s is still in progress(%dms)." CR), reportname, elapsed);
+                    break;
+                default:
+                    Log.warning(F("Warning: Previous info post for %s is in an unknown state (%d)." CR), reportname, state);
+                    break;
+            }
+            return false;
+        }
+        return true;
+    }
+    else
+    {
+        Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+        return false;
     }
 }
 
-void postHandler(void* optParm, asyncHTTPrequest* report, int readyState) {
-
-    // asyncHTTPrequest::response:
-    //
-    // int     respHeaderCount();                   // Retrieve count of response headers
-    // char*   respHeaderName(int index);           // Return header name by index
-    // char*   respHeaderValue(int index);          // Return header value by index
-    // char*   respHeaderValue(const char* name);   // Return header value by name
-    // bool    respHeaderExists(const char* name);  // Does header exist by name?
-    // String  headers();                           // Return all headers as String
-    // size_t  responseLength();                    // Indicated response length or sum of chunks to date     
-    // int     responseHTTPcode();                  // HTTP response code or (negative) error code
-    // String  responseText();                      // response (whole* or partial* as string)
-    // uint32_t elapsedTime();                      // Elapsed time of in progress transaction or last completed (ms)
-    // String  version();                           // Version of asyncHTTPrequest
-
-    const int code = report->responseHTTPcode();
-    const int elapsed = report->elapsedTime();
-    // const char * response = report->responseText().c_str(); // DEBUG
-    
-    switch(code)
+bool sendTempReport()
+{ // Send a temp report on timer
+    const char * reporttype = "tempreport";
+    const char * reportname = "Temperature Report";
+    if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
     {
-        case 0 ... 99:
-            // Code < 100, no idea how we got here, should not be possible
-            Log.error(F("Error: HTTP response code %d received." CR), code);
-            break;
-        case 100 ... 199:
-            // 1xx informational response – the request was received, continuing process
-            switch(code)
+        if (tapinfo.readyState() == 0 || tapinfo.readyState() == 4)
+        {
+            TempReport temps;
+            strlcpy(temps.api, API_KEY, sizeof(temps.api));
+            strlcpy(temps.breweryname, config.copconfig.breweryname, sizeof(temps.breweryname));
+            strlcpy(temps.kegeratorname, config.copconfig.kegeratorname, sizeof(temps.kegeratorname));
+            strlcpy(temps.reporttype, reporttype, sizeof(temps.reporttype));
+            temps.imperial = config.copconfig.imperial;
+            temps.controlpoint = config.temps.controlpoint;
+            temps.setpoint = config.temps.setpoint;
+            temps.status = tstat.state;
+            temps.controlenabled = config.temps.controlenabled;
+
+            for (int i = 0; i < NUMSENSOR; i++)
             {
+                strlcpy(temps.sensor[i].name, device.sensor[i].name, sizeof(temps.sensor[i].name));
+
+                if (config.copconfig.imperial)
+                {
+                    temps.sensor[i].average = convertCtoF(device.sensor[i].average);
+                }
+                else
+                {
+                    temps.sensor[i].average = device.sensor[i].average;
+                }
+
+                temps.sensor[i].enabled = config.temps.enabled[i];
+            }
+
+            const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(10);
+            DynamicJsonDocument doc(capacity);
+
+            doc["api"] = (const char*)temps.api;
+            doc["breweryname"] = (const char*)temps.breweryname;
+            doc["kegeratorname"] = (const char*)temps.kegeratorname;
+            doc["reporttype"] = (const char*)temps.reporttype;
+            doc["imperial"] = temps.imperial;
+            doc["controlpoint"] = (const int)temps.controlpoint;
+            doc["setting"] = (const float)temps.setpoint;
+            doc["status"] = (const int)temps.status;
+            doc["controlenabled"] = temps.controlenabled;
+
+            for (int i = 0; i < NUMSENSOR; i++)
+            {
+                doc["sensors"][i]["name"] = (const char*)temps.sensor[i].name;
+                doc["sensors"][i]["value"] = (const float)temps.sensor[i].average;
+                doc["sensors"][i]["enabled"] = temps.sensor[i].enabled;
+            }
+
+            std::string json;
+            serializeJson(doc, json);
+
+            LCBUrl url;
+            url.setUrl(config.kegscreen.url);
+
+            String connection = "";
+            if (url.isMDNS())
+            { // Is mDNS / .local
+                Log.verbose(F("%s: mDNS URL detected: %s (%s)" CR), reportname, url.getUrl().c_str(), url.getIP().toString().c_str());
+                connection = url.getIPUrl();
+            }
+            else
+            {   // Not mDNS/.local
+                Log.verbose(F("%s: Non-mDNS URL detected: %s" CR), reportname, url.getUrl().c_str());
+                connection = url.getUrl();
+            }
+            
+            if (connection.length() > 0)
+            {
+                tempreport.onData(resultHandler);
+                tempreport.setTimeout(10);
+                if (tempreport.open("POST", connection.c_str()))
+                {
+                    tempreport.setReqHeader("Content-Type","application/json");
+                    if (!tempreport.send(json.c_str()))
+                    {
+                        Log.warning(F("Warning: Failed to send POST to %s." CR), connection.c_str());
+                        return false;
+                    }
+                }
+                else
+                {
+                    Log.warning(F("Warning: Failed to open %s." CR), connection.c_str());
+                    return false;
+                }
+            }
+            else
+            {
+                Log.error(F("Error: Unable to parse URL." CR));
+                return false;
+            }
+        }
+        else
+        {
+            const int elapsed = tempreport.elapsedTime();
+            const int state = tempreport.readyState();
+            switch(state)
+            {
+                case 1 ... 3:
+                    Log.warning(F("Warning: Previous info post for %s is still in progress(%dms)." CR), reportname, elapsed);
+                    break;
                 default:
-                    Log.error(F("Warning: HTTP response code %d received from completed request." CR), code);
+                    Log.warning(F("Warning: Previous info post for %s is in an unknown state (%d)." CR), reportname, state);
                     break;
             }
-            break;
-        case 200 ... 299:
-            // 2xx successful – the request was successfully received, understood, and accepted
-            switch(code)
-            {
-                default:
-                    Log.notice(F("HTTP response code %d received (%dms). The request was successfully received, understood, and accepted." CR), code, elapsed);
-                    break;
-            }
-            break;
-        case 300 ... 399:
-            // 3xx redirection – further action needs to be taken in order to complete the request
-            switch(code)
-            {
-                default:
-                    Log.error(F("Warning: HTTP response code %d (redirect) received from completed request." CR), code);
-                    break;
-            }
-            break;
-        case 400 ... 499:
-            // 4xx client error – the request contains bad syntax or cannot be fulfilled
-            switch(code)
-            {
-                case 400:
-                    Log.error(F("Warning: HTTP response code %d received from completed transaction. Bad request." CR), code);
-                    break;
-                case 401:
-                    Log.error(F("Warning: HTTP response code %d received from completed transaction. Unauthorized." CR), code);
-                    break;
-                case 403:
-                    Log.error(F("Warning: HTTP response code %d received from completed transaction. Forbidden." CR), code);
-                    break;
-                case 404:
-                    Log.error(F("Warning: HTTP response code %d received from completed transaction. Page not found." CR), code);
-                    break;
-                case 408:
-                    Log.error(F("Error: HTTP response code %d received (%dms). The request timed out." CR), code, elapsed);
-                    break;
-                case 429:
-                    Log.error(F("Error: HTTP response code %d received. Too many requests reported." CR), code);
-                    break;
-                default:
-                    Log.error(F("Error: HTTP response code %d received. The request contains bad syntax or cannot be fulfilled." CR), code);
-                    break;
-            }
-            break;
-        case 500 ... 599:
-            // 5xx server error – the server failed to fulfil an apparently valid request
-            switch(code)
-            {
-                case 500:
-                    Log.error(F("Error: HTTP response code %d received. Internal server error." CR), code);
-                    break;
-                case 501:
-                    Log.error(F("Error: HTTP response code %d received. Not implemented." CR), code);
-                    break;
-                case 502:
-                    Log.error(F("Error: HTTP response code %d received. Bad gateway." CR), code);
-                    break;
-                case 503:
-                    Log.error(F("Error: HTTP response code %d received. Service unavailable." CR), code);
-                    break;
-                case 504:
-                    Log.error(F("Error: HTTP response code %d received (%dms)). Gateway timeout." CR), code, elapsed);
-                    break;
-                case 505:
-                    Log.error(F("Error: HTTP response code %d received. HTTP version not implemented." CR), code);
-                    break;
-                case 508:
-                    Log.error(F("Error: HTTP response code %d received. Loop detected." CR), code);
-                    break;
-                case 511:
-                    Log.error(F("Error: HTTP response code %d received. Network authentication required." CR), code);
-                default:
-                    Log.error(F("Error: HTTP response code %d received. The server failed to fulfil an apparently valid request." CR), code);
-                    break;
-            }
-            break;
-        default:
-            // Code < 0 or > 599, no idea how we got here, should not be possible
-            Log.error(F("Error: HTTP response code %d received." CR), code);
-            break;
+            return false;
+        }
+        return true;
+    }
+    else
+    {
+        Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+        return false;
+    }
+}
+
+void resultHandler(void* optParm, asyncHTTPrequest* report, int readyState) {
+    // enum    readyStates {
+    //         readyStateUnsent = 0,            // Client created, open not yet called
+    //         readyStateOpened =  1,           // open() has been called, connected
+    //         readyStateHdrsRecvd = 2,         // send() called, response headers available
+    //         readyStateLoading = 3,           // Receiving, partial data available
+    //         readyStateDone = 4} _readyState; // Request complete, all data available
+
+    if (readyState == 4) // Only report when request completes, all data available
+    {
+        // asyncHTTPrequest::response:
+        //
+        // int     respHeaderCount();                   // Retrieve count of response headers
+        // char*   respHeaderName(int index);           // Return header name by index
+        // char*   respHeaderValue(int index);          // Return header value by index
+        // char*   respHeaderValue(const char* name);   // Return header value by name
+        // bool    respHeaderExists(const char* name);  // Does header exist by name?
+        // String  headers();                           // Return all headers as String
+        // size_t  responseLength();                    // Indicated response length or sum of chunks to date     
+        // int     responseHTTPcode();                  // HTTP response code or (negative) error code
+        // String  responseText();                      // response (whole* or partial* as string)
+        // uint32_t elapsedTime();                      // Elapsed time of in progress transaction or last completed (ms)
+        // String  version();                           // Version of asyncHTTPrequest
+
+        const int code = report->responseHTTPcode();
+        const int elapsed = report->elapsedTime();
+        report->responseText(); // Discard response text to reset stack
+        
+        switch(code)
+        {
+            case 0 ... 99:
+                // Code < 100, no idea how we got here, should not be possible
+                Log.error(F("Error: Invalid HTTP response code %d received." CR), code);
+                break;
+            case 100 ... 199:
+                // 1xx informational response – the request was received, continuing process
+                switch(code)
+                {
+                    default:
+                        Log.error(F("Warning: HTTP response code %d received from completed request." CR), code);
+                        break;
+                }
+                break;
+            case 200 ... 299:
+                // 2xx successful – the request was successfully received, understood, and accepted
+                switch(code)
+                {
+                    default:
+                        Log.notice(F("HTTP response code %d received (%dms): Ok." CR), code, elapsed);
+                        break;
+                }
+                break;
+            case 300 ... 399:
+                // 3xx redirection – further action needs to be taken in order to complete the request
+                switch(code)
+                {
+                    default:
+                        Log.error(F("Warning: HTTP response code %d (redirect) received from completed request." CR), code);
+                        break;
+                }
+                break;
+            case 400 ... 499:
+                // 4xx client error – the request contains bad syntax or cannot be fulfilled
+                switch(code)
+                {
+                    case 400:
+                        Log.error(F("Warning: HTTP response code %d received from completed transaction. Bad request." CR), code);
+                        break;
+                    case 401:
+                        Log.error(F("Warning: HTTP response code %d received from completed transaction. Unauthorized." CR), code);
+                        break;
+                    case 403:
+                        Log.error(F("Warning: HTTP response code %d received from completed transaction. Forbidden." CR), code);
+                        break;
+                    case 404:
+                        Log.error(F("Warning: HTTP response code %d received from completed transaction. Page not found." CR), code);
+                        break;
+                    case 408:
+                        Log.error(F("Error: HTTP response code %d received (%dms). The request timed out." CR), code, elapsed);
+                        break;
+                    case 429:
+                        Log.error(F("Error: HTTP response code %d received. Too many requests reported." CR), code);
+                        break;
+                    default:
+                        Log.error(F("Error: HTTP response code %d received. The request contains bad syntax or cannot be fulfilled." CR), code);
+                        break;
+                }
+                break;
+            case 500 ... 599:
+                // 5xx server error – the server failed to fulfil an apparently valid request
+                switch(code)
+                {
+                    case 500:
+                        Log.error(F("Error: HTTP response code %d received. Internal server error." CR), code);
+                        break;
+                    case 501:
+                        Log.error(F("Error: HTTP response code %d received. Not implemented." CR), code);
+                        break;
+                    case 502:
+                        Log.error(F("Error: HTTP response code %d received. Bad gateway." CR), code);
+                        break;
+                    case 503:
+                        Log.error(F("Error: HTTP response code %d received. Service unavailable." CR), code);
+                        break;
+                    case 504:
+                        Log.error(F("Error: HTTP response code %d received (%dms)). Gateway timeout." CR), code, elapsed);
+                        break;
+                    case 505:
+                        Log.error(F("Error: HTTP response code %d received. HTTP version not implemented." CR), code);
+                        break;
+                    case 508:
+                        Log.error(F("Error: HTTP response code %d received. Loop detected." CR), code);
+                        break;
+                    case 511:
+                        Log.error(F("Error: HTTP response code %d received. Network authentication required." CR), code);
+                    default:
+                        Log.error(F("Error: HTTP response code %d received. The server failed to fulfil an apparently valid request." CR), code);
+                        break;
+                }
+                break;
+            default:
+                // Code < 0 or > 599, no idea how we got here, should not be possible
+                Log.error(F("Error: Invalid HTTP response code %d received." CR), code);
+                break;
+        }
     }
 }
