@@ -35,7 +35,7 @@ JSON Definition:
 		"kegcal": 99.99
 	},
 	"kegscreen": {
-		"name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"update": false
 	},
 	"urltarget": {
