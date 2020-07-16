@@ -24,19 +24,94 @@ SOFTWARE. */
 #define _KEGSCREEN_H
 
 #include "config.h"
+#include "jsonconfig.h"
+#include "flowmeter.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+#include <LCBUrl.h>
 #include <ArduinoLog.h>
 #include <AsyncTCP.h>
 #include <asyncHTTPrequest.h>
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
-void sendTapInfo(int);        // Push complete tap info (single tap)
-void sendPulseReport(int);    // Send pulse report when a pour is done (single tap)
-void sendKickReport(int);     // Send a kick report when keg kicks
-void sendCoolingState();      // Send temp status when a cooling state changes
-void sendTempReport();        // Send a temp report on timer
+struct TapInfo
+{
+    char api[32];
+    char breweryname[64];
+    char kegeratorname[64];
+    char reporttype[16];
+    bool imperial;
+    int tapid;
+    int ppu;
+    char name[32];
+    float capacity;
+    float remaining;
+    bool active;
+    bool calibrating;
+};
 
-void sendRequest(asyncHTTPrequest, const char *);
-void postHandler(void*, asyncHTTPrequest*, int);
+struct PourInfo
+{
+    char api[32];
+    char breweryname[64];
+    char kegeratorname[64];
+    char reporttype[16];
+    int tapid;
+    float dispensed;
+    float remaining;
+};
+
+struct KickReport
+{
+    char api[32];
+    char breweryname[64];
+    char kegeratorname[64];
+    char reporttype[16];
+    int tapid;
+};
+
+struct CoolState
+{
+    char api[32];
+    char breweryname[64];
+    char kegeratorname[64];
+    char reporttype[16];
+    int coolstate;
+};
+
+struct TempSensor
+{
+    char name[32];
+    double average;
+    bool enabled;
+};
+
+struct TempReport
+{
+    char api[32];
+    char breweryname[64];
+    char kegeratorname[64];
+    char reporttype[16];
+    bool imperial;
+    int controlpoint;
+    float setpoint;
+    int status;
+    bool controlenabled;
+    TempSensor sensor[NUMSENSOR];
+};
+
+bool sendTapInfo(int);              // Push complete tap info (single tap)
+bool sendPourReport(int, float);    // Send pour report when a pour is done (single tap)
+bool sendKickReport(int);           // Send a kick report when keg kicks
+bool sendCoolState();            // Send temp status when a cooling state changes
+bool sendTempReport();              // Send a temp report on timer
+
+void resultHandler(void*, asyncHTTPrequest*, int);
+
+extern struct Config config;
+extern struct Flowmeter flow;
+extern struct Devices device;
+extern struct Thermostat tstat;
 
 #endif // _KEGSCREEN_H
