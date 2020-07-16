@@ -1105,18 +1105,23 @@ bool handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL target
             const char * value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
-            // Target url settings
+            // Keg Screen url settings
             //
-            if (strcmp(name, "kegscreen") == 0) // Set Keg Screen hostname
+            if (strcmp(name, "kegscreen") == 0) // Change Keg Screen hostname
             {
-                if ((strlen(value) < 3) || (strlen(value) > 128))
+                if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    strlcpy(config.kegscreen.url, value, sizeof(config.kegscreen.url));
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(config.kegscreen.url, value, sizeof(config.kegscreen.url));
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(config.kegscreen.name, value, sizeof(config.kegscreen.name));
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }
