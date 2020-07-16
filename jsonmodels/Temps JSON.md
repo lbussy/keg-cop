@@ -6,39 +6,39 @@ JSON Definition:
 
 ```
 {
-  "imperial": false,
-  "controlpoint": 99,
-  "setting": 999.999,
-  "status": 99,
-  "controlenabled": false,
-  "displayenabled": false,
-  "sensors": [
+    "imperial": false,
+    "controlpoint": 99,
+    "setting": 999.999,
+    "status": 99,
+    "controlenabled": false,
+    "displayenabled": false,
+    "sensors": [
     {
-      "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      "enable": false,
-      "value": 999.999
+        "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "enable": false,
+        "value": 999.999
     },
     {
-      "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      "enable": false,
-      "value": 999.999
+        "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "enable": false,
+        "value": 999.999
     },
     {
-      "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      "enable": false,
-      "value": 999.999
+        "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "enable": false,
+        "value": 999.999
     },
     {
-      "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      "enable": false,
-      "value": 999.999
+        "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "enable": false,
+        "value": 999.999
     },
     {
-      "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      "enable": false,
-      "value": 999.999
+        "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "enable": false,
+        "value": 999.999
     }
-  ]
+    ]
 }
 ```
 
