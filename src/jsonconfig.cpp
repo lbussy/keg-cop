@@ -456,7 +456,7 @@ void Temperatures::load(JsonObjectConst obj)
 
 void KegScreen::save(JsonObject obj) const
 {
-    obj["name"] = name;
+    obj["url"] = url;
     obj["update"] = update;
 }
 
@@ -464,18 +464,18 @@ void KegScreen::load(JsonObjectConst obj)
 {
     // Load Keg Screen configuration
     //
-    if (obj["name"].isNull()) {
-        strlcpy(name, "", sizeof(name));
+    if (obj["url"].isNull()) {
+        strlcpy(url, "", sizeof(url));
     } else {
-        const char* nm = obj["name"];
-        strlcpy(name, nm, sizeof(name));
+        const char* ul = obj["url"];
+        strlcpy(url, ul, sizeof(url));
     }
 
     if (obj["update"].isNull()) {
         update = false;
     } else {
-        bool u = obj["update"];
-        update = u;
+        bool up = obj["update"];
+        update = up;
     }
 }
 
@@ -572,7 +572,7 @@ void Config::save(JsonObject obj) const
     // Add Calibration object
     temps.save(obj.createNestedObject("temps"));
     // Add Keg Screen object
-    urltarget.save(obj.createNestedObject("kegscreen"));
+    kegscreen.save(obj.createNestedObject("kegscreen"));
     // Add Target object
     urltarget.save(obj.createNestedObject("urltarget"));
     // Add Cloud object

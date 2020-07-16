@@ -69,7 +69,7 @@ struct Temperatures
 struct KegScreen
 {
     // Stores Keg Screen configuration
-    char name[32];
+    char url[128];
     bool update;
 
     void load(JsonObjectConst);
