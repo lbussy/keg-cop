@@ -16,7 +16,7 @@
 
 ## Bugs
 
-- "Serving 404 for request to /settings/true" when POSTing to /settings/#sensorcontrol
+- ??
 
 ## Before Release
 
@@ -155,3 +155,4 @@
     - ~~Send temp status when a cooling state changes~~
     - ~~Send a temp report on timer~~
 - ~~Add "Keg Screen Host" target~~
+- ~~"Serving 404 for request to /settings/true" when POSTing to /settings/#sensorcontrol~~
