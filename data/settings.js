@@ -582,8 +582,8 @@ function postData(url, data, newpage = false, newdata = false, callback = null) 
             alert('POST failed.');
         },
         complete: function (data) {
-            if (newpage) {
-                window.location.href = newpage;
+            if (false) { // Was: (newpage) {
+                window.location.href = window.location.href;
             } else if (newdata) {
                 repopulatePage(true);
             }
@@ -606,7 +606,6 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
 }
 
 function updateHelp(hashLoc) {
-    console.log("DEBUG: hashloc = " + hashLoc);
     var url="https://docs.kegcop.com"
 
     // Switch here for hashLoc
