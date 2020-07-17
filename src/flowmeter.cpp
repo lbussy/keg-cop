@@ -110,6 +110,7 @@ bool initFlow()
         lastPulse[i] = 0;       // For kick detector
         lastLoopTime[i] = 0;    // For kick detector
         lastPulseTime[i] = 0;   // For pour detector
+        queuePourReport[i] = 0; // Pour queue
     }
     return loadFlowConfig();
 }
@@ -147,12 +148,17 @@ void logFlow()
                 }
 				else
 				{ // Log a pour
-                    flow.taps[i].remaining = flow.taps[i].remaining - (double(pulseCount) / (double(flow.taps[i].ppu)));
+                    float pour = (float)pulseCount / (float)flow.taps[i].ppu;
+                    flow.taps[i].remaining = flow.taps[i].remaining - pour;
                     saveFlowConfig();
                     Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                     if (config.copconfig.rpintscompat)
                     { // Do RPints message
                         sendPulseCount(i, flow.taps[i].pin, pulseCount);
+                    }
+                    if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+                    {
+                        queuePourReport[i] = pour;
                     }
 				}
 			}
