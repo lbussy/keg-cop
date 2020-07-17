@@ -24,7 +24,7 @@ SOFTWARE. */
 
 float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
 bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending pours
-bool __attribute__((unused)) queueStateChange;          // Store pending state change
+bool __attribute__((unused)) queueStateChange;          // Store pending state changes
 
 void _delay(unsigned long ulDelay)
 {
@@ -87,7 +87,7 @@ void tickerLoop()
         if (queueStateChange == true)
         {
             sendCoolState();
-            queueStateChange == false;
+            queueStateChange = false;
         }
     }
 }
