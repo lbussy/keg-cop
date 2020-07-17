@@ -25,6 +25,7 @@ SOFTWARE. */
 
 #include "wifihandler.h"
 #include "kegscreen.h"
+#include "thermostat.h"
 #include <ArduinoLog.h>
 #include <Arduino.h>
 

@@ -83,6 +83,5 @@ void convertFlowtoMetric();
 extern struct Config config;
 extern float __attribute__((unused)) queuePourReport[NUMTAPS];  // Store pending pours
 extern bool __attribute__((unused)) queueKickReport[NUMTAPS];   // Store pending kicks
-extern bool __attribute__((unused)) queueStateChange;           // store pending state changes
 
 #endif // _FLOWMETER_H
