@@ -54,5 +54,6 @@ void tstatReport();
 
 extern struct Config config;
 extern struct Devices device;
+extern bool __attribute__((unused)) queueStateChange;   // Store pending state changes
 
 #endif // _THERMOSTAT_H

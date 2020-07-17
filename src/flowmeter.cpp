@@ -106,11 +106,12 @@ bool initFlow()
         pinMode(flowPins[i], INPUT_PULLUP);
         digitalWrite(flowPins[i], HIGH);
         attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
-        pulse[i] = 0;           // Hold current pour
-        lastPulse[i] = 0;       // For kick detector
-        lastLoopTime[i] = 0;    // For kick detector
-        lastPulseTime[i] = 0;   // For pour detector
-        queuePourReport[i] = 0; // Pour queue
+        pulse[i] = 0;               // Hold current pour
+        lastPulse[i] = 0;           // For kick detector
+        lastLoopTime[i] = 0;        // For kick detector
+        lastPulseTime[i] = 0;       // For pour detector
+        queuePourReport[i] = 0;     // Pour queue
+        queueKickReport[i] = false; // Kick queue
     }
     return loadFlowConfig();
 }
@@ -130,6 +131,7 @@ void logFlow()
 				else
 				{ // Disable flowmeter if kicked and !RPints
 					flow.taps[i].active = false;
+                    queueKickReport[i] = true;
 					saveFlowConfig();
 				}
 			}
