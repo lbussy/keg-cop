@@ -542,12 +542,12 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
             {
                 if (strcmp(value, "active") == 0)
                 {
-                    Log.notice(F("Settings update [%d], [%s]:(%s) (T) applied." CR), tapNum, name, value);
+                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CR), tapNum, name, value);
                     flow.taps[tapNum].active = true;
                 }
                 else if (strcmp(value, "inactive") == 0)
                 {
-                    Log.notice(F("Settings update [%d], [%s]:(%s) (F) applied." CR), tapNum, name, value);
+                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CR), tapNum, name, value);
                     flow.taps[tapNum].active = false;
                 }
                 else
@@ -559,6 +559,10 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
     }
     if (saveFlowConfig())
     {
+        if (tapNum >= 0)
+        {
+            setDoTapInfoReport(tapNum);  
+        }
         return true;
     }
     else

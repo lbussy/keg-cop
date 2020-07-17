@@ -58,6 +58,24 @@ void setDoWiFiReset()
     doWiFiReset = true; // Semaphore required for wifi reset in web page
 }
 
+void setDoKSTempReport()
+{
+    doKSTempReport = true; // Semaphore required for KS Temp Report
+}
+
+void initDoTapInforeport()
+{ // Clear all values on startup
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        doTapInfoReport[i] = false;
+    }
+}
+
+void setDoTapInfoReport(int tap)
+{
+    doTapInfoReport[tap] = true; // Semaphore required for KS Temp Report
+}
+
 void tickerLoop()
 {
     // Necessary because we cannot delay or do radio work in a callback
@@ -72,23 +90,39 @@ void tickerLoop()
         doWiFiReset = false;
         resetWifi();
     }
+
+    // Keg Screen Reports
     for (int i = 0; i < NUMTAPS; i++)
-    { // Send report from pour queue
+    {
+        // Send report from pour queue
         if (queuePourReport[i] > 0)
         {
             sendPourReport(i, queuePourReport[i]);
             queuePourReport[i] = 0;
         }
+        // Send kick report
         if (queueKickReport[i] == true)
         {
             sendKickReport(i);
             queueKickReport[i] = false;
         }
+        // Send temp control state change
         if (queueStateChange == true)
         {
             sendCoolState();
             queueStateChange = false;
         }
+        // Send Tap Info Report
+        if (doTapInfoReport[i] == true)
+        {
+            sendTapInfo(i);
+            doTapInfoReport[i] = false;
+        }
+    }
+    if (doKSTempReport)
+    {
+        sendTempReport();
+        doKSTempReport = false;
     }
 }
 
