@@ -23,6 +23,8 @@ SOFTWARE. */
 #include "tools.h"
 
 float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
+bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending pours
+bool __attribute__((unused)) queueStateChange;          // Store pending state change
 
 void _delay(unsigned long ulDelay)
 {
@@ -76,6 +78,16 @@ void tickerLoop()
         {
             sendPourReport(i, queuePourReport[i]);
             queuePourReport[i] = 0;
+        }
+        if (queueKickReport[i] == true)
+        {
+            sendKickReport(i);
+            queueKickReport[i] = false;
+        }
+        if (queueStateChange == true)
+        {
+            sendCoolState();
+            queueStateChange == false;
         }
     }
 }

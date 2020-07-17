@@ -31,6 +31,7 @@ void startControl()
     tstat.cooling = false;
     tstat.state = TSTAT_UNKNOWN;
     config.temps.controlenabled = config.temps.controlenabled;
+    queueStateChange = false;
 }
 
 void controlLoop()
@@ -38,6 +39,7 @@ void controlLoop()
     unsigned long now = millis();
     double setpoint;
     double tempNow = device.sensor[config.temps.controlpoint].average;
+    ThermostatState start = tstat.state;
 
     // If the assigned control point or temp control is disabled
     if (!config.temps.enabled[config.temps.controlpoint] || (!config.temps.controlenabled))
@@ -67,7 +69,6 @@ void controlLoop()
         setpoint = config.temps.setpoint;
     }
     
-
     if (tempNow > setpoint)
     {
         // Calling for cooling
@@ -122,6 +123,10 @@ void controlLoop()
         tstat.state = TSTAT_UNKNOWN;
     }
     
+    if (tstat.state != start)
+    { // Log a state change to Keg Screen
+        queueStateChange = true;
+    }
 }
 
 void tstatReport()
