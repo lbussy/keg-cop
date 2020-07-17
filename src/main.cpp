@@ -71,7 +71,7 @@ void setup()
     initWebServer();    // Turn on web server
     sensorInit();       // Initialize temperature sensors
     startControl();     // Initialize temperature control
-    doPoll();           // Get server version at startup
+    doVersionPoll();           // Get server version at startup
 
     Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
@@ -79,6 +79,7 @@ void setup()
 void loop()
 {
     // Poll teperature sensors
+    initDoTapInforeport(); // Clear KS reporting semaphores
     Ticker pollSensors;
     pollSensors.attach(TEMPLOOP, pollTemps);
 
@@ -92,7 +93,11 @@ void loop()
 
     // Poll for server version
     Ticker getThatVersion;
-    getThatVersion.attach(POLLSERVERVERSION, doPoll);
+    getThatVersion.attach(POLLSERVERVERSION, doVersionPoll);
+
+    // Sent Keg Screen Temp Report
+    Ticker doKSTempReport;
+    doKSTempReport.attach(KSTEMPREPORT, setDoKSTempReport);
 
     while (true)
     {

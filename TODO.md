@@ -9,12 +9,6 @@
 - Add target pushes
     - Target URL (mega report)
     - Cloud (or disable)
-- Add Keg Screen semaphores for reports
-    - bool sendTapInfo(int);              // Push complete tap info (single tap)
-    - ~~bool sendPourReport(int, float);    // Send pour report when a pour is done (single tap)~~
-    - ~~bool sendKickReport(int);           // Send a kick report when keg kicks~~
-    - ~~bool sendCoolState();               // Send temp status when a cooling state changes~~
-    - bool sendTempReport();              // Send a temp report on timer
 - Document API
 - Document Keg Cop page
 - Maybe add a "ping" after page failure to recover
@@ -22,7 +16,7 @@
 
 ## Bugs
 
-- ??
+- Kegs are kicking for strange reasons
 
 ## Before Release
 
@@ -162,3 +156,9 @@
     - ~~Send a temp report on timer~~
 - ~~Add "Keg Screen Host" target~~
 - ~~"Serving 404 for request to /settings/true" when POSTing to /settings/#sensorcontrol~~
+- ~~Add Keg Screen semaphores for reports~~
+    - ~~bool sendTapInfo(int);              // Push complete tap info (single tap)~~
+    - ~~bool sendPourReport(int, float);    // Send pour report when a pour is done (single tap)~~
+    - ~~bool sendKickReport(int);           // Send a kick report when keg kicks~~
+    - ~~bool sendCoolState();               // Send temp status when a cooling state changes~~
+    - ~~bool sendTempReport();              // Send a temp report on timer~~

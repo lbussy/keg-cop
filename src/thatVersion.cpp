@@ -73,7 +73,7 @@ bool deserializeVersion(const char * &src, ThatVersion &thatVersion) {
     }
 }
 
-void doPoll() {
+void doVersionPoll() {
     request.onData(requestHandler);
     sendRequest();
 }

@@ -37,7 +37,7 @@ struct ThatVersion {
     void save(JsonObject) const;
 };
 
-void doPoll();
+void doVersionPoll();
 void sendRequest();
 void requestHandler(void*, asyncHTTPrequest*, int);
 bool serializeVersion(const ThatVersion &, Print &);
