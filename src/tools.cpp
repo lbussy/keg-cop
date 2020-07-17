@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "tools.h"
 
+float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
+
 void _delay(unsigned long ulDelay)
 {
     // Safe semi-blocking delay
@@ -67,6 +69,14 @@ void tickerLoop()
     { // Need to do this to prevent WDT
         doWiFiReset = false;
         resetWifi();
+    }
+    for (int i = 0; i < NUMTAPS; i++)
+    { // Send report from pour queue
+        if (queuePourReport[i] > 0)
+        {
+            sendPourReport(i, queuePourReport[i]);
+            queuePourReport[i] = 0;
+        }
     }
 }
 

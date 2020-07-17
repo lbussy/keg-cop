@@ -27,6 +27,7 @@ SOFTWARE. */
 #include "serialhandler.h"
 #include "config.h"
 #include "jsonconfig.h"
+#include "kegscreen.h"
 #include <SPIFFS.h>
 #include <ArduinoJson.h>
 #include <ArduinoLog.h>
@@ -80,5 +81,6 @@ void convertFlowtoImperial();
 void convertFlowtoMetric();
 
 extern struct Config config;
+extern float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
 
 #endif // _FLOWMETER_H

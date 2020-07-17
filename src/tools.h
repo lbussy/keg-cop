@@ -24,6 +24,7 @@ SOFTWARE. */
 #define _TOOLS_H
 
 #include "wifihandler.h"
+#include "kegscreen.h"
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
