@@ -189,6 +189,7 @@ function populateConfig(callback = null) { // Get configuration settings
                 }
                 $('input[name="calkeg"]').val(parseFloat(config.temps.keg).toFixed(2));
 
+                $('input[name="kegscreen"]').val(config.kegscreen.url);
                 $('input[name="targeturl"]').val(config.urltarget.url);
                 $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
                 $('select[name="cloudtype"] option[value=' + parseInt(config.cloud.type, 10) + ']').attr('selected', 'selected');
