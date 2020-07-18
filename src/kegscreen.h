@@ -35,6 +35,15 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
+enum ReportKey
+{
+    KS_TAPINFO,
+    KS_POURREPORT,
+    KS_KICKREPORT,
+    KS_COOLSTATE,
+    KS_TEMPREPORT
+};
+
 struct TapInfo
 {
     char api[32];
@@ -101,12 +110,12 @@ struct TempReport
     TempSensor sensor[NUMSENSOR];
 };
 
-bool sendTapInfo(int);              // Push complete tap info (single tap)
-bool sendPourReport(int, float);    // Send pour report when a pour is done (single tap)
-bool sendKickReport(int);           // Send a kick report when keg kicks
-bool sendCoolState();               // Send temp status when a cooling state changes
-bool sendTempReport();              // Send a temp report on timer
-
+bool sendTapInfo(int);                      // Push complete tap info (single tap)
+bool sendPourReport(int, float);            // Send pour report when a pour is done (single tap)
+bool sendKickReport(int);                   // Send a kick report when keg kicks
+bool sendCoolState();                       // Send temp status when a cooling state changes
+bool sendTempReport();                      // Send a temp report on timer
+bool sendReport(ReportKey, const String &); // Handle the business of sending report
 void resultHandler(void*, asyncHTTPrequest*, int);
 
 extern struct Config config;
