@@ -50,7 +50,7 @@ const char *reportname[5] = {
     "Cooling State",
     "Temperature"};
 
-bool sendTapInfo(int tapid)
+bool sendTapInfoReport(int tapid)
 { // Push complete tap info (single tap) when tap is flipped to active or the data is changed
     ReportKey reportkey = KS_TAPINFO;
     if (tapid >= 0 && tapid <= NUMTAPS)
@@ -212,7 +212,7 @@ bool sendKickReport(int tapid)
     return true;
 }
 
-bool sendCoolState()
+bool sendCoolStateReport()
 { // Send cooling status when a cooling state changes
     ReportKey reportkey = KS_COOLSTATE;
     if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
