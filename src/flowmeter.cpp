@@ -122,8 +122,10 @@ void logFlow()
     {
         if (!flow.taps[i].calibrating) // Skip on calibrate
         {
+            // Check kick first so that speed is not averaged over pour
 			if (isKicked(i) && flow.taps[i].active)
 			{  // If the keg is blowing foam and active
+                pulse[i] = lastPulse[i]; // Discard the foam pulses
 				if (config.copconfig.rpintscompat)
 				{
 					sendKickedMsg(i, flow.taps[i].pin);
@@ -179,34 +181,24 @@ void logFlow()
 
 bool isKicked(int meter)
 { // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
-	const int secs = (millis() - lastLoopTime[meter]) / 1000;
-    if (secs > 0 && (pulse[meter] - lastPulse[meter] > 0))
+    // Get elapsed time and pulses
+	const double secs = (millis() - lastLoopTime[meter]) / 1000;
+    const int pulses = pulse[meter] - lastPulse[meter];
+    const double pps = (double)pulses / secs;
+    // Choose ounces per gallon or ounces per liter
+    double divisor = (config.copconfig.imperial) ? 128 : 33.8;
+    // Calculate pulses (kickspeed) > which = kicked keg
+    const double kickSpeed = ((double)flow.taps[meter].ppu / divisor) * KICKSPEED;
+
+    if (pps > kickSpeed)
     {
-        const unsigned long pps = (pulse[meter] - lastPulse[meter]) / secs;
-        double divisor;
-        if (config.copconfig.imperial)
-        {
-            divisor = 128; // Ounces per gallon
-        }
-        else
-        {
-            divisor = 33.8; // Ounces per liter
-        }
-        const double kickSpeed = (flow.taps[meter].ppu / divisor) * KICKSPEED;
-        if (pps > kickSpeed)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        Log.verbose(F("Tap %d is kicked." CR), meter);
+        return true;
     }
     else
     {
         return false;
     }
-    
 }
 
 bool loadFlowConfig()

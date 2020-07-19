@@ -16,7 +16,7 @@
 
 ## Bugs
 
-- Kegs are kicking for strange reasons
+- ??
 
 ## Before Release
 
@@ -162,3 +162,4 @@
     - ~~bool sendKickReport(int);           // Send a kick report when keg kicks~~
     - ~~bool sendCoolState();               // Send temp status when a cooling state changes~~
     - ~~bool sendTempReport();              // Send a temp report on timer~~
+- ~~Kegs are kicking for strange reasons~~
