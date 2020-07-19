@@ -34,10 +34,10 @@ void resetController();
 void setDoWiFiReset();
 void setDoReset();
 void setDoKSTempReport();
-void initDoTapInforeport();
 void setDoTapInfoReport(int);
 void tickerLoop();
 void printDebug();
+void printDebug(const char *);
 double convertFtoC(double);
 double convertCtoF(double);
 double convertOneFtoC(double);
@@ -49,6 +49,8 @@ std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep
 static bool __attribute__((unused)) doReset = false;            // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;        // Semaphore for wifi reset
 static bool __attribute__((unused)) doKSTempReport = false;     // Semaphore for reset
-static bool __attribute__((unused)) doTapInfoReport[NUMTAPS];   // Semaphore for reset
+static bool __attribute__((unused)) doTapInfoReport[NUMTAPS] = {
+    false, false, false, false, false, false, false, false
+}; // Semaphore for reset
 
 #endif
