@@ -79,7 +79,6 @@ void setup()
 void loop()
 {
     // Poll teperature sensors
-    initDoTapInforeport(); // Clear KS reporting semaphores
     Ticker pollSensors;
     pollSensors.attach(TEMPLOOP, pollTemps);
 
