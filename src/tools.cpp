@@ -23,8 +23,8 @@ SOFTWARE. */
 #include "tools.h"
 
 float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
-bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending pours
-bool __attribute__((unused)) queueStateChange;          // Store pending state changes
+bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending kicks
+bool __attribute__((unused)) queueStateChange;          // Store pending tstat state changes
 
 void _delay(unsigned long ulDelay)
 {
