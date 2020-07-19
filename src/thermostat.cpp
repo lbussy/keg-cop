@@ -130,7 +130,7 @@ void controlLoop()
 }
 
 void tstatReport()
-{ // DEBUG
+{ // For thermostat state messages debugging
     unsigned long now = millis();
     char tempFormat[1];
     double setpoint = config.temps.setpoint;
