@@ -63,14 +63,6 @@ void setDoKSTempReport()
     doKSTempReport = true; // Semaphore required for KS Temp Report
 }
 
-void initDoTapInforeport()
-{ // Clear all values on startup
-    for (int i = 0; i < NUMTAPS; i++)
-    {
-        doTapInfoReport[i] = false;
-    }
-}
-
 void setDoTapInfoReport(int tap)
 {
     doTapInfoReport[tap] = true; // Semaphore required for KS Temp Report
@@ -91,7 +83,7 @@ void tickerLoop()
         resetWifi();
     }
 
-    // Keg Screen Reports
+    // // Keg Screen Reports
     for (int i = 0; i < NUMTAPS; i++)
     {
         // Send report from pour queue
@@ -109,13 +101,13 @@ void tickerLoop()
         // Send temp control state change
         if (queueStateChange == true)
         {
-            sendCoolState();
+            sendCoolStateReport();
             queueStateChange = false;
         }
         // Send Tap Info Report
         if (doTapInfoReport[i] == true)
         {
-            sendTapInfo(i);
+            sendTapInfoReport(i);
             doTapInfoReport[i] = false;
         }
     }
@@ -127,6 +119,11 @@ void tickerLoop()
 }
 
 void printDebug()
+{
+    printDebug(nullptr);
+}
+
+void printDebug(const char * message)
 {
     uint32_t free;
     uint16_t max;
@@ -147,7 +144,11 @@ void printDebug()
     max = info.largest_free_block;
     frag = 100 - (max * 100) / free;
 #endif
-    Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d" CR), free, max, frag);
+    if (!message)
+        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d" CR), free, max, frag);
+    else
+        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d -> %s" CR), free, max, frag, message);
+    Serial.flush();
 }
 
 double convertFtoC(double F)
