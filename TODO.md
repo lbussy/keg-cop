@@ -8,15 +8,15 @@
 
 - Add target pushes
     - Target URL (mega report)
-    - Cloud (or disable)
+    - ~~Cloud (or disable)~~
 - Document API
-- Document Keg Cop page
 - Maybe add a "ping" after page failure to recover
 - Look at "other pages" with JS to split them out?
 
 ## Bugs
 
 - Does not reload after host name change
+- Keg kicks too fast (1, 6, 8)
 
 ## Before Release
 
@@ -163,3 +163,4 @@
     - ~~bool sendCoolState();               // Send temp status when a cooling state changes~~
     - ~~bool sendTempReport();              // Send a temp report on timer~~
 - ~~Kegs are kicking for strange reasons~~
+- ~~Document Keg Cop page~~
