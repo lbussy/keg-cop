@@ -121,6 +121,7 @@ bool sendPourReport(int tapid, float dispensed)
         {
             PourInfo pour;
             strlcpy(pour.api, API_KEY, sizeof(pour.api));
+            strlcpy(pour.hostname, config.hostname, sizeof(pour.hostname));
             strlcpy(pour.breweryname, config.copconfig.breweryname, sizeof(pour.breweryname));
             strlcpy(pour.kegeratorname, config.copconfig.kegeratorname, sizeof(pour.kegeratorname));
             strlcpy(pour.reporttype, reporttype[reportkey], sizeof(pour.reporttype));
@@ -128,10 +129,11 @@ bool sendPourReport(int tapid, float dispensed)
             pour.dispensed = dispensed;
             pour.remaining = flow.taps[tapid].remaining;
 
-            const size_t capacity = JSON_OBJECT_SIZE(7);
+            const size_t capacity = JSON_OBJECT_SIZE(8);
             DynamicJsonDocument doc(capacity);
 
             doc["api"] = (const char *)pour.api;
+            doc["hostname"] = (const char *)pour.hostname;
             doc["breweryname"] = (const char *)pour.breweryname;
             doc["kegeratorname"] = (const char *)pour.kegeratorname;
             doc["reporttype"] = (const char *)pour.reporttype;
