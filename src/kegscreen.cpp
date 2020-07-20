@@ -173,15 +173,17 @@ bool sendKickReport(int tapid)
         {
             KickReport kick;
             strlcpy(kick.api, API_KEY, sizeof(kick.api));
+            strlcpy(kick.hostname, config.hostname, sizeof(kick.hostname));
             strlcpy(kick.breweryname, config.copconfig.breweryname, sizeof(kick.breweryname));
             strlcpy(kick.kegeratorname, config.copconfig.kegeratorname, sizeof(kick.kegeratorname));
             strlcpy(kick.reporttype, reporttype[reportkey], sizeof(kick.reporttype));
             kick.tapid = tapid;
 
-            const size_t capacity = JSON_OBJECT_SIZE(5);
+            const size_t capacity = JSON_OBJECT_SIZE(6);
             DynamicJsonDocument doc(capacity);
 
             doc["api"] = (const char *)kick.api;
+            doc["hostname"] = (const char *)kick.hostname;
             doc["breweryname"] = (const char *)kick.breweryname;
             doc["kegeratorname"] = (const char *)kick.kegeratorname;
             doc["reporttype"] = (const char *)kick.reporttype;
