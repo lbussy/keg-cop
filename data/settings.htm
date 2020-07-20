@@ -109,7 +109,6 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#kegscreen">Keg Screen</a>
                             <a class="dropdown-item" data-toggle="tab" href="#targeturl">URL</a>
-                            <a class="dropdown-item" data-toggle="tab" href="#targetcloud">Cloud</a>
                         </div>
                     </li>
 
@@ -1432,63 +1431,6 @@
                         </div>
 
                     </div> <!-- URL Target Tab -->
-
-                    <div class="tab-pane fade" id="targetcloud"> <!-- Cloud Target Tab -->
-                        <div class="card-header">
-                            <h4 class="card-title">Cloud Target Configuration</h4>
-                        </div>
-                        <div class="card-body">
-
-                            <form id="cloudtype" action="/settings/cloudurl/" method="POST" onsubmit="return processPost(this);">
-
-                                <div class="form-group row">
-                                    <label for="cloudtype" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Select the cloud target to which the system will post data">
-                                        Cloud Target
-                                    </label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" name="cloudtype" id="cloudtype">
-                                            <option value = "0">Cloud 1</option>
-                                            <option value = "1">Cloud 2</option>
-                                            <option value = "2">Cloud 3</option>
-                                            <option value = "3">Cloud 4</option>
-                                            <option value = "4">Cloud 5</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="cloudkey" class="col-sm-2 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Key supplied by cloud system">
-                                        Cloud Key
-                                    </label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="cloudkey"
-                                            id="cloudkey" minlength="3" maxlength="64"
-                                            placeholder="01234567890ABCDEF01234567890ABCDEF">
-                                    </div>
-								</div>
-
-                                <div class="form-group row">
-                                    <label for="cloudfreq" class="col-sm-2 col-form-label" data-toggle="tooltip"
-                                        title="Frequency in minutes to update the target (15 to 60 minutes)">Post Frequency</label>
-                                    <div class="col-sm-10">
-                                        <input type="number" class="form-control" id="cloudfreq" name="cloudfreq"
-                                            min="15" max="60" step="1" placeholder="15">
-                                    </div>
-                                </div>
-
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
-                                </div>
-
-							</form>
-
-                        </div>
-
-                    </div> <!-- Cloud Target Tab -->
 
                     <div class="tab-pane fade" id="flowcal"> <!-- Calibrate Flowmeters Tab -->
                         <div class="card-header">

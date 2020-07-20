@@ -38,9 +38,8 @@ At a minimum, you will want to look at the :ref:`Settings <settings>` menu to se
 
 Targets:
 
-- :ref:`URL Targets <url>`
-- :ref:`Cloud Targets <cloud>`
-
+- :ref:`Keg Screen Target <kegscreen>`
+- :ref:`URL Target <url>`
 
 Advanced
 

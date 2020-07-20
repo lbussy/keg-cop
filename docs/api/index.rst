@@ -8,7 +8,7 @@ Keg Cop uses a combination of API types:
 - `Action Pages`_
 - `JSON Retrieval`_
 - `Settings Handlers (POST)`_
-- `POSTed JSON Report`_
+- `Target URL Report`_
 - `Serial Reports`_
 - `Keg Screen Reports`_
 
@@ -45,49 +45,46 @@ These pages return proper JSON reports for configuration and status items:
     :linenos:
 
     {
-    "apconfig": {
-        "ssid": "kegcop",
-        "passphrase": "kegcop12"
-    },
-    "hostname": "kegcop",
-    "copconfig": {
-        "breweryname": "Keg Cop Brewery",
-        "kegeratorname": "Keezer",
-        "imperial": true,
-        "rpintscompat": false,
-        "randr": false,
-        "tapsolenoid": true
-    },
-    "temps": {
-        "setpoint": 35,
-        "controlpoint": 4,
-        "controlenabled": true,
-        "roomenabled": true,
-        "room": 1,
-        "towerenabled": true,
-        "tower": 2,
-        "upperenabled": true,
-        "upper": -1,
-        "lowerenabled": true,
-        "lower": -2,
-        "kegenabled": true,
-        "keg": 1
-    },
-    "urltarget": {
-        "url": "",
-        "freq": 30,
-        "update": false
-    },
-    "cloud": {
-        "type": 0,
-        "url": "",
-        "key": "",
-        "freq": 15,
-        "update": false
-    },
-    "dospiffs1": false,
-    "dospiffs2": false,
-    "didupdate": false
+        "apconfig": {
+            "ssid": "kegcop",
+            "passphrase": "kegcop12"
+        },
+        "hostname": "kegcop",
+        "copconfig": {
+            "breweryname": "Silver Fox Brewery",
+            "kegeratorname": "Keezer",
+            "imperial": true,
+            "rpintscompat": false,
+            "randr": false,
+            "tapsolenoid": true
+        },
+        "temps": {
+            "setpoint": 35,
+            "controlpoint": 4,
+            "controlenabled": true,
+            "roomenabled": true,
+            "room": 1,
+            "towerenabled": true,
+            "tower": 2,
+            "upperenabled": true,
+            "upper": -1,
+            "lowerenabled": true,
+            "lower": -2,
+            "kegenabled": true,
+            "keg": 3
+        },
+        "kegscreen": {
+            "url": "",
+            "update": false
+        },
+        "urltarget": {
+            "url": "",
+            "freq": 15,
+            "update": false
+        },
+        "dospiffs1": false,
+        "dospiffs2": false,
+        "didupdate": false
     }
 
 /thatVersion/
@@ -318,7 +315,6 @@ The following endpoints receive specific POSTed information from the web pages:
 
 - `/setcalmode/`_
 - `/settings/controller/`_
-- `/settings/cloudurl/`_
 - `/settings/sensorcontrol/`_
 - `/settings/tapcontrol/`_
 - `/settings/tapcal/`_
@@ -344,15 +340,6 @@ Entries POSTed to this endpoint will configure many elements of the controller's
 - ``imperial:{bool}``, where ``{bool}`` is true or false, respectively, for imperial or metric units of measure. It should be noted that selection of the opposite causes a conversion of the various data points, and may cause accumulation of error if repeatedly toggled
 - ``tapsolenoid:{energized|deenergized}``, where ``{energized|deenergized}`` determines whether the solenoid control is on or off respectively
 - ``rpintscompat:{kegcop|rpintscompat|randr}``, where ``{kegcop|rpintscompat|randr}`` is standard Keg Cop operations when set to *kegcop*. Selecting *rpintscompat* or *randr* will toggle RaspberryPints-compatible serial reporting in either original or RandR+ variants
-
-/settings/cloudurl/
-====================
-
-Cloud URL is currently not implemented.  These items are sent from the ``http://kegcop.local/settings/#targetcloud`` page.  The POST syntax is:
-
-- ``cloudtype:{n}``, where ``{n}`` is the index, 0-4, of the cloud service to which the reports should be sent
-- ``cloudkey:{key}``, where ``{key}`` is a string representing any key or password required by the cloud service
-- ``cloudfreq:{n}``, where ``{n}`` is the number of minutes between reports
 
 /settings/sensorcontrol/
 ==========================
@@ -412,7 +399,7 @@ This endoint allows POSTing configuration related to temperature control.  These
 
 Entries POSTed to this endpoint will pass through the control routines for all other control points.  It is intended to serve as a single point through which mass configuration may be handled.  There is no web page from which this is done natively.
 
-POSTed JSON Report
+Target URL Report
 *******************
 
 .. todo::
