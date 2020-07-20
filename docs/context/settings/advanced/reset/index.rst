@@ -8,7 +8,4 @@ Reset Controller
    :align: center
    :alt: Reset Controller
 
-Clicking the "Reset Controller" button in this UI will perform the same function as pressing the reset button on the controller. All settings will be retained.
-
-.. todo::
-   Spellcheck!
+Clicking the "Reset Controller" button in this UI will perform the same function as pressing the reset button on the controller. The controller will retain all settings.

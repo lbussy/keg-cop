@@ -21,6 +21,3 @@ Cannot open Keg Cop by Name
 
 - Android phones have had a questionable history of support for mDNS - likely because the technology was adopted early on by Apple and is heavily ingrained in the Apple ecosystem.  Reportedly, under ChromeOS 80 the Chrome Browser *does* resolve mDNS names (.local). Under Android 10, it does not.  There is an issue on the `Issue Tracker <https://issuetracker.google.com/issues/140786115>`_, which is an interesting mix of phanbois giving reasons why it should not be supported, and real users who want it.
 - From an Android smartphone, you can use something like `Service Browser <https://play.google.com/store/apps/details?id=com.druk.servicebrowser>`_ to browse mDNS services on your local network.
-
-.. todo::
-    Spellcheck!
