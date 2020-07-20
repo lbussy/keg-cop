@@ -16,7 +16,7 @@
 
 ## Bugs
 
-- ??
+- Does not reload after host name change
 
 ## Before Release
 
