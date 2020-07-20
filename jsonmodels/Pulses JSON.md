@@ -1,4 +1,4 @@
-Pulse Report JSON Model:
+Pulse JSON Model:
 =======================
 
 JSON Definition:
