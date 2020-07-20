@@ -3,7 +3,7 @@
         "ssid": "kegcop",
         "passphrase": "kegcop12"
     },
-    "hostname": "kegger",
+    "hostname": "kegcop",
     "copconfig": {
         "breweryname": "Silver Fox Brewery",
         "kegeratorname": "Keezer",
@@ -34,13 +34,6 @@
     "urltarget": {
         "url": "",
         "freq": 30,
-        "update": false
-    },
-    "cloud": {
-        "type": 0,
-        "url": "",
-        "key": "",
-        "freq": 15,
         "update": false
     },
     "dospiffs1": false,

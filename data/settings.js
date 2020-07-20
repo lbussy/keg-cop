@@ -192,9 +192,6 @@ function populateConfig(callback = null) { // Get configuration settings
                 $('input[name="kegscreen"]').val(config.kegscreen.url);
                 $('input[name="targeturl"]').val(config.urltarget.url);
                 $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
-                $('select[name="cloudtype"] option[value=' + parseInt(config.cloud.type, 10) + ']').attr('selected', 'selected');
-                $('input[name="cloudkey"]').val(config.cloud.key);
-                $('input[name="cloudfreq"]').val(parseInt(config.cloud.freq), 10);
                 $('.updatepulsesecs').text(pulseReloadTimer / 1000);
             }
             catch {
@@ -364,9 +361,6 @@ function processPost(obj) {
             break;
         case "#targeturl":
             processTargetUrlPost(url, obj);
-            break;
-        case "#targetcloud":
-            processTargetCloudPost(url, obj);
             break;
         case "#controller":
             processControllerPost(url, obj);
@@ -553,24 +547,6 @@ function processTargetUrlPost(url, obj) {
     postData(url, data);
 }
 
-function processTargetCloudPost(url, obj) {
-    // Handle target cloud posts
-
-    // Get form data
-    var $form = $(obj),
-        cloudtype = $form.find("select[name='cloudtype']").val(),
-        cloudkey = $form.find("input[name='cloudkey']").val(),
-        cloudfreq = $form.find("input[name='cloudfreq']").val()
-
-    // Process post
-    data = {
-        cloudtype: cloudtype,
-        cloudkey: cloudkey,
-        cloudfreq: cloudfreq
-    }
-    postData(url, data);
-}
-
 function postData(url, data, newpage = false, newdata = false, callback = null) {
     $.ajax({
         url: url,
@@ -632,9 +608,6 @@ function updateHelp(hashLoc) {
             break;
         case "#targeturl":
             url = url + "/en/latest/context/settings/targets/url/index.html";
-            break;
-        case "#targetcloud":
-            url = url + "/en/latest/context/settings/targets/cloud/index.html";
             break;
         case "#controller":
             url = url + "/en/latest/context/settings/controller/index.html";

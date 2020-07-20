@@ -5,7 +5,7 @@
     },
     "hostname": "kegcop",
     "copconfig": {
-        "breweryname": "Keg Cop Brewery",
+        "breweryname": "Silver Fox Brewery",
         "kegeratorname": "Keezer",
         "imperial": true,
         "rpintscompat": false,
@@ -25,17 +25,14 @@
         "lowerenabled": true,
         "lower": -2,
         "kegenabled": true,
-        "keg": 1
+        "keg": 3
+    },
+    "kegscreen": {
+        "url": "",
+        "update": false
     },
     "urltarget": {
         "url": "",
-        "freq": 30,
-        "update": false
-    },
-    "cloud": {
-        "type": 0,
-        "url": "",
-        "key": "",
         "freq": 15,
         "update": false
     },

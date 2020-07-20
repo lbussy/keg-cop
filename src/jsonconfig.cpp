@@ -24,8 +24,8 @@ SOFTWARE. */
 
 Config config;
 const char *filename = FILENAME;
-extern const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(5) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(10) + JSON_OBJECT_SIZE(13);
-extern const size_t capacityDeserial = capacitySerial + 1130;
+const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13);
+extern const size_t capacityDeserial = capacitySerial + 840;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -498,55 +498,6 @@ void URLTarget::load(JsonObjectConst obj)
     }
 
     if (obj["freq"].isNull()) {
-        freq = 30;
-    } else {
-        int f = obj["freq"];
-        freq = f;
-    }
-
-    if (obj["update"].isNull()) {
-        update = false;
-    } else {
-        bool u = obj["update"];
-        update = u;
-    }
-}
-
-void CloudTarget::save(JsonObject obj) const
-{
-    obj["type"] = type;
-    obj["url"] = url;
-    obj["key"] = key;
-    obj["freq"] = freq;
-    obj["update"] = update;
-}
-
-void CloudTarget::load(JsonObjectConst obj)
-{
-    // Load Cloud configuration
-    //
-    if (obj["type"].isNull()) {
-        type = 0;
-    } else {
-        int t = obj["type"];
-        type = t;
-    }
-
-    if (obj["url"].isNull()) {
-        strlcpy(url, "", sizeof(url));
-    } else {
-        const char* u = obj["url"];
-        strlcpy(url, u, sizeof(url));
-    }
-
-    if (obj["key"].isNull()) {
-        strlcpy(key, "", sizeof(key));
-    } else {
-        const char* k = obj["key"];
-        strlcpy(key, k, sizeof(key));
-    }
-
-    if (obj["freq"].isNull()) {
         freq = 15;
     } else {
         int f = obj["freq"];
@@ -575,8 +526,6 @@ void Config::save(JsonObject obj) const
     kegscreen.save(obj.createNestedObject("kegscreen"));
     // Add Target object
     urltarget.save(obj.createNestedObject("urltarget"));
-    // Add Cloud object
-    cloud.save(obj.createNestedObject("cloud"));
     // Add dospiffs1 object
     obj["dospiffs1"] = dospiffs1;
     // Add dospiffs2 object
@@ -603,7 +552,6 @@ void Config::load(JsonObjectConst obj)
     temps.load(obj["temps"]);
     kegscreen.load(obj["kegscreen"]);
     urltarget.load(obj["urltarget"]);
-    cloud.load(obj["cloud"]);
 
     if (obj["dospiffs1"].isNull()) {
         dospiffs1 = false;
