@@ -37,7 +37,7 @@ void setClock() {
                 resetController();
             }
             printCR();
-            Log.verbose(F("Re-requesting time hack." CR));
+            Log.verbose(F("Re-requesting time hack."));
             configTime(GMT, 0, TIMESERVER);
             startSecs = time(nullptr);
             cycle++;
