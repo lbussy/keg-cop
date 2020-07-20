@@ -1,6 +1,6 @@
 .. _todo:
 
-List of any Documentation TODOs
+Documentation TODOs
 ################################
 
 .. todolist::
