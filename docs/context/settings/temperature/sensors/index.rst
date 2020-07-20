@@ -8,8 +8,6 @@ Sensor Control
    :align: center
    :alt: Temperature Sensor Settings
 
-.. todo::
-   Finish this page
+You may apply a positive or negative calibration value individually for each temperature sensor. 
 
-.. todo::
-   Spellcheck!
+If a sensor is unused, or if you wish to disable it, mark it as such.

@@ -8,7 +8,4 @@ Keg Cop License
    :align: center
    :alt: Keg Cop License
 
-Keg Cop is released under the `MIT License <https://github.com/lbussy/keg-cop/blob/master/LICENSE>`_.
-
-.. todo::
-   Spellcheck!
+I have released Keg Cop under the `MIT License <https://github.com/lbussy/keg-cop/blob/master/LICENSE>`_.

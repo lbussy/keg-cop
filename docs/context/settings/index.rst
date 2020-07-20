@@ -21,11 +21,7 @@ The settings page provides a tabbed sub-menu for application settings and config
     temperature/sensors/index
     targets/kegscreen/index
     targets/url/index
-    targets/cloud/index
     advanced/calibrate/index
     advanced/reset/index
     advanced/update/index
     advanced/wifi/index
-
-.. todo::
-   Spellcheck!

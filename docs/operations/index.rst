@@ -13,7 +13,6 @@ At a minimum, you will want to look at the :ref:`Settings <settings>` menu to se
 - Units of measure
 - Reporting functionality
 
-
 :ref:`Taps <taps>`:
 
 - Pulses per unit of measure
@@ -22,19 +21,16 @@ At a minimum, you will want to look at the :ref:`Settings <settings>` menu to se
 - Remaining in keg
 - Tap active/inactive
 
-
 :ref:`Temperature Control <cooling>`:
 
 - Set point
 - Control point
 - Control enabled/disabled
 
-
 :ref:`Temperature Sensors <sensors>`;
 
 - Calibration
 - Enabled/disabled
-
 
 Targets:
 
@@ -47,6 +43,3 @@ Advanced
 - :ref:`Reset controller <reset>`
 - :ref:`Update application <update>`
 - :ref:`Reset WiFi <resetwifi>`
-
-.. todo::
-    Spellcheck!
