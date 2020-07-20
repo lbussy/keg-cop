@@ -128,7 +128,7 @@ bool sendPourReport(int tapid, float dispensed)
             pour.dispensed = dispensed;
             pour.remaining = flow.taps[tapid].remaining;
 
-            const size_t capacity = JSON_OBJECT_SIZE(11);
+            const size_t capacity = JSON_OBJECT_SIZE(7);
             DynamicJsonDocument doc(capacity);
 
             doc["api"] = (const char *)pour.api;
