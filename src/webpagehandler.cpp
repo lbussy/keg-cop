@@ -1072,7 +1072,7 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
             if (strcmp(name, "targetfreq") == 0) // Set the push frequency
             {
                 const double val = atof(value);
-                if ((val < 10) || (val > 900))
+                if ((val < 5) || (val > 120))
                 {
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
