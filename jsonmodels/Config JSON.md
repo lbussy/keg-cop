@@ -35,7 +35,7 @@ JSON Definition:
 		"kegcal": 99.99
 	},
 	"kegscreen": {
-		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"update": false
 	},
 	"urltarget": {
@@ -53,18 +53,18 @@ Size:
 -----
 
 ```
-const size_t capacity = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13) + 840;
-560+752 = 1312
+const size_t capacity = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13) + 950;
+560+848 = 1408
 ```
 
 Parsing:
 --------
 
 ```
-const size_t capacity = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13) + 840;
+const size_t capacity = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13) + 950;
 DynamicJsonDocument doc(capacity);
 
-const char* json = "{\"apconfig\":{\"ssid\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"passphrase\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"},\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"copconfig\":{\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"imperial\":false,\"rpintscompat\":false,\"randr\":false,\"tapsolenoid\":false},\"temps\":{\"setpoint\":100,\"controlpoint\":99,\"controlenabled\":false,\"roomenable\":false,\"roomcal\":99.99,\"towerenable\":false,\"towercal\":-99.99,\"upperenable\":false,\"uppercal\":99.99,\"lowerenable\":false,\"lowercal\":-99.99,\"kegenable\":false,\"kegcal\":99.99},\"kegscreen\":{\"url\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"update\":false},\"urltarget\":{\"url\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"freq\":999,\"update\":false},\"dospiffs1\":false,\"dospiffs2\":false,\"didupdate\":false}";
+const char* json = "{\"apconfig\":{\"ssid\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"passphrase\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"},\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"copconfig\":{\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"imperial\":false,\"rpintscompat\":false,\"randr\":false,\"tapsolenoid\":false},\"temps\":{\"setpoint\":100,\"controlpoint\":99,\"controlenabled\":false,\"roomenable\":false,\"roomcal\":99.99,\"towerenable\":false,\"towercal\":-99.99,\"upperenable\":false,\"uppercal\":99.99,\"lowerenable\":false,\"lowercal\":-99.99,\"kegenable\":false,\"kegcal\":99.99},\"kegscreen\":{\"url\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"update\":false},\"urltarget\":{\"url\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"freq\":999,\"update\":false},\"dospiffs1\":false,\"dospiffs2\":false,\"didupdate\":false}";
 
 deserializeJson(doc, json);
 
@@ -96,7 +96,7 @@ float temps_lowercal = temps["lowercal"]; // -99.99
 bool temps_kegenable = temps["kegenable"]; // false
 float temps_kegcal = temps["kegcal"]; // 99.99
 
-const char* kegscreen_url = doc["kegscreen"]["url"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* kegscreen_url = doc["kegscreen"]["url"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 bool kegscreen_update = doc["kegscreen"]["update"]; // false
 
 JsonObject urltarget = doc["urltarget"];
@@ -145,7 +145,7 @@ temps["kegenable"] = false;
 temps["kegcal"] = 99.99;
 
 JsonObject kegscreen = doc.createNestedObject("kegscreen");
-kegscreen["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+kegscreen["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 kegscreen["update"] = false;
 
 JsonObject urltarget = doc.createNestedObject("urltarget");
