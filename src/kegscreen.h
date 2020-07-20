@@ -47,6 +47,7 @@ enum ReportKey
 struct TapInfo
 {
     char api[32];
+    char hostname[32];
     char breweryname[64];
     char kegeratorname[64];
     char reporttype[16];

@@ -59,6 +59,7 @@ bool sendTapInfoReport(int tapid)
         {
             TapInfo tap;
             strlcpy(tap.api, API_KEY, sizeof(tap.api));
+            strlcpy(tap.hostname, config.hostname, sizeof(tap.hostname));
             strlcpy(tap.breweryname, config.copconfig.breweryname, sizeof(tap.breweryname));
             strlcpy(tap.kegeratorname, config.copconfig.kegeratorname, sizeof(tap.kegeratorname));
             strlcpy(tap.reporttype, reporttype[reportkey], sizeof(tap.reporttype));
@@ -71,10 +72,11 @@ bool sendTapInfoReport(int tapid)
             tap.active = flow.taps[tapid].active;
             tap.calibrating = flow.taps[tapid].calibrating;
 
-            const size_t capacity = JSON_OBJECT_SIZE(12);
+            const size_t capacity = JSON_OBJECT_SIZE(13);
             DynamicJsonDocument doc(capacity);
 
             doc["api"] = (const char *)tap.api;
+            doc["hostname"] = (const char *)tap.hostname;
             doc["breweryname"] = (const char *)tap.breweryname;
             doc["kegeratorname"] = (const char *)tap.kegeratorname;
             doc["reporttype"] = (const char *)tap.reporttype;
