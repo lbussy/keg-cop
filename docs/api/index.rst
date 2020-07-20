@@ -432,6 +432,7 @@ Whenever a change is made to any of the tap information, this report is sent to 
 
     {
         "api":"Keg Cop",
+        "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
         "reporttype":"tapinfo",
@@ -455,6 +456,7 @@ Whenever a pour completes, Keg Cop sends a pour report to teh Keg Screen system.
 
     {
         "api":"Keg Cop",
+        "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
         "reporttype":"pourreport",
@@ -473,6 +475,7 @@ Keg Cop employs algorithm for detecting a kicked keg. When the pour volume excee
 
     {
         "api":"Keg Cop",
+        "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
         "reporttype":"kickreport",
@@ -489,6 +492,7 @@ Whenever the cooling state changes, a state report is triggered for the Keg Scre
 
     {
         "api":"Keg Cop",
+        "hostname":"kegcop",
         "breweryname":"Keg Cop Brewery",
         "kegeratorname":"Keezer",
         "reporttype":"coolstate",
@@ -516,6 +520,7 @@ A report containing all temperature points is sent to the Keg Screen system ever
 
     {
         "api":"Keg Cop",
+        "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
         "reporttype":"tempreport",
