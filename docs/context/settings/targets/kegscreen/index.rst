@@ -8,8 +8,4 @@ Keg Screen Target
    :align: center
    :alt: Keg Screen Settings
 
-.. todo::
-   Finish this page
-
-.. todo::
-   Spellcheck!
+The Keg Screen page allows you to set or clear the URL of the Keg Screen endpoint. Removing the value will disable Keg Screen reports.
