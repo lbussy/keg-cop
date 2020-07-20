@@ -219,15 +219,17 @@ bool sendCoolStateReport()
     {
         CoolState cool;
         strlcpy(cool.api, API_KEY, sizeof(cool.api));
+        strlcpy(cool.hostname, config.hostname, sizeof(cool.hostname));
         strlcpy(cool.breweryname, config.copconfig.breweryname, sizeof(cool.breweryname));
         strlcpy(cool.kegeratorname, config.copconfig.kegeratorname, sizeof(cool.kegeratorname));
         strlcpy(cool.reporttype, reporttype[reportkey], sizeof(cool.reporttype));
         cool.coolstate = tstat.state;
 
-        const size_t capacity = JSON_OBJECT_SIZE(5);
+        const size_t capacity = JSON_OBJECT_SIZE(6);
         DynamicJsonDocument doc(capacity);
 
         doc["api"] = (const char *)cool.api;
+        doc["hostname"] = (const char *)cool.hostname;
         doc["breweryname"] = (const char *)cool.breweryname;
         doc["kegeratorname"] = (const char *)cool.kegeratorname;
         doc["reporttype"] = (const char *)cool.reporttype;
