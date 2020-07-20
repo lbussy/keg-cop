@@ -1,5 +1,5 @@
-Temps Report (push) JSON Model:
-===============================
+Temperatures Report JSON Model:
+================================
 
 JSON Definition:
 ----------------
