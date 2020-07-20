@@ -267,6 +267,7 @@ bool sendTempReport()
     {
         TempReport temps;
         strlcpy(temps.api, API_KEY, sizeof(temps.api));
+        strlcpy(temps.hostname, config.hostname, sizeof(temps.hostname));
         strlcpy(temps.breweryname, config.copconfig.breweryname, sizeof(temps.breweryname));
         strlcpy(temps.kegeratorname, config.copconfig.kegeratorname, sizeof(temps.kegeratorname));
         strlcpy(temps.reporttype, reporttype[reportkey], sizeof(temps.reporttype));
@@ -292,10 +293,11 @@ bool sendTempReport()
             temps.sensor[i].enabled = config.temps.enabled[i];
         }
 
-        const size_t capacity = JSON_ARRAY_SIZE(5) + 5 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(10);
+        const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(11);
         DynamicJsonDocument doc(capacity);
 
         doc["api"] = (const char *)temps.api;
+        doc["hostname"] = (const char *)temps.hostname;
         doc["breweryname"] = (const char *)temps.breweryname;
         doc["kegeratorname"] = (const char *)temps.kegeratorname;
         doc["reporttype"] = (const char *)temps.reporttype;
