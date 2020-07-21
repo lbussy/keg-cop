@@ -6,11 +6,6 @@
 
 ## Features
 
-- Add target pushes
-    - Target URL (mega report)
-    - ~~Keg Screen~~
-    - ~~Cloud (or disable)~~
-- Document API
 - Maybe add a "ping" after page failure to recover
 - Look at "other pages" with JS to split them out?
 
@@ -18,12 +13,15 @@
 
 - Does not reload after host name change
 - Keg kicks too fast (1, 6, 8)
+- Crash in URL Target post
+- Fix RPints reports
 
 ## Before Release
 
 - Remove /edit/
 - Update tag
 - Update website
+- Remove demo JSON?
 
 # Complete
 
@@ -164,4 +162,12 @@
     - ~~bool sendCoolState();               // Send temp status when a cooling state changes~~
     - ~~bool sendTempReport();              // Send a temp report on timer~~
 - ~~Kegs are kicking for strange reasons~~
-- ~~Document Keg Cop page~~
+- ~~Document Keg Screen page~~
+- ~~Add hostname to Keg Screen reports~~
+- ~~Add target pushes~~
+    - ~~Target URL (mega report)~~
+    - ~~Keg Screen~~
+    - ~~Cloud (or disable)~~
+- ~~Finish documenting API~~
+    - ~~Mega post~~
+    - ~~Serial reports~~
