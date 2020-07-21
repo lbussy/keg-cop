@@ -1059,14 +1059,19 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
             //
             if (strcmp(name, "targeturl") == 0) // Set target URL
             {
-                if ((strlen(value) < 3) || (strlen(value) > 128))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
+                if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "targetfreq") == 0) // Set the push frequency
