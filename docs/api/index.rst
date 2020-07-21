@@ -118,7 +118,7 @@ These pages return proper JSON reports for configuration and status items:
 
 - ``tapid``: The tap ID numbered 0-7
 - ``pin``: Controller pin connected to the flowmeter
-- ``ppu``: Pulses per unit in Pulses per Gallon when configured as imperial, and Pulses per Liter when configured as metric
+- ``ppu``: Pulses per unit in Pulses per Gallon when configured as imperial, and Pulses per Liter when set as metric
 - ``name``: Name of the beverage, displayed on the home page
 - ``capacity``: Reports the keg's capacity in gallons or liters, depending on the units of measure set for the system
 - ``remaining``: This is the calculated liquid remaining in the keg in gallons or liters depending on the units of measure set for the system
@@ -366,7 +366,7 @@ Entries POSTed to this endpoint will configure the taps configured for the contr
 - ``ppu:{n}``, where ``{n}`` is pulses per unit of flowmeter pulses in gallons or liters depending on the imperial or metric configuration
 - ``beername:{beverage name}``, where ``{beverage name}`` is the name of the beverage on the selected tap
 - ``cap:{n.n}``, where ``{n.n}`` is a floating-point number for the keg's capacity in gallons or liters, depending on the imperial or metric configuration
-- ``remain:{n.n}``, where ``{n.n}`` is a floating-point number for the liquid remaining in the keg in gallons or liters, depending on the imperial or metric configuration
+- ``remain:{n.n}``, where ``{n.n}`` is a floating-point number for the liquid remaining in the keg in gallons or liters
 - ``active:{bool}``, where ``{bool}`` is true or false to enable or disable the tap. This setting determines whether the tap shows on the home page
 
 /settings/tapcal/
@@ -388,10 +388,10 @@ This endpoint configures the URL (generally local) to which the system POSTs rep
 /settings/tempcontrol/
 =======================
 
-This endoint allows POSTing configuration related to temperature control.  These items are sent from the ``http://kegcop.local/settings/#tempcontrol`` page.  The POST syntax is:
+This endoint allows POSTing configuration related to temperature control.  The ``http://kegcop.local/settings/#tempcontrol`` page sends this POST.  The POST syntax is:
 
 - ``setpoint:{n.n}``, where ``{n.n}`` is a floating-point number to which the unit will cool
-- ``controlpoint:{n}``, where ``{n}`` is the index of the temperature sensor, 0-4, which will be used as the control point
+- ``controlpoint:{n}``, where ``{n}`` is the index of the temperature sensor, 0-4, used as the control point
 - ``enablecontrol:{bool}``, where ``{bool}`` is true or false to enable temperature control
 
 /settings/update/
@@ -402,14 +402,168 @@ Entries POSTed to this endpoint will pass through the control routines for all o
 Target URL Report
 *******************
 
-.. todo::
-    Mega-Report: Figure this format out 
+The Target URL Report provides a holistic picture of the system to a custom/third-party endpoint. It is a timer-based POST; a change of state does not trigger it. As with all target system configuration within Keg Cop, it will post to HTTP only. The format is as follows:
+
+.. code-block:: json
+    :linenos:
+
+    {
+        "api":"Keg Cop",
+        "hostname":"kegcop",
+        "breweryname":"Silver Fox Brewery",
+        "kegeratorname":"Keezer",
+        "reporttype":"targeturlreport",
+        "imperial":true,
+        "controlpoint":4,
+        "setting":35,
+        "status":2,
+        "controlenabled":true,
+        "sensors":[
+            {
+                "name":"Room",
+                "value":84.1982,
+                "enabled":true
+            },
+            {
+                "name":"Tower",
+                "value":84.1964,
+                "enabled":true
+            },
+            {
+                "name":"Upper Chamber",
+                "value":77.0018,
+                "enabled":true
+            },
+            {
+                "name":"Lower Chamber",
+                "value":73.6286,
+                "enabled":true
+            },
+            {
+                "name":"Keg",
+                "value":83.2946,
+                "enabled":true
+            }
+        ],
+        "taps":[
+            {
+                "tapid":0,
+                "ppu":21118,
+                "name":"Pudswiller Doors",
+                "capacity":5,
+                "remaining":4.1955,
+                "active":false
+            },
+            {
+                "tapid":1,
+                "ppu":21118,
+                "name":"Bug's House Ale",
+                "capacity":5,
+                "remaining":3.299195,
+                "active":true
+            },
+            {
+                "tapid":2,
+                "ppu":21118,
+                "name":"Navelgazer IPA",
+                "capacity":5,
+                "remaining":1.499148,
+                "active":true
+            },
+            {
+                "tapid":3,
+                "ppu":21118,
+                "name":"Tanked 7",
+                "capacity":5,
+                "remaining":2.197301,
+                "active":true
+            },
+            {
+                "tapid":4,
+                "ppu":21118,
+                "name":"Ringaling Lager",
+                "capacity":15.5,
+                "remaining":13.09872,
+                "active":true
+            },
+            {
+                "tapid":5,
+                "ppu":21118,
+                "name":"Peter Skee",
+                "capacity":5,
+                "remaining":4.1,
+                "active":true
+            },
+            {
+                "tapid":6,
+                "ppu":21118,
+                "name":"Undead Guy",
+                "capacity":5,
+                "remaining":3.899053,
+                "active":true
+            },
+            {
+                "tapid":7,
+                "ppu":21118,
+                "name":"Who's Garden",
+                "capacity":5,
+                "remaining":1.2,
+                "active":true
+            }
+        ]
+    }
 
 Serial Reports
 ****************
 
-.. todo::
-    Include RaspberryPints reports
+When configured as a RaspberryPints-compatible controller, Keg Screen disables all serial debug printing and provides reports via the serial connection.  There are two RaspberryPints-compatible reports:
+
+- Pour Report
+- Kick Report
+
+Pour Report
+============
+
+Keg Cop will issue the Pour Report after a pour when the controller detects that the pour has stopped.  The report follows this format:
+
+``P;1;4;3200``
+
+A semicolon (``;``) delimits the fields, and the fields are as follows:
+
+- ``P`` - Report Type: The "P" in the first field designates this as a "Pour Report."
+- ``1`` - Address: The "1" here is the tap number for the pour.
+- ``0`` - Pin Number: The "4" here is the controller pin number for the pour.
+- ``3200`` - Pulse Count: This is the number of pulses detected during the pour.
+
+For RandR+-compatible systems, the Pour Report is slightly different.  For example:
+
+``P;2147483640;0;3200``, where:
+
+- ``P`` - Report Type: The "P" in the first field designates this as a "Pour Report"
+- ``2147483640`` - RFID User: The "2147483640" indicates an RFID-identified user.  This field is not supported in Keg Cop and will always report "0"
+- ``0`` - Pin Number: The "0" here is the tap number for the pour
+- ``3200`` - Pulse Count: This is the number of pulses detected during the pour
+
+Kick Report
+============
+
+Keg Cop will issue the Kick Report after the controller detects the tap blowing foam.  The report follows this format:
+
+``K;2;0``
+
+A semicolon (``;``) delimits the fields, and the fields are as follows:
+
+- ``K`` - Report Type: The "K" in the first field designates this as a "Kick Report"
+- ``2`` - Address: The "2" here is the tap number which has kicked
+- ``0`` - Pin Number: The "0" here is the controller pin number for the pour
+
+For RandR+-compatible systems, the Kick Report is slightly different.  For example:
+
+``K;2147483640;6``
+
+- ``K`` - Report Type: The "P" in the first field designates this as a "Pour Report"
+- ``2147483640`` - RFID User: The "2147483640" identifies an RFID-identified user.  This is not supported in Keg Cop and will always report "0"
+- ``6`` - Pin Number: The "6" here is the tap number for the pour
 
 Keg Screen Reports
 *******************
@@ -557,6 +711,3 @@ A report containing all temperature points is sent to the Keg Screen system ever
             }  
         ]
     }
-
-.. todo::
-   Spellcheck!
