@@ -8,12 +8,12 @@
 
 - Maybe add a "ping" after page failure to recover
 - Look at "other pages" with JS to split them out?
+- Create CSS for AsyncWiFiManager
 
 ## Bugs
 
 - Does not reload after host name change
 - Keg kicks too fast (1, 6, 8)
-- Crash in URL Target post
 - Fix RPints reports
 
 ## Before Release
@@ -171,3 +171,4 @@
 - ~~Finish documenting API~~
     - ~~Mega post~~
     - ~~Serial reports~~
+- ~~Crash in URL Target post~~

@@ -94,11 +94,11 @@ void loop()
     Ticker getThatVersion;
     getThatVersion.attach(POLLSERVERVERSION, doVersionPoll);
 
-    // Sent Keg Screen Temp Report
+    // Send Keg Screen Temp Report
     Ticker doKSTempReport;
     doKSTempReport.attach(KSTEMPREPORT, setDoKSTempReport);
 
-    // Sent Target Report
+    // Send Target Report
     Ticker doTargetReport;
     doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
 
