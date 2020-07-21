@@ -68,6 +68,11 @@ void setDoTapInfoReport(int tap)
     doTapInfoReport[tap] = true; // Semaphore required for KS Temp Report
 }
 
+void setDoTargetReport()
+{
+    doTargetReport = true; // Semaphore required for URL Target Report
+}
+
 void tickerLoop()
 {
     // Necessary because we cannot delay or do radio work in a callback
@@ -115,6 +120,11 @@ void tickerLoop()
     {
         sendTempReport();
         doKSTempReport = false;
+    }
+    if (doTargetReport)
+    {
+        sendTargetReport();
+        doTargetReport = false;
     }
 }
 

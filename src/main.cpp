@@ -98,8 +98,20 @@ void loop()
     Ticker doKSTempReport;
     doKSTempReport.attach(KSTEMPREPORT, setDoKSTempReport);
 
+    // Sent Target Report
+    Ticker doTargetReport;
+    doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
+
     while (true)
     {
+        // Check for Target URL Timing reset
+        if (config.urltarget.update) {
+            Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
+            doTargetReport.detach();
+            doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
+            config.urltarget.update = false;
+        }
+
         doOTALoop();
         tickerLoop();
     }

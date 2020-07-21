@@ -26,6 +26,7 @@ SOFTWARE. */
 #include "wifihandler.h"
 #include "kegscreen.h"
 #include "thermostat.h"
+#include "urltarget.h"
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
@@ -35,6 +36,7 @@ void setDoWiFiReset();
 void setDoReset();
 void setDoKSTempReport();
 void setDoTapInfoReport(int);
+void setDoTargetReport();
 void tickerLoop();
 void printDebug();
 void printDebug(const char *);
@@ -48,7 +50,8 @@ std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep
 
 static bool __attribute__((unused)) doReset = false;            // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;        // Semaphore for wifi reset
-static bool __attribute__((unused)) doKSTempReport = false;     // Semaphore for reset
+static bool __attribute__((unused)) doKSTempReport = false;     // Semaphore for Keg Screen Temps Report
+static bool __attribute__((unused)) doTargetReport = false;     // Semaphore for URL Target Report
 static bool __attribute__((unused)) doTapInfoReport[NUMTAPS] = {
     false, false, false, false, false, false, false, false
 }; // Semaphore for reset
