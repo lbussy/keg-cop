@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2020 Lee C. Bussy (@LBussy)
+git /* Copyright (C) 2019-2020 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
