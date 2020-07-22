@@ -176,7 +176,7 @@ SOFTWARE. */
 // Set Rasperry Pints baud rate
 //
 #ifndef RPBAUD
-#define RPBAUD 115200
+#define RPBAUD 9600
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
