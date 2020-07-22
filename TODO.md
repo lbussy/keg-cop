@@ -6,8 +6,7 @@
 
 ## Features
 
-- Maybe add a "ping" after page failure to recover
-- Look at "other pages" with JS to split them out?
+- ??
 
 ## Bugs
 
@@ -19,7 +18,6 @@
 - Update tag
 - Update website
 - Remove demo JSON?
-- Change RPBAUD to 9600
 
 # Complete
 
@@ -174,3 +172,6 @@
 - ~~Fix RPints reports~~
 - ~~Does not reload after host name change~~
 - ~~Create CSS for AsyncWiFiManager~~
+- ~~Change RPBAUD to 9600~~
+- ~~Maybe add a "ping" after page failure to recover~~
+- ~~Look at "other pages" with JS to split them out?~~
