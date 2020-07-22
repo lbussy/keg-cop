@@ -43,11 +43,27 @@ void serial() {
     }
 }
 
-void toggleRPCompat(bool enable)
+void toggleRPCompat(bool kegcop, bool rpints, bool randr)
 {
-    if (enable)
+    if (config.copconfig.rpintscompat && kegcop)
     {
-        Log.verbose(F("Disabling serial logging." CR));
+        // We are switching from RaspberryPints to KegCop
+        Serial.print("Enabling Keg Cop mode (be sure to change terminal baud rate to ");
+        Serial.print(BAUD);
+        Serial.println(".)");
+        Serial.updateBaudRate(BAUD);
+        Serial.flush();
+        Serial.setDebugOutput(true);
+        Log.begin(LOG_LEVEL, &Serial, true);
+        Log.setPrefix(printTimestamp);
+        config.copconfig.rpintscompat =  false;
+        config.copconfig.randr = false;
+    }
+    else if (!config.copconfig.rpintscompat && rpints)
+    {
+        // We are switching from KegCop to RaspberryPints
+        Log.verbose(F("Enabling RaspberryPints mode (be sure to change terminal baud rate to %d.)" CR), RPBAUD);
+        config.copconfig.rpintscompat =  true;
         Serial.flush();
         Serial.setDebugOutput(false);
         Log.setLevel(LOG_LEVEL_SILENT);
@@ -55,13 +71,13 @@ void toggleRPCompat(bool enable)
     }
     else
     {
-        Serial.updateBaudRate(BAUD);
-        Serial.flush();
-        Serial.setDebugOutput(true);
-        Log.begin(LOG_LEVEL, &Serial, true);
-        Log.setPrefix(printTimestamp);
-        Log.verbose(F("Serial logging enabled." CR));
+        // We're not changing anything
     }
+    if (randr)
+    {
+        config.copconfig.randr = true;
+    }
+    saveConfig();
 }
 
 void printTimestamp(Print* _logOutput) {

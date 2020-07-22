@@ -728,25 +728,23 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                 {
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
-            }            if (strcmp(name, "rpintscompat") == 0) // Set compatability
+            }
+            if (strcmp(name, "rpintscompat") == 0) // Set compatability
             {
                 if (strcmp(value, "kegcop") == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.copconfig.rpintscompat = false;
-                    config.copconfig.randr = false;
+                    toggleRPCompat(true, false, false);
                 }
                 else if (strcmp(value, "rpintscompat") == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.copconfig.rpintscompat = true;
-                    config.copconfig.randr = false;
+                    toggleRPCompat(false, true, false);
                 }
                 else if (strcmp(value, "randr") == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.copconfig.rpintscompat = false;
-                    config.copconfig.randr = true;
+                    toggleRPCompat(false, true, true);
                 }
                 else
                 {
