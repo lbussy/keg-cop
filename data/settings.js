@@ -424,13 +424,13 @@ function processControllerPost(url, obj) {
 
     // Decide if we accessed via IP or non-mDNS name
     var confirmText = '';
-    if (!(hostnameVal == originalHostnameConfig)) {
+    if (hostnameVal != originalHostnameConfig) {
         hostnamechanged = true;
         if (isIP(hostname)) {
             confirmText = 'You have connected with an IP address. Changing the hostname may have unintended consequences. Do you want to proceed?';
             reloadpage = false;
         } else if (!isMDNS(hostname)) {
-            reloadpage = 'You are not using an mDNS name. Changing the hostname may have unintended consequences. Do you want to proceed?';
+            confirmText = 'You are not using an mDNS name. Changing the hostname may have unintended consequences. Do you want to proceed?';
             reloadpage = false;
         } else {
             reloadpage = true;
@@ -452,7 +452,6 @@ function processControllerPost(url, obj) {
             rpintscompat: rpintscompatVal
         }
         if (hostnamechanged && reloadpage) {
-
             var protocol = window.location.protocol;
             var path = window.location.pathname;
             var newpage = protocol + "//" + hostnameVal + ".local" + path + hashLoc;
@@ -548,19 +547,20 @@ function processTargetUrlPost(url, obj) {
 }
 
 function postData(url, data, newpage = false, newdata = false, callback = null) {
+    var loadNew = (newpage.length > 0);
     $.ajax({
         url: url,
         type: 'POST',
         data: data,
         success: function (data) {
-            //
+            // Nothing to do
         },
         error: function (data) {
             alert('POST failed.');
         },
         complete: function (data) {
-            if (false) { // Was: (newpage) {
-                window.location.href = window.location.href;
+            if (loadNew) {
+                window.location.href = newpage;
             } else if (newdata) {
                 repopulatePage(true);
             }

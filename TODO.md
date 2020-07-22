@@ -12,7 +12,7 @@
 
 ## Bugs
 
-- Does not reload after host name change
+- ??
 
 ## Before Release
 
@@ -173,3 +173,4 @@
 - ~~Crash in URL Target post~~
 - ~~Keg kicks too fast (1, 6, 8)~~
 - ~~Fix RPints reports~~
+- ~~Does not reload after host name change~~
