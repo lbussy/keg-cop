@@ -9,7 +9,7 @@ Keg Cop uses a combination of API types:
 - `JSON Retrieval`_
 - `Settings Handlers (POST)`_
 - `Target URL Report`_
-- `Serial Reports`_
+- `RaspberryPints Reports`_
 - `Keg Screen Reports`_
 
 Action Pages
@@ -513,8 +513,8 @@ The Target URL Report provides a holistic picture of the system to a custom/thir
         ]
     }
 
-Serial Reports
-****************
+RaspberryPints Reports
+************************
 
 When configured as a RaspberryPints-compatible controller, Keg Screen disables all serial debug printing and provides reports via the serial connection.  There are two RaspberryPints-compatible reports:
 
@@ -532,7 +532,7 @@ A semicolon (``;``) delimits the fields, and the fields are as follows:
 
 - ``P`` - Report Type: The "P" in the first field designates this as a "Pour Report."
 - ``1`` - Address: The "1" here is the tap number for the pour.
-- ``0`` - Pin Number: The "4" here is the controller pin number for the pour.
+- ``4`` - Pin Number: The "4" here is the controller pin number for the pour.
 - ``3200`` - Pulse Count: This is the number of pulses detected during the pour.
 
 For RandR+-compatible systems, the Pour Report is slightly different.  For example:
