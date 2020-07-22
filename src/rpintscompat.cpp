@@ -64,12 +64,12 @@ void sendPulseCount(long rfidUser, int addr, int pinNum, unsigned int pulseCount
 
 void sendKickedMsg(int addr, int pinNum)
 { // RPints compatible report (no RFID user in this system)
-    sendPulseCount((long)0, addr, pinNum);
+    sendKickedMsg((long)0, addr, pinNum);
 }
 
 void sendKickedMsg(int pinNum)
 { // RandR+ compatible report (No address used in this report)
-    sendPulseCount((long)0, (int)0, pinNum);
+    sendKickedMsg((long)0, (int)0, pinNum);
 }
 
 void sendKickedMsg(long rfidUser, int addr, int pinNum)
