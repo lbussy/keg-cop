@@ -30,7 +30,7 @@ SOFTWARE. */
 #include <Arduino.h>
 
 void serial();
-void toggleRPCompat(bool);
+void toggleRPCompat(bool, bool, bool);
 void printTimestamp(Print* _logOutput);
 void printDot();
 void printChar(const char *);

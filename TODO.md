@@ -13,8 +13,6 @@
 ## Bugs
 
 - Does not reload after host name change
-- Keg kicks too fast (1, 6, 8)
-- Fix RPints reports
 
 ## Before Release
 
@@ -22,6 +20,7 @@
 - Update tag
 - Update website
 - Remove demo JSON?
+- Change RPBAUD to 9600
 
 # Complete
 
@@ -172,3 +171,5 @@
     - ~~Mega post~~
     - ~~Serial reports~~
 - ~~Crash in URL Target post~~
+- ~~Keg kicks too fast (1, 6, 8)~~
+- ~~Fix RPints reports~~
