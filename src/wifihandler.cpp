@@ -64,7 +64,8 @@ void doWiFi(bool dontUseStoredCreds)
         "exit"};
 
     myAsyncWifiManager.setMenu(_wfmPortalMenu); // Set menu items
-    myAsyncWifiManager.setClass(F("invert"));   // Set dark theme
+    // myAsyncWifiManager.setCustomHeadElement("<style>html{filter: invert(100%); -webkit-filter: invert(100%);}</style>");
+    // myAsyncWifiManager.setClass(F("invert"));   // Set dark theme
 
     myAsyncWifiManager.setCountry(WIFI_COUNTRY);    // Setting wifi country seems to improve OSX soft ap connectivity
     myAsyncWifiManager.setWiFiAPChannel(WIFI_CHAN); // Set WiFi channel
