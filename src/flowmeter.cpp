@@ -28,7 +28,7 @@ int flowPins[8] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7};
 volatile static unsigned long pulse[NUMTAPS];           // Unregistered pulse counter
 volatile static unsigned long lastPulse[NUMTAPS];       // Pulses pending at last poll
 volatile static unsigned long lastPulseTime[NUMTAPS];   // Monitor ongoing active pours
-volatile static unsigned long lastLoopTime[NUMTAPS];   // Monitor ongoing active pours
+volatile static unsigned long lastLoopTime[NUMTAPS];    // Monitor ongoing active pours
 extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(8);
 extern const size_t capacityFlowDeserial = capacityFlowSerial + 1100;
 extern const size_t capacityPulseSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1);
@@ -108,8 +108,8 @@ bool initFlow()
         attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
         pulse[i] = 0;               // Hold current pour
         lastPulse[i] = 0;           // For kick detector
-        lastLoopTime[i] = 0;        // For kick detector
-        lastPulseTime[i] = 0;       // For pour detector
+        lastLoopTime[i] = millis(); // Compare for kickdetect
+        lastPulseTime[i] = millis();// For pour detector
         queuePourReport[i] = 0;     // Pour queue
         queueKickReport[i] = false; // Kick queue
     }
@@ -128,7 +128,14 @@ void logFlow()
                 pulse[i] = lastPulse[i]; // Discard the foam pulses
 				if (config.copconfig.rpintscompat)
 				{
-					sendKickedMsg(i, flow.taps[i].pin);
+                    if (config.copconfig.randr)
+                    {
+                        sendKickedMsg(flow.taps[i].pin); // RandR+ compat
+                    }
+                    else
+                    {
+                        sendKickedMsg(i, flow.taps[i].pin); // RPints compat
+                    }
 				}
 				else
 				{ // Disable flowmeter if kicked and !RPints
@@ -156,12 +163,16 @@ void logFlow()
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
                     saveFlowConfig();
                     Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
-                    if (config.copconfig.rpintscompat)
-                    { // Do RPints message
-                        sendPulseCount(i, flow.taps[i].pin, pulseCount);
+                    if (config.copconfig.randr)
+                    {
+                        sendPulseCount(flow.taps[i].pin,pulseCount); // RandR+ compat
+                    }
+                    else
+                    {
+                        sendPulseCount(i, flow.taps[i].pin, pulseCount); // RPints compat
                     }
                     if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
-                    {
+                    { /// Queue upstream report
                         queuePourReport[i] = pour;
                     }
 				}
@@ -185,12 +196,16 @@ bool isKicked(int meter)
 	const double secs = (millis() - lastLoopTime[meter]) / 1000;
     const int pulses = pulse[meter] - lastPulse[meter];
     const double pps = (double)pulses / secs;
+
     // Choose ounces per gallon or ounces per liter
     double divisor = (config.copconfig.imperial) ? 128 : 33.8;
     // Calculate pulses (kickspeed) > which = kicked keg
     const double kickSpeed = ((double)flow.taps[meter].ppu / divisor) * KICKSPEED;
 
-    if (pps > kickSpeed)
+    // Sometimes get inf number for pps, deal with that here
+    const bool isKicked = (isinf(pps) || isnan(pps)) ? false : (pps > kickSpeed);
+
+    if (isKicked)
     {
         Log.verbose(F("Tap %d is kicked." CR), meter);
         return true;
