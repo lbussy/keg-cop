@@ -5,6 +5,7 @@
 .vscode/
 *.code-workspace
 *.log
+rpints-arduino/
 
 # Documentation working files
 docs/_build/
