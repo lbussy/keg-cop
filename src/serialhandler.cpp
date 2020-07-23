@@ -31,16 +31,23 @@ ESPTelnet SerialAndTelnet;
 
 void serial()
 {
+    char buffer[32];
+    sprintf(buffer, "Connected to %s", API_KEY);
+#if DOTELNET == true
+    MYSERIAL.setWelcomeMsg(buffer);
+#endif
     _delay(3000); // Delay to allow a monitor to start
     if (!config.copconfig.rpintscompat)
     {
         MYSERIAL.begin(BAUD);
         MYSERIAL.flush();
+#ifndef DISABLE_LOGGING
         MYSERIAL.println();
         MYSERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &MYSERIAL, true);
         Log.setPrefix(printTimestamp);
         Log.notice(F("Serial logging started at %l." CRR), BAUD);
+#endif
     }
     else
     {
@@ -60,7 +67,13 @@ void toggleRPCompat(bool kegcop, bool rpints, bool randr)
         MYSERIAL.print(BAUD);
         MYSERIAL.println(".)");
         MYSERIAL.flush();
+#if DOTELNET == true
         MYSERIAL.baudUpdate(BAUD);
+#else
+        Serial.updateBaudRate(BAUD);
+#endif
+
+#ifndef DISABLE_LOGGING
         MYSERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &MYSERIAL, true);
         Log.setPrefix(printTimestamp);
@@ -69,6 +82,7 @@ void toggleRPCompat(bool kegcop, bool rpints, bool randr)
         MYSERIAL.flush();
         MYSERIAL.println();
         Log.verbose(F("Keg Cop mode set." CRR));
+#endif
     }
     else if (!config.copconfig.rpintscompat && rpints)
     {
@@ -78,7 +92,11 @@ void toggleRPCompat(bool kegcop, bool rpints, bool randr)
         MYSERIAL.flush();
         MYSERIAL.setDebugOutput(false);
         Log.setLevel(LOG_LEVEL_SILENT);
+#if DOTELNET == true
         MYSERIAL.baudUpdate(RPBAUD);
+#else
+        Serial.updateBaudRate(RPBAUD);
+#endif
     }
     else
     {
@@ -111,7 +129,11 @@ size_t printDot(bool safe)
 {
     if (safe && !config.copconfig.rpintscompat)
     {
+#ifndef DISABLE_LOGGING
         return MYSERIAL.print(F("."));
+#else
+        return 0;
+#endif
     }
     else
     {
@@ -128,7 +150,11 @@ size_t printChar(bool safe, const char * chr)
 {
     if (safe && !config.copconfig.rpintscompat)
     {
+#ifndef DISABLE_LOGGING
         return MYSERIAL.println(chr);
+#else
+        return 0;
+#endif
     }
     else
     {
@@ -145,7 +171,11 @@ size_t printCR(bool safe)
 {
     if (safe && !config.copconfig.rpintscompat)
     {
+#ifndef DISABLE_LOGGING
         return MYSERIAL.println();
+#else
+        return 0;
+#endif
     }
     else
     {
@@ -172,7 +202,9 @@ void flush(bool safe)
 
 void serialLoop()
 {
+#if DOTELNET == true
     SerialAndTelnet.handle();
+#endif
 }
 
 size_t myPrint(const __FlashStringHelper *ifsh)

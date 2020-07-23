@@ -107,6 +107,7 @@ SOFTWARE. */
 // Uncomment #define for logging level desired.
 //
 #ifndef LOG_LEVEL
+// #define DISABLE_LOGGING
 // #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
 // #define LOG_LEVEL LOG_LEVEL_FATAL      // Fatal errors
 // #define LOG_LEVEL LOG_LEVEL_ERROR      // All errors
