@@ -44,7 +44,11 @@ void doWiFi(bool dontUseStoredCreds)
 
     if (!config.copconfig.rpintscompat)
     {
+#ifndef DISABLE_LOGGING
         myAsyncWifiManager.setDebugOutput(true); // Verbose debug is enabled by default
+#else
+        myAsyncWifiManager.setDebugOutput(false);
+#endif
     }
     else
     {
