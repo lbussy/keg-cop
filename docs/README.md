@@ -1,3 +1,5 @@
+[![Keg Cop Logo](https://github.com/lbussy/keg-cop/raw/master/logos/readmeheader.jpg "Keg Cop")](http://www.kegcop.com/)
+
 # Keg Cop Documentation
 
 [![Documentation Status](https://readthedocs.org/projects/keg-cop/badge/?version=latest)](https://keg-cop.readthedocs.io/en/latest/?badge=latest)
