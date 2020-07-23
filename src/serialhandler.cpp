@@ -60,12 +60,15 @@ void toggleRPCompat(bool kegcop, bool rpints, bool randr)
         MYSERIAL.print(BAUD);
         MYSERIAL.println(".)");
         MYSERIAL.flush();
-        MYSERIAL.begin(BAUD); // TODO: Make sure we can "begin" again
+        MYSERIAL.baudUpdate(BAUD);
         MYSERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &MYSERIAL, true);
         Log.setPrefix(printTimestamp);
         config.copconfig.rpintscompat = false;
         config.copconfig.randr = false;
+        MYSERIAL.flush();
+        MYSERIAL.println();
+        Log.verbose(F("Keg Cop mode set." CRR));
     }
     else if (!config.copconfig.rpintscompat && rpints)
     {
@@ -75,7 +78,7 @@ void toggleRPCompat(bool kegcop, bool rpints, bool randr)
         MYSERIAL.flush();
         MYSERIAL.setDebugOutput(false);
         Log.setLevel(LOG_LEVEL_SILENT);
-        MYSERIAL.begin(RPBAUD); // TODO: Make sure we can "begin" again
+        MYSERIAL.baudUpdate(RPBAUD);
     }
     else
     {
