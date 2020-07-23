@@ -56,7 +56,7 @@ void toggleRPCompat(bool kegcop, bool rpints, bool randr)
     if (config.copconfig.rpintscompat && kegcop)
     {
         // We are switching from RaspberryPints to KegCop
-        MYSERIAL.print("Enabling Keg Cop mode (be sure to change terminal baud rate to ");
+        MYSERIAL.print("Enabling Keg Cop mode (set baud rate to ");
         MYSERIAL.print(BAUD);
         MYSERIAL.println(".)");
         MYSERIAL.flush();
@@ -70,7 +70,7 @@ void toggleRPCompat(bool kegcop, bool rpints, bool randr)
     else if (!config.copconfig.rpintscompat && rpints)
     {
         // We are switching from KegCop to RaspberryPints
-        Log.verbose(F("Enabling RaspberryPints mode (be sure to change terminal baud rate to %d.)" CRR), RPBAUD);
+        Log.verbose(F("Enabling RaspberryPints mode (set baud to %d.)" CRR), RPBAUD);
         config.copconfig.rpintscompat = true;
         MYSERIAL.flush();
         MYSERIAL.setDebugOutput(false);
