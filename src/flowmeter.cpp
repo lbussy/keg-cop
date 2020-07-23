@@ -333,9 +333,9 @@ bool printFlowFile()
         return false;
 
     while (file.available())
-        printChar((const char *)file.read());
+        printChar(true, (const char *)file.read());
 
-    printCR();
+    printCR(true);
     file.close();
     return true;
 }
@@ -355,7 +355,7 @@ bool printFlowConfig()
     // Serialize JSON to file
     if (!config.copconfig.rpintscompat)
         retval = serializeJsonPretty(doc, Serial) > 0;
-    printCR();
+    printCR(true);
     return retval;
 }
 
@@ -368,8 +368,8 @@ bool mergeFlowJsonString(String newJson)
     DeserializationError err = deserializeJson(doc, newJson);
     if (err)
     {
-        printChar(err.c_str());
-        printCR();
+        printChar(true, err.c_str());
+        printCR(true);
     }
     return mergeJsonObject(doc);
 }

@@ -22,24 +22,32 @@ SOFTWARE. */
 
 #include "serialhandler.h"
 
-void serial() {
+#if DOTELNET == true
+ESPTelnet SerialAndTelnet;
+#define MYSERIAL SerialAndTelnet
+#else
+#define MYSERIAL Serial
+#endif
+
+void serial()
+{
     _delay(3000); // Delay to allow a monitor to start
     if (!config.copconfig.rpintscompat)
     {
-        Serial.begin(BAUD);
-        Serial.flush();
-        Serial.println();
-        Serial.setDebugOutput(true);
-        Log.begin(LOG_LEVEL, &Serial, true);
+        MYSERIAL.begin(BAUD);
+        MYSERIAL.flush();
+        MYSERIAL.println();
+        MYSERIAL.setDebugOutput(true);
+        Log.begin(LOG_LEVEL, &MYSERIAL, true);
         Log.setPrefix(printTimestamp);
-        Log.notice(F("Serial logging started at %l." CR), BAUD);
+        Log.notice(F("Serial logging started at %l." CRR), BAUD);
     }
     else
     {
-        Serial.begin(RPBAUD);
-        Serial.flush();
-        Serial.println();
-        Serial.setDebugOutput(false);
+        MYSERIAL.begin(RPBAUD);
+        MYSERIAL.flush();
+        MYSERIAL.println();
+        MYSERIAL.setDebugOutput(false);
     }
 }
 
@@ -48,26 +56,26 @@ void toggleRPCompat(bool kegcop, bool rpints, bool randr)
     if (config.copconfig.rpintscompat && kegcop)
     {
         // We are switching from RaspberryPints to KegCop
-        Serial.print("Enabling Keg Cop mode (be sure to change terminal baud rate to ");
-        Serial.print(BAUD);
-        Serial.println(".)");
-        Serial.updateBaudRate(BAUD);
-        Serial.flush();
-        Serial.setDebugOutput(true);
-        Log.begin(LOG_LEVEL, &Serial, true);
+        MYSERIAL.print("Enabling Keg Cop mode (be sure to change terminal baud rate to ");
+        MYSERIAL.print(BAUD);
+        MYSERIAL.println(".)");
+        MYSERIAL.flush();
+        MYSERIAL.begin(BAUD); // TODO: Make sure we can "begin" again
+        MYSERIAL.setDebugOutput(true);
+        Log.begin(LOG_LEVEL, &MYSERIAL, true);
         Log.setPrefix(printTimestamp);
-        config.copconfig.rpintscompat =  false;
+        config.copconfig.rpintscompat = false;
         config.copconfig.randr = false;
     }
     else if (!config.copconfig.rpintscompat && rpints)
     {
         // We are switching from KegCop to RaspberryPints
-        Log.verbose(F("Enabling RaspberryPints mode (be sure to change terminal baud rate to %d.)" CR), RPBAUD);
-        config.copconfig.rpintscompat =  true;
-        Serial.flush();
-        Serial.setDebugOutput(false);
+        Log.verbose(F("Enabling RaspberryPints mode (be sure to change terminal baud rate to %d.)" CRR), RPBAUD);
+        config.copconfig.rpintscompat = true;
+        MYSERIAL.flush();
+        MYSERIAL.setDebugOutput(false);
         Log.setLevel(LOG_LEVEL_SILENT);
-        Serial.updateBaudRate(RPBAUD);
+        MYSERIAL.begin(RPBAUD); // TODO: Make sure we can "begin" again
     }
     else
     {
@@ -80,7 +88,8 @@ void toggleRPCompat(bool kegcop, bool rpints, bool randr)
     saveConfig();
 }
 
-void printTimestamp(Print* _logOutput) {
+void printTimestamp(Print *_logOutput)
+{
     time_t now;
     time_t rawtime = time(&now);
     struct tm ts;
@@ -90,26 +99,205 @@ void printTimestamp(Print* _logOutput) {
     _logOutput->print(locTime);
 }
 
-void printDot()
+size_t printDot()
 {
-    if (!config.copconfig.rpintscompat)
+    return printDot(false);
+}
+
+size_t printDot(bool safe)
+{
+    if (safe && !config.copconfig.rpintscompat)
     {
-        Serial.print(F("."));
+        return MYSERIAL.print(F("."));
+    }
+    else
+    {
+        return 0;
     }
 }
 
-void printChar(const char * chr)
+size_t printChar(const char * chr)
 {
-    if (!config.copconfig.rpintscompat)
+    return printChar(false, chr);
+}
+
+size_t printChar(bool safe, const char * chr)
+{
+    if (safe && !config.copconfig.rpintscompat)
     {
-        Serial.println(chr);
+        return MYSERIAL.println(chr);
+    }
+    else
+    {
+        return 0;
     }
 }
 
-void printCR()
+size_t printCR()
 {
-    if (!config.copconfig.rpintscompat)
+    return printCR(false);
+}
+
+size_t printCR(bool safe)
+{
+    if (safe && !config.copconfig.rpintscompat)
     {
-        Serial.println();
+        return MYSERIAL.println();
     }
+    else
+    {
+        return 0;
+    }
+}
+
+void flush()
+{
+    flush(false);
+}
+
+void flush(bool safe)
+{
+    if (safe && !config.copconfig.rpintscompat)
+    {
+        MYSERIAL.flush();
+    }
+    else
+    {
+        MYSERIAL.flush();
+    }
+}
+
+void serialLoop()
+{
+    SerialAndTelnet.handle();
+}
+
+size_t myPrint(const __FlashStringHelper *ifsh)
+{
+    return MYSERIAL.print(ifsh);
+}
+
+size_t myPrint(const String &s)
+{
+    return MYSERIAL.print(s);
+}
+
+size_t myPrint(const char str[])
+{
+    return MYSERIAL.print(str);
+}
+
+size_t myPrint(char c)
+{
+    return MYSERIAL.print(c);
+}
+
+size_t myPrint(unsigned char b, int base)
+{
+    return MYSERIAL.print(b, base);
+}
+
+size_t myPrint(int n, int base)
+{
+    return MYSERIAL.print(n, base);
+}
+
+size_t myPrint(unsigned int n, int base)
+{
+    return MYSERIAL.print(n, base);
+}
+
+size_t myPrint(long n, int base)
+{
+    return MYSERIAL.print(n, base);
+}
+
+size_t myPrint(unsigned long n, int base)
+{
+    return MYSERIAL.print(n, base);
+}
+
+size_t myPrint(double n, int digits)
+{
+   return MYSERIAL.print(n, digits);
+}
+
+size_t myPrint(const Printable& x)
+{
+    return MYSERIAL.print(x);
+}
+
+size_t myPrint(struct tm * timeinfo, const char * format)
+{
+    return MYSERIAL.print(timeinfo, format);
+}
+
+// size_t myPrintf(const char *format, ...)
+// {
+//     return MYSERIAL.printf(*format, ...);
+// }
+
+size_t myPrintln(const __FlashStringHelper *ifsh)
+{
+    return MYSERIAL.println(ifsh);
+}
+
+size_t myPrintln(void)
+{
+    return MYSERIAL.println();
+}
+
+size_t myPrintln(const String &s)
+{
+    return MYSERIAL.println(s);
+}
+
+size_t myPrintln(const char c[])
+{
+    return MYSERIAL.println(c);
+}
+
+size_t myPrintln(char c)
+{
+    return MYSERIAL.println(c);
+}
+
+size_t myPrintln(unsigned char b, int base)
+{
+    return MYSERIAL.println(b, base);
+}
+
+size_t myPrintln(int num, int base)
+{
+    return MYSERIAL.println(num, base);
+}
+
+size_t myPrintln(unsigned int num, int base)
+{
+    return MYSERIAL.println(num, base);
+}
+
+size_t myPrintln(long num, int base)
+{
+    return MYSERIAL.println(num, base);
+}
+
+size_t myPrintln(unsigned long num, int base)
+{
+    return MYSERIAL.println(num, base);
+}
+
+size_t myPrintln(double num, int digits)
+{
+    return MYSERIAL.println(num, digits);
+}
+
+size_t myPrintln(const Printable& x)
+{
+    return MYSERIAL.println(x);
+}
+
+size_t myPrintln(struct tm * timeinfo, const char * format)
+{
+    return MYSERIAL.println(timeinfo, format);
 }
