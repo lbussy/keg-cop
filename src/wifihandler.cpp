@@ -88,7 +88,7 @@ void doWiFi(bool dontUseStoredCreds)
             digitalWrite(LED, LOW);
             _delay(3000);
             digitalWrite(LED, HIGH);
-            Log.notice(F("Hit timeout for on-demand portal, exiting." CR));
+            Log.notice(F("Hit timeout for on-demand portal, exiting." CRR));
             setDoReset();
         }
     }
@@ -99,12 +99,12 @@ void doWiFi(bool dontUseStoredCreds)
         myAsyncWifiManager.setConfigPortalTimeout(120);
         if (!myAsyncWifiManager.autoConnect(config.apconfig.ssid, config.apconfig.passphrase))
         {
-            Log.warning(F("Failed to connect and/or hit timeout." CR));
+            Log.warning(F("Failed to connect and/or hit timeout." CRR));
             blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
             _delay(3000);
             digitalWrite(LED, HIGH);
-            Log.warning(F("Hit timeout on connect, restarting." CR));
+            Log.warning(F("Hit timeout on connect, restarting." CRR));
             resetController();
             _delay(1000); // Just a hack to give it time to reset
         }
@@ -126,11 +126,11 @@ void doWiFi(bool dontUseStoredCreds)
     }
 
     // if (shouldSaveConfig) { // Save configuration
-    // Log.notice(F("Saving configuration." CR));
+    // Log.notice(F("Saving configuration." CRR));
     //
     // }
 
-    Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());
+    Log.notice(F("Connected. IP address: %s." CRR), WiFi.localIP().toString().c_str());
     blinker.detach();        // Turn off blinker
     digitalWrite(LED, HIGH); // Turn off LED
 }
@@ -141,7 +141,7 @@ void resetWifi()
     myAsyncWifiManager.resetSettings();
     blinker.detach();       // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
-    Log.notice(F("Restarting after clearing wifi settings." CR));
+    Log.notice(F("Restarting after clearing wifi settings." CRR));
     ESP.restart();
 }
 
@@ -154,34 +154,34 @@ void wifiBlinker()
 
 void apCallback(AsyncWiFiManager *asyncWiFiManager)
 { // Entered Access Point mode
-    Log.verbose(F("[CALLBACK]: setAPCallback fired." CR));
+    Log.verbose(F("[CALLBACK]: setAPCallback fired." CRR));
     blinker.detach(); // Turn off blinker
     blinker.attach_ms(APBLINK, wifiBlinker);
-    Log.notice(F("Entered portal mode; name: %s, IP: %s." CR),
+    Log.notice(F("Entered portal mode; name: %s, IP: %s." CRR),
                asyncWiFiManager->getConfigPortalSSID().c_str(),
                WiFi.localIP().toString().c_str());
 }
 
 // void configResetCallback() {
-//     Log.verbose(F("[CALLBACK]: setConfigResetCallback fired." CR));
+//     Log.verbose(F("[CALLBACK]: setConfigResetCallback fired." CRR));
 // }
 
 // void preSaveConfigCallback() {
-//     Log.verbose(F("[CALLBACK]: preSaveConfigCallback fired." CR));
+//     Log.verbose(F("[CALLBACK]: preSaveConfigCallback fired." CRR));
 // }
 
 // void saveConfigCallback() {
-//     Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
+//     Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CRR));
 //     //shouldSaveConfig = true;
 // }
 
 // void saveParamsCallback() {
-//     Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CR));
+//     Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CRR));
 //     //shouldSaveConfig = true;
 // }
 
 // void webServerCallback() {
-//     Log.verbose(F("[CALLBACK]: setWebServerCallback fired." CR));
+//     Log.verbose(F("[CALLBACK]: setWebServerCallback fired." CRR));
 // }
 
 void tcpCleanup(void)

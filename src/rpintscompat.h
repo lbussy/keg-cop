@@ -23,6 +23,7 @@ SOFTWARE. */
 #ifndef _RPINTSCOMPAT_H
 #define _RPINTSCOMPAT_H
 
+#include "serialhandler.h"
 #include "jsonconfig.h"
 #include <Arduino.h>
 

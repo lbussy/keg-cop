@@ -24,11 +24,14 @@ SOFTWARE. */
 
 void mdnssetup() {
     if (!MDNS.begin(WiFi.getHostname())) { // Start the mDNS responder
-        Log.error(F("Error setting up mDNS responder." CR));
+        Log.error(F("Error setting up mDNS responder." CRR));
     } else {
-        Log.notice(F("mDNS responder started for %s.local." CR), WiFi.getHostname());
+        Log.notice(F("mDNS responder started for %s.local." CRR), WiFi.getHostname());
         MDNS.addService("http", "tcp", PORT);
-        Log.notice(F("HTTP registered via mDNS on port %i." CR), PORT);
+#if DOTELNET == true
+        MDNS.addService("telnet", "tcp", TELNETPORT);
+#endif
+        Log.notice(F("HTTP registered via mDNS on port %i." CRR), PORT);
     }
 }
 
@@ -37,7 +40,7 @@ void mdnsreset() {
     if (!MDNS.begin(config.hostname)) {
         Log.error(F("Error resetting MDNS responder."));
     } else {
-        Log.notice(F("mDNS responder restarted, hostname: %s.local." CR), WiFi.getHostname());
+        Log.notice(F("mDNS responder restarted, hostname: %s.local." CRR), WiFi.getHostname());
         MDNS.addService("http", "tcp", 80);
     }
 }

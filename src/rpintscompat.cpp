@@ -39,7 +39,8 @@ void sendPulseCount(long rfidUser, int addr, int pinNum, unsigned int pulseCount
     if (config.copconfig.randr)
     {
         // RandR+ Format: P;2147483640;0;3200
-        Serial.printf("P%s%ld%s%d%s%hd\n",
+        char buffer[32];
+        sprintf(buffer, "P%s%ld%s%d%s%hd",
             delim,
             rfidUser,
             delim,
@@ -47,11 +48,13 @@ void sendPulseCount(long rfidUser, int addr, int pinNum, unsigned int pulseCount
             delim,
             pulseCount
         );
+        myPrintln(buffer);
     }
     else
     {
         // RPints Format: P;0;0;3200
-        Serial.printf("P%s%d%s%d%s%hd\n",
+        char buffer[16];
+        sprintf(buffer, "P%s%d%s%d%s%hd",
             delim,
             addr,
             delim,
@@ -59,6 +62,7 @@ void sendPulseCount(long rfidUser, int addr, int pinNum, unsigned int pulseCount
             delim,
             pulseCount
         );
+        myPrintln(buffer);
     }
 }
 
@@ -77,22 +81,25 @@ void sendKickedMsg(long rfidUser, int addr, int pinNum)
     if (config.copconfig.randr)
     {
         // Format: K;2147483640;0
-        Serial.printf("K%s%ld%s%d\n",
+        char buffer[32];
+        sprintf(buffer, "K%s%ld%s%d",
             delim,
             rfidUser,
             delim,
-            pinNum
-        );
+            pinNum);
+        myPrintln(buffer);
     }
     else
     {
         // Format: K;0;0
-        Serial.printf("K%s%d%s%d\n",
+        char buffer[8];
+        sprintf(buffer, "K%s%d%s%d",
             delim,
             addr,
             delim,
             pinNum
         );
+        myPrintln(buffer);
     }
 }
 
@@ -104,7 +111,8 @@ void sendUpdateCount(int pinNum, unsigned int pulseCount)
 void sendUpdateCount(long rfidUser, int pinNum, unsigned int pulseCount)
 {
     // Format: U;2147483640;0;5200
-    Serial.printf("U%s%ld%s%d%s%hd\n",
+    char buffer[32];
+    sprintf(buffer, "U%s%ld%s%d%s%hd",
         delim,
         rfidUser,
         delim,
@@ -112,4 +120,5 @@ void sendUpdateCount(long rfidUser, int pinNum, unsigned int pulseCount)
         delim,
         pulseCount
     );
+    myPrintln(buffer);
 }

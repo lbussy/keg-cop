@@ -41,7 +41,7 @@ void initWebServer()
         }
         else
         {
-            Log.verbose(F("Serving 404 for request to %s." CR), request->url().c_str());
+            Log.verbose(F("Serving 404 for request to %s." CRR), request->url().c_str());
             request->redirect("/404/");
         }
     });
@@ -50,8 +50,8 @@ void initWebServer()
 
     server.begin();
 
-    Log.notice(F("Async HTTP server started on port %l." CR), PORT);
-    Log.verbose(F("Open: http://%s.local to view controller application." CR), WiFi.getHostname());
+    Log.notice(F("Async HTTP server started on port %l." CRR), PORT);
+    Log.verbose(F("Open: http://%s.local to view application." CRR), WiFi.getHostname());
 }
 
 void setRegPageAliases()
@@ -82,33 +82,33 @@ void setActionPageHandlers()
     });
 
     server.on("/oktowifireset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /wifireset/." CR));
+        Log.verbose(F("Processing /wifireset/." CRR));
         request->send(200, F("text/plain"), F("Ok."));
         _delay(2000);
         setDoWiFiReset(); // Wipe settings, reset controller
     });
 
     server.on("/oktoreset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /oktoreset/." CR));
+        Log.verbose(F("Processing /oktoreset/." CRR));
         request->send(200, F("text/plain"), F("Ok."));
         _delay(2000);
         setDoReset();
     });
 
     server.on("/ping/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /ping/." CR));
+        Log.verbose(F("Processing /ping/." CRR));
         request->send(200, F("text/plain"), F("Ok."));
     });
 
     server.on("/otastart/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /otastart/." CR));
+        Log.verbose(F("Processing /otastart/." CRR));
         request->send(200, F("text/plain"), F("200: OTA started."));
         setDoOTA(); // Trigger the OTA update
     });
 
     server.on("/clearupdate/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /clearupdate/." CR));
-        Log.verbose(F("Clearing any update flags." CR));
+        Log.verbose(F("Processing /clearupdate/." CRR));
+        Log.verbose(F("Clearing any update flags." CRR));
         config.dospiffs1 = false;
         config.dospiffs2 = false;
         config.didupdate = false;
@@ -117,8 +117,8 @@ void setActionPageHandlers()
     });
 
     server.on("/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /clearcalmode/." CR));
-        Log.verbose(F("Clearing all calibration flags." CR));
+        Log.verbose(F("Processing /clearcalmode/." CRR));
+        Log.verbose(F("Clearing all calibration flags." CRR));
         for (int i = 0; i < NUMTAPS; i++)
         {
             flow.taps[i].calibrating = false;
@@ -133,7 +133,7 @@ void setJsonHandlers()
     // JSON Handlers
 
     server.on("/thisVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Serving /thisVersion/." CR));
+        Log.verbose(F("Serving /thisVersion/." CRR));
         const size_t capacity = JSON_OBJECT_SIZE(1);
         DynamicJsonDocument doc(capacity);
 
@@ -146,7 +146,7 @@ void setJsonHandlers()
     });
 
     server.on("/thatVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Serving /thatVersion/." CR));
+        Log.verbose(F("Serving /thatVersion/." CRR));
         const size_t capacity = JSON_OBJECT_SIZE(1);
         DynamicJsonDocument doc(capacity);
 
@@ -161,7 +161,7 @@ void setJsonHandlers()
 
     server.on("/config/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the Config json
-        Log.verbose(F("Serving /config/." CR));
+        Log.verbose(F("Serving /config/." CRR));
 
         // Serialize configuration
         DynamicJsonDocument doc(capacitySerial); // Create doc
@@ -176,7 +176,7 @@ void setJsonHandlers()
 
     server.on("/flow/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the Kegs json
-        Log.verbose(F("Serving /flow/." CR));
+        Log.verbose(F("Serving /flow/." CRR));
 
         // Serialize configuration
         DynamicJsonDocument doc(capacityFlowSerial); // Create doc
@@ -191,7 +191,7 @@ void setJsonHandlers()
 
     server.on("/pulses/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the pulses json
-        Log.verbose(F("Serving /pulses/." CR));
+        Log.verbose(F("Serving /pulses/." CRR));
 
         // Serialize pulses
         DynamicJsonDocument doc(capacityPulseSerial); // Create doc
@@ -211,7 +211,7 @@ void setJsonHandlers()
     });
 
     server.on("/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Serving /sensors/." CR));
+        Log.verbose(F("Serving /sensors/." CRR));
         DynamicJsonDocument doc(capacityTempsSerial);
 
         doc["imperial"] = config.copconfig.imperial;
@@ -263,7 +263,7 @@ void setJsonHandlers()
 void setSettingsAliases()
 {
     server.on("/settings/tapcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/tapcontrol/." CR));
+        Log.verbose(F("Processing post to /settings/tapcontrol/." CRR));
         if (handleTapPost(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -275,12 +275,12 @@ void setSettingsAliases()
     });
 
     server.on("/settings/tapcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/tapcontrol/." CR));
+        Log.verbose(F("Invalid method to /settings/tapcontrol/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/tapcal/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/tapcal/." CR));
+        Log.verbose(F("Processing post to /settings/tapcal/." CRR));
         if (handleTapCal(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -292,12 +292,12 @@ void setSettingsAliases()
     });
 
     server.on("/settings/tapcal/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/tapcal/." CR));
+        Log.verbose(F("Invalid method to /settings/tapcal/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/controller/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/controller/." CR));
+        Log.verbose(F("Processing post to /settings/controller/." CRR));
         if (handleControllerPost(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -309,12 +309,12 @@ void setSettingsAliases()
     });
 
     server.on("/settings/controller/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/controller/." CR));
+        Log.verbose(F("Invalid method to /settings/controller/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/tempcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/tempcontrol/." CR));
+        Log.verbose(F("Processing post to /settings/tempcontrol/." CRR));
         if (handleControlPost(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -326,12 +326,12 @@ void setSettingsAliases()
     });
 
     server.on("/settings/tempcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/tempcontrol/." CR));
+        Log.verbose(F("Invalid method to /settings/tempcontrol/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/sensorcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/sensorcontrol/." CR));
+        Log.verbose(F("Processing post to /settings/sensorcontrol/." CRR));
         if (handleSensorPost(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -343,12 +343,12 @@ void setSettingsAliases()
     });
 
     server.on("/settings/sensorcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/sensorcontrol/." CR));
+        Log.verbose(F("Invalid method to /settings/sensorcontrol/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/kegscreen/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/kegscreen/." CR));
+        Log.verbose(F("Processing post to /settings/kegscreen/." CRR));
         if (handleKegScreenPost(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -360,12 +360,12 @@ void setSettingsAliases()
     });
 
     server.on("/settings/kegscreen/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/kegscreen/." CR));
+        Log.verbose(F("Invalid method to /settings/kegscreen/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/targeturl/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/targeturl/." CR));
+        Log.verbose(F("Processing post to /settings/targeturl/." CRR));
         if (handleUrlTargetPost(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -377,12 +377,12 @@ void setSettingsAliases()
     });
 
     server.on("/settings/targeturl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/targeturl/." CR));
+        Log.verbose(F("Invalid method to /settings/targeturl/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/cloudurl/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/targeturl/." CR));
+        Log.verbose(F("Processing post to /settings/targeturl/." CRR));
         if (handleCloudTargetPost(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -394,7 +394,7 @@ void setSettingsAliases()
     });
 
     server.on("/setcalmode/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /setcalmode/." CR));
+        Log.verbose(F("Processing post to /setcalmode/." CRR));
         if (handleSetCalMode(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -406,18 +406,18 @@ void setSettingsAliases()
     });
 
     server.on("/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /setcalmode/." CR));
+        Log.verbose(F("Invalid method to /setcalmode/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/cloudurl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/cloudurl/." CR));
+        Log.verbose(F("Invalid method to /settings/cloudurl/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
     server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) {
         // Process settings update (bulk POST)
-        Log.verbose(F("Processing post to /settings/update/." CR));
+        Log.verbose(F("Processing post to /settings/update/." CRR));
 
         handleTapPost(request);         // Tap parameters
         handleControllerPost(request);  // Controller parameters
@@ -432,7 +432,7 @@ void setSettingsAliases()
     });
 
     server.on("/settings/update/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/update/." CR));
+        Log.verbose(F("Invalid method to /settings/update/." CRR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 }
@@ -454,7 +454,7 @@ void stopWebServer()
 {
     server.reset();
     server.end();
-    Log.notice(F("Web server stopped." CR));
+    Log.notice(F("Web server stopped." CRR));
 }
 
 bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
@@ -470,7 +470,7 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Tap settings
             //
@@ -479,11 +479,11 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
                 const int val = atof(value);
                 if ((val < 0) || (val > NUMTAPS))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
+                    Log.notice(F("Settings update, processing [%s]:(%s)." CRR), name, value);
                     tapNum = val;
                 }
             }
@@ -492,11 +492,11 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
                 const int val = atof(value);
                 if ((val < 0) || (val > 999999))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     flow.taps[tapNum].ppu = val;
                 }
             }
@@ -504,11 +504,11 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
             {
                 if ((strlen(value) < 1) || (strlen(value) > 64))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     strlcpy(flow.taps[tapNum].name, value, sizeof(flow.taps[tapNum].name));
                 }
             }
@@ -517,11 +517,11 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
                 const float val = atof(value);
                 if ((val < 0) || (val > 99999))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     flow.taps[tapNum].capacity = val;
                 }
             }
@@ -530,11 +530,11 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
                 const float val = atof(value);
                 if ((val < 0) || (val > 99999))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     flow.taps[tapNum].remaining = val;
                 }
             }
@@ -542,17 +542,17 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
             {
                 if (strcmp(value, "active") == 0)
                 {
-                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CR), tapNum, name, value);
+                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CRR), tapNum, name, value);
                     flow.taps[tapNum].active = true;
                 }
                 else if (strcmp(value, "inactive") == 0)
                 {
-                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CR), tapNum, name, value);
+                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CRR), tapNum, name, value);
                     flow.taps[tapNum].active = false;
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
         }
@@ -567,7 +567,7 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
     }
     else
     {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
+        Log.error(F("Error: Unable to save tap configuration data." CRR));
         return false;
     }
 }
@@ -585,7 +585,7 @@ bool handleTapCal(AsyncWebServerRequest *request) // Handle tap settings
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Tap Calibration
             //
@@ -594,11 +594,11 @@ bool handleTapCal(AsyncWebServerRequest *request) // Handle tap settings
                 const int val = atof(value);
                 if ((val < 0) || (val > NUMTAPS))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
+                    Log.notice(F("Settings update, processing [%s]:(%s)." CRR), name, value);
                     tapNum = val;
                 }
             }
@@ -607,11 +607,11 @@ bool handleTapCal(AsyncWebServerRequest *request) // Handle tap settings
                 const int val = atof(value);
                 if ((val < 0) || (val > 999999))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     flow.taps[tapNum].ppu = val;
                 }
             }
@@ -623,7 +623,7 @@ bool handleTapCal(AsyncWebServerRequest *request) // Handle tap settings
     }
     else
     {
-        Log.error(F("Error: Unable to save tap calibration data." CR));
+        Log.error(F("Error: Unable to save tap calibration data." CRR));
         return false;
     }
 }
@@ -641,7 +641,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Controller settings
             //
@@ -649,7 +649,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
             {
                 if ((strlen(value) < 3) || (strlen(value) > 32))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
@@ -657,7 +657,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                     {
                         hostnamechanged=true;
                     }
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     strlcpy(config.hostname, value, sizeof(config.hostname));
                 }
             }
@@ -665,11 +665,11 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
             {
                 if ((strlen(value) < 1) || (strlen(value) > 64))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     strlcpy(config.copconfig.breweryname, value, sizeof(config.copconfig.breweryname));
                 }
             }
@@ -677,11 +677,11 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
             {
                 if ((strlen(value) < 1) || (strlen(value) > 64))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     strlcpy(config.copconfig.kegeratorname, value, sizeof(config.copconfig.kegeratorname));
                 }
             }
@@ -694,7 +694,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                         convertConfigtoImperial();
                         convertFlowtoImperial();
                     }
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                 }
                 else if (strcmp(value, "false") == 0)
                 {
@@ -703,52 +703,52 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                         convertConfigtoMetric();
                         convertFlowtoMetric();
                     }
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
             if (strcmp(name, "tapsolenoid") == 0) // Set active
             {
                 if (strcmp(value, "energized") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     digitalWrite(SOLENOID, LOW);
                     config.copconfig.tapsolenoid = true;
                 }
                 else if (strcmp(value, "deenergized") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     digitalWrite(SOLENOID, HIGH);
                     config.copconfig.tapsolenoid = false;
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
             if (strcmp(name, "rpintscompat") == 0) // Set compatability
             {
                 if (strcmp(value, "kegcop") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     toggleRPCompat(true, false, false);
                 }
                 else if (strcmp(value, "rpintscompat") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     toggleRPCompat(false, true, false);
                 }
                 else if (strcmp(value, "randr") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     toggleRPCompat(false, true, true);
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
         }
@@ -764,7 +764,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
             tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.hostname);
             mdnsreset();
             #endif
-            Log.verbose(F("POSTed new mDNSid, reset mDNS stack." CR));
+            Log.verbose(F("POSTed new mDNSid, reset mDNS stack." CRR));
         }
     }
     if (saveConfig())
@@ -773,7 +773,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
     }
     else
     {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
+        Log.error(F("Error: Unable to save tap configuration data." CRR));
         return false;
     }
 }
@@ -790,7 +790,7 @@ bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control se
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Sensor settings
             //
@@ -809,11 +809,11 @@ bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control se
                 }
                 if ((atof(value) < min) || (atof(value) > max))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.setpoint = atof(value);
                 }
             }
@@ -822,11 +822,11 @@ bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control se
                 const double val = atof(value);
                 if ((val < 0) || (val > 4))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.controlpoint = val;
                 }
             }
@@ -834,17 +834,17 @@ bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control se
             {
                 if (strcmp(value, "true") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.controlenabled = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.controlenabled = false;
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
         }
@@ -855,7 +855,7 @@ bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control se
     }
     else
     {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
+        Log.error(F("Error: Unable to save tap configuration data." CRR));
         return false;
     }
 }
@@ -872,7 +872,7 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Sensor settings
             //
@@ -881,11 +881,11 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.calibration[0] = val;
                 }
             }
@@ -893,17 +893,17 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
             {
                 if (strcmp(value, "true") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[0] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[0] = false;
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
             if (strcmp(name, "caltower") == 0) // Set the sensor calibration
@@ -911,11 +911,11 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.calibration[1] = val;
                 }
             }
@@ -923,17 +923,17 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
             {
                 if (strcmp(value, "true") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[1] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[1] = false;
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
             if (strcmp(name, "calupper") == 0) // Set the sensor calibration
@@ -941,11 +941,11 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.calibration[2] = val;
                 }
             }
@@ -953,17 +953,17 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
             {
                 if (strcmp(value, "true") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[2] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[2] = false;
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
             if (strcmp(name, "callower") == 0) // Set the sensor calibration
@@ -971,11 +971,11 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.calibration[3] = val;
                 }
             }
@@ -983,17 +983,17 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
             {
                 if (strcmp(value, "true") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[3] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[3] = false;
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
             if (strcmp(name, "calkeg") == 0) // Set the sensor calibration
@@ -1001,11 +1001,11 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.calibration[4] = val;
                 }
             }
@@ -1013,17 +1013,17 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
             {
                 if (strcmp(value, "true") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[4] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.temps.enabled[4] = false;
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
         }
@@ -1034,7 +1034,7 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
     }
     else
     {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
+        Log.error(F("Error: Unable to save tap configuration data." CRR));
         return false;
     }
 }
@@ -1051,7 +1051,7 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Target url settings
             //
@@ -1059,17 +1059,17 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
             {
                 if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) cleared." CRR), name, value);
                     strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
             if (strcmp(name, "targetfreq") == 0) // Set the push frequency
@@ -1077,11 +1077,11 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
                 const double val = atof(value);
                 if ((val < 5) || (val > 120))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.urltarget.freq = val;
                 }
             }
@@ -1093,7 +1093,7 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
     }
     else
     {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
+        Log.error(F("Error: Unable to save tap configuration data." CRR));
         return false;
     }
 }
@@ -1110,7 +1110,7 @@ bool handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL target
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Keg Screen url settings
             //
@@ -1118,17 +1118,17 @@ bool handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL target
             {
                 if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     strlcpy(config.kegscreen.url, value, sizeof(config.kegscreen.url));
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) cleared." CRR), name, value);
                     strlcpy(config.kegscreen.url, value, sizeof(config.kegscreen.url));
                 }
                 else
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
         }
@@ -1139,7 +1139,7 @@ bool handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL target
     }
     else
     {
-        Log.error(F("Error: Unable to save Keg Screen configuration data." CR));
+        Log.error(F("Error: Unable to save Keg Screen configuration data." CRR));
         return false;
     }
 }
@@ -1156,7 +1156,7 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Cloud target settings
             //
@@ -1165,11 +1165,11 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
                 const double val = atof(value);
                 if ((val < 0) || (val > 4))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.cloud.type = val;
                 }
             }
@@ -1177,11 +1177,11 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
             {
                 if ((strlen(value) < 3) || (strlen(value) > 128))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     strlcpy(config.cloud.key, value, sizeof(config.cloud.key));
                 }
             }
@@ -1190,11 +1190,11 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
                 const double val = atof(value);
                 if ((val < 10) || (val > 900))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     config.cloud.freq = val;
                 }
             }
@@ -1206,14 +1206,14 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
     }
     else
     {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
+        Log.error(F("Error: Unable to save tap configuration data." CRR));
         return false;
     }
 }
 
 bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibration mode
 {
-    Log.verbose(F("Clearing any calibration flags before setting new flags." CR));
+    Log.verbose(F("Clearing any calibration flags before setting new flags." CRR));
     for (int i = 0; i < NUMTAPS; i++)
     {
         flow.taps[i].calibrating = false;
@@ -1230,7 +1230,7 @@ bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibrat
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char * name = p->name().c_str();
             const char * value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Calibration Mode Set
             //
@@ -1239,11 +1239,11 @@ bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibrat
                 const int val = atof(value);
                 if ((val < 0) || (val >= NUMTAPS))
                 {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     flow.taps[val].calibrating = true;
                 }
             }
@@ -1255,7 +1255,7 @@ bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibrat
     }
     else
     {
-        Log.error(F("Error: Unable to save tap calibration mode." CR));
+        Log.error(F("Error: Unable to save tap calibration mode." CRR));
         return false;
     }
 }

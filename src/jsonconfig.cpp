@@ -130,9 +130,9 @@ bool printFile()
         return false;
 
     while (file.available())
-        printChar((const char *)file.read());
+        printChar(true, (const char *)file.read());
 
-    printCR();
+    printCR(true);
     file.close();
     return true;
 }
@@ -152,7 +152,7 @@ bool printConfig()
     // Serialize JSON to file
     if (!config.copconfig.rpintscompat)
         retval = serializeJsonPretty(doc, Serial) > 0;
-    printCR();
+    printCR(true);
     return retval;
 }
 
@@ -165,8 +165,8 @@ bool mergeJsonString(String newJson)
     DeserializationError err = deserializeJson(doc, newJson);
     if (err)
     {
-        printChar(err.c_str());
-        printCR();
+        printChar(true, err.c_str());
+        printCR(true);
     }
 
     return mergeJsonObject(doc);
@@ -377,14 +377,14 @@ void Temperatures::load(JsonObjectConst obj)
     }
 
     if (obj["controlenabled"].isNull()) {
-        controlenabled = true;
+        controlenabled = CTRLENABLE;
     } else {
         bool ce = obj["controlenabled"];
         controlenabled = ce;
     }
 
     if (obj["roomenabled"].isNull()) {
-        enabled[0] = true;
+        enabled[0] = false;
     } else {
         bool en = obj["roomenabled"];
         enabled[0] = en;
@@ -398,7 +398,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
 
     if (obj["towerenabled"].isNull()) {
-        enabled[1] = true;
+        enabled[1] = false;
     } else {
         bool en = obj["towerenabled"];
         enabled[1] = en;
@@ -412,7 +412,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
 
     if (obj["upperenabled"].isNull()) {
-        enabled[2] = true;
+        enabled[2] = false;
     } else {
         bool en = obj["upperenabled"];
         enabled[2] = en;
@@ -426,7 +426,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
 
     if (obj["lowerenabled"].isNull()) {
-        enabled[3] = true;
+        enabled[3] = false;
     } else {
         bool en = obj["lowerenabled"];
         enabled[3] = en;
@@ -440,7 +440,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
 
     if (obj["kegenabled"].isNull()) {
-        enabled[4] = true;
+        enabled[4] = false;
     } else {
         bool en = obj["kegenabled"];
         enabled[4] = en;

@@ -36,9 +36,9 @@ void requestHandler(void* optParm, asyncHTTPrequest* request, int readyState) {
     String body = request->responseText();
     const char * src = body.c_str();
     if (!deserializeVersion(src, thatVersion)) {
-        Log.error(F("Failed to deserialize version information." CR));
+        Log.error(F("Failed to deserialize version information." CRR));
     } else {
-        Log.verbose(F("Deserialized version information." CR));
+        Log.verbose(F("Deserialized version information." CRR));
     }
 }
 

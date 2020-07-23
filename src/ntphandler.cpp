@@ -33,16 +33,16 @@ void setClock() {
     while (nowSecs < EPOCH_1_1_2019) {
         if (nowSecs - startSecs > 9) {
             if (cycle > 9) {
-                Log.warning(F("Unable to get time hack from %s, rebooting." CR), TIMESERVER);
+                Log.warning(F("Unable to get time hack from %s, rebooting." CRR), TIMESERVER);
                 resetController();
             }
-            printCR();
+            printCR(true);
             Log.verbose(F("Re-requesting time hack."));
             configTime(GMT, 0, TIMESERVER);
             startSecs = time(nullptr);
             cycle++;
         }
-        printDot();
+        printDot(true);
         _delay(1000);
 #ifdef ESP8266
         yield();
@@ -50,8 +50,8 @@ void setClock() {
         nowSecs = time(nullptr);
     }
     blinker.detach();
-    printCR();
-    Log.notice(F("NTP time set." CR));
+    printCR(true);
+    Log.notice(F("NTP time set." CRR));
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
 }

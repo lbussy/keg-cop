@@ -43,7 +43,7 @@ void _delay(unsigned long ulDelay)
 
 void resetController()
 {
-    Log.notice(F("Reboot request - rebooting system." CR));
+    Log.notice(F("Reboot request - rebooting system." CRR));
     _delay(5000);
     ESP.restart();
 }
@@ -155,10 +155,10 @@ void printDebug(const char * message)
     frag = 100 - (max * 100) / free;
 #endif
     if (!message)
-        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d" CR), free, max, frag);
+        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d" CRR), free, max, frag);
     else
-        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d -> %s" CR), free, max, frag, message);
-    Serial.flush();
+        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d -> %s" CRR), free, max, frag, message);
+    flush(true);
 }
 
 double convertFtoC(double F)

@@ -43,12 +43,12 @@ void setup()
     // Check if portal is requested
     if (digitalRead(RESETWIFI) == LOW)
     {
-        Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
+        Log.notice(F("Pin %d low, presenting portal." CRR), RESETWIFI);
         doWiFi(true);
     }
     else
     {
-        Log.verbose(F("WiFi: Normal boot." CR));
+        Log.verbose(F("WiFi: Normal boot." CRR));
         doWiFi();
     }
 
@@ -60,9 +60,9 @@ void setup()
 
     // Initialize flowmeters before checking for SPIFFS update
     if (initFlow())
-        Log.notice(F("Flowmeters loaded." CR));
+        Log.notice(F("Flowmeters loaded." CRR));
     else
-        Log.error(F("Unable to load flowmeters." CR));
+        Log.error(F("Unable to load flowmeters." CRR));
 
     execspiffs();       // Check for pending SPIFFS update
 
@@ -73,12 +73,12 @@ void setup()
     startControl();     // Initialize temperature control
     doVersionPoll();           // Get server version at startup
 
-    Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
+    Log.notice(F("Started %s version %s (%s) [%s]." CRR), API_KEY, version(), branch(), build());
 }
 
 void loop()
 {
-    // Poll teperature sensors
+    // Poll temperature sensors
     Ticker pollSensors;
     pollSensors.attach(TEMPLOOP, pollTemps);
 
@@ -106,7 +106,7 @@ void loop()
     {
         // Check for Target URL Timing reset
         if (config.urltarget.update) {
-            Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
+            Log.notice(F("Resetting URL Target frequency timer to %l minutes." CRR), config.urltarget.freq);
             doTargetReport.detach();
             doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
             config.urltarget.update = false;
@@ -114,5 +114,6 @@ void loop()
 
         doOTALoop();
         tickerLoop();
+        serialLoop();
     }
 }
