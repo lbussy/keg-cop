@@ -1,5 +1,5 @@
 [![Keg Cop Logo](https://github.com/lbussy/keg-cop/raw/master/logos/readmeheader.jpg "Keg Cop")](http://www.kegcop.com/)
 
-# Project Jail
+# 3D Printed Cases
 
-Files and notes used as reference are contained here.
+Within these folders are 3D models of cases which you may use in your own deployments.

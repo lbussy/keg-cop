@@ -1,5 +1,5 @@
 [![Keg Cop Logo](https://github.com/lbussy/keg-cop/raw/master/logos/readmeheader.jpg "Keg Cop")](http://www.kegcop.com/)
 
-# Project Jail
+# Website
 
-Files and notes used as reference are contained here.
+Files here are used for placeholder pages withing the Keg Cop website.
