@@ -17,7 +17,7 @@
 - Remove /edit/
 - Update tag
 - Update website
-- Remove demo JSON?
+- Remove demo JSON
 
 # Complete
 
