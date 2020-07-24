@@ -25,6 +25,33 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
+// Set verbosity of debug messages 0-6
+//
+//      * 0 - LOG_LEVEL_SILENT     no output
+//      * 1 - LOG_LEVEL_FATAL      fatal errors
+//      * 2 - LOG_LEVEL_ERROR      all errors
+//      * 3 - LOG_LEVEL_WARNING    errors, and warnings
+//      * 4 - LOG_LEVEL_NOTICE     errors, warnings and notices
+//      * 5 - LOG_LEVEL_TRACE      errors, warnings, notices & traces
+//      * 6 - LOG_LEVEL_VERBOSE    all
+//
+// Uncomment #define for logging level desired.
+//
+#ifndef LOG_LEVEL
+// #define DISABLE_LOGGING
+// #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
+// #define LOG_LEVEL LOG_LEVEL_FATAL      // Fatal errors
+// #define LOG_LEVEL LOG_LEVEL_ERROR      // All errors
+// #define LOG_LEVEL LOG_LEVEL_WARNING    // Errors, and warnings
+// #define LOG_LEVEL LOG_LEVEL_NOTICE     // Errors, warnings and notices
+// #define LOG_LEVEL LOG_LEVEL_TRACE      // Errors, warnings, notices & traces
+#define LOG_LEVEL LOG_LEVEL_VERBOSE // All
+#endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
 // Echo all serial output to telnet
 //
 #ifndef DOTELNET
@@ -32,6 +59,8 @@ SOFTWARE. */
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
+//
+// Leave this part alone
 //
 #if DOTELNET == true
 #define TELNETPORT 23
@@ -74,6 +103,16 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
+// Use SPIFFS Editor
+//
+#ifndef SPIFFSEDIT
+// #define SPIFFSEDIT
+#endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
 // SPIFFS Editor Username
 //
 #ifndef SPIFFSEDITUSER
@@ -88,33 +127,6 @@ SOFTWARE. */
 //
 #ifndef SPIFFSEDITPW
 #define SPIFFSEDITPW "p@ssword"
-#endif
-//
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-//
-// Set verbosity of debug messages 0-6
-//
-//      * 0 - LOG_LEVEL_SILENT     no output
-//      * 1 - LOG_LEVEL_FATAL      fatal errors
-//      * 2 - LOG_LEVEL_ERROR      all errors
-//      * 3 - LOG_LEVEL_WARNING    errors, and warnings
-//      * 4 - LOG_LEVEL_NOTICE     errors, warnings and notices
-//      * 5 - LOG_LEVEL_TRACE      errors, warnings, notices & traces
-//      * 6 - LOG_LEVEL_VERBOSE    all
-//
-// Uncomment #define for logging level desired.
-//
-#ifndef LOG_LEVEL
-// #define DISABLE_LOGGING
-// #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
-// #define LOG_LEVEL LOG_LEVEL_FATAL      // Fatal errors
-// #define LOG_LEVEL LOG_LEVEL_ERROR      // All errors
-// #define LOG_LEVEL LOG_LEVEL_WARNING    // Errors, and warnings
-// #define LOG_LEVEL LOG_LEVEL_NOTICE     // Errors, warnings and notices
-// #define LOG_LEVEL LOG_LEVEL_TRACE      // Errors, warnings, notices & traces
-#define LOG_LEVEL LOG_LEVEL_VERBOSE // All
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
