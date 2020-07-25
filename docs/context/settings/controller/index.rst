@@ -17,7 +17,3 @@ The Controller Settings page allows configuration of settings which control the 
    - **Metric**: Volume reports in liters and milliliters, the temperature in degrees Celcius, and you will enter the flowmeter calibration in pulses per liter.
    - **Imperial**: Volume reports in gallons and ounces, the temperature in degrees Fahrenheit, you will enter the flowmeter calibration in pulses per gallon.
 - **Solenoid Relay**: This will energize or de-energize a relay. This setting controls a solenoid or bank of solenoids to turn the beverage flow on or off. I have provided this point for convenience; I intend for an upstream system to control it.
-- **Functionality**:
-   - **Keg Cop**: The controller will operate in stand-alone mode or report to upstream systems as Keg Cop.
-   - **RaspberryPints**: The controller will disable all serial communication except for that which is compatible with the RaspberryPints 2.x systems. This setting should allow it to be a direct replacement for the Arduino or AlaMode.
-   - **RPints RandR+**: The controller will disable all serial communication except for that which is compatible with the RandR+ fork of the RaspberryPints 2.x systems. This setting should allow it to be a direct replacement for the Arduino or AlaMode.

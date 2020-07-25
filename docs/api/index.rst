@@ -9,7 +9,6 @@ Keg Cop uses a combination of API types:
 - `JSON Retrieval`_
 - `Settings Handlers (POST)`_
 - `Target URL Report`_
-- `RaspberryPints Reports`_
 - `Keg Screen Reports`_
 
 Action Pages
@@ -54,8 +53,6 @@ These pages return proper JSON reports for configuration and status items:
             "breweryname": "Silver Fox Brewery",
             "kegeratorname": "Keezer",
             "imperial": true,
-            "rpintscompat": false,
-            "randr": false,
             "tapsolenoid": true
         },
         "temps": {
@@ -339,7 +336,6 @@ Entries POSTed to this endpoint will configure many elements of the controller's
 - ``kegeratorname:{kegeratorname}``, where ``{kegeratorname}`` is the name of the kegerator served by the controller used on various web pages
 - ``imperial:{bool}``, where ``{bool}`` is true or false, respectively, for imperial or metric units of measure. Note that selection of the opposite causes a conversion of the various data points, and may cause accumulation of error if repeatedly toggled
 - ``tapsolenoid:{energized|deenergized}``, where ``{energized|deenergized}`` determines whether the solenoid control is on or off respectively
-- ``rpintscompat:{kegcop|rpintscompat|randr}``, where ``{kegcop|rpintscompat|randr}`` is standard Keg Cop operations when set to *kegcop*. Selecting *rpintscompat* or *randr* will toggle RaspberryPints-compatible serial reporting in either original or RandR+ variants
 
 /settings/sensorcontrol/
 ==========================
@@ -512,58 +508,6 @@ The Target URL Report provides a holistic picture of the system to a custom/thir
             }
         ]
     }
-
-RaspberryPints Reports
-************************
-
-When configured as a RaspberryPints-compatible controller, Keg Screen disables all serial debug printing and provides reports via the serial connection.  There are two RaspberryPints-compatible reports:
-
-- Pour Report
-- Kick Report
-
-Pour Report
-============
-
-Keg Cop will issue the Pour Report after a pour when the controller detects that the pour has stopped.  The report follows this format:
-
-``P;1;4;3200``
-
-A semicolon (``;``) delimits the fields, and the fields are as follows:
-
-- ``P`` - Report Type: The "P" in the first field designates this as a "Pour Report."
-- ``1`` - Address: The "1" here is the tap number for the pour.
-- ``4`` - Pin Number: The "4" here is the controller pin number for the pour.
-- ``3200`` - Pulse Count: This is the number of pulses detected during the pour.
-
-For RandR+-compatible systems, the Pour Report is slightly different.  For example:
-
-``P;2147483640;0;3200``, where:
-
-- ``P`` - Report Type: The "P" in the first field designates this as a "Pour Report"
-- ``2147483640`` - RFID User: The "2147483640" indicates an RFID-identified user.  This field is not supported in Keg Cop and will always report "0"
-- ``0`` - Pin Number: The "0" here is the tap number for the pour
-- ``3200`` - Pulse Count: This is the number of pulses detected during the pour
-
-Kick Report
-============
-
-Keg Cop will issue the Kick Report after the controller detects the tap blowing foam.  The report follows this format:
-
-``K;2;0``
-
-A semicolon (``;``) delimits the fields, and the fields are as follows:
-
-- ``K`` - Report Type: The "K" in the first field designates this as a "Kick Report"
-- ``2`` - Address: The "2" here is the tap number which has kicked
-- ``0`` - Pin Number: The "0" here is the controller pin number for the pour
-
-For RandR+-compatible systems, the Kick Report is slightly different.  For example:
-
-``K;2147483640;6``
-
-- ``K`` - Report Type: The "P" in the first field designates this as a "Pour Report"
-- ``2147483640`` - RFID User: The "2147483640" identifies an RFID-identified user.  This is not supported in Keg Cop and will always report "0"
-- ``6`` - Pin Number: The "6" here is the tap number for the pour
 
 Keg Screen Reports
 *******************
