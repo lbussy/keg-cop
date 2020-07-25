@@ -8,8 +8,6 @@
         "breweryname": "Silver Fox Brewery",
         "kegeratorname": "Keezer",
         "imperial": true,
-        "rpintscompat": false,
-        "randr": false,
         "tapsolenoid": true
     },
     "temps": {

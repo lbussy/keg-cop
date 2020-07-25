@@ -141,15 +141,6 @@ function populateConfig(callback = null) { // Get configuration settings
                 } else {
                     $('input:radio[name="tapsolenoid"]')[1].checked = true;
                 }
-                if (config.copconfig.rpintscompat) {
-                    if (config.copconfig.randr) {
-                        $('input:radio[name="rpintscompat"]')[2].checked = true;
-                    } else {
-                        $('input:radio[name="rpintscompat"]')[1].checked = true;
-                    }
-                } else {
-                    $('input:radio[name="rpintscompat"]')[0].checked = true;
-                }
                 $('input[name="setpoint"]').val(parseFloat(config.temps.setpoint).toFixed(1));
                 $('select[name="controlpoint"] option[value=' + parseInt(config.temps.controlpoint, 10) + ']').attr('selected', 'selected');
                 if (config.temps.controlenabled) {
@@ -406,9 +397,8 @@ function processControllerPost(url, obj) {
         hostnameVal = $form.find("input[name='hostname']").val(),
         brewerynameVal = $form.find("input[name='breweryname']").val(),
         kegeratornameVal = $form.find("input[name='kegeratorname']").val()
-    imperialVal = $("[name='imperial']:checked").val(),
-        tapsolenoidVal = $("[name='tapsolenoid']:checked").val(),
-        rpintscompatVal = $("[name='rpintscompat']:checked").val();
+        imperialVal = $("[name='imperial']:checked").val(),
+        tapsolenoidVal = $("[name='tapsolenoid']:checked").val()
 
     // Hold some data about what we changed
     var reloadpage = false;
@@ -449,7 +439,6 @@ function processControllerPost(url, obj) {
             kegeratorname: kegeratornameVal,
             imperial: imperialVal,
             tapsolenoid: tapsolenoidVal,
-            rpintscompat: rpintscompatVal
         }
         if (hostnamechanged && reloadpage) {
             var protocol = window.location.protocol;
