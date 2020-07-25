@@ -37,76 +37,15 @@ void serial()
     MYSERIAL.setWelcomeMsg(buffer);
 #endif
     _delay(3000); // Delay to allow a monitor to start
-    if (!config.copconfig.rpintscompat)
-    {
-        MYSERIAL.begin(BAUD);
-        MYSERIAL.flush();
+    MYSERIAL.begin(BAUD);
+    MYSERIAL.flush();
 #ifndef DISABLE_LOGGING
-        MYSERIAL.println();
-        MYSERIAL.setDebugOutput(true);
-        Log.begin(LOG_LEVEL, &MYSERIAL, true);
-        Log.setPrefix(printTimestamp);
-        Log.notice(F("Serial logging started at %l." CRR), BAUD);
+    MYSERIAL.println();
+    MYSERIAL.setDebugOutput(true);
+    Log.begin(LOG_LEVEL, &MYSERIAL, true);
+    Log.setPrefix(printTimestamp);
+    Log.notice(F("Serial logging started at %l." CRR), BAUD);
 #endif
-    }
-    else
-    {
-        MYSERIAL.begin(RPBAUD);
-        MYSERIAL.flush();
-        MYSERIAL.println();
-        MYSERIAL.setDebugOutput(false);
-    }
-}
-
-void toggleRPCompat(bool kegcop, bool rpints, bool randr)
-{
-    if (config.copconfig.rpintscompat && kegcop)
-    {
-        // We are switching from RaspberryPints to KegCop
-        MYSERIAL.print("Enabling Keg Cop mode (set baud rate to ");
-        MYSERIAL.print(BAUD);
-        MYSERIAL.println(".)");
-        MYSERIAL.flush();
-#if DOTELNET == true
-        MYSERIAL.baudUpdate(BAUD);
-#else
-        Serial.updateBaudRate(BAUD);
-#endif
-
-#ifndef DISABLE_LOGGING
-        MYSERIAL.setDebugOutput(true);
-        Log.begin(LOG_LEVEL, &MYSERIAL, true);
-        Log.setPrefix(printTimestamp);
-        config.copconfig.rpintscompat = false;
-        config.copconfig.randr = false;
-        MYSERIAL.flush();
-        MYSERIAL.println();
-        Log.verbose(F("Keg Cop mode set." CRR));
-#endif
-    }
-    else if (!config.copconfig.rpintscompat && rpints)
-    {
-        // We are switching from KegCop to RaspberryPints
-        Log.verbose(F("Enabling RaspberryPints mode (set baud to %d.)" CRR), RPBAUD);
-        config.copconfig.rpintscompat = true;
-        MYSERIAL.flush();
-        MYSERIAL.setDebugOutput(false);
-        Log.setLevel(LOG_LEVEL_SILENT);
-#if DOTELNET == true
-        MYSERIAL.baudUpdate(RPBAUD);
-#else
-        Serial.updateBaudRate(RPBAUD);
-#endif
-    }
-    else
-    {
-        // We're not changing anything
-    }
-    if (randr)
-    {
-        config.copconfig.randr = true;
-    }
-    saveConfig();
 }
 
 void printTimestamp(Print *_logOutput)
@@ -127,18 +66,11 @@ size_t printDot()
 
 size_t printDot(bool safe)
 {
-    if (safe && !config.copconfig.rpintscompat)
-    {
 #ifndef DISABLE_LOGGING
-        return MYSERIAL.print(F("."));
+    return MYSERIAL.print(F("."));
 #else
-        return 0;
+    return 0;
 #endif
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 size_t printChar(const char * chr)
@@ -148,18 +80,11 @@ size_t printChar(const char * chr)
 
 size_t printChar(bool safe, const char * chr)
 {
-    if (safe && !config.copconfig.rpintscompat)
-    {
 #ifndef DISABLE_LOGGING
-        return MYSERIAL.println(chr);
+    return MYSERIAL.println(chr);
 #else
-        return 0;
+    return 0;
 #endif
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 size_t printCR()
@@ -169,18 +94,11 @@ size_t printCR()
 
 size_t printCR(bool safe)
 {
-    if (safe && !config.copconfig.rpintscompat)
-    {
 #ifndef DISABLE_LOGGING
-        return MYSERIAL.println();
+    return MYSERIAL.println();
 #else
-        return 0;
+    return 0;
 #endif
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 void flush()
@@ -190,14 +108,7 @@ void flush()
 
 void flush(bool safe)
 {
-    if (safe && !config.copconfig.rpintscompat)
-    {
-        MYSERIAL.flush();
-    }
-    else
-    {
-        MYSERIAL.flush();
-    }
+    MYSERIAL.flush();
 }
 
 void serialLoop()
