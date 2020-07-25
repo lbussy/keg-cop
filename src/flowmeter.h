@@ -23,7 +23,6 @@ SOFTWARE. */
 #ifndef _FLOWMETER_H
 #define _FLOWMETER_H
 
-#include "rpintscompat.h"
 #include "serialhandler.h"
 #include "config.h"
 #include "jsonconfig.h"

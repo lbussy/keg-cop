@@ -39,7 +39,7 @@ void toggleRPCompat(bool, bool, bool);
 void printTimestamp(Print* _logOutput);
 void serialLoop();
 
-// Redefine outputs for RPints compatibility
+// Print outputs
 size_t printChar(bool, const char *);
 size_t printChar(const char *);
 size_t printDot();

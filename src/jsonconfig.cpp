@@ -24,8 +24,8 @@ SOFTWARE. */
 
 Config config;
 const char *filename = FILENAME;
-const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13);
-extern const size_t capacityDeserial = capacitySerial + 950;
+const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13);
+extern const size_t capacityDeserial = capacitySerial + 930;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -150,8 +150,7 @@ bool printConfig()
 
     bool retval = true;
     // Serialize JSON to file
-    if (!config.copconfig.rpintscompat)
-        retval = serializeJsonPretty(doc, Serial) > 0;
+    retval = serializeJsonPretty(doc, Serial) > 0;
     printCR(true);
     return retval;
 }
@@ -276,8 +275,6 @@ void CopConfig::save(JsonObject obj) const
     obj["breweryname"] = breweryname;
     obj["kegeratorname"] = kegeratorname;
     obj["imperial"] = imperial;
-    obj["rpintscompat"] = rpintscompat;
-    obj["randr"] = randr;
     obj["tapsolenoid"] = tapsolenoid;
 }
 
@@ -304,20 +301,6 @@ void CopConfig::load(JsonObjectConst obj)
     } else {
         bool units = obj["imperial"];
         imperial = units;
-    }
-
-    if (obj["rpintscompat"].isNull()) {
-        rpintscompat = RPINTS;
-    } else {
-        bool rpints = obj["rpintscompat"];
-        rpintscompat = rpints;
-    }
-
-    if (obj["randr"].isNull()) {
-        randr = RANDR;
-    } else {
-        bool r = obj["randr"];
-        randr = r;
     }
 
     // Need to instantiate solenoid here

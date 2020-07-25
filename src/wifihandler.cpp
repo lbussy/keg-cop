@@ -42,18 +42,11 @@ void doWiFi(bool dontUseStoredCreds)
     // myAsyncWifiManager.setSaveParamsCallback(saveParamsCallback); // Called after parameters are saved via params menu or wifi config
     // myAsyncWifiManager.setWebServerCallback(webServerCallback); // Called after webserver is setup
 
-    if (!config.copconfig.rpintscompat)
-    {
 #ifndef DISABLE_LOGGING
-        myAsyncWifiManager.setDebugOutput(true); // Verbose debug is enabled by default
+    myAsyncWifiManager.setDebugOutput(true); // Verbose debug is enabled by default
 #else
-        myAsyncWifiManager.setDebugOutput(false);
+    myAsyncWifiManager.setDebugOutput(false);
 #endif
-    }
-    else
-    {
-        myAsyncWifiManager.setDebugOutput(false);
-    }
 
     std::vector<const char *> _wfmPortalMenu = {
         "wifi",

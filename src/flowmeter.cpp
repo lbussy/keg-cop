@@ -126,23 +126,9 @@ void logFlow()
 			if (isKicked(i) && flow.taps[i].active)
 			{  // If the keg is blowing foam and active
                 pulse[i] = lastPulse[i]; // Discard the foam pulses
-				if (config.copconfig.rpintscompat)
-				{
-                    if (config.copconfig.randr)
-                    {
-                        sendKickedMsg(flow.taps[i].pin); // RandR+ compat
-                    }
-                    else
-                    {
-                        sendKickedMsg(i, flow.taps[i].pin); // RPints compat
-                    }
-				}
-				else
-				{ // Disable flowmeter if kicked and !RPints
-					flow.taps[i].active = false;
-                    queueKickReport[i] = true;
-					saveFlowConfig();
-				}
+                flow.taps[i].active = false;
+                queueKickReport[i] = true;
+                saveFlowConfig();
 			}
 			else if ((millis() - lastPulseTime[i] > POURDELAY) && (pulse[i] > 0))
 			{ // If we have stopped pouring, and there's something to log
@@ -163,14 +149,6 @@ void logFlow()
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
                     saveFlowConfig();
                     Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
-                    if (config.copconfig.randr)
-                    {
-                        sendPulseCount(flow.taps[i].pin,pulseCount); // RandR+ compat
-                    }
-                    else
-                    {
-                        sendPulseCount(i, flow.taps[i].pin, pulseCount); // RPints compat
-                    }
                     if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
                     { /// Queue upstream report
                         queuePourReport[i] = pour;
@@ -353,8 +331,7 @@ bool printFlowConfig()
 
     bool retval = true;
     // Serialize JSON to file
-    if (!config.copconfig.rpintscompat)
-        retval = serializeJsonPretty(doc, Serial) > 0;
+    retval = serializeJsonPretty(doc, Serial) > 0;
     printCR(true);
     return retval;
 }

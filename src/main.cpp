@@ -71,7 +71,7 @@ void setup()
     initWebServer();    // Turn on web server
     sensorInit();       // Initialize temperature sensors
     startControl();     // Initialize temperature control
-    doVersionPoll();           // Get server version at startup
+    doVersionPoll();    // Get server version at startup
 
     Log.notice(F("Started %s version %s (%s) [%s]." CRR), API_KEY, version(), branch(), build());
 }
