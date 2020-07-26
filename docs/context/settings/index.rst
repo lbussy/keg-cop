@@ -3,6 +3,10 @@
 Settings Page
 ######################
 
+.. todo::
+
+    `Operations and Configuration <https://keg-cop.readthedocs.io/en/latest/operations/index.html>`_ and `Settings <https://keg-cop.readthedocs.io/en/latest/context/settings/index.html>`_ page should be merged. I'm pretty sure every link on the former page jumps to the latter. Maybe take the descriptions and add them to the table entries on the Settings page (maybe at the end of each line in parenthesis and comma-delimited).
+
 .. image:: settings.png
    :scale: 100%
    :align: center

@@ -3,6 +3,10 @@
 System Assembly
 ###################
 
+.. todo::
+
+   Add 8-Pack and 6-Pack options/representations?
+
 As you have learned in the discussion on :ref:`planning your system <planning>`, Keg Cop is capable of a wide variety of configurations. Each has similar building blocks, and you may apply that methodology to a variety of applications.
 
 Described here are a system with two flow meters, a room temp sensor, a keg temp sensor, a chamber sensor, cooling control, and a solenoid.
