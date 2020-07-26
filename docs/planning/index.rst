@@ -3,6 +3,17 @@
 Project Planning
 ####################
 
+Keg Cop is capable of a wide variety of configurations. Each has similar building blocks, and you may apply that methodology to a variety of applications. As an example, here is a system with two flow meters, a room temp sensor, a keg temp sensor, a chamber sensor, cooling control, and a solenoid.
+
+.. image:: system.png
+   :scale: 50%
+   :align: center
+   :alt: System Diagram
+
+.. todo::
+
+   Add annotations to parts
+
 It would be best if you did a little planning before you begin.  Keg Cop is configurable and extensible, and as such, you should know what you hope to achieve. The flowchart below should help you decide on the PCB configuration that best supports your system.
 
 .. image:: board_choice_flowchart.png
