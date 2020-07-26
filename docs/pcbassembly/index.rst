@@ -3,6 +3,10 @@
 PCB Assembly
 #####################
 
+.. todo::
+
+   Add thumbnails of the various assembled PCBs somwhere here without leaving the page?
+
 Keg Cop runs on an ESP32 controller. To detect the information to be logged, you need to connect specific devices to the controller. I have provided a main circuit board design, as well as several breakouts for your use.
 
 Assembly is not difficult, but it does require some basic soldering.
@@ -83,7 +87,7 @@ For this configuration, we will use the following components:
 Soldering
 ===========
 
-You are going to have to solder. If you have legitimately never soldered anything before, I recommend you spend a few minutes on YouTube and watch a few videos. It is not hard at all once you get the hang of it. And, while the boards are comparatively small, the components chosen are simple through-hole parts, which may be easily soldered by a beginner with a little patience.
+You are going to have to solder.  If you have legitimately never soldered anything before, I recommend you spend a few minutes on YouTube and watch a few videos.  `Sparkfun <https://learn.sparkfun.com/>`_ also has a very nice `tutorial <https://learn.sparkfun.com/tutorials/how-to-solder-through-hole-soldering>`_. It is not hard at all once you get the hang of it.  And, while the boards are comparatively small, the components chosen are simple through-hole parts, which may be easily soldered by a beginner with a little patience.
 
 Be sure to use flux when you solder. Liquid flux is the easiest to use. Be sure to get both sides of the board because you want the solder to flow to both sides.  After you solder from behind, flip the board over to make sure you get a good flow. If not, you can always touch up from the top (but don't tell anyone you cheated.)
 
