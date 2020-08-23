@@ -3,7 +3,7 @@
 Operations and Configuration
 #################################
 
-At a minimum, you will want to look at the :ref:`Settings <settings>` menu to set up your new device. See the links below for a description of each option.
+At a minimum, you will want to look at the settings menu to set up your new device. See the links below for a description of each option.
 
 .. todo::
 
