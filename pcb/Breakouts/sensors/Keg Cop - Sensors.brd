@@ -162,18 +162,18 @@
 <wire x1="-4.6" y1="0" x2="41.17" y2="0" width="0" layer="20"/>
 <wire x1="41.17" y1="0" x2="41.17" y2="33.3" width="0" layer="20"/>
 <wire x1="41.17" y1="33.3" x2="-4.6" y2="33.3" width="0" layer="20"/>
-<text x="5.4" y="30.7" size="0.8128" layer="25" align="center-left">G</text>
-<text x="31.2" y="30.8" size="0.8128" layer="25" align="center-right">G</text>
-<text x="5.4" y="12.7" size="0.8128" layer="25" align="center-left">G</text>
-<text x="31.1" y="13" size="0.8128" layer="25" align="center-right">G</text>
-<text x="5.4" y="25.7" size="0.8128" layer="25" align="center-left">V</text>
-<text x="5.4" y="7.6" size="0.8128" layer="25" align="center-left">V</text>
-<text x="31.2" y="7.6" size="0.8128" layer="25" align="center-right">V</text>
-<text x="31.2" y="25.7" size="0.8128" layer="25" align="center-right">V</text>
-<text x="5.4" y="2.5" size="0.8128" layer="25" align="center-left">D</text>
-<text x="5.4" y="20.7" size="0.8128" layer="25" align="center-left">D</text>
-<text x="31.2" y="20.7" size="0.8128" layer="25" align="center-right">D</text>
-<text x="31.2" y="2.6" size="0.8128" layer="25" align="center-right">D</text>
+<text x="5.4" y="30.7" size="1.016" layer="25" align="center-left">G</text>
+<text x="31.2" y="20.7" size="1.016" layer="25" align="center-right">G</text>
+<text x="5.4" y="12.7" size="1.016" layer="25" align="center-left">G</text>
+<text x="31.2" y="2.7" size="1.016" layer="25" align="center-right">G</text>
+<text x="5.4" y="25.7" size="1.016" layer="25" align="center-left">V</text>
+<text x="5.4" y="7.6" size="1.016" layer="25" align="center-left">V</text>
+<text x="31.2" y="7.6" size="1.016" layer="25" align="center-right">V</text>
+<text x="31.2" y="25.7" size="1.016" layer="25" align="center-right">V</text>
+<text x="5.4" y="2.5" size="1.016" layer="25" align="center-left">D</text>
+<text x="5.4" y="20.7" size="1.016" layer="25" align="center-left">D</text>
+<text x="31.2" y="30.8" size="1.016" layer="25" align="center-right">D</text>
+<text x="31.1" y="12.6" size="1.016" layer="25" align="center-right">D</text>
 <text x="25.9" y="17" size="0.8128" layer="26" rot="MR0">1 - 
 2 - TDAT
 3 - UDAT
@@ -184,7 +184,11 @@
 8 - 5V</text>
 <text x="18.3" y="29.4" size="0.8128" layer="26" rot="MR0" align="bottom-center">Keg Cop
 Sensor Breakout
-v 1.0.0</text>
+v 1.0.0a</text>
+<text x="6.7" y="25.7" size="1.778" layer="25" rot="R90" align="top-center">TOWER</text>
+<text x="6.7" y="7.6" size="1.778" layer="25" rot="R90" align="top-center">UPPER</text>
+<text x="29.8" y="25.7" size="1.778" layer="25" rot="R270" align="top-center">LOWER</text>
+<text x="29.8" y="7.6" size="1.778" layer="25" rot="R270" align="top-center">KEG</text>
 </plain>
 <libraries>
 <library name="con-tycoelectronics" urn="urn:adsk.eagle:library:193">
@@ -512,7 +516,7 @@ design rules under a new name.</description>
 <element name="TDAT" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" package="W237-103" package3d_urn="urn:adsk.eagle:package:10691/1" value="" x="1" y="25.7" smashed="yes" rot="R270">
 <attribute name="MF" value="" x="1" y="25.7" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="237-103" x="1" y="25.7" size="1.778" layer="27" rot="R270" display="off"/>
-<attribute name="NAME" x="1.0078" y="17.9658" size="0.8128" layer="25" ratio="9" rot="R180" align="bottom-center"/>
+<attribute name="NAME" x="1.0078" y="17.9658" size="1.016" layer="25" ratio="9" rot="R180" align="bottom-center"/>
 <attribute name="OC_FARNELL" value="unknown" x="1" y="25.7" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="OC_NEWARK" value="18M7116" x="1" y="25.7" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="POPULARITY" value="5" x="1" y="25.7" size="1.778" layer="27" rot="R270" display="off"/>
@@ -521,7 +525,7 @@ design rules under a new name.</description>
 <element name="UDAT" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" package="W237-103" package3d_urn="urn:adsk.eagle:package:10691/1" value="" x="1" y="7.6" smashed="yes" rot="R270">
 <attribute name="MF" value="" x="1" y="7.6" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="237-103" x="1" y="7.6" size="1.778" layer="27" rot="R270" display="off"/>
-<attribute name="NAME" x="1.0378" y="15.3558" size="0.8128" layer="25" align="bottom-center"/>
+<attribute name="NAME" x="1.0378" y="15.3558" size="1.016" layer="25" align="bottom-center"/>
 <attribute name="OC_FARNELL" value="unknown" x="1" y="7.6" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="OC_NEWARK" value="18M7116" x="1" y="7.6" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="POPULARITY" value="5" x="1" y="7.6" size="1.778" layer="27" rot="R270" display="off"/>
@@ -530,7 +534,7 @@ design rules under a new name.</description>
 <element name="LDAT" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" package="W237-103" package3d_urn="urn:adsk.eagle:package:10691/1" value="" x="35.6" y="25.692" smashed="yes" rot="R90">
 <attribute name="MF" value="" x="35.6" y="25.692" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="MPN" value="237-103" x="35.6" y="25.692" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="NAME" x="35.6322" y="17.9762" size="0.8128" layer="25" rot="R180" align="bottom-center"/>
+<attribute name="NAME" x="35.6322" y="17.9762" size="1.016" layer="25" rot="R180" align="bottom-center"/>
 <attribute name="OC_FARNELL" value="unknown" x="35.6" y="25.692" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="OC_NEWARK" value="18M7116" x="35.6" y="25.692" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="POPULARITY" value="5" x="35.6" y="25.692" size="1.778" layer="27" rot="R90" display="off"/>
@@ -539,7 +543,7 @@ design rules under a new name.</description>
 <element name="KDAT" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" package="W237-103" package3d_urn="urn:adsk.eagle:package:10691/1" value="" x="35.6" y="7.6" smashed="yes" rot="R90">
 <attribute name="MF" value="" x="35.6" y="7.6" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="MPN" value="237-103" x="35.6" y="7.6" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="NAME" x="35.5722" y="15.3242" size="0.8128" layer="25" align="bottom-center"/>
+<attribute name="NAME" x="35.5722" y="15.3242" size="1.016" layer="25" align="bottom-center"/>
 <attribute name="OC_FARNELL" value="unknown" x="35.6" y="7.6" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="OC_NEWARK" value="18M7116" x="35.6" y="7.6" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="POPULARITY" value="5" x="35.6" y="7.6" size="1.778" layer="27" rot="R90" display="off"/>
