@@ -22,27 +22,32 @@ SOFTWARE. */
 
 #include "serialhandler.h"
 
+#undef SERIAL
 #if DOTELNET == true
 ESPTelnet SerialAndTelnet;
-#define MYSERIAL SerialAndTelnet
+#define SERIAL SerialAndTelnet // Use Telnet
 #else
-#define MYSERIAL Serial
+#define SERIAL Serial // Use hardware serial
 #endif
+
+#undef SERIAL
+//#define SERIAL Serial // Do not use Telnet
+#define SERIAL SerialAndTelnet // Use Telnet
 
 void serial()
 {
     char buffer[32];
     sprintf(buffer, "Connected to %s", API_KEY);
 #if DOTELNET == true
-    MYSERIAL.setWelcomeMsg(buffer);
+    SERIAL.setWelcomeMsg(buffer);
 #endif
     _delay(3000); // Delay to allow a monitor to start
-    MYSERIAL.begin(BAUD);
-    MYSERIAL.flush();
+    SERIAL.begin(BAUD);
+    SERIAL.flush();
 #ifndef DISABLE_LOGGING
-    MYSERIAL.println();
-    MYSERIAL.setDebugOutput(true);
-    Log.begin(LOG_LEVEL, &MYSERIAL, true);
+    SERIAL.println();
+    SERIAL.setDebugOutput(true);
+    Log.begin(LOG_LEVEL, &SERIAL, true);
     Log.setPrefix(printTimestamp);
     Log.notice(F("Serial logging started at %l." CRR), BAUD);
 #endif
@@ -67,21 +72,21 @@ size_t printDot()
 size_t printDot(bool safe)
 {
 #ifndef DISABLE_LOGGING
-    return MYSERIAL.print(F("."));
+    return SERIAL.print(F("."));
 #else
     return 0;
 #endif
 }
 
-size_t printChar(const char * chr)
+size_t printChar(const char *chr)
 {
     return printChar(false, chr);
 }
 
-size_t printChar(bool safe, const char * chr)
+size_t printChar(bool safe, const char *chr)
 {
 #ifndef DISABLE_LOGGING
-    return MYSERIAL.println(chr);
+    return SERIAL.println(chr);
 #else
     return 0;
 #endif
@@ -95,7 +100,7 @@ size_t printCR()
 size_t printCR(bool safe)
 {
 #ifndef DISABLE_LOGGING
-    return MYSERIAL.println();
+    return SERIAL.println();
 #else
     return 0;
 #endif
@@ -108,142 +113,174 @@ void flush()
 
 void flush(bool safe)
 {
-    MYSERIAL.flush();
+    SERIAL.flush();
 }
 
 void serialLoop()
 {
 #if DOTELNET == true
     SerialAndTelnet.handle();
+    if (SerialAndTelnet.available() > 0)
+    {
+#else
+    if (Serial.available() > 0)
+    {
 #endif
+        switch (SerialAndTelnet.read())
+        {
+        // Handle random shit
+        case ' ':
+        case '\n':
+        case '\r':
+        case 1:
+        case 3:
+        case 29:
+        case 31:
+        case '\'':
+        case 251:
+        case 253:
+        case 255:
+            break;
+        // End random shit handler
+        case 'a':
+            // TODO: Do Something
+            break;
+        case 'b':
+            // TODO: Do something
+            break;
+        case 'c':
+            // TODO: Do something
+            break;
+        }
+    }
 }
 
 size_t myPrint(const __FlashStringHelper *ifsh)
 {
-    return MYSERIAL.print(ifsh);
+    return SERIAL.print(ifsh);
 }
 
 size_t myPrint(const String &s)
 {
-    return MYSERIAL.print(s);
+    return SERIAL.print(s);
 }
 
 size_t myPrint(const char str[])
 {
-    return MYSERIAL.print(str);
+    return SERIAL.print(str);
 }
 
 size_t myPrint(char c)
 {
-    return MYSERIAL.print(c);
+    return SERIAL.print(c);
 }
 
 size_t myPrint(unsigned char b, int base)
 {
-    return MYSERIAL.print(b, base);
+    return SERIAL.print(b, base);
 }
 
 size_t myPrint(int n, int base)
 {
-    return MYSERIAL.print(n, base);
+    return SERIAL.print(n, base);
 }
 
 size_t myPrint(unsigned int n, int base)
 {
-    return MYSERIAL.print(n, base);
+    return SERIAL.print(n, base);
 }
 
 size_t myPrint(long n, int base)
 {
-    return MYSERIAL.print(n, base);
+    return SERIAL.print(n, base);
 }
 
 size_t myPrint(unsigned long n, int base)
 {
-    return MYSERIAL.print(n, base);
+    return SERIAL.print(n, base);
 }
 
 size_t myPrint(double n, int digits)
 {
-   return MYSERIAL.print(n, digits);
+    return SERIAL.print(n, digits);
 }
 
-size_t myPrint(const Printable& x)
+size_t myPrint(const Printable &x)
 {
-    return MYSERIAL.print(x);
+    return SERIAL.print(x);
 }
 
-size_t myPrint(struct tm * timeinfo, const char * format)
+size_t myPrint(struct tm *timeinfo, const char *format)
 {
-    return MYSERIAL.print(timeinfo, format);
+    return SERIAL.print(timeinfo, format);
 }
 
 // size_t myPrintf(const char *format, ...)
 // {
-//     return MYSERIAL.printf(*format, ...);
+//     return SERIAL.printf(*format, ...);
 // }
 
 size_t myPrintln(const __FlashStringHelper *ifsh)
 {
-    return MYSERIAL.println(ifsh);
+    return SERIAL.println(ifsh);
 }
 
 size_t myPrintln(void)
 {
-    return MYSERIAL.println();
+    return SERIAL.println();
 }
 
 size_t myPrintln(const String &s)
 {
-    return MYSERIAL.println(s);
+    return SERIAL.println(s);
 }
 
 size_t myPrintln(const char c[])
 {
-    return MYSERIAL.println(c);
+    return SERIAL.println(c);
 }
 
 size_t myPrintln(char c)
 {
-    return MYSERIAL.println(c);
+    return SERIAL.println(c);
 }
 
 size_t myPrintln(unsigned char b, int base)
 {
-    return MYSERIAL.println(b, base);
+    return SERIAL.println(b, base);
 }
 
 size_t myPrintln(int num, int base)
 {
-    return MYSERIAL.println(num, base);
+    return SERIAL.println(num, base);
 }
 
 size_t myPrintln(unsigned int num, int base)
 {
-    return MYSERIAL.println(num, base);
+    return SERIAL.println(num, base);
 }
 
 size_t myPrintln(long num, int base)
 {
-    return MYSERIAL.println(num, base);
+    return SERIAL.println(num, base);
 }
 
 size_t myPrintln(unsigned long num, int base)
 {
-    return MYSERIAL.println(num, base);
+    return SERIAL.println(num, base);
 }
 
 size_t myPrintln(double num, int digits)
 {
-    return MYSERIAL.println(num, digits);
+    return SERIAL.println(num, digits);
 }
 
-size_t myPrintln(const Printable& x)
+size_t myPrintln(const Printable &x)
 {
-    return MYSERIAL.println(x);
+    return SERIAL.println(x);
 }
 
-size_t myPrintln(struct tm * timeinfo, const char * format)
+size_t myPrintln(struct tm *timeinfo, const char *format)
 {
-    return MYSERIAL.println(timeinfo, format);
+    return SERIAL.println(timeinfo, format);
 }
