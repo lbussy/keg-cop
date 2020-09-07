@@ -59,6 +59,7 @@ bool sendTapInfoReport(int tapid)
         {
             TapInfo tap;
             strlcpy(tap.api, API_KEY, sizeof(tap.api));
+            snprintf(tap.guid, sizeof(tap.guid), "%08X", getGUID());
             strlcpy(tap.hostname, config.hostname, sizeof(tap.hostname));
             strlcpy(tap.breweryname, config.copconfig.breweryname, sizeof(tap.breweryname));
             strlcpy(tap.kegeratorname, config.copconfig.kegeratorname, sizeof(tap.kegeratorname));
@@ -72,10 +73,11 @@ bool sendTapInfoReport(int tapid)
             tap.active = flow.taps[tapid].active;
             tap.calibrating = flow.taps[tapid].calibrating;
 
-            const size_t capacity = JSON_OBJECT_SIZE(13);
+            const size_t capacity = JSON_OBJECT_SIZE(14);
             DynamicJsonDocument doc(capacity);
 
             doc["api"] = (const char *)tap.api;
+            doc["guid"] = (const char *)tap.guid;
             doc["hostname"] = (const char *)tap.hostname;
             doc["breweryname"] = (const char *)tap.breweryname;
             doc["kegeratorname"] = (const char *)tap.kegeratorname;
@@ -123,6 +125,7 @@ bool sendPourReport(int tapid, float dispensed)
         {
             PourInfo pour;
             strlcpy(pour.api, API_KEY, sizeof(pour.api));
+            snprintf(pour.guid, sizeof(pour.guid), "%08X", getGUID());
             strlcpy(pour.hostname, config.hostname, sizeof(pour.hostname));
             strlcpy(pour.breweryname, config.copconfig.breweryname, sizeof(pour.breweryname));
             strlcpy(pour.kegeratorname, config.copconfig.kegeratorname, sizeof(pour.kegeratorname));
@@ -131,10 +134,11 @@ bool sendPourReport(int tapid, float dispensed)
             pour.dispensed = dispensed;
             pour.remaining = flow.taps[tapid].remaining;
 
-            const size_t capacity = JSON_OBJECT_SIZE(8);
+            const size_t capacity = JSON_OBJECT_SIZE(9);
             DynamicJsonDocument doc(capacity);
 
             doc["api"] = (const char *)pour.api;
+            doc["guid"] = (const char *)pour.guid;
             doc["hostname"] = (const char *)pour.hostname;
             doc["breweryname"] = (const char *)pour.breweryname;
             doc["kegeratorname"] = (const char *)pour.kegeratorname;
@@ -177,16 +181,18 @@ bool sendKickReport(int tapid)
         {
             KickReport kick;
             strlcpy(kick.api, API_KEY, sizeof(kick.api));
+            snprintf(kick.guid, sizeof(kick.guid), "%08X", getGUID());
             strlcpy(kick.hostname, config.hostname, sizeof(kick.hostname));
             strlcpy(kick.breweryname, config.copconfig.breweryname, sizeof(kick.breweryname));
             strlcpy(kick.kegeratorname, config.copconfig.kegeratorname, sizeof(kick.kegeratorname));
             strlcpy(kick.reporttype, reporttype[reportkey], sizeof(kick.reporttype));
             kick.tapid = tapid;
 
-            const size_t capacity = JSON_OBJECT_SIZE(6);
+            const size_t capacity = JSON_OBJECT_SIZE(7);
             DynamicJsonDocument doc(capacity);
 
             doc["api"] = (const char *)kick.api;
+            doc["guid"] = (const char*)kick.guid;
             doc["hostname"] = (const char *)kick.hostname;
             doc["breweryname"] = (const char *)kick.breweryname;
             doc["kegeratorname"] = (const char *)kick.kegeratorname;
@@ -225,16 +231,18 @@ bool sendCoolStateReport()
     {
         CoolState cool;
         strlcpy(cool.api, API_KEY, sizeof(cool.api));
+        snprintf(cool.guid, sizeof(cool.guid), "%08X", getGUID());
         strlcpy(cool.hostname, config.hostname, sizeof(cool.hostname));
         strlcpy(cool.breweryname, config.copconfig.breweryname, sizeof(cool.breweryname));
         strlcpy(cool.kegeratorname, config.copconfig.kegeratorname, sizeof(cool.kegeratorname));
         strlcpy(cool.reporttype, reporttype[reportkey], sizeof(cool.reporttype));
         cool.coolstate = tstat.state;
 
-        const size_t capacity = JSON_OBJECT_SIZE(6);
+        const size_t capacity = JSON_OBJECT_SIZE(7);
         DynamicJsonDocument doc(capacity);
 
         doc["api"] = (const char *)cool.api;
+        doc["guid"] = (const char*)cool.guid;
         doc["hostname"] = (const char *)cool.hostname;
         doc["breweryname"] = (const char *)cool.breweryname;
         doc["kegeratorname"] = (const char *)cool.kegeratorname;
@@ -267,6 +275,7 @@ bool sendTempReport()
     {
         TempReport temps;
         strlcpy(temps.api, API_KEY, sizeof(temps.api));
+        snprintf(temps.guid, sizeof(temps.guid), "%08X", getGUID());
         strlcpy(temps.hostname, config.hostname, sizeof(temps.hostname));
         strlcpy(temps.breweryname, config.copconfig.breweryname, sizeof(temps.breweryname));
         strlcpy(temps.kegeratorname, config.copconfig.kegeratorname, sizeof(temps.kegeratorname));
@@ -293,10 +302,11 @@ bool sendTempReport()
             temps.sensor[i].enabled = config.temps.enabled[i];
         }
 
-        const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(11);
+        const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(12);
         DynamicJsonDocument doc(capacity);
 
         doc["api"] = (const char *)temps.api;
+        doc["guid"] = (const char *)temps.guid;
         doc["hostname"] = (const char *)temps.hostname;
         doc["breweryname"] = (const char *)temps.breweryname;
         doc["kegeratorname"] = (const char *)temps.kegeratorname;

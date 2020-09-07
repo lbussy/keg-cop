@@ -102,6 +102,7 @@ struct Config
 {
     // Stores the complete configuration
     ApConfig apconfig;
+    char guid[9];
     char hostname[32];
     CopConfig copconfig;
     Temperatures temps;

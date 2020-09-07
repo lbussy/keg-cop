@@ -4,6 +4,7 @@
         "passphrase": "kegcop12"
     },
     "hostname": "kegcop",
+    "guid": "A1B3C5D7",
     "copconfig": {
         "breweryname": "Silver Fox Brewery",
         "kegeratorname": "Keezer",
@@ -31,7 +32,7 @@
     },
     "urltarget": {
         "url": "",
-        "freq": 15,
+        "freq": 30,
         "update": false
     },
     "dospiffs1": false,
