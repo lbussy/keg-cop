@@ -87,6 +87,16 @@ JSON Definition:
 			"remaining": 999.9999,
 			"active": false,
 			"calibrating": false
+		},
+		{
+			"tapid": 99,
+			"pin": 99,
+			"ppu": 999999,
+			"name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+			"capacity": 999.9999,
+			"remaining": 999.9999,
+			"active": false,
+			"calibrating": false
 		}
 	]
 }
@@ -96,18 +106,18 @@ Size:
 -----
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(8) + 1100;
-1184+990 = 2174
+const size_t capacity = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(2) + 9*JSON_OBJECT_SIZE(8) + 1240;
+1328+1112 = 2440
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(8) + 1100;
+const size_t capacity = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(2) + 9*JSON_OBJECT_SIZE(8) + 1240;
 DynamicJsonDocument doc(capacity);
 
-const char* json = "{\"imperial\":false,\"taps\":[{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false}]}";
+const char* json = "{\"imperial\":false,\"taps\":[{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false},{\"tapid\":99,\"pin\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false,\"calibrating\":false}]}";
 
 deserializeJson(doc, json);
 
@@ -194,13 +204,23 @@ float taps_7_capacity = taps_7["capacity"]; // 999.9999
 float taps_7_remaining = taps_7["remaining"]; // 999.9999
 bool taps_7_active = taps_7["active"]; // false
 bool taps_7_calibrating = taps_7["calibrating"]; // false
+
+JsonObject taps_8 = taps[8];
+int taps_8_tapid = taps_8["tapid"]; // 99
+int taps_8_pin = taps_8["pin"]; // 99
+long taps_8_ppu = taps_8["ppu"]; // 999999
+const char* taps_8_name = taps_8["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+float taps_8_capacity = taps_8["capacity"]; // 999.9999
+float taps_8_remaining = taps_8["remaining"]; // 999.9999
+bool taps_8_active = taps_8["active"]; // false
+bool taps_8_calibrating = taps_8["calibrating"]; // false
 ```
 
 Serializing / Saving:
 ---------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(8);
+const size_t capacity = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(2) + 9*JSON_OBJECT_SIZE(8);
 DynamicJsonDocument doc(capacity);
 
 doc["imperial"] = false;
@@ -286,6 +306,16 @@ taps_7["capacity"] = 999.9999;
 taps_7["remaining"] = 999.9999;
 taps_7["active"] = false;
 taps_7["calibrating"] = false;
+
+JsonObject taps_8 = taps.createNestedObject();
+taps_8["tapid"] = 99;
+taps_8["pin"] = 99;
+taps_8["ppu"] = 999999;
+taps_8["name"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+taps_8["capacity"] = 999.9999;
+taps_8["remaining"] = 999.9999;
+taps_8["active"] = false;
+taps_8["calibrating"] = false;
 
 serializeJson(doc, Serial);
 ```

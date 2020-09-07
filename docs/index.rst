@@ -13,7 +13,7 @@ Invariably, the homebrewer moves from cleaning and filling 24 bottles at a time,
 .. image:: home.png
    :scale: 50%
    :align: center
-   :alt: Keg Cop Logo
+   :alt: Keg Cop Home
 
 At the core, Keg Cop is a small, inexpensive microcontroller far more capable than the computers used for the Apollo moon missions.  You connect the controller to one or more flow meters. Keg Cop makes incredibly precise measurements while you dispense your beer.  The capacity and amount remaining in each display on a compact and mobile responsive web page.  Optionally, you may configure Keg Cop to upload data to several other systems.
 

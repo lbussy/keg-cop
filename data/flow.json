@@ -80,6 +80,16 @@
             "remaining":1.2,
             "active":true,
             "calibrating":false
+        },
+        {
+            "tapid":8,
+            "pin":12,
+            "ppu":21120,
+            "name":"Mystery Mead",
+            "capacity":5,
+            "remaining":3.7,
+            "active":true,
+            "calibrating":false
         }
     ]
 }

@@ -68,7 +68,7 @@ bool sendTargetReport()
             urlreport.tap[i].active = flow.taps[i].active;
         }
 
-        const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(8) + 5*JSON_OBJECT_SIZE(3) + 8*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(12);
+        const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5*JSON_OBJECT_SIZE(3) + 9*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(12);
         DynamicJsonDocument doc(capacity);
 
         doc["api"] = (const char *)urlreport.api;
