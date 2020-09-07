@@ -23,15 +23,16 @@ SOFTWARE. */
 #include "urltarget.h"
 
 asyncHTTPrequest urltarget;
-static const char * reportkey = "targeturlreport";
-static const char * reportname = "Target URL Report";
+static const char *reportkey = "targeturlreport";
+static const char *reportname = "Target URL Report";
 
 bool sendTargetReport()
-{ // Send a temp report on timer
+{                                                                            // Send a temp report on timer
     if ((config.urltarget.url != NULL) && (config.urltarget.url[0] != '\0')) // If URL Target is enabled
     {
         UrlReport urlreport;
         strlcpy(urlreport.api, API_KEY, sizeof(urlreport.api));
+        snprintf(urlreport.guid, sizeof(urlreport.guid), "%08X", getGUID());
         strlcpy(urlreport.hostname, config.hostname, sizeof(urlreport.hostname));
         strlcpy(urlreport.breweryname, config.copconfig.breweryname, sizeof(urlreport.breweryname));
         strlcpy(urlreport.kegeratorname, config.copconfig.kegeratorname, sizeof(urlreport.kegeratorname));
@@ -68,10 +69,12 @@ bool sendTargetReport()
             urlreport.tap[i].active = flow.taps[i].active;
         }
 
-        const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5*JSON_OBJECT_SIZE(3) + 9*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(12);
+        const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5*JSON_OBJECT_SIZE(3) + 9*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(13);
         DynamicJsonDocument doc(capacity);
 
         doc["api"] = (const char *)urlreport.api;
+
+        doc["guid"] = (const char *)urlreport.guid;
         doc["hostname"] = (const char *)urlreport.hostname;
         doc["breweryname"] = (const char *)urlreport.breweryname;
         doc["kegeratorname"] = (const char *)urlreport.kegeratorname;
@@ -188,7 +191,7 @@ bool sendTReport(const String &json)
 }
 
 void targetResultHandler(void *optParm, asyncHTTPrequest *report, int readyState)
-{  
+{
     // enum    readyStates {
     //         readyStateUnsent = 0,            // Client created, open not yet called
     //         readyStateOpened =  1,           // open() has been called, connected
@@ -214,7 +217,7 @@ void targetResultHandler(void *optParm, asyncHTTPrequest *report, int readyState
 
         const int code = report->responseHTTPcode();
         const int elapsed = report->elapsedTime();
-        const char * __attribute__((unused)) response = report->responseText().c_str();
+        const char *__attribute__((unused)) response = report->responseText().c_str();
 
         switch (code)
         {

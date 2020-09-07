@@ -217,3 +217,18 @@ std::string addThousandSeparators(std::string value, char thousandSep = ',', cha
     }
     return value;
 }
+
+uint32_t getGUID()
+{
+    // Return (G)UID for ESP8266 or ESP32
+    // From: https://forum.arduino.cc/index.php?topic=613549.0
+    uint32_t chipID;
+#ifdef ESP8266
+    chipID = ESP.getChipId();
+#elif ESP32
+    uint64_t macAddress = ESP.getEfuseMac();
+    uint64_t macAddressTrunc = macAddress << 40;
+    chipID = macAddressTrunc >> 40;
+#endif
+    return chipID;
+}

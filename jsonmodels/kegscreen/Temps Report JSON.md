@@ -7,6 +7,7 @@ JSON Definition:
 ```
 {
     "api":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "guid":"xxxxxxxx",
     "hostname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "breweryname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "kegeratorname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -50,22 +51,23 @@ Size:
 -----
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(11) + 650;
-496+578 = 1074
+const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(12) + 660;
+512+592 = 1104
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(11) + 650;
+const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(12) + 660;
 DynamicJsonDocument doc(capacity);
 
-const char* json = "{\"api\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"reporttype\":\"xxxxxxxxxxxxxxxx\",\"imperial\":false,\"controlpoint\":99,\"setting\":999.999,\"status\":99,\"controlenabled\":false,\"sensors\":[{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999}]}";
+const char* json = "{\"api\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"guid\":\"xxxxxxxx\",\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"reporttype\":\"xxxxxxxxxxxxxxxx\",\"imperial\":false,\"controlpoint\":99,\"setting\":999.999,\"status\":99,\"controlenabled\":false,\"sensors\":[{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999}]}";
 
 deserializeJson(doc, json);
 
 const char* api = doc["api"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* guid = doc["guid"]; // "xxxxxxxx"
 const char* hostname = doc["hostname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* breweryname = doc["breweryname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* kegeratorname = doc["kegeratorname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -108,10 +110,11 @@ Serializing / Saving:
 ---------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(11);
+const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(12);
 DynamicJsonDocument doc(capacity);
 
 doc["api"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+doc["guid"] = "xxxxxxxx";
 doc["hostname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["breweryname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["kegeratorname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";

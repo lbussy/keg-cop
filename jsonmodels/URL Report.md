@@ -7,6 +7,7 @@ JSON Definition:
 ```
 {
     "api":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+	"guid":"xxxxxxxx",
     "hostname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "breweryname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "kegeratorname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -124,22 +125,23 @@ Size:
 -----
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5*JSON_OBJECT_SIZE(3) + 9*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(12) + 1710;
-1520+1537 = 3057
+const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5*JSON_OBJECT_SIZE(3) + 9*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(13) + 1730;
+1536+1551 = 3087
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5*JSON_OBJECT_SIZE(3) + 9*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(12) + 1710;
+const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5*JSON_OBJECT_SIZE(3) + 9*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(13) + 1730;
 DynamicJsonDocument doc(capacity);
 
-const char* json = "{\"api\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"reporttype\":\"xxxxxxxxxxxxxxxx\",\"imperial\":false,\"controlpoint\":99,\"setpoint\":999.999,\"state\":99,\"controlenabled\":false,\"sensors\":[{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999}],\"taps\":[{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false}]}";
+const char* json = "{\"api\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"guid\":\"xxxxxxxx\",\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"reporttype\":\"xxxxxxxxxxxxxxxx\",\"imperial\":false,\"controlpoint\":99,\"setpoint\":999.999,\"state\":99,\"controlenabled\":false,\"sensors\":[{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999}],\"taps\":[{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false},{\"tapid\":99,\"ppu\":999999,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"capacity\":999.9999,\"remaining\":999.9999,\"active\":false}]}";
 
 deserializeJson(doc, json);
 
 const char* api = doc["api"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* guid = doc["guid"]; // "xxxxxxxx"
 const char* hostname = doc["hostname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* breweryname = doc["breweryname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* kegeratorname = doc["kegeratorname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -256,10 +258,11 @@ Serializing / Saving:
 ---------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5*JSON_OBJECT_SIZE(3) + 9*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(12);
+const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5*JSON_OBJECT_SIZE(3) + 9*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(13);
 DynamicJsonDocument doc(capacity);
 
 doc["api"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+doc["guid"] = "xxxxxxxx";
 doc["hostname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["breweryname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["kegeratorname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";

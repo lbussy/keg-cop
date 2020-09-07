@@ -47,6 +47,7 @@ double convertOneCtoF(double);
 double convertGtoL(double);
 double convertLtoG(double);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
+uint32_t getGUID();
 
 static bool __attribute__((unused)) doReset = false;            // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;        // Semaphore for wifi reset

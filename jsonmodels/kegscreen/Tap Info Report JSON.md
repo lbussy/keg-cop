@@ -7,6 +7,7 @@ JSON Definition:
 ```
 {
     "api":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "guid":"xxxxxxxx",
     "hostname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "breweryname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "kegeratorname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -26,22 +27,23 @@ Size:
 -----
 
 ```
-const size_t capacity = JSON_OBJECT_SIZE(13) + 400;
-208+358 = 566
+const size_t capacity = JSON_OBJECT_SIZE(14) + 420;
+224+372 = 596
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-const size_t capacity = JSON_OBJECT_SIZE(13) + 400;
+const size_t capacity = JSON_OBJECT_SIZE(14) + 420;
 DynamicJsonDocument doc(capacity);
 
-const char* json = "{\"api\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"reporttype\":\"xxxxxxxxxxxxxxxx\",\"imperial\":false,\"tapid\":99,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"ppu\":999999,\"remaining\":999.9999,\"capacity\":999.9999,\"active\":false,\"calibrating\":false}";
+const char* json = "{\"api\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"guid\":\"xxxxxxxx\",\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"reporttype\":\"xxxxxxxxxxxxxxxx\",\"imperial\":false,\"tapid\":99,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"ppu\":999999,\"remaining\":999.9999,\"capacity\":999.9999,\"active\":false,\"calibrating\":false}";
 
 deserializeJson(doc, json);
 
 const char* api = doc["api"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* guid = doc["guid"]; // "xxxxxxxx"
 const char* hostname = doc["hostname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* breweryname = doc["breweryname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* kegeratorname = doc["kegeratorname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -60,10 +62,11 @@ Serializing / Saving:
 ---------------------
 
 ```
-const size_t capacity = JSON_OBJECT_SIZE(13);
+const size_t capacity = JSON_OBJECT_SIZE(14);
 DynamicJsonDocument doc(capacity);
 
 doc["api"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+doc["guid"] = "xxxxxxxx";
 doc["hostname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["breweryname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["kegeratorname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";

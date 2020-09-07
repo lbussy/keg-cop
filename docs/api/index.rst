@@ -49,6 +49,7 @@ These pages return proper JSON reports for configuration and status items:
             "passphrase": "kegcop12"
         },
         "hostname": "kegcop",
+        "guid": "A1B3C5D7",
         "copconfig": {
             "breweryname": "Silver Fox Brewery",
             "kegeratorname": "Keezer",
@@ -76,7 +77,7 @@ These pages return proper JSON reports for configuration and status items:
         },
         "urltarget": {
             "url": "",
-            "freq": 15,
+            "freq": 30,
             "update": false
         },
         "dospiffs1": false,
@@ -405,6 +406,7 @@ The Target URL Report provides a holistic picture of the system to a custom/thir
 
     {
         "api":"Keg Cop",
+        "guid": "A1B3C5D7",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
@@ -530,6 +532,7 @@ Whenever a change is made to any of the tap information, this report is sent to 
 
     {
         "api":"Keg Cop",
+        "guid": "A1B3C5D7",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
@@ -554,6 +557,7 @@ Whenever a pour completes, Keg Cop sends a pour report to teh Keg Screen system.
 
     {
         "api":"Keg Cop",
+        "guid": "A1B3C5D7",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
@@ -573,6 +577,7 @@ Keg Cop employs algorithm for detecting a kicked keg. When the pour volume excee
 
     {
         "api":"Keg Cop",
+        "guid": "A1B3C5D7",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
@@ -590,6 +595,7 @@ Whenever the cooling state changes, a state report is triggered for the Keg Scre
 
     {
         "api":"Keg Cop",
+        "guid": "A1B3C5D7",
         "hostname":"kegcop",
         "breweryname":"Keg Cop Brewery",
         "kegeratorname":"Keezer",
@@ -618,6 +624,7 @@ A report containing all temperature points is sent to the Keg Screen system ever
 
     {
         "api":"Keg Cop",
+        "guid": "A1B3C5D7",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",

@@ -24,8 +24,8 @@ SOFTWARE. */
 
 Config config;
 const char *filename = FILENAME;
-const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(9) + JSON_OBJECT_SIZE(13);
-extern const size_t capacityDeserial = capacitySerial + 930;
+const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(10) + JSON_OBJECT_SIZE(13);
+extern const size_t capacityDeserial = capacitySerial + 940;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -499,6 +499,8 @@ void Config::save(JsonObject obj) const
 {
     // Add Access Point object
     apconfig.save(obj.createNestedObject("apconfig"));
+    // Add GUID object
+    obj["guid"] = guid;
     // Add Hostname object
     obj["hostname"] = hostname;
     // Add Bubble object
@@ -523,6 +525,14 @@ void Config::load(JsonObjectConst obj)
     //
 
     apconfig.load(obj["apconfig"]);
+
+    // if (obj["guid"].isNull()) {
+    //     snprintf(guid, sizeof(guid), "%08X", getGUID());
+    // } else {
+    //     const char* gu = obj["guid"];
+    //     strlcpy(guid, gu, sizeof(guid));
+    // }
+    snprintf(guid, sizeof(guid), "%08X", getGUID());
 
     if (obj["hostname"].isNull()) {
         strlcpy(hostname, APNAME, sizeof(hostname));
