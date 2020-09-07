@@ -5,7 +5,7 @@ PCB Assembly
 
 .. todo::
 
-   Add thumbnails of the various assembled PCBs somwhere here without leaving the page?
+   Add thumbnails of the various assembled PCBs somewhere here without leaving the page?
 
 Keg Cop runs on an ESP32 controller. To detect the information to be logged, you need to connect specific devices to the controller. I have provided a main circuit board design, as well as several breakouts for your use.
 
@@ -25,7 +25,7 @@ Controller
 
 The ESP32 controller is paired with many different "developer boards" to make connections easier. While you can buy a bare ESP32 chip, you will walk that road alone.
 
-The developer board used in this project is the Lolin D32 v1.0.0 (not the Pro or 2.0.) Wherever you purchase it, make sure it is an official Espressif ESP32-WROOM-32 Module. It says 4MB (or sometimes shown as 32Mb which is 4 megaBYTES converted to megaBITS.)  There is a version sometimes called "LED" which means there is an annoying blinking LED when a battery is not connected.  It will work, and so long as it's in a case, you won't notice the blinking.  Be sure it comes with the 16-pin male and female headers, or get them elsewhere. It is common to only receive the male headers in the package.
+The developer board used in this project is the Lolin D32 v1.0.0 (not the Pro or 2.0.) Wherever you purchase it, make sure it is an official Espressif ESP32-WROOM-32 Module. It says 4MB (or sometimes shown as 32Mb, which is 4 megaBYTES converted to megaBITS.)  There is a version sometimes called "LED," which means there is an annoying blinking LED when a battery is not connected.  It will work, and so long as it's in a case, you won't notice the blinking.  Be sure it comes with the 16-pin male and female headers, or get them elsewhere. It is common to only receive the male headers in the package.
 
 .. image:: lolin_d32.jpg
    :scale: 50%
@@ -41,15 +41,15 @@ Printed Circuit Boards
 
 This configuration will use the following three boards:
 
-- \*\*\* `Tall Boy main board <https://dirtypcbs.com/store/designer/details/4818/6457/keg-cop-tallboy>`_
+- \*\*\* `Main Board <https://dirtypcbs.com/store/designer/details/4818/6477/keg-cop-main-board>`_
 - `Sensor board <https://dirtypcbs.com/store/designer/details/4818/6460/keg-cop-sensor-breakout>`_
-- 3 x `Daisy Chain boards <https://dirtypcbs.com/store/designer/details/4818/6458/keg-cop-daisy-chain>`_
+- 3 x `Daisy Chain boards <https://dirtypcbs.com/store/designer/details/4818/6478/keg-cop-daisy-chain>`_
 
 The links will take you to DirtyPCBs where I have uploaded the designs.  When you purchase the boards there, you pay a small premium (10%), which goes into my account. I use that credit in the development of these and other projects. Anyone who has done development like this can tell you how many boards we go through, and the cost is not insignificant. You may take the files from GitHub and upload them yourself to avoid that small markup if you choose. If you *do* purchase them here, it's only fair I tell you about it, and what I will do with the credits.
 
-These links will allow you to order boards in increments of ±10.  Sometimes you might get 11, sometimes nine, it's cheap and from China and that's how it works. Think of it as a lottery. If you end up with extras, I encourage you to share with others.
+These links will allow you to order boards in increments of ±10.  Sometimes you might get 11, sometimes nine, it's cheap and from China, and that's how it works. Think of it as a lottery. If you end up with extras, I encourage you to share with others.
 
-(\*\*\*) - The main board is > than the "standard" Dirty PCB size of 5x5cm.  When you get to the ordering page, you MUST select 10x10, which has a slightly higher price.  If you forget this, I think they may adjust the price afterward. For such low prices, it is proper to be upfront about things. On the same page, you may also select other than the default board color, which is red.
+(\*\*\*) - The main board is larger than the "standard" Dirty PCB size of 5x5cm.  When you get to the ordering page, you MUST select 10x10, which has a slightly higher price.  If you forget this, I think they may adjust the price afterward. For such low prices, it is proper to be upfront about things. On the same page, you may also select other than the default board color, which is red.
 
 .. image:: size.png
    :scale: 100%
@@ -61,13 +61,13 @@ Components
 
 For this configuration, we will use the following components:
 
-**Tallboy Main Board:**
+**Main Board:**
 
 - 2 x `0.1μF (1.0nF) Ceramic Capacitor (102) 2.54mm spacing <https://www.aliexpress.com/item/32868001945.html>`_ (C1, 3) (Note: The same link as below, select the proper item)
 - 2 x `1.0μF Ceramic Capacitor (105) 2.54mm spacing <https://www.aliexpress.com/item/32868001945.html>`_ (C2, C4) (Note: The same link as above, select the proper item)
 - \*1 x `DS18B20 PCB-mount sensor <https://www.aliexpress.com/item/1901263688.html>`_ (IC1) (Note: Multiple items on the page, be sure to select the proper item)
 - 5 x `2.2kΩ 1/4W 5% Axial Resistor <https://www.aliexpress.com/item/32660635741.html>`_ (R1-R5) (Note: Multiple items on the page, be sure to select the proper item)
-- 2 x `RJ45 8-pin 90° no shield PCM-mount jack <https://www.aliexpress.com/item/32736146888.html>`_
+- 4 x `RJ45 8-pin 90° no shield PCM-mount jack <https://www.aliexpress.com/item/32736146888.html>`_
 - 1 x `2-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (POWER) (Note: More than enough in one lot for all three headers)
 - \*1 x `3-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (ROOM) (Note: More than enough in one lot for all three headers)
 - 1 x `4-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (RELAY) (Note: More than enough in one lot for all three headers)
@@ -82,7 +82,7 @@ For this configuration, we will use the following components:
 - 2 x `RJ45 8-pin 90° no shield PCM-mount jack <https://www.aliexpress.com/item/32736146888.html>`_
 - 1 x `3-pin terminal block <https://www.aliexpress.com/item/32965348107.html>`_
 
-(*) - Optional items for use when you desire a room temperature sensor. Either use a DS18B20 sensor with a lead, or a PCB-mount sensor.
+(*) - Optional items for use when you desire a room temperature sensor. Either use a DS18B20 sensor with a lead or a PCB-mount sensor.
 
 Soldering
 ===========
@@ -95,11 +95,11 @@ I do not intend to provide a step-by-step on how to solder here. Still, I recomm
 
 - Resistors - These are the shortest mounted components. Soldering the resistors to the board first is the least challenging. They are also some of the most heat-tolerant parts, so these grant you some experience to get you going.
 - Capacitors - The next tallest components, these should go on next. They are also relatively tolerant of heat, so you can continue to refine your skills. Be sure to get them as close to the board as possible since having them stick up changes their intended impact on the circuit.
-- DS18B20 Sensor - Now that you are sure of your skills, these sensors should be soldered on next. Be careful not to overheat the devices, but they are not too sensitive.
+- DS18B20 Sensor - Now that you are sure of your skills, these sensors should be soldered next. Be careful not to overheat the devices, but they are not too sensitive.
 - Pin headers and terminal blocks - These components are not vulnerable to the heat at all except for the plastic.
 - RJ45 Jacks - These are the tallest items, and you should solder them on last.
 
-When you solder the sensor board, you have a choice. I designed it to orient the openings of the 3-pin terminal block pointing *in* to route the cables together out one end of a case. You may reverse them if you prefer.
+When you solder the sensor board, you have a choice. I designed it to orient the 3-pin terminal block's openings pointing *in* to route the cables together out one end of a case. You may reverse them if you prefer.
 
 Once you have finished soldering the shield, make sure to clean off the flux. You can use cheap vodka or Everclear, or a commercially available flux solvent.
 

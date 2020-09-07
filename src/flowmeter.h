@@ -50,7 +50,7 @@ struct Taps
 struct Flowmeter
 {
     bool imperial;
-    Taps taps[8];
+    Taps taps[NUMTAPS];
 
     void load(JsonObjectConst);
     void save(JsonObject) const;

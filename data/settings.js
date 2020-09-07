@@ -341,6 +341,9 @@ function processPost(obj) {
         case "#tap7":
             processTapPost(url, obj, 7);
             break;
+        case "#tap8":
+            processTapPost(url, obj, 8);
+            break;
         case "#tempcontrol":
             processTempControlPost(url, obj);
             break;
@@ -397,7 +400,7 @@ function processControllerPost(url, obj) {
         hostnameVal = $form.find("input[name='hostname']").val(),
         brewerynameVal = $form.find("input[name='breweryname']").val(),
         kegeratornameVal = $form.find("input[name='kegeratorname']").val()
-        imperialVal = $("[name='imperial']:checked").val(),
+    imperialVal = $("[name='imperial']:checked").val(),
         tapsolenoidVal = $("[name='tapsolenoid']:checked").val()
 
     // Hold some data about what we changed
@@ -512,10 +515,10 @@ function processKegScreenPost(url, obj) {
     var $form = $(obj),
         kegscreen = $form.find("input[name='kegscreen']").val(),
 
-    // Process post
-    data = {
-        kegscreen: kegscreen
-    };
+        // Process post
+        data = {
+            kegscreen: kegscreen
+        };
     postData(url, data);
 }
 
@@ -572,7 +575,7 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
 }
 
 function updateHelp(hashLoc) {
-    var url="https://docs.kegcop.com"
+    var url = "https://docs.kegcop.com"
 
     // Switch here for hashLoc
     switch (hashLoc) {
@@ -584,6 +587,7 @@ function updateHelp(hashLoc) {
         case "#tap5":
         case "#tap6":
         case "#tap7":
+        case "#tap8":
             url = url + "/en/latest/context/settings/taps/index.html";
             break;
         case "#tempcontrol":

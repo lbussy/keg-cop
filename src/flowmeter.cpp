@@ -24,14 +24,14 @@ SOFTWARE. */
 
 Flowmeter flow;
 const char *flowfilename = FLOWFILENAME;
-int flowPins[8] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7};
+int flowPins[NUMTAPS] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7, FLOW8};
 volatile static unsigned long pulse[NUMTAPS];           // Unregistered pulse counter
 volatile static unsigned long lastPulse[NUMTAPS];       // Pulses pending at last poll
 volatile static unsigned long lastPulseTime[NUMTAPS];   // Monitor ongoing active pours
 volatile static unsigned long lastLoopTime[NUMTAPS];    // Monitor ongoing active pours
-extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(2) + 8*JSON_OBJECT_SIZE(8);
-extern const size_t capacityFlowDeserial = capacityFlowSerial + 1100;
-extern const size_t capacityPulseSerial = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(1);
+extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(2) + 9*JSON_OBJECT_SIZE(8);
+extern const size_t capacityFlowDeserial = capacityFlowSerial + 1240;
+extern const size_t capacityPulseSerial = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(1);
 extern const size_t capacityPulseDeserial = capacityPulseSerial + 10;
 
 static IRAM_ATTR void HandleIntISR0(void)

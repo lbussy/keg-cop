@@ -89,6 +89,7 @@
                             <a class="dropdown-item" data-toggle="tab" href="#tap5">Tap 6</a>
                             <a class="dropdown-item" data-toggle="tab" href="#tap6">Tap 7</a>
                             <a class="dropdown-item" data-toggle="tab" href="#tap7">Tap 8</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap8">Tap 9</a>
                         </div>
                     </li>
 
@@ -808,7 +809,7 @@
                             
                         </div>
 
-                    </div> <!-- Tap 7 Tab -->
+                    </div> <!-- Tap 6 Tab -->
 
                     <div class="tab-pane fade" id="tap7"> <!-- Tap 7 Tab -->
 
@@ -905,6 +906,102 @@
                         </div>
 
                     </div> <!-- Tap 7 Tab -->
+
+                    <div class="tab-pane fade" id="tap8"> <!-- Tap 8 Tab -->
+
+                        <div class="card-header">
+                            <h4 class="card-title">Tap 8 Configuration</h4>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap8" action="/settings/tapcontrol/" method="POST" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="7">
+                            
+                                <div class="form-group row">
+                                    <label for="tap8ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap8ppu" id="tap8ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap8beername" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap8beername"
+                                            id="tap8beername" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap8cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap8cap" id="tap8cap"
+                                            min=".0001" max="999" step=".0001" placeholder="5" required>
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group row">
+                                    <label for="tap8remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap8remain"
+                                            id="tap8remain" min=".000" max="999" step=".0001" placeholder="5" required>
+                                    </div>
+                                </div>
+                            
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap8active" id="tap8active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap8active" id="tap8active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                </div>
+                            
+                            </form>
+                            
+                        </div>
+
+                    </div> <!-- Tap 8 Tab -->
 
                     <div class="tab-pane fade" id="controller"> <!-- Controller Tab -->
 
@@ -1432,6 +1529,7 @@
                                                 <option value="5">6</option>
                                                 <option value="6">7</option>
                                                 <option value="7">8</option>
+                                                <option value="8">9</option>
                                             </select>
                                         </div>
                                     </div>

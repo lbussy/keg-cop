@@ -3,10 +3,6 @@
 System Assembly
 ###################
 
-.. todo::
-
-   Add 8-Pack and 6-Pack options/representations?
-
 As you have learned in the discussion on :ref:`planning your system <planning>`, Keg Cop is capable of a wide variety of configurations. Each has similar building blocks, and you may apply that methodology to a variety of applications.
 
 Described here are a system with two flow meters, a room temp sensor, a keg temp sensor, a chamber sensor, cooling control, and a solenoid.
@@ -14,7 +10,7 @@ Described here are a system with two flow meters, a room temp sensor, a keg temp
 The main board is the centerpiece of the system. It hosts the controller and serves as a connection for the relay, sensors, and flow meters.
 
 .. image:: system.png
-   :scale: 50%
+   :scale: 15%
    :align: center
    :alt: System Diagram
 
@@ -26,7 +22,7 @@ You will power the system with a micro-USB cable plugged directly into the contr
 Flowmeters
 ************
 
-In the diagram above, you can see a crucial feature of the system; a single Ethernet cable leads to one or more flowmeters. The first cable is from the main board (Tallboy, in this case) to the first flowmeter.  Using the Daisy Chain boards, the first connection is always Flowmeter #1.  Any subsequent connections will be #2, #3, and so on up to six.
+In the diagram above, you can see a crucial feature of the system; a single Ethernet cable leads to one or more flowmeters. The first cable is from the main board to the first flowmeter.  Using the Daisy Chain boards, the first connection is always Flowmeter #1.  Any subsequent connections will be #2, #3, and so on up to six.
 
 Temperature Sensors
 ********************
@@ -61,18 +57,18 @@ Remove the jumper between JD-VCC and VCC on the relay board.  Connect the two-pi
 We will use the four-pin header to control the relays. Connect the four-pin header labeled RELAY on the main board in the following manner:
 
 - VCC on the relay to V on RELAY header
-- IN2 on the relay to C on RELAY header
-- IN1 on the relay to S on RELAY header
+- IN1 on the relay to C on RELAY header
+- IN2 on the relay to S on RELAY header
 - GND on the relay to G on RELAY header
 
 Cooling
 ========
 
-In this diagram, we use Relay #2 for cooling. This document is not sufficient to describe how to do high voltage wiring. If you are not familiar with this concept, please seek out a licensed and insured electrician.
+In this diagram, we use Relay #1 for cooling. This document is not sufficient to describe how to do high voltage wiring. If you are not familiar with this concept, please seek out a licensed and insured electrician.
 
-Generally, we use the is used to make or break the hot side of the high voltage electrical circuit. When used in this manner, run the hot leg to the COM2 terminal. Run the load side to the NO2 terminal.
+Generally, we use the is used to make or break the hot side of the high voltage electrical circuit. When used in this manner, run the hot leg to the COM1 terminal. Run the load side to the NO1 terminal.
 
 Solenoid
 =========
 
-Solenoids come in a wide variety of configurations. I have designed this system to actuate a single relay to control one or more solenoids simultaneously. Power the solenoids with a separate, dedicated power supply of sufficient amperage and proper voltage for the relays you implement.  Run them in parallel, through the COM1 and NO1 terminals on Relay #1.
+Solenoids come in a wide variety of configurations. I have designed this system to actuate a single relay to control one or more solenoids simultaneously. Power the solenoids with a separate, dedicated power supply of sufficient amperage and proper voltage for the relays you implement.  Run them in parallel, through the COM2 and NO2 terminals on Relay #2.
