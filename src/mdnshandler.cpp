@@ -28,6 +28,7 @@ void mdnssetup() {
     } else {
         Log.notice(F("mDNS responder started for %s.local." CRR), WiFi.getHostname());
         MDNS.addService("http", "tcp", PORT);
+        MDNS.addService("kegcop", "tcp", PORT);
 #if DOTELNET == true
         MDNS.addService("telnet", "tcp", TELNETPORT);
 #endif
