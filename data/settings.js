@@ -136,6 +136,11 @@ function populateConfig(callback = null) { // Get configuration settings
                     imperial = false;
                     $('input:radio[name="imperial"]')[0].checked = true;
                 }
+                if (config.copconfig.serial) {
+                    $('input:radio[name="serial"]')[1].checked = true;
+                } else {
+                    $('input:radio[name="serial"]')[0].checked = true;
+                }
                 if (config.copconfig.tapsolenoid) {
                     $('input:radio[name="tapsolenoid"]')[0].checked = true;
                 } else {
@@ -400,7 +405,8 @@ function processControllerPost(url, obj) {
         hostnameVal = $form.find("input[name='hostname']").val(),
         brewerynameVal = $form.find("input[name='breweryname']").val(),
         kegeratornameVal = $form.find("input[name='kegeratorname']").val()
-    imperialVal = $("[name='imperial']:checked").val(),
+        imperialVal = $("[name='imperial']:checked").val(),
+        serialVal = $("[name='serial']:checked").val(),
         tapsolenoidVal = $("[name='tapsolenoid']:checked").val()
 
     // Hold some data about what we changed
@@ -441,6 +447,7 @@ function processControllerPost(url, obj) {
             breweryname: brewerynameVal,
             kegeratorname: kegeratornameVal,
             imperial: imperialVal,
+            serial: serialVal,
             tapsolenoid: tapsolenoidVal,
         }
         if (hostnamechanged && reloadpage) {

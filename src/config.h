@@ -60,13 +60,17 @@ SOFTWARE. */
 //
 //////////////////////////////////////////////////////////////////////////
 //
-// Leave this part alone
+// Leave this part alone, setup for telnet
 //
 #if DOTELNET == true
+#ifndef TELNETPORT
 #define TELNETPORT 23
+#endif
+#ifndef CRR
 #define CRR "\r\n"
 #else
 #define CRR "\n"
+#endif
 #endif
 //
 //////////////////////////////////////////////////////////////////////////

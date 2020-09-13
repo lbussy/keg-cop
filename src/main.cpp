@@ -48,7 +48,7 @@ void setup()
     }
     else
     {
-        Log.verbose(F("WiFi: Normal boot." CRR));
+        Log.verbose(F("Starting WiFi." CRR));
         doWiFi();
     }
 
@@ -73,7 +73,10 @@ void setup()
     startControl();     // Initialize temperature control
     doVersionPoll();    // Get server version at startup
 
-    Log.notice(F("Started %s version %s (%s) [%s]." CRR), API_KEY, version(), branch(), build());
+    if (!Log.getLevel())
+       nullDoc("d");
+    else
+        Log.notice(F("Started %s version %s (%s) [%s]." CRR), API_KEY, version(), branch(), build());
 }
 
 void loop()

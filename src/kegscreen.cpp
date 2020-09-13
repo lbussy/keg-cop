@@ -52,10 +52,11 @@ const char *reportname[5] = {
 
 bool sendTapInfoReport(int tapid)
 { // Push complete tap info (single tap) when tap is flipped to active or the data is changed
+    bool retval = true;
     ReportKey reportkey = KS_TAPINFO;
     if (tapid >= 0 && tapid <= NUMTAPS)
     {
-        if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
         {
             TapInfo tap;
             strlcpy(tap.api, API_KEY, sizeof(tap.api));
@@ -96,32 +97,34 @@ bool sendTapInfoReport(int tapid)
 
             if (sendReport(reportkey, json.c_str()))
             {
-                return true;
+                retval = true;
             }
             else
             {
-                return false;
+                retval = false;
             }
         }
         else
         {
             Log.verbose(F("Keg Screen reporting not enabled, skipping." CRR));
-            return false;
+            retval = false;
         }
     }
     else
     {
         Log.error(F("Error: Invalid tap submitted to %s (%d)." CRR), reportname[reportkey], tapid);
+        retval = true;
     }
-    return true;
+    return retval;
 }
 
 bool sendPourReport(int tapid, float dispensed)
 { // Send pour report when a pour is done (single tap)
+    bool retval = true;
     ReportKey reportkey = KS_POURREPORT;
     if (tapid >= 0 && tapid <= NUMTAPS)
     {
-        if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
         {
             PourInfo pour;
             strlcpy(pour.api, API_KEY, sizeof(pour.api));
@@ -152,32 +155,34 @@ bool sendPourReport(int tapid, float dispensed)
 
             if (sendReport(reportkey, json.c_str()))
             {
-                return true;
+                retval = true;
             }
             else
             {
-                return false;
+                retval = false;
             }
         }
         else
         {
             Log.verbose(F("Keg Screen reporting not enabled, skipping." CRR));
-            return false;
+            retval = false;
         }
     }
     else
     {
         Log.error(F("Error: Invalid tap submitted to %s (%d)." CRR), reportname[reportkey], tapid);
+        retval = true;
     }
-    return true;
+    return retval;
 }
 
 bool sendKickReport(int tapid)
 { // Send a kick report when keg kicks
+    bool retval = true;
     ReportKey reportkey = KS_KICKREPORT;
     if (tapid >= 0 && tapid <= NUMTAPS)
     {
-        if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
         {
             KickReport kick;
             strlcpy(kick.api, API_KEY, sizeof(kick.api));
@@ -192,7 +197,7 @@ bool sendKickReport(int tapid)
             DynamicJsonDocument doc(capacity);
 
             doc["api"] = (const char *)kick.api;
-            doc["guid"] = (const char*)kick.guid;
+            doc["guid"] = (const char *)kick.guid;
             doc["hostname"] = (const char *)kick.hostname;
             doc["breweryname"] = (const char *)kick.breweryname;
             doc["kegeratorname"] = (const char *)kick.kegeratorname;
@@ -204,30 +209,32 @@ bool sendKickReport(int tapid)
 
             if (sendReport(reportkey, json.c_str()))
             {
-                return true;
+                retval = true;
             }
             else
             {
-                return false;
+                retval = false;
             }
         }
         else
         {
             Log.verbose(F("Keg Screen reporting not enabled, skipping." CRR));
-            return false;
+            retval = false;
         }
     }
     else
     {
         Log.error(F("Error: Invalid tap submitted to %s (%d)." CRR), reportname[reportkey], tapid);
+        retval = true;
     }
-    return true;
+    return retval;
 }
 
 bool sendCoolStateReport()
 { // Send cooling status when a cooling state changes
+    bool retval = true;
     ReportKey reportkey = KS_COOLSTATE;
-    if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+    if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
     {
         CoolState cool;
         strlcpy(cool.api, API_KEY, sizeof(cool.api));
@@ -242,7 +249,7 @@ bool sendCoolStateReport()
         DynamicJsonDocument doc(capacity);
 
         doc["api"] = (const char *)cool.api;
-        doc["guid"] = (const char*)cool.guid;
+        doc["guid"] = (const char *)cool.guid;
         doc["hostname"] = (const char *)cool.hostname;
         doc["breweryname"] = (const char *)cool.breweryname;
         doc["kegeratorname"] = (const char *)cool.kegeratorname;
@@ -254,24 +261,26 @@ bool sendCoolStateReport()
 
         if (sendReport(reportkey, json.c_str()))
         {
-            return true;
+            retval = true;
         }
         else
         {
-            return false;
+            retval = false;
         }
     }
     else
     {
         Log.verbose(F("Keg Screen reporting not enabled, skipping." CRR));
-        return false;
+        retval = false;
     }
+    return retval;
 }
 
 bool sendTempReport()
 { // Send a temp report on timer
+    bool retval = true;
     ReportKey reportkey = KS_TEMPREPORT;
-    if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
+    if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
     {
         TempReport temps;
         strlcpy(temps.api, API_KEY, sizeof(temps.api));
@@ -302,7 +311,7 @@ bool sendTempReport()
             temps.sensor[i].enabled = config.temps.enabled[i];
         }
 
-        const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(12);
+        const size_t capacity = JSON_ARRAY_SIZE(5) + 5 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(12);
         DynamicJsonDocument doc(capacity);
 
         doc["api"] = (const char *)temps.api;
@@ -329,18 +338,19 @@ bool sendTempReport()
 
         if (sendReport(reportkey, json.c_str()))
         {
-            return true;
+            retval = true;
         }
         else
         {
-            return false;
+            retval = false;
         }
     }
     else
     {
         Log.verbose(F("Keg Screen reporting not enabled, skipping." CRR));
-        return false;
+        retval = false;
     }
+    return retval;
 }
 
 bool sendReport(ReportKey reportkey, const String &json)
@@ -441,7 +451,7 @@ void resultHandler(void *optParm, asyncHTTPrequest *report, int readyState)
 
         const int code = report->responseHTTPcode();
         const int elapsed = report->elapsedTime();
-        const char * __attribute__((unused)) response = report->responseText().c_str();
+        const char *__attribute__((unused)) response = report->responseText().c_str();
 
         switch (code)
         {

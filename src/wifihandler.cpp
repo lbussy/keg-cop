@@ -43,7 +43,10 @@ void doWiFi(bool dontUseStoredCreds)
     // myAsyncWifiManager.setWebServerCallback(webServerCallback); // Called after webserver is setup
 
 #ifndef DISABLE_LOGGING
-    myAsyncWifiManager.setDebugOutput(true); // Verbose debug is enabled by default
+    if (Log.getLevel())
+        myAsyncWifiManager.setDebugOutput(true); // Verbose debug is enabled by default
+    else
+        myAsyncWifiManager.setDebugOutput(false);
 #else
     myAsyncWifiManager.setDebugOutput(false);
 #endif
