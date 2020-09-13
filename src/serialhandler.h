@@ -26,6 +26,9 @@ SOFTWARE. */
 #include "tools.h"
 #include "config.h"
 #include "jsonconfig.h"
+//#include "execota.h"
+#include "version.h"
+#include "thatVersion.h"
 #include <ArduinoLog.h>
 #include <WiFiUdp.h>
 #include <Arduino.h>
@@ -35,7 +38,7 @@ SOFTWARE. */
 #endif
 
 void serial();
-void toggleRPCompat(bool, bool, bool);
+void toggleSerialCompat(bool);
 void printTimestamp(Print* _logOutput);
 void serialLoop();
 
@@ -76,10 +79,19 @@ size_t myPrintln(unsigned long num, int base);
 size_t myPrintln(double num, int digits);
 size_t myPrintln(const Printable& x);
 size_t myPrintln(struct tm * timeinfo, const char * format);
+void nullDoc(const char *);
 
 #define prefLen 22
 
+extern struct ThatVersion thatVersion;
 extern struct Config config;
+extern const size_t capacitySerial;
+extern struct Flowmeter flow;
+extern const size_t capacityFlowSerial;
+extern const size_t capacityPulseSerial;
+extern struct Devices device;
+extern const size_t capacityTempsSerial;
+extern struct Thermostat tstat;
 
 #endif //_SERIALLOG_H
  

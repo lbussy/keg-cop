@@ -30,26 +30,31 @@ ESPTelnet SerialAndTelnet;
 #define SERIAL Serial // Use hardware serial
 #endif
 
-#undef SERIAL
-//#define SERIAL Serial // Do not use Telnet
-#define SERIAL SerialAndTelnet // Use Telnet
-
 void serial()
 {
+#if DOTELNET == true
     char buffer[32];
     sprintf(buffer, "Connected to %s", API_KEY);
-#if DOTELNET == true
     SERIAL.setWelcomeMsg(buffer);
 #endif
     _delay(3000); // Delay to allow a monitor to start
     SERIAL.begin(BAUD);
+    SERIAL.println();
     SERIAL.flush();
 #ifndef DISABLE_LOGGING
-    SERIAL.println();
-    SERIAL.setDebugOutput(true);
-    Log.begin(LOG_LEVEL, &SERIAL, true);
-    Log.setPrefix(printTimestamp);
-    Log.notice(F("Serial logging started at %l." CRR), BAUD);
+    if (config.copconfig.serial)
+    {
+        SERIAL.setDebugOutput(false);
+        Log.begin(LOG_LEVEL_SILENT, &SERIAL, true);
+        Log.setPrefix(printTimestamp);
+    }
+    else if (!config.copconfig.serial)
+    {
+        SERIAL.setDebugOutput(true);
+        Log.begin(LOG_LEVEL, &SERIAL, true);
+        Log.setPrefix(printTimestamp);
+        Log.notice(F("Serial logging started at %l." CRR), BAUD);
+    }
 #endif
 }
 
@@ -126,31 +131,92 @@ void serialLoop()
     if (Serial.available() > 0)
     {
 #endif
-        switch (SerialAndTelnet.read())
+        if (!config.copconfig.serial)
         {
-        // Handle random shit
-        case ' ':
-        case '\n':
-        case '\r':
-        case 1:
-        case 3:
-        case 29:
-        case 31:
-        case '\'':
-        case 251:
-        case 253:
-        case 255:
-            break;
-        // End random shit handler
-        case 'a':
-            // TODO: Do Something
-            break;
-        case 'b':
-            // TODO: Do something
-            break;
-        case 'c':
-            // TODO: Do something
-            break;
+            switch (SerialAndTelnet.read())
+            {
+            case 'd': // Toggle Debug
+                toggleSerialCompat(!config.copconfig.serial);
+                nullDoc("d");
+                break;
+            default:
+                break;
+            }
+        }
+        else
+        {
+            switch (SerialAndTelnet.read())
+            {
+            // Handle random shit
+            case ' ':
+            case '\n':
+            case '\r':
+            case 1:
+            case 3:
+            case 29:
+            case 31:
+            case '\'':
+            case 251:
+            case 253:
+            case 255:
+                break;
+            // End handling random shit
+
+            // Serial command menu
+            case 'h': // /heap/
+            {
+                const size_t capacity = 2*JSON_OBJECT_SIZE(1);
+                StaticJsonDocument<capacity> doc;
+                JsonObject h = doc.createNestedObject("h");
+                h["heap"] = ESP.getFreeHeap();
+                serializeJson(doc, Serial);
+                printCR();
+                break;
+            }
+            case 'a': // /thatVersion/
+            {
+                const size_t capacity = 2 * JSON_OBJECT_SIZE(1);
+                StaticJsonDocument<capacity> doc;
+                JsonObject a = doc.createNestedObject("a");
+                a["available"] = (const char *)thatVersion.version;
+                serializeJson(doc, SERIAL);
+                printCR();
+                break;
+            }
+            case 'v': // /thisVersion/
+            {
+                const size_t capacity = 2 * JSON_OBJECT_SIZE(1);
+                StaticJsonDocument<capacity> doc;
+                JsonObject v = doc.createNestedObject("v");
+                v["version"] = (const char *)version();
+                serializeJson(doc, SERIAL);
+                printCR();
+                break;
+            }
+            case 'd': // Toggle Debug
+                toggleSerialCompat(!config.copconfig.serial);
+                break;
+            case 'b': // Reset controller
+                setDoReset();
+                nullDoc("b");
+                break;
+            case 'g': // /ping/
+                nullDoc("g");
+                break;
+            case '?': // Help
+                SERIAL.println(F("\nKeg Cop - Available serial commands:"));
+                SERIAL.println(F("\th:\tDisplay heap information"));
+                SERIAL.println(F("\tg:\t'{}' (null json)"));
+                SERIAL.println(F("\tv:\tDisplay current version"));
+                SERIAL.println(F("\ta:\tDisplay available version"));
+                SERIAL.println(F("\td:\tEnter/exit Debug mode"));
+                SERIAL.println(F("\tb:\tRestart controller"));
+                SERIAL.println(F("\t?:\tHelp (this menu)"));
+                SERIAL.flush();
+                break;
+            default:
+                break;
+            }
         }
     }
 }
@@ -283,4 +349,39 @@ size_t myPrintln(const Printable &x)
 size_t myPrintln(struct tm *timeinfo, const char *format)
 {
     return SERIAL.println(timeinfo, format);
+}
+
+void toggleSerialCompat(bool enable)
+{
+    if (enable && !config.copconfig.serial)
+    {
+        config.copconfig.serial = true;
+        saveConfig();
+        SERIAL.flush();
+        SERIAL.setDebugOutput(false);
+        Log.setLevel(LOG_LEVEL_SILENT);
+    }
+    else if (!enable && config.copconfig.serial)
+    {
+        config.copconfig.serial = false;
+        saveConfig();
+        SERIAL.flush();
+        SERIAL.setDebugOutput(true);
+        Log.begin(LOG_LEVEL, &SERIAL, true);
+        Log.setPrefix(printTimestamp);
+        Log.notice(F("Serial communications (terse mode) disabled, debug print enabled." CRR));
+    }
+    else
+    {
+        // Not changing
+    }
+}
+
+void nullDoc(const char *wrapper)
+{
+    const size_t capacity = JSON_OBJECT_SIZE(1);
+    DynamicJsonDocument doc(capacity);
+    doc[wrapper] = nullptr;
+    serializeJson(doc, SERIAL);
+    printCR();
 }

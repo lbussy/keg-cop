@@ -24,8 +24,8 @@ SOFTWARE. */
 
 Config config;
 const char *filename = FILENAME;
-const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(10) + JSON_OBJECT_SIZE(13);
-extern const size_t capacityDeserial = capacitySerial + 940;
+extern const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(11) + JSON_OBJECT_SIZE(13);
+extern const size_t capacityDeserial = capacitySerial + 950;
 
 bool deleteConfigFile() {
     if (!SPIFFS.begin()) {
@@ -150,7 +150,7 @@ bool printConfig()
 
     bool retval = true;
     // Serialize JSON to file
-    retval = serializeJsonPretty(doc, Serial) > 0;
+    retval = serializeJson(doc, Serial) > 0;
     printCR(true);
     return retval;
 }
@@ -215,7 +215,7 @@ void convertConfigtoImperial()
     // Loop through all config numbers and convert to Imperial
     if (!config.copconfig.imperial) // Make sure it's not already set
     {
-        Log.verbose(F("Converting metric config to imperial." CR));
+        Log.verbose(F("Converting metric config to imperial." CRR));
         config.copconfig.imperial = true;
         config.temps.setpoint = convertCtoF(config.temps.setpoint);
         for (int i = 0; i < NUMSENSOR; i++)
@@ -232,7 +232,7 @@ void convertConfigtoMetric()
     // Loop through all config numbers and convert to Metric
     if (config.copconfig.imperial) // Make sure it's not already set
     {
-        Log.verbose(F("Converting imperial config to metric." CR));
+        Log.verbose(F("Converting imperial config to metric." CRR));
         config.copconfig.imperial = false;
         config.temps.setpoint = convertFtoC(config.temps.setpoint);
         for (int i = 0; i < NUMSENSOR; i++)
@@ -274,6 +274,7 @@ void CopConfig::save(JsonObject obj) const
 {
     obj["breweryname"] = breweryname;
     obj["kegeratorname"] = kegeratorname;
+    obj["serial"] = serial;
     obj["imperial"] = imperial;
     obj["tapsolenoid"] = tapsolenoid;
 }
@@ -301,6 +302,12 @@ void CopConfig::load(JsonObjectConst obj)
     } else {
         bool units = obj["imperial"];
         imperial = units;
+    }
+
+    if (obj["serial"].isNull()) {
+        serial = false;
+    } else {
+        serial = obj["serial"];
     }
 
     // Need to instantiate solenoid here

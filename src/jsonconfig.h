@@ -45,6 +45,7 @@ struct CopConfig
     char breweryname[64];
     char kegeratorname[64];
     bool imperial;
+    bool serial;
     bool tapsolenoid;
 
     void load(JsonObjectConst);

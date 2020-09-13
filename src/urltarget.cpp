@@ -27,8 +27,9 @@ static const char *reportkey = "targeturlreport";
 static const char *reportname = "Target URL Report";
 
 bool sendTargetReport()
-{                                                                            // Send a temp report on timer
-    if ((config.urltarget.url != NULL) && (config.urltarget.url[0] != '\0')) // If URL Target is enabled
+{ // Send a temp report on timer or demand
+    bool retval = true;
+    if (config.urltarget.url != NULL && config.urltarget.url[0] != '\0') // If URL Target
     {
         UrlReport urlreport;
         strlcpy(urlreport.api, API_KEY, sizeof(urlreport.api));
@@ -102,23 +103,31 @@ bool sendTargetReport()
             doc["taps"][i]["active"] = urlreport.tap[i].active;
         }
 
-        std::string json;
+        String json;
         serializeJson(doc, json);
 
-        if (sendTReport(json.c_str()))
+        if (config.urltarget.url != NULL && config.urltarget.url[0] != '\0')
         {
-            return true;
+            if (sendTReport(json.c_str()))
+            {
+                retval = true;
+            }
+            else
+            {
+                retval = false;
+            }
         }
         else
         {
-            return false;
+            retval = false;
         }
     }
     else
     {
         Log.verbose(F("%s reporting not enabled, skipping." CRR), reportname);
-        return false;
+        retval = false;
     }
+    return retval;
 }
 
 bool sendTReport(const String &json)

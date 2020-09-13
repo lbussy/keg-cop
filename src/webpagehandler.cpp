@@ -712,6 +712,25 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
                 }
             }
+            if (strcmp(name, "serial") == 0) // Set serial
+            {
+                if (strcmp(value, "true") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
+                    toggleSerialCompat(true);
+                    config.copconfig.serial = true;
+                }
+                else if (strcmp(value, "false") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
+                    toggleSerialCompat(false);
+                    config.copconfig.serial = false;
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CRR), name, value);
+                }
+            }
             if (strcmp(name, "tapsolenoid") == 0) // Set active
             {
                 if (strcmp(value, "energized") == 0)
