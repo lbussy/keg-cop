@@ -71,6 +71,7 @@ struct PourInfo
     char kegeratorname[64];
     char reporttype[16];
     int tapid;
+    bool imperial;
     float dispensed;
     float remaining;
 };

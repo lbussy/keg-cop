@@ -550,7 +550,7 @@ Whenever a change is made to any of the tap information, this report is sent to 
 Send Pulse Report
 ===================
 
-Whenever a pour completes, Keg Cop sends a pour report to teh Keg Screen system.  The format is as follows:
+Whenever a pour completes, Keg Cop sends a pour report to the Keg Screen system.  The format is as follows:
 
 .. code-block:: json
     :linenos:
@@ -563,6 +563,7 @@ Whenever a pour completes, Keg Cop sends a pour report to teh Keg Screen system.
         "kegeratorname":"Keezer",
         "reporttype":"pourreport",
         "tapid":0,
+        "imperial":true,
         "dispensed":0.004451,
         "remaining":4.195549
     }
