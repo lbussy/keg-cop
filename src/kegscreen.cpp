@@ -50,6 +50,10 @@ const char *reportname[5] = {
     "Cooling State",
     "Temperature"};
 
+static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
+    reportCBTapInfo, reportCBPourReport, reportCBKickReport, reportCBCoolState, reportCBTempReport
+};
+
 bool sendTapInfoReport(int tapid)
 { // Push complete tap info (single tap) when tap is flipped to active or the data is changed
     bool retval = true;
@@ -353,68 +357,72 @@ bool sendTempReport()
     return retval;
 }
 
-bool sendReport(ReportKey reportkey, const String &json)
+bool sendReport(ReportKey thisKey, const String &json)
 { // Handle sending all Keg Screen reports
-    if (reports[reportkey].readyState() == 0 || reports[reportkey].readyState() == 4)
+    if (thisKey && (reports[thisKey].readyState() == 0 || reports[thisKey].readyState() == 4))
     {
+        //Log.verbose(F("DEBUG: Entering sendReport(): reportKey = %s, readyState() = %d" CRR), reports[thisKey], reports[thisKey].readyState());
         LCBUrl url;
         url.setUrl(config.kegscreen.url);
 
         IPAddress connectionIP = url.getIP();
         if (connectionIP == INADDR_NONE)
         {
-            Log.warning(F("Warning: %s: Unable to resolve address of %s." CRR), reportname[reportkey], url.getHost().c_str());
+            Log.warning(F("Warning: %s: Unable to resolve address of %s." CRR), reportname[thisKey], url.getHost().c_str());
             return false;
         }
 
         String connection = "";
         if (url.isMDNS())
-        { // Is mDNS/.local
-            Log.verbose(F("%s: Preparing POST to: %s (%s)" CRR), reportname[reportkey], url.getUrl().c_str(), connectionIP.toString().c_str());
+        { // Is mDNS (== .local)
+            Log.verbose(F("%s: Preparing POST to: %s (%s)" CRR), reportname[thisKey], url.getUrl().c_str(), connectionIP.toString().c_str());
             connection = url.getIPUrl();
         }
         else
-        { // Not mDNS/.local
-            Log.verbose(F("%s: Preparing POST to: %s" CRR), reportname[reportkey], url.getUrl().c_str());
+        { // Not mDNS (!= .local)
+            Log.verbose(F("%s: Preparing POST to: %s" CRR), reportname[thisKey], url.getUrl().c_str());
             connection = url.getUrl();
         }
 
         if (connection.length() > 0)
         {
-            reports[reportkey].onData(resultHandler, &reportkey);
-            reports[reportkey].setTimeout(10);
-            if (reports[reportkey].open("POST", connection.c_str()))
+            reports[thisKey].onReadyStateChange(pf[thisKey]);
+            if (reports[thisKey].open("POST", connection.c_str()))
             {
-                reports[reportkey].setReqHeader("Content-Type", "application/json");
-                if (!reports[reportkey].send(json.c_str()))
+                reports[thisKey].setReqHeader("Content-Type", "application/json");
+                if (!reports[thisKey].send(json.c_str()))
                 {
-                    Log.warning(F("Warning: Failed to send %s POST to %s." CRR), reportname[reportkey], connection.c_str());
+                    Log.warning(F("Warning: Failed to dispatch %s POST to %s." CRR), reportname[thisKey], connection.c_str());
                     return false;
+                }
+                else
+                {
+                    Log.verbose(F("%s POST to %s dispatched." CRR), reportname[thisKey], connection.c_str());
                 }
             }
             else
             {
-                Log.warning(F("Warning: Failed to open %s for %s POST." CRR), connection.c_str(), reportname[reportkey]);
+                Log.warning(F("Warning: Failed to open %s for %s POST." CRR), connection.c_str(), reportname[thisKey]);
                 return false;
             }
         }
         else
         {
-            Log.error(F("Error: Unable to parse URL for %s POST." CRR), reportname[reportkey]);
+            Log.error(F("Error: Unable to parse URL for %s POST." CRR), reportname[thisKey]);
             return false;
         }
     }
     else
     {
-        const int elapsed = reports[reportkey].elapsedTime();
-        const int state = reports[reportkey].readyState();
+        const int elapsed = reports[thisKey].elapsedTime();
+        const int state = reports[thisKey].readyState();
         switch (state)
         {
         case 1 ... 3:
-            Log.warning(F("Warning: Previous transaction for %s POST is still in progress(%dms)." CRR), reportname[reportkey], elapsed);
+            Log.warning(F("Warning: Previous transaction for %s POST is still in progress(%dms)." CRR), reportname[thisKey], elapsed);
             break;
         default:
-            Log.warning(F("Warning: Previous transaction for %s POST is in an unknown state (%d)." CRR), reportname[reportkey], state);
+            Log.warning(F("Warning: Previous transaction for %s POST is in an unknown state (%d)." CRR), reportname[thisKey], state);
             break;
         }
         return false;
@@ -422,10 +430,14 @@ bool sendReport(ReportKey reportkey, const String &json)
     return true;
 }
 
-void resultHandler(void *optParm, asyncHTTPrequest *report, int readyState)
-{
-    ReportKey reportkey = {*static_cast<ReportKey *>(optParm)};
+void reportCBTapInfo(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_TAPINFO, readyState);}
+void reportCBPourReport(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_POURREPORT, readyState);}
+void reportCBKickReport(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_KICKREPORT, readyState);}
+void reportCBCoolState(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_COOLSTATE, readyState);}
+void reportCBTempReport(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_TEMPREPORT, readyState);}
 
+void resultHandler(ReportKey report, int readyState)
+{
     // enum    readyStates {
     //         readyStateUnsent = 0,            // Client created, open not yet called
     //         readyStateOpened =  1,           // open() has been called, connected
@@ -433,7 +445,7 @@ void resultHandler(void *optParm, asyncHTTPrequest *report, int readyState)
     //         readyStateLoading = 3,           // Receiving, partial data available
     //         readyStateDone = 4} _readyState; // Request complete, all data available
 
-    if (readyState == 4) // Only report when request completes, all data available
+    if (readyState == 4)
     {
         // asyncHTTPrequest::
         //
@@ -449,105 +461,106 @@ void resultHandler(void *optParm, asyncHTTPrequest *report, int readyState)
         // uint32_t elapsedTime();                      // Elapsed time of in progress transaction or last completed (ms)
         // String  version();                           // Version of asyncHTTPrequest
 
-        const int code = report->responseHTTPcode();
-        const int elapsed = report->elapsedTime();
-        const char *__attribute__((unused)) response = report->responseText().c_str();
+        const int __attribute__((unused)) code = (reports[report].responseHTTPcode() >= 0 && reports[report].responseHTTPcode() <= 599) ? reports[report].responseHTTPcode() : 0;
+        const int __attribute__((unused)) elapsed = (reports[report].elapsedTime() >= 0) ? reports[report].elapsedTime() : 0;
+        const char *__attribute__((unused)) response = (reports[report].responseText()) ? reports[report].responseText().c_str(): "";
 
+        // Log.verbose(F("DEBUG: Callback on '%s,' return code: %d, elapsed: %dms, response: '%s.'" CRR), reportname[report], code, elapsed, response);
         switch (code)
         {
         case 0 ... 99:
             // Code < 100, no idea how we got here, should not be possible
-            Log.error(F("Error: %s: Invalid HTTP response code %d received." CRR), reportname[reportkey], code);
+            Log.error(F("Error: %s: Invalid HTTP response code %d received." CRR), reportname[report], code);
             break;
         case 100 ... 199:
-            // 1xx informational response – the request was received, continuing process
+            // 1xx informational response – the report was received, continuing process
             switch (code)
             {
             default:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed request." CRR), reportname[reportkey], code);
+                Log.error(F("Warning: %s: HTTP response code %d received from completed report." CRR), reportname[report], code);
                 break;
             }
             break;
         case 200 ... 299:
-            // 2xx successful – the request was successfully received, understood, and accepted
+            // 2xx successful – the report was successfully received, understood, and accepted
             switch (code)
             {
             default:
-                Log.notice(F("%s: HTTP response code %d received (%dms): Ok." CRR), reportname[reportkey], code, elapsed);
+                Log.notice(F("%s: HTTP response code %d received (%dms): Ok." CRR), reportname[report], code, elapsed);
                 break;
             }
             break;
         case 300 ... 399:
-            // 3xx redirection – further action needs to be taken in order to complete the request
+            // 3xx redirection – further action needs to be taken in order to complete the report
             switch (code)
             {
             default:
-                Log.error(F("Warning: %s: HTTP response code %d (redirect) received from completed request." CRR), reportname[reportkey], code);
+                Log.error(F("Warning: %s: HTTP response code %d (redirect) received from completed report." CRR), reportname[report], code);
                 break;
             }
             break;
         case 400 ... 499:
-            // 4xx client error – the request contains bad syntax or cannot be fulfilled
+            // 4xx client error – the report contains bad syntax or cannot be fulfilled
             switch (code)
             {
             case 400:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Bad request." CRR), reportname[reportkey], code);
+                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Bad report." CRR), reportname[report], code);
                 break;
             case 401:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Unauthorized." CRR), reportname[reportkey], code);
+                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Unauthorized." CRR), reportname[report], code);
                 break;
             case 403:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Forbidden." CRR), reportname[reportkey], code);
+                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Forbidden." CRR), reportname[report], code);
                 break;
             case 404:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Page not found." CRR), reportname[reportkey], code);
+                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Page not found." CRR), reportname[report], code);
                 break;
             case 408:
-                Log.error(F("Error: %s: HTTP response code %d received (%dms). The request timed out." CRR), reportname[reportkey], code, elapsed);
+                Log.error(F("Error: %s: HTTP response code %d received (%dms). The report timed out." CRR), reportname[report], code, elapsed);
                 break;
             case 429:
-                Log.error(F("Error: %s: HTTP response code %d received. Too many requests reported." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. Too many requests reported." CRR), reportname[report], code);
                 break;
             default:
-                Log.error(F("Error: %s: HTTP response code %d received. The request contains bad syntax or cannot be fulfilled." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. The report contains bad syntax or cannot be fulfilled." CRR), reportname[report], code);
                 break;
             }
             break;
         case 500 ... 599:
-            // 5xx server error – the server failed to fulfil an apparently valid request
+            // 5xx server error – the server failed to fulfil an apparently valid report
             switch (code)
             {
             case 500:
-                Log.error(F("Error: %s: HTTP response code %d received. Internal server error." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. Internal server error." CRR), reportname[report], code);
                 break;
             case 501:
-                Log.error(F("Error: %s: HTTP response code %d received. Not implemented." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. Not implemented." CRR), reportname[report], code);
                 break;
             case 502:
-                Log.error(F("Error: %s: HTTP response code %d received. Bad gateway." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. Bad gateway." CRR), reportname[report], code);
                 break;
             case 503:
-                Log.error(F("Error: %s: HTTP response code %d received. Service unavailable." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. Service unavailable." CRR), reportname[report], code);
                 break;
             case 504:
-                Log.error(F("Error: %s: HTTP response code %d received (%dms)). Gateway timeout." CRR), reportname[reportkey], code, elapsed);
+                Log.error(F("Error: %s: HTTP response code %d received (%dms)). Gateway timeout." CRR), reportname[report], code, elapsed);
                 break;
             case 505:
-                Log.error(F("Error: %s: HTTP response code %d received. HTTP version not implemented." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. HTTP version not implemented." CRR), reportname[report], code);
                 break;
             case 508:
-                Log.error(F("Error: %s: HTTP response code %d received. Loop detected." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. Loop detected." CRR), reportname[report], code);
                 break;
             case 511:
-                Log.error(F("Error: %s: HTTP response code %d received. Network authentication required." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. Network authentication required." CRR), reportname[report], code);
             default:
-                Log.error(F("Error: %s: HTTP response code %d received. The server failed to fulfil an apparently valid request." CRR), reportname[reportkey], code);
+                Log.error(F("Error: %s: HTTP response code %d received. The server failed to fulfil an apparently valid report." CRR), reportname[report], code);
                 break;
             }
             break;
         default:
             // Code < 0 or > 599, no idea how we got here, should not be possible
-            Log.error(F("Error: %s: Invalid HTTP response code %d received." CRR), reportname[reportkey], code);
+            Log.error(F("Error: %s: Invalid HTTP response code %d received." CRR), reportname[report], code);
             break;
         }
     }

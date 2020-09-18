@@ -126,7 +126,14 @@ bool sendKickReport(int);                           // Send a kick report when k
 bool sendCoolStateReport();                         // Send temp status when a cooling state changes
 bool sendTempReport();                              // Send a temp report on timer
 bool sendReport(ReportKey, const String &);         // Handle the business of sending report
-void resultHandler(void*, asyncHTTPrequest*, int);  // Callback method for asynch
+
+// Callbacks for Async
+void reportCBTapInfo(void *, asyncHTTPrequest *, int);
+void reportCBPourReport(void *, asyncHTTPrequest *, int);
+void reportCBKickReport(void *, asyncHTTPrequest *, int);
+void reportCBCoolState(void *, asyncHTTPrequest *, int);
+void reportCBTempReport(void *, asyncHTTPrequest *, int);
+void resultHandler(ReportKey report, int readyState);   // Generic (synchronous) result handler
 
 extern struct Config config;
 extern struct Flowmeter flow;
