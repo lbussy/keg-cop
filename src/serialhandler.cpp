@@ -204,7 +204,7 @@ void serialLoop()
                 nullDoc("g");
                 break;
             case '?': // Help
-                SERIAL.println(F("\nKeg Cop - Available serial commands:"));
+                SERIAL.println(F("Keg Cop - Available serial commands:"));
                 SERIAL.println(F("\th:\tDisplay heap information"));
                 SERIAL.println(F("\tg:\t'{}' (null json)"));
                 SERIAL.println(F("\tv:\tDisplay current version"));
