@@ -50,9 +50,10 @@ const char *reportname[5] = {
     "Cooling State",
     "Temperature"};
 
+bool reported[5];
+
 static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
-    reportCBTapInfo, reportCBPourReport, reportCBKickReport, reportCBCoolState, reportCBTempReport
-};
+    reportCBTapInfo, reportCBPourReport, reportCBKickReport, reportCBCoolState, reportCBTempReport};
 
 bool sendTapInfoReport(int tapid)
 { // Push complete tap info (single tap) when tap is flipped to active or the data is changed
@@ -363,7 +364,7 @@ bool sendReport(ReportKey thisKey, const String &json)
 { // Handle sending all Keg Screen reports
     if (thisKey && (reports[thisKey].readyState() == 0 || reports[thisKey].readyState() == 4))
     {
-        //Log.verbose(F("DEBUG: Entering sendReport(): reportKey = %s, readyState() = %d" CRR), reports[thisKey], reports[thisKey].readyState());
+        reported[thisKey] = false;
         LCBUrl url;
         url.setUrl(config.kegscreen.url);
 
@@ -388,7 +389,8 @@ bool sendReport(ReportKey thisKey, const String &json)
 
         if (connection.length() > 0)
         {
-            reports[thisKey].onReadyStateChange(pf[thisKey]);
+            // reports[thisKey].setDebug(true);
+            reports[thisKey].onData(pf[thisKey]);
             if (reports[thisKey].open("POST", connection.c_str()))
             {
                 reports[thisKey].setReqHeader("Content-Type", "application/json");
@@ -432,11 +434,26 @@ bool sendReport(ReportKey thisKey, const String &json)
     return true;
 }
 
-void reportCBTapInfo(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_TAPINFO, readyState);}
-void reportCBPourReport(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_POURREPORT, readyState);}
-void reportCBKickReport(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_KICKREPORT, readyState);}
-void reportCBCoolState(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_COOLSTATE, readyState);}
-void reportCBTempReport(void *optParm, asyncHTTPrequest *report, int readyState) {resultHandler(KS_TEMPREPORT, readyState);}
+void reportCBTapInfo(void *optParm, asyncHTTPrequest *report, int readyState)
+{
+    resultHandler(KS_TAPINFO, readyState);
+}
+void reportCBPourReport(void *optParm, asyncHTTPrequest *report, int readyState)
+{
+    resultHandler(KS_POURREPORT, readyState);
+}
+void reportCBKickReport(void *optParm, asyncHTTPrequest *report, int readyState)
+{
+    resultHandler(KS_KICKREPORT, readyState);
+}
+void reportCBCoolState(void *optParm, asyncHTTPrequest *report, int readyState)
+{
+    resultHandler(KS_COOLSTATE, readyState);
+}
+void reportCBTempReport(void *optParm, asyncHTTPrequest *report, int readyState)
+{
+    resultHandler(KS_TEMPREPORT, readyState);
+}
 
 void resultHandler(ReportKey report, int readyState)
 {
@@ -447,27 +464,30 @@ void resultHandler(ReportKey report, int readyState)
     //         readyStateLoading = 3,           // Receiving, partial data available
     //         readyStateDone = 4} _readyState; // Request complete, all data available
 
-    if (readyState == 4)
+    // asyncHTTPrequest::
+    //
+    // int     respHeaderCount();                   // Retrieve count of response headers
+    // char*   respHeaderName(int index);           // Return header name by index
+    // char*   respHeaderValue(int index);          // Return header value by index
+    // char*   respHeaderValue(const char* name);   // Return header value by name
+    // bool    respHeaderExists(const char* name);  // Does header exist by name?
+    // String  headers();                           // Return all headers as String
+    // size_t  responseLength();                    // Indicated response length or sum of chunks to date
+    // int     responseHTTPcode();                  // HTTP response code or (negative) error code
+    // String  responseText();                      // response (whole* or partial* as string)
+    // uint32_t elapsedTime();                      // Elapsed time of in progress transaction or last completed (ms)
+    // String  version();                           // Version of asyncHTTPrequest
+
+    if (!reported[report])
     {
-        // asyncHTTPrequest::
-        //
-        // int     respHeaderCount();                   // Retrieve count of response headers
-        // char*   respHeaderName(int index);           // Return header name by index
-        // char*   respHeaderValue(int index);          // Return header value by index
-        // char*   respHeaderValue(const char* name);   // Return header value by name
-        // bool    respHeaderExists(const char* name);  // Does header exist by name?
-        // String  headers();                           // Return all headers as String
-        // size_t  responseLength();                    // Indicated response length or sum of chunks to date
-        // int     responseHTTPcode();                  // HTTP response code or (negative) error code
-        // String  responseText();                      // response (whole* or partial* as string)
-        // uint32_t elapsedTime();                      // Elapsed time of in progress transaction or last completed (ms)
-        // String  version();                           // Version of asyncHTTPrequest
+        reported[report] = true;
 
         const int __attribute__((unused)) code = (reports[report].responseHTTPcode() >= 0 && reports[report].responseHTTPcode() <= 599) ? reports[report].responseHTTPcode() : 0;
         const int __attribute__((unused)) elapsed = (reports[report].elapsedTime() >= 0) ? reports[report].elapsedTime() : 0;
-        const char *__attribute__((unused)) response = (reports[report].responseText()) ? reports[report].responseText().c_str(): "";
+        const char *__attribute__((unused)) response = (reports[report].responseText()) ? reports[report].responseText().c_str() : "";
 
-        // Log.verbose(F("DEBUG: Callback on '%s,' return code: %d, elapsed: %dms, response: '%s.'" CRR), reportname[report], code, elapsed, response);
+        reports[report].abort(); // No reason to keep going if we have headers
+
         switch (code)
         {
         case 0 ... 99:
