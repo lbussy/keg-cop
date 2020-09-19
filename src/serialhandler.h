@@ -26,7 +26,9 @@ SOFTWARE. */
 #include "tools.h"
 #include "config.h"
 #include "jsonconfig.h"
-//#include "execota.h"
+// Including execota.h to allow serial OTA trigger gets into the 
+// redefine mess with ESPAsyncWebServer.h
+// #include "execota.h"
 #include "version.h"
 #include "thatVersion.h"
 #include <ArduinoLog.h>

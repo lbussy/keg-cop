@@ -232,7 +232,7 @@ void convertConfigtoImperial()
     // Loop through all config numbers and convert to Imperial
     if (!config.copconfig.imperial) // Make sure it's not already set
     {
-        Log.verbose(F("Converting metric config to imperial." CRR));
+        Log.verbose(F("Converting metric config to imperial." CR));
         config.copconfig.imperial = true;
         config.temps.setpoint = convertCtoF(config.temps.setpoint);
         for (int i = 0; i < NUMSENSOR; i++)
@@ -249,7 +249,7 @@ void convertConfigtoMetric()
     // Loop through all config numbers and convert to Metric
     if (config.copconfig.imperial) // Make sure it's not already set
     {
-        Log.verbose(F("Converting imperial config to metric." CRR));
+        Log.verbose(F("Converting imperial config to metric." CR));
         config.copconfig.imperial = false;
         config.temps.setpoint = convertFtoC(config.temps.setpoint);
         for (int i = 0; i < NUMSENSOR; i++)

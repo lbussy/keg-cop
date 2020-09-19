@@ -74,11 +74,15 @@ static IRAM_ATTR void HandleIntISR7(void)
     handleInterrupts(7);
 }
 
+static IRAM_ATTR void HandleIntISR8(void)
+{
+    handleInterrupts(8);
+}
+
 static void (*pf[])(void) = { // ISR Function Pointers
-    HandleIntISR0, HandleIntISR1,
-    HandleIntISR2, HandleIntISR3,
-    HandleIntISR4, HandleIntISR5,
-    HandleIntISR6, HandleIntISR7};
+    HandleIntISR0, HandleIntISR1, HandleIntISR2,
+    HandleIntISR3, HandleIntISR4, HandleIntISR5,
+    HandleIntISR6, HandleIntISR7, HandleIntISR8};
 
 void IRAM_ATTR handleInterrupts(int tapNum)
 { // Increment pulse count
@@ -139,7 +143,7 @@ void logFlow()
 
                 if (pulseCount < SMALLPOUR)
                 { // Discard a small pour
-                    Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CRR), pulseCount, i, flow.taps[i].pin);
+                    Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                     // Since we don't do anything with pulseCount here, we're ignoring it
                 }
                 else
@@ -147,7 +151,7 @@ void logFlow()
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
                     saveFlowConfig();
-                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CRR), pulseCount, i, flow.taps[i].pin);
+                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                     if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
                     {                                                                        /// Queue upstream report
                         queuePourReport[i] = pour;
@@ -162,7 +166,7 @@ void logFlow()
         }
         else
         {
-            Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CRR), pulse[i], i, flow.taps[i].pin);
+            Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CR), pulse[i], i, flow.taps[i].pin);
         }
     }
 }
@@ -184,7 +188,7 @@ bool isKicked(int meter)
 
     if (isKicked)
     {
-        Log.verbose(F("Tap %d is kicked." CRR), meter);
+        Log.verbose(F("Tap %d is kicked." CR), meter);
         return true;
     }
     else
@@ -197,11 +201,11 @@ bool loadFlowConfig()
 { // Manage loading the configuration
     if (!loadFlowFile())
     {
-        Log.warning(F("Warning: Unable to load flowmeter configuration." CRR));
+        Log.warning(F("Warning: Unable to load flowmeter configuration." CR));
         saveFlowConfig();    // Save a blank config
         if (!loadFlowFile()) // Try one more time to load the default config
         {
-            Log.error(F("Error: Unable to generate default flowmeter configuration." CRR));
+            Log.error(F("Error: Unable to generate default flowmeter configuration." CR));
             return false;
         }
     }
@@ -221,14 +225,14 @@ bool loadFlowFile()
 {
     if (!SPIFFS.begin())
     {
-        Log.error(F("Error: Unable to start SPIFFS." CRR));
+        Log.error(F("Error: Unable to start SPIFFS." CR));
         return false;
     }
     // Loads the configuration from a file on SPIFFS
     File file = SPIFFS.open(flowfilename, "r");
     if (!SPIFFS.exists(flowfilename) || !file)
     {
-        Log.warning(F("Warning: Flow json does not exist, generating new %s." CRR), flowfilename);
+        Log.warning(F("Warning: Flow json does not exist, generating new %s." CR), flowfilename);
     }
     else
     {
@@ -237,7 +241,7 @@ bool loadFlowFile()
 
     if (!deserializeFlowConfig(file))
     {
-        Log.error(F("Error: Unable to deserialize flow config." CRR));
+        Log.error(F("Error: Unable to deserialize flow config." CR));
         file.close();
         return false;
     }
@@ -393,7 +397,7 @@ void convertFlowtoImperial()
 {
     if (!flow.imperial)
     {
-        Log.verbose(F("Converting metric flow data to imperial." CRR));
+        Log.verbose(F("Converting metric flow data to imperial." CR));
         flow.imperial = true;
         for (int i = 0; i < NUMTAPS; i++)
         {
@@ -411,7 +415,7 @@ void convertFlowtoMetric()
     // Loop through all flow numbers and convert to Metric
     if (flow.imperial)
     {
-        Log.verbose(F("Converting imperial flow data to metric." CRR));
+        Log.verbose(F("Converting imperial flow data to metric." CR));
         flow.imperial = false;
         for (int i = 0; i < NUMTAPS; i++)
         {

@@ -43,7 +43,7 @@ void _delay(unsigned long ulDelay)
 
 void resetController()
 {
-    Log.notice(F("Reboot request - rebooting system." CRR));
+    Log.notice(F("Reboot request - rebooting system." CR));
     _delay(5000);
     ESP.restart();
 }
@@ -132,12 +132,12 @@ void maintenanceLoop()
 {
     if (ESP.getFreeHeap() < MINFREEHEAP)
     {
-        Log.warning(F("Maintenance: Heap memory has degraded below safe minimum, restarting." CRR));
+        Log.warning(F("Maintenance: Heap memory has degraded below safe minimum, restarting." CR));
         resetController();
     }
     if (WiFi.status() != WL_CONNECTED)
     {
-        Log.warning(F("Maintenance: WiFi not connected, reconnecting." CRR));
+        Log.warning(F("Maintenance: WiFi not connected, reconnecting." CR));
         doWiFi();
         mdnsreset();
     }
@@ -183,9 +183,9 @@ void printDebug(const char *message)
     frag = 100 - (max * 100) / free;
 #endif
     if (!message)
-        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d" CRR), free, max, frag);
+        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d" CR), free, max, frag);
     else
-        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d -> %s" CRR), free, max, frag, message);
+        Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d -> %s" CR), free, max, frag, message);
     flush(true);
 }
 

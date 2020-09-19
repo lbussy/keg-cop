@@ -53,7 +53,7 @@ void serial()
         SERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &SERIAL, true);
         Log.setPrefix(printTimestamp);
-        Log.notice(F("Serial logging started at %l." CRR), BAUD);
+        Log.notice(F("Serial logging started at %l." CR), BAUD);
     }
 #endif
 }
@@ -133,7 +133,7 @@ void serialLoop()
 #endif
         if (!config.copconfig.serial)
         {
-            switch (SerialAndTelnet.read())
+            switch (SERIAL.read())
             {
             case 'd': // Toggle Debug
                 toggleSerialCompat(!config.copconfig.serial);
@@ -145,7 +145,7 @@ void serialLoop()
         }
         else
         {
-            switch (SerialAndTelnet.read())
+            switch (SERIAL.read())
             {
             // Handle random shit
             case ' ':
@@ -369,7 +369,7 @@ void toggleSerialCompat(bool enable)
         SERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &SERIAL, true);
         Log.setPrefix(printTimestamp);
-        Log.notice(F("Serial communications (terse mode) disabled, debug print enabled." CRR));
+        Log.notice(F("Serial communications (terse mode) disabled, debug print enabled." CR));
     }
     else
     {

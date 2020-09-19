@@ -37,7 +37,7 @@ void setClock()
         {
             if (cycle > 9)
             {
-                Log.warning(F("Unable to get time hack from %s, rebooting." CRR), TIMESERVER);
+                Log.warning(F("Unable to get time hack from %s, rebooting." CR), TIMESERVER);
                 resetController();
             }
             if (Log.getLevel())
@@ -58,7 +58,7 @@ void setClock()
     blinker.detach();
     if (Log.getLevel())
         printCR(true);
-    Log.notice(F("NTP time set." CRR));
+    Log.notice(F("NTP time set." CR));
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
     lastNTPUpdate = millis();
