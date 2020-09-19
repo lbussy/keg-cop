@@ -22,7 +22,8 @@ SOFTWARE. */
 
 #include "execota.h"
 
-void execfw() {
+void execfw()
+{
     Log.notice(F("Starting the Firmware OTA pull, will reboot without notice." CRR));
 
     // Stop web server before OTA update - will restart on reset
@@ -38,42 +39,45 @@ void execfw() {
     LCBUrl lcburl;
     lcburl.setUrl(FIRMWAREURL);
     char host[64], path[64];
-    strlcpy (host, lcburl.getHost().c_str(), sizeof(host));
+    strlcpy(host, lcburl.getHost().c_str(), sizeof(host));
     strlcpy(path, lcburl.getPath().c_str(), sizeof(path));
     HTTPUpdateResult ret = execFirmwareOTA(host, lcburl.getPort(), path);
 
-    switch(ret) {
-        case HTTP_UPDATE_FAILED:
-            Log.error(F("HTTP Firmware OTA Update failed," CRR));
-            // Don't allow anything to proceed
-            config.dospiffs1 = false;
-            config.dospiffs2 = false;
-            config.didupdate = false;
-            saveConfig();
-            saveFlowConfig();
-            ESP.restart();
-            break;
+    switch (ret)
+    {
+    case HTTP_UPDATE_FAILED:
+        Log.error(F("HTTP Firmware OTA Update failed," CRR));
+        // Don't allow anything to proceed
+        config.dospiffs1 = false;
+        config.dospiffs2 = false;
+        config.didupdate = false;
+        saveConfig();
+        saveFlowConfig();
+        ESP.restart();
+        break;
 
-        case HTTP_UPDATE_NO_UPDATES:
-            Log.notice(F("HTTP Firmware OTA Update: No updates." CRR));
-            // Don't allow anything to proceed
-            config.dospiffs1 = false;
-            config.dospiffs2 = false;
-            config.didupdate = false;
-            saveConfig();
-            saveFlowConfig();
-            ESP.restart();
-            break;
-        
-        case HTTP_UPDATE_OK:
-            Log.notice(F("HTTP Firmware OTA Update complete, restarting." CRR));
-            ESP.restart();
-            break;
+    case HTTP_UPDATE_NO_UPDATES:
+        Log.notice(F("HTTP Firmware OTA Update: No updates." CRR));
+        // Don't allow anything to proceed
+        config.dospiffs1 = false;
+        config.dospiffs2 = false;
+        config.didupdate = false;
+        saveConfig();
+        saveFlowConfig();
+        ESP.restart();
+        break;
+
+    case HTTP_UPDATE_OK:
+        Log.notice(F("HTTP Firmware OTA Update complete, restarting." CRR));
+        ESP.restart();
+        break;
     }
 }
 
-void execspiffs() {
-    if (config.dospiffs1) {
+void execspiffs()
+{
+    if (config.dospiffs1)
+    {
         Log.notice(F("Rebooting a second time before SPIFFS OTA pull." CRR));
         config.dospiffs1 = false;
         config.dospiffs2 = true;
@@ -83,7 +87,9 @@ void execspiffs() {
         _delay(3000);
         ESP.restart();
         _delay(1000);
-    } else if (config.dospiffs2) {
+    }
+    else if (config.dospiffs2)
+    {
         Log.notice(F("Starting the SPIFFS OTA pull." CRR));
 
         // Stop web server before OTA update - will restart on reset
@@ -92,33 +98,36 @@ void execspiffs() {
         LCBUrl lcburl;
         lcburl.setUrl(SPIFFSURL);
         char host[64], path[64];
-        strlcpy (host, lcburl.getHost().c_str(), sizeof(host));
+        strlcpy(host, lcburl.getHost().c_str(), sizeof(host));
         strlcpy(path, lcburl.getPath().c_str(), sizeof(path));
         HTTPUpdateResult ret = execSPIFFSOTA(host, lcburl.getPort(), path);
 
-        switch(ret) {
-            case HTTP_UPDATE_FAILED:
-                Log.error(F("HTTP SPIFFS OTA Update failed." CRR));
-                break;
+        switch (ret)
+        {
+        case HTTP_UPDATE_FAILED:
+            Log.error(F("HTTP SPIFFS OTA Update failed." CRR));
+            break;
 
-            case HTTP_UPDATE_NO_UPDATES:
-                Log.notice(F("HTTP SPIFFS OTA Update: No updates." CRR));
-                break;
+        case HTTP_UPDATE_NO_UPDATES:
+            Log.notice(F("HTTP SPIFFS OTA Update: No updates." CRR));
+            break;
 
-            case HTTP_UPDATE_OK:
-                // Reset SPIFFS update flag
-                config.dospiffs1 = false;
-                config.dospiffs2 = false;
-                config.didupdate = true;
-                saveConfig(); // This not only saves the flags, it (re)saves the whole config after SPIFFS wipes it
-                saveFlowConfig(); // Save previous flowmeter data
-                _delay(1000);
-                Log.notice(F("HTTP SPIFFS OTA Update complete, restarting." CRR));
-                ESP.restart();
-                _delay(1000);
-                break;
+        case HTTP_UPDATE_OK:
+            // Reset SPIFFS update flag
+            config.dospiffs1 = false;
+            config.dospiffs2 = false;
+            config.didupdate = true;
+            saveConfig();     // This not only saves the flags, it (re)saves the whole config after SPIFFS wipes it
+            saveFlowConfig(); // Save previous flowmeter data
+            _delay(1000);
+            Log.notice(F("HTTP SPIFFS OTA Update complete, restarting." CRR));
+            ESP.restart();
+            _delay(1000);
+            break;
         }
-    } else {
+    }
+    else
+    {
         Log.verbose(F("No OTA pending." CRR));
     }
 }
@@ -129,18 +138,18 @@ String getHeaderValue(String header, String headerName)
     return header.substring(strlen(headerName.c_str()));
 }
 
-HTTPUpdateResult execFirmwareOTA(char * host, int port, char * path)
+HTTPUpdateResult execFirmwareOTA(char *host, int port, char *path)
 {
     return execOTA(host, port, path, U_FLASH);
 }
 
-HTTPUpdateResult execSPIFFSOTA(char * host, int port, char * path)
+HTTPUpdateResult execSPIFFSOTA(char *host, int port, char *path)
 {
     return execOTA(host, port, path, U_SPIFFS);
 }
 
 // OTA updating of firmware or SPIFFS
-HTTPUpdateResult execOTA(char * host, int port, char * path, int cmd)
+HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
 {
     WiFiClient client;
     int contentLength = 0;
@@ -289,7 +298,8 @@ HTTPUpdateResult execOTA(char * host, int port, char * path, int cmd)
     return retVal;
 }
 
-void setDoOTA() {
+void setDoOTA()
+{
     doOTA = true; // Semaphore required for reset in callback
 }
 
@@ -300,5 +310,5 @@ void doOTALoop()
     {
         doOTA = false;
         execfw();
-    }    
+    }
 }

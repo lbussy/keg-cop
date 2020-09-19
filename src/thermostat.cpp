@@ -68,7 +68,7 @@ void controlLoop()
         // Sensors and control work in C, no conversion needed
         setpoint = config.temps.setpoint;
     }
-    
+
     if (tempNow > setpoint)
     {
         // Calling for cooling
@@ -122,7 +122,7 @@ void controlLoop()
     {
         tstat.state = TSTAT_UNKNOWN;
     }
-    
+
     if (tstat.state != start)
     { // Log a state change to Keg Screen
         queueStateChange = true;
@@ -139,7 +139,7 @@ void tstatReport()
     double runtime = (double)(now - tstat.lastOn) / 1000;
     double lastontime = (double)(now - tstat.lastOn) / 1000;
     double lastofftime = (double)(now - tstat.lastOff) / 1000;
-    if (config.copconfig.imperial) 
+    if (config.copconfig.imperial)
     {
         strlcpy(tempFormat, "F", sizeof(tempFormat));
         tempNow = convertCtoF(device.sensor[config.temps.controlpoint].average);
@@ -150,89 +150,83 @@ void tstatReport()
         tempNow = device.sensor[config.temps.controlpoint].average;
     }
 
-	switch (tstat.state)
-	{
-		case TSTAT_INACTIVE:
-            Log.verbose(F("[TSTAT_INACTIVE] Cooling is disabled." CRR));
-            break;
+    switch (tstat.state)
+    {
+    case TSTAT_INACTIVE:
+        Log.verbose(F("[TSTAT_INACTIVE] Cooling is disabled." CRR));
+        break;
 
-		case TSTAT_COOL_BEGIN:
-            Log.verbose(F("[TSTAT_COOL_BEGIN] Cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CRR),
-                tstat.cooling,
-                tempNow,
-                tempFormat,
-                setpoint,
-                tempFormat,
-                lastontime,
-                lastofftime,
-                runtime
-            );
-            break;
+    case TSTAT_COOL_BEGIN:
+        Log.verbose(F("[TSTAT_COOL_BEGIN] Cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CRR),
+                    tstat.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    lastofftime,
+                    runtime);
+        break;
 
-		case TSTAT_COOL_MINOFF:
-            Log.verbose(F("[TSTAT_COOL_MINOFF] Cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, wait time has been %D seconds." CRR),
-                tstat.cooling,
-                tempNow,
-                tempFormat,
-                setpoint,
-                tempFormat,
-                lastontime,
-                lastofftime,
-                wait
-            );
-            break;
+    case TSTAT_COOL_MINOFF:
+        Log.verbose(F("[TSTAT_COOL_MINOFF] Cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, wait time has been %D seconds." CRR),
+                    tstat.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    lastofftime,
+                    wait);
+        break;
 
-		case TSTAT_COOL_ACTIVE:
-			Log.verbose(F("[TSTAT_COOL_ACTIVE] Cooling is %T, control point %D°%s, setpoint %D°%s. Run started %D seconds ago, runnning for %D seconds." CRR),
-                tstat.cooling,
-                tempNow,
-                tempFormat,
-                setpoint,
-                tempFormat,
-                lastontime,
-                runtime
-            );
-            break;
+    case TSTAT_COOL_ACTIVE:
+        Log.verbose(F("[TSTAT_COOL_ACTIVE] Cooling is %T, control point %D°%s, setpoint %D°%s. Run started %D seconds ago, runnning for %D seconds." CRR),
+                    tstat.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    runtime);
+        break;
 
-		case TSTAT_OFF_END:
-			Log.verbose(F("[TSTAT_OFF_END] Cooling is %T, control point %D°%s, setpoint,  %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CRR),
-                tstat.cooling,
-                tempNow,
-                tempFormat,
-                setpoint,
-                tempFormat,
-                lastontime,
-                wait
-			);
-            break;
+    case TSTAT_OFF_END:
+        Log.verbose(F("[TSTAT_OFF_END] Cooling is %T, control point %D°%s, setpoint,  %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CRR),
+                    tstat.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    wait);
+        break;
 
-		case TSTAT_OFF_MINON:
-			Log.verbose(F("[TSTAT_OFF_MINON] Cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CRR),
-                tstat.cooling,
-                tempNow,
-                tempFormat,
-                setpoint,
-                tempFormat,
-                lastontime,
-                lastofftime,
-                runtime
-			);
-            break;
+    case TSTAT_OFF_MINON:
+        Log.verbose(F("[TSTAT_OFF_MINON] Cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CRR),
+                    tstat.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    lastofftime,
+                    runtime);
+        break;
 
-		case TSTAT_OFF_INACTIVE:
-            Log.verbose(F("[TSTAT_OFF_INACTIVE] Cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CRR),
-                tstat.cooling,
-                tempNow,
-                tempFormat,
-                setpoint,
-                tempFormat,
-                lastontime,
-                lastofftime
-            );
-            break;
+    case TSTAT_OFF_INACTIVE:
+        Log.verbose(F("[TSTAT_OFF_INACTIVE] Cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CRR),
+                    tstat.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    lastofftime);
+        break;
 
-		case TSTAT_UNKNOWN:
-            Log.verbose(F("[TSTAT_UNKNOWN] Thermostat is in an unknown state." CRR));
-            break;
-	}
+    case TSTAT_UNKNOWN:
+        Log.verbose(F("[TSTAT_UNKNOWN] Thermostat is in an unknown state." CRR));
+        break;
+    }
 }

@@ -25,24 +25,31 @@ SOFTWARE. */
 asyncHTTPrequest request;
 ThatVersion __attribute__((unused)) thatVersion;
 
-void sendRequest() {
-    if (request.readyState() == 0 || request.readyState() == 4) {
+void sendRequest()
+{
+    if (request.readyState() == 0 || request.readyState() == 4)
+    {
         request.open("GET", VERSIONJSONLOC);
         request.send();
     }
 }
 
-void requestHandler(void* optParm, asyncHTTPrequest* request, int readyState) {
+void requestHandler(void *optParm, asyncHTTPrequest *request, int readyState)
+{
     String body = request->responseText();
-    const char * src = body.c_str();
-    if (!deserializeVersion(src, thatVersion)) {
+    const char *src = body.c_str();
+    if (!deserializeVersion(src, thatVersion))
+    {
         Log.error(F("Failed to deserialize version information." CRR));
-    } else {
+    }
+    else
+    {
         Log.verbose(F("Deserialized version information." CRR));
     }
 }
 
-bool serializeVersion(const ThatVersion &thatVersion, Print &dst) {
+bool serializeVersion(const ThatVersion &thatVersion, Print &dst)
+{
     // Serialize version
     const size_t capacity = JSON_OBJECT_SIZE(1);
     DynamicJsonDocument doc(capacity);
@@ -57,33 +64,40 @@ bool serializeVersion(const ThatVersion &thatVersion, Print &dst) {
     return serializeJsonPretty(doc, dst) > 0;
 }
 
-bool deserializeVersion(const char * &src, ThatVersion &thatVersion) {
+bool deserializeVersion(const char *&src, ThatVersion &thatVersion)
+{
     // Deserialize version
     const size_t capacity = JSON_OBJECT_SIZE(1) + 50;
     DynamicJsonDocument doc(capacity);
 
     // Parse the JSON object in the file
     DeserializationError err = deserializeJson(doc, src);
-    if (err) {
+    if (err)
+    {
         thatVersion.load(doc.as<JsonObject>());
         return true;
-    } else {
+    }
+    else
+    {
         thatVersion.load(doc.as<JsonObject>());
-        return true;        
+        return true;
     }
 }
 
-void doVersionPoll() {
+void doVersionPoll()
+{
     request.onData(requestHandler);
     sendRequest();
 }
 
-void ThatVersion::save(JsonObject obj) const {
+void ThatVersion::save(JsonObject obj) const
+{
     obj["version"] = version;
 }
 
-void ThatVersion::load(JsonObjectConst obj) {
-    const char* v = obj["version"];
+void ThatVersion::load(JsonObjectConst obj)
+{
+    const char *v = obj["version"];
     if (v)
         strlcpy(version, v, sizeof(version));
     else

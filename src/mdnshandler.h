@@ -23,16 +23,8 @@ SOFTWARE. */
 #ifndef _MDNSHANDLER_H
 #define _MDNSHANDLER_H
 
-#include "main.h"
 #include "jsonconfig.h"
 #include <ArduinoLog.h>
-
-#ifdef ESP8266
-#include <ESP8266WiFi.h>
-#elif defined ESP32
-#include <WiFi.h>
-#endif
-
 #include <ESPmDNS.h>
 
 void mdnssetup();

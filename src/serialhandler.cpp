@@ -165,7 +165,7 @@ void serialLoop()
             // Serial command menu
             case 'h': // /heap/
             {
-                const size_t capacity = 2*JSON_OBJECT_SIZE(1);
+                const size_t capacity = 2 * JSON_OBJECT_SIZE(1);
                 StaticJsonDocument<capacity> doc;
                 JsonObject h = doc.createNestedObject("h");
                 h["heap"] = ESP.getFreeHeap();

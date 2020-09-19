@@ -24,11 +24,13 @@ SOFTWARE. */
 
 Config config;
 const char *filename = FILENAME;
-extern const size_t capacitySerial = 2*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(11) + JSON_OBJECT_SIZE(13);
+extern const size_t capacitySerial = 2 * JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(11) + JSON_OBJECT_SIZE(13);
 extern const size_t capacityDeserial = capacitySerial + 950;
 
-bool deleteConfigFile() {
-    if (!SPIFFS.begin()) {
+bool deleteConfigFile()
+{
+    if (!SPIFFS.begin())
+    {
         return false;
     }
     return SPIFFS.remove(filename);
@@ -37,9 +39,12 @@ bool deleteConfigFile() {
 bool loadConfig()
 {
     // Manage loading the configuration
-    if (!loadFile()) {
+    if (!loadFile())
+    {
         return false;
-    } else {
+    }
+    else
+    {
         saveFile();
         return true;
     }
@@ -47,21 +52,28 @@ bool loadConfig()
 
 bool loadFile()
 {
-    if (!SPIFFS.begin()) {
+    if (!SPIFFS.begin())
+    {
         return false;
     }
     // Loads the configuration from a file on SPIFFS
     File file = SPIFFS.open(filename, "r");
-    if (!SPIFFS.exists(filename) || !file) {
+    if (!SPIFFS.exists(filename) || !file)
+    {
         // File does not exist or unable to read file
-    } else {
+    }
+    else
+    {
         // Existing configuration present
     }
 
-    if (!deserializeConfig(file)) {
+    if (!deserializeConfig(file))
+    {
         file.close();
         return false;
-    } else {
+    }
+    else
+    {
         file.close();
         return true;
     }
@@ -76,13 +88,15 @@ bool saveFile()
 {
     // Saves the configuration to a file on SPIFFS
     File file = SPIFFS.open(filename, "w");
-    if (!file) {
+    if (!file)
+    {
         file.close();
         return false;
     }
 
     // Serialize JSON to file
-    if (!serializeConfig(file)) {
+    if (!serializeConfig(file))
+    {
         file.close();
         return false;
     }
@@ -98,10 +112,13 @@ bool deserializeConfig(Stream &src)
     // Parse the JSON object in the file
     DeserializationError err = deserializeJson(doc, src);
 
-    if (err) {
+    if (err)
+    {
         config.load(doc.as<JsonObject>());
         return true;
-    } else {
+    }
+    else
+    {
         config.load(doc.as<JsonObject>());
         return true;
     }
@@ -254,20 +271,25 @@ void ApConfig::load(JsonObjectConst obj)
 {
     // Load Access Point configuration
     //
-    if (obj["ssid"].isNull()) {
+    if (obj["ssid"].isNull())
+    {
         strlcpy(ssid, APNAME, sizeof(ssid));
-    } else {
-        const char* sd = obj["ssid"];
+    }
+    else
+    {
+        const char *sd = obj["ssid"];
         strlcpy(ssid, sd, sizeof(ssid));
     }
 
-    if (obj["passphrase"].isNull()) {
+    if (obj["passphrase"].isNull())
+    {
         strlcpy(passphrase, AP_PASSWD, sizeof(passphrase));
-    } else {
-        const char* ps = obj["passphrase"];
+    }
+    else
+    {
+        const char *ps = obj["passphrase"];
         strlcpy(passphrase, ps, sizeof(passphrase));
     }
-
 }
 
 void CopConfig::save(JsonObject obj) const
@@ -283,30 +305,42 @@ void CopConfig::load(JsonObjectConst obj)
 {
     // Load Cop configuration
     //
-    if (obj["breweryname"].isNull()) {
+    if (obj["breweryname"].isNull())
+    {
         strlcpy(breweryname, BRWYNAME, sizeof(breweryname));
-    } else {
-        const char* bn = obj["breweryname"];
+    }
+    else
+    {
+        const char *bn = obj["breweryname"];
         strlcpy(breweryname, bn, sizeof(breweryname));
     }
 
-    if (obj["kegeratorname"].isNull()) {
+    if (obj["kegeratorname"].isNull())
+    {
         strlcpy(kegeratorname, KNAME, sizeof(kegeratorname));
-    } else {
-        const char* kn = obj["kegeratorname"];
+    }
+    else
+    {
+        const char *kn = obj["kegeratorname"];
         strlcpy(kegeratorname, kn, sizeof(kegeratorname));
     }
 
-    if (obj["imperial"].isNull()) {
+    if (obj["imperial"].isNull())
+    {
         imperial = IMPERIAL;
-    } else {
+    }
+    else
+    {
         bool units = obj["imperial"];
         imperial = units;
     }
 
-    if (obj["serial"].isNull()) {
+    if (obj["serial"].isNull())
+    {
         serial = false;
-    } else {
+    }
+    else
+    {
         serial = obj["serial"];
     }
 
@@ -314,10 +348,13 @@ void CopConfig::load(JsonObjectConst obj)
     pinMode(SOLENOID, OUTPUT);
     digitalWrite(SOLENOID, HIGH);
 
-    if (obj["tapsolenoid"].isNull()) {
+    if (obj["tapsolenoid"].isNull())
+    {
         tapsolenoid = TSOL;
         digitalWrite(SOLENOID, HIGH);
-    } else {
+    }
+    else
+    {
         bool tsol = obj["tapsolenoid"];
         tapsolenoid = tsol;
         if (tapsolenoid)
@@ -352,93 +389,132 @@ void Temperatures::load(JsonObjectConst obj)
 {
     // Load Temperature configuration
     //
-    if (obj["setpoint"].isNull()) {
+    if (obj["setpoint"].isNull())
+    {
         setpoint = DEFSET;
-    } else {
+    }
+    else
+    {
         float sp = obj["setpoint"];
         setpoint = sp;
     }
 
-    if (obj["controlpoint"].isNull()) {
+    if (obj["controlpoint"].isNull())
+    {
         controlpoint = DEFCON;
-    } else {
+    }
+    else
+    {
         int cp = obj["controlpoint"];
         controlpoint = cp;
     }
 
-    if (obj["controlenabled"].isNull()) {
+    if (obj["controlenabled"].isNull())
+    {
         controlenabled = CTRLENABLE;
-    } else {
+    }
+    else
+    {
         bool ce = obj["controlenabled"];
         controlenabled = ce;
     }
 
-    if (obj["roomenabled"].isNull()) {
+    if (obj["roomenabled"].isNull())
+    {
         enabled[0] = false;
-    } else {
+    }
+    else
+    {
         bool en = obj["roomenabled"];
         enabled[0] = en;
     }
 
-    if (obj["room"].isNull()) {
+    if (obj["room"].isNull())
+    {
         calibration[0] = 0.0;
-    } else {
+    }
+    else
+    {
         float rc = obj["room"];
         calibration[0] = rc;
     }
 
-    if (obj["towerenabled"].isNull()) {
+    if (obj["towerenabled"].isNull())
+    {
         enabled[1] = false;
-    } else {
+    }
+    else
+    {
         bool en = obj["towerenabled"];
         enabled[1] = en;
     }
 
-    if (obj["tower"].isNull()) {
+    if (obj["tower"].isNull())
+    {
         calibration[1] = 0.0;
-    } else {
+    }
+    else
+    {
         float tc = obj["tower"];
         calibration[1] = tc;
     }
 
-    if (obj["upperenabled"].isNull()) {
+    if (obj["upperenabled"].isNull())
+    {
         enabled[2] = false;
-    } else {
+    }
+    else
+    {
         bool en = obj["upperenabled"];
         enabled[2] = en;
     }
 
-    if (obj["upper"].isNull()) {
+    if (obj["upper"].isNull())
+    {
         calibration[2] = 0.0;
-    } else {
+    }
+    else
+    {
         float uc = obj["upper"];
         calibration[2] = uc;
     }
 
-    if (obj["lowerenabled"].isNull()) {
+    if (obj["lowerenabled"].isNull())
+    {
         enabled[3] = false;
-    } else {
+    }
+    else
+    {
         bool en = obj["lowerenabled"];
         enabled[3] = en;
     }
 
-    if (obj["lower"].isNull()) {
+    if (obj["lower"].isNull())
+    {
         calibration[3] = 0.0;
-    } else {
+    }
+    else
+    {
         float lc = obj["lower"];
         calibration[3] = lc;
     }
 
-    if (obj["kegenabled"].isNull()) {
+    if (obj["kegenabled"].isNull())
+    {
         enabled[4] = false;
-    } else {
+    }
+    else
+    {
         bool en = obj["kegenabled"];
         enabled[4] = en;
     }
 
-    if (obj["keg"].isNull()) {
+    if (obj["keg"].isNull())
+    {
         calibration[4] = 0.0;
-    } else {
+    }
+    else
+    {
         float kc = obj["keg"];
         calibration[4] = kc;
     }
@@ -454,16 +530,22 @@ void KegScreen::load(JsonObjectConst obj)
 {
     // Load Keg Screen configuration
     //
-    if (obj["url"].isNull()) {
+    if (obj["url"].isNull())
+    {
         strlcpy(url, "", sizeof(url));
-    } else {
-        const char* ul = obj["url"];
+    }
+    else
+    {
+        const char *ul = obj["url"];
         strlcpy(url, ul, sizeof(url));
     }
 
-    if (obj["update"].isNull()) {
+    if (obj["update"].isNull())
+    {
         update = false;
-    } else {
+    }
+    else
+    {
         bool up = obj["update"];
         update = up;
     }
@@ -480,23 +562,32 @@ void URLTarget::load(JsonObjectConst obj)
 {
     // Load URL Target configuration
     //
-    if (obj["url"].isNull()) {
+    if (obj["url"].isNull())
+    {
         strlcpy(url, "", sizeof(url));
-    } else {
-        const char* tu = obj["url"];
+    }
+    else
+    {
+        const char *tu = obj["url"];
         strlcpy(url, tu, sizeof(url));
     }
 
-    if (obj["freq"].isNull()) {
+    if (obj["freq"].isNull())
+    {
         freq = 15;
-    } else {
+    }
+    else
+    {
         int f = obj["freq"];
         freq = f;
     }
 
-    if (obj["update"].isNull()) {
+    if (obj["update"].isNull())
+    {
         update = false;
-    } else {
+    }
+    else
+    {
         bool u = obj["update"];
         update = u;
     }
@@ -541,10 +632,13 @@ void Config::load(JsonObjectConst obj)
     // }
     snprintf(guid, sizeof(guid), "%08X", getGUID());
 
-    if (obj["hostname"].isNull()) {
+    if (obj["hostname"].isNull())
+    {
         strlcpy(hostname, APNAME, sizeof(hostname));
-    } else {
-        const char* hn = obj["hostname"];
+    }
+    else
+    {
+        const char *hn = obj["hostname"];
         strlcpy(hostname, hn, sizeof(hostname));
     }
 
@@ -553,21 +647,30 @@ void Config::load(JsonObjectConst obj)
     kegscreen.load(obj["kegscreen"]);
     urltarget.load(obj["urltarget"]);
 
-    if (obj["dospiffs1"].isNull()) {
+    if (obj["dospiffs1"].isNull())
+    {
         dospiffs1 = false;
-    } else {
+    }
+    else
+    {
         dospiffs1 = obj["dospiffs1"];
     }
 
-    if (obj["dospiffs2"].isNull()) {
+    if (obj["dospiffs2"].isNull())
+    {
         dospiffs2 = false;
-    } else {
+    }
+    else
+    {
         dospiffs2 = obj["dospiffs2"];
     }
 
-    if (obj["didupdate"].isNull()) {
+    if (obj["didupdate"].isNull())
+    {
         didupdate = false;
-    } else {
+    }
+    else
+    {
         didupdate = obj["didupdate"];
     }
 }

@@ -34,7 +34,6 @@ void initWebServer()
 
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request) {
-
         if (request->method() == HTTP_OPTIONS)
         {
             request->send(200);
@@ -165,8 +164,8 @@ void setJsonHandlers()
 
         // Serialize configuration
         DynamicJsonDocument doc(capacitySerial); // Create doc
-        JsonObject root = doc.to<JsonObject>(); // Create JSON object
-        config.save(root); // Fill the object with current config
+        JsonObject root = doc.to<JsonObject>();  // Create JSON object
+        config.save(root);                       // Fill the object with current config
 
         String json;
         serializeJsonPretty(doc, json); // Serialize JSON to String
@@ -180,8 +179,8 @@ void setJsonHandlers()
 
         // Serialize configuration
         DynamicJsonDocument doc(capacityFlowSerial); // Create doc
-        JsonObject root = doc.to<JsonObject>(); // Create JSON object
-        flow.save(root); // Fill the object with current kegs
+        JsonObject root = doc.to<JsonObject>();      // Create JSON object
+        flow.save(root);                             // Fill the object with current kegs
 
         String json;
         serializeJsonPretty(doc, json); // Serialize JSON to String
@@ -221,7 +220,7 @@ void setJsonHandlers()
         doc["controlenabled"] = config.temps.enabled[config.temps.controlpoint];
 
         int numEnabled = 0;
-        char * sensorName[NUMSENSOR];
+        char *sensorName[NUMSENSOR];
         double sensorAverage[NUMSENSOR];
 
         for (int i = 0; i < NUMSENSOR; i++)
@@ -245,7 +244,7 @@ void setJsonHandlers()
 
         for (int i = 0; i < NUMSENSOR; i++)
         {
-            doc["sensors"][i]["name"] = (const char*)sensorName[i];
+            doc["sensors"][i]["name"] = (const char *)sensorName[i];
             doc["sensors"][i]["value"] = (const float)sensorAverage[i];
         }
 
@@ -426,7 +425,7 @@ void setSettingsAliases()
         handleKegScreenPost(request);   // Keg Screen settings
         handleUrlTargetPost(request);   // Target URL settings
         handleCloudTargetPost(request); // Cloud Target settings
-        
+
         // Redirect to Settings page
         request->redirect("/settings/");
     });
@@ -470,8 +469,8 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
         if (p->isPost())
         {
             // Process any p->name().c_str() / p->value().c_str() pairs
-            const char * name = p->name().c_str();
-            const char * value = p->value().c_str();
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Tap settings
@@ -563,7 +562,7 @@ bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
     {
         if (tapNum >= 0)
         {
-            setDoTapInfoReport(tapNum);  
+            setDoTapInfoReport(tapNum);
         }
         return true;
     }
@@ -585,8 +584,8 @@ bool handleTapCal(AsyncWebServerRequest *request) // Handle tap settings
         if (p->isPost())
         {
             // Process any p->name().c_str() / p->value().c_str() pairs
-            const char * name = p->name().c_str();
-            const char * value = p->value().c_str();
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Tap Calibration
@@ -641,8 +640,8 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
         if (p->isPost())
         {
             // Process any p->name().c_str() / p->value().c_str() pairs
-            const char * name = p->name().c_str();
-            const char * value = p->value().c_str();
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Controller settings
@@ -657,7 +656,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                 {
                     if (!strcmp(config.hostname, value) == 0)
                     {
-                        hostnamechanged=true;
+                        hostnamechanged = true;
                     }
                     Log.notice(F("Settings update, [%s]:(%s) applied." CRR), name, value);
                     strlcpy(config.hostname, value, sizeof(config.hostname));
@@ -754,15 +753,15 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
         if (hostnamechanged)
         { // We reset hostname, process
             hostnamechanged = false;
-            #ifdef ESP8266
+#ifdef ESP8266
             wifi_station_set_hostname(config.hostname);
             MDNS.setHostname(config.hostname);
             MDNS.notifyAPChange();
             MDNS.announce();
-            #elif defined ESP32
+#elif defined ESP32
             tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.hostname);
             mdnsreset();
-            #endif
+#endif
             Log.verbose(F("POSTed new mDNSid, reset mDNS stack." CRR));
         }
     }
@@ -787,8 +786,8 @@ bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control se
         if (p->isPost())
         {
             // Process any p->name().c_str() / p->value().c_str() pairs
-            const char * name = p->name().c_str();
-            const char * value = p->value().c_str();
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Sensor settings
@@ -869,8 +868,8 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
         if (p->isPost())
         {
             // Process any p->name().c_str() / p->value().c_str() pairs
-            const char * name = p->name().c_str();
-            const char * value = p->value().c_str();
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Sensor settings
@@ -1048,8 +1047,8 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
         if (p->isPost())
         {
             // Process any p->name().c_str() / p->value().c_str() pairs
-            const char * name = p->name().c_str();
-            const char * value = p->value().c_str();
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Target url settings
@@ -1107,8 +1106,8 @@ bool handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL target
         if (p->isPost())
         {
             // Process any p->name().c_str() / p->value().c_str() pairs
-            const char * name = p->name().c_str();
-            const char * value = p->value().c_str();
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Keg Screen url settings
@@ -1153,8 +1152,8 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
         if (p->isPost())
         {
             // Process any p->name().c_str() / p->value().c_str() pairs
-            const char * name = p->name().c_str();
-            const char * value = p->value().c_str();
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Cloud target settings
@@ -1227,8 +1226,8 @@ bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibrat
         if (p->isPost())
         {
             // Process any p->name().c_str() / p->value().c_str() pairs
-            const char * name = p->name().c_str();
-            const char * value = p->value().c_str();
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CRR), name, value);
 
             // Calibration Mode Set

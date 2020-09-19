@@ -25,11 +25,11 @@ SOFTWARE. */
 Flowmeter flow;
 const char *flowfilename = FLOWFILENAME;
 int flowPins[NUMTAPS] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7, FLOW8};
-volatile static unsigned long pulse[NUMTAPS];           // Unregistered pulse counter
-volatile static unsigned long lastPulse[NUMTAPS];       // Pulses pending at last poll
-volatile static unsigned long lastPulseTime[NUMTAPS];   // Monitor ongoing active pours
-volatile static unsigned long lastLoopTime[NUMTAPS];    // Monitor ongoing active pours
-extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(2) + 9*JSON_OBJECT_SIZE(8);
+volatile static unsigned long pulse[NUMTAPS];         // Unregistered pulse counter
+volatile static unsigned long lastPulse[NUMTAPS];     // Pulses pending at last poll
+volatile static unsigned long lastPulseTime[NUMTAPS]; // Monitor ongoing active pours
+volatile static unsigned long lastLoopTime[NUMTAPS];  // Monitor ongoing active pours
+extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(2) + 9 * JSON_OBJECT_SIZE(8);
 extern const size_t capacityFlowDeserial = capacityFlowSerial + 1240;
 extern const size_t capacityPulseSerial = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(1);
 extern const size_t capacityPulseDeserial = capacityPulseSerial + 10;
@@ -78,13 +78,12 @@ static void (*pf[])(void) = { // ISR Function Pointers
     HandleIntISR0, HandleIntISR1,
     HandleIntISR2, HandleIntISR3,
     HandleIntISR4, HandleIntISR5,
-    HandleIntISR6, HandleIntISR7
-};
+    HandleIntISR6, HandleIntISR7};
 
 void IRAM_ATTR handleInterrupts(int tapNum)
 { // Increment pulse count
     pulse[tapNum]++;
-    lastPulseTime[tapNum] = millis();   // Reset while we are pouring
+    lastPulseTime[tapNum] = millis(); // Reset while we are pouring
 }
 
 unsigned long getPulseCount(int tap)
@@ -106,12 +105,12 @@ bool initFlow()
         pinMode(flowPins[i], INPUT_PULLUP);
         digitalWrite(flowPins[i], HIGH);
         attachInterrupt(digitalPinToInterrupt(flowPins[i]), pf[i], FALLING);
-        pulse[i] = 0;               // Hold current pour
-        lastPulse[i] = 0;           // For kick detector
-        lastLoopTime[i] = millis(); // Compare for kickdetect
-        lastPulseTime[i] = millis();// For pour detector
-        queuePourReport[i] = 0;     // Pour queue
-        queueKickReport[i] = false; // Kick queue
+        pulse[i] = 0;                // Hold current pour
+        lastPulse[i] = 0;            // For kick detector
+        lastLoopTime[i] = millis();  // Compare for kickdetect
+        lastPulseTime[i] = millis(); // For pour detector
+        queuePourReport[i] = 0;      // Pour queue
+        queueKickReport[i] = false;  // Kick queue
     }
     return loadFlowConfig();
 }
@@ -123,43 +122,43 @@ void logFlow()
         if (!flow.taps[i].calibrating) // Skip on calibrate
         {
             // Check kick first so that speed is not averaged over pour
-			if (isKicked(i) && flow.taps[i].active)
-			{  // If the keg is blowing foam and active
+            if (isKicked(i) && flow.taps[i].active)
+            {                            // If the keg is blowing foam and active
                 pulse[i] = lastPulse[i]; // Discard the foam pulses
                 flow.taps[i].active = false;
                 queueKickReport[i] = true;
                 saveFlowConfig();
-			}
-			else if ((millis() - lastPulseTime[i] > POURDELAY) && (pulse[i] > 0))
-			{ // If we have stopped pouring, and there's something to log
-				noInterrupts();
-				const unsigned int pulseCount = pulse[i];
-				pulse[i] = 0;
-				lastPulseTime[i] = millis();
-				interrupts();
+            }
+            else if ((millis() - lastPulseTime[i] > POURDELAY) && (pulse[i] > 0))
+            { // If we have stopped pouring, and there's something to log
+                noInterrupts();
+                const unsigned int pulseCount = pulse[i];
+                pulse[i] = 0;
+                lastPulseTime[i] = millis();
+                interrupts();
 
                 if (pulseCount < SMALLPOUR)
                 { // Discard a small pour
                     Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CRR), pulseCount, i, flow.taps[i].pin);
-					// Since we don't do anything with pulseCount here, we're ignoring it
+                    // Since we don't do anything with pulseCount here, we're ignoring it
                 }
-				else
-				{ // Log a pour
+                else
+                { // Log a pour
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
                     saveFlowConfig();
                     Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CRR), pulseCount, i, flow.taps[i].pin);
                     if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
-                    { /// Queue upstream report
+                    {                                                                        /// Queue upstream report
                         queuePourReport[i] = pour;
                     }
-				}
-			}
-			else
-			{ // Either we are not finished pouring, or there's no pulses to log
-				lastPulse[i] = pulse[i];    // Hold to compare for kickdetect
+                }
+            }
+            else
+            {                               // Either we are not finished pouring, or there's no pulses to log
+                lastPulse[i] = pulse[i];    // Hold to compare for kickdetect
                 lastLoopTime[i] = millis(); // Hold to compare for kickdetect
-			}
+            }
         }
         else
         {
@@ -169,9 +168,9 @@ void logFlow()
 }
 
 bool isKicked(int meter)
-{ // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
+{   // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
     // Get elapsed time and pulses
-	const double secs = (millis() - lastLoopTime[meter]) / 1000;
+    const double secs = (millis() - lastLoopTime[meter]) / 1000;
     const int pulses = pulse[meter] - lastPulse[meter];
     const double pps = (double)pulses / secs;
 
@@ -199,7 +198,7 @@ bool loadFlowConfig()
     if (!loadFlowFile())
     {
         Log.warning(F("Warning: Unable to load flowmeter configuration." CRR));
-        saveFlowConfig(); // Save a blank config
+        saveFlowConfig();    // Save a blank config
         if (!loadFlowFile()) // Try one more time to load the default config
         {
             Log.error(F("Error: Unable to generate default flowmeter configuration." CRR));
@@ -427,14 +426,14 @@ void convertFlowtoMetric()
 
 void Taps::save(JsonObject obj) const
 {
-    obj["tapid"] = tapid;               // Tap ID
-    obj["pin"] =  pin;                  // μC Pin
-    obj["ppu"] =  ppu;                  // Pulses per Gallon
-    obj["name"] =  name;                // Beer Name
-    obj["capacity"] =  capacity;        // Tap Capacity
-    obj["remaining"] =  remaining;      // Tap remaining
-    obj["active"] =  active;            // Tap active
-    obj["calibrating"] =  calibrating;  // Tap calibrating
+    obj["tapid"] = tapid;             // Tap ID
+    obj["pin"] = pin;                 // μC Pin
+    obj["ppu"] = ppu;                 // Pulses per Gallon
+    obj["name"] = name;               // Beer Name
+    obj["capacity"] = capacity;       // Tap Capacity
+    obj["remaining"] = remaining;     // Tap remaining
+    obj["active"] = active;           // Tap active
+    obj["calibrating"] = calibrating; // Tap calibrating
 }
 
 void Taps::load(JsonObjectConst obj, int numTap)
@@ -511,21 +510,22 @@ void Flowmeter::load(JsonObjectConst obj)
     imperial = config.copconfig.imperial;
 
     // Get a reference to the taps array
-	JsonArrayConst _taps = obj["taps"];
+    JsonArrayConst _taps = obj["taps"];
 
-	// Extract each tap point
-	int i = 0;
-	for (JsonObjectConst tap : _taps)
+    // Extract each tap point
+    int i = 0;
+    for (JsonObjectConst tap : _taps)
     {
-		// Load the tap
-		taps[i].load(tap, i);
+        // Load the tap
+        taps[i].load(tap, i);
 
-		// Increment tap count
-		i++;
+        // Increment tap count
+        i++;
 
-		// Max reached?
-		if (i >= NUMTAPS) break;
-	}
+        // Max reached?
+        if (i >= NUMTAPS)
+            break;
+    }
 }
 
 void Flowmeter::save(JsonObject obj) const
@@ -533,10 +533,10 @@ void Flowmeter::save(JsonObject obj) const
     // Save units here because it's easier in the web/JS
     obj["imperial"] = imperial; // Units in Imperial
 
-	// Add "taps" array
-	JsonArray _taps = obj.createNestedArray("taps");
+    // Add "taps" array
+    JsonArray _taps = obj.createNestedArray("taps");
 
-	// Add each tap in the array
-	for (int i = 0; i < NUMTAPS; i++)
-		taps[i].save(_taps.createNestedObject());
+    // Add each tap in the array
+    for (int i = 0; i < NUMTAPS; i++)
+        taps[i].save(_taps.createNestedObject());
 }

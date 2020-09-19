@@ -30,17 +30,18 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
-struct ThatVersion {
-    char version[32] = {'0','.','0','.','0'};
-    
+struct ThatVersion
+{
+    char version[32] = {'0', '.', '0', '.', '0'};
+
     void load(JsonObjectConst);
     void save(JsonObject) const;
 };
 
 void doVersionPoll();
 void sendRequest();
-void requestHandler(void*, asyncHTTPrequest*, int);
+void requestHandler(void *, asyncHTTPrequest *, int);
 bool serializeVersion(const ThatVersion &, Print &);
-bool deserializeVersion(const char * &, ThatVersion &);
+bool deserializeVersion(const char *&, ThatVersion &);
 
 #endif // _THATVERSION_H

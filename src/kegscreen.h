@@ -121,12 +121,12 @@ struct TempReport
     TempSensor sensor[NUMSENSOR];
 };
 
-bool sendTapInfoReport(int);                        // Push complete tap info (single tap)
-bool sendPourReport(int, float);                    // Send pour report when a pour is done (single tap)
-bool sendKickReport(int);                           // Send a kick report when keg kicks
-bool sendCoolStateReport();                         // Send temp status when a cooling state changes
-bool sendTempReport();                              // Send a temp report on timer
-bool sendReport(ReportKey, const String &);         // Handle the business of sending report
+bool sendTapInfoReport(int);                // Push complete tap info (single tap)
+bool sendPourReport(int, float);            // Send pour report when a pour is done (single tap)
+bool sendKickReport(int);                   // Send a kick report when keg kicks
+bool sendCoolStateReport();                 // Send temp status when a cooling state changes
+bool sendTempReport();                      // Send a temp report on timer
+bool sendReport(ReportKey, const String &); // Handle the business of sending report
 
 // Callbacks for Async
 void reportCBTapInfo(void *, asyncHTTPrequest *, int);
@@ -134,7 +134,7 @@ void reportCBPourReport(void *, asyncHTTPrequest *, int);
 void reportCBKickReport(void *, asyncHTTPrequest *, int);
 void reportCBCoolState(void *, asyncHTTPrequest *, int);
 void reportCBTempReport(void *, asyncHTTPrequest *, int);
-void resultHandler(ReportKey report, int readyState);   // Generic (synchronous) result handler
+void resultHandler(ReportKey report, int readyState); // Generic (synchronous) result handler
 
 extern struct Config config;
 extern struct Flowmeter flow;

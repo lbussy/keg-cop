@@ -45,15 +45,15 @@ enum HTTPUpdateResult
     HTTP_UPDATE_OK
 };
 
-HTTPUpdateResult execFirmwareOTA(char * host, int port, char * path);
-HTTPUpdateResult execSPIFFSOTA(char * host, int port, char * path);
+HTTPUpdateResult execFirmwareOTA(char *host, int port, char *path);
+HTTPUpdateResult execSPIFFSOTA(char *host, int port, char *path);
 
-HTTPUpdateResult execOTA(char * host, int port, char * path, int type);
+HTTPUpdateResult execOTA(char *host, int port, char *path, int type);
 String getHeaderValue(String header, String headerName); // Return header value
 
 extern bool saveConfig();
 extern struct Config config;
 
-static bool __attribute__((unused)) doOTA = false;          // Semaphore for OTA
+static bool __attribute__((unused)) doOTA = false; // Semaphore for OTA
 
 #endif //_EXECOTA_H

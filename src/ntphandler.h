@@ -38,14 +38,14 @@ SOFTWARE. */
 
 void setClock();
 String getDTS();
-int getYear();      // tm_year
-int getMonth();     // tm_mon
-int getDate();      // tm_mday
-int getWday();      // tm_wday
-int getHour();      // tm_hour
-int getMinute();    // tm_min
-int getSecond();    // tm_sec
-int getYDay();      // tm_yday
+int getYear();   // tm_year
+int getMonth();  // tm_mon
+int getDate();   // tm_mday
+int getWday();   // tm_wday
+int getHour();   // tm_hour
+int getMinute(); // tm_min
+int getSecond(); // tm_sec
+int getYDay();   // tm_yday
 void ntpBlinker();
 
 static const float __attribute__((unused)) GMT = 0;
@@ -81,9 +81,11 @@ static const float __attribute__((unused)) AGT = -3.00;
 static const float __attribute__((unused)) BET = -3.00;
 static const float __attribute__((unused)) CAT = -1.00;
 
-static const int __attribute__((unused)) EPOCH_1_1_2019 = 1546300800; //1546300800 =  01/01/2019 @ 12:00am (UTC)
-static const char __attribute__((unused)) *DAYS_OF_WEEK[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-static const char __attribute__((unused)) *DAYS_OF_WEEK_3[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+static const int __attribute__((unused)) EPOCH_1_1_2019 = 1546300800; // 1546300800 =  01/01/2019 @ 12:00am (UTC)
+static const char __attribute__((unused)) * DAYS_OF_WEEK[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+static const char __attribute__((unused)) * DAYS_OF_WEEK_3[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
+static uint32_t __attribute__((unused)) lastNTPUpdate = 0;
 
 extern struct Config config;
 
