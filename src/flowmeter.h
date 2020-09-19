@@ -34,14 +34,14 @@ SOFTWARE. */
 
 struct Taps
 {
-    int tapid;                  // Tap ID
-    int pin;                    // μC Pin
-    long ppu;                   // Pulses per Gallon
-    char name[65];              // Beer Name
-    double capacity;            // Tap Capacity
-    double remaining;           // Tap remaining
-    bool active = false;        // Is tap active
-    bool calibrating = false;   // In calibration mode
+    int tapid;                // Tap ID
+    int pin;                  // μC Pin
+    long ppu;                 // Pulses per Gallon
+    char name[65];            // Beer Name
+    double capacity;          // Tap Capacity
+    double remaining;         // Tap remaining
+    bool active = false;      // Is tap active
+    bool calibrating = false; // In calibration mode
 
     void load(JsonObjectConst, int);
     void save(JsonObject) const;
@@ -80,7 +80,7 @@ void convertFlowtoImperial();
 void convertFlowtoMetric();
 
 extern struct Config config;
-extern float __attribute__((unused)) queuePourReport[NUMTAPS];  // Store pending pours
-extern bool __attribute__((unused)) queueKickReport[NUMTAPS];   // Store pending kicks
+extern float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
+extern bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending kicks
 
 #endif // _FLOWMETER_H

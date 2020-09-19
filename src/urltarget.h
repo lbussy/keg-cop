@@ -69,9 +69,9 @@ struct UrlReport
     SensorsReport sensor[NUMSENSOR];
 };
 
-bool sendTargetReport();                                    // Push complete report
-bool sendTReport(const String &);                           // Handle the business of sending report
-void targetResultHandler(void*, asyncHTTPrequest*, int);    // Callback method for asynch
+bool sendTargetReport();                                   // Push complete report
+bool sendTReport(const String &);                          // Handle the business of sending report
+void targetResultHandler(void *, asyncHTTPrequest *, int); // Callback method for asynch
 
 extern struct Config config;
 extern struct Flowmeter flow;

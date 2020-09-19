@@ -28,10 +28,12 @@ void setup()
     { // If configuration does not load, sit and blink slowly like an idiot
         pinMode(LED, OUTPUT);
         Ticker blinker;
-        blinker.attach_ms(CONFIGBLINK, [](){
+        blinker.attach_ms(CONFIGBLINK, []() {
             digitalWrite(LED, !(digitalRead(LED)));
         });
-        while (true) {};
+        while (true)
+        {
+        };
     }
 
     serial();
@@ -56,7 +58,7 @@ void setup()
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, HIGH);
 
-    setClock();         // Set NTP Time
+    setClock(); // Set NTP Time
 
     // Initialize flowmeters before checking for SPIFFS update
     if (initFlow())
@@ -64,17 +66,17 @@ void setup()
     else
         Log.error(F("Unable to load flowmeters." CRR));
 
-    execspiffs();       // Check for pending SPIFFS update
+    execspiffs(); // Check for pending SPIFFS update
 
-    mdnssetup();        // Set up mDNS responder
-    tcpCleanup();       // Get rid of -8 errors
-    initWebServer();    // Turn on web server
-    sensorInit();       // Initialize temperature sensors
-    startControl();     // Initialize temperature control
-    doVersionPoll();    // Get server version at startup
+    mdnssetup();     // Set up mDNS responder
+    tcpCleanup();    // Get rid of -8 errors
+    initWebServer(); // Turn on web server
+    sensorInit();    // Initialize temperature sensors
+    startControl();  // Initialize temperature control
+    doVersionPoll(); // Get server version at startup
 
     if (!Log.getLevel())
-       nullDoc("d");
+        nullDoc("d");
     else
         Log.notice(F("Started %s version %s (%s) [%s]." CRR), API_KEY, version(), branch(), build());
 }
@@ -108,7 +110,8 @@ void loop()
     while (true)
     {
         // Check for Target URL Timing reset
-        if (config.urltarget.update) {
+        if (config.urltarget.update)
+        {
             Log.notice(F("Resetting URL Target frequency timer to %l minutes." CRR), config.urltarget.freq);
             doTargetReport.detach();
             doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
@@ -118,5 +121,6 @@ void loop()
         doOTALoop();
         tickerLoop();
         serialLoop();
+        maintenanceLoop();
     }
 }

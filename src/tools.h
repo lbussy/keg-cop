@@ -23,10 +23,13 @@ SOFTWARE. */
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
+#include "config.h"
+#include "ntphandler.h"
 #include "wifihandler.h"
 #include "kegscreen.h"
 #include "thermostat.h"
 #include "urltarget.h"
+#include "mdnshandler.h"
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
@@ -38,6 +41,7 @@ void setDoKSTempReport();
 void setDoTapInfoReport(int);
 void setDoTargetReport();
 void tickerLoop();
+void maintenanceLoop();
 void printDebug();
 void printDebug(const char *);
 double convertFtoC(double);
@@ -49,12 +53,11 @@ double convertLtoG(double);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
 uint32_t getGUID();
 
-static bool __attribute__((unused)) doReset = false;            // Semaphore for reset
-static bool __attribute__((unused)) doWiFiReset = false;        // Semaphore for wifi reset
-static bool __attribute__((unused)) doKSTempReport = false;     // Semaphore for Keg Screen Temps Report
-static bool __attribute__((unused)) doTargetReport = false;     // Semaphore for URL Target Report
+static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
+static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset
+static bool __attribute__((unused)) doKSTempReport = false; // Semaphore for Keg Screen Temps Report
+static bool __attribute__((unused)) doTargetReport = false; // Semaphore for URL Target Report
 static bool __attribute__((unused)) doTapInfoReport[NUMTAPS] = {
-    false, false, false, false, false, false, false, false
-}; // Semaphore for reset
+    false, false, false, false, false, false, false, false}; // Semaphore for reset
 
 #endif

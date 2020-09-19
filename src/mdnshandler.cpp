@@ -22,10 +22,14 @@ SOFTWARE. */
 
 #include "mdnshandler.h"
 
-void mdnssetup() {
-    if (!MDNS.begin(WiFi.getHostname())) { // Start the mDNS responder
+void mdnssetup()
+{
+    if (!MDNS.begin(WiFi.getHostname()))
+    { // Start the mDNS responder
         Log.error(F("Error setting up mDNS responder." CRR));
-    } else {
+    }
+    else
+    {
         Log.notice(F("mDNS responder started for %s.local." CRR), WiFi.getHostname());
         MDNS.addService("http", "tcp", PORT);
         MDNS.addService("kegcop", "tcp", PORT);
@@ -36,12 +40,20 @@ void mdnssetup() {
     }
 }
 
-void mdnsreset() {
+void mdnsreset()
+{
     MDNS.end();
-    if (!MDNS.begin(config.hostname)) {
+    if (!MDNS.begin(config.hostname))
+    {
         Log.error(F("Error resetting MDNS responder."));
-    } else {
+    }
+    else
+    {
         Log.notice(F("mDNS responder restarted, hostname: %s.local." CRR), WiFi.getHostname());
         MDNS.addService("http", "tcp", 80);
+        MDNS.addService("kegcop", "tcp", PORT);
+#if DOTELNET == true
+        MDNS.addService("telnet", "tcp", TELNETPORT);
+#endif
     }
 }

@@ -39,7 +39,7 @@ SOFTWARE. */
 
 void serial();
 void toggleSerialCompat(bool);
-void printTimestamp(Print* _logOutput);
+void printTimestamp(Print *_logOutput);
 void serialLoop();
 
 // Print outputs
@@ -63,8 +63,8 @@ size_t myPrint(unsigned int n, int base);
 size_t myPrint(long n, int base);
 size_t myPrint(unsigned long n, int base);
 size_t myPrint(double n, int digits);
-size_t myPrint(const Printable& x);
-size_t myPrint(struct tm * timeinfo, const char * format);
+size_t myPrint(const Printable &x);
+size_t myPrint(struct tm *timeinfo, const char *format);
 // size_t myPrintf(const char *format, ...);
 size_t myPrintln(void);
 size_t myPrintln(const __FlashStringHelper *ifsh);
@@ -77,8 +77,8 @@ size_t myPrintln(unsigned int num, int base);
 size_t myPrintln(long num, int base);
 size_t myPrintln(unsigned long num, int base);
 size_t myPrintln(double num, int digits);
-size_t myPrintln(const Printable& x);
-size_t myPrintln(struct tm * timeinfo, const char * format);
+size_t myPrintln(const Printable &x);
+size_t myPrintln(struct tm *timeinfo, const char *format);
 void nullDoc(const char *);
 
 #define prefLen 22
@@ -94,4 +94,3 @@ extern const size_t capacityTempsSerial;
 extern struct Thermostat tstat;
 
 #endif //_SERIALLOG_H
- 

@@ -30,23 +30,23 @@ SOFTWARE. */
 
 enum ThermostatState
 {
-    TSTAT_INACTIVE,         // Thermostat inactive
-    TSTAT_COOL_BEGIN,       // Turning on cooling
-    TSTAT_COOL_MINOFF,      // Waiting to cool because of MINOFF
-    TSTAT_COOL_ACTIVE,      // Actively cooling
-    TSTAT_OFF_END,          // Turning off cooling
-    TSTAT_OFF_MINON,        // Temp => Setpoint, still running because of MINON
-    TSTAT_OFF_INACTIVE,     // Not cooling
-    TSTAT_UNKNOWN           // Should never get this
+    TSTAT_INACTIVE,     // Thermostat inactive
+    TSTAT_COOL_BEGIN,   // Turning on cooling
+    TSTAT_COOL_MINOFF,  // Waiting to cool because of MINOFF
+    TSTAT_COOL_ACTIVE,  // Actively cooling
+    TSTAT_OFF_END,      // Turning off cooling
+    TSTAT_OFF_MINON,    // Temp => Setpoint, still running because of MINON
+    TSTAT_OFF_INACTIVE, // Not cooling
+    TSTAT_UNKNOWN       // Should never get this
 };
 
 struct Thermostat
 {
-    bool control;           // Turn on/off temp control
-    ThermostatState state;  // Holds return value from control
-    bool cooling;           // Cooling state
-    unsigned long lastOff;  // Timestamp for last off
-    unsigned long lastOn;   // Timestamp for last on
+    bool control;          // Turn on/off temp control
+    ThermostatState state; // Holds return value from control
+    bool cooling;          // Cooling state
+    unsigned long lastOff; // Timestamp for last off
+    unsigned long lastOn;  // Timestamp for last on
 };
 
 void startControl();
@@ -55,6 +55,6 @@ void tstatReport();
 
 extern struct Config config;
 extern struct Devices device;
-extern bool __attribute__((unused)) queueStateChange;   // Store pending state changes
+extern bool __attribute__((unused)) queueStateChange; // Store pending state changes
 
 #endif // _THERMOSTAT_H

@@ -128,12 +128,40 @@ void tickerLoop()
     }
 }
 
+void maintenanceLoop()
+{
+    if (ESP.getFreeHeap() < MINFREEHEAP)
+    {
+        Log.warning(F("Maintenance: Heap memory has degraded below safe minimum, restarting." CRR));
+        resetController();
+    }
+    if (WiFi.status() != WL_CONNECTED)
+    {
+        Log.warning(F("Maintenance: WiFi not connected, reconnecting." CRR));
+        doWiFi();
+        mdnsreset();
+    }
+    if (millis() > ESPREBOOT)
+    {
+        // The ms clock will rollover after ~49 days.  To be on the safe side,
+        // restart the ESP after about 42 days to reset the ms clock.
+        Log.warning(F("Maintenance: Six week routine restart."));
+        ESP.restart();
+    }
+    if (lastNTPUpdate > NTPRESET)
+    {
+        // Reset NTP (blocking) every measured 24 hours
+        Log.notice(F("Maintenance: Setting time"));
+        setClock();
+    }
+}
+
 void printDebug()
 {
     printDebug(nullptr);
 }
 
-void printDebug(const char * message)
+void printDebug(const char *message)
 {
     uint32_t free;
     uint16_t max;
