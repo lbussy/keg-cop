@@ -45,12 +45,12 @@ void setup()
     // Check if portal is requested
     if (digitalRead(RESETWIFI) == LOW)
     {
-        Log.notice(F("Pin %d low, presenting portal." CRR), RESETWIFI);
+        Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
         doWiFi(true);
     }
     else
     {
-        Log.verbose(F("Starting WiFi." CRR));
+        Log.verbose(F("Starting WiFi." CR));
         doWiFi();
     }
 
@@ -62,9 +62,9 @@ void setup()
 
     // Initialize flowmeters before checking for SPIFFS update
     if (initFlow())
-        Log.notice(F("Flowmeters loaded." CRR));
+        Log.notice(F("Flowmeters loaded." CR));
     else
-        Log.error(F("Unable to load flowmeters." CRR));
+        Log.error(F("Unable to load flowmeters." CR));
 
     execspiffs(); // Check for pending SPIFFS update
 
@@ -78,7 +78,7 @@ void setup()
     if (!Log.getLevel())
         nullDoc("d");
     else
-        Log.notice(F("Started %s version %s (%s) [%s]." CRR), API_KEY, version(), branch(), build());
+        Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
 }
 
 void loop()
@@ -112,7 +112,7 @@ void loop()
         // Check for Target URL Timing reset
         if (config.urltarget.update)
         {
-            Log.notice(F("Resetting URL Target frequency timer to %l minutes." CRR), config.urltarget.freq);
+            Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
             doTargetReport.detach();
             doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
             config.urltarget.update = false;

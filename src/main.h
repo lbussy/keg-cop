@@ -23,10 +23,6 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
-// Define assert
-// #define NDEBUG       // DEBUG: Voids assertions when defined
-#include <assert.h> // DEBUG: Use assert(false); to crash
-
 #include "jsonconfig.h"
 #include "serialhandler.h"
 #include "config.h"

@@ -24,7 +24,7 @@ SOFTWARE. */
 
 void execfw()
 {
-    Log.notice(F("Starting the Firmware OTA pull, will reboot without notice." CRR));
+    Log.notice(F("Starting the Firmware OTA pull, will reboot without notice." CR));
 
     // Stop web server before OTA update - will restart on reset
     stopWebServer();
@@ -46,7 +46,7 @@ void execfw()
     switch (ret)
     {
     case HTTP_UPDATE_FAILED:
-        Log.error(F("HTTP Firmware OTA Update failed," CRR));
+        Log.error(F("HTTP Firmware OTA Update failed," CR));
         // Don't allow anything to proceed
         config.dospiffs1 = false;
         config.dospiffs2 = false;
@@ -57,7 +57,7 @@ void execfw()
         break;
 
     case HTTP_UPDATE_NO_UPDATES:
-        Log.notice(F("HTTP Firmware OTA Update: No updates." CRR));
+        Log.notice(F("HTTP Firmware OTA Update: No updates." CR));
         // Don't allow anything to proceed
         config.dospiffs1 = false;
         config.dospiffs2 = false;
@@ -68,7 +68,7 @@ void execfw()
         break;
 
     case HTTP_UPDATE_OK:
-        Log.notice(F("HTTP Firmware OTA Update complete, restarting." CRR));
+        Log.notice(F("HTTP Firmware OTA Update complete, restarting." CR));
         ESP.restart();
         break;
     }
@@ -78,7 +78,7 @@ void execspiffs()
 {
     if (config.dospiffs1)
     {
-        Log.notice(F("Rebooting a second time before SPIFFS OTA pull." CRR));
+        Log.notice(F("Rebooting a second time before SPIFFS OTA pull." CR));
         config.dospiffs1 = false;
         config.dospiffs2 = true;
         config.didupdate = false;
@@ -90,7 +90,7 @@ void execspiffs()
     }
     else if (config.dospiffs2)
     {
-        Log.notice(F("Starting the SPIFFS OTA pull." CRR));
+        Log.notice(F("Starting the SPIFFS OTA pull." CR));
 
         // Stop web server before OTA update - will restart on reset
         stopWebServer();
@@ -105,11 +105,11 @@ void execspiffs()
         switch (ret)
         {
         case HTTP_UPDATE_FAILED:
-            Log.error(F("HTTP SPIFFS OTA Update failed." CRR));
+            Log.error(F("HTTP SPIFFS OTA Update failed." CR));
             break;
 
         case HTTP_UPDATE_NO_UPDATES:
-            Log.notice(F("HTTP SPIFFS OTA Update: No updates." CRR));
+            Log.notice(F("HTTP SPIFFS OTA Update: No updates." CR));
             break;
 
         case HTTP_UPDATE_OK:
@@ -120,7 +120,7 @@ void execspiffs()
             saveConfig();     // This not only saves the flags, it (re)saves the whole config after SPIFFS wipes it
             saveFlowConfig(); // Save previous flowmeter data
             _delay(1000);
-            Log.notice(F("HTTP SPIFFS OTA Update complete, restarting." CRR));
+            Log.notice(F("HTTP SPIFFS OTA Update complete, restarting." CR));
             ESP.restart();
             _delay(1000);
             break;
@@ -128,7 +128,7 @@ void execspiffs()
     }
     else
     {
-        Log.verbose(F("No OTA pending." CRR));
+        Log.verbose(F("No OTA pending." CR));
     }
 }
 
@@ -157,12 +157,12 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
     String header = "";
     String get = "";
 
-    Log.notice(F("Connecting to: %s port %l." CRR), host, port);
+    Log.notice(F("Connecting to: %s port %l." CR), host, port);
     // Connect to Webserver
     if (client.connect(host, port))
     {
         // Fecthing the path
-        Log.notice(F("Fetching path: /%s" CRR), path);
+        Log.notice(F("Fetching path: /%s" CR), path);
 
         // Get the contents of the bin file
         get = String("GET /") + String(path) + String(" HTTP/1.1\r\nHost: ") + String(host) + String("\r\nCache-Control: no-cache\r\nConnection: close\r\n\r\n");
@@ -173,7 +173,7 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
         {
             if (millis() - timeout > 3000)
             {
-                Log.error(F("Client timeout." CRR));
+                Log.error(F("Client timeout." CR));
                 client.stop(); // Free resources
                 return HTTP_UPDATE_FAILED;
             }
@@ -197,7 +197,7 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
             {
                 if (line.indexOf("200") < 0)
                 {
-                    Log.error(F("Received a non-200 status code from server. Exiting OTA Update." CRR));
+                    Log.error(F("Received a non-200 status code from server. Exiting OTA Update." CR));
                     client.stop();
                     return HTTP_UPDATE_FAILED;
                 }
@@ -211,7 +211,7 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
             if (header.equalsIgnoreCase("Content-Length: "))
             {
                 contentLength = atoi((getHeaderValue(line, "Content-Length: ")).c_str());
-                Log.notice(F("Got %l bytes from server." CRR), contentLength);
+                Log.notice(F("Got %l bytes from server." CR), contentLength);
             }
 
             // Content type
@@ -219,7 +219,7 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
             if (header.equalsIgnoreCase("Content-Type: "))
             {
                 String contentType = getHeaderValue(line, header);
-                Log.notice(F("Received payload: %s" CRR), contentType.c_str());
+                Log.notice(F("Received payload: %s" CR), contentType.c_str());
                 if (contentType == "application/octet-stream")
                 {
                     isValidContentType = true;
@@ -230,35 +230,35 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
     else
     {
         // Connect to webserver failed
-        Log.error(F("Connection to %d failed, please check configuration." CRR), host);
+        Log.error(F("Connection to %d failed, please check configuration." CR), host);
         client.stop(); // Free resources
         return HTTP_UPDATE_FAILED;
     }
 
     // Check what is the contentLength and if content type is `application/octet-stream`
-    Log.notice(F("Content length: %l; is valid content: %T" CRR), contentLength, isValidContentType);
+    Log.notice(F("Content length: %l; is valid content: %T" CR), contentLength, isValidContentType);
 
     HTTPUpdateResult retVal;
     // Check contentLength and content type
     if (contentLength && isValidContentType)
     {
         // Check if there is enough to OTA Update and set the type of update FIRMWARE or SPIFFS
-        Log.notice(F("OTA type: %s" CRR), (cmd == U_SPIFFS) ? String("SPIFFS").c_str() : String("FIRMWARE").c_str());
+        Log.notice(F("OTA type: %s" CR), (cmd == U_SPIFFS) ? String("SPIFFS").c_str() : String("FIRMWARE").c_str());
         bool canBegin = Update.begin(contentLength, cmd);
 
         // If yes, begin
         if (canBegin)
         {
-            Log.notice(F("Begin OTA. This may take 2 to 5 mins to complete. There will be no status updates during this time." CRR));
+            Log.notice(F("Begin OTA. This may take 2 to 5 mins to complete. There will be no status updates during this time." CR));
             size_t written = Update.writeStream(client);
 
             if (written == contentLength)
             {
-                Log.notice(F("Written : %l successfully." CRR), written);
+                Log.notice(F("Written : %l successfully." CR), written);
             }
             else
             {
-                Log.error(F("Wrote %l of %l, please retry." CRR), written, contentLength);
+                Log.error(F("Wrote %l of %l, please retry." CR), written, contentLength);
                 return HTTP_UPDATE_FAILED;
             }
 
@@ -266,12 +266,12 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
             {
                 if (Update.isFinished())
                 {
-                    Log.notice(F("OTA update successful." CRR));
+                    Log.notice(F("OTA update successful." CR));
                     retVal = HTTP_UPDATE_OK;
                 }
                 else
                 {
-                    Log.error(F("OTA update reports it did not finish." CRR));
+                    Log.error(F("OTA update reports it did not finish." CR));
                     retVal = HTTP_UPDATE_FAILED;
                 }
             }
@@ -284,13 +284,13 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
         else
         {
             // Not enough space to begin OTA
-            Log.error(F("Not enough space to begin OTA." CRR));
+            Log.error(F("Not enough space to begin OTA." CR));
             retVal = HTTP_UPDATE_FAILED;
         }
     }
     else
     {
-        Log.warning(F("There was no content in the response." CRR));
+        Log.warning(F("There was no content in the response." CR));
         retVal = HTTP_UPDATE_NO_UPDATES;
     }
 

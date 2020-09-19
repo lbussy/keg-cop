@@ -55,7 +55,7 @@ SOFTWARE. */
 // Echo all serial output to telnet
 //
 #ifndef DOTELNET
-#define DOTELNET true
+#define DOTELNET false
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -65,11 +65,6 @@ SOFTWARE. */
 #if DOTELNET == true
 #ifndef TELNETPORT
 #define TELNETPORT 23
-#endif
-#ifndef CRR
-#define CRR "\r\n"
-#else
-#define CRR "\n"
 #endif
 #endif
 //

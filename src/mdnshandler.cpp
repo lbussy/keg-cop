@@ -26,17 +26,17 @@ void mdnssetup()
 {
     if (!MDNS.begin(WiFi.getHostname()))
     { // Start the mDNS responder
-        Log.error(F("Error setting up mDNS responder." CRR));
+        Log.error(F("Error setting up mDNS responder." CR));
     }
     else
     {
-        Log.notice(F("mDNS responder started for %s.local." CRR), WiFi.getHostname());
+        Log.notice(F("mDNS responder started for %s.local." CR), WiFi.getHostname());
         MDNS.addService("http", "tcp", PORT);
         MDNS.addService("kegcop", "tcp", PORT);
 #if DOTELNET == true
         MDNS.addService("telnet", "tcp", TELNETPORT);
 #endif
-        Log.notice(F("HTTP registered via mDNS on port %i." CRR), PORT);
+        Log.notice(F("HTTP registered via mDNS on port %i." CR), PORT);
     }
 }
 
@@ -49,7 +49,7 @@ void mdnsreset()
     }
     else
     {
-        Log.notice(F("mDNS responder restarted, hostname: %s.local." CRR), WiFi.getHostname());
+        Log.notice(F("mDNS responder restarted, hostname: %s.local." CR), WiFi.getHostname());
         MDNS.addService("http", "tcp", 80);
         MDNS.addService("kegcop", "tcp", PORT);
 #if DOTELNET == true
