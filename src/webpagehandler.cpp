@@ -188,6 +188,7 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
+#if KCWEIGH == false
     server.on("/pulses/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the pulses json
         Log.verbose(F("Serving /pulses/." CR));
@@ -208,6 +209,7 @@ void setJsonHandlers()
         request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
     });
+#endif
 
     server.on("/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /sensors/." CR));
@@ -261,6 +263,7 @@ void setJsonHandlers()
 
 void setSettingsAliases()
 {
+#if KCWEIGH == false
     server.on("/settings/tapcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/tapcontrol/." CR));
         if (handleTapPost(request))
@@ -294,6 +297,7 @@ void setSettingsAliases()
         Log.verbose(F("Invalid method to /settings/tapcal/." CR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
+#endif
 
     server.on("/settings/controller/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/controller/." CR));
@@ -392,6 +396,7 @@ void setSettingsAliases()
         }
     });
 
+#if KCWEIGH == false
     server.on("/setcalmode/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /setcalmode/." CR));
         if (handleSetCalMode(request))
@@ -408,6 +413,7 @@ void setSettingsAliases()
         Log.verbose(F("Invalid method to /setcalmode/." CR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
+#endif
 
     server.on("/settings/cloudurl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Invalid method to /settings/cloudurl/." CR));
