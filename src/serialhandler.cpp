@@ -34,7 +34,8 @@ void serial()
 {
 #if DOTELNET == true
     char buffer[32];
-    sprintf(buffer, "Connected to %s", API_KEY);
+    strcpy(buffer, (const char*)"Connected to ");
+    strcat(buffer, (const char*)API_KEY);
     SERIAL.setWelcomeMsg(buffer);
 #endif
     _delay(3000); // Delay to allow a monitor to start
@@ -196,20 +197,60 @@ void serialLoop()
             case 'd': // Toggle Debug
                 toggleSerialCompat(!config.copconfig.serial);
                 break;
+            case 'u': // Display uptime
+            {
+                // Get uptime in millisseconds
+                unsigned int millis = (unsigned int)floor((esp_timer_get_time() / 1000));
+
+                // 86400000 millis in a day
+                const int days = (int)floor(millis / 86400000);
+                millis = millis - 86400000 * days;
+
+                // 3600000 millis in an hour
+                const int hours = (int)floor(millis / 3600000);
+                millis = millis - 3600000 * hours;
+
+                // 60000 millis in a minute
+                const int minutes = (int)floor(millis / 60000);
+                millis = millis - 60000 * minutes;
+
+                // 1000 millis in a second
+                const int seconds = (int)floor(millis / 1000);
+                millis = millis - 1000 * seconds;
+
+                // Need a const int for ArduinoJson
+                const int milliseconds = millis;
+
+                const size_t capacity = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 50;
+                StaticJsonDocument <capacity> doc;
+                JsonArray uptime = doc.createNestedArray("u");
+                JsonObject uptime_0 = uptime.createNestedObject();
+
+                uptime_0["days"] = days;
+                uptime_0["hours"] = hours;
+                uptime_0["minutes"] = minutes;
+                uptime_0["seconds"] = seconds;
+                uptime_0["millis"] = milliseconds;
+
+                serializeJson(doc, SERIAL);
+                printCR();
+                break;
+            }
             case 'b': // Reset controller
                 setDoReset();
                 nullDoc("b");
                 break;
-            case 'g': // /ping/
-                nullDoc("g");
+            case 'p': // /ping/
+                nullDoc("");
                 break;
             case '?': // Help
                 SERIAL.println(F("Keg Cop - Available serial commands:"));
                 SERIAL.println(F("\th:\tDisplay heap information"));
-                SERIAL.println(F("\tg:\t'{}' (null json)"));
+                SERIAL.println(F("\tp:\t'Ping, e.g. {}' (null json)"));
                 SERIAL.println(F("\tv:\tDisplay current version"));
                 SERIAL.println(F("\ta:\tDisplay available version"));
                 SERIAL.println(F("\td:\tEnter/exit Debug mode"));
+                SERIAL.println(F("\tu:\tUptime"));
                 SERIAL.println(F("\tb:\tRestart controller"));
                 SERIAL.println(F("\t?:\tHelp (this menu)"));
                 SERIAL.flush();
