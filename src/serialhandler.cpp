@@ -34,8 +34,8 @@ void serial()
 {
 #if DOTELNET == true
     char buffer[32];
-    strcpy(buffer, (const char*)"Connected to ");
-    strcat(buffer, (const char*)API_KEY);
+    strcpy(buffer, (const char *)"Connected to ");
+    strcat(buffer, (const char *)API_KEY);
     SERIAL.setWelcomeMsg(buffer);
 #endif
     _delay(3000); // Delay to allow a monitor to start
@@ -166,10 +166,22 @@ void serialLoop()
             // Serial command menu
             case 'h': // /heap/
             {
-                const size_t capacity = 2 * JSON_OBJECT_SIZE(1);
+                // total_free_bytes;      ///<  Total free bytes in the heap. Equivalent to multi_free_heap_size().
+                // total_allocated_bytes; ///<  Total bytes allocated to data in the heap.
+                // largest_free_block;    ///<  Size of largest free block in the heap. This is the largest malloc-able size.
+                // minimum_free_bytes;    ///<  Lifetime minimum free heap size. Equivalent to multi_minimum_free_heap_size().
+                // allocated_blocks;      ///<  Number of (variable size) blocks allocated in the heap.
+                // free_blocks;           ///<  Number of (variable size) free blocks in the heap.
+                // total_blocks;          ///<  Total number of (variable size) blocks in the heap.
+                multi_heap_info_t info;
+                heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
+                const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(4) + 30;
                 StaticJsonDocument<capacity> doc;
                 JsonObject h = doc.createNestedObject("h");
                 h["heap"] = ESP.getFreeHeap();
+                h["free"] = info.total_free_bytes;
+                h["max"] = info.largest_free_block;
+                h["frag"] = 100 - (info.largest_free_block * 100) / info.total_free_bytes;
                 serializeJson(doc, SERIAL);
                 printCR();
                 break;
@@ -222,7 +234,7 @@ void serialLoop()
                 const int milliseconds = millis;
 
                 const size_t capacity = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 50;
-                StaticJsonDocument <capacity> doc;
+                StaticJsonDocument<capacity> doc;
                 JsonArray uptime = doc.createNestedArray("u");
                 JsonObject uptime_0 = uptime.createNestedObject();
 
