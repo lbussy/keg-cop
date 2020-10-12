@@ -170,7 +170,7 @@ void serialLoop()
                 StaticJsonDocument<capacity> doc;
                 JsonObject h = doc.createNestedObject("h");
                 h["heap"] = ESP.getFreeHeap();
-                serializeJson(doc, Serial);
+                serializeJson(doc, SERIAL);
                 printCR();
                 break;
             }
