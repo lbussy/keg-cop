@@ -33,6 +33,7 @@ SOFTWARE. */
 const char *build();
 const char *branch();
 const char *version();
+const char *project();
 
 int versionCompare(String, String);
 
