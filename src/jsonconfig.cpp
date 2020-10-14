@@ -622,15 +622,15 @@ void Config::load(JsonObjectConst obj)
     // Load all config objects
     //
 
-    apconfig.load(obj["apconfig"]);
-
-    // if (obj["guid"].isNull()) {
-    //     snprintf(guid, sizeof(guid), "%08X", getGUID());
-    // } else {
-    //     const char* gu = obj["guid"];
-    //     strlcpy(guid, gu, sizeof(guid));
-    // }
-    snprintf(guid, sizeof(guid), "%08X", getGUID());
+    if (obj["guid"].isNull())
+    {
+        getGuid(guid, sizeof(guid));
+    }
+    else
+    {
+        const char *gd = obj["guid"];
+        strlcpy(guid, gd, sizeof(guid));
+    }
 
     if (obj["hostname"].isNull())
     {

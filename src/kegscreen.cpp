@@ -65,7 +65,7 @@ bool sendTapInfoReport(int tapid)
         {
             TapInfo tap;
             strlcpy(tap.api, API_KEY, sizeof(tap.api));
-            snprintf(tap.guid, sizeof(tap.guid), "%08X", getGUID());
+            getGuid(tap.guid, sizeof(tap.guid));
             strlcpy(tap.hostname, config.hostname, sizeof(tap.hostname));
             strlcpy(tap.breweryname, config.copconfig.breweryname, sizeof(tap.breweryname));
             strlcpy(tap.kegeratorname, config.copconfig.kegeratorname, sizeof(tap.kegeratorname));
@@ -133,7 +133,7 @@ bool sendPourReport(int tapid, float dispensed)
         {
             PourInfo pour;
             strlcpy(pour.api, API_KEY, sizeof(pour.api));
-            snprintf(pour.guid, sizeof(pour.guid), "%08X", getGUID());
+            getGuid(pour.guid, sizeof(pour.guid));
             strlcpy(pour.hostname, config.hostname, sizeof(pour.hostname));
             strlcpy(pour.breweryname, config.copconfig.breweryname, sizeof(pour.breweryname));
             strlcpy(pour.kegeratorname, config.copconfig.kegeratorname, sizeof(pour.kegeratorname));
@@ -193,7 +193,7 @@ bool sendKickReport(int tapid)
         {
             KickReport kick;
             strlcpy(kick.api, API_KEY, sizeof(kick.api));
-            snprintf(kick.guid, sizeof(kick.guid), "%08X", getGUID());
+            getGuid(kick.guid, sizeof(kick.guid));
             strlcpy(kick.hostname, config.hostname, sizeof(kick.hostname));
             strlcpy(kick.breweryname, config.copconfig.breweryname, sizeof(kick.breweryname));
             strlcpy(kick.kegeratorname, config.copconfig.kegeratorname, sizeof(kick.kegeratorname));
@@ -245,7 +245,7 @@ bool sendCoolStateReport()
     {
         CoolState cool;
         strlcpy(cool.api, API_KEY, sizeof(cool.api));
-        snprintf(cool.guid, sizeof(cool.guid), "%08X", getGUID());
+        getGuid(cool.guid, sizeof(cool.guid));
         strlcpy(cool.hostname, config.hostname, sizeof(cool.hostname));
         strlcpy(cool.breweryname, config.copconfig.breweryname, sizeof(cool.breweryname));
         strlcpy(cool.kegeratorname, config.copconfig.kegeratorname, sizeof(cool.kegeratorname));
@@ -291,7 +291,7 @@ bool sendTempReport()
     {
         TempReport temps;
         strlcpy(temps.api, API_KEY, sizeof(temps.api));
-        snprintf(temps.guid, sizeof(temps.guid), "%08X", getGUID());
+        getGuid(temps.guid, sizeof(temps.guid));
         strlcpy(temps.hostname, config.hostname, sizeof(temps.hostname));
         strlcpy(temps.breweryname, config.copconfig.breweryname, sizeof(temps.breweryname));
         strlcpy(temps.kegeratorname, config.copconfig.kegeratorname, sizeof(temps.kegeratorname));
