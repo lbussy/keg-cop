@@ -166,22 +166,27 @@ void serialLoop()
             // Serial command menu
             case 'h': // /heap/
             {
-                // total_free_bytes;      ///<  Total free bytes in the heap. Equivalent to multi_free_heap_size().
-                // total_allocated_bytes; ///<  Total bytes allocated to data in the heap.
-                // largest_free_block;    ///<  Size of largest free block in the heap. This is the largest malloc-able size.
-                // minimum_free_bytes;    ///<  Lifetime minimum free heap size. Equivalent to multi_minimum_free_heap_size().
-                // allocated_blocks;      ///<  Number of (variable size) blocks allocated in the heap.
-                // free_blocks;           ///<  Number of (variable size) free blocks in the heap.
-                // total_blocks;          ///<  Total number of (variable size) blocks in the heap.
+                // From: multi_heap.h
+                // /** @brief Structure to access heap metadata via multi_heap_get_info */
+                // typedef struct {
+                //     size_t total_free_bytes;      ///<  Total free bytes in the heap. Equivalent to multi_free_heap_size().
+                //     size_t total_allocated_bytes; ///<  Total bytes allocated to data in the heap.
+                //     size_t largest_free_block;    ///<  Size of largest free block in the heap. This is the largest malloc-able size.
+                //     size_t minimum_free_bytes;    ///<  Lifetime minimum free heap size. Equivalent to multi_minimum_free_heap_size().
+                //     size_t allocated_blocks;      ///<  Number of (variable size) blocks allocated in the heap.
+                //     size_t free_blocks;           ///<  Number of (variable size) free blocks in the heap.
+                //     size_t total_blocks;          ///<  Total number of (variable size) blocks in the heap.
+                // } multi_heap_info_t;
                 multi_heap_info_t info;
                 heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
-                const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(4) + 30;
+                const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 70;
                 StaticJsonDocument<capacity> doc;
                 JsonObject h = doc.createNestedObject("h");
-                h["heap"] = ESP.getFreeHeap();
-                h["free"] = info.total_free_bytes;
-                h["max"] = info.largest_free_block;
-                h["frag"] = 100 - (info.largest_free_block * 100) / info.total_free_bytes;
+                h["totalFreeK"] = info.total_free_bytes / 1024;
+                h["totalAllocK"] = info.total_allocated_bytes / 1024;
+                h["largestFreeK"] = info.largest_free_block / 1024;
+                h["lifetimeMinFreeK"] = info.minimum_free_bytes / 1024;
+                h["fragPct"] = 100 - (info.largest_free_block * 100) / info.total_free_bytes;
                 serializeJson(doc, SERIAL);
                 printCR();
                 break;
@@ -235,7 +240,7 @@ void serialLoop()
 
                 const size_t capacity = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 50;
                 StaticJsonDocument<capacity> doc;
-                JsonObject u = doc.createNestedObject("h");
+                JsonObject u = doc.createNestedObject("u");
 
                 u["days"] = days;
                 u["hours"] = hours;
