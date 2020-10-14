@@ -75,9 +75,7 @@ void setActionPageHandlers()
     // Action Page Handlers
 
     server.on("/heap/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        uint32_t _heap = ESP.getFreeHeap();
-        String heap = "Current heap: " + String(_heap);
-        request->send(200, F("text/plain"), heap);
+        request->send(200, F("text/plain"), String(ESP.getFreeHeap()));
     });
 
     server.on("/oktowifireset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
@@ -134,7 +132,7 @@ void setJsonHandlers()
     server.on("/thisVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /thisVersion/." CR));
         const size_t capacity = JSON_OBJECT_SIZE(1);
-        DynamicJsonDocument doc(capacity);
+        StaticJsonDocument <capacity> doc;
 
         doc["version"] = version();
 
