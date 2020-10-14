@@ -3543,6 +3543,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <segment>
 <wire x1="-45.72" y1="-10.16" x2="-45.72" y2="-17.78" width="0.1524" layer="91"/>
 <pinref part="GND1" gate="1" pin="GND"/>
+<pinref part="J3" gate="J1" pin="2"/>
+<wire x1="-58.42" y1="-10.16" x2="-45.72" y2="-10.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="RDAT" class="0">
@@ -3686,6 +3688,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <segment>
 <wire x1="-45.72" y1="-7.62" x2="-45.72" y2="-5.08" width="0.1524" layer="91"/>
 <pinref part="U$10" gate="G$1" pin="VDDA"/>
+<pinref part="J3" gate="J1" pin="1"/>
+<wire x1="-58.42" y1="-7.62" x2="-45.72" y2="-7.62" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$11" class="0">
@@ -3726,12 +3730,22 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="43.18" y1="35.56" x2="45.72" y2="35.56" width="0.1524" layer="91"/>
 <label x="43.18" y="35.56" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
+<segment>
+<pinref part="J3" gate="J1" pin="4"/>
+<wire x1="-58.42" y1="-15.24" x2="-50.8" y2="-15.24" width="0.1524" layer="91"/>
+<label x="-53.34" y="-15.24" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="A+" class="0">
 <segment>
 <pinref part="R7" gate="G$1" pin="1"/>
 <wire x1="43.18" y1="22.86" x2="45.72" y2="22.86" width="0.1524" layer="91"/>
 <label x="43.18" y="22.86" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="J3" gate="J1" pin="3"/>
+<wire x1="-58.42" y1="-12.7" x2="-50.8" y2="-12.7" width="0.1524" layer="91"/>
+<label x="-53.34" y="-12.7" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$1" class="0">
