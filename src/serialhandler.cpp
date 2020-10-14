@@ -235,14 +235,13 @@ void serialLoop()
 
                 const size_t capacity = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 50;
                 StaticJsonDocument<capacity> doc;
-                JsonArray uptime = doc.createNestedArray("u");
-                JsonObject uptime_0 = uptime.createNestedObject();
+                JsonObject u = doc.createNestedObject("h");
 
-                uptime_0["days"] = days;
-                uptime_0["hours"] = hours;
-                uptime_0["minutes"] = minutes;
-                uptime_0["seconds"] = seconds;
-                uptime_0["millis"] = milliseconds;
+                u["days"] = days;
+                u["hours"] = hours;
+                u["minutes"] = minutes;
+                u["seconds"] = seconds;
+                u["millis"] = milliseconds;
 
                 serializeJson(doc, SERIAL);
                 printCR();
