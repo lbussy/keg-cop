@@ -33,7 +33,7 @@ bool sendTargetReport()
     {
         UrlReport urlreport;
         strlcpy(urlreport.api, API_KEY, sizeof(urlreport.api));
-        snprintf(urlreport.guid, sizeof(urlreport.guid), "%08X", getGUID());
+        getGuid(urlreport.guid, sizeof(urlreport.guid));
         strlcpy(urlreport.hostname, config.hostname, sizeof(urlreport.hostname));
         strlcpy(urlreport.breweryname, config.copconfig.breweryname, sizeof(urlreport.breweryname));
         strlcpy(urlreport.kegeratorname, config.copconfig.kegeratorname, sizeof(urlreport.kegeratorname));
@@ -74,7 +74,6 @@ bool sendTargetReport()
         DynamicJsonDocument doc(capacity);
 
         doc["api"] = (const char *)urlreport.api;
-
         doc["guid"] = (const char *)urlreport.guid;
         doc["hostname"] = (const char *)urlreport.hostname;
         doc["breweryname"] = (const char *)urlreport.breweryname;
