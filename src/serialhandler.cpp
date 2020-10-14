@@ -182,11 +182,11 @@ void serialLoop()
                 const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 70;
                 StaticJsonDocument<capacity> doc;
                 JsonObject h = doc.createNestedObject("h");
-                h["totalFreeK"] = info.total_free_bytes / 1024;
-                h["totalAllocK"] = info.total_allocated_bytes / 1024;
-                h["largestFreeK"] = info.largest_free_block / 1024;
-                h["lifetimeMinFreeK"] = info.minimum_free_bytes / 1024;
-                h["fragPct"] = 100 - (info.largest_free_block * 100) / info.total_free_bytes;
+                h["totFreeK"] = info.total_free_bytes / 1024;
+                h["totAllocK"] = info.total_allocated_bytes / 1024;
+                h["lrgFreeK"] = info.largest_free_block / 1024;
+                h["minFreeK"] = info.minimum_free_bytes / 1024;
+                h["frgPct"] = 100 - (info.largest_free_block * 100) / info.total_free_bytes;
                 serializeJson(doc, SERIAL);
                 printCR();
                 break;
