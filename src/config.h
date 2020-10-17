@@ -700,7 +700,7 @@ SOFTWARE. */
 // Input pin for keg 8 flow
 //
 #ifndef FLOW8
-#define FLOW8 12
+#define FLOW8 13
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -810,7 +810,7 @@ SOFTWARE. */
 // Flow speed in oz/sec at which to trigger a kicked keg
 //
 #ifndef KICKSPEED
-#define KICKSPEED 2
+#define KICKSPEED 4
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
