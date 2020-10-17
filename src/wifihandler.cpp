@@ -34,12 +34,14 @@ void doWiFi(bool dontUseStoredCreds)
 { // Handle WiFi and optionally ignore current config
     AsyncWiFiManager myAsyncWifiManager;
 
+    // myAsyncWifiManager.erase();     // DEBUG
+
     // AsyncWiFiManager Callbacks
     myAsyncWifiManager.setAPCallback(apCallback); // Called after AP has started
     // myAsyncWifiManager.setConfigResetCallback(configResetCallback); // Called after settings are reset
     // myAsyncWifiManager.setPreSaveConfigCallback(preSaveConfigCallback); // Called before saving wifi creds
     // myAsyncWifiManager.setSaveConfigCallback(saveConfigCallback); //  Called only if wifi is saved/changed, or setBreakAfterConfig(true)
-    // myAsyncWifiManager.setSaveParamsCallback(saveParamsCallback); // Called after parameters are saved via params menu or wifi config
+    myAsyncWifiManager.setSaveParamsCallback(saveParamsCallback); // Called after parameters are saved via params menu or wifi config
     // myAsyncWifiManager.setWebServerCallback(webServerCallback); // Called after webserver is setup
 
 #ifndef DISABLE_LOGGING
@@ -58,7 +60,6 @@ void doWiFi(bool dontUseStoredCreds)
         "info",
         //"param",
         //"close",
-        //"sep",
         "erase",
         "restart",
         "exit"};
@@ -72,6 +73,10 @@ void doWiFi(bool dontUseStoredCreds)
 
     myAsyncWifiManager.setShowStaticFields(true); // Force show static ip fields
     myAsyncWifiManager.setShowDnsFields(true);    // Force show dns field always
+
+    // Allow non-default host name
+    AsyncWiFiManagerParameter hostname("hostname", "Custom Hostname", HOSTNAME, 32);
+    myAsyncWifiManager.addParameter(&hostname);
 
     if (dontUseStoredCreds)
     { // Voluntary portal
@@ -125,10 +130,12 @@ void doWiFi(bool dontUseStoredCreds)
         }
     }
 
-    // if (shouldSaveConfig) { // Save configuration
-    // Log.notice(F("Saving configuration." CR));
-    //
-    // }
+    if (shouldSaveConfig) { // Save configuration
+        Log.notice(F("Saving custom hostname configuration: %s." CR), hostname.getValue());
+        strlcpy(config.hostname, hostname.getValue(), sizeof(config.hostname));
+        saveConfig();
+        ESP.restart();
+    }
 
     Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());
     blinker.detach();        // Turn off blinker
@@ -172,13 +179,13 @@ void apCallback(AsyncWiFiManager *asyncWiFiManager)
 
 // void saveConfigCallback() {
 //     Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
-//     //shouldSaveConfig = true;
+//     shouldSaveConfig = true;
 // }
 
-// void saveParamsCallback() {
-//     Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CR));
-//     //shouldSaveConfig = true;
-// }
+void saveParamsCallback() {
+    Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CR));
+    shouldSaveConfig = true;
+}
 
 // void webServerCallback() {
 //     Log.verbose(F("[CALLBACK]: setWebServerCallback fired." CR));
