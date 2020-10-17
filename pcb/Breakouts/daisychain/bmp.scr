@@ -1913,6 +1913,3 @@ RECT (52.3000 117.30000)(58.5000 117.50000);
 change layer 200;
 SET UNDO_LOG ON;
 WINDOW FIT;
-Change Size 0.4000;
-CHANGE FONT VECTOR;
-TEXT 'C:/Users/lee/OneDrive/Documents/GitHub/keg-cop/graphics/Gumball Machine Outline.bmp' (0 -1.0000);
