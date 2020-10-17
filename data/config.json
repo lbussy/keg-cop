@@ -1,10 +1,10 @@
 {
     "apconfig": {
         "ssid": "kegcop",
-        "passphrase": "kegcop12"
+        "passphrase": "kegcop2020"
     },
     "hostname": "kegcop",
-    "guid": "A1B3C5D7",
+    "guid": "",
     "copconfig": {
         "breweryname": "Silver Fox Brewery",
         "kegeratorname": "Keezer",
