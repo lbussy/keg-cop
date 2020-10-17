@@ -5,3 +5,5 @@
 - Add colorized feedback to /temps/ temp display similar to home page
 - Replace js pop-up errors with a health indicator
 - Brand the PCBs
+- Consider whether dropping WiFi should reset the controller?
+- Test GPIO13 with a pull up and flowmeter
