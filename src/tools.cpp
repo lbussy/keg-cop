@@ -166,8 +166,9 @@ void printDebug(const char *message)
     uint32_t free;
     uint16_t max;
     uint8_t frag;
-#ifdef ESP8266
-    ESP.getHeapStats(&free, &max, &frag);
+
+#ifdef ESP8266 // TODO: Does not exist in 2.3.0
+    // ESP.getHeapStats(&free, &max, &frag);
 #elif defined ESP32
     // total_free_bytes;      ///<  Total free bytes in the heap. Equivalent to multi_free_heap_size().
     // total_allocated_bytes; ///<  Total bytes allocated to data in the heap.
@@ -182,11 +183,14 @@ void printDebug(const char *message)
     max = info.largest_free_block;
     frag = 100 - (max * 100) / free;
 #endif
+
+#ifndef ESP8266
     if (!message)
         Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d" CR), free, max, frag);
     else
         Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d -> %s" CR), free, max, frag, message);
     flush(true);
+#endif
 }
 
 double convertFtoC(double F)
