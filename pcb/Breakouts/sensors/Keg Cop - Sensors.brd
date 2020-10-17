@@ -1503,7 +1503,8 @@
 <rectangle x1="10.8546875" y1="32.77743125" x2="11.45666875" y2="32.78505" layer="25"/>
 <rectangle x1="10.9308875" y1="32.78505" x2="11.38046875" y2="32.79266875" layer="25"/>
 <rectangle x1="11.03756875" y1="32.792671875" x2="11.2737875" y2="32.800290625" layer="25"/>
-<text x="13.571215625" y="29.237940625" size="0.8128" layer="25">Keg Cop Sensor Breakout v 1.0
+<text x="13.754096875" y="28.60548125" size="0.8128" layer="25">Keg Cop Sensor Breakout
+v 1.0
 https://www.kegcop.com
 By @lbussy</text>
 </plain>
