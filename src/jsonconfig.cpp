@@ -622,6 +622,8 @@ void Config::load(JsonObjectConst obj)
     // Load all config objects
     //
 
+    apconfig.load(obj["apconfig"]);
+
     if (obj["guid"].isNull())
     {
         getGuid(guid, sizeof(guid));
