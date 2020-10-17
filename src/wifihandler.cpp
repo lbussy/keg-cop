@@ -34,8 +34,6 @@ void doWiFi(bool dontUseStoredCreds)
 { // Handle WiFi and optionally ignore current config
     AsyncWiFiManager myAsyncWifiManager;
 
-    // myAsyncWifiManager.erase();     // DEBUG
-
     // AsyncWiFiManager Callbacks
     myAsyncWifiManager.setAPCallback(apCallback); // Called after AP has started
     // myAsyncWifiManager.setConfigResetCallback(configResetCallback); // Called after settings are reset
@@ -131,10 +129,17 @@ void doWiFi(bool dontUseStoredCreds)
     }
 
     if (shouldSaveConfig) { // Save configuration
-        Log.notice(F("Saving custom hostname configuration: %s." CR), hostname.getValue());
-        strlcpy(config.hostname, hostname.getValue(), sizeof(config.hostname));
-        saveConfig();
-        ESP.restart();
+        if (hostname.getValue() != config.hostname)
+        {
+            Log.notice(F("Saving custom hostname configuration: %s." CR), hostname.getValue());
+            strlcpy(config.hostname, hostname.getValue(), sizeof(config.hostname));
+            saveConfig();
+#ifdef ESP8266
+            WiFi.hostname(config.hostname);
+#elif defined ESP32
+            WiFi.setHostname(config.hostname);
+#endif
+        }
     }
 
     Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());
