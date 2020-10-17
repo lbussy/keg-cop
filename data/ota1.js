@@ -94,13 +94,13 @@ function populateTemps(callback = null) { // Get configuration settings
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse temperature data from SPIFFS.");
+                    // No need to handle an error here since this simply sets up the menu
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve temperature data from SPIFFS.");
+                // No need to handle an error here since this simply sets up the menu
             }
         })
         .always(function () {
