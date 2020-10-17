@@ -236,13 +236,13 @@ function pulseReload(callback = null) { // Get pulses
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse flow data from controller.");
+                    alert("Unable to parse flowmeter data from controller.");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve flow data from controller.");
+                alert("Unable to retrieve flowmeter data from controller.");
             }
         })
         .always(function () {

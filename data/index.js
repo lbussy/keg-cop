@@ -77,13 +77,13 @@ function populateFlow(callback = null) { // Get flowmeter data
             }
             catch {
                 if (!unloadingState) {
-                   alert("Unable to parse configuration data from SPIFFS."); 
+                   alert("Unable to parse flowmeter data from SPIFFS."); 
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve configuration data from SPIFFS.");
+                alert("Unable to retrieve flowmeter data from SPIFFS.");
             }
         })
         .always(function () {
