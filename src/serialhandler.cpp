@@ -36,6 +36,7 @@ void serial()
     char buffer[32];
     strcpy(buffer, (const char *)"Connected to ");
     strcat(buffer, (const char *)API_KEY);
+    strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
 #endif
     _delay(3000); // Delay to allow a monitor to start
