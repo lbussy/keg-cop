@@ -47,7 +47,7 @@ const char *reportname[5] = {
     "Taps",
     "Pour",
     "Kick",
-    "Cool State",
+    "Cool",
     "Temps"};
 
 bool reported[5];
