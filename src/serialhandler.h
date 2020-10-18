@@ -36,7 +36,7 @@ SOFTWARE. */
 #include <Arduino.h>
 
 #if DOTELNET == true
-#include <ESPTelnet.h>
+#include <esptelnet.h>
 #endif
 
 void serial();
