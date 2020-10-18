@@ -44,11 +44,11 @@ const char *reporttype[5] = {
     "tempreport"};
 
 const char *reportname[5] = {
-    "Tap Info",
+    "Taps",
     "Pour",
     "Kick",
-    "Cooling State",
-    "Temperature"};
+    "Cool State",
+    "Temps"};
 
 bool reported[5];
 
