@@ -31,7 +31,8 @@ void doWiFi()
 }
 
 void doWiFi(bool dontUseStoredCreds)
-{ // Handle WiFi and optionally ignore current config
+{
+    // Handle WiFi and optionally ignore current config
     AsyncWiFiManager myAsyncWifiManager;
 
     // AsyncWiFiManager Callbacks
@@ -107,14 +108,13 @@ void doWiFi(bool dontUseStoredCreds)
             digitalWrite(LED, LOW);
             _delay(3000);
             digitalWrite(LED, HIGH);
-            Log.warning(F("Hit timeout on connect, restarting." CR));
+            Log.warning(F("Restarting." CR));
             resetController();
             _delay(1000); // Just a hack to give it time to reset
         }
         else
         {
-            // We finished with portal (configured)
-            WiFi.mode(WIFI_STA); // Explicitly set mode, esp defaults to STA+AP
+            // We finished with portal (We were configured)
 #ifdef ESP8266
             WiFi.setSleepMode(WIFI_NONE_SLEEP); // Make sure sleep is disabled
 #endif
