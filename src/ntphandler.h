@@ -25,7 +25,7 @@ SOFTWARE. */
 
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
-#elif defined ESP32
+#elif ESP32
 #include <WiFi.h>
 #endif
 

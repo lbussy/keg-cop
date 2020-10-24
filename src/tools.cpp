@@ -169,7 +169,7 @@ void printDebug(const char *message)
 
 #ifdef ESP8266 // TODO: Does not exist in 2.3.0
     // ESP.getHeapStats(&free, &max, &frag);
-#elif defined ESP32
+#elif ESP32
     // total_free_bytes;      ///<  Total free bytes in the heap. Equivalent to multi_free_heap_size().
     // total_allocated_bytes; ///<  Total bytes allocated to data in the heap.
     // largest_free_block;    ///<  Size of largest free block in the heap. This is the largest malloc-able size.
