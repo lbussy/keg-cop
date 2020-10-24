@@ -50,7 +50,7 @@ void mdnsreset()
     else
     {
         Log.notice(F("mDNS responder restarted, hostname: %s.local." CR), WiFi.getHostname());
-        MDNS.addService("http", "tcp", 80);
+        MDNS.addService("http", "tcp", PORT);
         MDNS.addService("kegcop", "tcp", PORT);
 #if DOTELNET == true
         MDNS.addService("telnet", "tcp", TELNETPORT);
