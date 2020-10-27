@@ -40,6 +40,7 @@ function populateFlow(callback = null) { // Get flowmeter data
         okToClear = true;
     }
     var flow = $.getJSON(url, function () {
+        flowAlert.warning();
     })
         .done(function (flow) {
             if (okToClear) {
@@ -77,13 +78,13 @@ function populateFlow(callback = null) { // Get flowmeter data
             }
             catch {
                 if (!unloadingState) {
-                   alert("Unable to parse flowmeter data from SPIFFS."); 
+                    flowAlert.warning("Unable to parse flowmeter data.");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve flowmeter data from SPIFFS.");
+                flowAlert.warning("Unable to retrieve flowmeter data.");
             }
         })
         .always(function () {
@@ -94,6 +95,7 @@ function populateFlow(callback = null) { // Get flowmeter data
 function populateConfig() { // Get configuration settings
     var url = "/config/";
     var config = $.getJSON(url, function () {
+        configAlert.warning();
     })
         .done(function (config) {
             try {
@@ -107,12 +109,12 @@ function populateConfig() { // Get configuration settings
                 loaded++;
             }
             catch {
-                alert("Unable to parse configuration data from SPIFFS.");
+                configAlert.warning("Unable to parse configuration data.");
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve configuration data from SPIFFS.");
+                configAlert.warning("Unable to retrieve configuration data.");
             }
         })
         .always(function () {
@@ -123,6 +125,7 @@ function populateConfig() { // Get configuration settings
 function populateTemps(callback = null) { // Get configuration settings
     var url = "/sensors/";
     var config = $.getJSON(url, function () {
+        tempAlert.warning();
     })
         .done(function (temps) {
             try {
@@ -202,13 +205,13 @@ function populateTemps(callback = null) { // Get configuration settings
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse temperature data from SPIFFS.");
+                    tempAlert.warning("Unable to parse temperature data.");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve temperature data from SPIFFS.");
+                tempAlert.warning("Unable to retrieve temperature data.");
             }
         })
         .always(function () {
@@ -223,7 +226,7 @@ function clearState() {
     $("#coolstate").removeClass("alert-info");
     $("#coolstate").removeClass("alert-primary");
     $("#coolstate").removeClass("alert-secondary");
-    $("#coolstate").removeClass("alert-light");         
+    $("#coolstate").removeClass("alert-light");
 }
 
 function addData(chart, label, data) {
@@ -385,4 +388,37 @@ function finishPage() { // Display page
     doChart();
     setTimeout(tempsReload, tempsReloadTimer);
     setTimeout(flowReload, flowReloadTimer);
+}
+
+tempAlert = function () { }
+tempAlert.warning = function (message) {
+    _div = "";
+    if (message) {
+        _div = '<div class="alert alert-dismissible alert-warning" id="warnTempError">'
+        _div += '<button type="button" class="close" data-dismiss="alert">&times;</button><p class="mb-0">'
+        _div += '<strong>Temps Warning: </strong><span>' + message + '</span></p></div>'
+    }
+    $('#flowAlert_placeholder').html(_div);
+}
+
+configAlert = function () { }
+configAlert.warning = function (message) {
+    _div = "";
+    if (message) {
+        _div = '<div class="alert alert-dismissible alert-warning" id="warnConfigError">'
+        _div += '<button type="button" class="close" data-dismiss="alert">&times;</button><p class="mb-0">'
+        _div += '<strong>Config Warning: </strong><span>' + message + '</span></p></div>'
+    }
+    $('#flowAlert_placeholder').html(_div);
+}
+
+flowAlert = function () { }
+flowAlert.warning = function (message) {
+    _div = "";
+    if (message) {
+        _div = '<div class="alert alert-dismissible alert-warning" id="warnFlowError">'
+        _div += '<button type="button" class="close" data-dismiss="alert">&times;</button><p class="mb-0">'
+        _div += '<strong>Flow Warning: </strong><span>' + message + '</span></p></div>'
+    }
+    $('#flowAlert_placeholder').html(_div);
 }
