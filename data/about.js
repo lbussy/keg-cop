@@ -37,14 +37,12 @@ function loadThisVersion() { // Get current parameters
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse current version from controller.");
-                    $('#thisVersion').text("(Error loading version.)");
+                    $('#thisVersion').text("(Error parsing version.)");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Failed getting current version from controller.");
                 $('#thisVersion').text("(Error loading version.)");
             }
         })

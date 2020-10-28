@@ -25,16 +25,10 @@ function loadThisVersion() { // Get current parameters
                 $('#thisVersion').text(thisVersion.version);
             }
             catch {
-                if (!unloadingState) {
-                    alert("Unable to parse current version from controller.");
-                }
                 $('#thisVersion').text("Error loading.");
             }
         })
         .fail(function () {
-            if (!unloadingState) {
-                alert("Failed getting current version from controller.");
-            }
             $('#thisVersion').text("Error loading.");
         })
         .always(function () {
@@ -52,16 +46,10 @@ function loadThatVersion() { // Get current parameters
                 document.getElementById("proceed").disabled = false;
             }
             catch {
-                if (!unloadingState) {
-                    alert("Unable to parse available version from web repository.");
-                }
                 $('#thatVersion').text("Error loading.");
             }
         })
         .fail(function () {
-            if (!unloadingState) {
-                alert("Failed getting available version from web repository.");
-            }
             $('#thatVersion').text("Error loading.");
         })
         .always(function () {
