@@ -4,13 +4,14 @@
         "passphrase": "kegcop2020"
     },
     "hostname": "kegcop",
-    "guid": "",
+    "guid": "A1B3C5D7",
     "copconfig": {
         "breweryname": "Silver Fox Brewery",
         "kegeratorname": "Keezer",
         "imperial": true,
         "serial": false,
-        "tapsolenoid": true
+        "tapsolenoid": true,
+        "scale": false
     },
     "temps": {
         "setpoint": 35,

@@ -47,6 +47,7 @@ struct CopConfig
     bool imperial;
     bool serial;
     bool tapsolenoid;
+    bool scale;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
