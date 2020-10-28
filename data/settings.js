@@ -555,10 +555,10 @@ function postData(url, data, newpage = false, newdata = false, callback = null) 
         type: 'POST',
         data: data,
         success: function (data) {
-            // Nothing to do
+            settingsAlert.error();
         },
         error: function (data) {
-            alert('POST failed.');
+            settingsAlert.error("Settings update failed.");
         },
         complete: function (data) {
             if (loadNew) {
