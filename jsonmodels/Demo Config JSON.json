@@ -10,7 +10,8 @@
         "kegeratorname": "Keezer",
         "imperial": true,
         "serial": false,
-        "tapsolenoid": true
+        "tapsolenoid": true,
+        "scale": false
     },
     "temps": {
         "setpoint": 35,

@@ -299,6 +299,7 @@ void CopConfig::save(JsonObject obj) const
     obj["serial"] = serial;
     obj["imperial"] = imperial;
     obj["tapsolenoid"] = tapsolenoid;
+    obj["scale"] = scale;
 }
 
 void CopConfig::load(JsonObjectConst obj)
@@ -365,6 +366,16 @@ void CopConfig::load(JsonObjectConst obj)
         {
             digitalWrite(SOLENOID, HIGH);
         }
+    }
+
+    if (obj["scale"].isNull())
+    {
+        scale = KCWEIGH;
+    }
+    else
+    {
+        bool sc = obj["scale"];
+        scale = sc;
     }
 }
 
