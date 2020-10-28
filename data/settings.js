@@ -81,6 +81,7 @@ function loadHash() { // Link to tab via hash value
 function populateFlow(callback = null) { // Get flowmeter settings
     var url = "/flow/";
     var flow = $.getJSON(url, function () {
+        flowAlert.warning();
     })
         .done(function (flow) {
             var numTaps = flow["taps"].length;
@@ -99,13 +100,13 @@ function populateFlow(callback = null) { // Get flowmeter settings
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse flowmeter data from SPIFFS.");
+                    flowAlert.warning("Unable to parse flowmeter data.");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve flowmeter data from SPIFFS.");
+                flowAlert.warning("Unable to retrieve flowmeter data.");
             }
         })
         .always(function () {
@@ -122,6 +123,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
 function populateConfig(callback = null) { // Get configuration settings
     var url = "/config/";
     var config = $.getJSON(url, function () {
+        configAlert.warning()
     })
         .done(function (config) {
             try {
@@ -192,13 +194,13 @@ function populateConfig(callback = null) { // Get configuration settings
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse configuration data from SPIFFS.");
+                    configAlert.warning("Unable to parse configuration data.");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve configuration data from SPIFFS.");
+                configAlert.warning("Unable to retrieve configuration data.");
             }
         })
         .always(function () {
@@ -216,6 +218,7 @@ function populateConfig(callback = null) { // Get configuration settings
 function populateTemps(callback = null) { // Get configuration settings
     var url = "/sensors/";
     var config = $.getJSON(url, function () {
+        tempAlert.warning();
     })
         .done(function (temps) {
             try {
@@ -238,13 +241,13 @@ function populateTemps(callback = null) { // Get configuration settings
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse temperature data from SPIFFS.");
+                    tempAlert.warning("Unable to parse temperature data.");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve temperature data from SPIFFS.");
+                tempAlert.warning("Unable to retrieve temperature data.");
             }
         })
         .always(function () {

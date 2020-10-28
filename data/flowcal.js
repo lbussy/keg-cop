@@ -185,6 +185,7 @@ function pulseReload(callback = null) { // Get pulses
     var selectedIndex = $('#flowmeter').prop('selectedIndex');
     var url = "/pulses/";
     var pulses = $.getJSON(url, function () {
+        flowAlert.warning();
     })
         .done(function (pulses) {
             var numTaps = pulses.pulses.length;
@@ -236,13 +237,13 @@ function pulseReload(callback = null) { // Get pulses
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse flowmeter data from controller.");
+                    flowAlert.warning("Unable to parse flowmeter data.");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve flowmeter data from controller.");
+                flowAlert.warning("Unable to retrieve flowmeter data.");
             }
         })
         .always(function () {

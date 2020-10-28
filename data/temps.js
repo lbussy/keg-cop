@@ -26,6 +26,7 @@ function populatePage() { // Get page data
 function populateConfig() { // Get configuration settings
     var url = "/config/";
     var config = $.getJSON(url, function () {
+        configAlert.warning();
     })
         .done(function (config) {
             try {
@@ -40,13 +41,13 @@ function populateConfig() { // Get configuration settings
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse configuration data from SPIFFS.");
+                    configAlert.warning("Unable to parse configuration data.");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve configuration data from SPIFFS.");
+                configAlert.warning("Unable to retrieve configuration data.");
             }
         })
         .always(function () {
@@ -61,6 +62,7 @@ function populateTemps(callback = null) { // Get configuration settings
         okToClear = true;
     }
     var config = $.getJSON(url, function () {
+        tempAlert.warning();
     })
         .done(function (temps) {
             try {
@@ -117,13 +119,13 @@ function populateTemps(callback = null) { // Get configuration settings
             }
             catch {
                 if (!unloadingState) {
-                    alert("Unable to parse temperature data from SPIFFS.");
+                    tempAlert.warning("Unable to parse temperature data.");
                 }
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                alert("Unable to retrieve temperature data from SPIFFS.");
+                tempAlert.warning("Unable to retrieve temperatire data.");
             }
         })
         .always(function () {
