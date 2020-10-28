@@ -18,6 +18,11 @@ $(window).bind("beforeunload", function () {
 });
 
 function populatePage() { // Get page data
+    $(document).tooltip({ // Enable tooltips
+        'selector': '[data-toggle=tooltip]',
+        'placement': 'left',
+        'toggleEnabled': true
+    });
     populateTemps();
     populateConfig();
     pollComplete();
@@ -109,6 +114,55 @@ function populateTemps(callback = null) { // Get configuration settings
 
                 scaleTemps = temperatures;
                 scaleTemps.push(parseFloat(setpoint));
+
+                // Set indicator button
+                switch (temps.status) {
+                    case 0: // TSTAT_INACTIVE
+                        clearState();
+                        $("#coolstate").addClass("alert-secondary");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is disabled");
+                        break;
+                    case 1: // TSTAT_COOL_BEGIN
+                        clearState();
+                        $("#coolstate").addClass("alert-info");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is starting to cool");
+                        break;
+                    case 2: // TSTAT_COOL_MINOFF
+                        clearState();
+                        $("#coolstate").addClass("alert-danger");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is calling for cooling but in minimum off time");
+                        break;
+                    case 3: // TSTAT_COOL_ACTIVE
+                        clearState();
+                        $("#coolstate").addClass("alert-primary");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is actively cooling");
+                        break;
+                    case 4: // TSTAT_IDLE_END
+                        clearState();
+                        $("#coolstate").addClass("alert-warning");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, minimum off time ending");
+                        break;
+                    case 5: // TSTAT_IDLE_MINON
+                        clearState();
+                        $("#coolstate").addClass("alert-success");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling but in minimum on time");
+                        break;
+                    case 6: // TSTAT_IDLE_INACTIVE
+                        clearState();
+                        $("#coolstate").addClass("alert-light");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, in idle mode");
+                        break;
+                    case 7: // TSTAT_UNKNOWN
+                        clearState();
+                        $("#coolstate").addClass("alert-light");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
+                        break;
+                    default: // TSTAT_UNKNOWN
+                        clearState();
+                        $("#coolstate").addClass("alert-light");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
+                        break;
+                }
 
                 if (loaded < numReq) {
                     loaded++;
@@ -252,6 +306,16 @@ function barClick(event, array) { // Bar click handler
     var tapNum = array[0]._index;
     var url = "/settings/#sensorcontrol";
     window.open(url, "_self");
+}
+
+function clearState() {
+    $("#coolstate").removeClass("alert-warning");
+    $("#coolstate").removeClass("alert-danger");
+    $("#coolstate").removeClass("alert-success");
+    $("#coolstate").removeClass("alert-info");
+    $("#coolstate").removeClass("alert-primary");
+    $("#coolstate").removeClass("alert-secondary");
+    $("#coolstate").removeClass("alert-light");
 }
 
 function pollComplete() {
