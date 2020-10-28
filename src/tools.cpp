@@ -138,7 +138,7 @@ void maintenanceLoop()
     if (WiFi.status() != WL_CONNECTED)
     {
         Log.warning(F("Maintenance: WiFi not connected, reconnecting." CR));
-        doWiFi();
+        doWiFi(); // TODO:  This needs to not be so obtrusive.
         mdnsreset();
     }
     if (millis() > ESPREBOOT)
