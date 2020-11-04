@@ -42,8 +42,9 @@ void setup()
     pinMode(RESETWIFI, INPUT_PULLUP);
     // Set LED pin
     pinMode(LED, OUTPUT);
+
     // Check if portal is requested
-    if (digitalRead(RESETWIFI) == LOW)
+    if (false) // (digitalRead(RESETWIFI) == LOW) // TODO: Currently disabled
     {
         Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
         doWiFi(true);
