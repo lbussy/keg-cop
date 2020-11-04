@@ -191,7 +191,7 @@ SOFTWARE. */
 // Define reset WiFi on boot pin - reset if pulled low on boot
 //
 #ifndef RESETWIFI
-#define RESETWIFI 13
+#define RESETWIFI 13 // TODO:  Curently not enabled
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -620,7 +620,7 @@ SOFTWARE. */
 // Input pin for keg 0 flow
 //
 #ifndef FLOW0
-#define FLOW0 0
+#define FLOW0 4
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -630,7 +630,7 @@ SOFTWARE. */
 // Input pin for keg 1 flow
 //
 #ifndef FLOW1
-#define FLOW1 4
+#define FLOW1 16
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -770,7 +770,7 @@ SOFTWARE. */
 // Define solenoid actuator pin
 //
 #ifndef SOLENOID
-#define SOLENOID 16
+#define SOLENOID 2
 #endif
 //
 //////////////////////////////////////////////////////////////////////////

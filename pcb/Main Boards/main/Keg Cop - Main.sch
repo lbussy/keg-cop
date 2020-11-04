@@ -2258,12 +2258,12 @@ Source: &lt;a href="http://docs-emea.rs-online.com/webdocs/078b/0900766b8078b130
 <segment>
 <pinref part="RELAY" gate="1" pin="2"/>
 <wire x1="-27.94" y1="10.16" x2="-27.94" y2="22.86" width="0.1524" layer="91"/>
-<wire x1="-27.94" y1="22.86" x2="60.96" y2="22.86" width="0.1524" layer="91"/>
-<wire x1="60.96" y1="22.86" x2="60.96" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="D32" gate="G$1" pin="IO16"/>
-<wire x1="60.96" y1="43.18" x2="53.34" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="-27.94" y1="22.86" x2="58.42" y2="22.86" width="0.1524" layer="91"/>
 <label x="-27.94" y="10.16" size="1.778" layer="95" rot="R90"/>
-<label x="55.88" y="43.18" size="1.778" layer="95"/>
+<label x="55.88" y="35.56" size="1.778" layer="95"/>
+<wire x1="58.42" y1="22.86" x2="58.42" y2="35.56" width="0.1524" layer="91"/>
+<pinref part="D32" gate="G$1" pin="IO2"/>
+<wire x1="58.42" y1="35.56" x2="53.34" y2="35.56" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="COOL" class="0">
@@ -2278,34 +2278,32 @@ Source: &lt;a href="http://docs-emea.rs-online.com/webdocs/078b/0900766b8078b130
 </net>
 <net name="KEG0" class="0">
 <segment>
-<pinref part="D32" gate="G$1" pin="IO0"/>
 <pinref part="X2" gate="G$1" pin="2"/>
-<wire x1="53.34" y1="38.1" x2="58.42" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="58.42" y1="38.1" x2="58.42" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="58.42" y1="30.48" x2="96.52" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="40.64" x2="60.96" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="30.48" x2="96.52" y2="30.48" width="0.1524" layer="91"/>
 <label x="78.74" y="30.48" size="1.778" layer="95"/>
 <pinref part="R14" gate="G$1" pin="1"/>
 <wire x1="96.52" y1="30.48" x2="101.6" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="96.52" y1="22.86" x2="96.52" y2="30.48" width="0.1524" layer="91"/>
 <junction x="96.52" y="30.48"/>
-<wire x1="96.52" y1="22.86" x2="96.52" y2="7.62" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="30.48" x2="96.52" y2="7.62" width="0.1524" layer="91"/>
 <wire x1="96.52" y1="7.62" x2="88.9" y2="7.62" width="0.1524" layer="91"/>
+<pinref part="D32" gate="G$1" pin="IO4"/>
+<wire x1="53.34" y1="40.64" x2="60.96" y2="40.64" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="KEG1" class="0">
 <segment>
 <pinref part="X2" gate="G$1" pin="4"/>
 <wire x1="101.6" y1="35.56" x2="93.98" y2="35.56" width="0.1524" layer="91"/>
-<pinref part="D32" gate="G$1" pin="IO4"/>
 <label x="78.74" y="35.56" size="1.778" layer="95"/>
 <pinref part="R13" gate="G$1" pin="1"/>
 <wire x1="88.9" y1="15.24" x2="93.98" y2="15.24" width="0.1524" layer="91"/>
 <wire x1="93.98" y1="15.24" x2="93.98" y2="35.56" width="0.1524" layer="91"/>
 <junction x="93.98" y="35.56"/>
-<wire x1="53.34" y1="40.64" x2="63.5" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="40.64" x2="63.5" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="38.1" x2="63.5" y2="35.56" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="43.18" x2="63.5" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="63.5" y1="35.56" x2="93.98" y2="35.56" width="0.1524" layer="91"/>
+<pinref part="D32" gate="G$1" pin="IO16"/>
+<wire x1="53.34" y1="43.18" x2="63.5" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="KEG2" class="0">
@@ -2424,6 +2422,9 @@ Source: &lt;a href="http://docs-emea.rs-online.com/webdocs/078b/0900766b8078b130
 </sheet>
 </sheets>
 <errors>
+<approved hash="104,1,17.78,68.58,D32,VCC,3V3,,,"/>
+<approved hash="202,1,53.34,58.42,D32,RXD0,,,,"/>
+<approved hash="104,1,-58.42,10.16,IC1,VDD,5V,,,"/>
 <approved hash="113,1,17.676,44.346,FRAME1,,,,,"/>
 </errors>
 </schematic>
