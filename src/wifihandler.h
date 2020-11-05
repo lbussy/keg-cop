@@ -54,6 +54,7 @@ void saveConfigCallback();
 void saveParamsCallback();
 void webServerCallback();
 
+extern AsyncWiFiManager myAsyncWifiManager;
 extern struct Config config;
 extern const size_t capacitySerial;
 extern const size_t capacityDeserial;

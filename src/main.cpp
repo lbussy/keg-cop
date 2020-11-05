@@ -113,18 +113,29 @@ void loop()
 
     while (true)
     {
-        // Check for Target URL Timing reset
-        if (config.urltarget.update)
+        if (doNonBlock)
         {
-            Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
-            doTargetReport.detach();
-            doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
-            config.urltarget.update = false;
+            // Handle nonblocking portal (if configured)
+            myAsyncWifiManager.process();
+        }
+        else
+        {
+            // We can do normal processing
+
+            // Check for Target URL Timing reset
+            if (config.urltarget.update)
+            {
+                Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
+                doTargetReport.detach();
+                doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
+                config.urltarget.update = false;
+            }
+
+            doOTALoop();
+            tickerLoop();
+            maintenanceLoop();
         }
 
-        doOTALoop();
-        tickerLoop();
         serialLoop();
-        maintenanceLoop();
     }
 }
