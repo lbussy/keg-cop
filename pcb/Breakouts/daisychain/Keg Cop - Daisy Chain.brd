@@ -1616,6 +1616,48 @@ Grid 5.00 mm&lt;p&gt;
 </package3d>
 </packages3d>
 </library>
+<library name="SparkFun-Resistors" urn="urn:adsk.eagle:library:532">
+<description>&lt;h3&gt;SparkFun Resistors&lt;/h3&gt;
+This library contains resistors. Reference designator:R. 
+&lt;br&gt;
+&lt;br&gt;
+We've spent an enormous amount of time creating and checking these footprints and parts, but it is &lt;b&gt; the end user's responsibility&lt;/b&gt; to ensure correctness and suitablity for a given componet or application. 
+&lt;br&gt;
+&lt;br&gt;If you enjoy using this library, please buy one of our products at &lt;a href=" www.sparkfun.com"&gt;SparkFun.com&lt;/a&gt;.
+&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Licensing:&lt;/b&gt; Creative Commons ShareAlike 4.0 International - https://creativecommons.org/licenses/by-sa/4.0/ 
+&lt;br&gt;
+&lt;br&gt;
+You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
+<packages>
+<package name="AXIAL-0.3" urn="urn:adsk.eagle:footprint:39622/1" library_version="1">
+<description>&lt;h3&gt;AXIAL-0.3&lt;/h3&gt;
+&lt;p&gt;Commonly used for 1/4W through-hole resistors. 0.3" pitch between holes.&lt;/p&gt;</description>
+<wire x1="-2.54" y1="0.762" x2="2.54" y2="0.762" width="0.2032" layer="21"/>
+<wire x1="2.54" y1="0.762" x2="2.54" y2="0" width="0.2032" layer="21"/>
+<wire x1="2.54" y1="0" x2="2.54" y2="-0.762" width="0.2032" layer="21"/>
+<wire x1="2.54" y1="-0.762" x2="-2.54" y2="-0.762" width="0.2032" layer="21"/>
+<wire x1="-2.54" y1="-0.762" x2="-2.54" y2="0" width="0.2032" layer="21"/>
+<wire x1="-2.54" y1="0" x2="-2.54" y2="0.762" width="0.2032" layer="21"/>
+<wire x1="2.54" y1="0" x2="2.794" y2="0" width="0.2032" layer="21"/>
+<wire x1="-2.54" y1="0" x2="-2.794" y2="0" width="0.2032" layer="21"/>
+<pad name="P$1" x="-3.81" y="0" drill="0.9" diameter="1.8796"/>
+<pad name="P$2" x="3.81" y="0" drill="0.9" diameter="1.8796"/>
+<text x="0" y="1.016" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;Name</text>
+<text x="0" y="-1.016" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;Value</text>
+</package>
+</packages>
+<packages3d>
+<package3d name="AXIAL-0.3" urn="urn:adsk.eagle:package:39658/1" type="box" library_version="1">
+<description>AXIAL-0.3
+Commonly used for 1/4W through-hole resistors. 0.3" pitch between holes.</description>
+<packageinstances>
+<packageinstance name="AXIAL-0.3"/>
+</packageinstances>
+</package3d>
+</packages3d>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -1834,6 +1876,10 @@ design rules under a new name.</description>
 <attribute name="POPULARITY" value="5" x="28.7" y="21.6" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="VALUE" x="33.6476" y="16.2952" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>
+<element name="R1" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" package="AXIAL-0.3" package3d_urn="urn:adsk.eagle:package:39658/1" value="1k" x="13.446759375" y="24.2214375" smashed="yes">
+<attribute name="NAME" x="13.446759375" y="25.1104375" size="0.8128" layer="25" font="vector" align="bottom-center"/>
+<attribute name="PROD_ID" value="RES-08380" x="13.446759375" y="24.2214375" size="1.778" layer="27" display="off"/>
+</element>
 </elements>
 <signals>
 <signal name="GND">
@@ -1899,26 +1945,16 @@ design rules under a new name.</description>
 <wire x1="15.395" y1="31.35" x2="17.15" y2="31.35" width="1.016" layer="1"/>
 <wire x1="21.9" y1="26.6" x2="29.99" y2="26.6" width="1.016" layer="1"/>
 <wire x1="17.15" y1="31.35" x2="21.9" y2="26.6" width="1.016" layer="1"/>
-<wire x1="15.395" y1="14.39" x2="15.395" y2="21.295" width="1.016" layer="16"/>
-<wire x1="20.7" y1="26.6" x2="29.99" y2="26.6" width="1.016" layer="16"/>
-<wire x1="15.395" y1="21.295" x2="20.7" y2="26.6" width="1.016" layer="16"/>
+<wire x1="16.8392" y1="26.6" x2="29.99" y2="26.6" width="1.016" layer="16"/>
+<wire x1="15.395" y1="25.1558" x2="16.8392" y2="26.6" width="1.016" layer="16"/>
+<wire x1="15.395" y1="14.39" x2="15.395" y2="25.1558" width="1.016" layer="16"/>
 </signal>
 <signal name="DATA0">
 <contactref element="IN" pad="2"/>
-<contactref element="FLOW" pad="2"/>
-<wire x1="7.775" y1="14.39" x2="5.79" y2="14.39" width="1.016" layer="16"/>
-<wire x1="5.79" y1="14.39" x2="4.8" y2="13.4" width="1.016" layer="16"/>
-<wire x1="4.8" y1="13.4" x2="4.8" y2="10.6" width="1.016" layer="16"/>
-<wire x1="16.4" y1="8.8" x2="18.4078" y2="10.8078" width="1.016" layer="16"/>
-<wire x1="26.8" y1="20.8" x2="27.6" y2="21.6" width="1.016" layer="16"/>
-<wire x1="27.6" y1="21.6" x2="29.99" y2="21.6" width="1.016" layer="16"/>
-<wire x1="4.8" y1="10.6" x2="6.6" y2="8.8" width="1.016" layer="16"/>
-<wire x1="18.4078" y1="10.8078" x2="18.4078" y2="14.45240625" width="1.016" layer="16"/>
-<wire x1="18.4078" y1="14.45240625" x2="20.55539375" y2="16.6" width="1.016" layer="16"/>
-<wire x1="20.55539375" y1="16.6" x2="25.4" y2="16.6" width="1.016" layer="16"/>
-<wire x1="26.8" y1="18" x2="26.8" y2="20.8" width="1.016" layer="16"/>
-<wire x1="25.4" y1="16.6" x2="26.8" y2="18" width="1.016" layer="16"/>
-<wire x1="6.6" y1="8.8" x2="16.4" y2="8.8" width="1.016" layer="16"/>
+<contactref element="R1" pad="P$1"/>
+<wire x1="7.775" y1="14.39" x2="7.775" y2="23.6652375" width="1.016" layer="16"/>
+<wire x1="8.3312" y1="24.2214375" x2="9.636759375" y2="24.2214375" width="1.016" layer="16"/>
+<wire x1="7.775" y1="23.6652375" x2="8.3312" y2="24.2214375" width="1.016" layer="16"/>
 </signal>
 <signal name="5VD">
 <contactref element="IN" pad="7"/>
@@ -1929,34 +1965,39 @@ design rules under a new name.</description>
 <wire x1="14.125" y1="11.85" x2="11.975" y2="9.7" width="1.016" layer="1"/>
 <wire x1="7.775" y1="31.35" x2="6.25" y2="31.35" width="1.016" layer="1"/>
 <wire x1="6.25" y1="31.35" x2="4.7" y2="29.8" width="1.016" layer="1"/>
-<wire x1="4.6" y1="10.8" x2="4.6" y2="13.7" width="1.016" layer="1"/>
+<wire x1="4.6" y1="10.8" x2="4.6" y2="14.4" width="1.016" layer="1"/>
 <wire x1="4.7" y1="28.2" x2="4.7" y2="29.8" width="1.016" layer="1"/>
 <wire x1="5.7" y1="9.7" x2="11.975" y2="9.7" width="1.016" layer="1"/>
 <wire x1="4.6" y1="10.8" x2="5.7" y2="9.7" width="1.016" layer="1"/>
 <wire x1="14.125" y1="11.85" x2="15.85" y2="11.85" width="1.016" layer="1"/>
-<wire x1="7.7" y1="27.2" x2="5.7" y2="27.2" width="1.016" layer="1"/>
-<wire x1="5.7" y1="27.2" x2="4.7" y2="28.2" width="1.016" layer="1"/>
-<wire x1="9.5" y1="18.6" x2="9.5" y2="25.4" width="1.016" layer="1"/>
-<wire x1="9.5" y1="25.4" x2="7.7" y2="27.2" width="1.016" layer="1"/>
-<wire x1="4.6" y1="13.7" x2="4.6" y2="14.4" width="1.016" layer="1"/>
-<wire x1="6.7" y1="16.5" x2="8.2" y2="16.5" width="1.016" layer="1"/>
-<wire x1="8.2" y1="16.5" x2="9.5" y2="17.8" width="1.016" layer="1"/>
-<wire x1="9.5" y1="17.8" x2="9.5" y2="18.6" width="1.016" layer="1"/>
-<wire x1="4.6" y1="14.4" x2="6.7" y2="16.5" width="1.016" layer="1"/>
+<wire x1="7.153040625" y1="25.746959375" x2="4.7" y2="28.2" width="1.016" layer="1"/>
+<wire x1="4.6" y1="14.4" x2="7.153040625" y2="16.953040625" width="1.016" layer="1"/>
+<wire x1="7.153040625" y1="16.953040625" x2="7.153040625" y2="25.746959375" width="1.016" layer="1"/>
 </signal>
 <signal name="DATA1">
 <contactref element="IN" pad="4"/>
 <contactref element="OUT" pad="2"/>
-<wire x1="10.315" y1="14.39" x2="10.315" y2="19.715" width="1.016" layer="16"/>
-<wire x1="14.125" y1="23.525" x2="14.125" y2="28.81" width="1.016" layer="16"/>
-<wire x1="10.315" y1="19.715" x2="14.125" y2="23.525" width="1.016" layer="16"/>
+<wire x1="10.315" y1="14.39" x2="10.315" y2="16.578640625" width="1.016" layer="1"/>
+<wire x1="14.125" y1="20.388640625" x2="14.125" y2="28.81" width="1.016" layer="1"/>
+<wire x1="10.315" y1="16.578640625" x2="14.125" y2="20.388640625" width="1.016" layer="1"/>
 </signal>
 <signal name="DATA2">
 <contactref element="IN" pad="6"/>
 <contactref element="OUT" pad="4"/>
-<wire x1="12.855" y1="14.39" x2="12.855" y2="19.545" width="1.016" layer="1"/>
-<wire x1="11.585" y1="20.815" x2="11.585" y2="28.81" width="1.016" layer="1"/>
-<wire x1="12.855" y1="19.545" x2="11.585" y2="20.815" width="1.016" layer="1"/>
+<wire x1="12.855" y1="14.39" x2="12.855" y2="24.467759375" width="1.016" layer="16"/>
+<wire x1="11.585" y1="25.737759375" x2="11.585" y2="28.81" width="1.016" layer="16"/>
+<wire x1="12.855" y1="24.467759375" x2="11.585" y2="25.737759375" width="1.016" layer="16"/>
+</signal>
+<signal name="N$1">
+<contactref element="FLOW" pad="2"/>
+<contactref element="R1" pad="P$2"/>
+<wire x1="17.256759375" y1="24.2214375" x2="17.256759375" y2="19.110959375" width="1.016" layer="16"/>
+<wire x1="19.715478125" y1="16.652240625" x2="24.190959375" y2="16.652240625" width="1.016" layer="16"/>
+<wire x1="24.190959375" y1="16.652240625" x2="25.943559375" y2="18.404840625" width="1.016" layer="16"/>
+<wire x1="26.893359375" y1="21.6" x2="29.99" y2="21.6" width="1.016" layer="16"/>
+<wire x1="17.256759375" y1="19.110959375" x2="19.715478125" y2="16.652240625" width="1.016" layer="16"/>
+<wire x1="25.943559375" y1="18.404840625" x2="25.943559375" y2="20.6502" width="1.016" layer="16"/>
+<wire x1="25.943559375" y1="20.6502" x2="26.893359375" y2="21.6" width="1.016" layer="16"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
