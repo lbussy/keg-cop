@@ -150,7 +150,7 @@ void doWiFi(bool dontUseStoredCreds)
     if (doNonBlock)
     {
         // Turn off nonblocking portal (if configured)
-        Log.notice(F("Returning after non-blocking connect." CR));
+        Log.notice(F("Returning after non-blocking reconnect." CR));
         doNonBlock = false;
         mdnsreset();
     }
