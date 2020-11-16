@@ -25,6 +25,7 @@ SOFTWARE. */
 float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
 bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending kicks
 bool __attribute__((unused)) queueStateChange;          // Store pending tstat state changes
+AsyncWiFiManager myAsyncWifiManager;
 
 void _delay(unsigned long ulDelay)
 {
@@ -60,7 +61,8 @@ void setDoWiFiReset()
 
 void setDoKSTempReport()
 {
-    doKSTempReport = true; // Semaphore required for KS Temp Report
+    if (!doNonBlock)            // Make sure we're not in a non-blocking loop
+        doKSTempReport = true;  // Semaphore required for KS Temp Report
 }
 
 void setDoTapInfoReport(int tap)
@@ -70,7 +72,8 @@ void setDoTapInfoReport(int tap)
 
 void setDoTargetReport()
 {
-    doTargetReport = true; // Semaphore required for URL Target Report
+    if (!doNonBlock)            // Make sure we're not in a non-blocking loop
+        doTargetReport = true;  // Semaphore required for URL Target Report
 }
 
 void tickerLoop()
@@ -138,8 +141,8 @@ void maintenanceLoop()
     if (WiFi.status() != WL_CONNECTED)
     {
         Log.warning(F("Maintenance: WiFi not connected, reconnecting." CR));
-        doWiFi(); // TODO:  This needs to not be so obtrusive.
-        mdnsreset();
+        doNonBlock = true;
+        doWiFi(); // With doNonBlock, this should be non-blocking
     }
     if (millis() > ESPREBOOT)
     {

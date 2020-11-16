@@ -24,6 +24,7 @@ SOFTWARE. */
 #define _THATVERSION_H
 
 #include "config.h"
+#include "wifihandler.h"
 #include <ArduinoLog.h>
 #include <AsyncTCP.h>
 #include <asyncHTTPrequest.h>

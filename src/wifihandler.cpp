@@ -32,9 +32,6 @@ void doWiFi()
 
 void doWiFi(bool dontUseStoredCreds)
 {
-    // Handle WiFi and optionally ignore current config
-    AsyncWiFiManager myAsyncWifiManager;
-
     // AsyncWiFiManager Callbacks
     myAsyncWifiManager.setAPCallback(apCallback); // Called after AP has started
     // myAsyncWifiManager.setConfigResetCallback(configResetCallback); // Called after settings are reset
@@ -77,10 +74,18 @@ void doWiFi(bool dontUseStoredCreds)
     AsyncWiFiManagerParameter hostname("hostname", "Custom Hostname", HOSTNAME, 32);
     myAsyncWifiManager.addParameter(&hostname);
 
+    if (doNonBlock)
+    {
+        // Enable nonblocking portal (if configured)
+        myAsyncWifiManager.setConfigPortalBlocking(false);
+    }
+
     if (dontUseStoredCreds)
-    { // Voluntary portal
+    {
+        // Voluntary portal
         blinker.attach_ms(APBLINK, wifiBlinker);
         myAsyncWifiManager.setConfigPortalTimeout(120);
+
         if (myAsyncWifiManager.startConfigPortal(config.apconfig.ssid, config.apconfig.passphrase))
         {
             // We finished with portal, do we need this?
@@ -140,6 +145,14 @@ void doWiFi(bool dontUseStoredCreds)
             WiFi.setHostname(config.hostname);
 #endif
         }
+    }
+
+    if (doNonBlock)
+    {
+        // Turn off nonblocking portal (if configured)
+        Log.notice(F("Returning after non-blocking reconnect." CR));
+        doNonBlock = false;
+        mdnsreset();
     }
 
     Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());
