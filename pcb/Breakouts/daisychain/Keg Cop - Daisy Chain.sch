@@ -786,11 +786,11 @@ Warning: This is the KIT version of the AXIAL-0.3 package. This package has a sm
 <instances>
 <instance part="IN" gate="G$1" x="63.5" y="33.02" smashed="yes" rot="R270">
 <attribute name="NAME" x="73.66" y="35.56" size="1.778" layer="95" rot="R270"/>
-<attribute name="VALUE" x="50.292" y="35.56" size="1.778" layer="96" rot="R270"/>
+<attribute name="VALUE" x="60.452" y="30.48" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="OUT" gate="G$1" x="60.96" y="68.58" smashed="yes" rot="R90">
 <attribute name="NAME" x="50.8" y="66.04" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="74.168" y="66.04" size="1.778" layer="96" rot="R90"/>
+<attribute name="VALUE" x="64.008" y="71.12" size="1.778" layer="96"/>
 </instance>
 <instance part="FLOW" gate="-1" x="96.52" y="55.88" smashed="yes" rot="R180">
 <attribute name="NAME" x="96.52" y="54.991" size="1.778" layer="95"/>
