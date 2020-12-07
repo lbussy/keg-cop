@@ -255,7 +255,6 @@ function populateTemps(callback = null) { // Get configuration settings
         });
 }
 
-
 function doUnits() { // Change names on page according to units in place
     // Set Gallon / Liter
     if (imperial) {
