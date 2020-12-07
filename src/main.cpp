@@ -22,8 +22,12 @@ SOFTWARE. */
 
 #include "main.h"
 
+DoubleResetDetector *drd;
+
 void setup()
 {
+    drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
+
     if (!loadConfig())
     { // If configuration does not load, sit and blink slowly like an idiot
         pinMode(LED, OUTPUT);
@@ -43,8 +47,15 @@ void setup()
     // Set LED pin
     pinMode(LED, OUTPUT);
 
+    // Log.verbose(F("DEBUG:  IPL = %T." CR), isIPL()); // DEBUG Initial program load work
+
     // Check if portal is requested
-    if (false) // (digitalRead(RESETWIFI) == LOW) // TODO: Currently disabled
+    if (drd->detectDoubleReset())
+    {
+        Log.notice(F("DRD: Portal requested." CR));
+        doWiFi(true);
+    }
+    else if (digitalRead(RESETWIFI) == LOW)
     {
         Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
         doWiFi(true);
@@ -134,9 +145,9 @@ void loop()
 
             doOTALoop();
             tickerLoop();
+            drd->loop();
+            serialLoop();
             maintenanceLoop();
         }
-
-        serialLoop();
     }
 }

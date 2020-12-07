@@ -37,7 +37,7 @@ void setClock()
         {
             if (cycle > 9)
             {
-                Log.warning(F("Unable to get time hack from %s, rebooting." CR), TIMESERVER);
+                Log.warning(F(CR "Unable to get time hack from %s, rebooting." CR), TIMESERVER);
                 resetController();
             }
             if (Log.getLevel())

@@ -84,6 +84,10 @@ void execspiffs()
         config.didupdate = false;
         saveConfig();
         saveFlowConfig();
+
+        if (SPIFFS.begin())
+            SPIFFS.remove("/drd.dat");
+
         _delay(3000);
         ESP.restart();
         _delay(1000);

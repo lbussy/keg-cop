@@ -23,6 +23,12 @@ SOFTWARE. */
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
+#ifndef IPLINFO
+#define IPLINFO
+#define IPL_FILE "/ipl.dat"
+#define IPL_FS SPIFFS
+#endif
+
 #include "config.h"
 #include "ntphandler.h"
 #include "wifihandler.h"
@@ -31,6 +37,7 @@ SOFTWARE. */
 #include "urltarget.h"
 #include "mdnshandler.h"
 #include "wifihandler.h"
+#include <SPIFFS.h>
 #include <AsyncWiFiManager.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>
@@ -54,6 +61,7 @@ double convertGtoL(double);
 double convertLtoG(double);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
 void getGuid(char *str, size_t len);
+bool isIPL();
 
 static bool __attribute__((unused)) doNonBlock = false;     // Semaphore for non-blocking portal
 static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
