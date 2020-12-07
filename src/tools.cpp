@@ -61,8 +61,8 @@ void setDoWiFiReset()
 
 void setDoKSTempReport()
 {
-    if (!doNonBlock)            // Make sure we're not in a non-blocking loop
-        doKSTempReport = true;  // Semaphore required for KS Temp Report
+    if (!doNonBlock)           // Make sure we're not in a non-blocking loop
+        doKSTempReport = true; // Semaphore required for KS Temp Report
 }
 
 void setDoTapInfoReport(int tap)
@@ -72,8 +72,8 @@ void setDoTapInfoReport(int tap)
 
 void setDoTargetReport()
 {
-    if (!doNonBlock)            // Make sure we're not in a non-blocking loop
-        doTargetReport = true;  // Semaphore required for URL Target Report
+    if (!doNonBlock)           // Make sure we're not in a non-blocking loop
+        doTargetReport = true; // Semaphore required for URL Target Report
 }
 
 void tickerLoop()
@@ -267,4 +267,47 @@ void getGuid(char *str, size_t len)
 #endif
     snprintf(str, len, "%08X", chipID);
     str[len - 1] = '\0';
+}
+
+bool isIPL()
+{
+    bool ipl = false;
+    const char *vDate = __TIMESTAMP__;
+    if (IPL_FS.begin())
+    {
+        File iplFile = IPL_FS.open(IPL_FILE, FILE_READ);
+        if (iplFile && iplFile.available())
+        {
+            const char *iplData = iplFile.readStringUntil('\n').c_str();
+            iplFile.close();
+            if (!strcmp(vDate, iplData) == 0)
+            {
+                Log.verbose(F("DEBUG: IPL file found, vDate does not match." CR));
+                ipl = true;
+            }
+            else
+            {
+                Log.verbose(F("DEBUG: IPL file found, vDate matches." CR));
+            }
+        }
+        else
+        {
+            Log.verbose(F("DEBUG: No IPL file found." CR));
+            ipl = true;
+        }
+    }
+    if (ipl)
+    {
+        File iplFile = IPL_FS.open(IPL_FILE, FILE_WRITE);
+        if (iplFile.print(vDate))
+        {
+            Log.verbose(F("DEBUG: IPL Process writing '%s' to %s." CR), vDate, IPL_FILE);
+        }
+        else
+        {
+            Log.verbose(F("DEBUG: IPL Process write failed." CR));
+        }
+        iplFile.close();
+    }
+    return ipl;
 }
