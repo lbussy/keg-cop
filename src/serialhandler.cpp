@@ -65,7 +65,7 @@ void serial()
     strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
 #endif
-    _delay(3000); // Delay to allow a monitor to start
+    // _delay(3000); // Delay to allow a monitor to start
     SERIAL.begin(BAUD);
     SERIAL.println();
     SERIAL.flush();
