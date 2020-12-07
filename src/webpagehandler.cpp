@@ -775,7 +775,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
     }
     else
     {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
+        Log.error(F("Error: Unable to save controller configuration data." CR));
         return false;
     }
 }
