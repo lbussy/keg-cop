@@ -98,7 +98,8 @@ void doWiFi(bool dontUseStoredCreds)
             _delay(3000);
             digitalWrite(LED, HIGH);
             Log.notice(F("Hit timeout for on-demand portal, exiting." CR));
-            setDoReset();
+            resetController();
+            _delay(1000);
         }
     }
     else
@@ -115,7 +116,7 @@ void doWiFi(bool dontUseStoredCreds)
             digitalWrite(LED, HIGH);
             Log.warning(F("Restarting." CR));
             resetController();
-            _delay(1000); // Just a hack to give it time to reset
+            _delay(1000);
         }
         else
         {
