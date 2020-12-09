@@ -205,7 +205,7 @@ SOFTWARE. */
 // Define reset WiFi on boot pin - reset if pulled low on boot
 //
 #ifndef RESETWIFI
-#define RESETWIFI 13 // TODO:  Curently not enabled
+#define RESETWIFI 32 // Shared with sensor
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
