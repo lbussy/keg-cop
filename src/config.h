@@ -67,7 +67,7 @@ SOFTWARE. */
 //
 #ifndef DRD_TIMEOUT
 #define ESP_DRD_USE_SPIFFS true
-#define DOUBLERESETDETECTOR_DEBUG true
+#define DOUBLERESETDETECTOR_DEBUG false
 #define DRD_TIMEOUT 5
 #define DRD_ADDRESS 0 // Not used for SPIFFS, still needed for init
 #endif
