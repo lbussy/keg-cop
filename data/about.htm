@@ -60,7 +60,7 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/about/index.html">?</a>
+                        <a class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/help/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -69,19 +69,40 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp"> <!-- Container -->
+        <div class="container" id="settingsapp">
+            <!-- Container -->
 
-            <div class="card border-dark mb-3"> <!-- About Keg Cop Information -->
+            <div class="card border-dark mb-3">
+                <!-- About Keg Cop Information -->
                 <div class="card-header">
-                    <h4 class="card-title">About Keg Cop <span id="thisVersion">(version loading...)</span></h4>
+                    <h4 class="card-title">
+                        About Keg Cop:
+                        <span id="thisVersion">(version loading...)</span>
+                        [<span class="text-warning" id="thisBranch"></span>]
+                        (<span class="text-danger" id="thisBuild"></span>)
+                    </h4>
                 </div>
                 <div class="card-body">
-                    <p><a href="https://www.brewbubbles.com/">Keg Cop</a> is a project by Lee
-                        Bussy and <a href="/license.htm">is licensed under
-                        The MIT License</a>. Inquiries may be directed to
+                    <p><a href="https://www.brewbubbles.com/">Keg Cop</a> is a project developed
+                        by Lee Bussy and <a href="/license.htm">is licensed under
+                            The MIT License</a>. Inquiries may be directed to
                         <a href="https://www.homebrewtalk.com/forum/members/lbussy.144719/">
-                        LBussy</a> on the HomeBrewTalk Forums (free registration required).
+                            LBussy</a> on the HomeBrewTalk Forums (free registration required).
                     </p>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Uptime: </strong>
+                            <span id="uptime" data-html="true" data-toggle="tooltip">...loading</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Reset Reason: </strong>
+                            <span id="resetreason" data-html="true" data-toggle="tooltip">...loading</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Heap Information: </strong>
+                            <span id="heap" data-html="true" data-toggle="tooltip">...loading</span>
+                        </li>
+                    </ul>
                 </div>
             </div> <!-- About Keg Cop Information -->
 
@@ -90,7 +111,7 @@
     </main>
 
     <footer class="footer mt-auto py-3">
-        <div class="container">
+        <div class="container text-center">
             <span class="text-muted">Copyright &copy; 2020, Lee C. Bussy</span>
         </div>
     </footer>

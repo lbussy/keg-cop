@@ -74,10 +74,6 @@ void setActionPageHandlers()
 {
     // Action Page Handlers
 
-    server.on("/heap/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        request->send(200, F("text/plain"), String(ESP.getFreeHeap()));
-    });
-
     server.on("/oktowifireset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /wifireset/." CR));
         request->send(200, F("text/plain"), F("Ok."));
@@ -129,16 +125,88 @@ void setJsonHandlers()
 {
     // JSON Handlers
 
+    server.on("/resetreason/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // Used to provide the reset reason json
+        Log.verbose(F("Sending /resetreason/." CR));
+
+        const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2);
+        StaticJsonDocument<capacity> doc;
+        JsonObject r = doc.createNestedObject("r");
+
+        r["reason"] = rstReason();
+        r["description"] = rstDescription(); 
+
+        String resetreason;
+        serializeJson(doc, resetreason);
+        request->send(200, F("application/json"), resetreason);
+    });
+
+    server.on("/heap/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // Used to provide the heap json
+        Log.verbose(F("Sending /heap/." CR));
+
+        const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(3);
+        StaticJsonDocument<capacity> doc;
+        JsonObject h = doc.createNestedObject("h");
+
+        uint32_t free;
+        uint16_t max;
+        uint8_t frag;
+#ifdef ESP8266
+        ESP.getHeapStats(&free, &max, &frag);
+#elif defined ESP32
+        multi_heap_info_t info;
+        heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
+        free = info.total_free_bytes;
+        max = info.largest_free_block;
+        frag = 100 - (max * 100) / free;
+#endif
+
+        h["free"] = (const uint32_t)free;
+        h["max"] = (const uint16_t)max;
+        h["frag"] = (const uint8_t)frag;
+
+        String heap;
+        serializeJson(doc, heap);
+        request->send(200, F("application/json"), heap);
+    });
+
+    server.on("/uptime/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // Used to provide the uptime json
+        Log.verbose(F("Sending /uptime/." CR));
+
+        const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5);
+        StaticJsonDocument<capacity> doc;
+        JsonObject u = doc.createNestedObject("u");
+
+        const int days = uptimeDays();
+        const int hours = uptimeHours();
+        const int minutes = uptimeMinutes();
+        const int seconds = uptimeSeconds();
+        const int millis = uptimeMillis();
+
+        u["days"] = days;
+        u["hours"] = hours;
+        u["minutes"] = minutes;
+        u["seconds"] = seconds;
+        u["millis"] = millis;
+
+        String ut = "";
+        serializeJson(doc, ut);
+        request->send(200, F("application/json"), ut);
+    });
+
     server.on("/thisVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /thisVersion/." CR));
-        const size_t capacity = JSON_OBJECT_SIZE(1);
-        StaticJsonDocument <capacity> doc;
+        const size_t capacity = JSON_OBJECT_SIZE(3);
+        DynamicJsonDocument doc(capacity);
 
         doc["version"] = version();
+        doc["branch"] = branch();
+        doc["build"] = build();
 
         String json;
         serializeJsonPretty(doc, json);
-        request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
     });
 
