@@ -23,6 +23,8 @@ SOFTWARE. */
 #ifndef _WEBPAGEHANDLER_H
 #define _WEBPAGEHANDLER_H
 
+#include "uptime.h"
+#include "resetreasons.h"
 #include "wifihandler.h"
 #include "jsonconfig.h"
 #include "version.h"
