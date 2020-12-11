@@ -30,32 +30,6 @@ ESPTelnet SerialAndTelnet;
 #define SERIAL Serial // Use hardware serial
 #endif
 
-const char *resetReason[11] = {
-    "ESP_RST_UNKNOWN",
-    "ESP_RST_POWERON",
-    "ESP_RST_EXT",
-    "ESP_RST_SW",
-    "ESP_RST_PANIC",
-    "ESP_RST_INT_WDT",
-    "ESP_RST_TASK_WDT",
-    "ESP_RST_WDT",
-    "ESP_RST_DEEPSLEEP",
-    "ESP_RST_BROWNOUT",
-    "ESP_RST_SDIO"};
-
-const char *resetDescription[11] = {
-    "Reset reason can not be determined",
-    "Reset due to power-on event",
-    "Reset by external pin (not applicable for ESP32)",
-    "Software reset via esp_restart",
-    "Software reset due to exception/panic",
-    "Reset (software or hardware) due to interrupt watchdog",
-    "Reset due to task watchdog",
-    "Reset due to other watchdogs",
-    "Reset after exiting deep sleep mode",
-    "Brownout reset (software or hardware)",
-    "Reset over SDIO"};
-
 void serial()
 {
 #if DOTELNET == true
@@ -243,8 +217,8 @@ void serialLoop()
                 const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2);
                 StaticJsonDocument<capacity> doc;
                 JsonObject r = doc.createNestedObject("r");
-                r["reason"] = (const char *)resetReason[esp_reset_reason()];
-                r["description"] = (const char *)resetDescription[esp_reset_reason()];
+                r["reason"] = rstReason();
+                r["description"] = rstDescription();
                 serializeJson(doc, SERIAL);
                 printCR();
                 break;
