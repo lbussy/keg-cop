@@ -105,6 +105,7 @@ void setActionPageHandlers()
         config.dospiffs1 = false;
         config.dospiffs2 = false;
         config.didupdate = false;
+        config.nodrd = false;
         saveConfig();
         request->send(200, F("text/plain"), F("200: OK."));
     });
@@ -229,7 +230,7 @@ void setJsonHandlers()
         Log.verbose(F("Serving /config/." CR));
 
         // Serialize configuration
-        DynamicJsonDocument doc(capacitySerial); // Create doc
+        StaticJsonDocument<CAP_CONF> doc;  // Create doc
         JsonObject root = doc.to<JsonObject>();  // Create JSON object
         config.save(root);                       // Fill the object with current config
 
