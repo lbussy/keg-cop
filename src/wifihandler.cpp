@@ -168,6 +168,8 @@ void resetWifi()
     blinker.detach();       // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
     Log.notice(F("Restarting after clearing wifi settings." CR));
+    config.nodrd = true;
+    saveConfig();
     ESP.restart();
 }
 

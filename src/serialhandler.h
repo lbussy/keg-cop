@@ -88,7 +88,6 @@ void nullDoc(const char *);
 
 extern struct ThatVersion thatVersion;
 extern struct Config config;
-extern const size_t capacitySerial;
 #if KCWEIGH == false
 extern struct Flowmeter flow;
 extern const size_t capacityFlowSerial;

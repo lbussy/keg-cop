@@ -29,6 +29,8 @@ SOFTWARE. */
 #include <SPIFFS.h>
 #include <FS.h>
 
+#define CAP_CONF 1532
+
 struct ApConfig
 {
     // Stores Access Point configuration
@@ -114,6 +116,7 @@ struct Config
     bool dospiffs1;
     bool dospiffs2;
     bool didupdate;
+    bool nodrd;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;

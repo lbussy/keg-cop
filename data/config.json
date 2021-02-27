@@ -1,7 +1,7 @@
 {
     "apconfig": {
         "ssid": "kegcop",
-        "passphrase": "kegcop2020"
+        "passphrase": "kegcop21"
     },
     "hostname": "kegcop",
     "guid": "A1B3C5D7",
@@ -39,5 +39,6 @@
     },
     "dospiffs1": false,
     "dospiffs2": false,
-    "didupdate": false
+    "didupdate": false,
+    "nodrd": false
 }

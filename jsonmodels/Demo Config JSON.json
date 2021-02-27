@@ -39,5 +39,6 @@
     },
     "dospiffs1": false,
     "dospiffs2": false,
-    "didupdate": false
+    "didupdate": false,
+    "nodrd": false
 }

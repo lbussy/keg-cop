@@ -33,6 +33,7 @@ void execfw()
     config.dospiffs1 = true;
     config.dospiffs2 = false;
     config.didupdate = false;
+    config.nodrd = true;
     saveConfig();
     saveFlowConfig();
 
@@ -51,6 +52,7 @@ void execfw()
         config.dospiffs1 = false;
         config.dospiffs2 = false;
         config.didupdate = false;
+        config.nodrd = true;
         saveConfig();
         saveFlowConfig();
         ESP.restart();
@@ -62,6 +64,7 @@ void execfw()
         config.dospiffs1 = false;
         config.dospiffs2 = false;
         config.didupdate = false;
+        config.nodrd = true;
         saveConfig();
         saveFlowConfig();
         ESP.restart();
@@ -69,6 +72,8 @@ void execfw()
 
     case HTTP_UPDATE_OK:
         Log.notice(F("HTTP Firmware OTA Update complete, restarting." CR));
+        config.nodrd = true;
+        saveConfig();
         ESP.restart();
         break;
     }
@@ -82,15 +87,15 @@ void execspiffs()
         config.dospiffs1 = false;
         config.dospiffs2 = true;
         config.didupdate = false;
+        config.nodrd = true;
         saveConfig();
         saveFlowConfig();
 
         if (SPIFFS.begin())
             SPIFFS.remove("/drd.dat");
-
-        _delay(3000);
+        config.nodrd = true;
+        saveConfig();
         ESP.restart();
-        _delay(1000);
     }
     else if (config.dospiffs2)
     {
@@ -121,12 +126,11 @@ void execspiffs()
             config.dospiffs1 = false;
             config.dospiffs2 = false;
             config.didupdate = true;
+            config.nodrd = true;
             saveConfig();     // This not only saves the flags, it (re)saves the whole config after SPIFFS wipes it
             saveFlowConfig(); // Save previous flowmeter data
-            _delay(1000);
             Log.notice(F("HTTP SPIFFS OTA Update complete, restarting." CR));
             ESP.restart();
-            _delay(1000);
             break;
         }
     }

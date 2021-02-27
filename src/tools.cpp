@@ -45,7 +45,8 @@ void _delay(unsigned long ulDelay)
 void resetController()
 {
     Log.notice(F("Reboot request - rebooting system." CR));
-    _delay(5000);
+    config.nodrd = true;
+    saveConfig();
     ESP.restart();
 }
 
@@ -149,6 +150,8 @@ void maintenanceLoop()
         // The ms clock will rollover after ~49 days.  To be on the safe side,
         // restart the ESP after about 42 days to reset the ms clock.
         Log.warning(F("Maintenance: Six week routine restart."));
+        config.nodrd = true;
+        saveConfig();
         ESP.restart();
     }
     if (lastNTPUpdate > NTPRESET)

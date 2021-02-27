@@ -56,8 +56,6 @@ void webServerCallback();
 
 extern AsyncWiFiManager myAsyncWifiManager;
 extern struct Config config;
-extern const size_t capacitySerial;
-extern const size_t capacityDeserial;
 
 struct tcp_pcb;
 extern struct tcp_pcb *tcp_tw_pcbs;

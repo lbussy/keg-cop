@@ -71,8 +71,6 @@ bool handleSetCalMode(AsyncWebServerRequest *);
 
 extern struct ThatVersion thatVersion;
 extern struct Config config;
-extern const size_t capacityDeserial;
-extern const size_t capacitySerial;
 extern struct Flowmeter flow;
 extern const size_t capacityFlowDeserial;
 extern const size_t capacityFlowSerial;

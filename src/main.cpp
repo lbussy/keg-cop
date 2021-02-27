@@ -50,7 +50,7 @@ void setup()
     // Log.verbose(F("DEBUG:  IPL = %T." CR), isIPL()); // DEBUG Initial program load work
 
     // Check if portal is requested
-    if (drd->detectDoubleReset())
+    if (!config.nodrd && drd->detectDoubleReset())
     {
         Log.notice(F("DRD: Portal requested." CR));
         doWiFi(true);
@@ -63,6 +63,7 @@ void setup()
     else
     {
         Log.verbose(F("Starting WiFi." CR));
+        config.nodrd = false;
         doWiFi();
     }
 

@@ -24,8 +24,6 @@ SOFTWARE. */
 
 Config config;
 const char *filename = FILENAME;
-extern const size_t capacitySerial = 2 * JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(11) + JSON_OBJECT_SIZE(13);
-extern const size_t capacityDeserial = capacitySerial + 950;
 
 bool deleteConfigFile()
 {
@@ -107,7 +105,7 @@ bool saveFile()
 bool deserializeConfig(Stream &src)
 {
     // Deserialize configuration
-    DynamicJsonDocument doc(capacityDeserial);
+    StaticJsonDocument<CAP_CONF> doc;
 
     // Parse the JSON object in the file
     DeserializationError err = deserializeJson(doc, src);
@@ -127,7 +125,7 @@ bool deserializeConfig(Stream &src)
 bool serializeConfig(Print &dst)
 {
     // Serialize configuration
-    DynamicJsonDocument doc(capacitySerial);
+    StaticJsonDocument<CAP_CONF> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -157,7 +155,7 @@ bool printFile()
 bool printConfig()
 {
     // Serialize configuration
-    DynamicJsonDocument doc(capacitySerial);
+    StaticJsonDocument<CAP_CONF> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -175,7 +173,7 @@ bool printConfig()
 bool mergeJsonString(String newJson)
 {
     // Serialize configuration
-    DynamicJsonDocument doc(capacityDeserial);
+    StaticJsonDocument<CAP_CONF> doc;
 
     // Parse directly from file
     DeserializationError err = deserializeJson(doc, newJson);
@@ -191,7 +189,7 @@ bool mergeJsonString(String newJson)
 bool mergeJsonObject(JsonVariantConst src)
 {
     // Serialize configuration
-    DynamicJsonDocument doc(capacityDeserial);
+    StaticJsonDocument<CAP_CONF> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -626,6 +624,8 @@ void Config::save(JsonObject obj) const
     obj["dospiffs2"] = dospiffs2;
     // Add didupdate object
     obj["didupdate"] = didupdate;
+    // Add nodrd object
+    obj["nodrd"] = nodrd;
 }
 
 void Config::load(JsonObjectConst obj)
@@ -685,5 +685,14 @@ void Config::load(JsonObjectConst obj)
     else
     {
         didupdate = obj["didupdate"];
+    }
+
+    if (obj["nodrd"].isNull())
+    {
+        nodrd = false;
+    }
+    else
+    {
+        nodrd = obj["nodrd"];
     }
 }
