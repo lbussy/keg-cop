@@ -434,6 +434,8 @@ Grid 5.00 mm&lt;p&gt;
 <classes>
 <class number="0" name="default" width="0" drill="0">
 </class>
+<class number="1" name="GND" width="0" drill="0">
+</class>
 </classes>
 <parts>
 <part name="IN" library="con-tycoelectronics" library_urn="urn:adsk.eagle:library:193" deviceset="RJ45" device="" package3d_urn="urn:adsk.eagle:package:10660/1" technology="-8X"/>
@@ -484,7 +486,7 @@ Grid 5.00 mm&lt;p&gt;
 <busses>
 </busses>
 <nets>
-<net name="GND" class="0">
+<net name="GND" class="1">
 <segment>
 <pinref part="IN" gate="G$1" pin="1"/>
 <wire x1="71.12" y1="35.56" x2="71.12" y2="38.1" width="0.1524" layer="91"/>
