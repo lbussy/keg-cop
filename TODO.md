@@ -12,6 +12,7 @@
 - Remember to do something with the web pages if we are using a scale
     - If a massive weight change is detected - as in, the keg tare weight or greater is removed, re-tare the scale to zero
 - Test new board with branch new_pins
+- Use a fraction of the configured per liter number for discarded pulses
 
 # Done
 
