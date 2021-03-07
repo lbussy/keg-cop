@@ -369,7 +369,7 @@ bool sendReport(ReportKey thisKey, const String &json)
         url.setUrl(config.kegscreen.url);
 
         IPAddress connectionIP = url.getIP();
-        if (connectionIP == INADDR_NONE)
+        if (connectionIP == (IPAddress)INADDR_NONE)
         {
             Log.warning(F("Warning: %s: Unable to resolve address of %s." CR), reportname[thisKey], url.getHost().c_str());
             return false;

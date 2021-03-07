@@ -137,7 +137,7 @@ bool sendTReport(const String &json)
         url.setUrl(config.urltarget.url);
 
         IPAddress connectionIP = url.getIP();
-        if (connectionIP == INADDR_NONE)
+        if (connectionIP == (IPAddress)INADDR_NONE)
         {
             Log.warning(F("Warning: %s: Unable to resolve address of %s." CR), reportname, url.getHost().c_str());
             return false;
