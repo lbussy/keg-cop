@@ -42,7 +42,7 @@ SOFTWARE. */
 
 void wifiBlinker();
 void doWiFi();
-void doWiFi(bool);
+void doWiFi(bool dontUseStoredCreds);
 void resetWifi();
 
 // WiFiManager Callbacks
