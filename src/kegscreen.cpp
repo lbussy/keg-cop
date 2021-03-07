@@ -368,7 +368,7 @@ bool sendReport(ReportKey thisKey, const String &json)
         LCBUrl url;
         url.setUrl(config.kegscreen.url);
 
-        IPAddress connectionIP = url.getIP();
+        IPAddress connectionIP = url.getIP(url.getHost().c_str());
         if (connectionIP == (IPAddress)INADDR_NONE)
         {
             Log.warning(F("Warning: %s: Unable to resolve address of %s." CR), reportname[thisKey], url.getHost().c_str());
@@ -376,7 +376,7 @@ bool sendReport(ReportKey thisKey, const String &json)
         }
 
         String connection = "";
-        if (url.isMDNS())
+        if (url.isMDNS(url.getHost().c_str()))
         { // Is mDNS (== .local)
             Log.verbose(F("%s: Preparing POST to: %s (%s)" CR), reportname[thisKey], url.getUrl().c_str(), connectionIP.toString().c_str());
             connection = url.getIPUrl();
