@@ -47,7 +47,10 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 #include <FS.h>
+
+#define WEBSERVER_H
 #include <ESPAsyncWebServer.h>
+
 #include <SPIFFSEditor.h>
 #include <Arduino.h>
 

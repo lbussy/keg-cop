@@ -38,7 +38,7 @@ SOFTWARE. */
 #include "mdnshandler.h"
 #include "wifihandler.h"
 #include <SPIFFS.h>
-#include <AsyncWiFiManager.h>
+#include <WiFiManager.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>
 

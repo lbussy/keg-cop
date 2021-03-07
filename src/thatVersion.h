@@ -26,7 +26,13 @@ SOFTWARE. */
 #include "config.h"
 #include "wifihandler.h"
 #include <ArduinoLog.h>
+
+#ifdef ESP32
 #include <AsyncTCP.h>
+#elif defined ESP8266
+#include <ESPAsyncTCP.h>
+#endif
+
 #include <asyncHTTPrequest.h>
 #include <ArduinoJson.h>
 #include <Arduino.h>

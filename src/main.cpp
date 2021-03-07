@@ -129,7 +129,7 @@ void loop()
         if (doNonBlock)
         {
             // Handle nonblocking portal (if configured)
-            myAsyncWifiManager.process();
+            wm.process();
         }
         else
         {
