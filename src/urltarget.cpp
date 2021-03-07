@@ -136,7 +136,7 @@ bool sendTReport(const String &json)
         LCBUrl url;
         url.setUrl(config.urltarget.url);
 
-        IPAddress connectionIP = url.getIP();
+        IPAddress connectionIP = url.getIP(url.getHost().c_str());
         if (connectionIP == (IPAddress)INADDR_NONE)
         {
             Log.warning(F("Warning: %s: Unable to resolve address of %s." CR), reportname, url.getHost().c_str());
@@ -144,7 +144,7 @@ bool sendTReport(const String &json)
         }
 
         String connection = "";
-        if (url.isMDNS())
+        if (url.isMDNS(url.getHost().c_str()))
         { // Is mDNS/.local
             Log.verbose(F("%s: Preparing POST to: %s (%s)" CR), reportname, url.getUrl().c_str(), connectionIP.toString().c_str());
             connection = url.getIPUrl();
