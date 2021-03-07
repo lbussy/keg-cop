@@ -25,7 +25,7 @@ SOFTWARE. */
 float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
 bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending kicks
 bool __attribute__((unused)) queueStateChange;          // Store pending tstat state changes
-AsyncWiFiManager myAsyncWifiManager;
+WiFiManager wm;
 
 void _delay(unsigned long ulDelay)
 {

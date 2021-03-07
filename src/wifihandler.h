@@ -31,13 +31,12 @@ SOFTWARE. */
 
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
-#include <WiFiManager.h>
 #endif
 #ifdef ESP32
 #include <WiFi.h>
-#include <AsyncWiFiManager.h>
 #endif
 
+#include <WiFiManager.h>
 #include <Ticker.h>
 #include <ArduinoLog.h>
 
@@ -47,14 +46,14 @@ void doWiFi(bool);
 void resetWifi();
 
 // WiFiManager Callbacks
-void apCallback(AsyncWiFiManager *myWiFiManager);
+void apCallback(WiFiManager *wiFiManager);
 void configResetCallback();
 void preSaveConfigCallback();
 void saveConfigCallback();
 void saveParamsCallback();
 void webServerCallback();
 
-extern AsyncWiFiManager myAsyncWifiManager;
+extern WiFiManager wm;
 extern struct Config config;
 
 struct tcp_pcb;
