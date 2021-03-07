@@ -63,7 +63,6 @@ std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep
 void getGuid(char *str, size_t len);
 bool isIPL();
 
-static bool __attribute__((unused)) doNonBlock = false;     // Semaphore for non-blocking portal
 static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset
 static bool __attribute__((unused)) doKSTempReport = false; // Semaphore for Keg Screen Temps Report
