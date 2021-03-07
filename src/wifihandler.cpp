@@ -32,6 +32,7 @@ void doWiFi()
 
 void doWiFi(bool dontUseStoredCreds)
 {
+    WiFiManager wm;
     // WiFiManager Callbacks
     wm.setAPCallback(apCallback); // Called after AP has started
     // wm.setConfigResetCallback(configResetCallback); // Called after settings are reset

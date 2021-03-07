@@ -53,7 +53,6 @@ void saveConfigCallback();
 void saveParamsCallback();
 void webServerCallback();
 
-extern WiFiManager wm;
 extern struct Config config;
 
 struct tcp_pcb;
