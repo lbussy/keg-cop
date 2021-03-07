@@ -47,8 +47,6 @@ void setup()
     // Set LED pin
     pinMode(LED, OUTPUT);
 
-    // Log.verbose(F("DEBUG:  IPL = %T." CR), isIPL()); // DEBUG Initial program load work
-
     // Check if portal is requested
     if (!config.nodrd && drd->detectDoubleReset())
     {
@@ -126,29 +124,21 @@ void loop()
 
     while (true)
     {
-        if (doNonBlock)
-        {
-            // Handle nonblocking portal (if configured)
-            wm.process();
-        }
-        else
-        {
-            // We can do normal processing
+        // We can do normal processing
 
-            // Check for Target URL Timing reset
-            if (config.urltarget.update)
-            {
-                Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
-                doTargetReport.detach();
-                doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
-                config.urltarget.update = false;
-            }
-
-            doOTALoop();
-            tickerLoop();
-            drd->loop();
-            serialLoop();
-            maintenanceLoop();
+        // Check for Target URL Timing reset
+        if (config.urltarget.update)
+        {
+            Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
+            doTargetReport.detach();
+            doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
+            config.urltarget.update = false;
         }
+
+        doOTALoop();
+        tickerLoop();
+        drd->loop();
+        serialLoop();
+        maintenanceLoop();
     }
 }

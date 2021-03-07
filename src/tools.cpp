@@ -62,8 +62,7 @@ void setDoWiFiReset()
 
 void setDoKSTempReport()
 {
-    if (!doNonBlock)           // Make sure we're not in a non-blocking loop
-        doKSTempReport = true; // Semaphore required for KS Temp Report
+    doKSTempReport = true; // Semaphore required for KS Temp Report
 }
 
 void setDoTapInfoReport(int tap)
@@ -73,8 +72,7 @@ void setDoTapInfoReport(int tap)
 
 void setDoTargetReport()
 {
-    if (!doNonBlock)           // Make sure we're not in a non-blocking loop
-        doTargetReport = true; // Semaphore required for URL Target Report
+    doTargetReport = true; // Semaphore required for URL Target Report
 }
 
 void tickerLoop()
@@ -139,12 +137,35 @@ void maintenanceLoop()
         Log.warning(F("Maintenance: Heap memory has degraded below safe minimum, restarting." CR));
         resetController();
     }
+
     if (WiFi.status() != WL_CONNECTED)
     {
+        // WiFi is down - Reconnect
         Log.warning(F("Maintenance: WiFi not connected, reconnecting." CR));
-        doNonBlock = true;
-        doWiFi(); // With doNonBlock, this should be non-blocking
+        WiFi.begin();
+
+        int rcCount = 0;
+        while (WiFi.status() != WL_CONNECTED && rcCount < 190)
+        {
+            delay(100);
+            printDot(true);
+            ++rcCount;
+            yield();
+        }
+
+        if (WiFi.status() != WL_CONNECTED)
+        {
+            // We failed to reconnect.
+            Log.error(F("Maintenance: WiFi failed to reconnect, restarting." CR));
+            ESP.restart();
+        }
+        else
+        {
+            // We reconnected successfully
+            Log.notice(F("Maintenance: WiFi reconnected." CR));
+        }
     }
+
     if (millis() > ESPREBOOT)
     {
         // The ms clock will rollover after ~49 days.  To be on the safe side,

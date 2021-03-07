@@ -74,12 +74,6 @@ void doWiFi(bool dontUseStoredCreds)
     WiFiManagerParameter hostname("hostname", "Custom Hostname", HOSTNAME, 32);
     wm.addParameter(&hostname);
 
-    if (doNonBlock)
-    {
-        // Enable nonblocking portal (if configured)
-        wm.setConfigPortalBlocking(false);
-    }
-
     if (dontUseStoredCreds)
     {
         // Voluntary portal
@@ -146,14 +140,6 @@ void doWiFi(bool dontUseStoredCreds)
             WiFi.setHostname(config.hostname);
 #endif
         }
-    }
-
-    if (doNonBlock)
-    {
-        // Turn off nonblocking portal (if configured)
-        Log.notice(F("Returning after non-blocking reconnect." CR));
-        doNonBlock = false;
-        mdnsreset();
     }
 
     Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());

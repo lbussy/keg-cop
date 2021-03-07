@@ -27,14 +27,10 @@ ThatVersion __attribute__((unused)) thatVersion;
 
 void sendRequest()
 {
-    if (!doNonBlock)
+    if (request.readyState() == 0 || request.readyState() == 4)
     {
-        // Make sure we're not in a non-blocking loop
-        if (request.readyState() == 0 || request.readyState() == 4)
-        {
-            request.open("GET", VERSIONJSONLOC);
-            request.send();
-        }
+        request.open("GET", VERSIONJSONLOC);
+        request.send();
     }
 }
 
