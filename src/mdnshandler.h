@@ -25,7 +25,12 @@ SOFTWARE. */
 
 #include "jsonconfig.h"
 #include <ArduinoLog.h>
+
+#ifdef ESP8266
+#include <ESP8266mDNS.h>
+#elif defined ESP32
 #include <ESPmDNS.h>
+#endif
 
 void mdnssetup();
 void mdnsreset();
