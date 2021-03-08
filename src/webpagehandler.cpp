@@ -50,7 +50,13 @@ void initWebServer()
     server.begin();
 
     Log.notice(F("Async HTTP server started on port %l." CR), PORT);
+#ifdef ESP32
     Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.getHostname());
+#elif defined ESP8266
+    Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.hostname());
+#else
+    //
+#endif
 }
 
 void setRegPageAliases()
