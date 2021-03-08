@@ -67,7 +67,6 @@ double convertGtoL(double);
 double convertLtoG(double);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
 void getGuid(char *str, size_t len);
-bool isIPL();
 
 static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset
