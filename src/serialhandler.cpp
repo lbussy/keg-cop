@@ -232,26 +232,26 @@ void serialLoop()
             case 'u': // Display uptime
             {
                 // Get uptime in millisseconds
-                unsigned int millis = (unsigned int)floor((esp_timer_get_time() / 1000));
+                unsigned int mill = millis();
 
                 // 86400000 millis in a day
-                const int days = (int)floor(millis / 86400000);
-                millis = millis - 86400000 * days;
+                const int days = (int)floor(mill / 86400000);
+                mill = mill - 86400000 * days;
 
                 // 3600000 millis in an hour
-                const int hours = (int)floor(millis / 3600000);
-                millis = millis - 3600000 * hours;
+                const int hours = (int)floor(mill / 3600000);
+                mill = mill - 3600000 * hours;
 
                 // 60000 millis in a minute
-                const int minutes = (int)floor(millis / 60000);
-                millis = millis - 60000 * minutes;
+                const int minutes = (int)floor(mill / 60000);
+                mill = mill - 60000 * minutes;
 
                 // 1000 millis in a second
-                const int seconds = (int)floor(millis / 1000);
-                millis = millis - 1000 * seconds;
+                const int seconds = (int)floor(mill / 1000);
+                mill = mill - 1000 * seconds;
 
                 // Need a const int for ArduinoJson
-                const int milliseconds = millis;
+                const int milliseconds = mill;
 
                 const size_t capacity = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 50;
                 StaticJsonDocument<capacity> doc;
