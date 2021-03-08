@@ -24,13 +24,25 @@ SOFTWARE. */
 
 void mdnssetup()
 {
+#ifdef ESP32
     if (!MDNS.begin(WiFi.getHostname()))
+#elif defined ESP8266
+    if (!MDNS.begin(WiFi.hostname()))
+#else
+    if (0)
+#endif
     { // Start the mDNS responder
         Log.error(F("Error setting up mDNS responder." CR));
     }
     else
     {
+#ifdef ESP32
         Log.notice(F("mDNS responder started for %s.local." CR), WiFi.getHostname());
+#elif defined ESP8266
+    Log.notice(F("mDNS responder started for %s.local." CR), WiFi.hostname());
+#else
+    Log.notice(F("mDNS responder started." CR));
+#endif
         MDNS.addService("http", "tcp", PORT);
         MDNS.addService("kegcop", "tcp", PORT);
 #if DOTELNET == true
@@ -49,7 +61,13 @@ void mdnsreset()
     }
     else
     {
-        Log.notice(F("mDNS responder restarted, hostname: %s.local." CR), WiFi.getHostname());
+#ifdef ESP32
+        Log.notice(F("mDNS responder restarted for %s.local." CR), WiFi.getHostname());
+#elif defined ESP8266
+        Log.notice(F("mDNS responder restarted for %s.local." CR), WiFi.hostname());
+#else
+        Log.notice(F("mDNS responder restarted." CR));
+#endif  
         MDNS.addService("http", "tcp", PORT);
         MDNS.addService("kegcop", "tcp", PORT);
 #if DOTELNET == true
