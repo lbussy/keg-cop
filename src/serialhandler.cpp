@@ -178,6 +178,8 @@ void serialLoop()
                 //     size_t free_blocks;           ///<  Number of (variable size) free blocks in the heap.
                 //     size_t total_blocks;          ///<  Total number of (variable size) blocks in the heap.
                 // } multi_heap_info_t;
+
+#ifdef ESP32    // TODO:  Fix this for ESP8266
                 multi_heap_info_t info;
                 heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
                 const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 70;
@@ -190,6 +192,7 @@ void serialLoop()
                 h["frgPct"] = 100 - (info.largest_free_block * 100) / info.total_free_bytes;
                 serializeJson(doc, SERIAL);
                 printCR();
+#endif
                 break;
             }
             case 'a': // /thatVersion/
