@@ -26,8 +26,13 @@ SOFTWARE. */
 #include "serialhandler.h"
 #include "config.h"
 #include <ArduinoJson.h>
-#include <SPIFFS.h>
+
+#ifdef ESP32
+#include <FILESYSTEM.h>
 #include <FS.h>
+#elif defined ESP8266
+#include <LittleFS.h>
+#endif
 
 #define CAP_CONF 1532
 

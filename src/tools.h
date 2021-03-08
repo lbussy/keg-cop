@@ -26,7 +26,7 @@ SOFTWARE. */
 #ifndef IPLINFO
 #define IPLINFO
 #define IPL_FILE "/ipl.dat"
-#define IPL_FS SPIFFS
+#define IPL_FS FILESYSTEM
 #endif
 
 #include "config.h"
@@ -37,7 +37,13 @@ SOFTWARE. */
 #include "urltarget.h"
 #include "mdnshandler.h"
 #include "wifihandler.h"
-#include <SPIFFS.h>
+
+#ifdef ESP32
+#include <FILESYSTEM.h>
+#elif defined ESP8266
+#include <LittleFS.h>
+#endif
+
 #include <WiFiManager.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>

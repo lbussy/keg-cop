@@ -66,10 +66,16 @@ SOFTWARE. */
 // https://github.com/khoih-prog/ESP_DoubleResetDetector/
 //
 #ifndef DRD_TIMEOUT
+
+#ifdef ESP32
 #define ESP_DRD_USE_SPIFFS true
+#elif defined ESP8266
+#define ESP_DRD_USE_LITTLEFS true
+#endif
+
 #define DOUBLERESETDETECTOR_DEBUG false
 #define DRD_TIMEOUT 5
-#define DRD_ADDRESS 0 // Not used for SPIFFS, still needed for init
+#define DRD_ADDRESS 0 // Not used for FILESYSTEM, still needed for init
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -122,7 +128,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Use SPIFFS Editor
+// Use FILESYSTEM Editor
 //
 #ifndef SPIFFSEDIT
 #define SPIFFSEDIT
@@ -132,7 +138,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// SPIFFS Editor Username
+// FILESYSTEM Editor Username
 //
 #ifndef SPIFFSEDITUSER
 #define SPIFFSEDITUSER "admin"
@@ -142,7 +148,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// SPIFFS Editor Username
+// FILESYSTEM Editor Username
 //
 #ifndef SPIFFSEDITPW
 #define SPIFFSEDITPW "p@ssword"
@@ -304,7 +310,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// SPIFFS URL
+// FILESYSTEM URL
 //
 #ifndef SPIFFSURL
 #define SPIFFSURL "http://www.kegcop.com/firmware/spiffs.bin"

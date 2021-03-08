@@ -214,23 +214,23 @@ bool loadFlowConfig()
 
 bool deleteFlowConfigFile()
 {
-    if (!SPIFFS.begin())
+    if (!FILESYSTEM.begin())
     {
         return false;
     }
-    return SPIFFS.remove(flowfilename);
+    return FILESYSTEM.remove(flowfilename);
 }
 
 bool loadFlowFile()
 {
-    if (!SPIFFS.begin())
+    if (!FILESYSTEM.begin())
     {
-        Log.error(F("Error: Unable to start SPIFFS." CR));
+        Log.error(F("Error: Unable to start FILESYSTEM." CR));
         return false;
     }
-    // Loads the configuration from a file on SPIFFS
-    File file = SPIFFS.open(flowfilename, "r");
-    if (!SPIFFS.exists(flowfilename) || !file)
+    // Loads the configuration from a file on FILESYSTEM
+    File file = FILESYSTEM.open(flowfilename, "r");
+    if (!FILESYSTEM.exists(flowfilename) || !file)
     {
         Log.warning(F("Warning: Flow json does not exist, generating new %s." CR), flowfilename);
     }
@@ -254,8 +254,8 @@ bool loadFlowFile()
 
 bool saveFlowConfig()
 {
-    // Saves the configuration to a file on SPIFFS
-    File file = SPIFFS.open(flowfilename, "w");
+    // Saves the configuration to a file on FILESYSTEM
+    File file = FILESYSTEM.open(flowfilename, "w");
     if (!file)
     {
         file.close();
@@ -309,7 +309,7 @@ bool serializeFlowConfig(Print &dst)
 bool printFlowFile()
 {
     // Prints the content of a file to the Serial
-    File file = SPIFFS.open(flowfilename, "r");
+    File file = FILESYSTEM.open(flowfilename, "r");
     if (!file)
         return false;
 
