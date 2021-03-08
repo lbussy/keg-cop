@@ -38,15 +38,16 @@ SOFTWARE. */
 
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
 #elif defined ESP32
 #include <WiFi.h>
+#include <ESPmDNS.h>
 #endif
 
-#include <ESPmDNS.h>
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
-#include <FS.h>
+// #include <FS.h>
 
 #define WEBSERVER_H
 #include <ESPAsyncWebServer.h>
