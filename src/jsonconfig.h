@@ -28,7 +28,7 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 
 #ifdef ESP32
-#include <FILESYSTEM.h>
+#include <SPIFFS.h>
 #include <FS.h>
 #elif defined ESP8266
 #include <LittleFS.h>

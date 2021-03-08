@@ -39,7 +39,7 @@ SOFTWARE. */
 #include "wifihandler.h"
 
 #ifdef ESP32
-#include <FILESYSTEM.h>
+#include <SPIFFS.h>
 #elif defined ESP8266
 #include <LittleFS.h>
 #endif
