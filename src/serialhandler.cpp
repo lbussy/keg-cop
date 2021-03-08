@@ -361,7 +361,11 @@ size_t myPrint(const Printable &x)
 
 size_t myPrint(struct tm *timeinfo, const char *format)
 {
+#ifdef ESP32
     return SERIAL.print(timeinfo, format);
+#else
+    return 0;
+#endif
 }
 
 // size_t myPrintf(const char *format, ...)
@@ -431,7 +435,11 @@ size_t myPrintln(const Printable &x)
 
 size_t myPrintln(struct tm *timeinfo, const char *format)
 {
+#ifdef ESP32
     return SERIAL.println(timeinfo, format);
+#else
+    return 0;
+#endif
 }
 
 void toggleSerialCompat(bool enable)
