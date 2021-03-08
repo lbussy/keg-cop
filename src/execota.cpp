@@ -83,7 +83,7 @@ void execspiffs()
 {
     if (config.dospiffs1)
     {
-        Log.notice(F("Rebooting a second time before SPIFFS OTA pull." CR));
+        Log.notice(F("Rebooting a second time before FILESYSTEM OTA pull." CR));
         config.dospiffs1 = false;
         config.dospiffs2 = true;
         config.didupdate = false;
@@ -91,15 +91,15 @@ void execspiffs()
         saveConfig();
         saveFlowConfig();
 
-        if (SPIFFS.begin())
-            SPIFFS.remove("/drd.dat");
+        if (FILESYSTEM.begin())
+            FILESYSTEM.remove("/drd.dat");
         config.nodrd = true;
         saveConfig();
         ESP.restart();
     }
     else if (config.dospiffs2)
     {
-        Log.notice(F("Starting the SPIFFS OTA pull." CR));
+        Log.notice(F("Starting the FILESYSTEM OTA pull." CR));
 
         // Stop web server before OTA update - will restart on reset
         stopWebServer();
@@ -114,22 +114,22 @@ void execspiffs()
         switch (ret)
         {
         case HTTP_UPDATE_FAILED:
-            Log.error(F("HTTP SPIFFS OTA Update failed." CR));
+            Log.error(F("HTTP FILESYSTEM OTA Update failed." CR));
             break;
 
         case HTTP_UPDATE_NO_UPDATES:
-            Log.notice(F("HTTP SPIFFS OTA Update: No updates." CR));
+            Log.notice(F("HTTP FILESYSTEM OTA Update: No updates." CR));
             break;
 
         case HTTP_UPDATE_OK:
-            // Reset SPIFFS update flag
+            // Reset FILESYSTEM update flag
             config.dospiffs1 = false;
             config.dospiffs2 = false;
             config.didupdate = true;
             config.nodrd = true;
-            saveConfig();     // This not only saves the flags, it (re)saves the whole config after SPIFFS wipes it
+            saveConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
             saveFlowConfig(); // Save previous flowmeter data
-            Log.notice(F("HTTP SPIFFS OTA Update complete, restarting." CR));
+            Log.notice(F("HTTP FILESYSTEM OTA Update complete, restarting." CR));
             ESP.restart();
             break;
         }
@@ -156,7 +156,7 @@ HTTPUpdateResult execSPIFFSOTA(char *host, int port, char *path)
     return execOTA(host, port, path, U_SPIFFS);
 }
 
-// OTA updating of firmware or SPIFFS
+// OTA updating of firmware or FILESYSTEM
 HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
 {
     WiFiClient client;
@@ -250,8 +250,8 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
     // Check contentLength and content type
     if (contentLength && isValidContentType)
     {
-        // Check if there is enough to OTA Update and set the type of update FIRMWARE or SPIFFS
-        Log.notice(F("OTA type: %s" CR), (cmd == U_SPIFFS) ? String("SPIFFS").c_str() : String("FIRMWARE").c_str());
+        // Check if there is enough to OTA Update and set the type of update FIRMWARE or FILESYSTEM
+        Log.notice(F("OTA type: %s" CR), (cmd == U_SPIFFS) ? String("FILESYSTEM").c_str() : String("FIRMWARE").c_str());
         bool canBegin = Update.begin(contentLength, cmd);
 
         // If yes, begin

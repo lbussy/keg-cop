@@ -72,14 +72,14 @@ void setup()
     setClock(); // Set NTP Time
 
 #if KCWEIGH == false
-    // Initialize flowmeters before checking for SPIFFS update
+    // Initialize flowmeters before checking for FILESYSTEM update
     if (initFlow())
         Log.notice(F("Flowmeters loaded." CR));
     else
         Log.error(F("Unable to load flowmeters." CR));
 #endif
 
-    execspiffs(); // Check for pending SPIFFS update
+    execspiffs(); // Check for pending FILESYSTEM update
 
     mdnssetup();     // Set up mDNS responder
     tcpCleanup();    // Get rid of -8 errors
