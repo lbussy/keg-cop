@@ -257,9 +257,9 @@ std::string addThousandSeparators(std::string value, char thousandSep = ',', cha
     int len = value.length();
     int negative = ((len && value[0] == '-') ? 1 : 0);
     int dpos = value.find_last_of(sourceDecimalSep);
-    int dlen = 3 + (dpos == std::string::npos ? 0 : (len - dpos));
+    int dlen = 3 + ((unsigned int)dpos == std::string::npos ? 0 : (len - dpos));
 
-    if (dpos != std::string::npos && decimalSep != sourceDecimalSep)
+    if ((unsigned int)dpos != std::string::npos && decimalSep != sourceDecimalSep)
     {
         value[dpos] = decimalSep;
     }
