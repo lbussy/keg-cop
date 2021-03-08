@@ -25,7 +25,6 @@ SOFTWARE. */
 
 #include "tools.h"
 #include "config.h"
-#include "resetreasons.h"
 #include "jsonconfig.h"
 // Including execota.h to allow serial OTA trigger gets into the 
 // redefine mess with ESPAsyncWebServer.h
