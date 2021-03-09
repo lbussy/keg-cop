@@ -224,11 +224,11 @@ void serialLoop()
                 const int reset = (int)esp_reset_reason();
 #elif defined ESP8266
                 const int reset = (int)ESP.getResetInfoPtr();
-#endif 
+#endif
 
 #if defined ESP32 || defined ESP8266
-                r["reason"] = resetReason[reset];
-                r["description"] = resetDescription[reset];
+                r["reason"] = rstReason(reset);
+                r["description"] = rstDescription(reset);
 #else
                 r["reason"] = "Unknown";
                 r["description"] = "Unknown";

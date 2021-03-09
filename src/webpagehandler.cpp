@@ -140,8 +140,19 @@ void setJsonHandlers()
         StaticJsonDocument<capacity> doc;
         JsonObject r = doc.createNestedObject("r");
 
-        r["reason"] = rstReason();
-        r["description"] = rstDescription(); 
+#ifdef ESP32
+                const int reset = (int)esp_reset_reason();
+#elif defined ESP8266
+                const int reset = (int)ESP.getResetInfoPtr();
+#endif
+
+#if defined ESP32 || defined ESP8266
+                r["reason"] = rstReason(reset);
+                r["description"] = rstDescription(reset);
+#else
+                r["reason"] = "Unknown";
+                r["description"] = "Unknown";
+#endif
 
         String resetreason;
         serializeJson(doc, resetreason);
