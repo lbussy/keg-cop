@@ -23,13 +23,22 @@ SOFTWARE. */
 #ifndef _EXECOTA_H
 #define _EXECOTA_H
 
+#define WEBSERVER_H
+
 #include "jsonconfig.h"
 #include "webpagehandler.h"
 #include "flowmeter.h"
 #include <LCBUrl.h>
+
+#ifdef ESP32
 #include <Update.h>
-#include <ArduinoLog.h>
 #include <HTTPClient.h>
+#elif defined ESP8266
+// #include <ESP8266WiFi.h>
+#include <ESP8266httpUpdate.h>
+#endif
+
+#include <ArduinoLog.h>
 #include <Arduino.h>
 
 void execfw();
@@ -38,12 +47,14 @@ void execspiffs();
 void setDoOTA();
 void doOTALoop();
 
+#ifdef ESP32
 enum HTTPUpdateResult
 {
     HTTP_UPDATE_FAILED,
     HTTP_UPDATE_NO_UPDATES,
     HTTP_UPDATE_OK
 };
+#endif
 
 HTTPUpdateResult execFirmwareOTA(char *host, int port, char *path);
 HTTPUpdateResult execSPIFFSOTA(char *host, int port, char *path);
