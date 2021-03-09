@@ -34,7 +34,7 @@ SOFTWARE. */
 #include <Update.h>
 #include <HTTPClient.h>
 #elif defined ESP8266
-// #include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>
 #include <ESP8266httpUpdate.h>
 #endif
 
