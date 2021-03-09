@@ -24,6 +24,8 @@ SOFTWARE. */
 
 #if defined ESP8266
 
+const int reset = (int)ESP.getResetInfoPtr();
+
 const char *resetReason[7] = {
     "REASON_DEFAULT_RST",      // = 0, /* normal startup by power on */
     "REASON_WDT_RST",          // = 1, /* hardware watch dog reset */
@@ -44,6 +46,8 @@ const char *resetDescription[7] = {
     "External system reset"};
 
 #elif defined ESP32
+
+const int reset = (int)esp_reset_reason();
 
 const char *resetReason[11] = {
     "ESP_RST_UNKNOWN",    //!< Reset reason can not be determined
@@ -75,12 +79,12 @@ const char *resetDescription[11] = {
 
 #endif
 
-const char *rstReason(int index)
+const char *rstReason()
 {
-    return resetReason[index];
+    return resetReason[reset];
 }
 
-const char *rstDescription(int index)
+const char *rstDescription()
 {
-    return resetDescription[index];
+    return resetDescription[reset];
 }
