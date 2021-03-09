@@ -24,7 +24,6 @@ SOFTWARE. */
 #define _WEBPAGEHANDLER_H
 
 #include "uptime.h"
-#include "resetreasons.h"
 #include "wifihandler.h"
 #include "jsonconfig.h"
 #include "version.h"
@@ -35,6 +34,7 @@ SOFTWARE. */
 #include "mdnshandler.h"
 #include "tempsensors.h"
 #include "thermostat.h"
+#include "resetreasons.h"
 
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
@@ -47,7 +47,6 @@ SOFTWARE. */
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
-// #include <FS.h>
 
 #define WEBSERVER_H
 #include <ESPAsyncWebServer.h>
