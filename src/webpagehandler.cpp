@@ -53,7 +53,7 @@ void initWebServer()
 #ifdef ESP32
     Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.getHostname());
 #elif defined ESP8266
-    Log.verbose(F("Open: http://%s.local to view application." CR), .c_str());
+    Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.hostname().c_str());
 #else
     //
 #endif
@@ -139,12 +139,6 @@ void setJsonHandlers()
         const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2);
         StaticJsonDocument<capacity> doc;
         JsonObject r = doc.createNestedObject("r");
-
-#ifdef ESP32
-                const int reset = (int)esp_reset_reason();
-#elif defined ESP8266
-                const int reset = (int)ESP.getResetInfoPtr();
-#endif
 
 #if defined ESP32 || defined ESP8266
                 r["reason"] = rstReason();

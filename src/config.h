@@ -319,7 +319,11 @@ SOFTWARE. */
 // Firmware URL
 //
 #ifndef FIRMWAREURL
+#ifdef ESP32
 #define FIRMWAREURL "http://www.kegcop.com/firmware/firmware.bin"
+#elif defined ESP8266
+#define FIRMWAREURL "http://www.kegcop.com/firmware_8266/firmware.bin"
+#endif
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -328,8 +332,12 @@ SOFTWARE. */
 //
 // FILESYSTEM URL
 //
+#ifdef ESP32
 #ifndef SPIFFSURL
 #define SPIFFSURL "http://www.kegcop.com/firmware/spiffs.bin"
+#endif
+#elif defined ESP8266
+#define LITTLEFSURL "http://www.kegcop.com/firmware_8266/littlefs.bin"
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
