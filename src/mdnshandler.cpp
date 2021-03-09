@@ -39,7 +39,7 @@ void mdnssetup()
 #ifdef ESP32
         Log.notice(F("mDNS responder started for %s.local." CR), WiFi.getHostname());
 #elif defined ESP8266
-    Log.notice(F("mDNS responder started for %s.local." CR), WiFi.hostname());
+    Log.notice(F("mDNS responder started for %s.local." CR), WiFi.hostname().c_str());
 #else
     Log.notice(F("mDNS responder started." CR));
 #endif
@@ -64,7 +64,7 @@ void mdnsreset()
 #ifdef ESP32
         Log.notice(F("mDNS responder restarted for %s.local." CR), WiFi.getHostname());
 #elif defined ESP8266
-        Log.notice(F("mDNS responder restarted for %s.local." CR), WiFi.hostname());
+        Log.notice(F("mDNS responder restarted for %s.local." CR), WiFi.hostname().c_str());
 #else
         Log.notice(F("mDNS responder restarted." CR));
 #endif  
