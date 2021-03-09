@@ -32,6 +32,7 @@ SOFTWARE. */
 #include "resetreasons.h"
 #include <ArduinoLog.h>
 #include <WiFiUdp.h>
+#include <ArduinoJson.h>
 #include <Arduino.h>
 
 #if DOTELNET == true
