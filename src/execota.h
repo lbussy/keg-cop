@@ -23,20 +23,19 @@ SOFTWARE. */
 #ifndef _EXECOTA_H
 #define _EXECOTA_H
 
+#ifdef ESP32
+#include <Update.h>
+#include <HTTPClient.h>
+#elif defined ESP8266
 #define WEBSERVER_H
+#include <ESP8266WiFi.h>
+#include <ESP8266httpUpdate.h>
+#endif
 
 #include "jsonconfig.h"
 #include "webpagehandler.h"
 #include "flowmeter.h"
 #include <LCBUrl.h>
-
-#ifdef ESP32
-#include <Update.h>
-#include <HTTPClient.h>
-#elif defined ESP8266
-#include <ESP8266WiFi.h>
-#include <ESP8266httpUpdate.h>
-#endif
 
 #include <ArduinoLog.h>
 #include <Arduino.h>
