@@ -48,17 +48,17 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 
-#define WEBSERVER_H
-#include <ESPAsyncWebServer.h>
-
 // For LittleFS support of SPIFFSEditor
 #ifdef ESP8266
 #include <FS.h>
 #define SPIFFS LittleFS
 #include <LittleFS.h>
 #endif
-
 #include <SPIFFSEditor.h>
+
+#define WEBSERVER_H
+#include <ESPAsyncWebServer.h>
+
 #include <Arduino.h>
 
 void initWebServer();
