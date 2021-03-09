@@ -79,8 +79,7 @@ bool sendTapInfoReport(int tapid)
             tap.active = flow.taps[tapid].active;
             tap.calibrating = flow.taps[tapid].calibrating;
 
-            const size_t capacity = JSON_OBJECT_SIZE(14);
-            DynamicJsonDocument doc(capacity);
+            StaticJsonDocument<512> doc;
 
             doc["api"] = (const char *)tap.api;
             doc["guid"] = (const char *)tap.guid;
@@ -97,7 +96,7 @@ bool sendTapInfoReport(int tapid)
             doc["active"] = tap.active;
             doc["calibrating"] = tap.calibrating;
 
-            std::string json;
+            String json;
             serializeJson(doc, json);
 
             if (sendReport(reportkey, json.c_str()))
@@ -143,8 +142,7 @@ bool sendPourReport(int tapid, float dispensed)
             pour.dispensed = dispensed;
             pour.remaining = flow.taps[tapid].remaining;
 
-            const size_t capacity = JSON_OBJECT_SIZE(10);
-            DynamicJsonDocument doc(capacity);
+            StaticJsonDocument<512> doc;
 
             doc["api"] = (const char *)pour.api;
             doc["guid"] = (const char *)pour.guid;
@@ -157,7 +155,7 @@ bool sendPourReport(int tapid, float dispensed)
             doc["dispensed"] = (const float)pour.dispensed;
             doc["remaining"] = (const float)pour.remaining;
 
-            std::string json;
+            String json;
             serializeJson(doc, json);
 
             if (sendReport(reportkey, json.c_str()))
@@ -200,8 +198,7 @@ bool sendKickReport(int tapid)
             strlcpy(kick.reporttype, reporttype[reportkey], sizeof(kick.reporttype));
             kick.tapid = tapid;
 
-            const size_t capacity = JSON_OBJECT_SIZE(7);
-            DynamicJsonDocument doc(capacity);
+            StaticJsonDocument<384> doc;
 
             doc["api"] = (const char *)kick.api;
             doc["guid"] = (const char *)kick.guid;
@@ -211,7 +208,7 @@ bool sendKickReport(int tapid)
             doc["reporttype"] = (const char *)kick.reporttype;
             doc["tapid"] = (const int)tapid;
 
-            std::string json;
+            String json;
             serializeJson(doc, json);
 
             if (sendReport(reportkey, json.c_str()))
@@ -252,8 +249,7 @@ bool sendCoolStateReport()
         strlcpy(cool.reporttype, reporttype[reportkey], sizeof(cool.reporttype));
         cool.coolstate = tstat.state;
 
-        const size_t capacity = JSON_OBJECT_SIZE(7);
-        DynamicJsonDocument doc(capacity);
+        StaticJsonDocument<384> doc;
 
         doc["api"] = (const char *)cool.api;
         doc["guid"] = (const char *)cool.guid;
@@ -261,9 +257,9 @@ bool sendCoolStateReport()
         doc["breweryname"] = (const char *)cool.breweryname;
         doc["kegeratorname"] = (const char *)cool.kegeratorname;
         doc["reporttype"] = (const char *)cool.reporttype;
-        doc["state"] = (const int)cool.coolstate;
+        doc["coolstate"] = (const int)cool.coolstate;
 
-        std::string json;
+        String json;
         serializeJson(doc, json);
 
         if (sendReport(reportkey, json.c_str()))
@@ -318,8 +314,7 @@ bool sendTempReport()
             temps.sensor[i].enabled = config.temps.enabled[i];
         }
 
-        const size_t capacity = JSON_ARRAY_SIZE(5) + 5 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(12);
-        DynamicJsonDocument doc(capacity);
+        StaticJsonDocument<1024> doc;
 
         doc["api"] = (const char *)temps.api;
         doc["guid"] = (const char *)temps.guid;
@@ -340,7 +335,7 @@ bool sendTempReport()
             doc["sensors"][i]["enabled"] = temps.sensor[i].enabled;
         }
 
-        std::string json;
+        String json;
         serializeJson(doc, json);
 
         if (sendReport(reportkey, json.c_str()))
