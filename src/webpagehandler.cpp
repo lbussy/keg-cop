@@ -53,7 +53,7 @@ void initWebServer()
 #ifdef ESP32
     Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.getHostname());
 #elif defined ESP8266
-    Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.hostname());
+    Log.verbose(F("Open: http://%s.local to view application." CR), .c_str());
 #else
     //
 #endif
@@ -147,8 +147,8 @@ void setJsonHandlers()
 #endif
 
 #if defined ESP32 || defined ESP8266
-                r["reason"] = rstReason(reset);
-                r["description"] = rstDescription(reset);
+                r["reason"] = rstReason();
+                r["description"] = rstDescription();
 #else
                 r["reason"] = "Unknown";
                 r["description"] = "Unknown";

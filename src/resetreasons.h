@@ -23,7 +23,9 @@ SOFTWARE. */
 #ifndef _RESETREASONS_H
 #define _RESETREASONS_H
 
-const char *rstReason(int index);
-const char *rstDescription(int index);
+#include <Arduino.h>
+
+const char *rstReason();
+const char *rstDescription();
 
 #endif // _RESETREASONS_H

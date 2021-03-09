@@ -220,15 +220,10 @@ void serialLoop()
                 const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2);
                 StaticJsonDocument<capacity> doc;
                 JsonObject r = doc.createNestedObject("r");
-#ifdef ESP32
-                const int reset = (int)esp_reset_reason();
-#elif defined ESP8266
-                const int reset = (int)ESP.getResetInfoPtr();
-#endif
 
 #if defined ESP32 || defined ESP8266
-                r["reason"] = rstReason(reset);
-                r["description"] = rstDescription(reset);
+                r["reason"] = rstReason();
+                r["description"] = rstDescription();
 #else
                 r["reason"] = "Unknown";
                 r["description"] = "Unknown";
