@@ -27,26 +27,31 @@ Size:
 -----
 
 ```
-const size_t capacity = JSON_OBJECT_SIZE(14) + 420;
-224+372 = 596
+256 or 512
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-const size_t capacity = JSON_OBJECT_SIZE(14) + 420;
-DynamicJsonDocument doc(capacity);
+// char* input;
+// size_t inputLength; (optional)
 
-const char* json = "{\"api\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"guid\":\"xxxxxxxx\",\"hostname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"breweryname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"kegeratorname\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"reporttype\":\"xxxxxxxxxxxxxxxx\",\"imperial\":false,\"tapid\":99,\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"ppu\":999999,\"remaining\":999.9999,\"capacity\":999.9999,\"active\":false,\"calibrating\":false}";
+StaticJsonDocument<256> doc;
 
-deserializeJson(doc, json);
+DeserializationError error = deserializeJson(doc, input, inputLength);
+
+if (error) {
+  Serial.print(F("deserializeJson() failed: "));
+  Serial.println(error.f_str());
+  return;
+}
 
 const char* api = doc["api"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* guid = doc["guid"]; // "xxxxxxxx"
 const char* hostname = doc["hostname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-const char* breweryname = doc["breweryname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-const char* kegeratorname = doc["kegeratorname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* breweryname = doc["breweryname"];
+const char* kegeratorname = doc["kegeratorname"];
 const char* reporttype = doc["reporttype"]; // "xxxxxxxxxxxxxxxx"
 bool imperial = doc["imperial"]; // false
 int tapid = doc["tapid"]; // 99
@@ -62,8 +67,7 @@ Serializing / Saving:
 ---------------------
 
 ```
-const size_t capacity = JSON_OBJECT_SIZE(14);
-DynamicJsonDocument doc(capacity);
+StaticJsonDocument<512> doc;
 
 doc["api"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["guid"] = "xxxxxxxx";
@@ -80,5 +84,5 @@ doc["capacity"] = 999.9999;
 doc["active"] = false;
 doc["calibrating"] = false;
 
-serializeJson(doc, Serial);
+serializeJson(doc, output);
 ```
