@@ -527,7 +527,7 @@ void setEditor()
 #ifdef ESP32
     server.addHandler(new SPIFFSEditor(FILESYSTEM, SPIFFSEDITUSER, SPIFFSEDITPW));
 #elif defined(ESP8266)
-    server.addHandler(new SPIFFSEditor(SPIFFSEDITUSER, SPIFFSEDITPW));
+    server.addHandler(new SPIFFSEditor(SPIFFSEDITUSER, SPIFFSEDITPW, FILESYSTEM));
 #endif
     server.on("/edit/", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->redirect("/edit");
