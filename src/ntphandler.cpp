@@ -27,41 +27,54 @@ void setClock()
     Ticker blinker;
     Log.notice(F("Entering blocking loop to get NTP time."));
     blinker.attach_ms(NTPBLINK, ntpBlinker);
-    configTime(GMT, 0, "pool.ntp.org", "time.nist.gov");
-    time_t nowSecs = time(nullptr);
-    time_t startSecs = time(nullptr);
+    unsigned long startSecs = millis() / 1000;
     int cycle = 0;
-    while (nowSecs < EPOCH_1_1_2019)
+#if LWIP_VERSION_MAJOR == 1
+    char * servers[SNTP_MAX_SERVERS] = {TIMESERVER};
+    for (int i = 0; servers[i]!='\0'; i++)
     {
-        if (nowSecs - startSecs > 9)
+        sntp_setservername(i, servers[i]);
+    }
+    sntp_set_timezone(0);
+    while (sntp_get_current_timestamp() == 0)
+    {
+        sntp_stop();
+        sntp_init();
+#else
+    while (time(nullptr) < SECS_1_1_2019)
+    {
+        configTime(THISTZ, TIMESERVER);
+#endif
+        if ((millis() / 1000) - startSecs > 9)
         {
             if (cycle > 9)
             {
-                Log.warning(F(CR "Unable to get time hack from %s, rebooting." CR), TIMESERVER);
-                resetController();
+#ifdef LOG_LEVEL
+                myPrintln();
+#endif
+                Log.warning(F("Unable to get time hack from server, restarting." CR));
+                blinker.detach();
+                ESP.restart();
+                return;
             }
-            if (Log.getLevel())
-                printCR(true);
+#ifdef LOG_LEVEL
+            myPrintln();
+#endif
             Log.verbose(F("Re-requesting time hack."));
-            configTime(GMT, 0, TIMESERVER);
-            startSecs = time(nullptr);
+            startSecs = millis() / 1000;
             cycle++;
         }
-        if (Log.getLevel())
-            printDot(true);
-        _delay(1000);
-#ifdef ESP8266
-        yield();
+#ifdef LOG_LEVEL
+        myPrint(F("."));
 #endif
-        nowSecs = time(nullptr);
+        delay(1000);
+        yield();
     }
     blinker.detach();
-    if (Log.getLevel())
-        printCR(true);
+#ifdef LOG_LEVEL
+    myPrintln();
+#endif
     Log.notice(F("NTP time set." CR));
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-    lastNTPUpdate = millis();
 }
 
 String getDTS()
