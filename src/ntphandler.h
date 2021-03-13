@@ -35,6 +35,7 @@ SOFTWARE. */
 #include "config.h"
 #include <Ticker.h>
 #include <ArduinoLog.h>
+#include <sntp.h>   // sntp_get_current_timestamp()
 
 void setClock();
 String getDTS();
