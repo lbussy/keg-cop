@@ -635,6 +635,7 @@ SOFTWARE. */
 // NTP Server
 //
 #ifndef TIMESERVER
+#define THISTZ TZ_Etc_GMT
 #define TIMESERVER "pool.ntp.org", "time.nist.gov"
 #endif
 //
