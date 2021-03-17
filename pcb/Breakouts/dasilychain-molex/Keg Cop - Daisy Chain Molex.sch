@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.6.2">
+<eagle version="9.5.2">
 <drawing>
 <settings>
-<setting alwaysvectorfont="yes"/>
+<setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
@@ -331,432 +331,70 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 </deviceset>
 </devicesets>
 </library>
-<library name="con-wago-500" urn="urn:adsk.eagle:library:195">
-<description>&lt;b&gt;Wago Screw Clamps&lt;/b&gt;&lt;p&gt;
-Grid 5.00 mm&lt;p&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<library name="SamacSys_Parts">
+<description>&lt;b&gt;https://componentsearchengine.com&lt;/b&gt;&lt;p&gt;
+&lt;author&gt;Created by SamacSys&lt;/author&gt;</description>
 <packages>
-<package name="W237-103" urn="urn:adsk.eagle:footprint:10678/1" library_version="2">
-<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
-<wire x1="4.093" y1="-2.255" x2="5.897" y2="-0.299" width="0.254" layer="51"/>
-<wire x1="-0.911" y1="-2.331" x2="0.994" y2="-0.299" width="0.254" layer="51"/>
-<wire x1="-5.991" y1="-2.306" x2="-3.984" y2="-0.299" width="0.254" layer="51"/>
-<wire x1="-7.489" y1="-5.481" x2="7.497" y2="-5.481" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="3.714" x2="7.497" y2="3.511" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="3.714" x2="-7.489" y2="3.714" width="0.1524" layer="21"/>
-<wire x1="-7.489" y1="-5.481" x2="-7.489" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="-7.489" y1="-3.093" x2="-5.889" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="-5.889" y1="-3.093" x2="-4.111" y2="-3.093" width="0.1524" layer="51"/>
-<wire x1="-4.111" y1="-3.093" x2="-0.885" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="0.893" y1="-3.093" x2="4.119" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="5.897" y1="-3.093" x2="7.497" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="-7.489" y1="-3.093" x2="-7.489" y2="3.511" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="-3.093" x2="7.497" y2="-5.481" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="3.511" x2="-7.489" y2="3.511" width="0.1524" layer="21"/>
-<wire x1="7.497" y1="3.511" x2="7.497" y2="-3.093" width="0.1524" layer="21"/>
-<wire x1="-7.489" y1="3.511" x2="-7.489" y2="3.714" width="0.1524" layer="21"/>
-<wire x1="-0.885" y1="-3.093" x2="0.893" y2="-3.093" width="0.1524" layer="51"/>
-<wire x1="4.119" y1="-3.093" x2="5.897" y2="-3.093" width="0.1524" layer="51"/>
-<circle x="-5" y="-1.29" radius="1.4986" width="0.1524" layer="51"/>
-<circle x="5.0076" y="-1.29" radius="1.4986" width="0.1524" layer="51"/>
-<circle x="-5" y="2.1898" radius="0.508" width="0.1524" layer="21"/>
-<circle x="5.0076" y="2.1898" radius="0.508" width="0.1524" layer="21"/>
-<circle x="0.0038" y="-1.29" radius="1.4986" width="0.1524" layer="51"/>
-<circle x="0.0038" y="2.1898" radius="0.508" width="0.1524" layer="21"/>
-<pad name="1" x="-5" y="-1.29" drill="1.1938" shape="long" rot="R90"/>
-<pad name="2" x="0" y="-1.29" drill="1.1938" shape="long" rot="R90"/>
-<pad name="3" x="5" y="-1.29" drill="1.1938" shape="long" rot="R90"/>
-<text x="-6.905" y="0.615" size="1.27" layer="51" ratio="10">1</text>
-<text x="-1.8504" y="0.5642" size="1.27" layer="51" ratio="10">2</text>
-<text x="3.1534" y="0.615" size="1.27" layer="51" ratio="10">3</text>
-<text x="-5.3048" y="-4.9476" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-5.6858" y="-7.4622" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<package name="0533240360">
+<description>&lt;b&gt;0533240360-1&lt;/b&gt;&lt;br&gt;
+</description>
+<pad name="1" x="0" y="0" drill="0.8" diameter="1.3"/>
+<pad name="2" x="-2" y="0" drill="0.8" diameter="1.3"/>
+<pad name="3" x="-4" y="0" drill="0.8" diameter="1.3"/>
+<hole x="2.05" y="1.1" drill="1.4"/>
+<text x="-1.95" y="-0.9" size="1.27" layer="25" align="center">&gt;NAME</text>
+<text x="-1.95" y="-0.9" size="1.27" layer="27" align="center">&gt;VALUE</text>
+<wire x1="-6.65" y1="1.7" x2="2.65" y2="1.7" width="0.1" layer="51"/>
+<wire x1="2.65" y1="1.7" x2="2.65" y2="-2.85" width="0.1" layer="51"/>
+<wire x1="2.65" y1="-2.85" x2="-6.65" y2="-2.85" width="0.1" layer="51"/>
+<wire x1="-6.65" y1="-2.85" x2="-6.65" y2="1.7" width="0.1" layer="51"/>
+<wire x1="-7.65" y1="2.8" x2="3.75" y2="2.8" width="0.1" layer="51"/>
+<wire x1="3.75" y1="2.8" x2="3.75" y2="-4.6" width="0.1" layer="51"/>
+<wire x1="3.75" y1="-4.6" x2="-7.65" y2="-4.6" width="0.1" layer="51"/>
+<wire x1="-7.65" y1="-4.6" x2="-7.65" y2="2.8" width="0.1" layer="51"/>
+<wire x1="1" y1="1.7" x2="-6.65" y2="1.7" width="0.2" layer="21"/>
+<wire x1="-6.65" y1="1.7" x2="-6.65" y2="-2.85" width="0.2" layer="21"/>
+<wire x1="-6.65" y1="-2.85" x2="2.65" y2="-2.85" width="0.2" layer="21"/>
+<wire x1="2.65" y1="-2.85" x2="2.65" y2="0" width="0.2" layer="21"/>
 </package>
 </packages>
-<packages3d>
-<package3d name="W237-103" urn="urn:adsk.eagle:package:10691/1" type="box" library_version="2">
-<description>WAGO SCREW CLAMP</description>
-<packageinstances>
-<packageinstance name="W237-103"/>
-</packageinstances>
-</package3d>
-</packages3d>
 <symbols>
-<symbol name="KL" urn="urn:adsk.eagle:symbol:10675/1" library_version="2">
-<circle x="1.27" y="0" radius="1.27" width="0.254" layer="94"/>
-<text x="0" y="0.889" size="1.778" layer="95" rot="R180">&gt;NAME</text>
-<pin name="KL" x="5.08" y="0" visible="off" length="short" direction="pas" rot="R180"/>
-</symbol>
-<symbol name="KL+V" urn="urn:adsk.eagle:symbol:10673/1" library_version="2">
-<circle x="1.27" y="0" radius="1.27" width="0.254" layer="94"/>
-<text x="-2.54" y="-3.683" size="1.778" layer="96">&gt;VALUE</text>
-<text x="0" y="0.889" size="1.778" layer="95" rot="R180">&gt;NAME</text>
-<pin name="KL" x="5.08" y="0" visible="off" length="short" direction="pas" rot="R180"/>
+<symbol name="0533240360">
+<wire x1="5.08" y1="2.54" x2="15.24" y2="2.54" width="0.254" layer="94"/>
+<wire x1="15.24" y1="-7.62" x2="15.24" y2="2.54" width="0.254" layer="94"/>
+<wire x1="15.24" y1="-7.62" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="5.08" y1="2.54" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
+<text x="16.51" y="7.62" size="1.778" layer="95" align="center-left">&gt;NAME</text>
+<text x="16.51" y="5.08" size="1.778" layer="96" align="center-left">&gt;VALUE</text>
+<pin name="1" x="0" y="-5.08" length="middle"/>
+<pin name="2" x="0" y="-2.54" length="middle"/>
+<pin name="3" x="0" y="0" length="middle"/>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="W237-103" urn="urn:adsk.eagle:component:10707/2" prefix="X" uservalue="yes" library_version="2">
-<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
+<deviceset name="0533240360" prefix="J">
+<description>&lt;b&gt;Conn Shrouded Header (4 Sides) HDR 3 POS 2mm Solder ST Thru-Hole Mi II&lt;/b&gt;&lt;p&gt;
+Source: &lt;a href="https://www.molex.com/pdm_docs/sd/533240260_sd.pdf"&gt; Datasheet &lt;/a&gt;</description>
 <gates>
-<gate name="-1" symbol="KL" x="0" y="5.08" addlevel="always"/>
-<gate name="-2" symbol="KL" x="0" y="0" addlevel="always"/>
-<gate name="-3" symbol="KL+V" x="0" y="-5.08" addlevel="always"/>
+<gate name="G$1" symbol="0533240360" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="W237-103">
-<connects>
-<connect gate="-1" pin="KL" pad="1"/>
-<connect gate="-2" pin="KL" pad="2"/>
-<connect gate="-3" pin="KL" pad="3"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:10691/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="MF" value="" constant="no"/>
-<attribute name="MPN" value="237-103" constant="no"/>
-<attribute name="OC_FARNELL" value="unknown" constant="no"/>
-<attribute name="OC_NEWARK" value="18M7116" constant="no"/>
-<attribute name="POPULARITY" value="5" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
-<library name="SparkFun-Resistors" urn="urn:adsk.eagle:library:532">
-<description>&lt;h3&gt;SparkFun Resistors&lt;/h3&gt;
-This library contains resistors. Reference designator:R. 
-&lt;br&gt;
-&lt;br&gt;
-We've spent an enormous amount of time creating and checking these footprints and parts, but it is &lt;b&gt; the end user's responsibility&lt;/b&gt; to ensure correctness and suitablity for a given componet or application. 
-&lt;br&gt;
-&lt;br&gt;If you enjoy using this library, please buy one of our products at &lt;a href=" www.sparkfun.com"&gt;SparkFun.com&lt;/a&gt;.
-&lt;br&gt;
-&lt;br&gt;
-&lt;b&gt;Licensing:&lt;/b&gt; Creative Commons ShareAlike 4.0 International - https://creativecommons.org/licenses/by-sa/4.0/ 
-&lt;br&gt;
-&lt;br&gt;
-You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
-<packages>
-<package name="AXIAL-0.3" urn="urn:adsk.eagle:footprint:39622/1" library_version="1">
-<description>&lt;h3&gt;AXIAL-0.3&lt;/h3&gt;
-&lt;p&gt;Commonly used for 1/4W through-hole resistors. 0.3" pitch between holes.&lt;/p&gt;</description>
-<wire x1="-2.54" y1="0.762" x2="2.54" y2="0.762" width="0.2032" layer="21"/>
-<wire x1="2.54" y1="0.762" x2="2.54" y2="0" width="0.2032" layer="21"/>
-<wire x1="2.54" y1="0" x2="2.54" y2="-0.762" width="0.2032" layer="21"/>
-<wire x1="2.54" y1="-0.762" x2="-2.54" y2="-0.762" width="0.2032" layer="21"/>
-<wire x1="-2.54" y1="-0.762" x2="-2.54" y2="0" width="0.2032" layer="21"/>
-<wire x1="-2.54" y1="0" x2="-2.54" y2="0.762" width="0.2032" layer="21"/>
-<wire x1="2.54" y1="0" x2="2.794" y2="0" width="0.2032" layer="21"/>
-<wire x1="-2.54" y1="0" x2="-2.794" y2="0" width="0.2032" layer="21"/>
-<pad name="P$1" x="-3.81" y="0" drill="0.9" diameter="1.8796"/>
-<pad name="P$2" x="3.81" y="0" drill="0.9" diameter="1.8796"/>
-<text x="0" y="1.016" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;Name</text>
-<text x="0" y="-1.016" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;Value</text>
-</package>
-<package name="AXIAL-0.1" urn="urn:adsk.eagle:footprint:39620/1" library_version="1">
-<description>&lt;h3&gt;AXIAL-0.1&lt;/h3&gt;
-&lt;p&gt;Commonly used for 1/4W through-hole resistors. 0.1" pitch between holes.&lt;/p&gt;</description>
-<wire x1="0" y1="-0.762" x2="0" y2="0" width="0.2032" layer="21"/>
-<wire x1="0" y1="0" x2="0" y2="0.762" width="0.2032" layer="21"/>
-<wire x1="0.254" y1="0" x2="0" y2="0" width="0.2032" layer="21"/>
-<wire x1="0" y1="0" x2="-0.254" y2="0" width="0.2032" layer="21"/>
-<pad name="P$1" x="-1.27" y="0" drill="0.9" diameter="1.8796"/>
-<pad name="P$2" x="1.27" y="0" drill="0.9" diameter="1.8796"/>
-<text x="0" y="1.143" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;Name</text>
-<text x="0" y="-1.143" size="0.6096" layer="21" font="vector" ratio="20" align="top-center">&gt;Value</text>
-</package>
-<package name="AXIAL-0.1-KIT" urn="urn:adsk.eagle:footprint:39621/1" library_version="1">
-<description>&lt;h3&gt;AXIAL-0.1-KIT&lt;/h3&gt;
-&lt;p&gt;Commonly used for 1/4W through-hole resistors. 0.1" pitch between holes.&lt;/p&gt;
-&lt;p&gt;&lt;b&gt;Warning:&lt;/b&gt; This is the KIT version of the AXIAL-0.1 package. This package has a smaller diameter top stop mask, which doesn't cover the diameter of the pad. This means only the bottom side of the pads' copper will be exposed. You'll only be able to solder to the bottom side.&lt;/p&gt;</description>
-<wire x1="0" y1="-0.762" x2="0" y2="0" width="0.2032" layer="21"/>
-<wire x1="0" y1="0" x2="0" y2="0.762" width="0.2032" layer="21"/>
-<wire x1="0.254" y1="0" x2="0" y2="0" width="0.2032" layer="21"/>
-<wire x1="0" y1="0" x2="-0.254" y2="0" width="0.2032" layer="21"/>
-<pad name="P$1" x="-1.27" y="0" drill="0.9" diameter="1.8796" stop="no"/>
-<pad name="P$2" x="1.27" y="0" drill="0.9" diameter="1.8796" stop="no"/>
-<text x="0" y="1.143" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;Name</text>
-<text x="0" y="-1.143" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;Value</text>
-<circle x="-1.27" y="0" radius="0.4572" width="0" layer="29"/>
-<circle x="-1.27" y="0" radius="1.016" width="0" layer="30"/>
-<circle x="1.27" y="0" radius="1.016" width="0" layer="30"/>
-<circle x="-1.27" y="0" radius="0.4572" width="0" layer="29"/>
-<circle x="1.27" y="0" radius="0.4572" width="0" layer="29"/>
-</package>
-<package name="AXIAL-0.3-KIT" urn="urn:adsk.eagle:footprint:39623/1" library_version="1">
-<description>&lt;h3&gt;AXIAL-0.3-KIT&lt;/h3&gt;
-&lt;p&gt;Commonly used for 1/4W through-hole resistors. 0.3" pitch between holes.&lt;/p&gt;
-&lt;p&gt;&lt;b&gt;Warning:&lt;/b&gt; This is the KIT version of the AXIAL-0.3 package. This package has a smaller diameter top stop mask, which doesn't cover the diameter of the pad. This means only the bottom side of the pads' copper will be exposed. You'll only be able to solder to the bottom side.&lt;/p&gt;</description>
-<wire x1="-2.54" y1="1.27" x2="2.54" y2="1.27" width="0.254" layer="21"/>
-<wire x1="2.54" y1="1.27" x2="2.54" y2="0" width="0.254" layer="21"/>
-<wire x1="2.54" y1="0" x2="2.54" y2="-1.27" width="0.254" layer="21"/>
-<wire x1="2.54" y1="-1.27" x2="-2.54" y2="-1.27" width="0.254" layer="21"/>
-<wire x1="-2.54" y1="-1.27" x2="-2.54" y2="0" width="0.254" layer="21"/>
-<wire x1="-2.54" y1="0" x2="-2.54" y2="1.27" width="0.254" layer="21"/>
-<wire x1="2.54" y1="0" x2="2.794" y2="0" width="0.254" layer="21"/>
-<wire x1="-2.54" y1="0" x2="-2.794" y2="0" width="0.254" layer="21"/>
-<pad name="P$1" x="-3.81" y="0" drill="1.016" diameter="2.032" stop="no"/>
-<pad name="P$2" x="3.81" y="0" drill="1.016" diameter="2.032" stop="no"/>
-<text x="0" y="1.524" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
-<text x="0" y="-1.524" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;VALUE</text>
-<polygon width="0.127" layer="30">
-<vertex x="3.8201" y="-0.9449" curve="-90"/>
-<vertex x="2.8652" y="-0.0152" curve="-90.011749"/>
-<vertex x="3.8176" y="0.9602" curve="-90"/>
-<vertex x="4.7676" y="-0.0178" curve="-90.024193"/>
-</polygon>
-<polygon width="0.127" layer="29">
-<vertex x="3.8176" y="-0.4369" curve="-90.012891"/>
-<vertex x="3.3731" y="-0.0127" curve="-90"/>
-<vertex x="3.8176" y="0.4546" curve="-90"/>
-<vertex x="4.2595" y="-0.0025" curve="-90.012967"/>
-</polygon>
-<polygon width="0.127" layer="30">
-<vertex x="-3.8075" y="-0.9525" curve="-90"/>
-<vertex x="-4.7624" y="-0.0228" curve="-90.011749"/>
-<vertex x="-3.81" y="0.9526" curve="-90"/>
-<vertex x="-2.86" y="-0.0254" curve="-90.024193"/>
-</polygon>
-<polygon width="0.127" layer="29">
-<vertex x="-3.81" y="-0.4445" curve="-90.012891"/>
-<vertex x="-4.2545" y="-0.0203" curve="-90"/>
-<vertex x="-3.81" y="0.447" curve="-90"/>
-<vertex x="-3.3681" y="-0.0101" curve="-90.012967"/>
-</polygon>
-</package>
-<package name="0603" urn="urn:adsk.eagle:footprint:39615/1" library_version="1">
-<description>&lt;p&gt;&lt;b&gt;Generic 1608 (0603) package&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;0.2mm courtyard excess rounded to nearest 0.05mm.&lt;/p&gt;</description>
-<wire x1="-1.6" y1="0.7" x2="1.6" y2="0.7" width="0.0508" layer="39"/>
-<wire x1="1.6" y1="0.7" x2="1.6" y2="-0.7" width="0.0508" layer="39"/>
-<wire x1="1.6" y1="-0.7" x2="-1.6" y2="-0.7" width="0.0508" layer="39"/>
-<wire x1="-1.6" y1="-0.7" x2="-1.6" y2="0.7" width="0.0508" layer="39"/>
-<wire x1="-0.356" y1="0.432" x2="0.356" y2="0.432" width="0.1016" layer="51"/>
-<wire x1="-0.356" y1="-0.419" x2="0.356" y2="-0.419" width="0.1016" layer="51"/>
-<smd name="1" x="-0.85" y="0" dx="1.1" dy="1" layer="1"/>
-<smd name="2" x="0.85" y="0" dx="1.1" dy="1" layer="1"/>
-<text x="0" y="0.762" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
-<text x="0" y="-0.762" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;VALUE</text>
-<rectangle x1="-0.8382" y1="-0.4699" x2="-0.3381" y2="0.4801" layer="51"/>
-<rectangle x1="0.3302" y1="-0.4699" x2="0.8303" y2="0.4801" layer="51"/>
-<rectangle x1="-0.1999" y1="-0.3" x2="0.1999" y2="0.3" layer="35"/>
-</package>
-</packages>
-<packages3d>
-<package3d name="AXIAL-0.3" urn="urn:adsk.eagle:package:39658/1" type="box" library_version="1">
-<description>AXIAL-0.3
-Commonly used for 1/4W through-hole resistors. 0.3" pitch between holes.</description>
-<packageinstances>
-<packageinstance name="AXIAL-0.3"/>
-</packageinstances>
-</package3d>
-<package3d name="AXIAL-0.1" urn="urn:adsk.eagle:package:39656/1" type="box" library_version="1">
-<description>AXIAL-0.1
-Commonly used for 1/4W through-hole resistors. 0.1" pitch between holes.</description>
-<packageinstances>
-<packageinstance name="AXIAL-0.1"/>
-</packageinstances>
-</package3d>
-<package3d name="AXIAL-0.1-KIT" urn="urn:adsk.eagle:package:39653/1" type="box" library_version="1">
-<description>AXIAL-0.1-KIT
-Commonly used for 1/4W through-hole resistors. 0.1" pitch between holes.
-Warning: This is the KIT version of the AXIAL-0.1 package. This package has a smaller diameter top stop mask, which doesn't cover the diameter of the pad. This means only the bottom side of the pads' copper will be exposed. You'll only be able to solder to the bottom side.</description>
-<packageinstances>
-<packageinstance name="AXIAL-0.1-KIT"/>
-</packageinstances>
-</package3d>
-<package3d name="AXIAL-0.3-KIT" urn="urn:adsk.eagle:package:39661/1" type="box" library_version="1">
-<description>AXIAL-0.3-KIT
-Commonly used for 1/4W through-hole resistors. 0.3" pitch between holes.
-Warning: This is the KIT version of the AXIAL-0.3 package. This package has a smaller diameter top stop mask, which doesn't cover the diameter of the pad. This means only the bottom side of the pads' copper will be exposed. You'll only be able to solder to the bottom side.</description>
-<packageinstances>
-<packageinstance name="AXIAL-0.3-KIT"/>
-</packageinstances>
-</package3d>
-<package3d name="0603" urn="urn:adsk.eagle:package:39650/1" type="box" library_version="1">
-<description>Generic 1608 (0603) package
-0.2mm courtyard excess rounded to nearest 0.05mm.</description>
-<packageinstances>
-<packageinstance name="0603"/>
-</packageinstances>
-</package3d>
-</packages3d>
-<symbols>
-<symbol name="RESISTOR" urn="urn:adsk.eagle:symbol:39614/1" library_version="1">
-<wire x1="-2.54" y1="0" x2="-2.159" y2="1.016" width="0.1524" layer="94"/>
-<wire x1="-2.159" y1="1.016" x2="-1.524" y2="-1.016" width="0.1524" layer="94"/>
-<wire x1="-1.524" y1="-1.016" x2="-0.889" y2="1.016" width="0.1524" layer="94"/>
-<wire x1="-0.889" y1="1.016" x2="-0.254" y2="-1.016" width="0.1524" layer="94"/>
-<wire x1="-0.254" y1="-1.016" x2="0.381" y2="1.016" width="0.1524" layer="94"/>
-<wire x1="0.381" y1="1.016" x2="1.016" y2="-1.016" width="0.1524" layer="94"/>
-<wire x1="1.016" y1="-1.016" x2="1.651" y2="1.016" width="0.1524" layer="94"/>
-<wire x1="1.651" y1="1.016" x2="2.286" y2="-1.016" width="0.1524" layer="94"/>
-<wire x1="2.286" y1="-1.016" x2="2.54" y2="0" width="0.1524" layer="94"/>
-<text x="0" y="1.524" size="1.778" layer="95" font="vector" align="bottom-center">&gt;NAME</text>
-<text x="0" y="-1.524" size="1.778" layer="96" font="vector" align="top-center">&gt;VALUE</text>
-<pin name="2" x="5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1" rot="R180"/>
-<pin name="1" x="-5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="1KOHM" urn="urn:adsk.eagle:component:39763/1" prefix="R" library_version="1">
-<description>&lt;h3&gt;1kΩ resistor&lt;/h3&gt;
-&lt;p&gt;A resistor is a passive two-terminal electrical component that implements electrical resistance as a circuit element. Resistors act to reduce current flow, and, at the same time, act to lower voltage levels within circuits. - Wikipedia&lt;/p&gt;</description>
-<gates>
-<gate name="G$1" symbol="RESISTOR" x="0" y="0"/>
-</gates>
-<devices>
-<device name="-HORIZ-1/4W-1%" package="AXIAL-0.3">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39658/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-12182"/>
-<attribute name="VALUE" value="1k"/>
-</technology>
-</technologies>
-</device>
-<device name="-VERT-1/4W-1%" package="AXIAL-0.1">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39656/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-12182"/>
-<attribute name="VALUE" value="1k"/>
-</technology>
-</technologies>
-</device>
-<device name="-VERT_KIT-1/4W-1%" package="AXIAL-0.1-KIT">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39653/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-12182"/>
-<attribute name="VALUE" value="1k"/>
-</technology>
-</technologies>
-</device>
-<device name="-HORIZ_KIT-1/4W-1%" package="AXIAL-0.3-KIT">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39661/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-12182"/>
-<attribute name="VALUE" value="1k"/>
-</technology>
-</technologies>
-</device>
-<device name="-VERT-1/4W-5%" package="AXIAL-0.1">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39656/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-08380"/>
-<attribute name="VALUE" value="1k"/>
-</technology>
-</technologies>
-</device>
-<device name="-VERT_KIT-1/4W-5%" package="AXIAL-0.1-KIT">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39653/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-08380"/>
-<attribute name="VALUE" value="1k"/>
-</technology>
-</technologies>
-</device>
-<device name="-HORIZ-1/4W-5%" package="AXIAL-0.3">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39658/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-08380"/>
-<attribute name="VALUE" value="1k"/>
-</technology>
-</technologies>
-</device>
-<device name="-HORIZ_KIT-1/4W-5%" package="AXIAL-0.3-KIT">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39661/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-08380"/>
-<attribute name="VALUE" value="1k"/>
-</technology>
-</technologies>
-</device>
-<device name="-VERT-1/6W-5%" package="AXIAL-0.1">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39656/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="PROD_ID" value="RES-09769"/>
-<attribute name="VALUE" value="1k"/>
-</technology>
-</technologies>
-</device>
-<device name="-0603-1/10W-1%" package="0603">
+<device name="" package="0533240360">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
 </connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:39650/1"/>
-</package3dinstances>
 <technologies>
 <technology name="">
-<attribute name="PROD_ID" value="RES-07856"/>
-<attribute name="VALUE" value="1k"/>
+<attribute name="ARROW_PART_NUMBER" value="0533240360" constant="no"/>
+<attribute name="ARROW_PRICE-STOCK" value="https://www.arrow.com/en/products/0533240360/molex" constant="no"/>
+<attribute name="DESCRIPTION" value="Conn Shrouded Header (4 Sides) HDR 3 POS 2mm Solder ST Thru-Hole Mi II" constant="no"/>
+<attribute name="HEIGHT" value="6.2mm" constant="no"/>
+<attribute name="MANUFACTURER_NAME" value="Molex" constant="no"/>
+<attribute name="MANUFACTURER_PART_NUMBER" value="0533240360" constant="no"/>
+<attribute name="MOUSER_PART_NUMBER" value="N/A" constant="no"/>
+<attribute name="MOUSER_PRICE-STOCK" value="https://www.mouser.co.uk/ProductDetail/Molex/0533240360?qs=PBcRNPEHKsqkWdh5nxv5XA%3D%3D" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -776,8 +414,7 @@ Warning: This is the KIT version of the AXIAL-0.3 package. This package has a sm
 <parts>
 <part name="IN" library="con-tycoelectronics" library_urn="urn:adsk.eagle:library:193" deviceset="RJ45" device="" package3d_urn="urn:adsk.eagle:package:10660/1" technology="-8X"/>
 <part name="OUT" library="con-tycoelectronics" library_urn="urn:adsk.eagle:library:193" deviceset="RJ45" device="" package3d_urn="urn:adsk.eagle:package:10660/1" technology="-8X"/>
-<part name="FLOW" library="con-wago-500" library_urn="urn:adsk.eagle:library:195" deviceset="W237-103" device="" package3d_urn="urn:adsk.eagle:package:10691/1"/>
-<part name="R1" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="1KOHM" device="-HORIZ-1/4W-5%" package3d_urn="urn:adsk.eagle:package:39658/1" value="1k"/>
+<part name="J1" library="SamacSys_Parts" deviceset="0533240360" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -792,19 +429,9 @@ Warning: This is the KIT version of the AXIAL-0.3 package. This package has a sm
 <attribute name="NAME" x="50.8" y="66.04" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="64.008" y="71.12" size="1.778" layer="96"/>
 </instance>
-<instance part="FLOW" gate="-1" x="96.52" y="55.88" smashed="yes" rot="R180">
-<attribute name="NAME" x="96.52" y="54.991" size="1.778" layer="95"/>
-</instance>
-<instance part="FLOW" gate="-2" x="96.52" y="50.8" smashed="yes" rot="R180">
-<attribute name="NAME" x="96.52" y="49.911" size="1.778" layer="95"/>
-</instance>
-<instance part="FLOW" gate="-3" x="96.52" y="45.72" smashed="yes" rot="R180">
-<attribute name="VALUE" x="99.06" y="49.403" size="1.778" layer="96" rot="R180"/>
-<attribute name="NAME" x="96.52" y="44.831" size="1.778" layer="95"/>
-</instance>
-<instance part="R1" gate="G$1" x="78.74" y="50.8" smashed="yes">
-<attribute name="NAME" x="78.74" y="52.324" size="1.778" layer="95" font="vector" align="bottom-center"/>
-<attribute name="VALUE" x="78.74" y="49.276" size="1.778" layer="96" font="vector" align="top-center"/>
+<instance part="J1" gate="G$1" x="96.52" y="53.34" smashed="yes">
+<attribute name="NAME" x="113.03" y="60.96" size="1.778" layer="95" align="center-left"/>
+<attribute name="VALUE" x="113.03" y="58.42" size="1.778" layer="96" align="center-left"/>
 </instance>
 </instances>
 <busses>
@@ -842,10 +469,12 @@ Warning: This is the KIT version of the AXIAL-0.3 package. This package has a sm
 <junction x="58.42" y="63.5"/>
 <wire x1="58.42" y1="63.5" x2="53.34" y2="63.5" width="0.1524" layer="91"/>
 <junction x="71.12" y="63.5"/>
-<pinref part="FLOW" gate="-3" pin="KL"/>
-<wire x1="91.44" y1="45.72" x2="71.12" y2="45.72" width="0.1524" layer="91"/>
 <junction x="71.12" y="45.72"/>
-<label x="86.36" y="45.72" size="1.778" layer="95"/>
+<label x="93.98" y="38.1" size="1.778" layer="95"/>
+<pinref part="J1" gate="G$1" pin="1"/>
+<wire x1="96.52" y1="48.26" x2="83.82" y2="48.26" width="0.1524" layer="91"/>
+<wire x1="83.82" y1="48.26" x2="83.82" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="83.82" y1="45.72" x2="71.12" y2="45.72" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="DATA0" class="0">
@@ -853,8 +482,8 @@ Warning: This is the KIT version of the AXIAL-0.3 package. This package has a sm
 <pinref part="IN" gate="G$1" pin="2"/>
 <wire x1="68.58" y1="35.56" x2="68.58" y2="50.8" width="0.1524" layer="91"/>
 <label x="86.36" y="50.8" size="1.778" layer="95"/>
-<pinref part="R1" gate="G$1" pin="1"/>
-<wire x1="68.58" y1="50.8" x2="73.66" y2="50.8" width="0.1524" layer="91"/>
+<pinref part="J1" gate="G$1" pin="2"/>
+<wire x1="68.58" y1="50.8" x2="96.52" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="5VD" class="0">
@@ -866,10 +495,12 @@ Warning: This is the KIT version of the AXIAL-0.3 package. This package has a sm
 <wire x1="66.04" y1="55.88" x2="68.58" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="OUT" gate="G$1" pin="7"/>
 <wire x1="68.58" y1="55.88" x2="68.58" y2="66.04" width="0.1524" layer="91"/>
-<pinref part="FLOW" gate="-1" pin="KL"/>
-<wire x1="91.44" y1="55.88" x2="68.58" y2="55.88" width="0.1524" layer="91"/>
 <junction x="68.58" y="55.88"/>
-<label x="86.36" y="55.88" size="1.778" layer="95"/>
+<label x="93.98" y="55.88" size="1.778" layer="95"/>
+<wire x1="91.44" y1="55.88" x2="68.58" y2="55.88" width="0.1524" layer="91"/>
+<pinref part="J1" gate="G$1" pin="3"/>
+<wire x1="91.44" y1="55.88" x2="91.44" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="53.34" x2="96.52" y2="53.34" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="DATA1" class="0">
@@ -890,19 +521,9 @@ Warning: This is the KIT version of the AXIAL-0.3 package. This package has a sm
 <wire x1="60.96" y1="50.8" x2="60.96" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$1" class="0">
-<segment>
-<pinref part="FLOW" gate="-2" pin="KL"/>
-<wire x1="91.44" y1="50.8" x2="83.82" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="R1" gate="G$1" pin="2"/>
-</segment>
-</net>
 </nets>
 </sheet>
 </sheets>
-<errors>
-<approved hash="113,1,96.6296,55.88,FLOW,,,,,"/>
-</errors>
 </schematic>
 </drawing>
 <compatibility>
