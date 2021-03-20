@@ -50,13 +50,7 @@ void initWebServer()
     server.begin();
 
     Log.notice(F("Async HTTP server started on port %l." CR), PORT);
-#ifdef ESP32
     Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.getHostname());
-#elif defined ESP8266
-    Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.hostname().c_str());
-#else
-    //
-#endif
 }
 
 void setRegPageAliases()
@@ -140,13 +134,8 @@ void setJsonHandlers()
         StaticJsonDocument<capacity> doc;
         JsonObject r = doc.createNestedObject("r");
 
-#if defined ESP32 || defined ESP8266
-                r["reason"] = rstReason();
-                r["description"] = rstDescription();
-#else
-                r["reason"] = "Unknown";
-                r["description"] = "Unknown";
-#endif
+        r["reason"] = rstReason();
+        r["description"] = rstDescription();
 
         String resetreason;
         serializeJson(doc, resetreason);
@@ -164,15 +153,11 @@ void setJsonHandlers()
         uint32_t free;
         uint16_t max;
         uint8_t frag;
-#ifdef ESP8266
-        ESP.getHeapStats(&free, &max, &frag);
-#elif defined ESP32
         multi_heap_info_t info;
         heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
         free = info.total_free_bytes;
         max = info.largest_free_block;
         frag = 100 - (max * 100) / free;
-#endif
 
         h["free"] = (const uint32_t)free;
         h["max"] = (const uint16_t)max;
@@ -266,7 +251,6 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-#if KCWEIGH == false
     server.on("/pulses/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the pulses json
         Log.verbose(F("Serving /pulses/." CR));
@@ -287,7 +271,6 @@ void setJsonHandlers()
         request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
     });
-#endif
 
     server.on("/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Serving /sensors/." CR));
@@ -341,7 +324,6 @@ void setJsonHandlers()
 
 void setSettingsAliases()
 {
-#if KCWEIGH == false
     server.on("/settings/tapcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/tapcontrol/." CR));
         if (handleTapPost(request))
@@ -375,7 +357,6 @@ void setSettingsAliases()
         Log.verbose(F("Invalid method to /settings/tapcal/." CR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
-#endif
 
     server.on("/settings/controller/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /settings/controller/." CR));
@@ -474,7 +455,6 @@ void setSettingsAliases()
         }
     });
 
-#if KCWEIGH == false
     server.on("/setcalmode/", HTTP_POST, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing post to /setcalmode/." CR));
         if (handleSetCalMode(request))
@@ -491,7 +471,6 @@ void setSettingsAliases()
         Log.verbose(F("Invalid method to /setcalmode/." CR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
-#endif
 
     server.on("/settings/cloudurl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Invalid method to /settings/cloudurl/." CR));
@@ -524,11 +503,7 @@ void setSettingsAliases()
 void setEditor()
 {
     // Setup FILESYSTEM editor
-#ifdef ESP32
     server.addHandler(new SPIFFSEditor(FILESYSTEM, SPIFFSEDITUSER, SPIFFSEDITPW));
-#elif defined(ESP8266)
-    server.addHandler(new SPIFFSEditor(SPIFFSEDITUSER, SPIFFSEDITPW, FILESYSTEM));
-#endif
     server.on("/edit/", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->redirect("/edit");
     });
@@ -837,15 +812,8 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
         if (hostnamechanged)
         { // We reset hostname, process
             hostnamechanged = false;
-#ifdef ESP8266
-            wifi_station_set_hostname(config.hostname);
-            MDNS.setHostname(config.hostname);
-            MDNS.notifyAPChange();
-            MDNS.announce();
-#elif defined ESP32
             tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.hostname);
             mdnsreset();
-#endif
             Log.verbose(F("POSTed new mDNSid, reset mDNS stack." CR));
         }
     }

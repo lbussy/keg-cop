@@ -25,14 +25,10 @@ SOFTWARE. */
 
 #include "serialhandler.h"
 #include "config.h"
-#include <ArduinoJson.h>
 
-#ifdef ESP32
+#include <ArduinoJson.h>
 #include <SPIFFS.h>
 #include <FS.h>
-#elif defined ESP8266
-#include <LittleFS.h>
-#endif
 
 #define CAP_CONF 1532
 
@@ -54,7 +50,6 @@ struct CopConfig
     bool imperial;
     bool serial;
     bool tapsolenoid;
-    bool scale;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;

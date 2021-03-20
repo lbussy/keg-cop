@@ -17,8 +17,7 @@ JSON Definition:
 		"kegeratorname": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"imperial": false,
 		"serial": false,
-		"tapsolenoid": false,
-		"scale": false
+		"tapsolenoid": false
 	},
 	"temps": {
 		"setpoint": 100,
@@ -86,7 +85,6 @@ const char* copconfig_kegeratorname = copconfig["kegeratorname"];
 bool copconfig_imperial = copconfig["imperial"]; // false
 bool copconfig_serial = copconfig["serial"]; // false
 bool copconfig_tapsolenoid = copconfig["tapsolenoid"]; // false
-bool copconfig_scale = copconfig["scale"]; // false
 
 JsonObject temps = doc["temps"];
 int temps_setpoint = temps["setpoint"]; // 100
@@ -135,7 +133,6 @@ copconfig["kegeratorname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 copconfig["imperial"] = false;
 copconfig["serial"] = false;
 copconfig["tapsolenoid"] = false;
-copconfig["scale"] = false;
 
 JsonObject temps = doc.createNestedObject("temps");
 temps["setpoint"] = 100;

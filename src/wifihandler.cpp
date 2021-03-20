@@ -116,16 +116,9 @@ void doWiFi(bool dontUseStoredCreds)
         else
         {
             // We finished with portal (We were configured)
-#ifdef ESP8266
-            WiFi.setSleepMode(WIFI_NONE_SLEEP); // Make sure sleep is disabled
-#endif
             blinker.detach();        // Turn off blinker
             digitalWrite(LED, HIGH); // Turn off LED
-#ifdef ESP8266
-            WiFi.hostname(config.hostname);
-#elif defined ESP32
             WiFi.setHostname(config.hostname);
-#endif
         }
     }
 
@@ -135,11 +128,7 @@ void doWiFi(bool dontUseStoredCreds)
             Log.notice(F("Saving custom hostname configuration: %s." CR), hostname.getValue());
             strlcpy(config.hostname, hostname.getValue(), sizeof(config.hostname));
             saveConfig();
-#ifdef ESP8266
-            WiFi.hostname(config.hostname);
-#elif defined ESP32
             WiFi.setHostname(config.hostname);
-#endif
         }
     }
 

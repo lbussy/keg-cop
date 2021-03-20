@@ -71,13 +71,11 @@ void setup()
 
     setClock(); // Set NTP Time
 
-#if KCWEIGH == false
     // Initialize flowmeters before checking for FILESYSTEM update
     if (initFlow())
         Log.notice(F("Flowmeters loaded." CR));
     else
         Log.error(F("Unable to load flowmeters." CR));
-#endif
 
     execspiffs(); // Check for pending FILESYSTEM update
 
@@ -104,11 +102,9 @@ void loop()
     Ticker doControl;
     doControl.attach(TEMPLOOP, controlLoop);
 
-#if KCWEIGH == false
     // Log pours
     Ticker logPour;
     logPour.attach(TAPLOOP, logFlow);
-#endif
 
     // Poll for server version
     Ticker getThatVersion;
