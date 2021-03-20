@@ -22,12 +22,6 @@ SOFTWARE. */
 
 #include "execota.h"
 
-#ifdef ESP8266
-#if LWIP_VERSION_MAJOR == 2
-#warning "Remember: You are using lwIP v2.x and this causes filesystem OTA to act weird."
-#endif
-#endif
-
 void execfw()
 {
     Log.notice(F("Starting the Firmware OTA pull, will reboot without notice." CR));
@@ -43,11 +37,6 @@ void execfw()
     saveConfig();
     saveFlowConfig();
 
-#ifdef ESP8266
-    Log.verbose(F("Pulling Firmware from: %s" CR), F(FIRMWAREURL));
-    WiFiClient _client;
-    t_httpUpdate_return ret = ESPhttpUpdate.update(_client, F(FIRMWAREURL), "0");
-#elif defined ESP32
     Log.verbose(F("Pulling Firmware from: %s" CR), F(FIRMWAREURL));
     LCBUrl lcburl;
     lcburl.setUrl(FIRMWAREURL);
@@ -55,7 +44,6 @@ void execfw()
     strlcpy(host, lcburl.getHost().c_str(), sizeof(host));
     strlcpy(path, lcburl.getPath().c_str(), sizeof(path));
     HTTPUpdateResult ret = execFirmwareOTA(host, lcburl.getPort(), path);
-#endif
 
     switch (ret)
     {
@@ -117,7 +105,6 @@ void execspiffs()
         // Stop web server before OTA update - will restart on reset
         stopWebServer();
 
-#ifdef ESP32
         Log.verbose(F("Pulling Filesystem from: %s" CR), F(SPIFFSURL));
         LCBUrl lcburl;
         lcburl.setUrl(SPIFFSURL);
@@ -125,11 +112,6 @@ void execspiffs()
         strlcpy(host, lcburl.getHost().c_str(), sizeof(host));
         strlcpy(path, lcburl.getPath().c_str(), sizeof(path));
         HTTPUpdateResult ret = execSPIFFSOTA(host, lcburl.getPort(), path);
-#elif defined ESP8266
-        Log.verbose(F("Pulling Filesystem from: %s" CR), F(LITTLEFSURL));
-        WiFiClient client;
-        t_httpUpdate_return ret = ESPhttpUpdate.updateFS(client, F(LITTLEFSURL), "");
-#endif
 
         switch (ret)
         {

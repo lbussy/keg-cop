@@ -38,12 +38,7 @@ SOFTWARE. */
 #include "mdnshandler.h"
 #include "wifihandler.h"
 
-#ifdef ESP32
 #include <SPIFFS.h>
-#elif defined ESP8266
-#include <LittleFS.h>
-#endif
-
 #include <WiFiManager.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>
