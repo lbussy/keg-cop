@@ -29,16 +29,7 @@ bool __attribute__((unused)) queueStateChange;          // Store pending tstat s
 void _delay(unsigned long ulDelay)
 {
     // Safe semi-blocking delay
-#ifdef ESP32
     vTaskDelay(ulDelay); // Builtin to ESP32
-#elif defined ESP8266
-    unsigned long ulNow = millis();
-    unsigned long ulThen = ulNow + ulDelay;
-    while (ulThen > millis())
-    {
-        yield(); // ESP8266 needs to yield()
-    }
-#endif
 }
 
 void resetController()
@@ -189,9 +180,6 @@ void printDebug()
 
 void printDebug(const char *message)
 {
-#ifdef ESP8266 // TODO: Handle this for ESP8266
-    // ESP.getHeapStats(&free, &max, &frag);
-#elif defined ESP32
     // total_free_bytes;      ///<  Total free bytes in the heap. Equivalent to multi_free_heap_size().
     // total_allocated_bytes; ///<  Total bytes allocated to data in the heap.
     // largest_free_block;    ///<  Size of largest free block in the heap. This is the largest malloc-able size.
@@ -213,7 +201,6 @@ void printDebug(const char *message)
     else
         Log.verbose(F("[MEM] Free Heap: %l | Largest Free Block: %l | Fragments: %d -> %s" CR), free, max, frag, message);
     flush(true);
-#endif
 }
 
 double convertFtoC(double F)
@@ -275,16 +262,10 @@ std::string addThousandSeparators(std::string value, char thousandSep = ',', cha
 
 void getGuid(char *str, size_t len)
 {
-    // Return (G)UID for ESP8266 or ESP32
-    // From: https://forum.arduino.cc/index.php?topic=613549.0
     uint32_t chipID;
-#ifdef ESP8266
-    chipID = ESP.getChipId();
-#elif ESP32
     uint64_t macAddress = ESP.getEfuseMac();
     uint64_t macAddressTrunc = macAddress << 40;
     chipID = macAddressTrunc >> 40;
-#endif
     snprintf(str, len, "%08X", chipID);
     str[len - 1] = '\0';
 }

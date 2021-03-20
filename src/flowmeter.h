@@ -28,12 +28,7 @@ SOFTWARE. */
 #include "jsonconfig.h"
 #include "kegscreen.h"
 
-#ifdef ESP32
 #include <SPIFFS.h>
-#elif defined ESP8266
-#include <LittleFS.h>
-#endif
-
 #include <ArduinoJson.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>
