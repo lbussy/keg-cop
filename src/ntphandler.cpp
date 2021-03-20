@@ -29,22 +29,10 @@ void setClock()
     blinker.attach_ms(NTPBLINK, ntpBlinker);
     unsigned long startSecs = millis() / 1000;
     int cycle = 0;
-#if LWIP_VERSION_MAJOR == 1
-    char * servers[SNTP_MAX_SERVERS] = {TIMESERVER};
-    for (int i = 0; servers[i]!='\0'; i++)
+
+    while (time(nullptr) < 1577836800) // 1577836800 = 1/1/2020
     {
-        sntp_setservername(i, servers[i]);
-    }
-    sntp_set_timezone(0);
-    while (sntp_get_current_timestamp() == 0)
-    {
-        sntp_stop();
-        sntp_init();
-#else
-    while (time(nullptr) < SECS_1_1_2019)
-    {
-        configTime(THISTZ, TIMESERVER);
-#endif
+        configTime(0, 0, TIMESERVER);
         if ((millis() / 1000) - startSecs > 9)
         {
             if (cycle > 9)

@@ -36,24 +36,11 @@ SOFTWARE. */
 #include "thermostat.h"
 #include "resetreasons.h"
 
-#ifdef ESP8266
-#include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
-#elif defined ESP32
 #include <WiFi.h>
 #include <ESPmDNS.h>
-#endif
-
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
-
-// For LittleFS support of SPIFFSEditor
-#ifdef ESP8266
-#include <FS.h>
-#define SPIFFS LittleFS
-#include <LittleFS.h>
-#endif
 #include <SPIFFSEditor.h>
 
 #define WEBSERVER_H
