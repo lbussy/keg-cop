@@ -141,7 +141,7 @@ void logFlow()
                 lastPulseTime[i] = millis();
                 interrupts();
 
-                if (pulseCount < SMALLPOUR)
+                if (isSmallPour(pulseCount, i))
                 { // Discard a small pour
                     Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                     // Since we don't do anything with pulseCount here, we're ignoring it
@@ -168,6 +168,31 @@ void logFlow()
         {
             Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CR), pulse[i], i, flow.taps[i].pin);
         }
+    }
+}
+
+bool isSmallPour(unsigned int count, int tap)
+{
+    // Small Pour Detector - Use SMALLPOUR as a constant volume to factor
+    // with the PPU value.  If pour < SMALLPOUR then it will be ignored.
+
+    // Choose ounces per gallon or ounces per liter
+    double divisor = (config.copconfig.imperial) ? 128 : 33.8;
+    // Calculate pulses (smallpour) < which = small pour (not logged)
+    const double smallpour = ((double)flow.taps[tap].ppu / divisor) * SMALLPOUR;
+
+    // Decide if this is a small pour
+    const bool isSmallPour = (unsigned int)(round(smallpour)) > count;
+
+    if (isSmallPour)
+    {
+        Log.verbose(F("Tap %d showed a small pour of %d pulses." CR), tap, count);
+        return true;
+    }
+    else
+    {
+        Log.verbose(F("Tap %d is registering %d pulses." CR), tap, count);
+        return false;
     }
 }
 

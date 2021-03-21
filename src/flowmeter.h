@@ -61,6 +61,7 @@ struct Flowmeter
 void handleInterrupts(int);
 void logFlow();
 unsigned long getPulseCount(int);
+bool isSmallPour(unsigned int * count, int tap);
 bool isKicked(int);
 // Control
 bool initFlow();
