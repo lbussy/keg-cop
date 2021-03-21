@@ -73,9 +73,9 @@ bool deserializeFlowConfig(Stream &);
 bool serializeFlowConfig(Print &);
 bool printFlowFile();
 bool printFlowConfig();
-bool mergeFlowJsonString(String);
-bool mergeFlowJsonObject(JsonVariantConst);
-bool mergeFlow(JsonVariant, JsonVariantConst);
+// bool mergeFlowJsonString(String);
+// bool mergeFlowJsonObject(JsonVariantConst);
+// bool mergeFlow(JsonVariant, JsonVariantConst);
 // Conversions
 void convertFlowtoImperial();
 void convertFlowtoMetric();

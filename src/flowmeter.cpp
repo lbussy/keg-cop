@@ -339,59 +339,59 @@ bool printFlowConfig()
     return retval;
 }
 
-bool mergeFlowJsonString(String newJson)
-{
-    // Serialize configuration
-    DynamicJsonDocument doc(capacityFlowDeserial);
+// bool mergeFlowJsonString(String newJson)
+// {
+//     // Serialize configuration
+//     DynamicJsonDocument doc(capacityFlowDeserial);
 
-    // Parse directly from file
-    DeserializationError err = deserializeJson(doc, newJson);
-    if (err)
-    {
-        printChar(true, err.c_str());
-        printCR(true);
-    }
-    return mergeJsonObject(doc);
-}
+//     // Parse directly from file
+//     DeserializationError err = deserializeJson(doc, newJson);
+//     if (err)
+//     {
+//         printChar(true, err.c_str());
+//         printCR(true);
+//     }
+//     return mergeJsonObject(doc);
+// }
 
-bool mergeFlowJsonObject(JsonVariantConst src)
-{
-    // Serialize configuration
-    DynamicJsonDocument doc(capacityFlowDeserial);
+// bool mergeFlowJsonObject(JsonVariantConst src)
+// {
+//     // Serialize configuration
+//     DynamicJsonDocument doc(capacityFlowDeserial);
 
-    // Create an object at the root
-    JsonObject root = doc.to<JsonObject>();
+//     // Create an object at the root
+//     JsonObject root = doc.to<JsonObject>();
 
-    // Fill the object
-    flow.save(root);
+//     // Fill the object
+//     flow.save(root);
 
-    // Merge in the configuration
-    if (merge(root, src))
-    {
-        // Move new object to config
-        flow.load(root);
-        saveFile();
-        return true;
-    }
+//     // Merge in the configuration
+//     if (merge(root, src))
+//     {
+//         // Move new object to config
+//         flow.load(root);
+//         saveFile();
+//         return true;
+//     }
 
-    return false;
-}
+//     return false;
+// }
 
-bool mergeFlow(JsonVariant dst, JsonVariantConst src)
-{
-    if (src.is<JsonObject>())
-    {
-        for (auto kvp : src.as<JsonObject>())
-        {
-            merge(dst.getOrAddMember(kvp.key()), kvp.value());
-        }
-    }
-    else
-    {
-        dst.set(src);
-    }
-    return true;
-}
+// bool mergeFlow(JsonVariant dst, JsonVariantConst src)
+// {
+//     if (src.is<JsonObject>())
+//     {
+//         for (auto kvp : src.as<JsonObject>())
+//         {
+//             merge(dst.getOrAddMember(kvp.key()), kvp.value());
+//         }
+//     }
+//     else
+//     {
+//         dst.set(src);
+//     }
+//     return true;
+// }
 
 void convertFlowtoImperial()
 {
