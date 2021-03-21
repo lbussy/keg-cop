@@ -131,9 +131,9 @@ bool printConfig();
 bool printFile();
 bool serializeConfig(Print &);
 bool deserializeConfig(Stream &);
-bool merge(JsonVariant, JsonVariantConst);
-bool mergeJsonObject(JsonVariantConst);
-bool mergeJsonString(String);
+// bool merge(JsonVariant, JsonVariantConst);
+// bool mergeJsonObject(JsonVariantConst);
+// bool mergeJsonString(String);
 // Conversions
 void convertConfigtoImperial();
 void convertConfigtoMetric();
