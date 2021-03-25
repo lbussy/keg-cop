@@ -63,6 +63,7 @@ bool handleControlPost(AsyncWebServerRequest *);
 bool handleSensorPost(AsyncWebServerRequest *);
 bool handleKegScreenPost(AsyncWebServerRequest *);
 bool handleUrlTargetPost(AsyncWebServerRequest *);
+bool handleMQTTTargetPost(AsyncWebServerRequest *);
 bool handleCloudTargetPost(AsyncWebServerRequest *);
 bool handleSetCalMode(AsyncWebServerRequest *);
 
