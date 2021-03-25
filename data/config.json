@@ -31,6 +31,14 @@
         "url": "",
         "update": false
     },
+    "mqtttarget": {
+        "host": "",
+        "port": 1883,
+        "username": "",
+        "password": "",
+        "topic": "",
+        "update": false
+    },
     "urltarget": {
         "url": "",
         "freq": 30,
@@ -39,5 +47,5 @@
     "dospiffs1": false,
     "dospiffs2": false,
     "didupdate": false,
-    "nodrd": false
+    "nodrd": true
 }
