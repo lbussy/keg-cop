@@ -1151,6 +1151,7 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     config.urltarget.freq = val;
+                    config.urltarget.update = true;
                 }
             }
         }
