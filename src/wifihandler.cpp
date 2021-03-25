@@ -55,8 +55,6 @@ void doWiFi(bool dontUseStoredCreds)
         "wifinoscan",
         "sep",
         "info",
-        //"param",
-        //"close",
         "erase",
         "restart",
         "exit"};
@@ -72,7 +70,7 @@ void doWiFi(bool dontUseStoredCreds)
     wm.setShowDnsFields(true);    // Force show dns field always
 
     // Allow non-default host name
-    WiFiManagerParameter hostname("hostname", "Hostname", HOSTNAME, 32);
+    WiFiManagerParameter hostname("hostname", "Hostname", config.hostname, 32);
     wm.addParameter(&hostname);
 
     if (dontUseStoredCreds)
