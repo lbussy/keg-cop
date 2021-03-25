@@ -28,6 +28,7 @@ SOFTWARE. */
 #include "config.h"
 #include "jsonconfig.h"
 #include "tools.h"
+#include "mqttclient.h"
 
 #include <WiFi.h>
 #include <WiFiManager.h>
@@ -46,6 +47,7 @@ void preSaveConfigCallback();
 void saveConfigCallback();
 void saveParamsCallback();
 void webServerCallback();
+void WiFiEvent(WiFiEvent_t event);
 
 extern struct Config config;
 
