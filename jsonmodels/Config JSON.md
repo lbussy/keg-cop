@@ -43,6 +43,14 @@ JSON Definition:
 		"freq": 999,
 		"update": false
 	},
+	"mqtttarget": {
+		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"port": 99999,
+		"username": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"topic": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"update": false
+	},
 	"dospiffs1": false,
 	"dospiffs2": false,
 	"didupdate": false,
@@ -54,7 +62,8 @@ Size:
 -----
 
 ```
-1536
+Deserial:	2048
+Serial:		1536
 ```
 
 Parsing/Deserializing:
@@ -63,7 +72,7 @@ Parsing/Deserializing:
 ```
 // Stream& input;
 
-StaticJsonDocument<1536> doc;
+StaticJsonDocument<2048> doc;
 
 DeserializationError error = deserializeJson(doc, input);
 
@@ -108,6 +117,14 @@ JsonObject urltarget = doc["urltarget"];
 const char* urltarget_url = urltarget["url"];
 int urltarget_freq = urltarget["freq"]; // 999
 bool urltarget_update = urltarget["update"]; // false
+
+JsonObject mqtttarget = doc["mqtttarget"];
+const char* mqtttarget_host = mqtttarget["host"];
+long mqtttarget_port = mqtttarget["port"]; // 99999
+const char* mqtttarget_username = mqtttarget["username"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* mqtttarget_password = mqtttarget["password"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* mqtttarget_topic = mqtttarget["topic"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+bool mqtttarget_update = mqtttarget["update"]; // false
 
 bool dospiffs1 = doc["dospiffs1"]; // false
 bool dospiffs2 = doc["dospiffs2"]; // false
@@ -157,6 +174,14 @@ JsonObject urltarget = doc.createNestedObject("urltarget");
 urltarget["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 urltarget["freq"] = 999;
 urltarget["update"] = false;
+
+JsonObject mqtttarget = doc.createNestedObject("mqtttarget");
+mqtttarget["host"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+mqtttarget["port"] = 99999;
+mqtttarget["username"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+mqtttarget["password"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+mqtttarget["topic"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+mqtttarget["update"] = false;
 doc["dospiffs1"] = false;
 doc["dospiffs2"] = false;
 doc["didupdate"] = false;
