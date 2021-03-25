@@ -24,6 +24,13 @@ SOFTWARE. */
 
 DoubleResetDetector *drd;
 
+Ticker pollSensorsTicker;
+Ticker doControlTicker;
+Ticker logPourTicker;
+Ticker getThatVersionTicker;
+Ticker sendKSTempReportTicker;
+Ticker sendTargetReportTicker;
+
 void setup()
 {
     drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
@@ -77,14 +84,21 @@ void setup()
     else
         Log.error(F("Unable to load flowmeters." CR));
 
-    execspiffs(); // Check for pending FILESYSTEM update
+    execspiffs();       // Check for pending FILESYSTEM update
+    mdnssetup();        // Set up mDNS responder
+    initWebServer();    // Turn on web server
+    sensorInit();       // Initialize temperature sensors
+    startControl();     // Initialize temperature control
+    doVersionPoll();    // Get server version at startup
+    setupMqtt();        // Set up MQTT
 
-    mdnssetup();     // Set up mDNS responder
-    tcpCleanup();    // Get rid of -8 errors
-    initWebServer(); // Turn on web server
-    sensorInit();    // Initialize temperature sensors
-    startControl();  // Initialize temperature control
-    doVersionPoll(); // Get server version at startup
+    // Setup tickers
+    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors
+    doControlTicker.attach(TEMPLOOP, controlLoop);                                  // Update temperature control loop
+    logPourTicker.attach(TAPLOOP, logFlow);                                         // Log pours
+    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                  // Poll for server version
+    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);                 // Send Keg Screen Temp Report
+    sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport);   // Send Target Report
 
     if (!Log.getLevel())
         nullDoc("d");
@@ -94,47 +108,18 @@ void setup()
 
 void loop()
 {
-    // Poll temperature sensors
-    Ticker pollSensors;
-    pollSensors.attach(TEMPLOOP, pollTemps);
-
-    // Update temperature control loop
-    Ticker doControl;
-    doControl.attach(TEMPLOOP, controlLoop);
-
-    // Log pours
-    Ticker logPour;
-    logPour.attach(TAPLOOP, logFlow);
-
-    // Poll for server version
-    Ticker getThatVersion;
-    getThatVersion.attach(POLLSERVERVERSION, doVersionPoll);
-
-    // Send Keg Screen Temp Report
-    Ticker doKSTempReport;
-    doKSTempReport.attach(KSTEMPREPORT, setDoKSTempReport);
-
-    // Send Target Report
-    Ticker doTargetReport;
-    doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
-
-    while (true)
+    // Check for Target URL Timing reset
+    if (config.urltarget.update)
     {
-        // We can do normal processing
-
-        // Check for Target URL Timing reset
-        if (config.urltarget.update)
-        {
-            Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
-            doTargetReport.detach();
-            doTargetReport.attach(config.urltarget.freq * 60, setDoTargetReport);
-            config.urltarget.update = false;
-        }
-
-        doOTALoop();
-        tickerLoop();
-        drd->loop();
-        serialLoop();
-        maintenanceLoop();
+        Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
+        sendTargetReportTicker.detach();
+        sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport);
+        config.urltarget.update = false;
     }
+
+    doOTALoop();
+    tickerLoop();
+    drd->loop();
+    serialLoop();
+    maintenanceLoop();
 }
