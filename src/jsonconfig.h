@@ -30,7 +30,8 @@ SOFTWARE. */
 #include <SPIFFS.h>
 #include <FS.h>
 
-#define CAP_CONF 1532
+#define CAP_SER_CONF 1536
+#define CAP_DESER_CONF 2048
 
 struct ApConfig
 {
@@ -78,6 +79,20 @@ struct KegScreen
     void save(JsonObject) const;
 };
 
+struct MQTTTarget
+{
+    // Stores MQTT Target configuration
+    char host[64];
+    int port;
+    char username[32];
+    char password[32];
+    char topic[30];
+    bool update;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
 struct URLTarget
 {
     // Stores URL Target configuration
@@ -112,6 +127,7 @@ struct Config
     Temperatures temps;
     KegScreen kegscreen;
     URLTarget urltarget;
+    MQTTTarget mqtttarget;
     CloudTarget cloud;
     bool dospiffs1;
     bool dospiffs2;

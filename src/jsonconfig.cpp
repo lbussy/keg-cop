@@ -105,7 +105,7 @@ bool saveFile()
 bool deserializeConfig(Stream &src)
 {
     // Deserialize configuration
-    StaticJsonDocument<CAP_CONF> doc;
+    StaticJsonDocument<CAP_DESER_CONF> doc;
 
     // Parse the JSON object in the file
     DeserializationError err = deserializeJson(doc, src);
@@ -125,7 +125,7 @@ bool deserializeConfig(Stream &src)
 bool serializeConfig(Print &dst)
 {
     // Serialize configuration
-    StaticJsonDocument<CAP_CONF> doc;
+    StaticJsonDocument<CAP_SER_CONF> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -155,7 +155,7 @@ bool printFile()
 bool printConfig()
 {
     // Serialize configuration
-    StaticJsonDocument<CAP_CONF> doc;
+    StaticJsonDocument<CAP_SER_CONF> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -173,7 +173,7 @@ bool printConfig()
 // bool mergeJsonString(String newJson)
 // {
 //     // Serialize configuration
-//     StaticJsonDocument<CAP_CONF> doc;
+//     StaticJsonDocument<CAP_SER_CONF> doc;
 
 //     // Parse directly from file
 //     DeserializationError err = deserializeJson(doc, newJson);
@@ -189,7 +189,7 @@ bool printConfig()
 // bool mergeJsonObject(JsonVariantConst src)
 // {
 //     // Serialize configuration
-//     StaticJsonDocument<CAP_CONF> doc;
+//     StaticJsonDocument<CAP_SER_CONF> doc;
 
 //     // Create an object at the root
 //     JsonObject root = doc.to<JsonObject>();
@@ -591,6 +591,81 @@ void URLTarget::load(JsonObjectConst obj)
     }
 }
 
+void MQTTTarget::save(JsonObject obj) const
+{
+    obj["host"] = host;
+    obj["port"] = port;
+    obj["username"] = username;
+    obj["password"] = password;
+    obj["topic"] = topic;
+    obj["update"] = update;
+}
+
+void MQTTTarget::load(JsonObjectConst obj)
+{
+    // Load MQTT Target configuration
+    //
+    if (obj["host"].isNull())
+    {
+        strlcpy(host, "", sizeof(host));
+    }
+    else
+    {
+        const char *ht = obj["host"];
+        strlcpy(host, ht, sizeof(host));
+    }
+
+    if (obj["port"].isNull())
+    {
+        port = 1883;
+    }
+    else
+    {
+        int p = obj["port"];
+        port = p;
+    }
+
+    if (obj["username"].isNull())
+    {
+        strlcpy(username, "", sizeof(username));
+    }
+    else
+    {
+        const char *un = obj["username"];
+        strlcpy(username, un, sizeof(username));
+    }
+
+    if (obj["password"].isNull())
+    {
+        strlcpy(password, "", sizeof(password));
+    }
+    else
+    {
+        const char *pw = obj["passworc"];
+        strlcpy(password, pw, sizeof(password));
+    }
+
+    if (obj["topic"].isNull())
+    {
+        strlcpy(topic, "", sizeof(topic));
+    }
+    else
+    {
+        const char *to = obj["topic"];
+        strlcpy(topic, to, sizeof(topic));
+    }
+
+    if (obj["update"].isNull())
+    {
+        update = false;
+    }
+    else
+    {
+        bool u = obj["update"];
+        update = u;
+    }
+}
+
 void Config::save(JsonObject obj) const
 {
     // Add Access Point object
@@ -605,6 +680,8 @@ void Config::save(JsonObject obj) const
     temps.save(obj.createNestedObject("temps"));
     // Add Keg Screen object
     kegscreen.save(obj.createNestedObject("kegscreen"));
+    // Add MQTT object
+    mqtttarget.save(obj.createNestedObject("mqtttarget"));
     // Add Target object
     urltarget.save(obj.createNestedObject("urltarget"));
     // Add dospiffs1 object
@@ -648,6 +725,7 @@ void Config::load(JsonObjectConst obj)
     temps.load(obj["temps"]);
     kegscreen.load(obj["kegscreen"]);
     urltarget.load(obj["urltarget"]);
+    mqtttarget.load(obj["mqtttarget"]);
 
     if (obj["dospiffs1"].isNull())
     {
