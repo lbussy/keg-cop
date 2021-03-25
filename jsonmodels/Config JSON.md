@@ -35,8 +35,7 @@ JSON Definition:
 		"kegcal": 99.99
 	},
 	"kegscreen": {
-		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-		"update": false
+		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	},
 	"urltarget": {
 		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -48,8 +47,7 @@ JSON Definition:
 		"port": 99999,
 		"username": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-		"topic": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-		"update": false
+		"topic": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	},
 	"dospiffs1": false,
 	"dospiffs2": false,
@@ -111,7 +109,6 @@ bool temps_kegenable = temps["kegenable"]; // false
 float temps_kegcal = temps["kegcal"]; // 99.99
 
 const char* kegscreen_url = doc["kegscreen"]["url"];
-bool kegscreen_update = doc["kegscreen"]["update"]; // false
 
 JsonObject urltarget = doc["urltarget"];
 const char* urltarget_url = urltarget["url"];
@@ -119,12 +116,11 @@ int urltarget_freq = urltarget["freq"]; // 999
 bool urltarget_update = urltarget["update"]; // false
 
 JsonObject mqtttarget = doc["mqtttarget"];
-const char* mqtttarget_host = mqtttarget["host"];
+const char* mqtttarget_url = mqtttarget["url"];
 long mqtttarget_port = mqtttarget["port"]; // 99999
 const char* mqtttarget_username = mqtttarget["username"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* mqtttarget_password = mqtttarget["password"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* mqtttarget_topic = mqtttarget["topic"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-bool mqtttarget_update = mqtttarget["update"]; // false
 
 bool dospiffs1 = doc["dospiffs1"]; // false
 bool dospiffs2 = doc["dospiffs2"]; // false
@@ -165,10 +161,7 @@ temps["lowerenable"] = false;
 temps["lowercal"] = -99.99;
 temps["kegenable"] = false;
 temps["kegcal"] = 99.99;
-
-JsonObject kegscreen = doc.createNestedObject("kegscreen");
-kegscreen["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-kegscreen["update"] = false;
+doc["kegscreen"]["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 JsonObject urltarget = doc.createNestedObject("urltarget");
 urltarget["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
@@ -176,12 +169,11 @@ urltarget["freq"] = 999;
 urltarget["update"] = false;
 
 JsonObject mqtttarget = doc.createNestedObject("mqtttarget");
-mqtttarget["host"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+mqtttarget["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 mqtttarget["port"] = 99999;
 mqtttarget["username"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 mqtttarget["password"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 mqtttarget["topic"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-mqtttarget["update"] = false;
 doc["dospiffs1"] = false;
 doc["dospiffs2"] = false;
 doc["didupdate"] = false;
