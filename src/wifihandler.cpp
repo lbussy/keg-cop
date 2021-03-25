@@ -72,7 +72,7 @@ void doWiFi(bool dontUseStoredCreds)
     wm.setShowDnsFields(true);    // Force show dns field always
 
     // Allow non-default host name
-    WiFiManagerParameter hostname("hostname", "Custom Hostname", HOSTNAME, 32);
+    WiFiManagerParameter hostname("hostname", "Hostname", HOSTNAME, 32);
     wm.addParameter(&hostname);
 
     if (dontUseStoredCreds)
@@ -135,6 +135,8 @@ void doWiFi(bool dontUseStoredCreds)
     Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());
     blinker.detach();        // Turn off blinker
     digitalWrite(LED, HIGH); // Turn off LED
+
+    WiFi.onEvent(WiFiEvent);
 }
 
 void resetWifi()
@@ -190,10 +192,28 @@ void saveParamsCallback() {
 //     Log.verbose(F("[CALLBACK]: setWebServerCallback fired." CR));
 // }
 
-void tcpCleanup(void)
+void WiFiEvent(WiFiEvent_t event)
 {
-    // Supposedly not needed, but we still get -8 errors on occasion
-    // https://github.com/esp8266/Arduino/tree/master/doc/faq#how-to-clear-tcp-pcbs-in-time-wait-state-
-    while (tcp_tw_pcbs)
-        tcp_abort(tcp_tw_pcbs);
+    Serial.printf("[WiFi-event] event: %d\n", event);
+    if (! WiFi.isConnected())
+    {
+        Log.warning(F("WiFi lost connection." CR));
+        disconnectMqtt();
+        WiFi.begin();
+
+        int WLcount = 0;
+        while (! WiFi.isConnected() && WLcount < 190) {
+            delay(100);
+            printDot(true);
+            ++WLcount;
+        }
+
+        if (! WiFi.isConnected()) {
+            // We failed to reconnect.
+            Log.error(F("Unable to reconnect WiFI, restarting." CR));
+            delay(1000);
+            ESP.restart();
+        }
+        connectMqtt();
+    }
 }
