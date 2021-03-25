@@ -188,6 +188,13 @@ function populateConfig(callback = null) { // Get configuration settings
                 $('input[name="calkeg"]').val(parseFloat(config.temps.keg).toFixed(2));
 
                 $('input[name="kegscreen"]').val(config.kegscreen.url);
+
+                $('input[name="mqtthost"]').val(config.mqtttarget.host);
+                $('input[name="mqttport"]').val(parseInt(config.mqtttarget.port, 10));
+                $('input[name="mqttusername"]').val(config.mqtttarget.username);
+                $('input[name="mqttpassword"]').val(config.mqtttarget.password);
+                $('input[name="mqtttopic').val(config.mqtttarget.topic);
+
                 $('input[name="targeturl"]').val(config.urltarget.url);
                 $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
                 $('.updatepulsesecs').text(pulseReloadTimer / 1000);
@@ -416,7 +423,7 @@ function processControllerPost(url, obj) {
     var hostnamechanged = false;
     var unitschanged = false;
 
-    // Decide if we changed units   
+    // Decide if we changed units
     if ((imperial) != (imperialVal == 'true')) {
         unitschanged = true;
     } else {
