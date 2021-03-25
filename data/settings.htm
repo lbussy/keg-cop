@@ -115,6 +115,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#kegscreen">Keg Screen</a>
                             <a class="dropdown-item" data-toggle="tab" href="#targeturl">URL</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#mqtt">URL</a>
                         </div>
                     </li>
 
@@ -1514,6 +1515,90 @@
                                     <div class="col-sm-10">
                                         <input type="number" class="form-control" id="targetfreq" name="targetfreq"
                                             min="5" max="120" step="1" placeholder="15">
+                                    </div>
+                                </div>
+
+                                <div class="row col-sm-12 justify-content-center">
+                                    <button class="btn btn-primary" id="submitSettings"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- URL Target Tab -->
+
+                    <div class="tab-pane fade" id="mqtt"> <!-- MQTT Tab -->
+
+                        <div class="card-header">
+                            <h4 class="card-title">MQTT Configuration</h4>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="mqtt" action="/settings/mqtt/" method="POST" onsubmit="return processPost(this);">
+
+                                <div class="form-group row">
+                                    <label for="mqtthost" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT broker hostname or IP address">
+                                        MQTT Broker Address
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="mqtthost"
+                                            id="mqtthost" minlength="3" maxlength="128"
+                                            placeholder="raspberrypi.local">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="mqttport" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT broker port">
+                                        MQTT Broker Port
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="mqttport" name="mqttport"
+                                            min="1" max="65535" step="1" placeholder="1883">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="mqttusername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT username if authentication is required">
+                                        MQTT User Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="mqttusername"
+                                            id="mqttusername" minlength="3" maxlength="128"
+                                            placeholder="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="mqttpassword" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT password if authentication is required">
+                                        MQTT Password
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="mqttpassword"
+                                            id="mqttpassword" minlength="3" maxlength="128"
+                                            placeholder="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="mqtttopic" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT topic to which we will publish">
+                                        MQTT Topic
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="mqtttopic"
+                                            id="mqtttopic" minlength="3" maxlength="30"
+                                            placeholder="kegcop">
                                     </div>
                                 </div>
 
