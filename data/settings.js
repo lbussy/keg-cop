@@ -323,7 +323,6 @@ function processPost(obj) {
     event.preventDefault();
     hashLoc = window.location.hash;
     var $form = $(obj);
-    var tapnum;
     url = $form.attr("action");
 
     $("button[id='submitSettings']").prop('disabled', true);
@@ -370,6 +369,9 @@ function processPost(obj) {
         case "#targeturl":
             processTargetUrlPost(url, obj);
             break;
+        case "#mqtt":
+            processMQTTPost(url, obj);
+            break;
         case "#controller":
             processControllerPost(url, obj);
             break;
@@ -414,7 +416,7 @@ function processControllerPost(url, obj) {
         hostnameVal = $form.find("input[name='hostname']").val(),
         brewerynameVal = $form.find("input[name='breweryname']").val(),
         kegeratornameVal = $form.find("input[name='kegeratorname']").val()
-        imperialVal = $("[name='imperial']:checked").val(),
+    imperialVal = $("[name='imperial']:checked").val(),
         serialVal = $("[name='serial']:checked").val(),
         tapsolenoidVal = $("[name='tapsolenoid']:checked").val()
 
@@ -550,6 +552,28 @@ function processTargetUrlPost(url, obj) {
     data = {
         targeturl: targeturl,
         targetfreq: targetfreq
+    };
+    postData(url, data);
+}
+
+function processMQTTPost(url, obj) {
+    // Handle target URL posts
+
+    // Get form data
+    var $form = $(obj),
+        mqtthost = $form.find("input[name='mqtthost']").val(),
+        mqttport = $form.find("input[name='mqttport']").val();
+        mqttusername = $form.find("input[name='mqttusername']").val();
+        mqttpassword = $form.find("input[name='mqttpassword']").val();
+        mqtttopic = $form.find("input[name='mqtttopic']").val();
+
+    // Process post
+    data = {
+        mqtthost: mqtthost,
+        mqttport: mqttport,
+        mqttusername: mqttusername,
+        mqttpassword: mqttpassword,
+        mqtttopic: mqtttopic
     };
     postData(url, data);
 }
