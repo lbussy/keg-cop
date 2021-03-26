@@ -647,7 +647,7 @@ void MQTTTarget::load(JsonObjectConst obj)
 
     if (obj["topic"].isNull())
     {
-        strlcpy(topic, "", sizeof(topic));
+        strlcpy(topic, "kegcop", sizeof(topic));
     }
     else
     {
