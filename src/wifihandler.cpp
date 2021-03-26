@@ -214,6 +214,6 @@ void WiFiEvent(WiFiEvent_t event)
             delay(1000);
             ESP.restart();
         }
-        connectMqtt();
+        setDoMqttConnect();
     }
 }

@@ -1184,9 +1184,10 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
             // MQTT Target settings
             //
             int changedMqtt = 0;
-            if (strcmp(name, "mqtturl") == 0) // Set MQTT broker host
+            if (strcmp(name, "mqtthost") == 0) // Set MQTT broker host
             {
-                if ((strlen(value) > 3) && (strlen(value) < 128))
+                LCBUrl url;
+                if (url.isValidHostName(value) && (strlen(value) > 3) && (strlen(value) < 128))
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     strlcpy(config.mqtttarget.host, value, sizeof(config.mqtttarget.host));
@@ -1271,7 +1272,7 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
             if (changedMqtt)
             {
                 disconnectMqtt();
-                connectMqtt();
+                setDoMqttConnect();
             }
         }
     }
