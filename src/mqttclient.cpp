@@ -31,7 +31,7 @@ void setupMqtt()
     mqttClient.onConnect(onMqttConnect);
     mqttClient.onDisconnect(onMqttDisconnect);
     mqttClient.onPublish(onMqttPublish);
-    mqttReconnectTimer.attach(5, connectMqtt);
+    mqttReconnectTimer.attach(5, setDoMqttConnect);
 }
 
 void connectMqtt()
@@ -39,7 +39,7 @@ void connectMqtt()
     if (config.mqtttarget.host != NULL && config.mqtttarget.host[0] != '\0' && !mqttClient.connected())
     {
         mqttReconnectTimer.detach();
-        Log.verbose(F("Connecting to MQTT." CR));
+        Log.verbose(F("MQTT: Connecting." CR));
         if (config.mqtttarget.username != NULL && config.mqtttarget.username[0] != '\0')
         {
             mqttClient.setCredentials(config.mqtttarget.username, config.mqtttarget.password);
@@ -48,9 +48,29 @@ void connectMqtt()
         {
             mqttClient.setCredentials(nullptr, nullptr);
         }
+        LCBUrl url;
+        if (url.isMDNS(config.mqtttarget.host)) {
+            Log.verbose(F("MQTT: Initializing connection to broker: %s (%s) on port: %d\r\n"),
+                config.mqtttarget.host,
+                url.getIP(config.mqtttarget.host).toString().c_str(),
+                config.mqtttarget.port);
+        } else {
+            Log.verbose(F("MQTT: Initializing connection to broker: %s on port: %d\r\n"),
+                config.mqtttarget.host,
+                config.mqtttarget.port);
+        }
+
+        // Determine if it's local
+        // Get mDNS or DNS lookup
+        // Use IP address
+
         mqttClient.setServer(config.mqtttarget.host, config.mqtttarget.port);
         mqttClient.connect();
         mqttReconnectTimer.attach(5000, connectMqtt);
+    }
+    else
+    {
+        Log.verbose(F("MQTT: No broker configured." CR));
     }
 }
 
@@ -101,7 +121,7 @@ bool sendPulsesMqtt(int tapID, unsigned int pulses)
 
 void onMqttConnect(bool sessionPresent)
 {
-    Log.notice(F("MQTT: Connected to MQTT, session: %T"), sessionPresent);
+    Log.notice(F("MQTT: Connected to MQTT, session: %T" CR), sessionPresent);
 }
 
 void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)

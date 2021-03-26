@@ -23,6 +23,7 @@ SOFTWARE. */
 #include "tools.h"
 
 float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
+unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pours
 bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending kicks
 bool __attribute__((unused)) queueStateChange;          // Store pending tstat state changes
 
@@ -65,6 +66,11 @@ void setDoTargetReport()
     doTargetReport = true; // Semaphore required for URL Target Report
 }
 
+void setDoMqttConnect()
+{
+    doMqttConnect = true; // Semaphore required for MQTT (re)connect
+}
+
 void tickerLoop()
 {
     // Necessary because we cannot delay or do radio work in a callback
@@ -80,14 +86,16 @@ void tickerLoop()
         resetWifi();
     }
 
-    // // Keg Screen Reports
+    // // External Event Reports
     for (int i = 0; i < NUMTAPS; i++)
     {
         // Send report from pour queue
         if (queuePourReport[i] > 0)
         {
+            sendPulsesMqtt(i, queuePulseReport[i]);
             sendPourReport(i, queuePourReport[i]);
             queuePourReport[i] = 0;
+            queuePulseReport[i] = 0;
         }
         // Send kick report
         if (queueKickReport[i] == true)
@@ -118,6 +126,11 @@ void tickerLoop()
         sendTargetReport();
         doTargetReport = false;
     }
+    if (doMqttConnect)
+    {
+        connectMqtt();
+        doMqttConnect = false;
+    }
 }
 
 void maintenanceLoop()
@@ -127,35 +140,6 @@ void maintenanceLoop()
         Log.warning(F("Maintenance: Heap memory has degraded below safe minimum, restarting." CR));
         resetController();
     }
-
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        // WiFi is down - Reconnect
-        Log.warning(F("Maintenance: WiFi not connected, reconnecting." CR));
-        WiFi.begin();
-
-        int rcCount = 0;
-        while (WiFi.status() != WL_CONNECTED && rcCount < 190)
-        {
-            delay(100);
-            printDot(true);
-            ++rcCount;
-            yield();
-        }
-
-        if (WiFi.status() != WL_CONNECTED)
-        {
-            // We failed to reconnect.
-            Log.error(F("Maintenance: WiFi failed to reconnect, restarting." CR));
-            ESP.restart();
-        }
-        else
-        {
-            // We reconnected successfully
-            Log.notice(F("Maintenance: WiFi reconnected." CR));
-        }
-    }
-
     if (millis() > ESPREBOOT)
     {
         // The ms clock will rollover after ~49 days.  To be on the safe side,

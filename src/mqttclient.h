@@ -24,6 +24,7 @@ SOFTWARE. */
 #define _MQTTCLIENT_H
 
 #include "jsonconfig.h"
+#include "tools.h"
 
 #include <AsyncMqttClient.h>
 #include <ArduinoLog.h>
@@ -32,7 +33,7 @@ SOFTWARE. */
 void setupMqtt();
 void connectMqtt();
 void disconnectMqtt();
-bool sendPulsesMqtt(int * tapID, unsigned int * pulses);
+bool sendPulsesMqtt(int tapID, unsigned int pulses);
 void onMqttConnect(bool sessionPresent);
 void onMqttDisconnect(AsyncMqttClientDisconnectReason reason);
 void onMqttPublish(uint16_t packetId);

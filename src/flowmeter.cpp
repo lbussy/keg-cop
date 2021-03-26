@@ -114,6 +114,7 @@ bool initFlow()
         lastLoopTime[i] = millis();  // Compare for kickdetect
         lastPulseTime[i] = millis(); // For pour detector
         queuePourReport[i] = 0;      // Pour queue
+        queuePulseReport[i] = 0;          // Pulse queue
         queueKickReport[i] = false;  // Kick queue
     }
     return loadFlowConfig();
@@ -151,11 +152,9 @@ void logFlow()
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
                     saveFlowConfig();
-                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
-                    if ((config.kegscreen.url != NULL) && (config.kegscreen.url[0] != '\0')) // If Keg Screen is enabled
-                    {                                                                        /// Queue upstream report
-                        queuePourReport[i] = pour;
-                    }
+                    queuePourReport[i] = pour;          // Queue upstream pour report
+                    queuePulseReport[i] = pulseCount;   // Queue upstream pulse report
+                    // Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                 }
             }
             else
