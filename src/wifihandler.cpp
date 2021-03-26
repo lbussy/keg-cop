@@ -37,7 +37,7 @@ void doWiFi(bool dontUseStoredCreds)
     wm.setAPCallback(apCallback); // Called after AP has started
     // wm.setConfigResetCallback(configResetCallback); // Called after settings are reset
     // wm.setPreSaveConfigCallback(preSaveConfigCallback); // Called before saving wifi creds
-    // wm.setSaveConfigCallback(saveConfigCallback); //  Called only if wifi is saved/changed, or setBreakAfterConfig(true)
+    wm.setSaveConfigCallback(saveConfigCallback); //  Called only if wifi is saved/changed, or setBreakAfterConfig(true)
     wm.setSaveParamsCallback(saveParamsCallback); // Called after parameters are saved via params menu or wifi config
     // wm.setWebServerCallback(webServerCallback); // Called after webserver is setup
 
@@ -70,8 +70,10 @@ void doWiFi(bool dontUseStoredCreds)
     wm.setShowDnsFields(true);    // Force show dns field always
 
     // Allow non-default host name
-    WiFiManagerParameter hostname("hostname", "Hostname", config.hostname, 32);
-    wm.addParameter(&hostname);
+    // WiFiManagerParameter custom_mqtt_server("server", "mqtt server", config.hostname, 40);
+    // wm.addParameter(&custom_mqtt_server);
+    WiFiManagerParameter custom_hostname("name", "Host Name", config.hostname, 32);
+    wm.addParameter(&custom_hostname);
 
     if (dontUseStoredCreds)
     {
@@ -121,12 +123,13 @@ void doWiFi(bool dontUseStoredCreds)
     }
 
     if (shouldSaveConfig) { // Save configuration
-        if (hostname.getValue() != config.hostname)
+        if (custom_hostname.getValue() != config.hostname)
         {
-            Log.notice(F("Saving custom hostname configuration: %s." CR), hostname.getValue());
-            strlcpy(config.hostname, hostname.getValue(), sizeof(config.hostname));
+            Log.notice(F("Saving custom hostname configuration: %s." CR), custom_hostname.getValue());
+            strlcpy(config.hostname, custom_hostname.getValue(), sizeof(config.hostname));
             saveConfig();
             WiFi.setHostname(config.hostname);
+
         }
     }
 
@@ -176,14 +179,13 @@ void apCallback(WiFiManager *wiFiManager)
 //     Log.verbose(F("[CALLBACK]: preSaveConfigCallback fired." CR));
 // }
 
-// void saveConfigCallback() {
-//     Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
-//     shouldSaveConfig = true;
-// }
+void saveConfigCallback() {
+    Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
+    shouldSaveConfig = true;
+}
 
 void saveParamsCallback() {
     Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CR));
-    shouldSaveConfig = true;
 }
 
 // void webServerCallback() {

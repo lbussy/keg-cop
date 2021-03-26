@@ -621,8 +621,8 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
     else
     {
-        int p = obj["port"];
-        port = p;
+        const int pt = obj["port"];
+        port = pt;
     }
 
     if (obj["username"].isNull())
@@ -641,7 +641,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
     else
     {
-        const char *pw = obj["passworc"];
+        const char *pw = obj["password"];
         strlcpy(password, pw, sizeof(password));
     }
 
@@ -661,8 +661,8 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
     else
     {
-        bool u = obj["update"];
-        update = u;
+        const bool up = obj["update"];
+        update = up;
     }
 }
 
