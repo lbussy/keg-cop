@@ -1,4 +1,5 @@
 recommonmark
 sphinx
+sphinx-build
 sphinx_bootstrap_theme
 sphinx_markdown_parser
