@@ -115,7 +115,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#kegscreen">Keg Screen</a>
                             <a class="dropdown-item" data-toggle="tab" href="#targeturl">URL</a>
-                            <a class="dropdown-item" data-toggle="tab" href="#mqtt">URL</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#mqtt">MQTT</a>
                         </div>
                     </li>
 
@@ -1505,7 +1505,7 @@
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" name="targeturl"
                                             id="targeturl" minlength="3" maxlength="128"
-                                            placeholder="http://raspberrypi.local/">
+                                            placeholder="http://rpints.local/">
                                     </div>
                                 </div>
 
@@ -1535,6 +1535,11 @@
                             <h4 class="card-title">MQTT Configuration</h4>
                         </div>
                         <div class="card-body">
+
+                            <p>
+                                MQTT sends only pour information to be consumed by a
+                                broker such as Raspberry Pints.
+                            </p>
 
                             <form id="mqtt" action="/settings/mqtt/" method="POST" onsubmit="return processPost(this);">
 

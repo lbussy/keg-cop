@@ -618,6 +618,9 @@ function updateHelp(hashLoc) {
         case "#targeturl":
             url = url + "/en/latest/context/settings/targets/url/index.html";
             break;
+        case "#mqtt":
+            url = url + "/en/latest/context/settings/targets/mqtt/index.html";
+            break;
         case "#controller":
             url = url + "/en/latest/context/settings/controller/index.html";
             break;
