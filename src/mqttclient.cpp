@@ -27,10 +27,11 @@ Ticker mqttReconnectTimer;
 
 void setupMqtt()
 {
+    Log.verbose(F("MQTT: Creating process." CR));
     mqttClient.onConnect(onMqttConnect);
     mqttClient.onDisconnect(onMqttDisconnect);
     mqttClient.onPublish(onMqttPublish);
-    mqttReconnectTimer.attach(5000, connectMqtt);
+    mqttReconnectTimer.attach(5, connectMqtt);
 }
 
 void connectMqtt()
