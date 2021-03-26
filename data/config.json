@@ -36,7 +36,7 @@
         "port": 1883,
         "username": "",
         "password": "",
-        "topic": "",
+        "topic": "kegcop",
         "update": false
     },
     "urltarget": {
