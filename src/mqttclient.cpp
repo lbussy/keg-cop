@@ -39,7 +39,8 @@ void connectMqtt()
     if (config.mqtttarget.host != NULL && config.mqtttarget.host[0] != '\0' && !mqttClient.connected())
     {
         mqttReconnectTimer.detach();
-        Log.verbose(F("MQTT: Connecting." CR));
+
+        // Set username/password
         if (config.mqtttarget.username != NULL && config.mqtttarget.username[0] != '\0')
         {
             mqttClient.setCredentials(config.mqtttarget.username, config.mqtttarget.password);
@@ -48,23 +49,31 @@ void connectMqtt()
         {
             mqttClient.setCredentials(nullptr, nullptr);
         }
+
+        // Set up connection to broker
+        Log.verbose(F("MQTT: Initializing connection to broker: %s on port: %d" CR),
+                    config.mqtttarget.host,
+                    config.mqtttarget.port);
         LCBUrl url;
-        if (url.isMDNS(config.mqtttarget.host)) {
-            Log.verbose(F("MQTT: Initializing connection to broker: %s (%s) on port: %d\r\n"),
-                config.mqtttarget.host,
-                url.getIP(config.mqtttarget.host).toString().c_str(),
-                config.mqtttarget.port);
-        } else {
-            Log.verbose(F("MQTT: Initializing connection to broker: %s on port: %d\r\n"),
-                config.mqtttarget.host,
-                config.mqtttarget.port);
+        if (url.isMDNS(config.mqtttarget.host))
+        {
+            Log.verbose(F("MQTT: Resolved mDNS broker name: %s (%s)" CR),
+                        config.mqtttarget.host,
+                        url.getIP(config.mqtttarget.host).toString().c_str(),
+                        config.mqtttarget.port);
+            mqttClient.setServer(url.getIP(config.mqtttarget.host), config.mqtttarget.port);
+        }
+        else if (url.isValidIP(config.mqtttarget.host) || url.isValidHostName(config.mqtttarget.host))
+        {
+            IPAddress hostIP;
+            mqttClient.setServer(hostIP.fromString(config.mqtttarget.host), config.mqtttarget.port);
+        }
+        else
+        {
+            mqttClient.setServer(config.mqtttarget.host, config.mqtttarget.port);
         }
 
-        // Determine if it's local
-        // Get mDNS or DNS lookup
-        // Use IP address
-
-        mqttClient.setServer(config.mqtttarget.host, config.mqtttarget.port);
+        Log.verbose(F("MQTT: Connecting." CR));
         mqttClient.connect();
         mqttReconnectTimer.attach(5000, connectMqtt);
     }
@@ -91,19 +100,19 @@ bool sendPulsesMqtt(int tapID, unsigned int pulses)
 
         // Convert integers to strings
         char pin[3];
-        sprintf(pin, "%d", tapID);        // String representation of the pin (follwed by semicolon)
+        sprintf(pin, "%d", tapID); // String representation of the pin (follwed by semicolon)
         char count[7];
-        sprintf(count, "%u", pulses);   // String representation of the pulse count
+        sprintf(count, "%u", pulses); // String representation of the pulse count
 
         // Concatenate report
         char payload[32];
-        strcpy(payload, "P");       // A pulse report
-        strcat(payload, ";");       // Delimiter
-        strcat(payload, "-1");      // User ID; -1 = no user
-        strcat(payload, ";");       // Delimiter
-        strcat(payload, pin);       // Pin in tap configuration
-        strcat(payload, ";");       // Delimiter
-        strcat(payload, count);     // Count of pulses in report
+        strcpy(payload, "P");   // A pulse report
+        strcat(payload, ";");   // Delimiter
+        strcat(payload, "-1");  // User ID; -1 = no user
+        strcat(payload, ";");   // Delimiter
+        strcat(payload, pin);   // Pin in tap configuration
+        strcat(payload, ";");   // Delimiter
+        strcat(payload, count); // Count of pulses in report
 
         // Send report
         Log.verbose(F("MQTT: Sending message to %s:%d, payload: %s" CR), config.mqtttarget.host, config.mqtttarget.port, payload);
