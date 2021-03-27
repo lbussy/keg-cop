@@ -30,6 +30,7 @@ Ticker logPourTicker;
 Ticker getThatVersionTicker;
 Ticker sendKSTempReportTicker;
 Ticker sendTargetReportTicker;
+Ticker rebootTimer;
 
 void setup()
 {
@@ -99,6 +100,7 @@ void setup()
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                  // Poll for server version
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);                 // Send Keg Screen Temp Report
     sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport);   // Send Target Report
+    rebootTimer.attach(86400 , setDoReset);                                         // Reboot every 24 hours
 
     if (!Log.getLevel())
         nullDoc("d");
