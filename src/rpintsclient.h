@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _MQTTCLIENT_H
-#define _MQTTCLIENT_H
+#ifndef _RPINTSCLIENT_H
+#define _RPINTSCLIENT_H
 
 #include "jsonconfig.h"
 #include "tools.h"
@@ -30,12 +30,12 @@ SOFTWARE. */
 #include <ArduinoLog.h>
 #include <Ticker.h>
 
-void setupMqtt();
-void connectMqtt();
-void disconnectMqtt();
-bool sendPulsesMqtt(int tapID, unsigned int pulses);
-void onMqttConnect(bool sessionPresent);
-void onMqttDisconnect(AsyncMqttClientDisconnectReason reason);
-void onMqttPublish(uint16_t packetId);
+void setupRPints();
+void connectRPints();
+void disconnectRPints();
+bool sendPulsesRPints(int tapID, unsigned int pulses);
+void onRPintsConnect(bool sessionPresent);
+void onRPintsDisconnect(AsyncMqttClientDisconnectReason reason);
+void onRPintsPublish(uint16_t packetId);
 
-#endif // _MQTTCLIENT_H
+#endif // _RPINTSCLIENT_H

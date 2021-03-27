@@ -28,7 +28,7 @@ SOFTWARE. */
 #include "config.h"
 #include "jsonconfig.h"
 #include "tools.h"
-#include "mqttclient.h"
+#include "rpintsclient.h"
 
 #include <WiFi.h>
 #include <WiFiManager.h>

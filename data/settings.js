@@ -189,11 +189,11 @@ function populateConfig(callback = null) { // Get configuration settings
 
                 $('input[name="kegscreen"]').val(config.kegscreen.url);
 
-                $('input[name="mqtthost"]').val(config.mqtttarget.host);
-                $('input[name="mqttport"]').val(parseInt(config.mqtttarget.port, 10));
-                $('input[name="mqttusername"]').val(config.mqtttarget.username);
-                $('input[name="mqttpassword"]').val(config.mqtttarget.password);
-                $('input[name="mqtttopic').val(config.mqtttarget.topic);
+                $('input[name="rpintshost"]').val(config.rpintstarget.host);
+                $('input[name="rpintsport"]').val(parseInt(config.rpintstarget.port, 10));
+                $('input[name="rpintsusername"]').val(config.rpintstarget.username);
+                $('input[name="rpintspassword"]').val(config.rpintstarget.password);
+                $('input[name="rpintstopic').val(config.rpintstarget.topic);
 
                 $('input[name="targeturl"]').val(config.urltarget.url);
                 $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
@@ -369,8 +369,8 @@ function processPost(obj) {
         case "#targeturl":
             processTargetUrlPost(url, obj);
             break;
-        case "#mqtt":
-            processMQTTPost(url, obj);
+        case "#rpints":
+            processRPintsPost(url, obj);
             break;
         case "#controller":
             processControllerPost(url, obj);
@@ -556,24 +556,24 @@ function processTargetUrlPost(url, obj) {
     postData(url, data);
 }
 
-function processMQTTPost(url, obj) {
+function processRPintsPost(url, obj) {
     // Handle target URL posts
 
     // Get form data
     var $form = $(obj),
-        mqtthost = $form.find("input[name='mqtthost']").val(),
-        mqttport = $form.find("input[name='mqttport']").val();
-        mqttusername = $form.find("input[name='mqttusername']").val();
-        mqttpassword = $form.find("input[name='mqttpassword']").val();
-        mqtttopic = $form.find("input[name='mqtttopic']").val();
+        rpintshost = $form.find("input[name='rpintshost']").val(),
+        rpintsport = $form.find("input[name='rpintsport']").val();
+        rpintsusername = $form.find("input[name='rpintsusername']").val();
+        rpintspassword = $form.find("input[name='rpintspassword']").val();
+        rpintstopic = $form.find("input[name='rpintstopic']").val();
 
     // Process post
     data = {
-        mqtthost: mqtthost,
-        mqttport: mqttport,
-        mqttusername: mqttusername,
-        mqttpassword: mqttpassword,
-        mqtttopic: mqtttopic
+        rpintshost: rpintshost,
+        rpintsport: rpintsport,
+        rpintsusername: rpintsusername,
+        rpintspassword: rpintspassword,
+        rpintstopic: rpintstopic
     };
     postData(url, data);
 }
@@ -642,8 +642,8 @@ function updateHelp(hashLoc) {
         case "#targeturl":
             url = url + "/en/latest/context/settings/targets/url/index.html";
             break;
-        case "#mqtt":
-            url = url + "/en/latest/context/settings/targets/mqtt/index.html";
+        case "#rpints":
+            url = url + "/en/latest/context/settings/targets/rpints/index.html";
             break;
         case "#controller":
             url = url + "/en/latest/context/settings/controller/index.html";
