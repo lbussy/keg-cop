@@ -4,7 +4,7 @@ Keg Screen Target
 ###################
 
 .. image:: kegscreen.png
-   :scale: 100%
+   :scale: 50%
    :align: center
    :alt: Keg Screen Settings
 

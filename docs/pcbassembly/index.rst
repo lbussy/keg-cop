@@ -7,6 +7,14 @@ PCB Assembly
 
    Add thumbnails of the various assembled PCBs somewhere here without leaving the page?
 
+.. todo::
+
+   Check BOM to ensure it's correct
+
+.. todo::
+
+   Change any DirtyPCB links to OshPark
+
 Keg Cop runs on an ESP32 controller. To detect the information to be logged, you need to connect specific devices to the controller. I have provided a main circuit board design, as well as several breakouts for your use.
 
 Assembly is not difficult, but it does require some basic soldering.
@@ -32,7 +40,7 @@ The developer board used in this project is the Lolin D32 v1.0.0 (not the Pro or
    :align: center
    :alt: Lolin D32 v1.0.0
 
-You can find the Lolin D32 in many places.  Lolin D32 is one of maybe hundreds of development boards. Their prime delivery method to hobbyists seems to be `the Lolin store on AliExpress <https://www.aliexpress.com/item/32808551116.html>`_. 
+You can find the Lolin D32 in many places.  Lolin D32 is one of maybe hundreds of development boards. Their prime delivery method to hobbyists seems to be `the Lolin store on AliExpress <https://www.aliexpress.com/item/32808551116.html>`_.
 
 AliExpress also seems to be the least expensive path, but of course, ordering direct from China does take a bit longer than other methods.  You will spend more but get your hands on the device quicker if you purchase from `Amazon <https://www.amazon.com/Genuine-Original-LOLIN-D32-V2-0-0/dp/B07T1SCXYW>`_ or any other place you can find it.
 

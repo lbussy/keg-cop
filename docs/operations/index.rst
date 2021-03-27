@@ -3,11 +3,12 @@
 Operations and Configuration
 #################################
 
+.. image:: settings.png
+   :scale: 60%
+   :align: center
+   :alt: Settings Page
+
 At a minimum, you will want to look at the settings menu to set up your new device. See the links below for a description of each option.
-
-.. todo::
-
-    Operations and Configuration and Settings page should be merged. I'm pretty sure every link on the former page jumps to the latter. Maybe take the descriptions and add them to the table entries on the Settings page (maybe at the end of each line in parenthesis and comma-delimited).
 
 :ref:`Controller <controller>`:
 
@@ -40,6 +41,7 @@ Targets:
 
 - :ref:`Keg Screen Target <kegscreen>`
 - :ref:`URL Target <url>`
+- :ref:`Raspberry Pints Target <rpints>`
 
 Advanced
 
