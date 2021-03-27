@@ -4,10 +4,10 @@ Sensor Control
 #######################
 
 .. image:: sensors.png
-   :scale: 100%
+   :scale: 50%
    :align: center
    :alt: Temperature Sensor Settings
 
-You may apply a positive or negative calibration value individually for each temperature sensor. 
+You may apply a positive or negative calibration value individually for each temperature sensor.
 
-If a sensor is unused, or if you wish to disable it, mark it as such.
+If a sensor is unused, or if you wish to disable it, mark it as such.  A disconnected sensor which is left enabled shoes an error value.
