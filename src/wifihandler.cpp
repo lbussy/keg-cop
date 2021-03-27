@@ -198,7 +198,7 @@ void WiFiEvent(WiFiEvent_t event)
     if (! WiFi.isConnected())
     {
         Log.warning(F("WiFi lost connection." CR));
-        disconnectMqtt();
+        disconnectRPints();
         WiFi.begin();
 
         int WLcount = 0;
@@ -214,6 +214,6 @@ void WiFiEvent(WiFiEvent_t event)
             delay(1000);
             ESP.restart();
         }
-        setDoMqttConnect();
+        setDoRPintsConnect();
     }
 }

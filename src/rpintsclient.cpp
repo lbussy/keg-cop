@@ -20,62 +20,62 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "mqttclient.h"
+#include "rpintsclient.h"
 
-AsyncMqttClient mqttClient;
-Ticker mqttReconnectTimer;
+AsyncMqttClient rpintsClient;
+Ticker rpintsReconnectTimer;
 
-void setupMqtt()
+void setupRPints()
 {
     Log.verbose(F("MQTT: Creating process." CR));
-    mqttClient.onConnect(onMqttConnect);
-    mqttClient.onDisconnect(onMqttDisconnect);
-    mqttClient.onPublish(onMqttPublish);
-    mqttReconnectTimer.attach(5, setDoMqttConnect);
+    rpintsClient.onConnect(onRPintsConnect);
+    rpintsClient.onDisconnect(onRPintsDisconnect);
+    rpintsClient.onPublish(onRPintsPublish);
+    rpintsReconnectTimer.attach(5, setDoRPintsConnect);
 }
 
-void connectMqtt()
+void connectRPints()
 {
-    if (config.mqtttarget.host != NULL && config.mqtttarget.host[0] != '\0' && !mqttClient.connected())
+    if (config.rpintstarget.host != NULL && config.rpintstarget.host[0] != '\0' && !rpintsClient.connected())
     {
-        mqttReconnectTimer.detach();
+        rpintsReconnectTimer.detach();
 
         // Set username/password
-        if (config.mqtttarget.username != NULL && config.mqtttarget.username[0] != '\0')
+        if (config.rpintstarget.username != NULL && config.rpintstarget.username[0] != '\0')
         {
-            mqttClient.setCredentials(config.mqtttarget.username, config.mqtttarget.password);
+            rpintsClient.setCredentials(config.rpintstarget.username, config.rpintstarget.password);
         }
         else
         {
-            mqttClient.setCredentials(nullptr, nullptr);
+            rpintsClient.setCredentials(nullptr, nullptr);
         }
 
         // Set up connection to broker
         Log.verbose(F("MQTT: Initializing connection to broker: %s on port: %d" CR),
-                    config.mqtttarget.host,
-                    config.mqtttarget.port);
+                    config.rpintstarget.host,
+                    config.rpintstarget.port);
         LCBUrl url;
-        if (url.isMDNS(config.mqtttarget.host))
+        if (url.isMDNS(config.rpintstarget.host))
         {
             Log.verbose(F("MQTT: Resolved mDNS broker name: %s (%s)" CR),
-                        config.mqtttarget.host,
-                        url.getIP(config.mqtttarget.host).toString().c_str(),
-                        config.mqtttarget.port);
-            mqttClient.setServer(url.getIP(config.mqtttarget.host), config.mqtttarget.port);
+                        config.rpintstarget.host,
+                        url.getIP(config.rpintstarget.host).toString().c_str(),
+                        config.rpintstarget.port);
+            rpintsClient.setServer(url.getIP(config.rpintstarget.host), config.rpintstarget.port);
         }
-        else if (url.isValidIP(config.mqtttarget.host) || url.isValidHostName(config.mqtttarget.host))
+        else if (url.isValidIP(config.rpintstarget.host) || url.isValidHostName(config.rpintstarget.host))
         {
             IPAddress hostIP;
-            mqttClient.setServer(hostIP.fromString(config.mqtttarget.host), config.mqtttarget.port);
+            rpintsClient.setServer(hostIP.fromString(config.rpintstarget.host), config.rpintstarget.port);
         }
         else
         {
-            mqttClient.setServer(config.mqtttarget.host, config.mqtttarget.port);
+            rpintsClient.setServer(config.rpintstarget.host, config.rpintstarget.port);
         }
 
         Log.verbose(F("MQTT: Connecting." CR));
-        mqttClient.connect();
-        mqttReconnectTimer.attach(5000, connectMqtt);
+        rpintsClient.connect();
+        rpintsReconnectTimer.attach(5000, connectRPints);
     }
     else
     {
@@ -83,18 +83,18 @@ void connectMqtt()
     }
 }
 
-void disconnectMqtt()
+void disconnectRPints()
 {
-    mqttReconnectTimer.detach();
-    if (mqttClient.connected())
+    rpintsReconnectTimer.detach();
+    if (rpintsClient.connected())
     {
-        mqttClient.disconnect();
+        rpintsClient.disconnect();
     }
 }
 
-bool sendPulsesMqtt(int tapID, unsigned int pulses)
+bool sendPulsesRPints(int tapID, unsigned int pulses)
 {
-    if (mqttClient.connected())
+    if (rpintsClient.connected())
     {
         // Prepare a pulse count MQTT report
 
@@ -115,8 +115,11 @@ bool sendPulsesMqtt(int tapID, unsigned int pulses)
         strcat(payload, count); // Count of pulses in report
 
         // Send report
-        Log.verbose(F("MQTT: Sending message to %s:%d, payload: %s" CR), config.mqtttarget.host, config.mqtttarget.port, payload);
-        if (mqttClient.publish(config.mqtttarget.topic, 0, false, payload) > 1)
+        Log.verbose(F("MQTT: Sending message to %s:%d, payload: %s" CR),
+                config.rpintstarget.host,
+                config.rpintstarget.port,
+                payload);
+        if (rpintsClient.publish(config.rpintstarget.topic, 0, false, payload) > 1)
         {
             return true;
         }
@@ -128,17 +131,17 @@ bool sendPulsesMqtt(int tapID, unsigned int pulses)
     return false;
 }
 
-void onMqttConnect(bool sessionPresent)
+void onRPintsConnect(bool sessionPresent)
 {
     Log.notice(F("MQTT: Connected to MQTT, session: %T" CR), sessionPresent);
 }
 
-void onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
+void onRPintsDisconnect(AsyncMqttClientDisconnectReason reason)
 {
     Log.verbose(F("Disconnected from MQTT." CR));
 }
 
-void onMqttPublish(uint16_t packetId)
+void onRPintsPublish(uint16_t packetId)
 {
     Log.verbose(F("MQTT: Publish acknowledged, packet ID: %d." CR), packetId);
 }

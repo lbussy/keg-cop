@@ -42,7 +42,7 @@ JSON Definition:
 		"freq": 999,
 		"update": false
 	},
-	"mqtttarget": {
+	"rpintstarget": {
 		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"port": 99999,
 		"username": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -115,12 +115,12 @@ const char* urltarget_url = urltarget["url"];
 int urltarget_freq = urltarget["freq"]; // 999
 bool urltarget_update = urltarget["update"]; // false
 
-JsonObject mqtttarget = doc["mqtttarget"];
-const char* mqtttarget_url = mqtttarget["url"];
-long mqtttarget_port = mqtttarget["port"]; // 99999
-const char* mqtttarget_username = mqtttarget["username"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-const char* mqtttarget_password = mqtttarget["password"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-const char* mqtttarget_topic = mqtttarget["topic"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+JsonObject rpintstarget = doc["rpintstarget"];
+const char* mqtttarget_url = rpintstarget["url"];
+long mqtttarget_port = rpintstarget["port"]; // 99999
+const char* mqtttarget_username = rpintstarget["username"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* mqtttarget_password = rpintstarget["password"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* mqtttarget_topic = rpintstarget["topic"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 bool dospiffs1 = doc["dospiffs1"]; // false
 bool dospiffs2 = doc["dospiffs2"]; // false
@@ -168,12 +168,12 @@ urltarget["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 urltarget["freq"] = 999;
 urltarget["update"] = false;
 
-JsonObject mqtttarget = doc.createNestedObject("mqtttarget");
-mqtttarget["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-mqtttarget["port"] = 99999;
-mqtttarget["username"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-mqtttarget["password"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-mqtttarget["topic"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+JsonObject rpintstarget = doc.createNestedObject("rpintstarget");
+rpintstarget["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+rpintstarget["port"] = 99999;
+rpintstarget["username"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+rpintstarget["password"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+rpintstarget["topic"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["dospiffs1"] = false;
 doc["dospiffs2"] = false;
 doc["didupdate"] = false;

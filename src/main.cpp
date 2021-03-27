@@ -90,7 +90,7 @@ void setup()
     sensorInit();       // Initialize temperature sensors
     startControl();     // Initialize temperature control
     doVersionPoll();    // Get server version at startup
-    setupMqtt();        // Set up MQTT
+    setupRPints();        // Set up MQTT
 
     // Setup tickers
     pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors

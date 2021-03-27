@@ -66,9 +66,9 @@ void setDoTargetReport()
     doTargetReport = true; // Semaphore required for URL Target Report
 }
 
-void setDoMqttConnect()
+void setDoRPintsConnect()
 {
-    doMqttConnect = true; // Semaphore required for MQTT (re)connect
+    doRPintsConnect = true; // Semaphore required for MQTT (re)connect
 }
 
 void tickerLoop()
@@ -92,7 +92,7 @@ void tickerLoop()
         // Send report from pour queue
         if (queuePourReport[i] > 0)
         {
-            sendPulsesMqtt(i, queuePulseReport[i]);
+            sendPulsesRPints(i, queuePulseReport[i]);
             sendPourReport(i, queuePourReport[i]);
             queuePourReport[i] = 0;
             queuePulseReport[i] = 0;
@@ -126,10 +126,10 @@ void tickerLoop()
         sendTargetReport();
         doTargetReport = false;
     }
-    if (doMqttConnect)
+    if (doRPintsConnect)
     {
-        connectMqtt();
-        doMqttConnect = false;
+        connectRPints();
+        doRPintsConnect = false;
     }
 }
 

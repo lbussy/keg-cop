@@ -31,7 +31,6 @@ SOFTWARE. */
 
 #include "config.h"
 #include "ntphandler.h"
-#include "wifihandler.h"
 #include "kegscreen.h"
 #include "thermostat.h"
 #include "urltarget.h"
@@ -50,7 +49,7 @@ void setDoReset();
 void setDoKSTempReport();
 void setDoTapInfoReport(int);
 void setDoTargetReport();
-void setDoMqttConnect();
+void setDoRPintsConnect();
 void tickerLoop();
 void maintenanceLoop();
 void printDebug();
@@ -68,7 +67,7 @@ static bool __attribute__((unused)) doReset = false;        // Semaphore for res
 static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset
 static bool __attribute__((unused)) doKSTempReport = false; // Semaphore for Keg Screen Temps Report
 static bool __attribute__((unused)) doTargetReport = false; // Semaphore for URL Target Report
-static bool __attribute__((unused)) doMqttConnect = false;  // Semaphore for MQTT (re)connect
+static bool __attribute__((unused)) doRPintsConnect = false;  // Semaphore for MQTT (re)connect
 static bool __attribute__((unused)) doTapInfoReport[NUMTAPS] = {
     false, false, false, false, false, false, false, false}; // Semaphore for reset
 

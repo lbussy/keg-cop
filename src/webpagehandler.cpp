@@ -426,8 +426,8 @@ void setSettingsAliases()
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
 
-    server.on("/settings/mqtt/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/mqtt/." CR));
+    server.on("/settings/rpints/", HTTP_POST, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Processing post to /settings/rpints/." CR));
         if (handleMQTTTargetPost(request))
         {
             request->send(200, F("text/plain"), F("Ok"));
@@ -438,7 +438,7 @@ void setSettingsAliases()
         }
     });
 
-    server.on("/settings/mqtt/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/settings/rpints/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Invalid method to /settings/targeturl/." CR));
         request->send(405, F("text/plain"), F("Method not allowed."));
     });
@@ -1184,19 +1184,19 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
             // MQTT Target settings
             //
             int changedMqtt = 0;
-            if (strcmp(name, "mqtthost") == 0) // Set MQTT broker host
+            if (strcmp(name, "rpintshost") == 0) // Set MQTT broker host
             {
                 LCBUrl url;
                 if (url.isValidHostName(value) && (strlen(value) > 3) && (strlen(value) < 128))
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(config.mqtttarget.host, value, sizeof(config.mqtttarget.host));
+                    strlcpy(config.rpintstarget.host, value, sizeof(config.rpintstarget.host));
                     changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
-                    strlcpy(config.mqtttarget.host, value, sizeof(config.mqtttarget.host));
+                    strlcpy(config.rpintstarget.host, value, sizeof(config.rpintstarget.host));
                     changedMqtt++;
                 }
                 else
@@ -1204,7 +1204,7 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "mqttport") == 0) // Set the broker port
+            if (strcmp(name, "rpintsport") == 0) // Set the broker port
             {
                 const double val = atof(value);
                 if ((val < 1) || (val > 65535))
@@ -1214,22 +1214,22 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
                 else
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.mqtttarget.port = val;
+                    config.rpintstarget.port = val;
                     changedMqtt++;
                 }
             }
-            if (strcmp(name, "mqttusername") == 0) // Set MQTT user name
+            if (strcmp(name, "rpintsusername") == 0) // Set MQTT user name
             {
                 if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(config.mqtttarget.username, value, sizeof(config.mqtttarget.username));
+                    strlcpy(config.rpintstarget.username, value, sizeof(config.rpintstarget.username));
                     changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
-                    strlcpy(config.mqtttarget.username, value, sizeof(config.mqtttarget.username));
+                    strlcpy(config.rpintstarget.username, value, sizeof(config.rpintstarget.username));
                     changedMqtt++;
                 }
                 else
@@ -1237,18 +1237,18 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "mqttpassword") == 0) // Set MQTT user password
+            if (strcmp(name, "rpintspassword") == 0) // Set MQTT user password
             {
                 if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(config.mqtttarget.password, value, sizeof(config.mqtttarget.password));
+                    strlcpy(config.rpintstarget.password, value, sizeof(config.rpintstarget.password));
                     changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
-                    strlcpy(config.mqtttarget.password, value, sizeof(config.mqtttarget.password));
+                    strlcpy(config.rpintstarget.password, value, sizeof(config.rpintstarget.password));
                     changedMqtt++;
                 }
                 else
@@ -1256,12 +1256,12 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "mqtttopic") == 0) // Set MQTT topic
+            if (strcmp(name, "rpintstopic") == 0) // Set MQTT topic
             {
                 if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(config.mqtttarget.topic, value, sizeof(config.mqtttarget.topic));
+                    strlcpy(config.rpintstarget.topic, value, sizeof(config.rpintstarget.topic));
                     changedMqtt++;
                 }
                 else
@@ -1271,8 +1271,8 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
             }
             if (changedMqtt)
             {
-                disconnectMqtt();
-                setDoMqttConnect();
+                disconnectRPints();
+                setDoRPintsConnect();
             }
         }
     }

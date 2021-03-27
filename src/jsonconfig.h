@@ -127,7 +127,7 @@ struct Config
     Temperatures temps;
     KegScreen kegscreen;
     URLTarget urltarget;
-    MQTTTarget mqtttarget;
+    MQTTTarget rpintstarget;
     CloudTarget cloud;
     bool dospiffs1;
     bool dospiffs2;

@@ -681,7 +681,7 @@ void Config::save(JsonObject obj) const
     // Add Keg Screen object
     kegscreen.save(obj.createNestedObject("kegscreen"));
     // Add MQTT object
-    mqtttarget.save(obj.createNestedObject("mqtttarget"));
+    rpintstarget.save(obj.createNestedObject("rpintstarget"));
     // Add Target object
     urltarget.save(obj.createNestedObject("urltarget"));
     // Add dospiffs1 object
@@ -725,7 +725,7 @@ void Config::load(JsonObjectConst obj)
     temps.load(obj["temps"]);
     kegscreen.load(obj["kegscreen"]);
     urltarget.load(obj["urltarget"]);
-    mqtttarget.load(obj["mqtttarget"]);
+    rpintstarget.load(obj["rpintstarget"]);
 
     if (obj["dospiffs1"].isNull())
     {
