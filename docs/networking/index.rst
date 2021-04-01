@@ -12,6 +12,10 @@ You may use any wireless-capable device to connect to the access point. However,
 
 In your device settings, search for an available access point named "kegcop."
 
+.. todo::
+
+   Change these images to current ones.
+
 .. image:: 1_choose_ap.jpg
    :scale: 25%
    :align: center

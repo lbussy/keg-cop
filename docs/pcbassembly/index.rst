@@ -7,14 +7,6 @@ PCB Assembly
 
    Add thumbnails of the various assembled PCBs somewhere here without leaving the page?
 
-.. todo::
-
-   Check BOM to ensure it's correct
-
-.. todo::
-
-   Change any DirtyPCB links to OshPark
-
 Keg Cop runs on an ESP32 controller. To detect the information to be logged, you need to connect specific devices to the controller. I have provided a main circuit board design, as well as several breakouts for your use.
 
 Assembly is not difficult, but it does require some basic soldering.
@@ -49,20 +41,11 @@ Printed Circuit Boards
 
 This configuration will use the following three boards:
 
-- \*\*\* `Main Board <https://dirtypcbs.com/store/designer/details/4818/6477/keg-cop-main-board>`_
-- `Sensor board <https://dirtypcbs.com/store/designer/details/4818/6460/keg-cop-sensor-breakout>`_
-- 3 x `Daisy Chain boards <https://dirtypcbs.com/store/designer/details/4818/6478/keg-cop-daisy-chain>`_
+- `Main Board <https://oshpark.com/shared_projects/UQZn4ng4>`_
+- `Sensor board <https://oshpark.com/shared_projects/MkSWgv0t>`_
+- 3 x `Daisy Chain boards <https://oshpark.com/shared_projects/Zc4zPNjI>`_
 
-The links will take you to DirtyPCBs where I have uploaded the designs.  When you purchase the boards there, you pay a small premium (10%), which goes into my account. I use that credit in the development of these and other projects. Anyone who has done development like this can tell you how many boards we go through, and the cost is not insignificant. You may take the files from GitHub and upload them yourself to avoid that small markup if you choose. If you *do* purchase them here, it's only fair I tell you about it, and what I will do with the credits.
-
-These links will allow you to order boards in increments of ±10.  Sometimes you might get 11, sometimes nine, it's cheap and from China, and that's how it works. Think of it as a lottery. If you end up with extras, I encourage you to share with others.
-
-(\*\*\*) - The main board is larger than the "standard" Dirty PCB size of 5x5cm.  When you get to the ordering page, you MUST select 10x10, which has a slightly higher price.  If you forget this, I think they may adjust the price afterward. For such low prices, it is proper to be upfront about things. On the same page, you may also select other than the default board color, which is red.
-
-.. image:: size.png
-   :scale: 100%
-   :align: center
-   :alt: Board Size
+The links will take you to OshPark where I have uploaded the designs.  OshPark is not the cheapest, but they are the most consistent fab house I have dealt with.  You're only talking the difference of a few dollars in your project between them and other fab houses.  For my peace of mind, and for me to recommend them to you, I think it's worth it.  You may take the files from GitHub and upload them yourself somewhere else to save money if you choose.
 
 Components
 ================
@@ -74,7 +57,7 @@ For this configuration, we will use the following components:
 - 2 x `0.1μF (1.0nF) Ceramic Capacitor (102) 2.54mm spacing <https://www.aliexpress.com/item/32868001945.html>`_ (C1, 3) (Note: The same link as below, select the proper item)
 - 2 x `1.0μF Ceramic Capacitor (105) 2.54mm spacing <https://www.aliexpress.com/item/32868001945.html>`_ (C2, C4) (Note: The same link as above, select the proper item)
 - \*1 x `DS18B20 PCB-mount sensor <https://www.aliexpress.com/item/1901263688.html>`_ (IC1) (Note: Multiple items on the page, be sure to select the proper item)
-- 5 x `2.2kΩ 1/4W 5% Axial Resistor <https://www.aliexpress.com/item/32660635741.html>`_ (R1-R5) (Note: Multiple items on the page, be sure to select the proper item)
+- 14 x `2.2kΩ 1/4W 5% Axial Resistor <https://www.aliexpress.com/item/32660635741.html>`_ (R1-R5) (Note: Multiple items on the page, be sure to select the proper item)
 - 4 x `RJ45 8-pin 90° no shield PCM-mount jack <https://www.aliexpress.com/item/32736146888.html>`_
 - 1 x `2-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (POWER) (Note: More than enough in one lot for all three headers)
 - \*1 x `3-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (ROOM) (Note: More than enough in one lot for all three headers)
@@ -85,7 +68,7 @@ For this configuration, we will use the following components:
 - 1 x `RJ45 8-pin 90° no shield PCM-mount jack <https://www.aliexpress.com/item/32736146888.html>`_
 - 4 x `3-pin terminal block <https://www.aliexpress.com/item/32965348107.html>`_
 
-**Daisy Chain Boards (multiply all numbers x 3 for three flowmeters):**
+**Daisy Chain Boards (per flowmeter, multiply all numbers x 3 for three flowmeters):**
 
 - 2 x `RJ45 8-pin 90° no shield PCM-mount jack <https://www.aliexpress.com/item/32736146888.html>`_
 - 1 x `3-pin terminal block <https://www.aliexpress.com/item/32965348107.html>`_
@@ -103,7 +86,7 @@ I do not intend to provide a step-by-step on how to solder here. Still, I recomm
 
 - Resistors - These are the shortest mounted components. Soldering the resistors to the board first is the least challenging. They are also some of the most heat-tolerant parts, so these grant you some experience to get you going.
 - Capacitors - The next tallest components, these should go on next. They are also relatively tolerant of heat, so you can continue to refine your skills. Be sure to get them as close to the board as possible since having them stick up changes their intended impact on the circuit.
-- DS18B20 Sensor - Now that you are sure of your skills, these sensors should be soldered next. Be careful not to overheat the devices, but they are not too sensitive.
+- DS18B20 Sensor - Now that you are sure of your skills, this sensor should be soldered next if you use one. Be careful not to overheat the device, but they are not too sensitive.
 - Pin headers and terminal blocks - These components are not vulnerable to the heat at all except for the plastic.
 - RJ45 Jacks - These are the tallest items, and you should solder them on last.
 
