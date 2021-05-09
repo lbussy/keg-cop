@@ -763,6 +763,19 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                     strlcpy(config.copconfig.kegeratorname, value, sizeof(config.copconfig.kegeratorname));
                 }
             }
+            if (strcmp(name, "controlnum") == 0) // Set the controller number
+            {
+                const uint8_t val = atof(value);
+                if ((val < 0) || (val > 9))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.copconfig.controllernumber = val;
+                }
+            }
             if (strcmp(name, "imperial") == 0) // Set units
             {
                 if (strcmp(value, "true") == 0)
