@@ -620,6 +620,48 @@ void KegScreen::load(JsonObjectConst obj)
     }
 }
 
+void TaplistIO::save(JsonObject obj) const
+{
+    obj["venue"] = venue;
+    obj["secret"] = secret;
+    obj["update"] = update;
+}
+
+void TaplistIO::load(JsonObjectConst obj)
+{
+    // Load TaplistIO configuration
+    //
+    if (obj["venue"].isNull())
+    {
+        strlcpy(venue, "", sizeof(venue));
+    }
+    else
+    {
+        const char *vn = obj["venue"];
+        strlcpy(venue, vn, sizeof(venue));
+    }
+
+    if (obj["secret"].isNull())
+    {
+        strlcpy(secret, "", sizeof(secret));
+    }
+    else
+    {
+        const char *sc = obj["secret"];
+        strlcpy(secret, sc, sizeof(secret));
+    }
+
+    if (obj["update"].isNull())
+    {
+        update = false;
+    }
+    else
+    {
+        bool up = obj["update"];
+        update = up;
+    }
+}
+
 void URLTarget::save(JsonObject obj) const
 {
     obj["url"] = url;
@@ -749,6 +791,8 @@ void Config::save(JsonObject obj) const
     temps.save(obj.createNestedObject("temps"));
     // Add Keg Screen object
     kegscreen.save(obj.createNestedObject("kegscreen"));
+    // Add TaplistIO object
+    ota.save(obj.createNestedObject("taplistio"));
     // Add MQTT object
     rpintstarget.save(obj.createNestedObject("rpintstarget"));
     // Add Target object
@@ -764,6 +808,7 @@ void Config::load(JsonObjectConst obj)
     ota.load(obj["ota"]);
     temps.load(obj["temps"]);
     kegscreen.load(obj["kegscreen"]);
+    taplistio.load(obj["taplistio"]);
     urltarget.load(obj["urltarget"]);
     rpintstarget.load(obj["rpintstarget"]);
 }

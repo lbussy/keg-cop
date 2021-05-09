@@ -82,6 +82,17 @@ struct KegScreen
     void save(JsonObject) const;
 };
 
+struct TaplistIO
+{
+    // Stores TaplistIO configuration
+    char venue[25];
+    char secret[57];
+    bool update;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
 struct MQTTTarget
 {
     // Stores MQTT Target configuration
@@ -139,6 +150,7 @@ struct Config
     OTA ota;
     Temperatures temps;
     KegScreen kegscreen;
+    TaplistIO taplistio;
     URLTarget urltarget;
     MQTTTarget rpintstarget;
     CloudTarget cloud;
