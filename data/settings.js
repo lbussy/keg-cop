@@ -131,6 +131,7 @@ function populateConfig(callback = null) { // Get configuration settings
                 originalHostnameConfig = $('input[name="hostname"]').val();
                 $('input[name="breweryname"]').val(config.copconfig.breweryname);
                 $('input[name="kegeratorname"]').val(config.copconfig.kegeratorname);
+                $('select[name="controlnum"] option[value=' + parseInt(config.copconfig.controlnum, 10) + ']').attr('selected', 'selected');
                 if (config.copconfig.imperial) {
                     imperial = true;
                     $('input:radio[name="imperial"]')[1].checked = true;
@@ -415,8 +416,9 @@ function processControllerPost(url, obj) {
     var $form = $(obj),
         hostnameVal = $form.find("input[name='hostname']").val(),
         brewerynameVal = $form.find("input[name='breweryname']").val(),
-        kegeratornameVal = $form.find("input[name='kegeratorname']").val()
-    imperialVal = $("[name='imperial']:checked").val(),
+        kegeratornameVal = $form.find("input[name='kegeratorname']").val(),
+        controlnum = $form.find("select[name='controlnum']").val(),
+        imperialVal = $("[name='imperial']:checked").val(),
         serialVal = $("[name='serial']:checked").val(),
         tapsolenoidVal = $("[name='tapsolenoid']:checked").val()
 
@@ -457,6 +459,7 @@ function processControllerPost(url, obj) {
             hostname: hostnameVal,
             breweryname: brewerynameVal,
             kegeratorname: kegeratornameVal,
+            controlnum: controlnumVal,
             imperial: imperialVal,
             serial: serialVal,
             tapsolenoid: tapsolenoidVal,
