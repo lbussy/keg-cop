@@ -45,12 +45,13 @@ struct ApConfig
 
 struct CopConfig
 {
-    // Stores Bubble configuration
+    // Stores Keg Cop configuration
     char guid[9];
     char hostname[32];
     bool nodrd;
     char breweryname[64];
     char kegeratorname[64];
+    uint8_t controllernumber;
     bool imperial;
     bool serial;
     bool tapsolenoid;
