@@ -102,10 +102,10 @@ void setActionPageHandlers()
     server.on("/clearupdate/", HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing /clearupdate/." CR));
         Log.verbose(F("Clearing any update flags." CR));
-        config.dospiffs1 = false;
-        config.dospiffs2 = false;
-        config.didupdate = false;
-        config.nodrd = false;
+        config.ota.dospiffs1 = false;
+        config.ota.dospiffs2 = false;
+        config.ota.didupdate = false;
+        config.copconfig.nodrd = false;
         saveConfig();
         request->send(200, F("text/plain"), F("200: OK."));
     });
@@ -731,12 +731,12 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                 }
                 else
                 {
-                    if (!strcmp(config.hostname, value) == 0)
+                    if (!strcmp(config.copconfig.hostname, value) == 0)
                     {
                         hostnamechanged = true;
                     }
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(config.hostname, value, sizeof(config.hostname));
+                    strlcpy(config.copconfig.hostname, value, sizeof(config.copconfig.hostname));
                 }
             }
             if (strcmp(name, "breweryname") == 0) // Set brewery name
@@ -830,7 +830,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
         if (hostnamechanged)
         { // We reset hostname, process
             hostnamechanged = false;
-            tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.hostname);
+            tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.copconfig.hostname);
             mdnsreset();
             Log.verbose(F("POSTed new mDNSid, reset mDNS stack." CR));
         }

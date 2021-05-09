@@ -30,7 +30,7 @@ SOFTWARE. */
 #include <SPIFFS.h>
 #include <FS.h>
 
-#define CAP_SER_CONF 1536
+#define CAP_SER_CONF 2048
 #define CAP_DESER_CONF 2048
 
 struct ApConfig
@@ -46,6 +46,9 @@ struct ApConfig
 struct CopConfig
 {
     // Stores Bubble configuration
+    char guid[9];
+    char hostname[32];
+    bool nodrd;
     char breweryname[64];
     char kegeratorname[64];
     bool imperial;
@@ -117,22 +120,28 @@ struct CloudTarget
     void save(JsonObject) const;
 };
 
+struct OTA
+{
+    // Stores OTA data
+    bool dospiffs1;
+    bool dospiffs2;
+    bool didupdate;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
 struct Config
 {
     // Stores the complete configuration
     ApConfig apconfig;
-    char guid[9];
-    char hostname[32];
     CopConfig copconfig;
+    OTA ota;
     Temperatures temps;
     KegScreen kegscreen;
     URLTarget urltarget;
     MQTTTarget rpintstarget;
     CloudTarget cloud;
-    bool dospiffs1;
-    bool dospiffs2;
-    bool didupdate;
-    bool nodrd;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
