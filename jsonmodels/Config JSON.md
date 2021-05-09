@@ -10,14 +10,20 @@ JSON Definition:
 		"ssid": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"passphrase": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	},
-	"guid":"xxxxxxxx",
-	"hostname": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 	"copconfig": {
+		"guid":"xxxxxxxx",
+		"hostname": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"nodrd": false,
 		"breweryname": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"kegeratorname": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"imperial": false,
 		"serial": false,
 		"tapsolenoid": false
+	},
+	"ota": {
+		"dospiffs1": false,
+		"dospiffs2": false,
+		"didupdate": false
 	},
 	"temps": {
 		"setpoint": 100,
@@ -37,6 +43,10 @@ JSON Definition:
 	"kegscreen": {
 		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	},
+	"taplistio": {
+		"venue": "taplist-0123456789",
+		"secret": "secret-abcdefghz5DxqHexX7hRLcaHLMM4JYLtHt4m4ByB"
+	},
 	"urltarget": {
 		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"freq": 999,
@@ -48,11 +58,7 @@ JSON Definition:
 		"username": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"topic": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-	},
-	"dospiffs1": false,
-	"dospiffs2": false,
-	"didupdate": false,
-	"nodrd": false
+	}
 }
 ```
 
@@ -83,15 +89,20 @@ if (error) {
 const char* apconfig_ssid = doc["apconfig"]["ssid"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* apconfig_passphrase = doc["apconfig"]["passphrase"];
 
-const char* guid = doc["guid"]; // "xxxxxxxx"
-const char* hostname = doc["hostname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-
 JsonObject copconfig = doc["copconfig"];
+const char* copconfig_guid = copconfig["guid"]; // "xxxxxxxx"
+const char* copconfig_hostname = copconfig["hostname"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+bool copconfig_nodrd = copconfig["nodrd"]; // false
 const char* copconfig_breweryname = copconfig["breweryname"];
 const char* copconfig_kegeratorname = copconfig["kegeratorname"];
 bool copconfig_imperial = copconfig["imperial"]; // false
 bool copconfig_serial = copconfig["serial"]; // false
 bool copconfig_tapsolenoid = copconfig["tapsolenoid"]; // false
+
+JsonObject ota = doc["ota"];
+bool ota_dospiffs1 = ota["dospiffs1"]; // false
+bool ota_dospiffs2 = ota["dospiffs2"]; // false
+bool ota_didupdate = ota["didupdate"]; // false
 
 JsonObject temps = doc["temps"];
 int temps_setpoint = temps["setpoint"]; // 100
@@ -110,42 +121,46 @@ float temps_kegcal = temps["kegcal"]; // 99.99
 
 const char* kegscreen_url = doc["kegscreen"]["url"];
 
+const char* taplistio_venue = doc["taplistio"]["venue"]; // "taplist-0123456789"
+const char* taplistio_secret = doc["taplistio"]["secret"];
+
 JsonObject urltarget = doc["urltarget"];
 const char* urltarget_url = urltarget["url"];
 int urltarget_freq = urltarget["freq"]; // 999
 bool urltarget_update = urltarget["update"]; // false
 
 JsonObject rpintstarget = doc["rpintstarget"];
-const char* mqtttarget_url = rpintstarget["url"];
-long mqtttarget_port = rpintstarget["port"]; // 99999
-const char* mqtttarget_username = rpintstarget["username"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-const char* mqtttarget_password = rpintstarget["password"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-const char* mqtttarget_topic = rpintstarget["topic"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-
-bool dospiffs1 = doc["dospiffs1"]; // false
-bool dospiffs2 = doc["dospiffs2"]; // false
-bool didupdate = doc["didupdate"]; // false
-bool nodrd = doc["nodrd"]; // false
+const char* rpintstarget_url = rpintstarget["url"];
+long rpintstarget_port = rpintstarget["port"]; // 99999
+const char* rpintstarget_username = rpintstarget["username"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* rpintstarget_password = rpintstarget["password"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* rpintstarget_topic = rpintstarget["topic"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 Serializing:
 ------------
 
 ```
-StaticJsonDocument<1536> doc;
+StaticJsonDocument<2048> doc;
 
 JsonObject apconfig = doc.createNestedObject("apconfig");
 apconfig["ssid"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 apconfig["passphrase"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-doc["guid"] = "xxxxxxxx";
-doc["hostname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 JsonObject copconfig = doc.createNestedObject("copconfig");
+copconfig["guid"] = "xxxxxxxx";
+copconfig["hostname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+copconfig["nodrd"] = false;
 copconfig["breweryname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 copconfig["kegeratorname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 copconfig["imperial"] = false;
 copconfig["serial"] = false;
 copconfig["tapsolenoid"] = false;
+
+JsonObject ota = doc.createNestedObject("ota");
+ota["dospiffs1"] = false;
+ota["dospiffs2"] = false;
+ota["didupdate"] = false;
 
 JsonObject temps = doc.createNestedObject("temps");
 temps["setpoint"] = 100;
@@ -163,6 +178,10 @@ temps["kegenable"] = false;
 temps["kegcal"] = 99.99;
 doc["kegscreen"]["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
+JsonObject taplistio = doc.createNestedObject("taplistio");
+taplistio["venue"] = "taplist-0123456789";
+taplistio["secret"] = "secret-abcdefghz5DxqHexX7hRLcaHLMM4JYLtHt4m4ByB";
+
 JsonObject urltarget = doc.createNestedObject("urltarget");
 urltarget["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 urltarget["freq"] = 999;
@@ -174,10 +193,6 @@ rpintstarget["port"] = 99999;
 rpintstarget["username"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 rpintstarget["password"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 rpintstarget["topic"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-doc["dospiffs1"] = false;
-doc["dospiffs2"] = false;
-doc["didupdate"] = false;
-doc["nodrd"] = false;
 
 serializeJson(doc, output);
 ```

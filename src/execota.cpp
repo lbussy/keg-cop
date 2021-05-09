@@ -30,10 +30,10 @@ void execfw()
     stopWebServer();
 
     // Have to set this here because we have no chance after update
-    config.dospiffs1 = true;
-    config.dospiffs2 = false;
-    config.didupdate = false;
-    config.nodrd = true;
+    config.ota.dospiffs1 = true;
+    config.ota.dospiffs2 = false;
+    config.ota.didupdate = false;
+    config.copconfig.nodrd = true;
     saveConfig();
     saveFlowConfig();
 
@@ -50,10 +50,10 @@ void execfw()
     case HTTP_UPDATE_FAILED:
         Log.error(F("HTTP Firmware OTA Update failed," CR));
         // Don't allow anything to proceed
-        config.dospiffs1 = false;
-        config.dospiffs2 = false;
-        config.didupdate = false;
-        config.nodrd = true;
+        config.ota.dospiffs1 = false;
+        config.ota.dospiffs2 = false;
+        config.ota.didupdate = false;
+        config.copconfig.nodrd = true;
         saveConfig();
         saveFlowConfig();
         ESP.restart();
@@ -62,10 +62,10 @@ void execfw()
     case HTTP_UPDATE_NO_UPDATES:
         Log.notice(F("HTTP Firmware OTA Update: No updates." CR));
         // Don't allow anything to proceed
-        config.dospiffs1 = false;
-        config.dospiffs2 = false;
-        config.didupdate = false;
-        config.nodrd = true;
+        config.ota.dospiffs1 = false;
+        config.ota.dospiffs2 = false;
+        config.ota.didupdate = false;
+        config.copconfig.nodrd = true;
         saveConfig();
         saveFlowConfig();
         ESP.restart();
@@ -73,7 +73,7 @@ void execfw()
 
     case HTTP_UPDATE_OK:
         Log.notice(F("HTTP Firmware OTA Update complete, restarting." CR));
-        config.nodrd = true;
+        config.copconfig.nodrd = true;
         saveConfig();
         ESP.restart();
         break;
@@ -82,23 +82,23 @@ void execfw()
 
 void execspiffs()
 {
-    if (config.dospiffs1)
+    if (config.ota.dospiffs1)
     {
         Log.notice(F("Rebooting a second time before FILESYSTEM OTA pull." CR));
-        config.dospiffs1 = false;
-        config.dospiffs2 = true;
-        config.didupdate = false;
-        config.nodrd = true;
+        config.ota.dospiffs1 = false;
+        config.ota.dospiffs2 = true;
+        config.ota.didupdate = false;
+        config.copconfig.nodrd = true;
         saveConfig();
         saveFlowConfig();
 
         if (FILESYSTEM.begin())
             FILESYSTEM.remove("/drd.dat");
-        config.nodrd = true;
+        config.copconfig.nodrd = true;
         saveConfig();
         ESP.restart();
     }
-    else if (config.dospiffs2)
+    else if (config.ota.dospiffs2)
     {
         Log.notice(F("Starting the FILESYSTEM OTA pull." CR));
 
@@ -125,10 +125,10 @@ void execspiffs()
 
         case HTTP_UPDATE_OK:
             // Reset FILESYSTEM update flag
-            config.dospiffs1 = false;
-            config.dospiffs2 = false;
-            config.didupdate = true;
-            config.nodrd = true;
+            config.ota.dospiffs1 = false;
+            config.ota.dospiffs2 = false;
+            config.ota.didupdate = true;
+            config.copconfig.nodrd = true;
             saveConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
             saveFlowConfig(); // Save previous flowmeter data
             Log.notice(F("HTTP FILESYSTEM OTA Update complete, restarting." CR));

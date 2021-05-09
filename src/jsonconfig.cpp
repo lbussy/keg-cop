@@ -290,8 +290,50 @@ void ApConfig::load(JsonObjectConst obj)
     }
 }
 
+void OTA::save(JsonObject obj) const
+{
+    obj["dospiffs1"] = dospiffs1;
+    obj["dospiffs2"] = dospiffs2;
+    obj["didupdate"] = didupdate;
+}
+
+void OTA::load(JsonObjectConst obj)
+{
+    // Load OTA configuration
+    //
+    if (obj["dospiffs1"].isNull())
+    {
+        dospiffs1 = false;
+    }
+    else
+    {
+        dospiffs1 = obj["dospiffs1"];
+    }
+
+    if (obj["dospiffs2"].isNull())
+    {
+        dospiffs2 = false;
+    }
+    else
+    {
+        dospiffs2 = obj["dospiffs2"];
+    }
+
+    if (obj["didupdate"].isNull())
+    {
+        didupdate = false;
+    }
+    else
+    {
+        didupdate = obj["didupdate"];
+    }
+}
+
 void CopConfig::save(JsonObject obj) const
 {
+    obj["guid"] = guid;
+    obj["hostname"] = hostname;
+    obj["nodrd"] = nodrd;
     obj["breweryname"] = breweryname;
     obj["kegeratorname"] = kegeratorname;
     obj["serial"] = serial;
@@ -303,6 +345,35 @@ void CopConfig::load(JsonObjectConst obj)
 {
     // Load Cop configuration
     //
+    if (obj["guid"].isNull())
+    {
+        getGuid(guid, sizeof(guid));
+    }
+    else
+    {
+        const char *gd = obj["guid"];
+        strlcpy(guid, gd, sizeof(guid));
+    }
+
+    if (obj["hostname"].isNull())
+    {
+        strlcpy(hostname, APNAME, sizeof(hostname));
+    }
+    else
+    {
+        const char *hn = obj["hostname"];
+        strlcpy(hostname, hn, sizeof(hostname));
+    }
+
+    if (obj["nodrd"].isNull())
+    {
+        nodrd = false;
+    }
+    else
+    {
+        nodrd = obj["nodrd"];
+    }
+
     if (obj["breweryname"].isNull())
     {
         strlcpy(breweryname, BRWYNAME, sizeof(breweryname));
@@ -670,12 +741,10 @@ void Config::save(JsonObject obj) const
 {
     // Add Access Point object
     apconfig.save(obj.createNestedObject("apconfig"));
-    // Add GUID object
-    obj["guid"] = guid;
-    // Add Hostname object
-    obj["hostname"] = hostname;
-    // Add Bubble object
+    // Add Keg Cop object
     copconfig.save(obj.createNestedObject("copconfig"));
+    // Add OTA object
+    ota.save(obj.createNestedObject("ota"));
     // Add Calibration object
     temps.save(obj.createNestedObject("temps"));
     // Add Keg Screen object
@@ -684,82 +753,17 @@ void Config::save(JsonObject obj) const
     rpintstarget.save(obj.createNestedObject("rpintstarget"));
     // Add Target object
     urltarget.save(obj.createNestedObject("urltarget"));
-    // Add dospiffs1 object
-    obj["dospiffs1"] = dospiffs1;
-    // Add dospiffs2 object
-    obj["dospiffs2"] = dospiffs2;
-    // Add didupdate object
-    obj["didupdate"] = didupdate;
-    // Add nodrd object
-    obj["nodrd"] = nodrd;
 }
 
 void Config::load(JsonObjectConst obj)
 {
     // Load all config objects
     //
-
     apconfig.load(obj["apconfig"]);
-
-    if (obj["guid"].isNull())
-    {
-        getGuid(guid, sizeof(guid));
-    }
-    else
-    {
-        const char *gd = obj["guid"];
-        strlcpy(guid, gd, sizeof(guid));
-    }
-
-    if (obj["hostname"].isNull())
-    {
-        strlcpy(hostname, APNAME, sizeof(hostname));
-    }
-    else
-    {
-        const char *hn = obj["hostname"];
-        strlcpy(hostname, hn, sizeof(hostname));
-    }
-
     copconfig.load(obj["copconfig"]);
+    ota.load(obj["ota"]);
     temps.load(obj["temps"]);
     kegscreen.load(obj["kegscreen"]);
     urltarget.load(obj["urltarget"]);
     rpintstarget.load(obj["rpintstarget"]);
-
-    if (obj["dospiffs1"].isNull())
-    {
-        dospiffs1 = false;
-    }
-    else
-    {
-        dospiffs1 = obj["dospiffs1"];
-    }
-
-    if (obj["dospiffs2"].isNull())
-    {
-        dospiffs2 = false;
-    }
-    else
-    {
-        dospiffs2 = obj["dospiffs2"];
-    }
-
-    if (obj["didupdate"].isNull())
-    {
-        didupdate = false;
-    }
-    else
-    {
-        didupdate = obj["didupdate"];
-    }
-
-    if (obj["nodrd"].isNull())
-    {
-        nodrd = false;
-    }
-    else
-    {
-        nodrd = obj["nodrd"];
-    }
 }

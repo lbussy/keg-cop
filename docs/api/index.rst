@@ -3,6 +3,10 @@
 Keg Cop API
 ################
 
+.. note::
+
+    Re-do API since moving top-level config items to subs.
+
 Keg Cop uses a combination of API types:
 
 - `Action Pages`_

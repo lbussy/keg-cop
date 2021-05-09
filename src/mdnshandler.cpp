@@ -43,7 +43,7 @@ void mdnssetup()
 void mdnsreset()
 {
     MDNS.end();
-    if (!MDNS.begin(config.hostname))
+    if (!MDNS.begin(config.copconfig.hostname))
     {
         Log.error(F("Error resetting MDNS responder."));
     }

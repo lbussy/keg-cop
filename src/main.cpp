@@ -56,7 +56,7 @@ void setup()
     pinMode(LED, OUTPUT);
 
     // Check if portal is requested
-    if (!config.nodrd && drd->detectDoubleReset())
+    if (!config.copconfig.nodrd && drd->detectDoubleReset())
     {
         Log.notice(F("DRD: Portal requested." CR));
         doWiFi(true);
@@ -69,7 +69,7 @@ void setup()
     else
     {
         Log.verbose(F("Starting WiFi." CR));
-        config.nodrd = false;
+        config.copconfig.nodrd = false;
         doWiFi();
     }
 

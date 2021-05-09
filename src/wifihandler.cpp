@@ -72,7 +72,7 @@ void doWiFi(bool dontUseStoredCreds)
     // Allow non-default host name
     // WiFiManagerParameter custom_mqtt_server("server", "mqtt server", config.hostname, 40);
     // wm.addParameter(&custom_mqtt_server);
-    WiFiManagerParameter custom_hostname("name", "Host Name", config.hostname, 32);
+    WiFiManagerParameter custom_hostname("name", "Host Name", config.copconfig.hostname, 32);
     wm.addParameter(&custom_hostname);
 
     if (dontUseStoredCreds)
@@ -118,17 +118,17 @@ void doWiFi(bool dontUseStoredCreds)
             // We finished with portal (We were configured)
             blinker.detach();        // Turn off blinker
             digitalWrite(LED, HIGH); // Turn off LED
-            WiFi.setHostname(config.hostname);
+            WiFi.setHostname(config.copconfig.hostname);
         }
     }
 
     if (shouldSaveConfig) { // Save configuration
-        if (custom_hostname.getValue() != config.hostname)
+        if (custom_hostname.getValue() != config.copconfig.hostname)
         {
             Log.notice(F("Saving custom hostname configuration: %s." CR), custom_hostname.getValue());
-            strlcpy(config.hostname, custom_hostname.getValue(), sizeof(config.hostname));
+            strlcpy(config.copconfig.hostname, custom_hostname.getValue(), sizeof(config.copconfig.hostname));
             saveConfig();
-            WiFi.setHostname(config.hostname);
+            WiFi.setHostname(config.copconfig.hostname);
 
         }
     }
@@ -146,7 +146,7 @@ void resetWifi()
     blinker.detach();       // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
     Log.notice(F("Restarting after clearing wifi settings." CR));
-    config.nodrd = true;
+    config.copconfig.nodrd = true;
     saveConfig();
     ESP.restart();
 }
