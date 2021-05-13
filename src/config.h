@@ -259,7 +259,7 @@ SOFTWARE. */
 // Access point password
 //
 #ifndef AP_PASSWD
-#define AP_PASSWD "kegcop2020"
+#define AP_PASSWD "kegcop2021"
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
