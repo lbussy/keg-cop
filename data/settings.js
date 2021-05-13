@@ -127,7 +127,7 @@ function populateConfig(callback = null) { // Get configuration settings
     })
         .done(function (config) {
             try {
-                $('input[name="hostname"]').val(config.hostname);
+                $('input[name="hostname"]').val(config.copconfig.hostname);
                 originalHostnameConfig = $('input[name="hostname"]').val();
                 $('input[name="breweryname"]').val(config.copconfig.breweryname);
                 $('input[name="kegeratorname"]').val(config.copconfig.kegeratorname);
@@ -417,7 +417,7 @@ function processControllerPost(url, obj) {
         hostnameVal = $form.find("input[name='hostname']").val(),
         brewerynameVal = $form.find("input[name='breweryname']").val(),
         kegeratornameVal = $form.find("input[name='kegeratorname']").val(),
-        controlnum = $form.find("select[name='controlnum']").val(),
+        controlnumVal = $form.find("select[name='controlnum']").val(),
         imperialVal = $("[name='imperial']:checked").val(),
         serialVal = $("[name='serial']:checked").val(),
         tapsolenoidVal = $("[name='tapsolenoid']:checked").val()
