@@ -37,9 +37,12 @@ void execfw()
     saveConfig();
     saveFlowConfig();
 
-    Log.verbose(F("Pulling Firmware from: %s" CR), F(FIRMWAREURL));
+    String fw_url = UPGRADEURL;
+    fw_url += board();
+    fw_url += "_firmware.bin";
+    Log.verbose(F("Pulling Firmware from: %s" CR), fw_url.c_str());
     LCBUrl lcburl;
-    lcburl.setUrl(FIRMWAREURL);
+    lcburl.setUrl(fw_url);
     char host[64], path[64];
     strlcpy(host, lcburl.getHost().c_str(), sizeof(host));
     strlcpy(path, lcburl.getPath().c_str(), sizeof(path));
@@ -105,9 +108,12 @@ void execspiffs()
         // Stop web server before OTA update - will restart on reset
         stopWebServer();
 
-        Log.verbose(F("Pulling Filesystem from: %s" CR), F(SPIFFSURL));
+        String fs_url = UPGRADEURL;
+        fs_url += board();
+        fs_url += "_spiffs.bin";
+        Log.verbose(F("Pulling Filesystem from: %s" CR), fs_url.c_str());
         LCBUrl lcburl;
-        lcburl.setUrl(SPIFFSURL);
+        lcburl.setUrl(fs_url);
         char host[64], path[64];
         strlcpy(host, lcburl.getHost().c_str(), sizeof(host));
         strlcpy(path, lcburl.getPath().c_str(), sizeof(path));
