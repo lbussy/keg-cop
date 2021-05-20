@@ -22,8 +22,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-declare CWD GITNAME GITROOT ENVIRONMENTS BINLOC
+declare CWD GITNAME GITROOT ENVIRONMENTS BINLOC PIO
 BINLOC="firmware"
+# TODO:
+    # Check for PIO
+    # Check for git
+    # Check for WSL
+PIO="/c/Users/lee/.platformio/penv/Scripts/platformio.exe"
 
 get_git() {
     echo -e "\nDetermining git root."
@@ -39,7 +44,7 @@ check_root() {
 get_envs() {
     echo -e "\nGathering build environments for $GITNAME."
     cd "$GITROOT" || exit
-    readarray -t ENVIRONMENTS < <(pio project data | grep "env_name" | cut -d'"' -f2)
+    readarray -t ENVIRONMENTS < <("$PIO" project data | grep "env_name" | cut -d'"' -f2)
 }
 
 list_envs() {
@@ -57,10 +62,10 @@ build_binaries() {
     do
         echo -e "\nBuilding binaries for $env."
         sleep 3
-        pio run -e "$env"
+        eval "$PIO" run -e "$env"
         echo -e "\nBuilding filesysyem for $env."
         sleep 3
-        pio run --target buildfs -e "$env"
+        eval "$PIO" run --target buildfs -e "$env"
     done
 }
 
