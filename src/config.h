@@ -289,7 +289,7 @@ SOFTWARE. */
 // Upgrade URL
 //
 #ifndef UPGRADEURL
-#define UPGRADEURL "http://www.kegcop.com/firmware/"
+#define UPGRADEURL "http://firmware.kegcop.com/"
 #endif
 //
 //////////////////////////////////////////////////////////////////////////

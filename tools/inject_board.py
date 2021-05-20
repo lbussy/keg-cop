@@ -25,8 +25,6 @@
 Import("env")
 board = env["BOARD"]
 
-macro_value = "\\\"" + board + "\\\""
-
 env.Append(CPPDEFINES=[
-  ("PIO_BOARD", macro_value)
+  ("PIO_BOARD", board)
 ])
