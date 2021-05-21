@@ -109,7 +109,9 @@ function populateConfig() { // Get configuration settings
                 loaded++;
             }
             catch {
-                configAlert.warning("Unable to parse configuration data.");
+                if (!unloadingState) {
+                    configAlert.warning("Unable to parse configuration data.");
+                }
             }
         })
         .fail(function () {
