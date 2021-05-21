@@ -23,8 +23,7 @@
 # SOFTWARE.
 
 Import("env")
-board = env["BOARD"]
 
 env.Append(CPPDEFINES=[
-  ("PIO_BOARD", board)
+  ("PIO_BOARD", env["BOARD"])
 ])
