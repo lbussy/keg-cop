@@ -24,21 +24,48 @@
 
 declare CWD GITNAME GITROOT ENVIRONMENTS BINLOC PIO
 BINLOC="firmware"
-# TODO:
-    # Check for PIO
-    # Check for git
-    # Check for WSL
-PIO="/c/Users/lee/.platformio/penv/Scripts/platformio.exe"
+
+get_pio() {
+    echo -e "\nChecking PlatformIO environment."
+    if grep -q "WSL" /proc/version; then
+        # Running WSL
+        PIO="/mnt/c/Users/$LOGNAME/.platformio/penv/Scripts/platformio.exe"
+    elif grep -q "@WIN" /proc/version; then
+        # Running Git Bash
+        PIO="$HOME/.platformio/penv/Scripts/platformio.exe"
+    else
+        # Running some form of Linux
+        PIO="$HOME/.platformio/penv/bin/platformio"
+    fi
+    if [[ ! -f "$PIO" ]]; then
+        # PIO does not exist
+        echo -e "\nERROR: Unable to find PlatformIO."
+        exit
+    fi
+}
 
 get_git() {
+    if [[ ! -f $(which git 2>/dev/null) ]]; then
+        echo -e "\nERROR: Git not found."
+        exit
+    fi
     echo -e "\nDetermining git root."
-    GITROOT=$(git rev-parse --show-toplevel) || (echo -e "Environment not found." && exit)
-    GITNAME=$(git rev-parse --show-toplevel); GITNAME=${GITNAME##*/}
+    if [[ ! $(git status 2>/dev/null) ]]; then
+        echo -e "\nERROR: Git repository not found."
+        exit
+    fi
+    GITROOT=$(git rev-parse --show-toplevel)
+    GITNAME=$(git rev-parse --show-toplevel)
+    GITNAME=${GITNAME##*/}
 }
 
 check_root() {
     CWD=$(pwd)
-    cd "$GITROOT" || (echo -e "Environment not found." && exit)
+    if [[ ! -d "$GITROOT" ]]; then
+        echo -e "\nERROR: Repository not found."
+        exit
+    fi
+    cd "$GITROOT" || exit
 }
 
 get_envs() {
@@ -80,11 +107,12 @@ copy_binaries() {
             cp "$GITROOT"/.pio/build/"$env"/spiffs.bin "$GITROOT"/"$BINLOC"/"$env"_spiffs.bin
         done
     else
-        echo -e "Unable to copy files to $GITROOT/$BINLOC"
+        echo -e "\nERROR: Unable to copy files to $GITROOT/$BINLOC"
     fi
 }
 
 main() {
+    get_pio "$@"
     get_git "$@"
     check_root "$@"
     get_envs "$@"
@@ -92,7 +120,7 @@ main() {
     build_binaries "$@"
     copy_binaries "$@"
     cd "$CWD" || exit
-    echo -e "\nBuild and prep for $GITNAME complete."
+    echo -e "\nBuild and prep for $GITNAME complete.\n"
 }
 
 main "$@" && exit 0
