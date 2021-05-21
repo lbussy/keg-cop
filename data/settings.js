@@ -139,11 +139,11 @@ function populateConfig(callback = null) { // Get configuration settings
                     imperial = false;
                     $('input:radio[name="imperial"]')[0].checked = true;
                 }
-                if (config.copconfig.serial) {
-                    $('input:radio[name="serial"]')[1].checked = true;
-                } else {
-                    $('input:radio[name="serial"]')[0].checked = true;
-                }
+                // if (config.copconfig.serial) {
+                //     $('input:radio[name="serial"]')[1].checked = true;
+                // } else {
+                //     $('input:radio[name="serial"]')[0].checked = true;
+                // }
                 if (config.copconfig.tapsolenoid) {
                     $('input:radio[name="tapsolenoid"]')[0].checked = true;
                 } else {
