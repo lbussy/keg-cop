@@ -124,7 +124,7 @@
         }
 
         function doResetSignal() {
-            var jqxhr = $.get( "/oktoreset/")
+            var jqxhr = $.put( "/api/action/reset/")
                 .done(function() {
                     myVar = setTimeout(watchReset, 5000);
                 })
@@ -153,7 +153,7 @@
         }
 
         function checkSemaphore(callback) { // Check to see if the update is complete
-            var jqxhr = $.get("/ping/")
+            var jqxhr = $.get("/api/action/ping/")
                 .done(function (data) {
                     callback(true);
                 })

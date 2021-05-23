@@ -24,12 +24,44 @@ SOFTWARE. */
 
 AsyncWebServer server(PORT);
 
+static int controlHandlers = 7;
+static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration functions
+    handleControllerPost,
+    handleControlPost,
+    handleSensorPost,
+    handleKegScreenPost,
+    handleMQTTTargetPost,
+    handleUrlTargetPost,
+    handleCloudTargetPost
+};
+static const char *cf_str[] = {
+    "handleControllerPost",
+    "handleControlPost",
+    "handleSensorPost",
+    "handleKegScreenPost",
+    "handleMQTTTargetPost",
+    "handleUrlTargetPost",
+    "handleCloudTargetPost"
+};
+
+static int tapHandlers = 3;
+static HANDLER_STATE (*tf[])(AsyncWebServerRequest *) = { // Tap functions
+    handleTapPost,
+    handleTapCal,
+    handleSetCalMode
+};
+static const char *tf_str[] = {
+    "handleTapPost",
+    "handleTapCal",
+    "handleSetCalMode"
+};
+
 void initWebServer()
 {
-    setRegPageAliases();
+    setRegPageHandlers();
     setActionPageHandlers();
-    setJsonHandlers();
-    setSettingsAliases();
+    setInfoPageHandlers();
+    setConfigurationPageHandlers();
     setEditor();
 
     // File not found handler
@@ -53,7 +85,7 @@ void initWebServer()
     Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.getHostname());
 }
 
-void setRegPageAliases()
+void setRegPageHandlers()
 {
     // Regular page aliases
 
@@ -68,67 +100,98 @@ void setRegPageAliases()
     server.serveStatic("/controllerreset/", FILESYSTEM, "/").setDefaultFile("controllerreset.htm").setCacheControl("max-age=600");
     server.serveStatic("/wifireset/", FILESYSTEM, "/").setDefaultFile("wifireset.htm").setCacheControl("max-age=600");
     server.serveStatic("/404/", FILESYSTEM, "/").setDefaultFile("404.htm").setCacheControl("max-age=600");
+    server.serveStatic("/api/", FILESYSTEM, "/").setDefaultFile("api.htm").setCacheControl("max-age=600");
 }
 
 void setActionPageHandlers()
 {
     // Action Page Handlers
 
-    server.on("/oktowifireset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /wifireset/." CR));
-        request->send(200, F("text/plain"), F("Ok."));
+    server.serveStatic("/api/action/", FILESYSTEM, "/").setDefaultFile("action.htm").setCacheControl("max-age=600");
+
+    server.on("/api/action/ping/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_ok(request);
+    });
+
+    server.on("/api/action/wifireset/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+        send_ok(request);
         _delay(2000);
         setDoWiFiReset(); // Wipe settings, reset controller
     });
 
-    server.on("/oktoreset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /oktoreset/." CR));
-        request->send(200, F("text/plain"), F("Ok."));
+    server.on("/api/action/wifireset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
+
+    server.on("/api/action/reset/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+        send_ok(request);
         _delay(2000);
         setDoReset();
     });
 
-    server.on("/ping/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /ping/." CR));
-        request->send(200, F("text/plain"), F("Ok."));
+    server.on("/api/action/reset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
     });
 
-    server.on("/otastart/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /otastart/." CR));
-        request->send(200, F("text/plain"), F("200: OTA started."));
+    server.on("/api/actions/updatestart/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+        send_ok(request);
         setDoOTA(); // Trigger the OTA update
     });
 
-    server.on("/clearupdate/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /clearupdate/." CR));
+    server.on("/api/actions/updatestart/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
+
+    server.on("/api/action/clearota/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+        send_ok(request);
         Log.verbose(F("Clearing any update flags." CR));
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
         config.copconfig.nodrd = false;
         saveConfig();
-        request->send(200, F("text/plain"), F("200: OK."));
     });
 
-    server.on("/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing /clearcalmode/." CR));
+    server.on("/api/action/clearota/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
+
+    server.on("/api/action/clearcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+        send_ok(request);
         Log.verbose(F("Clearing all calibration flags." CR));
         for (int i = 0; i < NUMTAPS; i++)
         {
             flow.taps[i].calibrating = false;
         }
         saveFlowConfig();
-        request->send(200, F("text/plain"), F("200: OK."));
+    });
+
+    server.on("/api/action/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
+
+    server.on("/api/action/setcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+        send_ok(request);
+        Log.verbose(F("Setting calibration flags." CR));
+        for (int i = 0; i < NUMTAPS; i++)
+        {
+            flow.taps[i].calibrating = true;
+        }
+        saveFlowConfig();
+    });
+
+    server.on("/api/action/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
     });
 }
 
-void setJsonHandlers()
+void setInfoPageHandlers()
 {
-    // JSON Handlers
+    server.serveStatic("/api/info/", FILESYSTEM, "/").setDefaultFile("info.htm").setCacheControl("max-age=600");
 
-    server.on("/resetreason/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/info/resetreason/", HTTP_GET, [](AsyncWebServerRequest *request) {
         // Used to provide the reset reason json
-        Log.verbose(F("Sending /resetreason/." CR));
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
 
         const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2);
         StaticJsonDocument<capacity> doc;
@@ -142,9 +205,13 @@ void setJsonHandlers()
         request->send(200, F("application/json"), resetreason);
     });
 
-    server.on("/heap/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/info/resetreason/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
+
+    server.on("/api/info/heap/", HTTP_GET, [](AsyncWebServerRequest *request) {
         // Used to provide the heap json
-        Log.verbose(F("Sending /heap/." CR));
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
 
         const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(3);
         StaticJsonDocument<capacity> doc;
@@ -168,9 +235,13 @@ void setJsonHandlers()
         request->send(200, F("application/json"), heap);
     });
 
-    server.on("/uptime/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/info/heap/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
+
+    server.on("/api/info/uptime/", HTTP_GET, [](AsyncWebServerRequest *request) {
         // Used to provide the uptime json
-        Log.verbose(F("Sending /uptime/." CR));
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
 
         const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5);
         StaticJsonDocument<capacity> doc;
@@ -193,8 +264,12 @@ void setJsonHandlers()
         request->send(200, F("application/json"), ut);
     });
 
-    server.on("/thisVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Serving /thisVersion/." CR));
+    server.on("/api/info/uptime/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
+
+    server.on("/api/info/thisVersion/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(3);
         DynamicJsonDocument doc(capacity);
 
@@ -207,8 +282,12 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-    server.on("/thatVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Serving /thatVersion/." CR));
+    server.on("/api/info/thisVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
+
+    server.on("/api/info/thatVersion/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(1);
         DynamicJsonDocument doc(capacity);
 
@@ -221,39 +300,13 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-    server.on("/config/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        // Used to provide the Config json
-        Log.verbose(F("Serving /config/." CR));
-
-        // Serialize configuration
-        StaticJsonDocument<CAP_SER_CONF> doc;   // Create doc
-        JsonObject root = doc.to<JsonObject>(); // Create JSON object
-        config.save(root);                      // Fill the object with current config
-
-        String json;
-        serializeJsonPretty(doc, json); // Serialize JSON to String
-        request->header("Cache-Control: no-store");
-        request->send(200, F("application/json"), json);
+    server.on("/api/info/thatVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
     });
 
-    server.on("/flow/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        // Used to provide the Kegs json
-        Log.verbose(F("Serving /flow/." CR));
-
-        // Serialize configuration
-        DynamicJsonDocument doc(capacityFlowSerial); // Create doc
-        JsonObject root = doc.to<JsonObject>();      // Create JSON object
-        flow.save(root);                             // Fill the object with current kegs
-
-        String json;
-        serializeJsonPretty(doc, json); // Serialize JSON to String
-        request->header("Cache-Control: no-store");
-        request->send(200, F("application/json"), json);
-    });
-
-    server.on("/pulses/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/info/pulses/", HTTP_GET, [](AsyncWebServerRequest *request) {
         // Used to provide the pulses json
-        Log.verbose(F("Serving /pulses/." CR));
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
 
         // Serialize pulses
         DynamicJsonDocument doc(capacityPulseSerial); // Create doc
@@ -272,8 +325,12 @@ void setJsonHandlers()
         request->send(200, F("application/json"), json);
     });
 
-    server.on("/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Serving /sensors/." CR));
+    server.on("/api/info/pulses/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
+
+    server.on("/api/info/sensors/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
         DynamicJsonDocument doc(capacityTempsSerial);
 
         doc["imperial"] = config.copconfig.imperial;
@@ -320,201 +377,100 @@ void setJsonHandlers()
         request->header("Cache-Control: no-store");
         request->send(200, F("application/json"), json);
     });
+
+    server.on("/api/info/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
+    });
 }
 
-void setSettingsAliases()
+void setConfigurationPageHandlers()
 {
-    server.on("/settings/tapcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/tapcontrol/." CR));
-        if (handleTapPost(request))
-        {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
-        }
-    });
+    server.serveStatic("/api/configuration/", FILESYSTEM, "/").setDefaultFile("configuration.htm").setCacheControl("max-age=600");
 
-    server.on("/settings/tapcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/tapcontrol/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
+    // Settings Handlers:
 
-    server.on("/settings/tapcal/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/tapcal/." CR));
-        if (handleTapCal(request))
-        {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
-        }
-    });
+    server.on("/api/configuration/settings/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+        // Process settings update
+        Log.verbose(F("Processing put to %s." CR), request->url().c_str());
 
-    server.on("/settings/tapcal/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/tapcal/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
-
-    server.on("/settings/controller/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/controller/." CR));
-        if (handleControllerPost(request))
+        HANDLER_STATE state = NOT_PROCCESSED;
+        for (int i = 0; i < controlHandlers; i++)
         {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
+            if (state == FAIL_PROCESS)
+                break;
+            Log.verbose(F("Checking %s." CR), cf_str[i]);
+            HANDLER_STATE thisState = cf[i](request);
+            if (thisState == PROCESSED)
+            {
+                request->send(200, F("text/plain"), F("Ok"));
+                state = PROCESSED;
+            }
+            else if (thisState == FAIL_PROCESS)
+            {
+                request->send(500, F("text/plain"), F("Unable to process data"));
+                state = FAIL_PROCESS;
+            }
         }
     });
 
-    server.on("/settings/controller/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/controller/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
+    server.on("/api/configuration/settings/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // Used to provide the Config json
+        // Serialize configuration
+        StaticJsonDocument<CAP_SER_CONF> doc;   // Create doc
+        JsonObject root = doc.to<JsonObject>(); // Create JSON object
+        config.save(root);                      // Fill the object with current config
+
+        String json;
+        serializeJsonPretty(doc, json); // Serialize JSON to String
+        send_json(request, json);
     });
 
-    server.on("/settings/tempcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/tempcontrol/." CR));
-        if (handleControlPost(request))
-        {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
-        }
+    server.on("/api/configuration/settings/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
     });
 
-    server.on("/settings/tempcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/tempcontrol/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
+    // Settings Handlers^
+    // Tap Handlers:
 
-    server.on("/settings/sensorcontrol/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/sensorcontrol/." CR));
-        if (handleSensorPost(request))
-        {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
-        }
-    });
+    server.on("/api/configuration/taps/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+        // Process taps update
+        Log.verbose(F("Processing post to %s." CR), request->url().c_str());
 
-    server.on("/settings/sensorcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/sensorcontrol/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
-
-    server.on("/settings/kegscreen/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/kegscreen/." CR));
-        if (handleKegScreenPost(request))
+        HANDLER_STATE state = NOT_PROCCESSED;
+        for (int i = 0; i < tapHandlers; i++)
         {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
+            if (state == FAIL_PROCESS)
+                break;
+            Log.verbose(F("Checking %s." CR), tf_str[i]);
+            HANDLER_STATE thisState = tf[i](request);
+            if (thisState == PROCESSED)
+            {
+                request->send(200, F("text/plain"), F("Ok"));
+                state = PROCESSED;
+            }
+            else if (thisState == FAIL_PROCESS)
+            {
+                request->send(500, F("text/plain"), F("Unable to process data"));
+                state = FAIL_PROCESS;
+            }
         }
     });
 
-    server.on("/settings/kegscreen/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/kegscreen/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
+    server.on("/api/configuration/taps/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // Serialize configuration
+        DynamicJsonDocument doc(capacityFlowSerial); // Create doc
+        JsonObject root = doc.to<JsonObject>();      // Create JSON object
+        flow.save(root);                             // Fill the object with current kegs
+
+        String json;
+        serializeJsonPretty(doc, json); // Serialize JSON to String
+        send_json(request, json);
     });
 
-    server.on("/settings/rpints/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/rpints/." CR));
-        if (handleMQTTTargetPost(request))
-        {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
-        }
+    server.on("/api/configuration/taps/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        send_not_allowed(request);
     });
-
-    server.on("/settings/rpints/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/targeturl/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
-
-    server.on("/settings/targeturl/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/targeturl/." CR));
-        if (handleUrlTargetPost(request))
-        {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
-        }
-    });
-
-    server.on("/settings/targeturl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/targeturl/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
-
-    server.on("/settings/cloudurl/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /settings/targeturl/." CR));
-        if (handleCloudTargetPost(request))
-        {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
-        }
-    });
-
-    server.on("/setcalmode/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Processing post to /setcalmode/." CR));
-        if (handleSetCalMode(request))
-        {
-            request->send(200, F("text/plain"), F("Ok"));
-        }
-        else
-        {
-            request->send(500, F("text/plain"), F("Unable to process data"));
-        }
-    });
-
-    server.on("/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /setcalmode/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
-
-    server.on("/settings/cloudurl/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/cloudurl/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
-
-    server.on("/settings/update/", HTTP_POST, [](AsyncWebServerRequest *request) {
-        // Process settings update (bulk POST)
-        Log.verbose(F("Processing post to /settings/update/." CR));
-
-        handleTapPost(request);         // Tap parameters
-        handleControllerPost(request);  // Controller parameters
-        handleControlPost(request);     // Temperature control and activation
-        handleSensorPost(request);      // Sensor calibration and activation
-        handleKegScreenPost(request);   // Keg Screen settings
-        handleMQTTTargetPost(request);  // MQTT Target settings
-        handleUrlTargetPost(request);   // Target URL settings
-        handleCloudTargetPost(request); // Cloud Target settings
-
-        // Redirect to Settings page
-        request->redirect("/settings/");
-    });
-
-    server.on("/settings/update/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        Log.verbose(F("Invalid method to /settings/update/." CR));
-        request->send(405, F("text/plain"), F("Method not allowed."));
-    });
+    // Tap Handlers^
 }
 
 #ifdef SPIFFSEDIT
@@ -535,179 +491,11 @@ void stopWebServer()
     Log.notice(F("Web server stopped." CR));
 }
 
-bool handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
+// Settings Handlers:
+
+HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle controller settings
 {
-    int tapNum = -1;
-    // Loop through all parameters
-    int params = request->params();
-    for (int i = 0; i < params; i++)
-    {
-        AsyncWebParameter *p = request->getParam(i);
-        if (p->isPost())
-        {
-            // Process any p->name().c_str() / p->value().c_str() pairs
-            const char *name = p->name().c_str();
-            const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
-
-            // Tap settings
-            //
-            if (strcmp(name, "tap") == 0) // Get tap number first
-            {
-                const int val = atof(value);
-                if ((val < 0) || (val > NUMTAPS))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
-                    tapNum = val;
-                }
-            }
-            if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
-            {
-                const int val = atof(value);
-                if ((val < 0) || (val > 999999))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    flow.taps[tapNum].ppu = val;
-                }
-            }
-            if ((strcmp(name, "beername") == 0) && tapNum >= 0) // Set the beer name
-            {
-                if ((strlen(value) < 1) || (strlen(value) > 64))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(flow.taps[tapNum].name, value, sizeof(flow.taps[tapNum].name));
-                }
-            }
-            if (strcmp(name, "cap") == 0) // Set capacity
-            {
-                const float val = atof(value);
-                if ((val < 0) || (val > 99999))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    flow.taps[tapNum].capacity = val;
-                }
-            }
-            if (strcmp(name, "remain") == 0) // Set remaining
-            {
-                const float val = atof(value);
-                if ((val < 0) || (val > 99999))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    flow.taps[tapNum].remaining = val;
-                }
-            }
-            if (strcmp(name, "active") == 0) // Set active
-            {
-                if (strcmp(value, "active") == 0)
-                {
-                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CR), tapNum, name, value);
-                    flow.taps[tapNum].active = true;
-                }
-                else if (strcmp(value, "inactive") == 0)
-                {
-                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CR), tapNum, name, value);
-                    flow.taps[tapNum].active = false;
-                }
-                else
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-            }
-        }
-    }
-    if (saveFlowConfig())
-    {
-        if (tapNum >= 0)
-        {
-            setDoTapInfoReport(tapNum);
-        }
-        return true;
-    }
-    else
-    {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
-        return false;
-    }
-}
-
-bool handleTapCal(AsyncWebServerRequest *request) // Handle tap settings
-{
-    int tapNum = -1;
-    // Loop through all parameters
-    int params = request->params();
-    for (int i = 0; i < params; i++)
-    {
-        AsyncWebParameter *p = request->getParam(i);
-        if (p->isPost())
-        {
-            // Process any p->name().c_str() / p->value().c_str() pairs
-            const char *name = p->name().c_str();
-            const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
-
-            // Tap Calibration
-            //
-            if (strcmp(name, "tapnum") == 0) // Get tap number first
-            {
-                const int val = atof(value);
-                if ((val < 0) || (val > NUMTAPS))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
-                    tapNum = val;
-                }
-            }
-            if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
-            {
-                const int val = atof(value);
-                if ((val < 0) || (val > 999999))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    flow.taps[tapNum].ppu = val;
-                }
-            }
-        }
-    }
-    if (saveFlowConfig())
-    {
-        return true;
-    }
-    else
-    {
-        Log.error(F("Error: Unable to save tap calibration data." CR));
-        return false;
-    }
-}
-
-bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller settings
-{
+    bool didChange = false;
     bool hostnamechanged = false;
     // Loop through all parameters
     int params = request->params();
@@ -737,6 +525,7 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
                     }
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     strlcpy(config.copconfig.hostname, value, sizeof(config.copconfig.hostname));
+                    didChange = true;
                 }
             }
             if (strcmp(name, "breweryname") == 0) // Set brewery name
@@ -850,17 +639,25 @@ bool handleControllerPost(AsyncWebServerRequest *request) // Handle controller s
     }
     if (saveConfig())
     {
-        return true;
+        if (didChange)
+        {
+            return PROCESSED;
+        }
+        else
+        {
+            return NOT_PROCCESSED;
+        }
     }
     else
     {
         Log.error(F("Error: Unable to save controller configuration data." CR));
-        return false;
+        return FAIL_PROCESS;
     }
 }
 
-bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control settings
+HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp control settings
 {
+    bool didChange = false;
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
@@ -877,6 +674,7 @@ bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control se
             //
             if (strcmp(name, "setpoint") == 0) // Set Kegerator setpoint
             {
+                didChange = true;
                 double min, max;
                 if (config.copconfig.imperial)
                 {
@@ -932,17 +730,25 @@ bool handleControlPost(AsyncWebServerRequest *request) // Handle temp control se
     }
     if (saveConfig())
     {
-        return true;
+        if (didChange)
+        {
+            return PROCESSED;
+        }
+        else
+        {
+            return NOT_PROCCESSED;
+        }
     }
     else
     {
         Log.error(F("Error: Unable to save tap configuration data." CR));
-        return false;
+        return FAIL_PROCESS;
     }
 }
 
-bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control settings
+HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control settings
 {
+    bool didChange = false;
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
@@ -959,6 +765,7 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
             //
             if (strcmp(name, "calroom") == 0) // Set the sensor calibration
             {
+                didChange = true;
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
@@ -1111,17 +918,25 @@ bool handleSensorPost(AsyncWebServerRequest *request) // Handle sensor control s
     }
     if (saveConfig())
     {
-        return true;
+        if (didChange)
+        {
+            return PROCESSED;
+        }
+        else
+        {
+            return NOT_PROCCESSED;
+        }
     }
     else
     {
         Log.error(F("Error: Unable to save tap configuration data." CR));
-        return false;
+        return FAIL_PROCESS;
     }
 }
 
-bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
+HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL target
 {
+    bool didChange = false;
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
@@ -1134,54 +949,49 @@ bool handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
             const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
-            // Target url settings
+            // Keg Screen url settings
             //
-            if (strcmp(name, "targeturl") == 0) // Set target URL
+            if (strcmp(name, "kegscreen") == 0) // Change Keg Screen hostname
             {
+                didChange = true;
                 if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
+                    strlcpy(config.kegscreen.url, value, sizeof(config.kegscreen.url));
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
-                    strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
+                    strlcpy(config.kegscreen.url, value, sizeof(config.kegscreen.url));
                 }
                 else
                 {
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-            }
-            if (strcmp(name, "targetfreq") == 0) // Set the push frequency
-            {
-                const double val = atof(value);
-                if ((val < 5) || (val > 120))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.urltarget.freq = val;
-                    config.urltarget.update = true;
                 }
             }
         }
     }
     if (saveConfig())
     {
-        return true;
+        if (didChange)
+        {
+            return PROCESSED;
+        }
+        else
+        {
+            return NOT_PROCCESSED;
+        }
     }
     else
     {
-        Log.error(F("Error: Unable to save tap configuration data." CR));
-        return false;
+        Log.error(F("Error: Unable to save Keg Screen configuration data." CR));
+        return FAIL_PROCESS;
     }
 }
 
-bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
+HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
 {
+    bool didChange = false;
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
@@ -1199,6 +1009,7 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
             int changedMqtt = 0;
             if (strcmp(name, "rpintshost") == 0) // Set MQTT broker host
             {
+                didChange = true;
                 LCBUrl url;
                 if (url.isValidHostName(value) && (strlen(value) > 3) && (strlen(value) < 128))
                 {
@@ -1291,17 +1102,25 @@ bool handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
     }
     if (saveConfig())
     {
-        return true;
+        if (didChange)
+        {
+            return PROCESSED;
+        }
+        else
+        {
+            return NOT_PROCCESSED;
+        }
     }
     else
     {
         Log.error(F("Error: Unable to save tap configuration data." CR));
-        return false;
+        return FAIL_PROCESS;
     }
 }
 
-bool handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL target
+HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
 {
+    bool didChange = false;
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
@@ -1314,40 +1133,63 @@ bool handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL target
             const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
-            // Keg Screen url settings
+            // Target url settings
             //
-            if (strcmp(name, "kegscreen") == 0) // Change Keg Screen hostname
+            if (strcmp(name, "targeturl") == 0) // Set target URL
             {
+                didChange = true;
                 if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(config.kegscreen.url, value, sizeof(config.kegscreen.url));
+                    strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
-                    strlcpy(config.kegscreen.url, value, sizeof(config.kegscreen.url));
+                    strlcpy(config.urltarget.url, value, sizeof(config.urltarget.url));
                 }
                 else
                 {
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
+            if (strcmp(name, "targetfreq") == 0) // Set the push frequency
+            {
+                const double val = atof(value);
+                if ((val < 5) || (val > 120))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.urltarget.freq = val;
+                    config.urltarget.update = true;
+                }
+            }
         }
     }
     if (saveConfig())
     {
-        return true;
+        if (didChange)
+        {
+            return PROCESSED;
+        }
+        else
+        {
+            return NOT_PROCCESSED;
+        }
     }
     else
     {
-        Log.error(F("Error: Unable to save Keg Screen configuration data." CR));
-        return false;
+        Log.error(F("Error: Unable to save tap configuration data." CR));
+        return FAIL_PROCESS;
     }
 }
 
-bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud target
+HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud target
 {
+    bool didChange = false;
     // Loop through all parameters
     int params = request->params();
     for (int i = 0; i < params; i++)
@@ -1364,6 +1206,7 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
             //
             if (strcmp(name, "cloudtype") == 0) // Set the cloud target type
             {
+                didChange = true;
                 const double val = atof(value);
                 if ((val < 0) || (val > 4))
                 {
@@ -1404,17 +1247,208 @@ bool handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cloud targe
     }
     if (saveConfig())
     {
-        return true;
+        if (didChange)
+        {
+            return PROCESSED;
+        }
+        else
+        {
+            return NOT_PROCCESSED;
+        }
     }
     else
     {
         Log.error(F("Error: Unable to save tap configuration data." CR));
-        return false;
+        return FAIL_PROCESS;
     }
 }
 
-bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibration mode
+// Settings Handlers^
+
+// Tap Handlers:
+
+HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settings
 {
+    int tapNum = -1;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Tap settings
+            //
+            if (strcmp(name, "tap") == 0) // Get tap number first
+            {
+                const int val = atof(value);
+                if ((val < 0) || (val > NUMTAPS))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
+                    tapNum = val;
+                }
+            }
+            if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
+            {
+                const int val = atof(value);
+                if ((val < 0) || (val > 999999))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    flow.taps[tapNum].ppu = val;
+                }
+            }
+            if ((strcmp(name, "beername") == 0) && tapNum >= 0) // Set the beer name
+            {
+                if ((strlen(value) < 1) || (strlen(value) > 64))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    strlcpy(flow.taps[tapNum].name, value, sizeof(flow.taps[tapNum].name));
+                }
+            }
+            if (strcmp(name, "cap") == 0) // Set capacity
+            {
+                const float val = atof(value);
+                if ((val < 0) || (val > 99999))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    flow.taps[tapNum].capacity = val;
+                }
+            }
+            if (strcmp(name, "remain") == 0) // Set remaining
+            {
+                const float val = atof(value);
+                if ((val < 0) || (val > 99999))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    flow.taps[tapNum].remaining = val;
+                }
+            }
+            if (strcmp(name, "active") == 0) // Set active
+            {
+                if (strcmp(value, "active") == 0)
+                {
+                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CR), tapNum, name, value);
+                    flow.taps[tapNum].active = true;
+                }
+                else if (strcmp(value, "inactive") == 0)
+                {
+                    Log.notice(F("Settings update [%d], [%s]:(%s) applied." CR), tapNum, name, value);
+                    flow.taps[tapNum].active = false;
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+        }
+    }
+    if (saveFlowConfig())
+    {
+        if (tapNum >= 0)
+        {
+            setDoTapInfoReport(tapNum);
+            return PROCESSED;
+        }
+        else
+            return NOT_PROCCESSED;
+    }
+    else
+    {
+        Log.error(F("Error: Unable to save tap configuration data." CR));
+        return FAIL_PROCESS;
+    }
+}
+
+HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap settings
+{
+    int tapNum = -1;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Tap Calibration
+            //
+            if (strcmp(name, "tapnum") == 0) // Get tap number first
+            {
+                const int val = atof(value);
+                if ((val < 0) || (val > NUMTAPS))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
+                    tapNum = val;
+                }
+            }
+            if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
+            {
+                const int val = atof(value);
+                if ((val < 0) || (val > 999999))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    flow.taps[tapNum].ppu = val;
+                }
+            }
+        }
+    }
+    if (saveFlowConfig())
+    {
+        if (tapNum >= 0)
+        {
+            setDoTapInfoReport(tapNum);
+            return PROCESSED;
+        }
+        else
+            return NOT_PROCCESSED;
+    }
+    else
+    {
+        Log.error(F("Error: Unable to save tap calibration data." CR));
+        return FAIL_PROCESS;
+    }
+}
+
+HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibration mode
+{
+    int tapNum = -1;
     Log.verbose(F("Clearing any calibration flags before setting new flags." CR));
     for (int i = 0; i < NUMTAPS; i++)
     {
@@ -1438,6 +1472,7 @@ bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibrat
             //
             if (strcmp(name, "tapnum") == 0)
             {
+                tapNum++;
                 const int val = atof(value);
                 if ((val < 0) || (val >= NUMTAPS))
                 {
@@ -1453,11 +1488,38 @@ bool handleSetCalMode(AsyncWebServerRequest *request) // Handle setting calibrat
     }
     if (saveFlowConfig())
     {
-        return true;
+        if (tapNum >= 0)
+        {
+            setDoTapInfoReport(tapNum);
+            return PROCESSED;
+        }
+        else
+            return NOT_PROCCESSED;
     }
     else
     {
         Log.error(F("Error: Unable to save tap calibration mode." CR));
-        return false;
+        return FAIL_PROCESS;
     }
+}
+
+// Tap Handlers^
+
+void send_ok(AsyncWebServerRequest *request)
+{
+    Log.verbose(F("Processing %s." CR), request->url().c_str());
+    request->send(200, F("text/plain"), F("Ok."));
+}
+
+void send_not_allowed(AsyncWebServerRequest *request)
+{
+    Log.verbose(F("Not processing %s." CR), request->url().c_str());
+    request->send(405, F("text/plain"), F("Method Not Allowed"));
+}
+
+void send_json(AsyncWebServerRequest *request, String &json)
+{
+    Log.verbose(F("Sending %s." CR), request->url().c_str());
+    request->header("Cache-Control: no-store");
+    request->send(200, F("application/json"), json);
 }

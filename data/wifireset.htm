@@ -130,7 +130,7 @@
         }
 
         function doResetSignal() {
-            $.get("/oktowifireset/", function(data){}); // Nuke the WiFi settings
+            $.put("/api/action/wifireset/", function(data){}); // Nuke the WiFi settings
         }
     </script>
 
