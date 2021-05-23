@@ -75,7 +75,6 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *);
 
-void send_ok(AsyncWebServerRequest *request);
 void send_not_allowed(AsyncWebServerRequest *request);
 void send_json(AsyncWebServerRequest *request, String &json);
 
