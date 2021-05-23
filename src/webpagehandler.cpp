@@ -110,13 +110,15 @@ void setActionPageHandlers()
     server.serveStatic("/api/action/", FILESYSTEM, "/").setDefaultFile("action.htm").setCacheControl("max-age=600");
 
     server.on("/api/action/ping/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        send_ok(request);
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        request->send(200, F("text/plain"), F("Ok."));
     });
 
     server.on("/api/action/wifireset/", HTTP_PUT, [](AsyncWebServerRequest *request) {
-        send_ok(request);
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         _delay(2000);
         setDoWiFiReset(); // Wipe settings, reset controller
+        request->send(200, F("text/plain"), F("Ok."));
     });
 
     server.on("/api/action/wifireset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
@@ -124,9 +126,10 @@ void setActionPageHandlers()
     });
 
     server.on("/api/action/reset/", HTTP_PUT, [](AsyncWebServerRequest *request) {
-        send_ok(request);
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         _delay(2000);
         setDoReset();
+        request->send(200, F("text/plain"), F("Ok."));
     });
 
     server.on("/api/action/reset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
@@ -134,8 +137,9 @@ void setActionPageHandlers()
     });
 
     server.on("/api/actions/updatestart/", HTTP_PUT, [](AsyncWebServerRequest *request) {
-        send_ok(request);
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         setDoOTA(); // Trigger the OTA update
+        request->send(200, F("text/plain"), F("Ok."));
     });
 
     server.on("/api/actions/updatestart/", HTTP_ANY, [](AsyncWebServerRequest *request) {
@@ -143,13 +147,12 @@ void setActionPageHandlers()
     });
 
     server.on("/api/action/clearota/", HTTP_PUT, [](AsyncWebServerRequest *request) {
-        send_ok(request);
-        Log.verbose(F("Clearing any update flags." CR));
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
         config.copconfig.nodrd = false;
-        saveConfig();
+        request->send(200, F("text/plain"), F("Ok."));
     });
 
     server.on("/api/action/clearota/", HTTP_ANY, [](AsyncWebServerRequest *request) {
@@ -157,13 +160,13 @@ void setActionPageHandlers()
     });
 
     server.on("/api/action/clearcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request) {
-        send_ok(request);
-        Log.verbose(F("Clearing all calibration flags." CR));
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         for (int i = 0; i < NUMTAPS; i++)
         {
             flow.taps[i].calibrating = false;
         }
         saveFlowConfig();
+        request->send(200, F("text/plain"), F("Ok."));
     });
 
     server.on("/api/action/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
@@ -171,13 +174,13 @@ void setActionPageHandlers()
     });
 
     server.on("/api/action/setcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request) {
-        send_ok(request);
-        Log.verbose(F("Setting calibration flags." CR));
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         for (int i = 0; i < NUMTAPS; i++)
         {
             flow.taps[i].calibrating = true;
         }
         saveFlowConfig();
+        request->send(200, F("text/plain"), F("Ok."));
     });
 
     server.on("/api/action/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
@@ -1504,12 +1507,6 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
 }
 
 // Tap Handlers^
-
-void send_ok(AsyncWebServerRequest *request)
-{
-    Log.verbose(F("Processing %s." CR), request->url().c_str());
-    request->send(200, F("text/plain"), F("Ok."));
-}
 
 void send_not_allowed(AsyncWebServerRequest *request)
 {
