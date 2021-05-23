@@ -15,7 +15,7 @@ function populatePage() { // Get page data
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = "/sensors/";
+    var url = "/api/info/sensors/";
     var config = $.getJSON(url, function () {
     })
         .done(function (temps) {

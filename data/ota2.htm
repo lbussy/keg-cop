@@ -131,8 +131,8 @@
         else window.onload = loadPage;
 
         function loadPage() { // Load the page's JS elements
-            $.get("/clearupdate/", function(data){}); // Clear any previous update flags
-            $.get("/otastart/", function(data){}); // Semaphore the controller that it's safe to proceed
+            $.put("/api/action/clearupdate/", function(data){});    // Clear any previous update flags
+            $.put("/api/action/otastart/", function(data){});       // Semaphore the controller that it's safe to proceed
 
             // Wait for update to complete
             var running = false;
@@ -142,7 +142,7 @@
                     if ((didupdate == true) && (running == false)) {
                         running = true;
                         // Update is complete
-                        $.get("/clearupdate/", function(data){});
+                        $.put("/api/action/clearupdate/", function(data){});
                         $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
                         $("#message").replaceWith("<p class='card-body'>The firmware update is complete.  You will be redirected momentarily.</p>");
                         setTimeout(function(){window.location.href = "/";},5000);
@@ -152,7 +152,7 @@
         }
 
         function checkSemaphore(callback) { // Check to see if the update is complete
-            var jqxhr = $.get("/ping/")
+            var jqxhr = $.get("/api/action/ping/")
                 .done(function (data) {
                     callback(true);
                 })

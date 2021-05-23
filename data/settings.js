@@ -79,7 +79,7 @@ function loadHash() { // Link to tab via hash value
 }
 
 function populateFlow(callback = null) { // Get flowmeter settings
-    var url = "/flow/";
+    var url = "/api/configuration/taps/";
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -121,7 +121,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
-    var url = "/config/";
+    var url = "/api/configuration/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning()
     })
@@ -224,7 +224,7 @@ function populateConfig(callback = null) { // Get configuration settings
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = "/sensors/";
+    var url = "/api/info/sensors/";
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
@@ -317,7 +317,7 @@ function finishPage() { // Display page
     toggleLoader("off");
 }
 
-// POST Handlers:
+// PUT Handlers:
 
 function processPost(obj) {
     posted = false;
@@ -406,7 +406,7 @@ function processTapPost(url, obj, tapNum) {
         remain: remain,
         active: active
     }
-    postData(url, data);
+    putData(url, data);
 }
 
 function processControllerPost(url, obj) {
@@ -468,11 +468,11 @@ function processControllerPost(url, obj) {
             var protocol = window.location.protocol;
             var path = window.location.pathname;
             var newpage = protocol + "//" + hostnameVal + ".local" + path + hashLoc;
-            postData(url, data, newpage);
+            putData(url, data, newpage);
         } else if (unitschanged) {
-            postData(url, data, false, true);
+            putData(url, data, false, true);
         } else {
-            postData(url, data, false, false, function () {
+            putData(url, data, false, false, function () {
                 toggleLoader("off");
             });
         }
@@ -494,7 +494,7 @@ function processTempControlPost(url, obj) {
         controlpoint: controlpoint,
         enablecontrol: enablecontrol
     }
-    postData(url, data);
+    putData(url, data);
 }
 
 function processSensorControlPost(url, obj) {
@@ -526,7 +526,7 @@ function processSensorControlPost(url, obj) {
         calkeg: calkeg,
         enablekeg: enablekeg
     }
-    postData(url, data, true, true);
+    putData(url, data, true, true);
 }
 
 function processKegScreenPost(url, obj) {
@@ -540,7 +540,7 @@ function processKegScreenPost(url, obj) {
         data = {
             kegscreen: kegscreen
         };
-    postData(url, data);
+    putData(url, data);
 }
 
 function processTargetUrlPost(url, obj) {
@@ -556,7 +556,7 @@ function processTargetUrlPost(url, obj) {
         targeturl: targeturl,
         targetfreq: targetfreq
     };
-    postData(url, data);
+    putData(url, data);
 }
 
 function processRPintsPost(url, obj) {
@@ -578,14 +578,14 @@ function processRPintsPost(url, obj) {
         rpintspassword: rpintspassword,
         rpintstopic: rpintstopic
     };
-    postData(url, data);
+    putData(url, data);
 }
 
-function postData(url, data, newpage = false, newdata = false, callback = null) {
+function putData(url, data, newpage = false, newdata = false, callback = null) {
     var loadNew = (newpage.length > 0);
     $.ajax({
         url: url,
-        type: 'POST',
+        type: 'PUT',
         data: data,
         success: function (data) {
             settingsAlert.error();
@@ -637,7 +637,7 @@ function updateHelp(hashLoc) {
             url = url + "/en/latest/context/settings/temperature/control/index.html";
             break;
         case "#sensorcontrol":
-            url = url + "/en/latest/context/settings/temperature/sensors/index.html";
+            url = url + "/en/latest/context/settings/temperature/api/info/sensors/index.html";
             break;
         case "#kegscreen":
             url = url + "/en/latest/context/settings/targets/kegscreen/index.html";
