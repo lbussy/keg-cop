@@ -129,7 +129,7 @@ void doWiFi(bool dontUseStoredCreds)
             strlcpy(config.copconfig.hostname, custom_hostname.getValue(), sizeof(config.copconfig.hostname));
             saveConfig();
             WiFi.setHostname(config.copconfig.hostname);
-
+            ESP.restart();
         }
     }
 
