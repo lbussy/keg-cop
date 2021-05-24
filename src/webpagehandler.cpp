@@ -109,7 +109,7 @@ void setActionPageHandlers()
 
     server.serveStatic("/api/action/", FILESYSTEM, "/").setDefaultFile("action.htm").setCacheControl("max-age=600");
 
-    server.on("/api/action/ping/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/action/ping/", HTTP_GET, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         request->send(200, F("text/plain"), F("Ok."));
     });
@@ -122,6 +122,7 @@ void setActionPageHandlers()
     });
 
     server.on("/api/action/wifireset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("DEBUG: Method: %d" CR), request->method());
         send_not_allowed(request);
     });
 
@@ -133,6 +134,7 @@ void setActionPageHandlers()
     });
 
     server.on("/api/action/reset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("DEBUG: Method: %d" CR), request->method());
         send_not_allowed(request);
     });
 
@@ -143,10 +145,11 @@ void setActionPageHandlers()
     });
 
     server.on("/api/actions/updatestart/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("DEBUG: Method: %d" CR), request->method());
         send_not_allowed(request);
     });
 
-    server.on("/api/action/clearota/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/action/clearupdate/", HTTP_PUT, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
@@ -155,7 +158,8 @@ void setActionPageHandlers()
         request->send(200, F("text/plain"), F("Ok."));
     });
 
-    server.on("/api/action/clearota/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/action/clearupdate/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("DEBUG: Method: %d" CR), request->method());
         send_not_allowed(request);
     });
 
@@ -170,6 +174,7 @@ void setActionPageHandlers()
     });
 
     server.on("/api/action/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("DEBUG: Method: %d" CR), request->method());
         send_not_allowed(request);
     });
 
@@ -184,6 +189,7 @@ void setActionPageHandlers()
     });
 
     server.on("/api/action/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("DEBUG: Method: %d" CR), request->method());
         send_not_allowed(request);
     });
 }
@@ -394,6 +400,7 @@ void setConfigurationPageHandlers()
 
     server.on("/api/configuration/settings/", HTTP_PUT, [](AsyncWebServerRequest *request) {
         // Process settings update
+        Log.verbose(F("DEBUG: Method = %d" CR), request->method());
         Log.verbose(F("Processing put to %s." CR), request->url().c_str());
 
         HANDLER_STATE state = NOT_PROCCESSED;
@@ -429,6 +436,7 @@ void setConfigurationPageHandlers()
     });
 
     server.on("/api/configuration/settings/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("DEBUG: Method: %d" CR), request->method());
         send_not_allowed(request);
     });
 
@@ -471,6 +479,7 @@ void setConfigurationPageHandlers()
     });
 
     server.on("/api/configuration/taps/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+        Log.verbose(F("DEBUG: Method: %d" CR), request->method());
         send_not_allowed(request);
     });
     // Tap Handlers^
@@ -1511,6 +1520,7 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
 void send_not_allowed(AsyncWebServerRequest *request)
 {
     Log.verbose(F("Not processing %s." CR), request->url().c_str());
+    request->header("Cache-Control: no-store");
     request->send(405, F("text/plain"), F("Method Not Allowed"));
 }
 
