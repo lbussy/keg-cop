@@ -38,7 +38,7 @@ SOFTWARE. */
 #include "wifihandler.h"
 
 #include <SPIFFS.h>
-#include <WiFiManager.h>
+#include <AsyncWiFiManager.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
