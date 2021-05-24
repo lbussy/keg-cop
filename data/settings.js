@@ -397,7 +397,7 @@ function processTapPost(url, obj, tapNum) {
         remain = $form.find("input[name='tap" + tapNum + "remain']").val(),
         active = $form.find("input[name='tap" + tapNum + "active']:checked").val();
 
-    // Process post
+    // Process put
     data = {
         tap: tapNum,
         ppu: ppu,
@@ -449,10 +449,10 @@ function processControllerPost(url, obj) {
         }
     }
     if (confirmText && (!confirm(confirmText))) {
-        // Bail out on post
+        // Bail out on put
         return;
     } else {
-        // Process post
+        // Process put
         toggleLoader("on");
         originalHostnameConfig = hostnameVal; // Pick up changed host name
         data = {
@@ -488,7 +488,7 @@ function processTempControlPost(url, obj) {
         controlpoint = $form.find("select[name='controlpoint']").val(),
         enablecontrol = $form.find("input[name='enablecontrol']:checked").val();
 
-    // Process post
+    // Process put
     data = {
         setpoint: setpoint,
         controlpoint: controlpoint,
@@ -513,7 +513,7 @@ function processSensorControlPost(url, obj) {
         calkeg = $form.find("input[name='calkeg']").val(),
         enablekeg = $form.find("input[name='enablekeg']:checked").val();
 
-    // Process post
+    // Process put
     data = {
         calroom: calroom,
         enableroom: enableroom,
@@ -536,7 +536,7 @@ function processKegScreenPost(url, obj) {
     var $form = $(obj),
         kegscreen = $form.find("input[name='kegscreen']").val(),
 
-        // Process post
+        // Process put
         data = {
             kegscreen: kegscreen
         };
@@ -551,7 +551,7 @@ function processTargetUrlPost(url, obj) {
         targeturl = $form.find("input[name='targeturl']").val(),
         targetfreq = $form.find("input[name='targetfreq']").val();
 
-    // Process post
+    // Process put
     data = {
         targeturl: targeturl,
         targetfreq: targetfreq
@@ -570,7 +570,7 @@ function processRPintsPost(url, obj) {
         rpintspassword = $form.find("input[name='rpintspassword']").val();
         rpintstopic = $form.find("input[name='rpintstopic']").val();
 
-    // Process post
+    // Process put
     data = {
         rpintshost: rpintshost,
         rpintsport: rpintsport,

@@ -260,7 +260,7 @@ function processTapCalPost(url, obj) {
     tapnum = $('#flowmeter').val();
     ppu = $('#ppu').val();
 
-    // Process post
+    // Process put
     data = {
         tapnum: tapnum,
         ppu: ppu
