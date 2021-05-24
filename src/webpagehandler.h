@@ -42,12 +42,8 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 #include <SPIFFSEditor.h>
-
-#define WEBSERVER_H
 #include <ESPAsyncWebServer.h>
-
 #include <Arduino.h>
-#include <string>
 
 enum HANDLER_STATE
 {
