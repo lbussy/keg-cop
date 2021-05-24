@@ -132,7 +132,7 @@
 
         function loadPage() { // Load the page's JS elements
             $.put("/api/action/clearupdate/", function(data){});    // Clear any previous update flags
-            $.put("/api/action/otastart/", function(data){});       // Semaphore the controller that it's safe to proceed
+            $.put("/api/action/updatestart/", function(data){});    // Semaphore the controller that it's safe to proceed
 
             // Wait for update to complete
             var running = false;
