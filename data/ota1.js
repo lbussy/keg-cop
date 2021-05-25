@@ -17,7 +17,7 @@ function populatePage() { // Get page data
 }
 
 function loadThisVersion() { // Get current parameters
-    var thisVersionJson = "/api/info/thisVersion/";
+    var thisVersionJson = "/api/v1/info/thisVersion/";
     var thisVersion = $.getJSON(thisVersionJson, function () {
     })
         .done(function (thisVersion) {
@@ -37,7 +37,7 @@ function loadThisVersion() { // Get current parameters
 }
 
 function loadThatVersion() { // Get current parameters
-    var thatVersionJson = "/api/info/thatVersion/";
+    var thatVersionJson = "/api/v1/info/thatVersion/";
     var thatVersion = $.getJSON(thatVersionJson, function () {
     })
         .done(function (thatVersion) {
@@ -58,7 +58,7 @@ function loadThatVersion() { // Get current parameters
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = "/api/info/sensors/";
+    var url = "/api/v1/info/sensors/";
     var config = $.getJSON(url, function () {
     })
         .done(function (temps) {

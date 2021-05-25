@@ -79,7 +79,7 @@ function loadHash() { // Link to tab via hash value
 }
 
 function populateFlow(callback = null) { // Get flowmeter settings
-    var url = "/api/configuration/taps/";
+    var url = "/api/v1/config/taps/";
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -121,7 +121,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
-    var url = "/api/configuration/settings/";
+    var url = "/api/v1/config/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning()
     })
@@ -224,7 +224,7 @@ function populateConfig(callback = null) { // Get configuration settings
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = "/api/info/sensors/";
+    var url = "/api/v1/info/sensors/";
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
@@ -637,7 +637,7 @@ function updateHelp(hashLoc) {
             url = url + "/en/latest/context/settings/temperature/control/index.html";
             break;
         case "#sensorcontrol":
-            url = url + "/en/latest/context/settings/temperature/api/info/sensors/index.html";
+            url = url + "/en/latest/context/settings/temperature/api/v1/info/sensors/index.html";
             break;
         case "#kegscreen":
             url = url + "/en/latest/context/settings/targets/kegscreen/index.html";

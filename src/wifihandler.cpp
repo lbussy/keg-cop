@@ -144,7 +144,7 @@ void doWiFi(bool dontUseStoredCreds)
 
 void resetWifi()
 { // Wipe wifi settings and reset controller
-    WiFi.disconnect();
+    WiFi.disconnect(true, true);
     blinker.detach();       // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
     Log.notice(F("Restarting after clearing wifi settings." CR));

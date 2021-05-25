@@ -57,7 +57,8 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/advanced/wifi/index.html">?</a>
+                        <a class="navbar-brand nav-link active" target="_blank"
+                            href="https://docs.kegcop.com/en/latest/context/settings/advanced/wifi/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -66,7 +67,8 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp"> <!-- Container -->
+        <div class="container" id="settingsapp">
+            <!-- Container -->
 
             <div class="card border-dark mb-3">
 
@@ -100,13 +102,13 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
+        </script>
 
     <script type="text/javascript">
         var okToReset = false;
@@ -118,7 +120,7 @@
         else window.onload = loadPage;
 
         function loadPage() { // Make sure the page is 100% loaded
-            if(document.readyState === 'ready' || document.readyState === 'complete') {
+            if (document.readyState === 'ready' || document.readyState === 'complete') {
                 doResetSignal();
             } else {
                 document.onreadystatechange = function () {
@@ -130,8 +132,12 @@
         }
 
         function doResetSignal() {
-            $.put("/api/action/wifireset/", function(data){}); // Nuke the WiFi settings
+            $.ajax({
+                url: '/api/v1/action/wifireset/',
+                type: 'PUT'
+            });
         }
+
     </script>
 
 </body>
