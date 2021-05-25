@@ -57,7 +57,8 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/advanced/update/index.html">?</a>
+                        <a class="navbar-brand nav-link active" target="_blank"
+                            href="https://docs.kegcop.com/en/latest/context/settings/advanced/update/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -92,12 +93,12 @@
                         reconfigure all application settings. WiFi settings will not be affected.
                     </p>
                     <p>
-                        <div class="text-danger" style="display: inline-block;">
-                            <strong>
-                                Do not refresh this page. If you do, you will not be able to
-                                track the upgrade process.
-                            </strong>
-                        </div>
+                    <div class="text-danger" style="display: inline-block;">
+                        <strong>
+                            Do not refresh this page. If you do, you will not be able to
+                            track the upgrade process.
+                        </strong>
+                    </div>
                     </p>
                 </div>
             </div> <!-- OTA In Progress Information -->
@@ -143,16 +144,19 @@
 
             // Wait for update to complete
             var running = false;
-            var intervalID = window.setInterval(function(){ // Poll every 5 seconds
-                checkSemaphore(function(semaphore) {
+            var intervalID = window.setInterval(function () { // Poll every 5 seconds
+                checkSemaphore(function (semaphore) {
                     didupdate = semaphore;
                     if ((didupdate == true) && (running == false)) {
                         running = true;
                         // Update is complete
-                        $.put("/api/v1/action/clearupdate/", function(data){});
+                        $.ajax({
+                            url: '/api/v1/action/clearupdate/',
+                            type: 'PUT'
+                        });
                         $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
                         $("#message").replaceWith("<p class='card-body'>The firmware update is complete.  You will be redirected momentarily.</p>");
-                        setTimeout(function(){window.location.href = "/";},5000);
+                        setTimeout(function () { window.location.href = "/"; }, 5000);
                     }
                 });
             }, 10000);
