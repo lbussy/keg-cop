@@ -125,17 +125,17 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     var url = '';
     var data = {};
     if (inCal) {
-        url = "/setcalmode/";
+        url = "/api/v1/action/setcalmode/";
         // Get form data
         tapnum = $('#flowmeter').val();
         data = {
             tapnum: tapnum
         }
     } else {
-        url = "/clearcalmode/";
+        url = "/api/v1/action/clearcalmode/";
     }
 
-    postData(url, data, false, false, function () {
+    putData(url, data, false, false, function () {
         if (typeof callback == "function") {
             callback(true);
         }
@@ -183,7 +183,7 @@ function resetFlowCalForm() {
 
 function pulseReload(callback = null) { // Get pulses
     var selectedIndex = $('#flowmeter').prop('selectedIndex');
-    var url = "/pulses/";
+    var url = "/api/v1/info/pulses/";
     var pulses = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -260,11 +260,11 @@ function processTapCalPost(url, obj) {
     tapnum = $('#flowmeter').val();
     ppu = $('#ppu').val();
 
-    // Process post
+    // Process put
     data = {
         tapnum: tapnum,
         ppu: ppu
     }
-    postData(url, data, false, true);
+    putData(url, data, false, true);
     resetFlowCalForm();
 }

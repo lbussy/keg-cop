@@ -32,8 +32,8 @@ void doWiFi()
 
 void doWiFi(bool dontUseStoredCreds)
 {
-    WiFiManager wm;
-    // WiFiManager Callbacks
+    AsyncWiFiManager wm;
+    // AsyncWiFiManager Callbacks
     wm.setAPCallback(apCallback); // Called after AP has started
     // wm.setConfigResetCallback(configResetCallback); // Called after settings are reset
     // wm.setPreSaveConfigCallback(preSaveConfigCallback); // Called before saving wifi creds
@@ -70,9 +70,9 @@ void doWiFi(bool dontUseStoredCreds)
     wm.setShowDnsFields(true);    // Force show dns field always
 
     // Allow non-default host name
-    // WiFiManagerParameter custom_mqtt_server("server", "mqtt server", config.hostname, 40);
+    // AsyncWiFiManagerParameter custom_mqtt_server("server", "mqtt server", config.hostname, 40);
     // wm.addParameter(&custom_mqtt_server);
-    WiFiManagerParameter custom_hostname("name", "Host Name", config.copconfig.hostname, 32);
+    AsyncWiFiManagerParameter custom_hostname("name", "Host Name", config.copconfig.hostname, 32);
     wm.addParameter(&custom_hostname);
 
     if (dontUseStoredCreds)
@@ -127,9 +127,11 @@ void doWiFi(bool dontUseStoredCreds)
         {
             Log.notice(F("Saving custom hostname configuration: %s." CR), custom_hostname.getValue());
             strlcpy(config.copconfig.hostname, custom_hostname.getValue(), sizeof(config.copconfig.hostname));
-            saveConfig();
             WiFi.setHostname(config.copconfig.hostname);
-
+            config.copconfig.nodrd = true;
+            saveConfig();
+            Log.notice(F("Restarting to pick up custom hostname." CR));
+            ESP.restart();
         }
     }
 
@@ -142,7 +144,7 @@ void doWiFi(bool dontUseStoredCreds)
 
 void resetWifi()
 { // Wipe wifi settings and reset controller
-    WiFi.disconnect();
+    WiFi.disconnect(true, true);
     blinker.detach();       // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
     Log.notice(F("Restarting after clearing wifi settings." CR));
@@ -156,9 +158,9 @@ void wifiBlinker()
     digitalWrite(LED, !(digitalRead(LED)));
 }
 
-// WiFiManager Callbacks
+// AsyncWiFiManager Callbacks
 
-void apCallback(WiFiManager *wiFiManager)
+void apCallback(AsyncWiFiManager *wiFiManager)
 { // Entered Access Point mode
     Log.verbose(F("[CALLBACK]: setAPCallback fired." CR));
 #ifdef ESP32

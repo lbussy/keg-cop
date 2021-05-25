@@ -23,15 +23,13 @@ SOFTWARE. */
 #ifndef _WIFI_H
 #define _WIFI_H
 
-#define WM_ASYNC
-
 #include "config.h"
 #include "jsonconfig.h"
 #include "tools.h"
 #include "rpintsclient.h"
 
 #include <WiFi.h>
-#include <WiFiManager.h>
+#include <AsyncWiFiManager.h>
 #include <Ticker.h>
 #include <ArduinoLog.h>
 
@@ -40,8 +38,8 @@ void doWiFi();
 void doWiFi(bool dontUseStoredCreds);
 void resetWifi();
 
-// WiFiManager Callbacks
-void apCallback(WiFiManager *wiFiManager);
+// AsyncWiFiManager Callbacks
+void apCallback(AsyncWiFiManager *wiFiManager);
 void configResetCallback();
 void preSaveConfigCallback();
 void saveConfigCallback();

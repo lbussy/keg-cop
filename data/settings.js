@@ -79,7 +79,7 @@ function loadHash() { // Link to tab via hash value
 }
 
 function populateFlow(callback = null) { // Get flowmeter settings
-    var url = "/flow/";
+    var url = "/api/v1/config/taps/";
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -121,7 +121,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
-    var url = "/config/";
+    var url = "/api/v1/config/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning()
     })
@@ -224,7 +224,7 @@ function populateConfig(callback = null) { // Get configuration settings
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = "/sensors/";
+    var url = "/api/v1/info/sensors/";
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
@@ -317,7 +317,7 @@ function finishPage() { // Display page
     toggleLoader("off");
 }
 
-// POST Handlers:
+// PUT Handlers:
 
 function processPost(obj) {
     posted = false;
@@ -397,7 +397,7 @@ function processTapPost(url, obj, tapNum) {
         remain = $form.find("input[name='tap" + tapNum + "remain']").val(),
         active = $form.find("input[name='tap" + tapNum + "active']:checked").val();
 
-    // Process post
+    // Process put
     data = {
         tap: tapNum,
         ppu: ppu,
@@ -406,7 +406,7 @@ function processTapPost(url, obj, tapNum) {
         remain: remain,
         active: active
     }
-    postData(url, data);
+    putData(url, data);
 }
 
 function processControllerPost(url, obj) {
@@ -449,10 +449,10 @@ function processControllerPost(url, obj) {
         }
     }
     if (confirmText && (!confirm(confirmText))) {
-        // Bail out on post
+        // Bail out on put
         return;
     } else {
-        // Process post
+        // Process put
         toggleLoader("on");
         originalHostnameConfig = hostnameVal; // Pick up changed host name
         data = {
@@ -468,11 +468,11 @@ function processControllerPost(url, obj) {
             var protocol = window.location.protocol;
             var path = window.location.pathname;
             var newpage = protocol + "//" + hostnameVal + ".local" + path + hashLoc;
-            postData(url, data, newpage);
+            putData(url, data, newpage);
         } else if (unitschanged) {
-            postData(url, data, false, true);
+            putData(url, data, false, true);
         } else {
-            postData(url, data, false, false, function () {
+            putData(url, data, false, false, function () {
                 toggleLoader("off");
             });
         }
@@ -488,13 +488,13 @@ function processTempControlPost(url, obj) {
         controlpoint = $form.find("select[name='controlpoint']").val(),
         enablecontrol = $form.find("input[name='enablecontrol']:checked").val();
 
-    // Process post
+    // Process put
     data = {
         setpoint: setpoint,
         controlpoint: controlpoint,
         enablecontrol: enablecontrol
     }
-    postData(url, data);
+    putData(url, data);
 }
 
 function processSensorControlPost(url, obj) {
@@ -513,7 +513,7 @@ function processSensorControlPost(url, obj) {
         calkeg = $form.find("input[name='calkeg']").val(),
         enablekeg = $form.find("input[name='enablekeg']:checked").val();
 
-    // Process post
+    // Process put
     data = {
         calroom: calroom,
         enableroom: enableroom,
@@ -526,7 +526,7 @@ function processSensorControlPost(url, obj) {
         calkeg: calkeg,
         enablekeg: enablekeg
     }
-    postData(url, data, true, true);
+    putData(url, data, true, true);
 }
 
 function processKegScreenPost(url, obj) {
@@ -536,11 +536,11 @@ function processKegScreenPost(url, obj) {
     var $form = $(obj),
         kegscreen = $form.find("input[name='kegscreen']").val(),
 
-        // Process post
+        // Process put
         data = {
             kegscreen: kegscreen
         };
-    postData(url, data);
+    putData(url, data);
 }
 
 function processTargetUrlPost(url, obj) {
@@ -551,12 +551,12 @@ function processTargetUrlPost(url, obj) {
         targeturl = $form.find("input[name='targeturl']").val(),
         targetfreq = $form.find("input[name='targetfreq']").val();
 
-    // Process post
+    // Process put
     data = {
         targeturl: targeturl,
         targetfreq: targetfreq
     };
-    postData(url, data);
+    putData(url, data);
 }
 
 function processRPintsPost(url, obj) {
@@ -570,7 +570,7 @@ function processRPintsPost(url, obj) {
         rpintspassword = $form.find("input[name='rpintspassword']").val();
         rpintstopic = $form.find("input[name='rpintstopic']").val();
 
-    // Process post
+    // Process put
     data = {
         rpintshost: rpintshost,
         rpintsport: rpintsport,
@@ -578,14 +578,14 @@ function processRPintsPost(url, obj) {
         rpintspassword: rpintspassword,
         rpintstopic: rpintstopic
     };
-    postData(url, data);
+    putData(url, data);
 }
 
-function postData(url, data, newpage = false, newdata = false, callback = null) {
+function putData(url, data, newpage = false, newdata = false, callback = null) {
     var loadNew = (newpage.length > 0);
     $.ajax({
         url: url,
-        type: 'POST',
+        type: 'PUT',
         data: data,
         success: function (data) {
             settingsAlert.error();
@@ -637,7 +637,7 @@ function updateHelp(hashLoc) {
             url = url + "/en/latest/context/settings/temperature/control/index.html";
             break;
         case "#sensorcontrol":
-            url = url + "/en/latest/context/settings/temperature/sensors/index.html";
+            url = url + "/en/latest/context/settings/temperature/api/v1/info/sensors/index.html";
             break;
         case "#kegscreen":
             url = url + "/en/latest/context/settings/targets/kegscreen/index.html";
