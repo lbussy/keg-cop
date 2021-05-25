@@ -34,7 +34,7 @@ function populatePage() { // Get page data
 }
 
 function populateFlow(callback = null) { // Get flowmeter data
-    var url = "/flow/";
+    var url = "/api/v1/config/taps/";
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -93,7 +93,7 @@ function populateFlow(callback = null) { // Get flowmeter data
 }
 
 function populateConfig() { // Get configuration settings
-    var url = "/config/";
+    var url = "/api/v1/config/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -125,7 +125,7 @@ function populateConfig() { // Get configuration settings
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = "/sensors/";
+    var url = "/api/v1/info/sensors/";
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })

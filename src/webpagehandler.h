@@ -35,6 +35,7 @@ SOFTWARE. */
 #include "tempsensors.h"
 #include "thermostat.h"
 #include "resetreasons.h"
+#include "api.h"
 
 #include <WiFi.h>
 #include <ESPmDNS.h>
@@ -42,30 +43,38 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 #include <SPIFFSEditor.h>
-
-#define WEBSERVER_H
 #include <ESPAsyncWebServer.h>
-
 #include <Arduino.h>
 
+enum HANDLER_STATE
+{
+    NOT_PROCCESSED = -1,
+    FAIL_PROCESS,
+    PROCESSED
+};
+
 void initWebServer();
-void setRegPageAliases();
+void setRegPageHandlers();
+void setAPIPageHandlers();
 void setActionPageHandlers();
-void setJsonHandlers();
-void setSettingsAliases();
+void setInfoPageHandlers();
+void setConfigurationPageHandlers();
 void setEditor();
 void stopWebServer();
 
-bool handleTapPost(AsyncWebServerRequest *);
-bool handleTapCal(AsyncWebServerRequest *);
-bool handleControllerPost(AsyncWebServerRequest *);
-bool handleControlPost(AsyncWebServerRequest *);
-bool handleSensorPost(AsyncWebServerRequest *);
-bool handleKegScreenPost(AsyncWebServerRequest *);
-bool handleUrlTargetPost(AsyncWebServerRequest *);
-bool handleMQTTTargetPost(AsyncWebServerRequest *);
-bool handleCloudTargetPost(AsyncWebServerRequest *);
-bool handleSetCalMode(AsyncWebServerRequest *);
+HANDLER_STATE handleTapPost(AsyncWebServerRequest *);
+HANDLER_STATE handleTapCal(AsyncWebServerRequest *);
+HANDLER_STATE handleControllerPost(AsyncWebServerRequest *);
+HANDLER_STATE handleControlPost(AsyncWebServerRequest *);
+HANDLER_STATE handleSensorPost(AsyncWebServerRequest *);
+HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *);
+HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *);
+HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *);
+HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *);
+HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *);
+
+void send_not_allowed(AsyncWebServerRequest *request);
+void send_json(AsyncWebServerRequest *request, String &json);
 
 extern struct ThatVersion thatVersion;
 extern struct Config config;
@@ -78,5 +87,6 @@ extern struct Devices device;
 extern const size_t capacityTempsDeserial;
 extern const size_t capacityTempsSerial;
 extern struct Thermostat tstat;
+extern struct API api;
 
 #endif // _WEBPAGEHANDLER_H

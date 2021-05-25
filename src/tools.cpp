@@ -246,6 +246,7 @@ std::string addThousandSeparators(std::string value, char thousandSep = ',', cha
 
 void getGuid(char *str, size_t len)
 {
+    // TODO:  Fix this to be unique
     uint32_t chipID;
     uint64_t macAddress = ESP.getEfuseMac();
     uint64_t macAddressTrunc = macAddress << 40;
