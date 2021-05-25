@@ -35,6 +35,7 @@ SOFTWARE. */
 #include "tempsensors.h"
 #include "thermostat.h"
 #include "resetreasons.h"
+#include "api.h"
 
 #include <WiFi.h>
 #include <ESPmDNS.h>
@@ -54,6 +55,7 @@ enum HANDLER_STATE
 
 void initWebServer();
 void setRegPageHandlers();
+void setAPIPageHandlers();
 void setActionPageHandlers();
 void setInfoPageHandlers();
 void setConfigurationPageHandlers();
@@ -85,5 +87,6 @@ extern struct Devices device;
 extern const size_t capacityTempsDeserial;
 extern const size_t capacityTempsSerial;
 extern struct Thermostat tstat;
+extern struct API api;
 
 #endif // _WEBPAGEHANDLER_H

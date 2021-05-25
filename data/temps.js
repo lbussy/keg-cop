@@ -29,7 +29,7 @@ function populatePage() { // Get page data
 }
 
 function populateConfig() { // Get configuration settings
-    var url = "/api/configuration/settings/";
+    var url = "/api/v1/config/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -61,7 +61,7 @@ function populateConfig() { // Get configuration settings
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = "/api/info/sensors/";
+    var url = "/api/v1/info/sensors/";
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;

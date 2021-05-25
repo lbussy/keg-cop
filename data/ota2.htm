@@ -131,8 +131,15 @@
         else window.onload = loadPage;
 
         function loadPage() { // Load the page's JS elements
-            $.put("/api/action/clearupdate/", function(data){});    // Clear any previous update flags
-            $.put("/api/action/updatestart/", function(data){});    // Semaphore the controller that it's safe to proceed
+            $.ajax({ // Clear any previous update flags
+                url: '/api/v1/action/clearupdate/',
+                type: 'PUT'
+            });
+
+            $.ajax({ // Semaphore the controller that it's safe to proceed
+                url: '/api/v1/action/updatestart/',
+                type: 'PUT'
+            });
 
             // Wait for update to complete
             var running = false;
@@ -142,7 +149,7 @@
                     if ((didupdate == true) && (running == false)) {
                         running = true;
                         // Update is complete
-                        $.put("/api/action/clearupdate/", function(data){});
+                        $.put("/api/v1/action/clearupdate/", function(data){});
                         $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
                         $("#message").replaceWith("<p class='card-body'>The firmware update is complete.  You will be redirected momentarily.</p>");
                         setTimeout(function(){window.location.href = "/";},5000);
@@ -152,7 +159,7 @@
         }
 
         function checkSemaphore(callback) { // Check to see if the update is complete
-            var jqxhr = $.get("/api/action/ping/")
+            var jqxhr = $.get("/api/v1/action/ping/")
                 .done(function (data) {
                     callback(true);
                 })
