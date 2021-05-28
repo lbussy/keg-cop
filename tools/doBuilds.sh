@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-declare CWD GITNAME GITROOT ENVIRONMENTS BINLOC PIO
+declare CWD GITNAME GITROOT GITTAG ENVIRONMENTS BINLOC PIO
 BINLOC="firmware"
 
 get_pio() {
@@ -56,7 +56,8 @@ get_git() {
     fi
     GITROOT=$(git rev-parse --show-toplevel)
     GITNAME=$(git rev-parse --show-toplevel)
-    GITNAME=${GITNAME##*/}
+    GITNAME=${GITROOT##*/}
+    GITTAG=$(git describe --tags --abbrev=0)
 }
 
 check_root() {
@@ -81,6 +82,17 @@ list_envs() {
         echo -e "\t$env"
     done
     sleep 3
+}
+
+create_version() {
+    echo -e "\nCreating version JSON."
+    sleep 1
+    cat << EOF | tee "$GITROOT/data/version.json" "$GITROOT/$BINLOC/version.json" > /dev/null || exit
+{
+    "fw_version": "$GITTAG",
+    "fs_version": "$GITTAG"
+}
+EOF
 }
 
 build_binaries() {
@@ -117,6 +129,7 @@ main() {
     check_root "$@"
     get_envs "$@"
     list_envs "$@"
+    create_version "$@"
     build_binaries "$@"
     copy_binaries "$@"
     cd "$CWD" || exit
