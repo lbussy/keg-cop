@@ -91,7 +91,7 @@ void setup()
     sensorInit();       // Initialize temperature sensors
     startControl();     // Initialize temperature control
     doVersionPoll();    // Get server version at startup
-    setupRPints();        // Set up MQTT
+    setupRPints();      // Set up MQTT
 
     // Setup tickers
     pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors
@@ -105,7 +105,9 @@ void setup()
     if (!Log.getLevel())
         nullDoc("d");
     else
-        Log.notice(F("Started %s version %s (%s) [%s]." CR), API_KEY, version(), branch(), build());
+    {
+        Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), API_KEY, fw_version(), fs_version(), branch(), build());        
+    }
 }
 
 void loop()
