@@ -22,11 +22,47 @@ SOFTWARE. */
 
 #include "version.h"
 
+static const char *filename = VERSIONJSON;
+static char fs_ver[32];
+
 const char *project() { return stringify(PIO_SRC_NAM); }
-const char *version() { return stringify(PIO_SRC_TAG); }
+const char *fw_version() { return stringify(PIO_SRC_TAG); }
+const char *fs_version() { fsver(); return (fs_ver); }
 const char *branch() { return stringify(PIO_SRC_BRH); }
 const char *build() { return stringify(PIO_SRC_REV); }
 const char *board() { return stringify(PIO_BOARD); }
+
+void fsver()
+{
+    // Filesystem Version
+    if (FILESYSTEM.begin())
+    {
+        // Loads the configuration from a file on FILESYSTEM
+        File file = FILESYSTEM.open(filename, "r");
+        if (FILESYSTEM.exists(filename) || !file)
+        {
+            // Deserialize version
+            StaticJsonDocument<96> doc;
+
+            // Parse the JSON object in the file
+            DeserializationError err = deserializeJson(doc, file);
+
+            if (!err)
+            {
+                if (doc["fs_version"].isNull())
+                {
+                    strlcpy(fs_ver, "0.0.0", sizeof(fs_ver));
+                }
+                else
+                {
+                    const char *fs = doc["fs_version"];
+                    strlcpy(fs_ver, fs, sizeof(fs_ver));
+                }
+            }
+        }
+    }
+    return;
+}
 
 /*
  * versionCompare: Compares two strings representing a semantic version
