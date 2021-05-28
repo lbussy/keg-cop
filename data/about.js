@@ -44,7 +44,7 @@ function loadThisVersion() { // Get current parameters
     })
         .done(function (thisVersion) {
             try {
-                $('#thisVersion').text("v" + thisVersion.version);
+                $('#thisVersion').text("v" + thisVersion.fw_version);
                 $('#thisBranch').text(thisVersion.branch);
                 $('#thisBuild').text(thisVersion.build);
             }

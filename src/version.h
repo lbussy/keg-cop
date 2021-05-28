@@ -26,12 +26,17 @@ SOFTWARE. */
 #include "config.h"
 #include "ArduinoLog.h"
 #include <Arduino.h>
+#include <ArduinoJson.h>
+#include <SPIFFS.h>
+#include <FS.h>
 
 #define stringify(s) _stringifyDo(s)
 #define _stringifyDo(s) #s
 
 const char *project();
-const char *version();
+const char *fw_version();
+const char *fs_version();
+void fsver();
 const char *branch();
 const char *build();
 const char *board();

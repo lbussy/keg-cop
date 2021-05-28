@@ -195,20 +195,22 @@ void serialLoop()
             }
             case 'a': // /thatVersion/
             {
-                const size_t capacity = 2 * JSON_OBJECT_SIZE(1);
+                const size_t capacity = 2 * JSON_OBJECT_SIZE(2);
                 StaticJsonDocument<capacity> doc;
                 JsonObject a = doc.createNestedObject("a");
-                a["available"] = (const char *)thatVersion.version;
+                a["fw_available"] = (const char *)thatVersion.fw_version;
+                a["fs_available"] = (const char *)thatVersion.fs_version;
                 serializeJson(doc, SERIAL);
                 printCR();
                 break;
             }
             case 'v': // /thisVersion/
             {
-                const size_t capacity = 2 * JSON_OBJECT_SIZE(1);
+                const size_t capacity = 2 * JSON_OBJECT_SIZE(2);
                 StaticJsonDocument<capacity> doc;
                 JsonObject v = doc.createNestedObject("v");
-                v["version"] = (const char *)version();
+                v["fw_version"] = (const char *)fw_version();
+                v["fs_version"] = (const char *)fs_version();
                 serializeJson(doc, SERIAL);
                 printCR();
                 break;

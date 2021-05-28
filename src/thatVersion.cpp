@@ -53,7 +53,7 @@ void requestHandler(void *optParm, asyncHTTPrequest *request, int readyState)
 bool serializeVersion(const ThatVersion &thatVersion, Print &dst)
 {
     // Serialize version
-    const size_t capacity = JSON_OBJECT_SIZE(1);
+    const size_t capacity = JSON_OBJECT_SIZE(2);
     DynamicJsonDocument doc(capacity);
 
     // Create an object at the root
@@ -69,7 +69,7 @@ bool serializeVersion(const ThatVersion &thatVersion, Print &dst)
 bool deserializeVersion(const char *&src, ThatVersion &thatVersion)
 {
     // Deserialize version
-    const size_t capacity = JSON_OBJECT_SIZE(1) + 50;
+    const size_t capacity = JSON_OBJECT_SIZE(2) + 50;
     DynamicJsonDocument doc(capacity);
 
     // Parse the JSON object in the file
@@ -94,14 +94,22 @@ void doVersionPoll()
 
 void ThatVersion::save(JsonObject obj) const
 {
-    obj["version"] = version;
+    obj["fw_version"] = fw_version;
+    obj["fs_version"] = fs_version;
 }
 
 void ThatVersion::load(JsonObjectConst obj)
 {
-    const char *v = obj["version"];
-    if (v)
-        strlcpy(version, v, sizeof(version));
+    const char *fw = obj["fw_version"];
+    if (fw)
+        strlcpy(fw_version, fw, sizeof(fw_version));
     else
-        strlcpy(version, "0.0.0", sizeof(version)); // Default
+        strlcpy(fw_version, "0.0.0", sizeof(fw_version)); // Default
+
+    // Filesystem Version
+    const char *fs = obj["fs_version"];
+    if (fs)
+        strlcpy(fs_version, fs, sizeof(fs_version));
+    else
+        strlcpy(fs_version, "0.0.0", sizeof(fs_version)); // Default
 }
