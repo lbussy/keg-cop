@@ -23,7 +23,7 @@ SOFTWARE. */
 #include "jsonconfig.h"
 
 Config config;
-const char *filename = FILENAME;
+static const char *filename = FILENAME;
 
 bool deleteConfigFile()
 {
