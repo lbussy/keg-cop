@@ -3,17 +3,402 @@
 Keg Cop API
 ################
 
-.. note::
-
-    Re-do API since moving top-level config items to subs.
-
 Keg Cop uses a combination of API types:
 
-- `Action Pages`_
-- `JSON Retrieval`_
-- `Settings Handlers (POST)`_
-- `Target URL Report`_
-- `Keg Screen Reports`_
+- `Client-Initiated Communication`_
+- `Controller-Initiated Communication`_
+
+Client-Initiated Communication
+================================
+
+Client-initiated communication is that commincation which is initiated from a system other than the controller, to retrieve data or initiate a data update or state change in the controller.  This is broken down into:
+
+- `Action Page Handlers`_: Pages which by access will initiate a change or present a state.
+- `Info Page Handlers`_: Pages accessed to retrieve in formation about the state of the controller and its systems.
+- `Configuration Page Handlers`_: Pages intended to provide a means by which the controller and application features and properties may be updated.
+
+Action Page Handlers
+---------------------
+
+These action page handlers exist within the Action Page API tree:
+
+- `Ping`_
+- `WiFi Reset`_
+- `Controller Reset`_
+- `Online Update`_
+- `Clear Update State`_
+- `Set Calibration Mode`_
+- `Clear Calibration Mode`_
+
+Ping
+~~~~~~~
+
+- **Address:**  :file:`/api/v1/ping/`
+- **Valid Methods:**  :file:`GET`
+- **Data:**  Ignored
+- **Response:** :file:`200 Ok`
+- **Description:** While not an action per se, this page provides a simple response intended to semaphire the existence of the controller.
+- **Error Message:** None
+
+WiFi Reset
+~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/action/wifireset/`
+- **Valid Methods:** :file:`PUT`
+- **Data:** Ignored
+- **Response:** :file:`200 Ok`
+- **Description:** This endpoint will initiate erasure of the saved WiFi credentials, and a controller restart.  A restart without credentials will cause the controller to start a captive portal for configuration.
+- **Error Message:** Any method other than :file:`PUT` will result in a :file:`405 Method Not Allowed` error.
+
+Controller Reset
+~~~~~~~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/action/reset/`
+- **Valid Methods:** :file:`PUT`
+- **Data:** Ignored
+- **Response:** :file:`200 Ok`
+- **Description:** This endpoint will initiate a controller restart with no loss of data.
+- **Error Message:** Any method other than :file:`PUT` will result in a :file:`405 Method Not Allowed` error.
+
+Online Update
+~~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/action/updatestart/`
+- **Valid Methods:** :file:`PUT`
+- **Data:** Ignored
+- **Response:** :file:`200 Ok`
+- **Description:** This endpoint will initiate a controller upgrade attempt from the author's website.  Both firmware and filesystem updates will be attempted.  The controller will restart several times during this process.
+- **Error Message:** Any method other than :file:`PUT` will result in a :file:`405 Method Not Allowed` error.
+
+Clear Update State
+~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/action/clearupdate/`
+- **Valid Methods:** :file:`PUT`
+- **Data:** Ignored
+- **Response:** :file:`200 Ok`
+- **Description:** This endpoint will clear the update semaphores which trigger an update attempt initiated on a controller restart.
+- **Error Message:** Any method other than :file:`PUT` will result in a :file:`405 Method Not Allowed` error.
+
+Set Calibration Mode
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/action/setcalmode/`
+- **Valid Methods:** :file:`PUT`
+- **Data:** Ignored
+- **Response:** :file:`200 Ok`
+- **Description:** This endpoint will put the controller in calibration mode.  This mode pauses pour calculations in order to allow a user to measure a pour and calculate pulses per unit.  The pulses accumulated will debit upon completion.
+- **Error Message:** Any method other than :file:`PUT` will result in a :file:`405 Method Not Allowed` error.
+
+Clear Calibration Mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/action/clearcalmode/`
+- **Valid Methods:** :file:`PUT`
+- **Data:** Ignored
+- **Response:** :file:`200 Ok`
+- **Description:** This endpoint will clear the calibration mode, and debit any accumulated pulses.
+- **Error Message:** Any method other than :file:`PUT` will result in a :file:`405 Method Not Allowed` error.
+
+Info Page Handlers
+---------------------
+
+These information provider pages exist within the Info API tree:
+
+- `Reset Reason`_
+- `Heap Information`_
+- `Uptime`_
+- `This Version`_
+- `That Version`_
+- `Pulses`_
+- `Sensors`_
+- `Reset Reason`_
+- `Heap Information`_
+- `Uptime`_
+- `This Version`_
+- `That Version`_
+- `Pulses`_
+- `Sensors`_
+
+Reset Reason
+~~~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/info/resetreason/`
+- **Valid Methods:** :file:`ANY`
+- **Data:** Ignored
+- **Description:** 
+- **Error Message:** None.
+- **Response:**
+
+::
+
+    {
+        "r": {
+            "reason": "ESP_RST_POWERON",
+            "description": "Reset due to power-on event"
+        }
+    }
+
+Heap Information
+~~~~~~~~~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/info/heap/`
+- **Valid Methods:** :file:`ANY`
+- **Data:** Ignored
+- **Description:** 
+- **Error Message:** None.
+- **Response:**
+
+::
+
+    {
+        "h": {
+            "free": 224092,
+            "max": 48256,
+            "frag": 79
+        }
+    }
+
+Uptime
+~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/info/uptime/`
+- **Valid Methods:** :file:`ANY`
+- **Data:** Ignored
+- **Description:** 
+- **Error Message:** None.
+- **Response:**
+
+::
+
+    {
+        "u": {
+            "days": 0,
+            "hours": 1,
+            "minutes": 8,
+            "seconds": 38,
+            "millis": 246
+        }
+    }
+
+This Version
+~~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/info/thisVersion/`
+- **Valid Methods:** :file:`ANY`
+- **Data:** Ignored
+- **Description:** 
+- **Error Message:** None.
+- **Response:**
+
+::
+
+    {
+        "version": "0.0.1",
+        "branch": "apis",
+        "build": "dfdfa9d"
+    }
+
+That Version
+~~~~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/info/thatVersion/`
+- **Valid Methods:** :file:`ANY`
+- **Data:** Ignored
+- **Description:** 
+- **Error Message:** None.
+- **Response:**
+
+::
+
+    {
+        "version": "0.0.1"
+    }
+
+Pulses
+~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/info/pulses/`
+- **Valid Methods:** :file:`ANY`
+- **Data:** Ignored
+- **Description:** 
+- **Error Message:** None.
+- **Response:**
+
+::
+
+    {
+        "pulses": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    }
+
+Sensors
+~~~~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/info/sensors/`
+- **Valid Methods:** :file:`ANY`
+- **Data:** Ignored
+- **Description:** 
+- **Error Message:** None.
+- **Response:**
+
+::
+
+    {
+        "imperial": true,
+        "controlpoint": 4,
+        "setting": 35,
+        "status": 6,
+        "controlenabled": true,
+        "sensors": [
+            {
+            "enable": true,
+            "name": "Room",
+            "value": -196.6
+            },
+            {
+            "enable": true,
+            "name": "Tower",
+            "value": -196.6
+            },
+            {
+            "enable": true,
+            "name": "Upper Chamber",
+            "value": -196.6
+            },
+            {
+            "enable": true,
+            "name": "Lower Chamber",
+            "value": -196.6
+            },
+            {
+            "enable": true,
+            "name": "Keg",
+            "value": -196.6
+            }
+        ],
+        "displayenabled": true
+    }
+
+Configuration Page Handlers
+-----------------------------
+
+The configuration page API tree allows retrieval of current states, or setting consitions and properties via the same endpoint.  Available pages are:
+
+- `Settings`_
+- `Taps`_
+
+Settings
+~~~~~~~~~~
+
+- **Address:** :file:`/api/v1/config/settings/`
+- **Valid Methods:** :file:`GET`
+- **Data:** Ignored
+- **Description:** The :file:`GET` method for this endpoint will return the current endpoint configuration.
+- **Error Message:** Any method other than :file:`PUT` or :file:`GET` will result in a :file:`405 Method Not Allowed` error.
+- **Response:**
+
+::
+
+    {
+        "apconfig": {
+            "ssid": "kegcop",
+            "passphrase": "kegcop21"
+        },
+        "copconfig": {
+            "guid": "002DE6B4",
+            "hostname": "kegcopmule",
+            "nodrd": false,
+            "breweryname": "Silver Fox Brewery",
+            "kegeratorname": "Keezer",
+            "controllernumber": 0,
+            "serial": false,
+            "imperial": true,
+            "tapsolenoid": true
+        },
+        "ota": {
+            "dospiffs1": false,
+            "dospiffs2": false,
+            "didupdate": false
+        },
+        "temps": {
+            "setpoint": 35,
+            "controlpoint": 4,
+            "controlenabled": true,
+            "roomenabled": true,
+            "room": 1,
+            "towerenabled": true,
+            "tower": 2,
+            "upperenabled": true,
+            "upper": -1,
+            "lowerenabled": true,
+            "lower": -2,
+            "kegenabled": true,
+            "keg": 3
+        },
+        "kegscreen": {
+            "url": "",
+            "update": false
+        },
+        "taplistio": {
+            "dospiffs1": false,
+            "dospiffs2": false,
+            "didupdate": false
+        },
+        "rpintstarget": {
+            "host": "",
+            "port": 1883,
+            username": "",
+            "password": "",
+            "topic": "kegcop",
+            "update": false
+        },
+        "urltarget": {
+            "url": "",
+            "freq": 30,
+            "update": false
+        }
+    }
+
+- **Address:** :file:`/api/v1/config/settings/`
+- **Valid Methods:** :file:`PUT`
+- **Data:** Ignored
+- **Response:** :file:``
+- **Description:** 
+- **Error Message:** Any method other than :file:`PUT` or :file:`GET` will result in a :file:`405 Method Not Allowed` error.
+
+Taps
+~~~~~~~~~~~
+
+- **Address:** :file:``
+- **Valid Methods:** :file:`PUT` or :file:`GET`
+- **Data:** Ignored
+- **Response:** :file:``
+- **Description:** 
+- **Error Message:** Any method other than :file:`PUT` or :file:`GET` will result in a `405 Method Not Allowed` error.
+
+Controller-Initiated Communication
+=====================================
+
+Keg Screen
+-------------
+
+URL
+----------
+
+Raspberry Pints
+---------------------
+
+
 
 Action Pages
 *************
