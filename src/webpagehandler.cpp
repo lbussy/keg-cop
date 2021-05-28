@@ -336,10 +336,12 @@ void setInfoPageHandlers()
 
     server.on("/api/v1/info/thisVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
-        const size_t capacity = JSON_OBJECT_SIZE(3);
+        const size_t capacity = JSON_OBJECT_SIZE(4);
         DynamicJsonDocument doc(capacity);
 
-        doc["version"] = version();
+        doc["fw_version"] = fw_version();
+        doc["fs_version"] = fs_version();
+
         doc["branch"] = branch();
         doc["build"] = build();
 
@@ -350,11 +352,13 @@ void setInfoPageHandlers()
 
     server.on("/api/v1/info/thatVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
-        const size_t capacity = JSON_OBJECT_SIZE(1);
+        const size_t capacity = JSON_OBJECT_SIZE(2);
         DynamicJsonDocument doc(capacity);
 
-        const char *version = thatVersion.version;
-        doc["version"] = version;
+        const char *fw_version = thatVersion.fw_version;
+        const char *fs_version = thatVersion.fs_version;
+        doc["fw_version"] = fw_version;
+        doc["fs_version"] = fs_version;
 
         String json;
         serializeJson(doc, json);

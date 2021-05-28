@@ -34,7 +34,8 @@ SOFTWARE. */
 
 struct ThatVersion
 {
-    char version[32] = {'0', '.', '0', '.', '0'};
+    char fw_version[32] = {'0', '.', '0', '.', '0'};
+    char fs_version[32] = {'0', '.', '0', '.', '0'};
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
