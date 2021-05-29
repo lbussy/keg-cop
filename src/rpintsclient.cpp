@@ -103,15 +103,16 @@ bool sendPulsesRPints(int tapID, unsigned int pulses)
         sprintf(pin, "%d", tapID); // String representation of the pin (follwed by semicolon)
         char count[7];
         sprintf(count, "%u", pulses); // String representation of the pulse count
+        const char * delim = ";";
 
         // Concatenate report
         char payload[32];
         strcpy(payload, "P");   // A pulse report
-        strcat(payload, ";");   // Delimiter
+        strcat(payload, delim); // Delimiter
         strcat(payload, "-1");  // User ID; -1 = no user
-        strcat(payload, ";");   // Delimiter
+        strcat(payload, delim); // Delimiter
         strcat(payload, pin);   // Pin in tap configuration
-        strcat(payload, ";");   // Delimiter
+        strcat(payload, delim); // Delimiter
         strcat(payload, count); // Count of pulses in report
 
         // Send report
