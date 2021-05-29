@@ -4,7 +4,8 @@ Update Controller
 ########################
 
 .. todo::
-   Update this page
+
+   Update this page (eliminated middleman page, new desciption/buttons)
 
 .. image:: update.png
    :scale: 50%
