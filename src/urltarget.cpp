@@ -33,7 +33,7 @@ bool sendTargetReport()
     {
         UrlReport urlreport;
         strlcpy(urlreport.api, API_KEY, sizeof(urlreport.api));
-        getGuid(urlreport.guid, sizeof(urlreport.guid));
+        getGuid(urlreport.guid);
         strlcpy(urlreport.hostname, config.copconfig.hostname, sizeof(urlreport.hostname));
         strlcpy(urlreport.breweryname, config.copconfig.breweryname, sizeof(urlreport.breweryname));
         strlcpy(urlreport.kegeratorname, config.copconfig.kegeratorname, sizeof(urlreport.kegeratorname));

@@ -346,15 +346,7 @@ void CopConfig::load(JsonObjectConst obj)
 {
     // Load Cop configuration
     //
-    if (obj["guid"].isNull())
-    {
-        getGuid(guid, sizeof(guid));
-    }
-    else
-    {
-        const char *gd = obj["guid"];
-        strlcpy(guid, gd, sizeof(guid));
-    }
+    getGuid(guid); // Always get this
 
     if (obj["hostname"].isNull())
     {
