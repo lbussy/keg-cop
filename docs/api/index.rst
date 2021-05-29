@@ -350,63 +350,58 @@ GET
 .. code-block:: json
 
     {
-    "apconfig": {
-        "ssid": "kegcop",
-        "passphrase": "kegcop21"
-    },
-    "copconfig": {
-        "guid": "002DE6B4",
-        "hostname": "kegcopmule",
-        "nodrd": false,
-        "breweryname": "Silver Fox Brewery",
-        "kegeratorname": "Keezer",
-        "controllernumber": 0,
-        "serial": false,
-        "imperial": true,
-        "tapsolenoid": true
-    },
-    "ota": {
-        "dospiffs1": false,
-        "dospiffs2": false,
-        "didupdate": false
-    },
-    "temps": {
-        "setpoint": 35,
-        "controlpoint": 4,
-        "controlenabled": true,
-        "roomenabled": true,
-        "room": 1,
-        "towerenabled": true,
-        "tower": 2,
-        "upperenabled": true,
-        "upper": -1,
-        "lowerenabled": true,
-        "lower": -2,
-        "kegenabled": true,
-        "keg": 3
-    },
-    "kegscreen": {
-        "url": "",
-        "update": false
-    },
-    "taplistio": {
-        "dospiffs1": false,
-        "dospiffs2": false,
-        "didupdate": false
-    },
-    "rpintstarget": {
-        "host": "",
-        "port": 1883,
-        "username": "",
-        "password": "",
-        "topic": "kegcop",
-        "update": false
-    },
-    "urltarget": {
-        "url": "",
-        "freq": 30,
-        "update": false
-    }
+        "apconfig": {
+            "ssid": "kegcop",
+            "passphrase": "kegcop21"
+        },
+        "copconfig": {
+            "guid": "952DE6B40000A1A6",
+            "hostname": "kegcop",
+            "nodrd": false,
+            "breweryname": "Silver Fox Brewery",
+            "kegeratorname": "Keezer",
+            "controllernumber": 0,
+            "serial": false,
+            "imperial": true,
+            "tapsolenoid": true
+        },
+        "ota": {
+            "dospiffs1": false,
+            "dospiffs2": false,
+            "didupdate": false
+        },
+        "temps": {
+            "setpoint": 35,
+            "controlpoint": 4,
+            "controlenabled": true,
+            "roomenabled": true,
+            "room": 1,
+            "towerenabled": true,
+            "tower": 2,
+            "upperenabled": true,
+            "upper": -1,
+            "lowerenabled": true,
+            "lower": -2,
+            "kegenabled": true,
+            "keg": 3
+        },
+        "kegscreen": {
+            "url": "http://mule.local/kegcop/",
+            "update": false
+        },
+        "rpintstarget": {
+            "host": "mule.local",
+            "port": 1883,
+            "username": "",
+            "password": "",
+            "topic": "kegcop",
+            "update": false
+        },
+        "urltarget": {
+            "url": "http://mule.local",
+            "freq": 30,
+            "update": false
+        }
     }
 
 .. todo::
