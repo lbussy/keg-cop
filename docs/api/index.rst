@@ -421,7 +421,7 @@ copconfig
 
 - ``guid`` - Not configurable via settings, this is a calculated/derived value unique to the controller.
 - ``hostname`` - A string representing a valid hostname (without the .local portion) between 3 and 32 characters.
-``breweryname`` - A string representing the brewery name, used to logically group multiple controllers and display the web page.
+- ``breweryname`` - A string representing the brewery name, used to logically group multiple controllers and display the web page.
 - ``kegeratorname`` - A string representing the kegerator name, used to identify the controller and displayed within the web page display.
 - ``imperial`` - A boolean representing imperial versus metric units to be used by the controller.  Changing this value will result in a conversion of all stored values to the target units.  Multiple toggles could result in accrued rounding errors and some loss of accuracy.
 - ``tapsolenoid`` - A simple control point intended to control a local solenoid by an upstream system or the web UI.
@@ -477,7 +477,7 @@ GET
 - **Description:** The :file:`GET` method for this endpoint will return the current endpoint configuration.
 - **Error Message:** Any method other than ``PUT`` or ``GET`` will result in a ``405 Method Not Allowed`` error.
 - **Response:** 
-- 
+
 .. code-block:: json
 
     {
