@@ -3,10 +3,6 @@
 PCB Assembly
 #####################
 
-.. todo::
-
-   Add thumbnails of the various assembled PCBs somewhere here without leaving the page?
-
 Keg Cop runs on an ESP32 controller. To detect the information to be logged, you need to connect specific devices to the controller. I have provided a main circuit board design, as well as several breakouts for your use.
 
 Assembly is not difficult, but it does require some basic soldering.
