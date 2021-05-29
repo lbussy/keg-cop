@@ -267,7 +267,7 @@ void setInfoPageHandlers()
 {
     // Info Page Handlers
 
-    server.on("/api/v1/info/resetreason", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/resetreason/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the reset reason json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -283,7 +283,7 @@ void setInfoPageHandlers()
         send_json(request, resetreason);
     });
 
-    server.on("/api/v1/info/heap", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/heap/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the heap json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -309,7 +309,7 @@ void setInfoPageHandlers()
         send_json(request, heap);
     });
 
-    server.on("/api/v1/info/uptime", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/uptime/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the uptime json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -334,7 +334,7 @@ void setInfoPageHandlers()
         send_json(request, ut);
     });
 
-    server.on("/api/v1/info/thisVersion", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/thisVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(4);
         DynamicJsonDocument doc(capacity);
@@ -350,7 +350,7 @@ void setInfoPageHandlers()
         send_json(request, json);
     });
 
-    server.on("/api/v1/info/thatVersion", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/thatVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(2);
         DynamicJsonDocument doc(capacity);
@@ -365,7 +365,7 @@ void setInfoPageHandlers()
         send_json(request, json);
     });
 
-    server.on("/api/v1/info/pulses", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/pulses/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         // Used to provide the pulses json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -385,7 +385,7 @@ void setInfoPageHandlers()
         send_json(request, json);
     });
 
-    server.on("/api/v1/info/sensors", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/sensors/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         DynamicJsonDocument doc(capacityTempsSerial);
 
@@ -438,7 +438,7 @@ void setConfigurationPageHandlers()
 {
     // Settings Handlers:
 
-    server.on("/api/v1/config/settings", KC_HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/settings/", KC_HTTP_PUT, [](AsyncWebServerRequest *request) {
         // Process settings update
         Log.verbose(F("Processing put to %s." CR), request->url().c_str());
 
@@ -462,7 +462,7 @@ void setConfigurationPageHandlers()
         }
     });
 
-    server.on("/api/v1/config/settings", KC_HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/settings/", KC_HTTP_GET, [](AsyncWebServerRequest *request) {
         // Used to provide the Config json
         // Serialize configuration
         StaticJsonDocument<CAP_SER_CONF> doc;   // Create doc
@@ -474,14 +474,14 @@ void setConfigurationPageHandlers()
         send_json(request, json);
     });
 
-    server.on("/api/v1/config/settings", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/settings/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         send_not_allowed(request);
     });
 
     // Settings Handlers^
     // Tap Handlers:
 
-    server.on("/api/v1/config/taps", KC_HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/taps/", KC_HTTP_PUT, [](AsyncWebServerRequest *request) {
         // Process taps update
         Log.verbose(F("Processing post to %s." CR), request->url().c_str());
 
@@ -505,7 +505,7 @@ void setConfigurationPageHandlers()
         }
     });
 
-    server.on("/api/v1/config/taps", KC_HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/taps/", KC_HTTP_GET, [](AsyncWebServerRequest *request) {
         // Serialize configuration
         DynamicJsonDocument doc(capacityFlowSerial); // Create doc
         JsonObject root = doc.to<JsonObject>();      // Create JSON object
@@ -516,7 +516,7 @@ void setConfigurationPageHandlers()
         send_json(request, json);
     });
 
-    server.on("/api/v1/config/taps", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/taps/", KC_HTTP_ANY, [](AsyncWebServerRequest *request) {
         send_not_allowed(request);
     });
     // Tap Handlers^
