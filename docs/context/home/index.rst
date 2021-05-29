@@ -1,6 +1,6 @@
 .. _home:
 
-.. include:: <isonum.txt>
+.. include:: <xhtml1-symbol.txt>
 
 Home Page
 ##############

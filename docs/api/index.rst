@@ -621,14 +621,14 @@ Controller-Initiated Communication
 
 These reports are sent, when so configured, via WiFi to upstream systems.
 
-- `Keg Screen`_
+- `KegScreen`_
 - `URL`_
 - `Raspberry Pints`_
 
-Keg Screen
+KegScreen
 =============
 
-Keg Cop sends five different reports to the upstream Keg Screen system:
+Keg Cop sends five different reports to the upstream KegScreen system:
 
 - `Send Tap Information Report`_
 - `Send Pulse Report`_
@@ -663,7 +663,7 @@ This report is sent to the upstream system whenever a change is made to any tap 
 Send Pulse Report
 --------------------
 
-Whenever a pour completes, Keg Cop sends a pour report to the Keg Screen system.  The format is as follows:
+Whenever a pour completes, Keg Cop sends a pour report to the KegScreen system.  The format is as follows:
 
 .. code-block:: json
 
@@ -683,7 +683,7 @@ Whenever a pour completes, Keg Cop sends a pour report to the Keg Screen system.
 Send Kick Report
 ------------------
 
-Keg Cop employs an algorithm for detecting a kicked keg. When the pour volume exceeds a predetermined amount per second, Keg Cop considers that as evidence the keg is blowing foam and will mark the keg inactive. A kick report will be sent to the Keg Screen system. The format is as follows:
+Keg Cop employs an algorithm for detecting a kicked keg. When the pour volume exceeds a predetermined amount per second, Keg Cop considers that as evidence the keg is blowing foam and will mark the keg inactive. A kick report will be sent to the KegScreen system. The format is as follows:
 
 .. code-block:: json
 
@@ -700,7 +700,7 @@ Keg Cop employs an algorithm for detecting a kicked keg. When the pour volume ex
 Send Cooling State Report
 ------------------------------
 
-Whenever the cooling state changes, a state report is triggered for the Keg Screen system.  The format is as follows:
+Whenever the cooling state changes, a state report is triggered for the KegScreen system.  The format is as follows:
 
 .. code-block:: json
 
@@ -726,7 +726,7 @@ Where:
 Send Temperature Report
 ------------------------------
 
-A report containing all temperature points is sent to the Keg Screen system every minute. The format is as follows:
+A report containing all temperature points is sent to the KegScreen system every minute. The format is as follows:
 
 .. code-block:: json
 
