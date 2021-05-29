@@ -3,12 +3,12 @@
 Help Links
 ################
 
+The Help page displays important support links for Keg Cop:
+
 .. image:: help.png
-   :scale: 100%
+   :scale: 50%
    :align: center
    :alt: Help Links
-
-The Help page displays important support links for Keg Cop:
 
 - `Visit the Homepage <https://www.kegcop.com>`_: A link to the Keg Cop main website.
 - `Visit project on GitHub <https://github.com/lbussys/keg-cop>`_: A link to the GitHub repository.

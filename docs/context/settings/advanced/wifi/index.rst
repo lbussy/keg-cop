@@ -10,7 +10,7 @@ Reset WiFi
 
 If you plan to move your Keg Cop to a new location or connect to a new network, resetting the network settings ahead of time is a good idea.  Pressing the "Reset WiFi" button is an irreversible action and will delete the current WiFi configuration.
 
-.. image:: wifi.png
+.. image:: done.png
    :scale: 50%
    :align: center
    :alt: WiFi Reset
