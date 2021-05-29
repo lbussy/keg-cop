@@ -244,13 +244,20 @@ std::string addThousandSeparators(std::string value, char thousandSep = ',', cha
     return value;
 }
 
-void getGuid(char *str, size_t len)
+void getGuid(char *str)
 {
-    // TODO:  Fix this to be unique
-    uint32_t chipID;
-    uint64_t macAddress = ESP.getEfuseMac();
-    uint64_t macAddressTrunc = macAddress << 40;
-    chipID = macAddressTrunc >> 40;
-    snprintf(str, len, "%08X", chipID);
-    str[len - 1] = '\0';
+    // char newguid[sizeof(guid)];
+    // getGuid(newguid);
+    uint64_t chipid = ESP.getEfuseMac();
+    uint32_t int32_1, int32_2;
+
+    int32_1 = chipid & 0x00000000FFFFFFFF;
+    int32_2 = (chipid & 0xFFFFFFFF00000000) >> 32;
+
+    char first[9], secon[9];
+    sprintf(first, "%08X", int32_1);
+    sprintf(secon, "%08X", int32_2);
+
+    strcpy(str, first);
+    strcat(str, secon);
 }
