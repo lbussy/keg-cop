@@ -3,14 +3,21 @@
         "ssid": "kegcop",
         "passphrase": "kegcop21"
     },
-    "hostname": "kegcop",
-    "guid": "A1B3C5D7",
     "copconfig": {
+        "guid": "952DE6B40000A1A6",
+        "hostname": "kegcop",
+        "nodrd": false,
         "breweryname": "Silver Fox Brewery",
         "kegeratorname": "Keezer",
-        "imperial": true,
+        "controllernumber": 0,
         "serial": false,
+        "imperial": true,
         "tapsolenoid": true
+    },
+    "ota": {
+        "dospiffs1": false,
+        "dospiffs2": false,
+        "didupdate": false
     },
     "temps": {
         "setpoint": 35,
@@ -43,9 +50,5 @@
         "url": "",
         "freq": 30,
         "update": false
-    },
-    "dospiffs1": false,
-    "dospiffs2": false,
-    "didupdate": false,
-    "nodrd": true
+    }
 }

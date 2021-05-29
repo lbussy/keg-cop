@@ -346,15 +346,7 @@ void CopConfig::load(JsonObjectConst obj)
 {
     // Load Cop configuration
     //
-    if (obj["guid"].isNull())
-    {
-        getGuid(guid, sizeof(guid));
-    }
-    else
-    {
-        const char *gd = obj["guid"];
-        strlcpy(guid, gd, sizeof(guid));
-    }
+    getGuid(guid); // Always get this
 
     if (obj["hostname"].isNull())
     {
@@ -803,7 +795,7 @@ void Config::save(JsonObject obj) const
     // Add Keg Screen object
     kegscreen.save(obj.createNestedObject("kegscreen"));
     // Add TaplistIO object
-    ota.save(obj.createNestedObject("taplistio"));
+    taplistio.save(obj.createNestedObject("taplistio"));
     // Add MQTT object
     rpintstarget.save(obj.createNestedObject("rpintstarget"));
     // Add Target object

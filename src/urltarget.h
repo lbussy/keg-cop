@@ -56,7 +56,7 @@ struct SensorsReport
 struct UrlReport
 {
     char api[32];
-    char guid[9];
+    char guid[17];
     char hostname[32];
     char breweryname[64];
     char kegeratorname[64];

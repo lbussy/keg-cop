@@ -204,6 +204,10 @@ void serialLoop()
                 printCR();
                 break;
             }
+            case 'o': // Perform OTA
+            {
+                setDoOTA(); // Trigger the OTA update
+            }
             case 'v': // /thisVersion/
             {
                 const size_t capacity = 2 * JSON_OBJECT_SIZE(2);
@@ -282,6 +286,7 @@ void serialLoop()
                 SERIAL.println(F("\tp:\t'Ping, e.g. {}' (null json)"));
                 SERIAL.println(F("\tv:\tDisplay current version"));
                 SERIAL.println(F("\ta:\tDisplay available version"));
+                SERIAL.println(F("\to:\tPerform online update"));
                 SERIAL.println(F("\td:\tEnter/exit Debug mode"));
                 SERIAL.println(F("\tu:\tUptime"));
                 SERIAL.println(F("\tb:\tRestart controller"));
