@@ -61,7 +61,7 @@ double convertOneCtoF(double);
 double convertGtoL(double);
 double convertLtoG(double);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
-void getGuid(char *str, size_t len);
+void getGuid(char *str); // 17 chars including null terminator
 
 static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset

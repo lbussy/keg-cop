@@ -48,7 +48,7 @@ enum ReportKey
 struct TapInfo
 {
     char api[32];
-    char guid[9];
+    char guid[17];
     char hostname[32];
     char breweryname[64];
     char kegeratorname[64];
@@ -66,7 +66,7 @@ struct TapInfo
 struct PourInfo
 {
     char api[32];
-    char guid[9];
+    char guid[17];
     char hostname[32];
     char breweryname[64];
     char kegeratorname[64];
@@ -80,7 +80,7 @@ struct PourInfo
 struct KickReport
 {
     char api[32];
-    char guid[9];
+    char guid[17];
     char hostname[32];
     char breweryname[64];
     char kegeratorname[64];
@@ -91,7 +91,7 @@ struct KickReport
 struct CoolState
 {
     char api[32];
-    char guid[9];
+    char guid[17];
     char hostname[32];
     char breweryname[64];
     char kegeratorname[64];
@@ -109,7 +109,7 @@ struct TempSensor
 struct TempReport
 {
     char api[32];
-    char guid[9];
+    char guid[17];
     char hostname[32];
     char breweryname[64];
     char kegeratorname[64];

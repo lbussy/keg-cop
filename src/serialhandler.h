@@ -26,7 +26,7 @@ SOFTWARE. */
 #include "tools.h"
 #include "config.h"
 #include "jsonconfig.h"
-// #include "execota.h"    // TODO:  Allow OTA Trigger
+#include "execota.h"
 #include "version.h"
 #include "thatVersion.h"
 #include "resetreasons.h"
