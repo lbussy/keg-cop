@@ -46,7 +46,7 @@ struct ApConfig
 struct CopConfig
 {
     // Stores Keg Cop configuration
-    char guid[9];
+    char guid[17];
     char hostname[32];
     bool nodrd;
     char breweryname[64];
