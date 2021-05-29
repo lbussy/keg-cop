@@ -11,10 +11,10 @@ Keg Cop uses a combination of API types:
 Client-Initiated Communication
 ********************************
 
-Client-initiated communication is that commincation which is initiated from a system other than the controller, to retrieve data or initiate a data update or state change in the controller.  This is broken down into:
+Client-initiated communication is initiated from a system other than the controller to retrieve data or initiate a data update or state change in the controller.  This is broken down into:
 
-- `Action Page Handlers`_: Pages which by access will initiate a change or present a state.
-- `Info Page Handlers`_: Pages accessed to retrieve in formation about the state of the controller and its systems.
+- `Action Page Handlers`_: Pages that access will initiate a change or present a state.
+- `Info Page Handlers`_: Pages accessed to retrieve in formation about the controller's state and its systems.
 - `Configuration Page Handlers`_: Pages intended to provide a means by which the controller and application features and properties may be updated.
 
 Action Page Handlers
@@ -319,7 +319,7 @@ Where:
 - ``imperial`` = True for imperial units, false for metric.
 - ``controlpoint`` = Zero-based index representing the current sensor_ by which temperature is being controlled.
 - ``setting`` = Temperature setting in current units.
-- ``status`` = Zero based index representing the current temperature control state_ ,
+- ``status`` = Zero based index representing the current temperature control state_.
 - ``controlenabled`` = Boolean for enabling temperature control.
 - ``sensors`` = An array of temperature sensors denoting the ``name``, ``enable`` status and current ``value`` of each.
 - ``displayenabled`` = Boolean to display temperatures on the web UI or not.
@@ -327,7 +327,7 @@ Where:
 Configuration Page Handlers
 =================================
 
-The configuration page API tree allows retrieval of current states, or setting consitions and properties via the same endpoint.  Available pages are:
+The configuration page API tree allows retrieval of current states or setting condition and properties via the same endpoint.  Available pages are:
 
 - `Settings`_
 - `Taps`_
@@ -404,23 +404,64 @@ GET
         }
     }
 
-.. todo::
-
-    Describe format
-
 PUT
 ^^^^^^^^
 
 - **Address:** :file:`/api/v1/config/settings/`
 - **Valid Methods:** :file:`PUT`
-- **Response:** :file:``
-- **Description:** 
+- **Response:** ``200 Ok`` on success, ``500 Unable to process data`` on failure.
+- **Description:**  The :file:`PUT` method for this endpoint will allow endpoint configuration.
 - **Error Message:** Any method other than :file:`PUT` or :file:`GET` will result in a :file:`405 Method Not Allowed` error.
 - **Data:** 
   
-.. todo::
+The PUT should follow standard form submission data format, with the following items available.  Items not listed are not available for change.  Some names are not the same as they appear in the JSON; the PUT format is flattened but represented below in groups by the JSON stanza.
 
-    Need to list PUT format
+copconfig
+"""""""""""
+
+- ``guid`` - Not configurable via settings, this is a calculated/derived value unique to the controller.
+- ``hostname`` - A string representing a valid hostname (without the .local portion) between 3 and 32 characters.
+``breweryname`` - A string representing the brewery name, used to logically group multiple controllers and display the web page.
+- ``kegeratorname`` - A string representing the kegerator name, used to identify the controller and displayed within the web page display.
+- ``imperial`` - A boolean representing imperial versus metric units to be used by the controller.  Changing this value will result in a conversion of all stored values to the target units.  Multiple toggles could result in accrued rounding errors and some loss of accuracy.
+- ``tapsolenoid`` - A simple control point intended to control a local solenoid by an upstream system or the web UI.
+
+temps
+"""""""""
+
+- ``setpoint`` - The temperature setpoint in the configured units to which the system will cool the cabinet.  This is a floating-point number.
+- ``controlpoint`` - A zero-based index indicating the sensor_ by which the system will be cooled.
+- ``enablecontrol`` - A boolean turning temperature control on and off.
+- ``enableroom`` - Enable the room sensor to be displayed.
+- ``calroom`` - A signed floating-point number by which the room sensor will be calibrated.
+- ``enabletower`` - Enable the tower sensor to be displayed.
+- ``caltower`` - A signed floating-point number by which the tower sensor will be calibrated.
+- ``enableupper`` - Enable the upper sensor to be displayed.
+- ``calupper`` - A signed floating-point number by which the upper sensor will be calibrated.
+- ``enablelower`` - Enable the lower sensor to be displayed.
+- ``callower`` - A signed floating-point number by which the lower sensor will be calibrated.
+- ``enablekeg`` - Enable the keg sensor to be displayed.
+- ``calkeg`` - A signed floating-point number by which the keg sensor will be calibrated.
+
+kegscreen
+""""""""""
+
+- ``kegscreen`` - The full URL target for the KegScreen system.
+
+rpintstarget
+""""""""""""""
+
+- ``rpintshost`` - The fully-qualified domain name for the Raspberry Pints system's MQTT broker.
+- ``rpintsport`` - The target MQTT port.
+- ``rpintsusername`` - The MQTT user name, blank if not used.
+- ``rpintspassword`` - The MQTT password, blank if not used.
+- ``rpintstopic`` - The MQTT topic.
+
+urltarget
+"""""""""""
+
+- ``targeturl`` - The full URL target for the generic URL target.
+- ``targetfreq`` - The frequency at which data will be pushed.
 
 Taps
 --------------
@@ -433,10 +474,10 @@ GET
 - **Address:** :file:`/api/v1/config/taps/`
 - **Valid Methods:** :file:`GET`
 - **Data:** Ignored
-- **Response:** :file:``
-- **Description:** 
-- **Error Message:** Any method other than :file:`PUT` or :file:`GET` will result in a `405 Method Not Allowed` error.
-
+- **Description:** The :file:`GET` method for this endpoint will return the current endpoint configuration.
+- **Error Message:** Any method other than ``PUT`` or ``GET`` will result in a ``405 Method Not Allowed`` error.
+- **Response:** 
+- 
 .. code-block:: json
 
     {
@@ -542,28 +583,38 @@ Where:
 
 Tap information follows the following format:
 
-``tapid`` = The zero-based index representing the tap number.
-``pin`` = The microcontroller pin_ defined for the tap.
-``ppu`` = The pulses per configured flow unit.
-``name`` = The name of the beverage currently on tap.
-``capacity`` = The capacity, in current units, of the attached keg.
-``remaining`` = The amount remaining, in current units, of the attached keg.
-``active`` = Denotes whether the tap is active (displayed) or not.
-``calibrating`` = Switch to put tap in calibration mode.
+- ``tapid`` = The zero-based index representing the tap number.
+- ``pin`` = The microcontroller pin_ defined for the tap.
+- ``ppu`` = The pulses per configured flow unit.
+- ``name`` = The name of the beverage currently on tap.
+- ``capacity`` = The capacity, in current units, of the attached keg.
+- ``remaining`` = The amount remaining, in current units, of the attached keg.
+- ``active`` = Denotes whether the tap is active (displayed) or not.
+- ``calibrating`` = Switch to put the tap in calibration mode.
 
 PUT
 ^^^^^^^
 
 - **Address:** :file:`/api/v1/config/taps/`
 - **Valid Methods:** :file:`PUT`
-- **Response:** :file:``
-- **Description:** 
+- **Response:**  ``200 Ok`` on success, ``500 Unable to process data`` on failure.
+- **Description:** The :file:`PUT` method for this endpoint will allow endpoint configuration.
 - **Error Message:** Any method other than :file:`PUT` or :file:`GET` will result in a `405 Method Not Allowed` error.
 - **Data:** 
 
-.. todo::
+The PUT should follow standard form submission data format, with the following items available.  Items not listed are not available for change.  Some names are not the same as they appear in the JSON; the PUT format is flattened but represented below in groups by the JSON stanza.
 
-    Need to list PUT format
+``imperial`` = True for imperial units, false for metric.
+``taps`` = An array with information for each of the taps configured.
+
+The tap array follows the following format for each of the nine available taps:
+
+- ``tap`` = The zero-based index representing the tap number.
+- ``ppu`` = The pulses per configured flow unit.
+- ``beername`` = The name of the beverage currently on tap.
+- ``cap`` = The capacity, in floating-point current units, of the attached keg.
+- ``remain`` = The amount remaining, in floating-point current units, of the attached keg.
+- ``active`` = Denotes whether the tap is active (displayed) or not.
 
 Controller-Initiated Communication
 ***************************************
@@ -588,13 +639,13 @@ Keg Cop sends five different reports to the upstream Keg Screen system:
 Send Tap Information Report
 -----------------------------
 
-Whenever a change is made to any of the tap information, this report is sent to the upstream system.  The configuration is as follows:
+This report is sent to the upstream system whenever a change is made to any tap information.  The configuration is as follows:
 
 .. code-block:: json
 
     {
         "api":"Keg Cop",
-        "guid": "A1B3C5D7",
+        "guid": "952DE6B40000A1A6",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
@@ -618,7 +669,7 @@ Whenever a pour completes, Keg Cop sends a pour report to the Keg Screen system.
 
     {
         "api":"Keg Cop",
-        "guid": "A1B3C5D7",
+        "guid": "952DE6B40000A1A6",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
@@ -632,13 +683,13 @@ Whenever a pour completes, Keg Cop sends a pour report to the Keg Screen system.
 Send Kick Report
 ------------------
 
-Keg Cop employs algorithm for detecting a kicked keg. When the pour volume exceeds a predetermined amount per second, Keg Cop considers that as evidence the keg is blowing foam and will mark the keg inactive. A kick report will be sent to the Keg Screen system. The format is as follows:
+Keg Cop employs an algorithm for detecting a kicked keg. When the pour volume exceeds a predetermined amount per second, Keg Cop considers that as evidence the keg is blowing foam and will mark the keg inactive. A kick report will be sent to the Keg Screen system. The format is as follows:
 
 .. code-block:: json
 
     {
         "api":"Keg Cop",
-        "guid": "A1B3C5D7",
+        "guid": "952DE6B40000A1A6",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
@@ -655,24 +706,22 @@ Whenever the cooling state changes, a state report is triggered for the Keg Scre
 
     {
         "api":"Keg Cop",
-        "guid": "A1B3C5D7",
+        "guid": "952DE6B40000A1A6",
         "hostname":"kegcop",
-        "breweryname":"Keg Cop Brewery",
+        "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
         "reporttype":"coolstate",
         "state":3
     }
 
-The thermostat state is one of the following:
+Where:
 
-- ``0``: ``TSTAT_INACTIVE`` - Thermostat is disabled
-- ``1``: ``TSTAT_COOL_BEGIN`` - Thermostat is starting to cool
-- ``2``: ``TSTAT_COOL_MINOFF`` - Thermostat is calling for cooling but in minimum off time
-- ``3``: ``TSTAT_COOL_ACTIVE`` - Thermostat is actively cooling
-- ``4``: ``TSTAT_OFF_END`` - Thermostat is not calling for cooling, minimum off time ending
-- ``5``: ``TSTAT_OFF_MINON`` - Thermostat is not calling for cooling but in minimum on time
-- ``6``: ``TSTAT_OFF_INACTIVE`` - Thermostat is not calling for cooling, in idle mode
-- ``7``: ``TSTAT_UNKNOWN`` - Thermostat is in an unknown state
+- ``API`` = Intended to be an indicator to the upstream system for the source of information.
+- ``guid`` = A unique identifier for the controller, used to help differentiate between multiple Keg Cops.
+- ``hostname`` = Current mDNS hostname.
+- ``brewername`` = A name used to group several Keg Cops logically.
+- ``reporttype`` = The type of information to be found in this report.
+- ``state`` = A zero-based index representing the current temperature control state_ 
 
 Send Temperature Report
 ------------------------------
@@ -683,7 +732,7 @@ A report containing all temperature points is sent to the Keg Screen system ever
 
     {
         "api":"Keg Cop",
-        "guid": "A1B3C5D7",
+        "guid": "952DE6B40000A1A6",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
@@ -725,13 +774,13 @@ A report containing all temperature points is sent to the Keg Screen system ever
 URL
 ================
 
-The Target URL Report provides a holistic picture of the system to a custom/third-party endpoint. It is a timer-based POST; a change of state does not trigger it. As with all target system configuration within Keg Cop, it will post to HTTP only. The format is as follows:
+The Target URL Report provides a holistic picture of the system to a custom/third-party endpoint. It is a timer-based POST; a change of state does not trigger it. As with all target system configurations within Keg Cop, it will post to HTTP only. The format is as follows:
 
 .. code-block:: json
 
     {
         "api":"Keg Cop",
-        "guid": "A1B3C5D7",
+        "guid": "952DE6B40000A1A6",
         "hostname":"kegcop",
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
@@ -839,7 +888,7 @@ The Target URL Report provides a holistic picture of the system to a custom/thir
 Raspberry Pints
 ========================
 
-Keg Cop will send a message via MQTT to a configured endpoint.  The format is as folows:
+Keg Cop will send a message via MQTT to a configured endpoint.  Raspberry Pints does not leverage standard MQTT format; this format is specific to Raspberry Pints.  The format is as follows:
 
 .. code-block::
 
