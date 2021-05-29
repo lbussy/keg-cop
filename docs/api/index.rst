@@ -405,6 +405,7 @@ GET
     }
 
 .. todo::
+
     Describe format
 
 PUT
@@ -561,6 +562,7 @@ PUT
 - **Data:** 
 
 .. todo::
+
     Need to list PUT format
 
 Controller-Initiated Communication
@@ -837,8 +839,19 @@ The Target URL Report provides a holistic picture of the system to a custom/thir
 Raspberry Pints
 ========================
 
-.. todo::
-    Include the MQTT format description here.
+Keg Cop will send a message via MQTT to a configured endpoint.  The format is as folows:
+
+.. code-block::
+
+    P;-1;0;737
+
+Where:
+
+- ``P`` = A pulse report (the only one currently supported via MQTT by Raspberry Pints.)
+- ``-1`` = The user.  Since Keg Cop does not support user IDs, a -1 is sent to indicate "no user."
+- ``0`` = Tap number.
+- ``737`` = Number of raw pulses to report.
+
 
 .. _resetreasons.cpp: https://github.com/lbussy/keg-cop/blob/main/src/resetreasons.cpp#L1
 .. _resetReason: https://github.com/lbussy/keg-cop/blob/d5713a3323ff9998a7986f801d07a92093c0c3f8/src/resetreasons.cpp#L27-L39
