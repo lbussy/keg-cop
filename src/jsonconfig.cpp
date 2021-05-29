@@ -795,7 +795,7 @@ void Config::save(JsonObject obj) const
     // Add Keg Screen object
     kegscreen.save(obj.createNestedObject("kegscreen"));
     // Add TaplistIO object
-    ota.save(obj.createNestedObject("taplistio"));
+    taplistio.save(obj.createNestedObject("taplistio"));
     // Add MQTT object
     rpintstarget.save(obj.createNestedObject("rpintstarget"));
     // Add Target object
