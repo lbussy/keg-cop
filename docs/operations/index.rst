@@ -39,7 +39,7 @@ At a minimum, you will want to look at the settings menu to set up your new devi
 
 Targets:
 
-- :ref:`Keg Screen Target <kegscreen>`
+- :ref:`KegScreen Target <kegscreen>`
 - :ref:`URL Target <url>`
 - :ref:`Raspberry Pints Target <rpints>`
 
