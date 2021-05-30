@@ -2,7 +2,7 @@
 
 # Keg Cop
 
-Beer Lines, Monitored.
+*Beer Lines, Monitored.*
 
 Keg Cop is an inexpensive and, most of all, simple to operate WiFi-enabled solution to maintain information about your Keezer, Kegerator, and Kegs.  Keg Cop enables you to use flowmeters of your choice (Swissflow during development) to monitor the contents of your kegs, and it even has a built-in Web UI to display what is on tap and how much is left.
 
