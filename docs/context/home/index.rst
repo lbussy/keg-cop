@@ -1,5 +1,7 @@
 .. _home:
 
+.. include:: <xhtml1-symbol.txt>
+
 Home Page
 ##############
 
@@ -8,7 +10,7 @@ Home Page
    :align: center
    :alt: Home Page
 
-The Keg Cop home page is displayed when you first connect via your chosen web browser.  You will see a main menu across the top border if you connect with a standard desktop web browser.  If in a mobile or portrait mode browser window, the list displays when you click the hamburger bar (&#8801;) in the top-right corner.
+The Keg Cop home page is displayed when you first connect via your chosen web browser.  You will see a main menu across the top border if you connect with a standard desktop web browser.  If in a mobile or portrait mode browser window, the list displays when you click the hamburger bar (|equiv|) in the top-right corner.
 
 In the top-left side of the main container is a title concatenated from the :ref:`kegerator <controller>` and :ref:`brewery name <controller>` (e.g. "Main Kegerator in Silver Fox Brewery.")
 
