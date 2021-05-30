@@ -1,6 +1,4 @@
-![Keg Cop Logo](https://github.com/lbussy/keg-cop/raw/main/logos/color-header.png)
-
-docs\planning\system.png    
+![Keg Cop Logo](https://github.com/lbussy/keg-cop/raw/main/logos/color-header.png) 
 
 # Keg Cop
 
