@@ -14,7 +14,7 @@ Client-Initiated Communication
 Client-initiated communication is initiated from a system other than the controller to retrieve data or initiate a data update or state change in the controller.  This is broken down into:
 
 - `Action Page Handlers`_: Pages that access will initiate a change or present a state.
-- `Info Page Handlers`_: Pages accessed to retrieve in formation about the controller's state and its systems.
+- `Info Page Handlers`_: Pages accessed to retrieve information about the controller's state and its systems.
 - `Configuration Page Handlers`_: Pages intended to provide a means by which the controller and application features and properties may be updated.
 
 Action Page Handlers
@@ -37,7 +37,7 @@ Ping
 - **Valid Methods:**  :file:`GET`
 - **Data:**  Ignored
 - **Response:** :file:`200 Ok`
-- **Description:** While not an action per se, this page provides a simple response intended to semaphire the existence of the controller.
+- **Description:** While not an action per se, this page provides a simple response intended to semaphore the existence of the controller.
 - **Error Message:** None
 
 WiFi Reset
@@ -47,7 +47,7 @@ WiFi Reset
 - **Valid Methods:** :file:`PUT`
 - **Data:** Ignored
 - **Response:** :file:`200 Ok`
-- **Description:** This endpoint will initiate erasure of the saved WiFi credentials, and a controller restart.  A restart without credentials will cause the controller to start a captive portal for configuration.
+- **Description:** This endpoint will initiate both erasure of the saved WiFi credentials and a controller restart.  As the restart will be without credentials, this will cause the controller to start a captive portal for configuration.
 - **Error Message:** Any method other than :file:`PUT` will result in a :file:`405 Method Not Allowed` error.
 
 Controller Reset
@@ -67,7 +67,7 @@ Online Update
 - **Valid Methods:** :file:`PUT`
 - **Data:** Ignored
 - **Response:** :file:`200 Ok`
-- **Description:** This endpoint will initiate a controller upgrade attempt from the author's website.  Both firmware and filesystem updates will be attempted.  The controller will restart several times during this process.
+- **Description:** This endpoint will initiate a controller upgrade attempt using the firmware avaialble at the author's website.  Both firmware and filesystem updates will be attempted.  The controller will restart several times during this process.
 - **Error Message:** Any method other than :file:`PUT` will result in a :file:`405 Method Not Allowed` error.
 
 Clear Update State
@@ -321,7 +321,7 @@ Where:
 - ``setting`` = Temperature setting in current units.
 - ``status`` = Zero based index representing the current temperature control state_.
 - ``controlenabled`` = Boolean for enabling temperature control.
-- ``sensors`` = An array of temperature sensors denoting the ``name``, ``enable`` status and current ``value`` of each.
+- ``sensors`` = An array of temperature sensors denoting the ``name``, ``enable`` status, and current ``value`` of each.
 - ``displayenabled`` = Boolean to display temperatures on the web UI or not.
 
 Configuration Page Handlers
