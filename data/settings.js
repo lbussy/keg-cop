@@ -88,7 +88,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
             try {
                 for (var i = 0; i < numTaps; i++) {
                     $('input[name="tap' + i + 'ppu"]').val(parseInt(flow.taps[i].ppu), 10);
-                    $('input[name="tap' + i + 'beername"]').val(flow.taps[i].name);
+                    $('input[name="tap' + i + 'bevname"]').val(flow.taps[i].name);
                     $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity).toFixed(4));
                     $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.taps[i].remaining).toFixed(4));
                     if (flow.taps[i].active) {
@@ -392,7 +392,7 @@ function processTapPost(url, obj, tapNum) {
     // Get form data
     var $form = $(obj),
         ppu = $form.find("input[name='tap" + tapNum + "ppu']").val(),
-        beername = $form.find("input[name='tap" + tapNum + "beername']").val(),
+        bevname = $form.find("input[name='tap" + tapNum + "bevname']").val(),
         cap = $form.find("input[name='tap" + tapNum + "cap']").val(),
         remain = $form.find("input[name='tap" + tapNum + "remain']").val(),
         active = $form.find("input[name='tap" + tapNum + "active']:checked").val();
@@ -401,7 +401,7 @@ function processTapPost(url, obj, tapNum) {
     data = {
         tap: tapNum,
         ppu: ppu,
-        beername: beername,
+        bevname: bevname,
         cap: cap,
         remain: remain,
         active: active
