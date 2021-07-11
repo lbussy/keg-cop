@@ -245,13 +245,13 @@ void ConfigAPI::save(JsonObject obj) const
     // Re-use char array:
     char _url[83];
 
-    // Heap
+    // Settings
     strcpy(_url, _base);
     strcat(_url, settings);
     strcat(_url, a_delim);
     obj["settings"] = _url;
 
-    // Heap
+    // Taps
     strcpy(_url, _base);
     strcat(_url, taps);
     strcat(_url, a_delim);
