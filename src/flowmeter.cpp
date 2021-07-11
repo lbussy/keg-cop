@@ -483,7 +483,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
 
     if (obj["name"].isNull() || strlen(obj["name"]) == 0)
     {
-        strlcpy(name, DEFAULTBEER, sizeof(name));
+        strlcpy(name, DEFAULTBEV, sizeof(name));
     }
     else
     {
