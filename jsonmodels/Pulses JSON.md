@@ -24,20 +24,25 @@ Size:
 -----
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(1) + 10;
-160+7 = 167
+Serialize: 192
+Deserialize: 192
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(1) + 10;
-DynamicJsonDocument doc(capacity);
+// Stream& input;
 
-const char* json = "{\"pulses\":[999999,999999,999999,999999,999999,999999,999999,999999,999999]}";
+StaticJsonDocument<192> doc;
 
-deserializeJson(doc, json);
+DeserializationError error = deserializeJson(doc, input);
+
+if (error) {
+  Serial.print(F("deserializeJson() failed: "));
+  Serial.println(error.f_str());
+  return;
+}
 
 JsonArray pulses = doc["pulses"];
 long pulses_0 = pulses[0]; // 999999
@@ -55,8 +60,7 @@ Serializing / Saving:
 ---------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(1);
-DynamicJsonDocument doc(capacity);
+StaticJsonDocument<192> doc;
 
 JsonArray pulses = doc.createNestedArray("pulses");
 pulses.add(999999);
@@ -69,5 +73,5 @@ pulses.add(999999);
 pulses.add(999999);
 pulses.add(999999);
 
-serializeJson(doc, Serial);
+serializeJson(doc, output);
 ```

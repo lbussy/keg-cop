@@ -29,8 +29,8 @@ volatile static unsigned long pulse[NUMTAPS];         // Unregistered pulse coun
 volatile static unsigned long lastPulse[NUMTAPS];     // Pulses pending at last poll
 volatile static unsigned long lastPulseTime[NUMTAPS]; // Monitor ongoing active pours
 volatile static unsigned long lastLoopTime[NUMTAPS];  // Monitor ongoing active pours
-extern const size_t capacityFlowSerial = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(2) + 9 * JSON_OBJECT_SIZE(8);
-extern const size_t capacityFlowDeserial = capacityFlowSerial + 1240;
+extern const size_t capacityFlowSerial = 3072;
+extern const size_t capacityFlowDeserial = 3072;
 extern const size_t capacityPulseSerial = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(1);
 extern const size_t capacityPulseDeserial = capacityPulseSerial + 10;
 
@@ -455,6 +455,7 @@ void convertFlowtoMetric()
 void Taps::save(JsonObject obj) const
 {
     obj["tapid"] = tapid;             // Tap ID
+    obj["taplabel"] = taplabel;       // Tap display label
     obj["pin"] = pin;                 // μC Pin
     obj["ppu"] = ppu;                 // Pulses per Gallon
     obj["name"] = name;               // Beer Name
@@ -470,6 +471,16 @@ void Taps::load(JsonObjectConst obj, int numTap)
     //
     tapid = numTap;
     pin = flowPins[numTap];
+
+    if (obj["taplabel"].isNull() || obj["taplabel"] == 0)
+    {
+        taplabel = tapid + 1; // Default to sequential 1-based label
+    }
+    else
+    {
+        int tl = obj["taplabel"];
+        taplabel = tl;
+    }
 
     if (obj["ppu"].isNull() || obj["ppu"] == 0)
     {

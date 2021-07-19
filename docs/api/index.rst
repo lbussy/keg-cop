@@ -485,6 +485,7 @@ GET
         "taps": [
             {
                 "tapid": 0,
+                "taplabel": 1,
                 "pin": 4,
                 "ppu": 21120,
                 "name": "Pudswiller Doors",
@@ -495,6 +496,7 @@ GET
             },
             {
                 "tapid": 1,
+                "taplabel": 2,
                 "pin": 16,
                 "ppu": 21120,
                 "name": "Bug's House Ale",
@@ -505,6 +507,7 @@ GET
             },
             {
                 "tapid": 2,
+                "taplabel": 3,
                 "pin": 17,
                 "ppu": 21120,
                 "name": "Navelgazer IPA",
@@ -515,6 +518,7 @@ GET
             },
             {
                 "tapid": 3,
+                "taplabel": 4,
                 "pin": 18,
                 "ppu": 21120,
                 "name": "Tanked 7",
@@ -525,6 +529,7 @@ GET
             },
             {
                 "tapid": 4,
+                "taplabel": 5,
                 "pin": 19,
                 "ppu": 21120,
                 "name": "Ringaling Lager",
@@ -535,6 +540,7 @@ GET
             },
             {
                 "tapid": 5,
+                "taplabel": 6,
                 "pin": 21,
                 "ppu": 21120,
                 "name": "Peter Skee",
@@ -545,6 +551,7 @@ GET
             },
             {
                 "tapid": 6,
+                "taplabel": 7,
                 "pin": 22,
                 "ppu": 21120,
                 "name": "Undead Guy",
@@ -555,6 +562,7 @@ GET
             },
             {
                 "tapid": 7,
+                "taplabel": 8,
                 "pin": 23,
                 "ppu": 21120,
                 "name": "Who's Garden",
@@ -565,6 +573,7 @@ GET
             },
             {
                 "tapid": 8,
+                "taplabel": 9,
                 "pin": 13,
                 "ppu": 21120,
                 "name": "Mystery Mead",
@@ -583,7 +592,8 @@ Where:
 
 Tap information follows the following format:
 
-- ``tapid`` = The zero-based index representing the tap number.
+- ``tapid`` = The zero-based index representing the tap number internally.
+- ``taplabel`` = The one-based label representing the tap number externally.
 - ``pin`` = The microcontroller pin_ defined for the tap.
 - ``ppu`` = The pulses per configured flow unit.
 - ``name`` = The name of the beverage currently on tap.
@@ -610,6 +620,7 @@ The PUT should follow standard form submission data format, with the following i
 The tap array follows the following format for each of the nine available taps:
 
 - ``tap`` = The zero-based index representing the tap number.
+- ``label`` = The one-based label representing the tap number externally.
 - ``ppu`` = The pulses per configured flow unit.
 - ``beername`` = The name of the beverage currently on tap.
 - ``cap`` = The capacity, in floating-point current units, of the attached keg.

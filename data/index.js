@@ -59,7 +59,7 @@ function populateFlow(callback = null) { // Get flowmeter data
             try {
                 for (var i = 0; i < numTaps; i++) {
                     if (flow.taps[i].active) {
-                        labels.push("Tap " + (i + 1) + ": " + flow.taps[i].name);
+                        labels.push("Tap " + flow.taps[i].label + ": " + flow.taps[i].name);
                         percent.push(((parseFloat(flow.taps[i].remaining) / parseFloat(flow.taps[i].capacity)) * 100));
                         capacity.push(parseFloat(flow.taps[i].capacity));
                         remaining.push(parseFloat(flow.taps[i].remaining));

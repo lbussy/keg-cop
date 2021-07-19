@@ -1346,6 +1346,19 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                     tapNum = val;
                 }
             }
+            if (strcmp(name, "label") == 0) // Set the tap label
+            {
+                const int val = atof(value);
+                if ((val < 0) || (val > 99))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
+                    flow.taps[tapNum].taplabel = val;
+                }
+            }
             if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
             {
                 const int val = atof(value);
