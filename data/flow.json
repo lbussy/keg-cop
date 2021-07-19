@@ -3,6 +3,7 @@
     "taps":[
         {
             "tapid":0,
+            "taplabel": 1,
             "pin":0,
             "ppu":21120,
             "name":"Pudswiller Doors",
@@ -13,6 +14,7 @@
         },
         {
             "tapid":1,
+            "taplabel": 2,
             "pin":4,
             "ppu":21120,
             "name":"Bug's House Ale",
@@ -23,6 +25,7 @@
         },
         {
             "tapid":2,
+            "taplabel": 3,
             "pin":17,
             "ppu":21120,
             "name":"Navelgazer IPA",
@@ -33,6 +36,7 @@
         },
         {
             "tapid":3,
+            "taplabel": 4,
             "pin":18,
             "ppu":21120,
             "name":"Tanked 7",
@@ -43,6 +47,7 @@
         },
         {
             "tapid":4,
+            "taplabel": 5,
             "pin":19,
             "ppu":21120,
             "name":"Ringaling Lager",
@@ -53,6 +58,7 @@
         },
         {
             "tapid":5,
+            "taplabel": 6,
             "pin":21,
             "ppu":21120,
             "name":"Peter Skee",
@@ -63,6 +69,7 @@
         },
         {
             "tapid":6,
+            "taplabel": 7,
             "pin":22,
             "ppu":21120,
             "name":"Undead Guy",
@@ -73,6 +80,7 @@
         },
         {
             "tapid":7,
+            "taplabel": 8,
             "pin":23,
             "ppu":21120,
             "name":"Who's Garden",
@@ -83,6 +91,7 @@
         },
         {
             "tapid":8,
+            "taplabel": 9,
             "pin":12,
             "ppu":21120,
             "name":"Mystery Mead",
