@@ -19,6 +19,8 @@ It would be best if you did a little planning before you begin.  Keg Cop is conf
     - Daisy-Chain Boards: These small boards, one per flowmeter, connect the flowmeter(2) into the system. There is an "In" and an "Out" port, creating a chain of up to six sensors. The first on the chain is always number one, and so on.
     - Sensor Board: This is a breakout board for connecting up to five temperature sensors.
 
+The BOM for the electronics may be found on the :doc:`PCB Assembly </pcbassembly/index>` page.
+
 Flowmeters
 *************
 
