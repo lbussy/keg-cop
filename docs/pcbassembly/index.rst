@@ -60,19 +60,24 @@ For this configuration, we will use the following components:
 - \*1 x `3-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (ROOM) (Note: More than enough in one lot for all three headers)
 - 1 x `4-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (RELAY) (Note: More than enough in one lot for all three headers)
 
-If you want the convenience of one-click ordering from the US, the BOM for the main board may be purchased from `Mouser <https://www.mouser.com/ProjectManager/ProjectDetail.aspx?AccessID=7085525c8d>`_.
+If you want the convenience of one-click ordering from the US, the BOM for the main board parts (not the PCB itself) may be purchased from `Mouser <https://www.mouser.com/ProjectManager/ProjectDetail.aspx?AccessID=7085525c8d>`_.  This does not include the DS18B20 temperature sensor.
 
 **Sensor Board:**
 
 - 1 x `RJ45 8-pin 90° no shield PCM-mount jack <https://www.aliexpress.com/item/32736146888.html>`_
 - 4 x `3-pin terminal block <https://www.aliexpress.com/item/32965348107.html>`_
+- \*4 x `DS1820 Stainless steel package Waterproof DS18b20 temperature probe <https://www.aliexpress.com/item/4000895660165.html?algo_exp_id=4e52347a-1295-44ca-8766-1ef0f244c1d2-1>`_ (Note: Multiple items on the page, be sure to select the proper item)
+
+If you want the convenience of one-click ordering from the US, the BOM for the sensor board (not the PCB itself) may be purchased from `Mouser <https://www.mouser.com/ProjectManager/ProjectDetail.aspx?AccessID=db4e1f22c9>`_.  This does not include the DS18B20 temperature sensors.
 
 **Daisy Chain Boards (per flowmeter, multiply all numbers x 3 for three flowmeters):**
 
 - 2 x `RJ45 8-pin 90° no shield PCM-mount jack <https://www.aliexpress.com/item/32736146888.html>`_
 - 1 x `3-pin terminal block <https://www.aliexpress.com/item/32965348107.html>`_
 
-(*) - Optional items for use when you desire a room temperature sensor. Either use a DS18B20 sensor with a lead or a PCB-mount sensor.
+If you want the convenience of one-click ordering from the US, the BOM for the daisy-chain board (not the PCB itself) may be purchased from `Mouser <https://www.mouser.com/ProjectManager/ProjectDetail.aspx?AccessID=92f043e4f8>`_.  You will need one of this list per flowmeter.
+
+(*) - Optional items for use when you desire a room temperature sensor. Either use a DS18B20 sensor with a lead or a PCB-mount sensor - the sensor on a lead is recommended to avoid invalid readings due to heat from the controller.
 
 Soldering
 ===========
