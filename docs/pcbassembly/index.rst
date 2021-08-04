@@ -50,6 +50,7 @@ For this configuration, we will use the following components:
 
 **Main Board:**
 
+- 2 x `2.54mm Pitch Single Row Female 16P PCB socket Board Pin Header Connector Strip Pinheader 2/3/4/6/10/12/16/20/40Pin For Arduino <https://www.aliexpress.com/item/1005001418544370.html?algo_exp_id=d7709a47-14ca-46e1-bdcb-fe609affb88a-0>`_ (D32) (Note: Multiple items on the page, be sure to select the proper item)
 - 2 x `0.1μF (1.0nF) Ceramic Capacitor (102) 2.54mm spacing <https://www.aliexpress.com/item/32868001945.html>`_ (C1, 3) (Note: The same link as below, select the proper item)
 - 2 x `1.0μF Ceramic Capacitor (105) 2.54mm spacing <https://www.aliexpress.com/item/32868001945.html>`_ (C2, C4) (Note: The same link as above, select the proper item)
 - \*1 x `DS18B20 PCB-mount sensor <https://www.aliexpress.com/item/1901263688.html>`_ (IC1) (Note: Multiple items on the page, be sure to select the proper item)
@@ -58,6 +59,8 @@ For this configuration, we will use the following components:
 - 1 x `2-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (POWER) (Note: More than enough in one lot for all three headers)
 - \*1 x `3-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (ROOM) (Note: More than enough in one lot for all three headers)
 - 1 x `4-pin Straight Male Header <https://www.aliexpress.com/item/2040310671.html>`_ (RELAY) (Note: More than enough in one lot for all three headers)
+
+If you want the convenience of one-click ordering from the US, the BOM for the main board may be purchased from `Mouser <https://www.mouser.com/ProjectManager/ProjectDetail.aspx?AccessID=7085525c8d>`_.
 
 **Sensor Board:**
 
