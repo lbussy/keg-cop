@@ -443,8 +443,8 @@ temps
 - ``enablekeg`` - Enable the keg sensor to be displayed.
 - ``calkeg`` - A signed floating-point number by which the keg sensor will be calibrated.
 
-kegscreen
-""""""""""
+kegscreen (url)
+"""""""""""""""
 
 - ``kegscreen`` - The full URL target for the KegScreen system.
 
