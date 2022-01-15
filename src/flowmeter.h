@@ -42,6 +42,7 @@ struct Taps
     char name[65];            // Beer Name
     double capacity;          // Tap Capacity
     double remaining;         // Tap remaining
+    uint8_t taplistioTap;     // Tap number at Taplist.io
     bool active = false;      // Is tap active
     bool calibrating = false; // In calibration mode
 
