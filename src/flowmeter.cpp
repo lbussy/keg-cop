@@ -461,6 +461,7 @@ void Taps::save(JsonObject obj) const
     obj["name"] = name;               // Beer Name
     obj["capacity"] = capacity;       // Tap Capacity
     obj["remaining"] = remaining;     // Tap remaining
+    obj["taplistioTap"] = taplistioTap;     // Tap number at Taplist.io
     obj["active"] = active;           // Tap active
     obj["calibrating"] = calibrating; // Tap calibrating
 }
@@ -520,6 +521,16 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         double rm = obj["remaining"];
         remaining = rm;
+    }
+
+    if (obj["taplistioTap"].isNull())
+    {
+        taplistioTap = 0;
+    }
+    else
+    {
+        uint8_t tioT = obj["taplistioTap"];
+        taplistioTap = tioT;
     }
 
     if (obj["active"].isNull())
