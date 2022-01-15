@@ -35,8 +35,8 @@ SOFTWARE. */
 
 struct Taps
 {
-    int tapid;                // Tap ID
-    int taplabel;             // Tap ID
+    int tapid;                // Tap ID (internal)
+    int label;                // Tap ID (external, user configurable)
     int pin;                  // μC Pin
     long ppu;                 // Pulses per Gallon
     char name[65];            // Beer Name

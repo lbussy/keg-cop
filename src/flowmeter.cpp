@@ -455,7 +455,7 @@ void convertFlowtoMetric()
 void Taps::save(JsonObject obj) const
 {
     obj["tapid"] = tapid;             // Tap ID
-    obj["taplabel"] = taplabel;       // Tap display label
+    obj["label"] = label;             // Tap display label
     obj["pin"] = pin;                 // μC Pin
     obj["ppu"] = ppu;                 // Pulses per Gallon
     obj["name"] = name;               // Beer Name
@@ -473,14 +473,14 @@ void Taps::load(JsonObjectConst obj, int numTap)
     tapid = numTap;
     pin = flowPins[numTap];
 
-    if (obj["taplabel"].isNull() || obj["taplabel"] == 0)
+    if (obj["label"].isNull() || obj["label"] == 0)
     {
-        taplabel = tapid + 1; // Default to sequential 1-based label
+        label = tapid + 1; // Default to sequential 1-based label
     }
     else
     {
-        int tl = obj["taplabel"];
-        taplabel = tl;
+        int tl = obj["label"];
+        label = tl;
     }
 
     if (obj["ppu"].isNull() || obj["ppu"] == 0)
