@@ -192,6 +192,9 @@ function populateConfig(callback = null) { // Get configuration settings
 
                 $('input[name="kegscreen"]').val(config.kegscreen.url);
 
+                $('input[name="taplistio_venue"]').val(config.taplistio_venue.url);
+                $('input[name="taplistio_secret"]').val(config.taplistio_secret.url);
+
                 $('input[name="rpintshost"]').val(config.rpintstarget.host);
                 $('input[name="rpintsport"]').val(parseInt(config.rpintstarget.port, 10));
                 $('input[name="rpintsusername"]').val(config.rpintstarget.username);
@@ -368,6 +371,9 @@ function processPost(obj) {
             break;
         case "#kegscreen":
             processKegScreenPost(url, obj);
+            break;
+        case "#taplistio":
+            processTaplistIOPost(url, obj);
             break;
         case "#targeturl":
             processTargetUrlPost(url, obj);
@@ -546,6 +552,22 @@ function processKegScreenPost(url, obj) {
         data = {
             kegscreen: kegscreen
         };
+    putData(url, data);
+}
+
+function processTaplistIOPost(url, obj) {
+    // Handle Keg Screen Name
+
+    // Get form data
+    var $form = $(obj),
+    taplistio_venue = $form.find("input[name='taplistio_venue']").val(),
+    taplistio_secret = $form.find("input[name='taplistio_secret']").val(),
+
+    // Process put
+    data = {
+        taplistio_venue: taplistio_venue,
+        taplistio_secret: taplistio_secret
+    };
     putData(url, data);
 }
 
