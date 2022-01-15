@@ -92,6 +92,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
                     $('input[name="tap' + i + 'bevname"]').val(flow.taps[i].name);
                     $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity).toFixed(4));
                     $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.taps[i].remaining).toFixed(4));
+                    $('input[name="tap' + i + 'taplistioTap"]').val(parseInt(flow.taps[i].taplistioTap), 10);
                     if (flow.taps[i].active) {
                         $('input[name="tap' + i + 'active"]')[0].checked = true;
                     } else {
@@ -397,6 +398,7 @@ function processTapPost(url, obj, tapNum) {
         bevname = $form.find("input[name='tap" + tapNum + "bevname']").val(),
         cap = $form.find("input[name='tap" + tapNum + "cap']").val(),
         remain = $form.find("input[name='tap" + tapNum + "remain']").val(),
+        taplistioTap = $form.find("input[name='tap" + tapNum + "taplistioTap']").val(),
         active = $form.find("input[name='tap" + tapNum + "active']:checked").val();
 
     // Process put
@@ -407,6 +409,7 @@ function processTapPost(url, obj, tapNum) {
         bevname: bevname,
         cap: cap,
         remain: remain,
+        taplistioTap: taplistioTap,
         active: active
     }
     putData(url, data);

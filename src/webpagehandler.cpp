@@ -1356,7 +1356,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 else
                 {
                     Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
-                    flow.taps[tapNum].taplabel = val;
+                    flow.taps[tapNum].label = val;
                 }
             }
             if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
@@ -1421,6 +1421,20 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     flow.taps[tapNum].remaining = val;
+                }
+            }
+            if (strcmp(name, "taplistiotap") == 0) // Set Taplist.io Tap Number
+            {
+                const uint8_t val = atoi(value);
+                if ((val < 0) || (val > 255))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    // We're processing this with the flow meter settings, but it gets saved to the config object
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    flow.taps[tapNum].taplistioTap = val;
                 }
             }
             if (strcmp(name, "active") == 0) // Set active
