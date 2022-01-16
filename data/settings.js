@@ -92,6 +92,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
                     $('input[name="tap' + i + 'bevname"]').val(flow.taps[i].name);
                     $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity).toFixed(4));
                     $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.taps[i].remaining).toFixed(4));
+                    $('input[name="tap' + i + 'taplistioTap"]').val(parseInt(flow.taps[i].taplistioTap), 10);
                     if (flow.taps[i].active) {
                         $('input[name="tap' + i + 'active"]')[0].checked = true;
                     } else {
@@ -190,6 +191,9 @@ function populateConfig(callback = null) { // Get configuration settings
                 $('input[name="calkeg"]').val(parseFloat(config.temps.keg).toFixed(2));
 
                 $('input[name="kegscreen"]').val(config.kegscreen.url);
+
+                $('input[name="taplistio_venue"]').val(config.taplistio_venue.url);
+                $('input[name="taplistio_secret"]').val(config.taplistio_secret.url);
 
                 $('input[name="rpintshost"]').val(config.rpintstarget.host);
                 $('input[name="rpintsport"]').val(parseInt(config.rpintstarget.port, 10));
@@ -368,6 +372,9 @@ function processPost(obj) {
         case "#kegscreen":
             processKegScreenPost(url, obj);
             break;
+        case "#taplistio":
+            processTaplistIOPost(url, obj);
+            break;
         case "#targeturl":
             processTargetUrlPost(url, obj);
             break;
@@ -397,6 +404,7 @@ function processTapPost(url, obj, tapNum) {
         bevname = $form.find("input[name='tap" + tapNum + "bevname']").val(),
         cap = $form.find("input[name='tap" + tapNum + "cap']").val(),
         remain = $form.find("input[name='tap" + tapNum + "remain']").val(),
+        taplistioTap = $form.find("input[name='tap" + tapNum + "taplistioTap']").val(),
         active = $form.find("input[name='tap" + tapNum + "active']:checked").val();
 
     // Process put
@@ -407,6 +415,7 @@ function processTapPost(url, obj, tapNum) {
         bevname: bevname,
         cap: cap,
         remain: remain,
+        taplistioTap: taplistioTap,
         active: active
     }
     putData(url, data);
@@ -543,6 +552,22 @@ function processKegScreenPost(url, obj) {
         data = {
             kegscreen: kegscreen
         };
+    putData(url, data);
+}
+
+function processTaplistIOPost(url, obj) {
+    // Handle Keg Screen Name
+
+    // Get form data
+    var $form = $(obj),
+    taplistio_venue = $form.find("input[name='taplistio_venue']").val(),
+    taplistio_secret = $form.find("input[name='taplistio_secret']").val(),
+
+    // Process put
+    data = {
+        taplistio_venue: taplistio_venue,
+        taplistio_secret: taplistio_secret
+    };
     putData(url, data);
 }
 
