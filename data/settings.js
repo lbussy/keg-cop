@@ -640,7 +640,7 @@ function updateHelp(hashLoc) {
             url = url + "/en/latest/context/settings/temperature/control/index.html";
             break;
         case "#sensorcontrol":
-            url = url + "/en/latest/context/settings/temperature/api/v1/info/sensors/index.html";
+            url = url + "/en/latest/context/settings/temperature/sensors/index.html";
             break;
         case "#kegscreen":
             url = url + "/en/latest/context/settings/targets/kegscreen/index.html";
