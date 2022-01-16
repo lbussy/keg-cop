@@ -382,8 +382,8 @@ SOFTWARE. */
 #define IMPERIAL true
 #define FMIN (double)33
 #define FMAX (double)80
-#define CMIN (double)1
-#define CMAX (double).5
+#define CMIN (double)0.5
+#define CMAX (double)27
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
