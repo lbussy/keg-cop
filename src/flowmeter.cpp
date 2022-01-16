@@ -455,12 +455,13 @@ void convertFlowtoMetric()
 void Taps::save(JsonObject obj) const
 {
     obj["tapid"] = tapid;             // Tap ID
-    obj["taplabel"] = taplabel;       // Tap display label
+    obj["label"] = label;             // Tap display label
     obj["pin"] = pin;                 // μC Pin
     obj["ppu"] = ppu;                 // Pulses per Gallon
     obj["name"] = name;               // Beer Name
     obj["capacity"] = capacity;       // Tap Capacity
     obj["remaining"] = remaining;     // Tap remaining
+    obj["taplistioTap"] = taplistioTap;     // Tap number at Taplist.io
     obj["active"] = active;           // Tap active
     obj["calibrating"] = calibrating; // Tap calibrating
 }
@@ -472,14 +473,14 @@ void Taps::load(JsonObjectConst obj, int numTap)
     tapid = numTap;
     pin = flowPins[numTap];
 
-    if (obj["taplabel"].isNull() || obj["taplabel"] == 0)
+    if (obj["label"].isNull() || obj["label"] == 0)
     {
-        taplabel = tapid + 1; // Default to sequential 1-based label
+        label = tapid + 1; // Default to sequential 1-based label
     }
     else
     {
-        int tl = obj["taplabel"];
-        taplabel = tl;
+        int tl = obj["label"];
+        label = tl;
     }
 
     if (obj["ppu"].isNull() || obj["ppu"] == 0)
@@ -520,6 +521,16 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         double rm = obj["remaining"];
         remaining = rm;
+    }
+
+    if (obj["taplistioTap"].isNull())
+    {
+        taplistioTap = 0;
+    }
+    else
+    {
+        uint8_t tioT = obj["taplistioTap"];
+        taplistioTap = tioT;
     }
 
     if (obj["active"].isNull())
