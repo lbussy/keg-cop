@@ -50,11 +50,12 @@ bool send_to_taplistio(int tapid)
         Log.error(F("taplist.io: Tap %d doesn't have a valid taplist.io tap id set (%d)." CR), tapid, flow.taps[tapid].taplistioTap);
         return false;
     }
-
-
-
-    // char userAgent[128];
-    // ds.get_useragent(userAgent, sizeof(userAgent));
+    
+    if (flow.taps[tapid].taplistioTap == 0)
+    {
+        Log.verbose(F("taplist.io: Tap %d has taplist.io tap id set to 0 - skipping send." CR), tapid);
+        return false;
+    }
 
     snprintf(auth_header, sizeof(auth_header), "token %s", config.taplistio.secret);
 
