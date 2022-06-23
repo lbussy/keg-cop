@@ -157,7 +157,11 @@ function populateConfig(callback = null) { // Get configuration settings
                 } else {
                     $('input:radio[name="enablecontrol"]')[1].checked = true;
                 }
-
+                if (config.temps.coolonhigh) {
+                    $('input:radio[name="coolonhigh"]')[0].checked = true;
+                } else {
+                    $('input:radio[name="coolonhigh"]')[1].checked = true;
+                }
                 if (config.temps.roomenabled) {
                     $('input:radio[name="enableroom"]')[0].checked = true;
                 } else {
@@ -490,12 +494,14 @@ function processTempControlPost(url, obj) {
         setpoint = $form.find("input[name='setpoint']").val(),
         controlpoint = $form.find("select[name='controlpoint']").val(),
         enablecontrol = $form.find("input[name='enablecontrol']:checked").val();
+        coolonhigh = $form.find("input[name='coolonhigh']:checked").val();
 
     // Process put
     data = {
         setpoint: setpoint,
         controlpoint: controlpoint,
-        enablecontrol: enablecontrol
+        enablecontrol: enablecontrol,
+        coolonhigh: coolonhigh
     }
     putData(url, data);
 }

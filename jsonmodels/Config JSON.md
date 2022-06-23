@@ -26,6 +26,7 @@ JSON Definition:
 		"didupdate": false
 	},
 	"temps": {
+		"coolonhigh: true,
 		"setpoint": 100,
 		"controlpoint": 99,
 		"controlenabled": false,
