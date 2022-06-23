@@ -27,10 +27,13 @@ BINLOC="firmware"
 
 get_pio() {
     echo -e "\nChecking PlatformIO environment."
-    if grep -q "WSL" /proc/version; then
+    if [[ $OSTYPE == 'darwin'* ]]; then
+        # On a Mac
+        PIO="$HOME/.platformio/penv/bin/platformio"
+    elif [ $(grep -q "WSL" /proc/version 2>/dev/null) -gt 0 ]; then
         # Running WSL
         PIO="/mnt/c/Users/$LOGNAME/.platformio/penv/Scripts/platformio.exe"
-    elif grep -q "@WIN" /proc/version; then
+    elif [ $(grep -q "@WIN" /proc/version 2>/dev/null) -gt 0 ]; then
         # Running Git Bash
         PIO="$HOME/.platformio/penv/Scripts/platformio.exe"
     else
@@ -72,7 +75,10 @@ check_root() {
 get_envs() {
     echo -e "\nGathering build environments for $GITNAME."
     cd "$GITROOT" || exit
-    readarray -t ENVIRONMENTS < <("$PIO" project data | grep "env_name" | cut -d'"' -f2)
+    while IFS= read var value; do
+        ENVIRONMENTS+=($var)
+        values+=($value)
+    done <<<  $(pio project config | grep "env:" | cut -d':' -f2)
 }
 
 list_envs() {
@@ -99,12 +105,14 @@ build_binaries() {
     cd "$GITROOT" || (echo -e "Environment not found." && exit)
     for env in "${ENVIRONMENTS[@]}"
     do
-        echo -e "\nBuilding binaries for $env."
-        sleep 3
-        eval "$PIO" run -e "$env"
-        echo -e "\nBuilding filesysyem for $env."
-        sleep 3
-        eval "$PIO" run --target buildfs -e "$env"
+        if [ ! -z "$env" ] ; then
+            echo -e "\nBuilding binaries for $env."
+            sleep 3
+            eval "$PIO" run -e "$env"
+            echo -e "\nBuilding filesysyem for $env."
+            sleep 3
+            eval "$PIO" run --target buildfs -e "$env"
+        fi
     done
 }
 
@@ -113,10 +121,12 @@ copy_binaries() {
     if [ -d "$GITROOT"/"$BINLOC"/ ]; then
         for env in "${ENVIRONMENTS[@]}"
         do
-            echo -e "Copying binaries for $env."
-            cp "$GITROOT"/.pio/build/"$env"/firmware.bin "$GITROOT"/"$BINLOC"/"$env"_firmware.bin
-            cp "$GITROOT"/.pio/build/"$env"/partitions.bin "$GITROOT"/"$BINLOC"/"$env"_partitions.bin
-            cp "$GITROOT"/.pio/build/"$env"/spiffs.bin "$GITROOT"/"$BINLOC"/"$env"_spiffs.bin
+            if [ ! -z "$env" ] ; then
+                echo -e "Copying binaries for $env."
+                cp "$GITROOT"/.pio/build/"$env"/firmware.bin "$GITROOT"/"$BINLOC"/"$env"_firmware.bin
+                cp "$GITROOT"/.pio/build/"$env"/partitions.bin "$GITROOT"/"$BINLOC"/"$env"_partitions.bin
+                cp "$GITROOT"/.pio/build/"$env"/spiffs.bin "$GITROOT"/"$BINLOC"/"$env"_spiffs.bin
+            fi
         done
     else
         echo -e "\nERROR: Unable to copy files to $GITROOT/$BINLOC"
