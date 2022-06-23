@@ -66,6 +66,7 @@ struct Temperatures
     float setpoint;
     int controlpoint;
     bool controlenabled;
+    bool coolonhigh;
     bool enabled[NUMSENSOR];
     float calibration[NUMSENSOR];
 

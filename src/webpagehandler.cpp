@@ -775,6 +775,23 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
+            if (strcmp(name, "coolonhigh") == 0) // Enable cooling on pin high (reverse)
+            {
+                if (strcmp(value, "true") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.coolonhigh = true;
+                }
+                else if (strcmp(value, "false") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.coolonhigh = false;
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
         }
     }
     if (saveConfig())

@@ -51,7 +51,7 @@
                         <a class="nav-link" href="/temps/">Temperatures</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/settings/">Settings  <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/settings/">Settings <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/help/">Help</a>
@@ -1286,6 +1286,13 @@
                                                 Control Point
                                             </label>
                                         </div>
+                                        <div class="row form-group">
+                                            <label for="enablecontrol" class="col-form-label" data-toggle="tooltip"
+                                                title="Invert cooling control pin (logical pin high == cooling on)">
+                                                Invert Cooling Control
+                                            </label>
+                                        </div>
+
                                     </div>
 
                                     <div class="col-5">
@@ -1302,6 +1309,30 @@
                                                 <option value="4">Keg Temp Sensor</option>
                                             </select>
                                         </div>
+
+                                        <div class="row form-group">
+                                            <fieldset class="form-group">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-sm-3">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Cooling pin normal (cool on pin low)">
+                                                                <input type="radio" class="form-check-input" name="coolonhigh" id="coolonhigh"
+                                                                value="false">
+                                                                Normal
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Invert cooling pin (cool on pin high)">
+                                                                <input type="radio" class="form-check-input" name="coolonhigh" id="coolonhigh"
+                                                                value="true">
+                                                                Inverted
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+
                                     </div>
 
 									<div class="col-sm-4">
