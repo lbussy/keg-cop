@@ -394,6 +394,7 @@ void setInfoPageHandlers()
         doc["setting"] = config.temps.setpoint;
         doc["status"] = tstat.state;
         doc["controlenabled"] = config.temps.enabled[config.temps.controlpoint];
+        doc["coolonhigh"] = config.temps.coolonhigh;
 
         int numEnabled = 0;
         char *sensorName[NUMSENSOR];
