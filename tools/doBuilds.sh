@@ -30,10 +30,16 @@ get_pio() {
     if [[ $OSTYPE == 'darwin'* ]]; then
         # On a Mac
         PIO="$HOME/.platformio/penv/bin/platformio"
-    elif [ $(grep -q "WSL" /proc/version 2>/dev/null) -gt 0 ]; then
+    elif [[ $(grep -q "WSL" /proc/version 2>/dev/null) -gt 0 ]]; then
         # Running WSL
         PIO="/mnt/c/Users/$LOGNAME/.platformio/penv/Scripts/platformio.exe"
-    elif [ $(grep -q "@WIN" /proc/version 2>/dev/null) -gt 0 ]; then
+    elif [ "$(expr substr $(uname -s) 1 5)" == "MINGW" ]; then
+        # Running GitBash on Windows
+        PIO="$HOME/.platformio/penv/Scripts/platformio.exe"
+    elif [ "$(expr substr $(uname -s) 1 7)" == "MSYS_NT" ]; then
+        # Running some weird bash on Windows
+        PIO="$HOME/.platformio/penv/Scripts/platformio.exe"
+    elif [[ $(grep -q "@WIN" /proc/version 2>/dev/null) -gt 0 ]]; then
         # Running Git Bash
         PIO="$HOME/.platformio/penv/Scripts/platformio.exe"
     else
@@ -78,7 +84,7 @@ get_envs() {
     while IFS= read var value; do
         ENVIRONMENTS+=($var)
         values+=($value)
-    done <<<  $(pio project config | grep "env:" | cut -d':' -f2)
+    done <<<  $($PIO project config | grep "env:" | cut -d':' -f2)
 }
 
 list_envs() {
