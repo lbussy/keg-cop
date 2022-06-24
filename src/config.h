@@ -487,7 +487,7 @@ SOFTWARE. */
 // Cooling Delay - Default 5 mins (in millis())
 //
 #ifndef COOLDELAY
-#define COOLDELAY 2 * 60 * 1000
+#define COOLDELAY 5 * 60 * 1000
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -497,7 +497,7 @@ SOFTWARE. */
 // Minimum on time - Default 2 mins (in millis())
 //
 #ifndef MINON
-#define MINON 1 * 60 * 1000
+#define MINON 2 * 60 * 1000
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
