@@ -158,9 +158,9 @@ function populateConfig(callback = null) { // Get configuration settings
                     $('input:radio[name="enablecontrol"]')[1].checked = true;
                 }
                 if (config.temps.coolonhigh) {
-                    $('input:radio[name="coolonhigh"]')[0].checked = true;
-                } else {
                     $('input:radio[name="coolonhigh"]')[1].checked = true;
+                } else {
+                    $('input:radio[name="coolonhigh"]')[0].checked = true;
                 }
                 if (config.temps.roomenabled) {
                     $('input:radio[name="enableroom"]')[0].checked = true;
