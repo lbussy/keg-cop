@@ -87,7 +87,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
             var numTaps = flow["taps"].length;
             try {
                 for (var i = 0; i < numTaps; i++) {
-                    $('input[name="tap' + i + 'label"]').val(parseInt(flow.taps[i].label), 10);
+                    $('input[name="tap' + i + 'label"]').val(parseInt(flow.taps[i].taplabel), 10);
                     $('input[name="tap' + i + 'ppu"]').val(parseInt(flow.taps[i].ppu), 10);
                     $('input[name="tap' + i + 'bevname"]').val(flow.taps[i].name);
                     $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity).toFixed(4));
