@@ -326,7 +326,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Default beer name
+// Default beverage name
 //
 #ifndef DEFAULTBEV
 #define DEFAULTBEV "Pudswiller Doors"

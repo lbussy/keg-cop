@@ -100,36 +100,36 @@ void tickerLoop()
         // Send kick report
         if (queueKickReport[i] == true)
         {
-            sendKickReport(i);
             queueKickReport[i] = false;
+            sendKickReport(i);
         }
         // Send temp control state change
         if (queueStateChange == true)
         {
-            sendCoolStateReport();
             queueStateChange = false;
+            sendCoolStateReport();
         }
         // Send Tap Info Report
         if (doTapInfoReport[i] == true)
         {
-            sendTapInfoReport(i);
             doTapInfoReport[i] = false;
+            sendTapInfoReport(i);
         }
     }
     if (doKSTempReport)
     {
-        sendTempReport();
         doKSTempReport = false;
+        sendTempReport();
     }
     if (doTargetReport)
     {
-        sendTargetReport();
         doTargetReport = false;
+        sendTargetReport();
     }
     if (doRPintsConnect)
     {
-        connectRPints();
         doRPintsConnect = false;
+        connectRPints();
     }
 }
 
