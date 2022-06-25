@@ -42,7 +42,6 @@ SOFTWARE. */
 void serial();
 void toggleSerialCompat(bool);
 void printTimestamp(Print *_logOutput);
-void serialFlush();
 void serialLoop();
 
 // Print outputs
