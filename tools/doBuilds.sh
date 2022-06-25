@@ -82,8 +82,10 @@ get_envs() {
     echo -e "\nGathering build environments for $GITNAME."
     cd "$GITROOT" || exit
     while IFS= read var value; do
-        ENVIRONMENTS+=($var)
-        values+=($value)
+        if [ ! -z "$var" ] ; then
+            ENVIRONMENTS+=($var)
+            values+=($value)
+        fi
     done <<<  $($PIO project config | grep "env:" | cut -d':' -f2)
 }
 
