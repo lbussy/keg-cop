@@ -1390,20 +1390,8 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                     flow.taps[tapNum].ppu = val;
                 }
             }
-            if ((strcmp(name, "bevname") == 0) && tapNum >= 0) // Set the beverage name
-            {
-                if ((strlen(value) < 1) || (strlen(value) > 64))
-                {
-                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    strlcpy(flow.taps[tapNum].name, value, sizeof(flow.taps[tapNum].name));
-                }
-            }
             // I changed the name to be beverage agnostic, but will still support the "beername" tag
-            else if ((strcmp(name, "beername") == 0) && tapNum >= 0) // Set the beer name
+            else if (((strcmp(name, "beername") == 0) || (strcmp(name, "bevname") == 0)) && tapNum >= 0) // Set the beverage name
             {
                 if ((strlen(value) < 1) || (strlen(value) > 64))
                 {

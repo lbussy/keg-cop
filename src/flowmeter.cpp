@@ -458,7 +458,7 @@ void Taps::save(JsonObject obj) const
     obj["taplabel"] = taplabel;       // Tap display label
     obj["pin"] = pin;                 // μC Pin
     obj["ppu"] = ppu;                 // Pulses per Gallon
-    obj["name"] = name;               // Beer Name
+    obj["name"] = name;               // Beverage Name
     obj["capacity"] = capacity;       // Tap Capacity
     obj["remaining"] = remaining;     // Tap remaining
     obj["active"] = active;           // Tap active

@@ -357,7 +357,7 @@ bool sendTempReport()
 
 bool sendReport(ReportKey thisKey, const String &json)
 { // Handle sending all Keg Screen reports
-    if (thisKey && (reports[thisKey].readyState() == 0 || reports[thisKey].readyState() == 4))
+    if (reports[thisKey].readyState() == 0 || reports[thisKey].readyState() == 4)
     {
         reported[thisKey] = false;
         LCBUrl url;
@@ -381,7 +381,6 @@ bool sendReport(ReportKey thisKey, const String &json)
             Log.verbose(F("%s: Preparing POST to: %s" CR), reportname[thisKey], url.getUrl().c_str());
             connection = url.getUrl();
         }
-
         if (connection.length() > 0)
         {
             // reports[thisKey].setDebug(true);
