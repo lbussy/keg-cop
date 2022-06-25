@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -394,6 +394,7 @@ void setInfoPageHandlers()
         doc["setting"] = config.temps.setpoint;
         doc["status"] = tstat.state;
         doc["controlenabled"] = config.temps.enabled[config.temps.controlpoint];
+        doc["coolonhigh"] = config.temps.coolonhigh;
 
         int numEnabled = 0;
         char *sensorName[NUMSENSOR];
@@ -769,6 +770,23 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     config.temps.controlenabled = false;
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "coolonhigh") == 0) // Enable cooling on pin high (reverse)
+            {
+                if (strcmp(value, "true") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.coolonhigh = true;
+                }
+                else if (strcmp(value, "false") == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    config.temps.coolonhigh = false;
                 }
                 else
                 {

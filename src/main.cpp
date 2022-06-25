@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -75,7 +75,8 @@ void setup()
 
     // Set pin for relay
     pinMode(COOL, OUTPUT);
-    digitalWrite(COOL, HIGH);
+    // digitalWrite(COOL, HIGH);
+    digitalWrite(COOL, (config.temps.coolonhigh)? LOW: HIGH);
 
     setClock(); // Set NTP Time
 

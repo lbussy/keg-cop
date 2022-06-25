@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -48,7 +48,8 @@ void controlLoop()
         if (tstat.cooling)
         {
             tstat.lastOff = now;
-            digitalWrite(COOL, HIGH);
+            // digitalWrite(COOL, HIGH);
+            digitalWrite(COOL, (config.temps.coolonhigh)? LOW: HIGH);
             tstat.cooling = false;
         }
 
@@ -77,7 +78,8 @@ void controlLoop()
         {
             // Not yet cooling, no delay, turn on cool relay
             tstat.lastOn = now;
-            digitalWrite(COOL, LOW);
+            // digitalWrite(COOL, LOW);
+            digitalWrite(COOL, (config.temps.coolonhigh)? HIGH: LOW);
             tstat.cooling = true;
             tstat.state = TSTAT_COOL_BEGIN;
         }
@@ -102,7 +104,8 @@ void controlLoop()
             {
                 // Turn off cooling
                 tstat.lastOff = now;
-                digitalWrite(COOL, HIGH);
+                // digitalWrite(COOL, HIGH);
+                digitalWrite(COOL, (config.temps.coolonhigh)? LOW: HIGH);
                 tstat.cooling = false;
                 tstat.state = TSTAT_OFF_END;
             }

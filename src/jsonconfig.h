@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -66,6 +66,7 @@ struct Temperatures
     float setpoint;
     int controlpoint;
     bool controlenabled;
+    bool coolonhigh;
     bool enabled[NUMSENSOR];
     float calibration[NUMSENSOR];
 
