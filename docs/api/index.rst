@@ -622,7 +622,7 @@ The tap array follows the following format for each of the nine available taps:
 - ``tap`` = The zero-based index representing the tap number.
 - ``label`` = The one-based label representing the tap number externally.
 - ``ppu`` = The pulses per configured flow unit.
-- ``beername`` = The name of the beverage currently on tap.
+- ``bevname`` = The name of the beverage currently on tap.
 - ``cap`` = The capacity, in floating-point current units, of the attached keg.
 - ``remain`` = The amount remaining, in floating-point current units, of the attached keg.
 - ``active`` = Denotes whether the tap is active (displayed) or not.

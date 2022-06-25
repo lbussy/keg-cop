@@ -39,7 +39,7 @@ struct Taps
     int taplabel;             // Tap ID
     int pin;                  // μC Pin
     long ppu;                 // Pulses per Gallon
-    char name[65];            // Beer Name
+    char name[65];            // Beverage Name
     double capacity;          // Tap Capacity
     double remaining;         // Tap remaining
     bool active = false;      // Is tap active
