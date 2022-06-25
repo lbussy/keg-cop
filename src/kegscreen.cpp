@@ -485,6 +485,7 @@ void resultHandler(ReportKey report, int readyState)
 
         switch (code)
         {
+        serialFlush(); // Need to flush serial before an asynch log message.
         case 0 ... 99:
             // Code < 100, no idea how we got here, should not be possible
             Log.error(F("Error: %s: Invalid HTTP response code %d received." CR), reportname[report], code);
@@ -580,5 +581,6 @@ void resultHandler(ReportKey report, int readyState)
             Log.error(F("Error: %s: Invalid HTTP response code %d received." CR), reportname[report], code);
             break;
         }
+        serialFlush();
     }
 }
