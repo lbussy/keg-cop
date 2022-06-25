@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -445,6 +445,7 @@ void Temperatures::save(JsonObject obj) const
     obj["setpoint"] = setpoint;
     obj["controlpoint"] = controlpoint;
     obj["controlenabled"] = controlenabled;
+    obj["coolonhigh"] = coolonhigh;
     obj["roomenabled"] = enabled[0];
     obj["room"] = calibration[0];
     obj["towerenabled"] = enabled[1];
@@ -489,6 +490,16 @@ void Temperatures::load(JsonObjectConst obj)
     {
         bool ce = obj["controlenabled"];
         controlenabled = ce;
+    }
+
+    if (obj["coolonhigh"].isNull())
+    {
+        coolonhigh = false;
+    }
+    else
+    {
+        bool ch = obj["coolonhigh"];
+        coolonhigh = ch;
     }
 
     if (obj["roomenabled"].isNull())

@@ -87,7 +87,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
             var numTaps = flow["taps"].length;
             try {
                 for (var i = 0; i < numTaps; i++) {
-                    $('input[name="tap' + i + 'label"]').val(parseInt(flow.taps[i].label), 10);
+                    $('input[name="tap' + i + 'label"]').val(parseInt(flow.taps[i].taplabel), 10);
                     $('input[name="tap' + i + 'ppu"]').val(parseInt(flow.taps[i].ppu), 10);
                     $('input[name="tap' + i + 'bevname"]').val(flow.taps[i].name);
                     $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity).toFixed(4));
@@ -157,7 +157,11 @@ function populateConfig(callback = null) { // Get configuration settings
                 } else {
                     $('input:radio[name="enablecontrol"]')[1].checked = true;
                 }
-
+                if (config.temps.coolonhigh) {
+                    $('input:radio[name="coolonhigh"]')[1].checked = true;
+                } else {
+                    $('input:radio[name="coolonhigh"]')[0].checked = true;
+                }
                 if (config.temps.roomenabled) {
                     $('input:radio[name="enableroom"]')[0].checked = true;
                 } else {
@@ -490,12 +494,14 @@ function processTempControlPost(url, obj) {
         setpoint = $form.find("input[name='setpoint']").val(),
         controlpoint = $form.find("select[name='controlpoint']").val(),
         enablecontrol = $form.find("input[name='enablecontrol']:checked").val();
+        coolonhigh = $form.find("input[name='coolonhigh']:checked").val();
 
     // Process put
     data = {
         setpoint: setpoint,
         controlpoint: controlpoint,
-        enablecontrol: enablecontrol
+        enablecontrol: enablecontrol,
+        coolonhigh: coolonhigh
     }
     putData(url, data);
 }
