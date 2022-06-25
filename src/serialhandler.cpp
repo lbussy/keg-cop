@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "serialhandler.h"
 
+#define _DO_FLUSH // Flush serial queues before printing during asynch (potentially dangerous)
+
 #undef SERIAL
 #if DOTELNET == true
 ESPTelnet SerialAndTelnet;
@@ -69,6 +71,13 @@ void printTimestamp(Print *_logOutput)
     char locTime[prefLen] = {'\0'};
     strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
     _logOutput->print(locTime);
+}
+
+void serialFlush()
+{
+#ifdef _DO_FLUSH
+    SERIAL.flush();
+#endif
 }
 
 size_t printDot()
