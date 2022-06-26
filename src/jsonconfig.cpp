@@ -336,7 +336,7 @@ void CopConfig::save(JsonObject obj) const
     obj["nodrd"] = nodrd;
     obj["breweryname"] = breweryname;
     obj["kegeratorname"] = kegeratorname;
-    obj["controllernumber"] = controllernumber;
+    obj["controlnum"] = controlnum;
     obj["serial"] = serial;
     obj["imperial"] = imperial;
     obj["tapsolenoid"] = tapsolenoid;
@@ -387,14 +387,14 @@ void CopConfig::load(JsonObjectConst obj)
         strlcpy(kegeratorname, kn, sizeof(kegeratorname));
     }
 
-    if (obj["controllernumber"].isNull())
+    if (obj["controlnum"].isNull())
     {
-        controllernumber = 0;
+        controlnum = 1;
     }
     else
     {
-        uint8_t cn = obj["controllernumber"];
-        controllernumber = cn;
+        uint8_t cn = obj["controlnum"];
+        controlnum = cn;
     }
 
     if (obj["imperial"].isNull())

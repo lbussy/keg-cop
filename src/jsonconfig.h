@@ -51,7 +51,7 @@ struct CopConfig
     bool nodrd;
     char breweryname[64];
     char kegeratorname[64];
-    uint8_t controllernumber;
+    uint8_t controlnum;
     bool imperial;
     bool serial;
     bool tapsolenoid;
