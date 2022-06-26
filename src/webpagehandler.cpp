@@ -605,14 +605,14 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             if (strcmp(name, "controlnum") == 0) // Set the controller number
             {
                 const uint8_t val = atof(value);
-                if ((val < 0) || (val > 9))
+                if ((val < 1) || (val > 9))
                 {
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
-                    config.copconfig.controllernumber = val;
+                    config.copconfig.controlnum = val;
                 }
             }
             if (strcmp(name, "imperial") == 0) // Set units

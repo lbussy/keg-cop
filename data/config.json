@@ -9,7 +9,7 @@
         "nodrd": false,
         "breweryname": "Silver Fox Brewery",
         "kegeratorname": "Keezer",
-        "controllernumber": 0,
+        "controlnum": 1,
         "serial": false,
         "imperial": true,
         "tapsolenoid": true
