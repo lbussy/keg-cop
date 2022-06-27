@@ -25,5 +25,10 @@
 Import("env")
 
 env.Append(CPPDEFINES=[
-  ("PIO_BOARD", env["BOARD"])
+    ("PIO_BOARD", env["BOARD"])
 ])
+
+if env.GetBuildType() == "debug":
+    env.Append(CPPDEFINES=[("_DEBUG_BUILD")])
+else:
+    env.Append(CPPDEFINES=[("_RELEASE_BUILD")])
