@@ -32,6 +32,10 @@ Ticker sendKSTempReportTicker;
 Ticker sendTargetReportTicker;
 Ticker rebootTimer;
 
+#ifdef _DEBUG_BUILD
+Ticker saveRebootTime;
+#endif
+
 void setup()
 {
     drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
@@ -102,6 +106,9 @@ void setup()
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);                 // Send Keg Screen Temp Report
     sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport);   // Send Target Report
     rebootTimer.attach(86400 , setDoReset);                                         // Reboot every 24 hours
+#ifdef _DEBUG_BUILD
+    saveRebootTime.attach(30, setSaveReboot);                                       // Set uptime data save
+#endif
 
     if (!Log.getLevel())
         nullDoc("d");
