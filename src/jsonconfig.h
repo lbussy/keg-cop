@@ -76,7 +76,7 @@ struct Temperatures
 
 struct KegScreen
 {
-    // Stores Keg Screen configuration
+    // Stores KegScreen configuration
     char url[128];
     bool update;
 

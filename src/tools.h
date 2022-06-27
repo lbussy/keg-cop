@@ -61,7 +61,7 @@ void setSaveRebootInfo();
 
 static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset
-static bool __attribute__((unused)) doKSTempReport = false; // Semaphore for Keg Screen Temps Report
+static bool __attribute__((unused)) doKSTempReport = false; // Semaphore for KegScreen Temps Report
 static bool __attribute__((unused)) doTargetReport = false; // Semaphore for URL Target Report
 static bool __attribute__((unused)) doRPintsConnect = false;  // Semaphore for MQTT (re)connect
 static bool __attribute__((unused)) doTapInfoReport[NUMTAPS] = {

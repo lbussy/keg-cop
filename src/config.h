@@ -524,7 +524,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Frequency at which temp reports are sent to Keg Screen (when configured)
+// Frequency at which temp reports are sent to KegScreen (when configured)
 //
 #ifndef KSTEMPREPORT
 #define KSTEMPREPORT 60
