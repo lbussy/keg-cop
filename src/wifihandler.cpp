@@ -199,9 +199,9 @@ void WiFiEvent(WiFiEvent_t event)
     Serial.printf("[WiFi-event] event: %d\n", event);
     if (! WiFi.isConnected())
     {
-        Log.warning(F("WiFi lost connection." CR));
+        Log.warning(F("WiFi lost connection, reconnecting .."));
         disconnectRPints();
-        WiFi.begin();
+        WiFi.reconnect();
 
         int WLcount = 0;
         while (! WiFi.isConnected() && WLcount < 190) {
@@ -209,6 +209,7 @@ void WiFiEvent(WiFiEvent_t event)
             printDot(true);
             ++WLcount;
         }
+        printCR();
 
         if (! WiFi.isConnected()) {
             // We failed to reconnect.
