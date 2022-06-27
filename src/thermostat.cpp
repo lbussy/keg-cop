@@ -127,7 +127,7 @@ void controlLoop()
     }
 
     if (tstat.state != start)
-    { // Log a state change to Keg Screen
+    { // Log a state change to KegScreen
         queueStateChange = true;
     }
 }
