@@ -23,12 +23,6 @@ SOFTWARE. */
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
-#ifndef IPLINFO
-#define IPLINFO
-#define IPL_FILE "/ipl.dat"
-#define IPL_FS FILESYSTEM
-#endif
-
 #include "config.h"
 #include "ntphandler.h"
 #include "kegscreen.h"
@@ -36,6 +30,7 @@ SOFTWARE. */
 #include "urltarget.h"
 #include "mdnshandler.h"
 #include "wifihandler.h"
+#include "uptime.h"
 
 #include <SPIFFS.h>
 #include <AsyncWiFiManager.h>
@@ -62,6 +57,7 @@ double convertGtoL(double);
 double convertLtoG(double);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
 void getGuid(char *str); // 17 chars including null terminator
+void setSaveRebootInfo();
 
 static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset
@@ -70,5 +66,6 @@ static bool __attribute__((unused)) doTargetReport = false; // Semaphore for URL
 static bool __attribute__((unused)) doRPintsConnect = false;  // Semaphore for MQTT (re)connect
 static bool __attribute__((unused)) doTapInfoReport[NUMTAPS] = {
     false, false, false, false, false, false, false, false}; // Semaphore for reset
+static bool __attribute__((unused)) doSetSaveReboot = false; // Semaphore required to save reboot time
 
 #endif

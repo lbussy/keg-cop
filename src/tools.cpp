@@ -22,10 +22,10 @@ SOFTWARE. */
 
 #include "tools.h"
 
-float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
+float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
 unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pours
-bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending kicks
-bool __attribute__((unused)) queueStateChange;          // Store pending tstat state changes
+bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
+bool __attribute__((unused)) queueStateChange;                  // Store pending tstat state changes
 
 void _delay(unsigned long ulDelay)
 {
@@ -35,6 +35,7 @@ void _delay(unsigned long ulDelay)
 
 void resetController()
 {
+    // TODO:  Log reboot time
     Log.notice(F("Reboot request - rebooting system." CR));
     config.copconfig.nodrd = true;
     saveConfig();
@@ -71,6 +72,11 @@ void setDoRPintsConnect()
     doRPintsConnect = true; // Semaphore required for MQTT (re)connect
 }
 
+void setSaveRebootInfo()
+{
+    doSetSaveReboot = true; // Semaphore required to save reboot time
+}
+
 void tickerLoop()
 {
     // Necessary because we cannot delay or do radio work in a callback
@@ -84,6 +90,12 @@ void tickerLoop()
     { // Need to do this to prevent WDT
         doWiFiReset = false;
         resetWifi();
+    }
+
+    if (doSetSaveReboot)
+    { // Need to do this to prevent WDT
+        doSetSaveReboot = false;
+        setSaveReboot();
     }
 
     // // External Event Reports
@@ -145,9 +157,7 @@ void maintenanceLoop()
         // The ms clock will rollover after ~49 days.  To be on the safe side,
         // restart the ESP after about 42 days to reset the ms clock.
         Log.warning(F("Maintenance: Six week routine restart."));
-        config.copconfig.nodrd = true;
-        saveConfig();
-        ESP.restart();
+        resetController();
     }
     if (lastNTPUpdate > NTPRESET)
     {
