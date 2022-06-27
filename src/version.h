@@ -40,6 +40,7 @@ void fsver();
 const char *branch();
 const char *build();
 const char *board();
+const char *build_mode();
 
 int versionCompare(String, String);
 

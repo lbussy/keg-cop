@@ -29,6 +29,13 @@ env.Append(CPPDEFINES=[
 ])
 
 if env.GetBuildType() == "debug":
-    env.Append(CPPDEFINES=[("_DEBUG_BUILD")])
+    env.Append(CPPDEFINES=[
+        ("_DEBUG_BUILD"),
+        ("BUILD_TYPE", "debug")
+    ])
+
 else:
-    env.Append(CPPDEFINES=[("_RELEASE_BUILD")])
+    env.Append(CPPDEFINES=[
+        ("_RELEASE_BUILD"),
+        ("BUILD_TYPE", "release")
+    ])
