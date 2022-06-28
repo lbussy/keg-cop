@@ -23,6 +23,7 @@ SOFTWARE. */
 #include "uptimelog.h"
 
 Uptime uptime;
+Ticker saveRebootTime;
 static const char *uptimefile = UPTIME_FILE;
 static const char *uptimelog = UPTIME_LOG;
 
@@ -98,6 +99,9 @@ void doUptime(bool reboot)
     uptime.lastSecondsSinceBoot = secondsSinceBoot;
     uptime.lastTimestamp = now;
     saveUptime();
+
+    if (reboot)
+        saveRebootTime.attach(20, setDoSaveUptime); // Start ticker
 }
 
 bool deleteUptimeFile()
