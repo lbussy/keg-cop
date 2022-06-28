@@ -76,7 +76,6 @@ void setup()
 
     // Set pin for relay
     pinMode(COOL, OUTPUT);
-    // digitalWrite(COOL, HIGH);
     digitalWrite(COOL, (config.temps.coolonhigh)? LOW: HIGH);
 
     setClock(); // Set NTP Time
