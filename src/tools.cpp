@@ -72,9 +72,9 @@ void setDoRPintsConnect()
     doRPintsConnect = true; // Semaphore required for MQTT (re)connect
 }
 
-void setSaveRebootInfo()
+void setDoSaveUptime()
 {
-    doSetSaveReboot = true; // Semaphore required to save reboot time
+    doSetSaveUptime = true; // Semaphore required to save reboot time
 }
 
 void tickerLoop()
@@ -92,10 +92,10 @@ void tickerLoop()
         resetWifi();
     }
 
-    if (doSetSaveReboot)
-    { // Need to do this to prevent WDT
-        doSetSaveReboot = false;
-        setSaveReboot();
+    if (doSetSaveUptime)
+    { // Log uptime
+        doSetSaveUptime = false;
+        doUptime();
     }
 
     // // External Event Reports
