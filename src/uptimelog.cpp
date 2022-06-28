@@ -23,8 +23,8 @@ SOFTWARE. */
 #include "uptimelog.h"
 
 Uptime uptime;
-static const char *filename = UPTIME_FILE;
-static const char *logname = UPTIME_LOG;
+static const char *uptimefile = UPTIME_FILE;
+static const char *uptimelog = UPTIME_LOG;
 
 enum StartType
 {
@@ -90,8 +90,10 @@ void doUptime(bool reboot)
 
     if (startType > 0 && startType < 3)
         Log.verbose(F("UPTIME: I should be logging: %l, %s, %s, %l" CR), now, startDesc[startType], reason, lastSecondsSinceBoot);
+        // TODO:  Log to uptimelog
     else if (startType == 0)
         Log.verbose(F("UPTIME: I should be starting a new log." CR));
+        // TODO:  Log to uptimelog
 
     uptime.lastSecondsSinceBoot = secondsSinceBoot;
     uptime.lastTimestamp = now;
@@ -104,7 +106,7 @@ bool deleteUptimeFile()
     {
         return false;
     }
-    return FILESYSTEM.remove(filename);
+    return FILESYSTEM.remove(uptimefile);
 }
 
 bool loadUptime()
@@ -128,8 +130,8 @@ bool loadUptimeFile()
         return false;
     }
     // Loads uptime information from a file on FILESYSTEM
-    File file = FILESYSTEM.open(filename, "r");
-    if (!FILESYSTEM.exists(filename) || !file)
+    File file = FILESYSTEM.open(uptimefile, "r");
+    if (!FILESYSTEM.exists(uptimefile) || !file)
     {
         // File does not exist or unable to read file
     }
@@ -158,7 +160,7 @@ bool saveUptime()
 bool saveUptimeFile()
 {
     // Saves the uptime information to a file on FILESYSTEM
-    File file = FILESYSTEM.open(filename, "w");
+    File file = FILESYSTEM.open(uptimefile, "w");
     if (!file)
     {
         file.close();
@@ -213,7 +215,7 @@ bool serializeUptime(Print &dst)
 bool printUptimeFile()
 {
     // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(filename, "r");
+    File file = FILESYSTEM.open(uptimefile, "r");
     if (!file)
         return false;
 
