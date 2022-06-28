@@ -31,6 +31,7 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <SPIFFS.h>
 #include <FS.h>
+#include <Ticker.h>
 
 #define CAP_SER_UPT 32
 #define CAP_DESER_UPT 96

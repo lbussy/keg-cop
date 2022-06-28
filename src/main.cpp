@@ -31,7 +31,6 @@ Ticker getThatVersionTicker;
 Ticker sendKSTempReportTicker;
 Ticker sendTargetReportTicker;
 Ticker rebootTimer;
-Ticker saveRebootTime;
 
 void setup()
 {
@@ -93,6 +92,7 @@ void setup()
     startControl();     // Initialize temperature control
     doVersionPoll();    // Get server version at startup
     setupRPints();      // Set up MQTT
+    doUptime(true);     // Uptime log start
 
     // Setup tickers
     pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors
