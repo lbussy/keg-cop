@@ -59,5 +59,6 @@ bool printUptime();
 bool printUptimeFile();
 bool serializeUptime(Print &);
 bool deserializeUptime(Stream &);
+bool writeLog(char * logLine);
 
 #endif // _UPTIMELOG_H
