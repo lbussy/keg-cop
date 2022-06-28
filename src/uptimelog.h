@@ -20,25 +20,43 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _MAIN_H
-#define _MAIN_H
+#ifndef _UPTIMELOG_H
+#define _UPTIMELOG_H
 
-#include "jsonconfig.h"
-#include "serialhandler.h"
 #include "config.h"
-#include "ntphandler.h"
-#include "wifihandler.h"
-#include "webpagehandler.h"
-#include "version.h"
-#include "mdnshandler.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-#include "flowmeter.h"
 #include "tools.h"
-#include "execota.h"
-#include "uptimelog.h"
+#include "serialhandler.h"
 
-#include <ArduinoLog.h>
-#include <ESP_DoubleResetDetector.h>
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <SPIFFS.h>
+#include <FS.h>
 
-#endif // _MAIN_H
+#define CAP_SER_UPT 32
+#define CAP_DESER_UPT 96
+
+#define UPTIME_FILE "/uptime.json"
+#define UPTIME_LOG "/uptime.csv"
+
+struct Uptime
+{
+    // Stores the uptime data
+    int64_t lastSecondsSinceBoot;
+    int64_t lastTimestamp;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+void doUptime(bool reboot = false);
+bool deleteUptimeFile();
+bool loadUptime();
+bool saveUptime();
+bool loadUptimeFile();
+bool saveUptimeFile();
+bool printUptime();
+bool printUptimeFile();
+bool serializeUptime(Print &);
+bool deserializeUptime(Stream &);
+
+#endif // _UPTIMELOG_H
