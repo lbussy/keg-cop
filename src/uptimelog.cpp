@@ -43,27 +43,27 @@ static const char *startDesc[] = {
 
 void doUptime(bool reboot)
 {
-    long secondsSinceBoot;      // Current uptime
-    long lastSecondsSinceBoot;  // Last uptime in seconds
-    long lastTimestamp;         // Time of last log
-    time_t now;                 // Current epoch time
-    time_t rawtime;             //
-    const char *reason;         // Reset reason
-    int startType;              // 0 = cold, 1 = warm
+    long secondsSinceBoot;     // Current uptime
+    long lastSecondsSinceBoot; // Last uptime in seconds
+    long lastTimestamp;        // Time of last log
+    time_t now;                // Current epoch time
+    time_t rawtime;            //
+    const char *reason;        // Reset reason
+    int startType;             // 0 = cold, 1 = warm
 
     secondsSinceBoot = esp_timer_get_time() / 1000000; // Calculate curent uptime
 
     rawtime = time(&now);
     struct tm ts;
     ts = *localtime(&rawtime);
-    char locTime[prefLen] = {'\0'};
-    strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
+    char locTime[21];
+    strftime(locTime, sizeof(locTime), "%FT%TZ", &ts);
 
-    loadUptime();   // Get previous information
+    loadUptime(); // Get previous information
     lastSecondsSinceBoot = long(uptime.lastSecondsSinceBoot);
     lastTimestamp = long(uptime.lastTimestamp);
     reason = rstReason();
-    
+
     if (reboot && lastSecondsSinceBoot == 0 && lastTimestamp == 0)
     { // Boot with clean filesystem
         Log.verbose(F("UPTIME: Started with no history." CR));
@@ -84,17 +84,19 @@ void doUptime(bool reboot)
     }
     else
     {
-        Log.verbose(F("UPTIME: Normal cadence." CR));
         uptime.lastSecondsSinceBoot = secondsSinceBoot;
         startType = START_RUNNING;
     }
 
+    char logLine[68];
+
     if (startType > 0 && startType < 3)
-        Log.verbose(F("UPTIME: I should be logging: %l, %s, %s, %l" CR), now, startDesc[startType], reason, lastSecondsSinceBoot);
-        // TODO:  Log to uptimelog
+        sprintf(logLine, "%s, %s, %s, %ld", locTime, reason, startDesc[startType], lastSecondsSinceBoot);
     else if (startType == 0)
-        Log.verbose(F("UPTIME: I should be starting a new log." CR));
-        // TODO:  Log to uptimelog
+        sprintf(logLine, "Date/Time, Start Reason, Restart Description, Uptime (Secs)");
+
+    if (startType < 3)
+        writeLog(logLine);
 
     uptime.lastSecondsSinceBoot = secondsSinceBoot;
     uptime.lastTimestamp = now;
@@ -278,3 +280,22 @@ void Uptime::load(JsonObjectConst obj)
     }
 }
 
+bool writeLog(char *logLine)
+{
+    // Appends to the uptime log on FILESYSTEM
+    File file = FILESYSTEM.open(uptimelog, FILE_APPEND);
+    if (!file)
+    {
+        file.close();
+        return false;
+    }
+
+    // Log CSV to file
+    if (!file.println(logLine))
+    {
+        file.close();
+        return false;
+    }
+    file.close();
+    return true;
+}
