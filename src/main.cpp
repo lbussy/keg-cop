@@ -94,7 +94,6 @@ void setup()
     startControl();     // Initialize temperature control
     doVersionPoll();    // Get server version at startup
     setupRPints();      // Set up MQTT
-    doUptime(true);     // Set up uptime data
 
     // Setup tickers
     pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors
@@ -104,7 +103,6 @@ void setup()
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);                 // Send KegScreen Temp Report
     sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport);   // Send Target Report
     rebootTimer.attach(86400, setDoReset);                                          // Reboot every 24 hours
-    saveRebootTime.attach(20, setDoSaveUptime);                                     // Set uptime data save
 
     if (!Log.getLevel())
         nullDoc("d");
