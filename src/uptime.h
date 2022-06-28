@@ -23,17 +23,7 @@ SOFTWARE. */
 #ifndef _UPTIME_H
 #define _UPTIME_H
 
-#include "config.h"
-#include "tools.h"
-#include "serialhandler.h"
-
 #include <Arduino.h>
-#include <ArduinoJson.h>
-#include <SPIFFS.h>
-#include <FS.h>
-
-#define CAP_SER_UPT 32
-#define CAP_DESER_UPT 96
 
 #define UPTIME_REFRESH 1
 
@@ -42,33 +32,8 @@ SOFTWARE. */
 #define MIN_MILLIS 60000
 #define SEC_MILLIS 1000
 
-#define UPTIME_FILE "/uptime.json"
-#define UPTIME_LOG "/uptime.csv"
-
-struct Uptime
-{
-    // Stores the uptime data
-    int64_t lastSecondsSinceBoot;
-    int64_t lastTimestamp;
-
-    void load(JsonObjectConst);
-    void save(JsonObject) const;
-};
-
-void doUptime(bool reboot = false);
-bool deleteUptimeFile();
-bool loadUptime();
-bool saveUptime();
-bool loadUptimeFile();
-bool saveUptimeFile();
-bool printUptime();
-bool printUptimeFile();
-bool serializeUptime(Print &);
-bool deserializeUptime(Stream &);
-
 void getNow();
 void setValues();
-
 const int uptimeDays(bool refr = false);
 const int uptimeHours(bool refr = false);
 const int uptimeMinutes(bool refr = false);

@@ -31,6 +31,7 @@ SOFTWARE. */
 #include "mdnshandler.h"
 #include "wifihandler.h"
 #include "uptime.h"
+#include "uptimelog.h"
 
 #include <SPIFFS.h>
 #include <AsyncWiFiManager.h>
