@@ -48,6 +48,7 @@ static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration funct
     handleControlPost,
     handleSensorPost,
     handleKegScreenPost,
+    handleTaplistIOPost,
     handleMQTTTargetPost,
     handleUrlTargetPost,
     handleCloudTargetPost};
@@ -56,6 +57,7 @@ static const char *cf_str[] = {
     "handleControlPost",
     "handleSensorPost",
     "handleKegScreenPost",
+    "handleTaplistIOPost",
     "handleMQTTTargetPost",
     "handleUrlTargetPost",
     "handleCloudTargetPost"};
@@ -1056,6 +1058,84 @@ HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL 
     }
 }
 
+HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *request) // Handle URL target
+{
+    bool didChange = false;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Taplist.io Venue
+            //
+            if (strcmp(name, "taplistio_venue") == 0) // Change Keg Screen hostname
+            {
+                didChange = true;
+                if ((strlen(value) > 1) && (strlen(value) < 256))
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    strlcpy(config.taplistio.venue, value, sizeof(config.taplistio.venue));
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(config.taplistio.venue, value, sizeof(config.taplistio.venue));
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+
+            // Taplist.io Secret
+            //
+            if (strcmp(name, "taplistio_secret") == 0) // Change Keg Screen hostname
+            {
+                didChange = true;
+                if ((strlen(value) > 7) && (strlen(value) < 256))
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    strlcpy(config.taplistio.secret, value, sizeof(config.taplistio.secret));
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(config.taplistio.secret, value, sizeof(config.taplistio.secret));
+                }
+                else
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+
+        }
+    }
+    if (saveConfig())
+    {
+        if (didChange)
+        {
+            return PROCESSED;
+        }
+        else
+        {
+            return NOT_PROCCESSED;
+        }
+    }
+    else
+    {
+        Log.error(F("Error: Unable to save Taplist.io configuration data." CR));
+        return FAIL_PROCESS;
+    }
+}
+
+
 HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
 {
     bool didChange = false;
@@ -1374,7 +1454,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 else
                 {
                     Log.notice(F("Settings update, processing [%s]:(%s)." CR), name, value);
-                    flow.taps[tapNum].taplabel = val;
+                    flow.taps[tapNum].label = val;
                 }
             }
             if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
@@ -1427,6 +1507,19 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 {
                     Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
                     flow.taps[tapNum].remaining = val;
+                }
+            }
+            if (strcmp(name, "taplistioTap") == 0) // Set Taplist.io Tap Number
+            {
+                const uint8_t val = atoi(value);
+                if ((val < 0) || (val > 255))
+                {
+                    Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings update, [%s]:(%s) applied." CR), name, value);
+                    flow.taps[tapNum].taplistioTap = val;
                 }
             }
             if (strcmp(name, "active") == 0) // Set active
