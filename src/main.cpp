@@ -92,7 +92,9 @@ void setup()
     startControl();     // Initialize temperature control
     doVersionPoll();    // Get server version at startup
     setupRPints();      // Set up MQTT
+#ifdef _DEBUG_BUILD
     doUptime(true);     // Uptime log start
+#endif
 
     // Setup tickers
     pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors
