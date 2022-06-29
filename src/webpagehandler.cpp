@@ -525,16 +525,16 @@ void setConfigurationPageHandlers()
     // Tap Handlers^
 }
 
-#ifdef SPIFFSEDIT
 void setEditor()
 {
+#ifdef SPIFFSEDIT
     // Setup FILESYSTEM editor
     server.addHandler(new SPIFFSEditor(FILESYSTEM, SPIFFSEDITUSER, SPIFFSEDITPW));
     server.on("/edit/", KC_HTTP_GET, [](AsyncWebServerRequest *request) {
         request->redirect("/edit");
     });
-}
 #endif
+}
 
 void stopWebServer()
 {
