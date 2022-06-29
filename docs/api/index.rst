@@ -360,7 +360,7 @@ GET
             "nodrd": false,
             "breweryname": "Silver Fox Brewery",
             "kegeratorname": "Keezer",
-            "controllernumber": 0,
+            "controlnum": 0,
             "serial": false,
             "imperial": true,
             "tapsolenoid": true
@@ -423,6 +423,7 @@ copconfig
 - ``hostname`` - A string representing a valid hostname (without the .local portion) between 3 and 32 characters.
 - ``breweryname`` - A string representing the brewery name, used to logically group multiple controllers and display the web page.
 - ``kegeratorname`` - A string representing the kegerator name, used to identify the controller and displayed within the web page display.
+- ``controlnum`` - A 1-based index of the controller sequence.  This should be unique in the brewery and will help identify the same tapid across multiple controllers.
 - ``imperial`` - A boolean representing imperial versus metric units to be used by the controller.  Changing this value will result in a conversion of all stored values to the target units.  Multiple toggles could result in accrued rounding errors and some loss of accuracy.
 - ``tapsolenoid`` - A simple control point intended to control a local solenoid by an upstream system or the web UI.
 
