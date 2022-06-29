@@ -39,7 +39,7 @@ void fsver()
     if (FILESYSTEM.begin())
     {
         // Loads the configuration from a file on FILESYSTEM
-        File file = FILESYSTEM.open(filename, "r");
+        File file = FILESYSTEM.open(filename,FILE_READ);
         if (FILESYSTEM.exists(filename) || !file)
         {
             // Deserialize version
