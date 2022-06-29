@@ -253,7 +253,7 @@ bool loadFlowFile()
         return false;
     }
     // Loads the configuration from a file on FILESYSTEM
-    File file = FILESYSTEM.open(flowfilename, "r");
+    File file = FILESYSTEM.open(flowfilename, FILE_READ);
     if (!FILESYSTEM.exists(flowfilename) || !file)
     {
         Log.warning(F("Warning: Flow json does not exist, generating new %s." CR), flowfilename);
@@ -279,7 +279,7 @@ bool loadFlowFile()
 bool saveFlowConfig()
 {
     // Saves the configuration to a file on FILESYSTEM
-    File file = FILESYSTEM.open(flowfilename, "w");
+    File file = FILESYSTEM.open(flowfilename,FILE_WRITE);
     if (!file)
     {
         file.close();
@@ -333,7 +333,7 @@ bool serializeFlowConfig(Print &dst)
 bool printFlowFile()
 {
     // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(flowfilename, "r");
+    File file = FILESYSTEM.open(flowfilename,FILE_READ);
     if (!file)
         return false;
 
