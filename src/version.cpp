@@ -31,6 +31,7 @@ const char *fs_version() { fsver(); return (fs_ver); }
 const char *branch() { return stringify(PIO_SRC_BRH); }
 const char *build() { return stringify(PIO_SRC_REV); }
 const char *board() { return stringify(PIO_BOARD); }
+const char *build_mode() { return stringify(BUILD_TYPE); }
 
 void fsver()
 {

@@ -61,7 +61,7 @@ bool sendTapInfoReport(int tapid)
     ReportKey reportkey = KS_TAPINFO;
     if (tapid >= 0 && tapid <= NUMTAPS)
     {
-        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
+        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
         {
             TapInfo tap;
             strlcpy(tap.api, API_KEY, sizeof(tap.api));
@@ -110,7 +110,7 @@ bool sendTapInfoReport(int tapid)
         }
         else
         {
-            Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+            Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
             retval = false;
         }
     }
@@ -128,7 +128,7 @@ bool sendPourReport(int tapid, float dispensed)
     ReportKey reportkey = KS_POURREPORT;
     if (tapid >= 0 && tapid <= NUMTAPS)
     {
-        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
+        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
         {
             PourInfo pour;
             strlcpy(pour.api, API_KEY, sizeof(pour.api));
@@ -169,7 +169,7 @@ bool sendPourReport(int tapid, float dispensed)
         }
         else
         {
-            Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+            Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
             retval = false;
         }
     }
@@ -187,7 +187,7 @@ bool sendKickReport(int tapid)
     ReportKey reportkey = KS_KICKREPORT;
     if (tapid >= 0 && tapid <= NUMTAPS)
     {
-        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
+        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
         {
             KickReport kick;
             strlcpy(kick.api, API_KEY, sizeof(kick.api));
@@ -222,7 +222,7 @@ bool sendKickReport(int tapid)
         }
         else
         {
-            Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+            Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
             retval = false;
         }
     }
@@ -238,7 +238,7 @@ bool sendCoolStateReport()
 { // Send cooling status when a cooling state changes
     bool retval = true;
     ReportKey reportkey = KS_COOLSTATE;
-    if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
+    if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
     {
         CoolState cool;
         strlcpy(cool.api, API_KEY, sizeof(cool.api));
@@ -273,7 +273,7 @@ bool sendCoolStateReport()
     }
     else
     {
-        Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+        Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
         retval = false;
     }
     return retval;
@@ -283,7 +283,7 @@ bool sendTempReport()
 { // Send a temp report on timer
     bool retval = true;
     ReportKey reportkey = KS_TEMPREPORT;
-    if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If Keg Screen is enabled
+    if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
     {
         TempReport temps;
         strlcpy(temps.api, API_KEY, sizeof(temps.api));
@@ -349,14 +349,14 @@ bool sendTempReport()
     }
     else
     {
-        Log.verbose(F("Keg Screen reporting not enabled, skipping." CR));
+        Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
         retval = false;
     }
     return retval;
 }
 
 bool sendReport(ReportKey thisKey, const String &json)
-{ // Handle sending all Keg Screen reports
+{ // Handle sending all KegScreen reports
     if (reports[thisKey].readyState() == 0 || reports[thisKey].readyState() == 4)
     {
         reported[thisKey] = false;

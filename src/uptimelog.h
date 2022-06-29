@@ -20,28 +20,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _VERSION_H
-#define _VERSION_H
+#ifndef _UPTIMELOG_H
+#define _UPTIMELOG_H
 
 #include "config.h"
-#include "ArduinoLog.h"
+#include "tools.h"
+#include "serialhandler.h"
+
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <SPIFFS.h>
 #include <FS.h>
+#include <Ticker.h>
 
-#define stringify(s) _stringifyDo(s)
-#define _stringifyDo(s) #s
+#define CAP_SER_UPT 32
+#define CAP_DESER_UPT 96
 
-const char *project();
-const char *fw_version();
-const char *fs_version();
-void fsver();
-const char *branch();
-const char *build();
-const char *board();
-const char *build_mode();
+#define UPTIME_FILE "/uptime.json"
+#define UPTIME_LOG "/uptime.csv"
 
-int versionCompare(String, String);
+struct Uptime
+{
+    // Stores the uptime data
+    int64_t lastSecondsSinceBoot;
+    int64_t lastTimestamp;
 
-#endif // _VERSION_H
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+void doUptime(bool reboot = false);
+bool deleteUptimeFile();
+bool loadUptime();
+bool saveUptime();
+bool loadUptimeFile();
+bool saveUptimeFile();
+bool printUptime();
+bool printUptimeFile();
+bool serializeUptime(Print &);
+bool deserializeUptime(Stream &);
+bool writeLog(char * logLine);
+
+#endif // _UPTIMELOG_H

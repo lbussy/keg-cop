@@ -50,6 +50,11 @@ SOFTWARE. */
 // Uncomment #define for logging level desired.
 //
 #ifndef LOG_LEVEL
+#ifdef _DEBUG_BUILD
+#define LOG_LEVEL LOG_LEVEL_VERBOSE       // All
+#else
+#define LOG_LEVEL LOG_LEVEL_NOTICE        // Errors, warnings and notices
+#endif
 // #define DISABLE_LOGGING
 // #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
 // #define LOG_LEVEL LOG_LEVEL_FATAL      // Fatal errors
@@ -57,7 +62,7 @@ SOFTWARE. */
 // #define LOG_LEVEL LOG_LEVEL_WARNING    // Errors, and warnings
 // #define LOG_LEVEL LOG_LEVEL_NOTICE     // Errors, warnings and notices
 // #define LOG_LEVEL LOG_LEVEL_TRACE      // Errors, warnings, notices & traces
-#define LOG_LEVEL LOG_LEVEL_VERBOSE     // All
+// #define LOG_LEVEL LOG_LEVEL_VERBOSE     // All
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -81,7 +86,9 @@ SOFTWARE. */
 // Echo all serial output to telnet
 //
 #ifndef DOTELNET
+#ifdef _DEBUG_BUILD // Only enable Telnet on debug builds
 #define DOTELNET true
+#endif
 #endif
 //
 #if DOTELNET == true
@@ -127,7 +134,9 @@ SOFTWARE. */
 // Use FILESYSTEM Editor
 //
 #ifndef SPIFFSEDIT
+#ifdef _DEBUG_BUILD
 #define SPIFFSEDIT
+#endif
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -524,7 +533,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Frequency at which temp reports are sent to Keg Screen (when configured)
+// Frequency at which temp reports are sent to KegScreen (when configured)
 //
 #ifndef KSTEMPREPORT
 #define KSTEMPREPORT 60

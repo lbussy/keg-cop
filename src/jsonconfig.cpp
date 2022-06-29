@@ -611,7 +611,7 @@ void KegScreen::save(JsonObject obj) const
 
 void KegScreen::load(JsonObjectConst obj)
 {
-    // Load Keg Screen configuration
+    // Load KegScreen configuration
     //
     if (obj["url"].isNull())
     {
@@ -803,7 +803,7 @@ void Config::save(JsonObject obj) const
     ota.save(obj.createNestedObject("ota"));
     // Add Calibration object
     temps.save(obj.createNestedObject("temps"));
-    // Add Keg Screen object
+    // Add KegScreen object
     kegscreen.save(obj.createNestedObject("kegscreen"));
     // Add TaplistIO object
     taplistio.save(obj.createNestedObject("taplistio"));

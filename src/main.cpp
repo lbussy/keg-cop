@@ -75,7 +75,6 @@ void setup()
 
     // Set pin for relay
     pinMode(COOL, OUTPUT);
-    // digitalWrite(COOL, HIGH);
     digitalWrite(COOL, (config.temps.coolonhigh)? LOW: HIGH);
 
     setClock(); // Set NTP Time
@@ -93,15 +92,18 @@ void setup()
     startControl();     // Initialize temperature control
     doVersionPoll();    // Get server version at startup
     setupRPints();      // Set up MQTT
+#ifdef _DEBUG_BUILD
+    doUptime(true);     // Uptime log start
+#endif
 
     // Setup tickers
     pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors
     doControlTicker.attach(TEMPLOOP, controlLoop);                                  // Update temperature control loop
     logPourTicker.attach(TAPLOOP, logFlow);                                         // Log pours
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                  // Poll for server version
-    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);                 // Send Keg Screen Temp Report
+    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);                 // Send KegScreen Temp Report
     sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport);   // Send Target Report
-    rebootTimer.attach(86400 , setDoReset);                                         // Reboot every 24 hours
+    rebootTimer.attach(86400, setDoReset);                                          // Reboot every 24 hours
 
     if (!Log.getLevel())
         nullDoc("d");
