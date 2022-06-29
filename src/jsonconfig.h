@@ -87,8 +87,10 @@ struct KegScreen
 struct TaplistIO
 {
     // Stores TaplistIO configuration
-    char venue[25];
-    char secret[57];
+    char venue[256];
+    char secret[256];
+    
+    // Note - TaplistIO pin numbers are stored on Taps (see: flowmeter.h)
     bool update;
 
     void load(JsonObjectConst);
