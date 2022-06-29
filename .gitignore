@@ -6,7 +6,6 @@
 *.code-workspace
 *.log
 rpints-arduino/
-*.DS_Store
 
 # Documentation working files
 docs/_build/
