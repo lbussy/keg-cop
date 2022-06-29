@@ -1016,9 +1016,9 @@ HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL 
             const char *value = p->value().c_str();
             Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
-            // Keg Screen url settings
+            // KegScreen url settings
             //
-            if (strcmp(name, "kegscreen") == 0) // Change Keg Screen hostname
+            if (strcmp(name, "kegscreen") == 0) // Change KegScreen hostname
             {
                 didChange = true;
                 if ((strlen(value) > 3) && (strlen(value) < 128))
@@ -1051,7 +1051,7 @@ HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL 
     }
     else
     {
-        Log.error(F("Error: Unable to save Keg Screen configuration data." CR));
+        Log.error(F("Error: Unable to save KegScreen configuration data." CR));
         return FAIL_PROCESS;
     }
 }

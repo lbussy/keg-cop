@@ -539,7 +539,7 @@ function processSensorControlPost(url, obj) {
 }
 
 function processKegScreenPost(url, obj) {
-    // Handle Keg Screen Name
+    // Handle KegScreen Name
 
     // Get form data
     var $form = $(obj),

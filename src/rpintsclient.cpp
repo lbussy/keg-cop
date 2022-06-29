@@ -24,6 +24,7 @@ SOFTWARE. */
 
 AsyncMqttClient rpintsClient;
 Ticker rpintsReconnectTimer;
+int cycleCount;
 
 void setupRPints()
 {
@@ -32,6 +33,7 @@ void setupRPints()
     rpintsClient.onDisconnect(onRPintsDisconnect);
     rpintsClient.onPublish(onRPintsPublish);
     rpintsReconnectTimer.attach(5, setDoRPintsConnect);
+    cycleCount = 10;
 }
 
 void connectRPints()
@@ -79,7 +81,11 @@ void connectRPints()
     }
     else
     {
-        Log.verbose(F("MQTT: No broker configured." CR));
+        if ( cycleCount >= 10 )
+        {
+            cycleCount = 0;
+            Log.verbose(F("MQTT: No broker configured." CR));
+        }
     }
 }
 
