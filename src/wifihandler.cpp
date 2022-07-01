@@ -63,7 +63,7 @@ void doWiFi(bool dontUseStoredCreds)
     // wm.setCustomHeadElement("<style>html{filter: invert(100%); -webkit-filter: invert(100%);}</style>");
     // wm.setClass(F("invert"));   // Set dark theme
 
-    wm.setCountry(WIFI_COUNTRY);    // Setting wifi country seems to improve OSX soft ap connectivity
+    // wm.setCountry(WIFI_COUNTRY);    // Setting wifi country seems to improve OSX soft ap connectivity (TODO: crashes now)
     wm.setWiFiAPChannel(WIFI_CHAN); // Set WiFi channel
 
     wm.setShowStaticFields(true); // Force show static ip fields

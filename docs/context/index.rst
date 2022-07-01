@@ -19,6 +19,7 @@ The following are links to context help for the web pages controlling the Keg Co
     settings/targets/kegscreen/index
     settings/targets/url/index
     settings/targets/rpints/index
+    settings/targets/taplistio/index
     settings/advanced/calibrate/index
     settings/advanced/reset/index
     settings/advanced/update/index

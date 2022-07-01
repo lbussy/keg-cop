@@ -55,7 +55,7 @@ bool loadFile()
         return false;
     }
     // Loads the configuration from a file on FILESYSTEM
-    File file = FILESYSTEM.open(filename, "r");
+    File file = FILESYSTEM.open(filename,FILE_READ);
     if (!FILESYSTEM.exists(filename) || !file)
     {
         // File does not exist or unable to read file
@@ -85,7 +85,7 @@ bool saveConfig()
 bool saveFile()
 {
     // Saves the configuration to a file on FILESYSTEM
-    File file = FILESYSTEM.open(filename, "w");
+    File file = FILESYSTEM.open(filename,FILE_WRITE);
     if (!file)
     {
         file.close();
@@ -140,7 +140,7 @@ bool serializeConfig(Print &dst)
 bool printFile()
 {
     // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(filename, "r");
+    File file = FILESYSTEM.open(filename,FILE_READ);
     if (!file)
         return false;
 
