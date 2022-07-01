@@ -136,7 +136,7 @@ bool loadUptimeFile()
         return false;
     }
     // Loads uptime information from a file on FILESYSTEM
-    File file = FILESYSTEM.open(uptimefile, "r");
+    File file = FILESYSTEM.open(uptimefile,FILE_READ);
     if (!FILESYSTEM.exists(uptimefile) || !file)
     {
         // File does not exist or unable to read file
@@ -166,7 +166,7 @@ bool saveUptime()
 bool saveUptimeFile()
 {
     // Saves the uptime information to a file on FILESYSTEM
-    File file = FILESYSTEM.open(uptimefile, "w");
+    File file = FILESYSTEM.open(uptimefile,FILE_WRITE);
     if (!file)
     {
         file.close();
@@ -221,7 +221,7 @@ bool serializeUptime(Print &dst)
 bool printUptimeFile()
 {
     // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(uptimefile, "r");
+    File file = FILESYSTEM.open(uptimefile,FILE_READ);
     if (!file)
         return false;
 

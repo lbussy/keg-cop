@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "tools.h"
+#include "taplistio.h"
 
 float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
 unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pours
@@ -106,6 +107,7 @@ void tickerLoop()
         {
             sendPulsesRPints(i, queuePulseReport[i]);
             sendPourReport(i, queuePourReport[i]);
+            send_to_taplistio(i);
             queuePourReport[i] = 0;
             queuePulseReport[i] = 0;
         }

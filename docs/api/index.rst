@@ -397,6 +397,11 @@ GET
             "topic": "kegcop",
             "update": false
         },
+        "taplistio": {
+            "venue": "taplist-12345",
+            "secret":"secret-abcdefghijk",
+            "update":false
+        },
         "urltarget": {
             "url": "http://mule.local",
             "freq": 30,
@@ -458,6 +463,12 @@ rpintstarget
 - ``rpintspassword`` - The MQTT password, blank if not used.
 - ``rpintstopic`` - The MQTT topic.
 
+taplistio
+""""""""""""""
+
+- ``taplistio_venue`` - The taplist.io venue name.
+- ``taplistio_secret`` - The taplist.io API secret key.
+
 urltarget
 """""""""""
 
@@ -492,6 +503,7 @@ GET
                 "name": "Pudswiller Doors",
                 "capacity": 5,
                 "remaining": 4.2,
+                "taplistioTap": 1,
                 "active": true,
                 "calibrating": false
             },
@@ -503,6 +515,7 @@ GET
                 "name": "Bug's House Ale",
                 "capacity": 5,
                 "remaining": 3.3,
+                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
@@ -514,6 +527,7 @@ GET
                 "name": "Navelgazer IPA",
                 "capacity": 5,
                 "remaining": 1.5,
+                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
@@ -525,6 +539,7 @@ GET
                 "name": "Tanked 7",
                 "capacity": 5,
                 "remaining": 2.2,
+                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
@@ -536,6 +551,7 @@ GET
                 "name": "Ringaling Lager",
                 "capacity": 15.5,
                 "remaining": 13.1,
+                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
@@ -547,6 +563,7 @@ GET
                 "name": "Peter Skee",
                 "capacity": 5,
                 "remaining": 4.1,
+                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
@@ -558,6 +575,7 @@ GET
                 "name": "Undead Guy",
                 "capacity": 5,
                 "remaining": 3.9,
+                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
@@ -569,6 +587,7 @@ GET
                 "name": "Who's Garden",
                 "capacity": 5,
                 "remaining": 1.2,
+                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
@@ -580,6 +599,7 @@ GET
                 "name": "Mystery Mead",
                 "capacity": 5,
                 "remaining": 3.7,
+                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             }
