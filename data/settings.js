@@ -9,6 +9,7 @@ var originalHostnameConfig;
 var imperial;
 var hashLoc;
 var posted = false;
+var taplistio = false;
 
 // Tab tracking
 var previousTab = "";
@@ -79,7 +80,7 @@ function loadHash() { // Link to tab via hash value
 }
 
 function populateFlow(callback = null) { // Get flowmeter settings
-    var url = "/api/v1/config/taps/";
+    var url = thisHost + "api/v1/config/taps";
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -88,11 +89,11 @@ function populateFlow(callback = null) { // Get flowmeter settings
             try {
                 for (var i = 0; i < numTaps; i++) {
                     $('input[name="tap' + i + 'label"]').val(parseInt(flow.taps[i].taplabel), 10);
+                    $('input[name="tap' + i + 'taplistioTap"]').val(parseInt(flow.taps[i].taplistioTap), 10);
                     $('input[name="tap' + i + 'ppu"]').val(parseInt(flow.taps[i].ppu), 10);
                     $('input[name="tap' + i + 'bevname"]').val(flow.taps[i].name);
                     $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity).toFixed(4));
                     $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.taps[i].remaining).toFixed(4));
-                    $('input[name="tap' + i + 'taplistioTap"]').val(parseInt(flow.taps[i].taplistioTap), 10);
                     if (flow.taps[i].active) {
                         $('input[name="tap' + i + 'active"]')[0].checked = true;
                     } else {
@@ -123,7 +124,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
-    var url = "/api/v1/config/settings/";
+    var url = thisHost + "api/v1/config/settings";
     var config = $.getJSON(url, function () {
         configAlert.warning()
     })
@@ -198,6 +199,11 @@ function populateConfig(callback = null) { // Get configuration settings
 
                 $('input[name="taplistio_venue"]').val(config.taplistio_venue.url);
                 $('input[name="taplistio_secret"]').val(config.taplistio_secret.url);
+                if (config.taplistio_secret.url) {
+                    taplistio = true;
+                } else {
+                    taplistio = false
+                }
 
                 $('input[name="rpintshost"]').val(config.rpintstarget.host);
                 $('input[name="rpintsport"]').val(parseInt(config.rpintstarget.port, 10));
@@ -233,7 +239,7 @@ function populateConfig(callback = null) { // Get configuration settings
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = "/api/v1/info/sensors/";
+    var url = thisHost + "api/v1/info/sensors";
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
@@ -324,6 +330,17 @@ function pollComplete() { // Poll to see if entire page is loaded
 
 function finishPage() { // Display page
     toggleLoader("off");
+    var display = "none";
+    if (taplistio) {
+        display = "block"
+    } else {
+        display = "none"
+    }
+    for (var i = 0; i < numTaps; i++) {
+        var element = document.getElementById('taplist.io_' + i);
+        // TODO: Show/hide <div class="form-group row" id="taplist.io_0" style="display: block;">
+        element.style.display = display;
+    }
 }
 
 // PUT Handlers:
@@ -483,7 +500,7 @@ function processControllerPost(url, obj) {
         if (hostnamechanged && reloadpage) {
             var protocol = window.location.protocol;
             var path = window.location.pathname;
-            var newpage = protocol + "//" + hostnameVal + ".local" + path + hashLoc;
+            var newpage = protocol + "" + hostnameVal + ".local" + path + hashLoc;
             putData(url, data, newpage);
         } else if (unitschanged) {
             putData(url, data, false, true);
@@ -665,28 +682,28 @@ function updateHelp(hashLoc) {
         case "#tap6":
         case "#tap7":
         case "#tap8":
-            url = url + "/en/latest/context/settings/taps/index.html";
+            url = url + "en/latest/context/settings/taps/index.html";
             break;
         case "#tempcontrol":
-            url = url + "/en/latest/context/settings/temperature/control/index.html";
+            url = url + "en/latest/context/settings/temperature/control/index.html";
             break;
         case "#sensorcontrol":
-            url = url + "/en/latest/context/settings/temperature/sensors/index.html";
+            url = url + "en/latest/context/settings/temperature/sensors/index.html";
             break;
         case "#kegscreen":
-            url = url + "/en/latest/context/settings/targets/kegscreen/index.html";
+            url = url + "en/latest/context/settings/targets/kegscreen/index.html";
             break;
         case "#targeturl":
-            url = url + "/en/latest/context/settings/targets/url/index.html";
+            url = url + "en/latest/context/settings/targets/url/index.html";
             break;
         case "#rpints":
-            url = url + "/en/latest/context/settings/targets/rpints/index.html";
+            url = url + "en/latest/context/settings/targets/rpints/index.html";
             break;
         case "#controller":
-            url = url + "/en/latest/context/settings/controller/index.html";
+            url = url + "en/latest/context/settings/controller/index.html";
             break;
         case "#flowcal":
-            url = url + "/en/latest/context/settings/advanced/calibrate/index.html";
+            url = url + "en/latest/context/settings/advanced/calibrate/index.html";
             break;
         default:
             // Unknown hash location passed
