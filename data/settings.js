@@ -332,7 +332,6 @@ function finishPage() { // Display page
 
 function processPost(obj) {
     posted = false;
-    event.preventDefault();
     hashLoc = window.location.hash;
     var $form = $(obj);
     url = $form.attr("action");
@@ -398,6 +397,7 @@ function processPost(obj) {
             break;
     }
     buttonClearDelay();
+    return false; // Prevent default event
 }
 
 function processTapPost(url, obj, tapNum) {
