@@ -9,7 +9,7 @@ var originalHostnameConfig;
 var imperial;
 var hashLoc;
 var posted = false;
-var taplistio = false;
+var numTaps = 0;
 
 // Tab tracking
 var previousTab = "";
@@ -85,7 +85,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
         flowAlert.warning();
     })
         .done(function (flow) {
-            var numTaps = flow["taps"].length;
+            numTaps = flow["taps"].length;
             try {
                 for (var i = 0; i < numTaps; i++) {
                     $('input[name="tap' + i + 'label"]').val(parseInt(flow.taps[i].taplabel), 10);
@@ -197,13 +197,8 @@ function populateConfig(callback = null) { // Get configuration settings
 
                 $('input[name="kegscreen"]').val(config.kegscreen.url);
 
-                $('input[name="taplistio_venue"]').val(config.taplistio_venue.url);
-                $('input[name="taplistio_secret"]').val(config.taplistio_secret.url);
-                if (config.taplistio_secret.url) {
-                    taplistio = true;
-                } else {
-                    taplistio = false
-                }
+                $('input[name="taplistio_venue"]').val(config.taplistio.venue);
+                $('input[name="taplistio_secret"]').val(config.taplistio.secret);
 
                 $('input[name="rpintshost"]').val(config.rpintstarget.host);
                 $('input[name="rpintsport"]').val(parseInt(config.rpintstarget.port, 10));
@@ -329,18 +324,8 @@ function pollComplete() { // Poll to see if entire page is loaded
 }
 
 function finishPage() { // Display page
+    toggleTIO();
     toggleLoader("off");
-    var display = "none";
-    if (taplistio) {
-        display = "block"
-    } else {
-        display = "none"
-    }
-    for (var i = 0; i < numTaps; i++) {
-        var element = document.getElementById('taplist.io_' + i);
-        // TODO: Show/hide <div class="form-group row" id="taplist.io_0" style="display: block;">
-        element.style.display = display;
-    }
 }
 
 // PUT Handlers:
@@ -417,6 +402,7 @@ function processPost(obj) {
 
 function processTapPost(url, obj, tapNum) {
     // Handle tap posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -444,6 +430,7 @@ function processTapPost(url, obj, tapNum) {
 
 function processControllerPost(url, obj) {
     // Handle controller posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -514,6 +501,7 @@ function processControllerPost(url, obj) {
 
 function processTempControlPost(url, obj) {
     // Handle temperature control posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -534,6 +522,7 @@ function processTempControlPost(url, obj) {
 
 function processSensorControlPost(url, obj) {
     // Handle sensor control posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -566,6 +555,7 @@ function processSensorControlPost(url, obj) {
 
 function processKegScreenPost(url, obj) {
     // Handle KegScreen Name
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -580,22 +570,24 @@ function processKegScreenPost(url, obj) {
 
 function processTaplistIOPost(url, obj) {
     // Handle Keg Screen Name
+    var data = {};
 
     // Get form data
     var $form = $(obj),
-    taplistio_venue = $form.find("input[name='taplistio_venue']").val(),
-    taplistio_secret = $form.find("input[name='taplistio_secret']").val(),
+        taplistio_venue = $form.find("input[name='taplistio_venue']").val(),
+        taplistio_secret = $form.find("input[name='taplistio_secret']").val(),
 
-    // Process put
-    data = {
-        taplistio_venue: taplistio_venue,
-        taplistio_secret: taplistio_secret
-    };
+        // Process put
+        data = {
+            taplistio_venue: taplistio_venue,
+            taplistio_secret: taplistio_secret
+        };
     putData(url, data);
 }
 
 function processTargetUrlPost(url, obj) {
     // Handle target URL posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -612,6 +604,7 @@ function processTargetUrlPost(url, obj) {
 
 function processRPintsPost(url, obj) {
     // Handle target URL posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -662,6 +655,7 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
     if (posted) {
         $("button[id='submitSettings']").prop('disabled', false);
         $("button[id='submitSettings']").html('Update');
+        toggleTIO();
         posted = false;
     } else {
         setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
@@ -710,4 +704,22 @@ function updateHelp(hashLoc) {
             break;
     }
     $("#contexthelp").prop("href", url)
+}
+
+function toggleTIO()
+{
+    var display = "none";
+
+    var tempVenue = $('input[name="taplistio_venue"]').val();
+    var tempSecret = $('input[name="taplistio_venue"]').val();
+
+    if (tempVenue && tempSecret) {
+        display = "block";
+    } else {
+        display = "none";
+    }
+
+    for (var i = 0; i < numTaps; i++) { // Show/hide Taplist.io tap number
+        document.getElementById('taplist.io_' + i).style.display = display;
+    }
 }
