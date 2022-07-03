@@ -9,6 +9,7 @@ var originalHostnameConfig;
 var imperial;
 var hashLoc;
 var posted = false;
+var numTaps = 0;
 
 // Tab tracking
 var previousTab = "";
@@ -79,20 +80,20 @@ function loadHash() { // Link to tab via hash value
 }
 
 function populateFlow(callback = null) { // Get flowmeter settings
-    var url = "/api/v1/config/taps/";
+    var url = thisHost + "api/v1/config/taps";
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
         .done(function (flow) {
-            var numTaps = flow["taps"].length;
+            numTaps = flow["taps"].length;
             try {
                 for (var i = 0; i < numTaps; i++) {
                     $('input[name="tap' + i + 'label"]').val(parseInt(flow.taps[i].taplabel), 10);
+                    $('input[name="tap' + i + 'taplistioTap"]').val(parseInt(flow.taps[i].taplistioTap), 10);
                     $('input[name="tap' + i + 'ppu"]').val(parseInt(flow.taps[i].ppu), 10);
                     $('input[name="tap' + i + 'bevname"]').val(flow.taps[i].name);
                     $('input[name="tap' + i + 'cap"]').val(parseFloat(flow.taps[i].capacity).toFixed(4));
                     $('input[name="tap' + i + 'remain"]').val(parseFloat(flow.taps[i].remaining).toFixed(4));
-                    $('input[name="tap' + i + 'taplistioTap"]').val(parseInt(flow.taps[i].taplistioTap), 10);
                     if (flow.taps[i].active) {
                         $('input[name="tap' + i + 'active"]')[0].checked = true;
                     } else {
@@ -123,7 +124,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
-    var url = "/api/v1/config/settings/";
+    var url = thisHost + "api/v1/config/settings";
     var config = $.getJSON(url, function () {
         configAlert.warning()
     })
@@ -196,8 +197,8 @@ function populateConfig(callback = null) { // Get configuration settings
 
                 $('input[name="kegscreen"]').val(config.kegscreen.url);
 
-                $('input[name="taplistio_venue"]').val(config.taplistio_venue.url);
-                $('input[name="taplistio_secret"]').val(config.taplistio_secret.url);
+                $('input[name="taplistio_venue"]').val(config.taplistio.venue);
+                $('input[name="taplistio_secret"]').val(config.taplistio.secret);
 
                 $('input[name="rpintshost"]').val(config.rpintstarget.host);
                 $('input[name="rpintsport"]').val(parseInt(config.rpintstarget.port, 10));
@@ -233,7 +234,7 @@ function populateConfig(callback = null) { // Get configuration settings
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = "/api/v1/info/sensors/";
+    var url = thisHost + "api/v1/info/sensors";
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
@@ -323,6 +324,7 @@ function pollComplete() { // Poll to see if entire page is loaded
 }
 
 function finishPage() { // Display page
+    toggleTIO();
     toggleLoader("off");
 }
 
@@ -400,6 +402,7 @@ function processPost(obj) {
 
 function processTapPost(url, obj, tapNum) {
     // Handle tap posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -427,6 +430,7 @@ function processTapPost(url, obj, tapNum) {
 
 function processControllerPost(url, obj) {
     // Handle controller posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -483,7 +487,7 @@ function processControllerPost(url, obj) {
         if (hostnamechanged && reloadpage) {
             var protocol = window.location.protocol;
             var path = window.location.pathname;
-            var newpage = protocol + "//" + hostnameVal + ".local" + path + hashLoc;
+            var newpage = protocol + "" + hostnameVal + ".local" + path + hashLoc;
             putData(url, data, newpage);
         } else if (unitschanged) {
             putData(url, data, false, true);
@@ -497,6 +501,7 @@ function processControllerPost(url, obj) {
 
 function processTempControlPost(url, obj) {
     // Handle temperature control posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -517,6 +522,7 @@ function processTempControlPost(url, obj) {
 
 function processSensorControlPost(url, obj) {
     // Handle sensor control posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -549,6 +555,7 @@ function processSensorControlPost(url, obj) {
 
 function processKegScreenPost(url, obj) {
     // Handle KegScreen Name
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -563,22 +570,24 @@ function processKegScreenPost(url, obj) {
 
 function processTaplistIOPost(url, obj) {
     // Handle Keg Screen Name
+    var data = {};
 
     // Get form data
     var $form = $(obj),
-    taplistio_venue = $form.find("input[name='taplistio_venue']").val(),
-    taplistio_secret = $form.find("input[name='taplistio_secret']").val(),
+        taplistio_venue = $form.find("input[name='taplistio_venue']").val(),
+        taplistio_secret = $form.find("input[name='taplistio_secret']").val(),
 
-    // Process put
-    data = {
-        taplistio_venue: taplistio_venue,
-        taplistio_secret: taplistio_secret
-    };
+        // Process put
+        data = {
+            taplistio_venue: taplistio_venue,
+            taplistio_secret: taplistio_secret
+        };
     putData(url, data);
 }
 
 function processTargetUrlPost(url, obj) {
     // Handle target URL posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -595,6 +604,7 @@ function processTargetUrlPost(url, obj) {
 
 function processRPintsPost(url, obj) {
     // Handle target URL posts
+    var data = {};
 
     // Get form data
     var $form = $(obj),
@@ -645,6 +655,7 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
     if (posted) {
         $("button[id='submitSettings']").prop('disabled', false);
         $("button[id='submitSettings']").html('Update');
+        toggleTIO();
         posted = false;
     } else {
         setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
@@ -665,32 +676,50 @@ function updateHelp(hashLoc) {
         case "#tap6":
         case "#tap7":
         case "#tap8":
-            url = url + "/en/latest/context/settings/taps/index.html";
+            url = url + "en/latest/context/settings/taps/index.html";
             break;
         case "#tempcontrol":
-            url = url + "/en/latest/context/settings/temperature/control/index.html";
+            url = url + "en/latest/context/settings/temperature/control/index.html";
             break;
         case "#sensorcontrol":
-            url = url + "/en/latest/context/settings/temperature/sensors/index.html";
+            url = url + "en/latest/context/settings/temperature/sensors/index.html";
             break;
         case "#kegscreen":
-            url = url + "/en/latest/context/settings/targets/kegscreen/index.html";
+            url = url + "en/latest/context/settings/targets/kegscreen/index.html";
             break;
         case "#targeturl":
-            url = url + "/en/latest/context/settings/targets/url/index.html";
+            url = url + "en/latest/context/settings/targets/url/index.html";
             break;
         case "#rpints":
-            url = url + "/en/latest/context/settings/targets/rpints/index.html";
+            url = url + "en/latest/context/settings/targets/rpints/index.html";
             break;
         case "#controller":
-            url = url + "/en/latest/context/settings/controller/index.html";
+            url = url + "en/latest/context/settings/controller/index.html";
             break;
         case "#flowcal":
-            url = url + "/en/latest/context/settings/advanced/calibrate/index.html";
+            url = url + "en/latest/context/settings/advanced/calibrate/index.html";
             break;
         default:
             // Unknown hash location passed
             break;
     }
     $("#contexthelp").prop("href", url)
+}
+
+function toggleTIO()
+{
+    var display = "none";
+
+    var tempVenue = $('input[name="taplistio_venue"]').val();
+    var tempSecret = $('input[name="taplistio_venue"]').val();
+
+    if (tempVenue && tempSecret) {
+        display = "block";
+    } else {
+        display = "none";
+    }
+
+    for (var i = 0; i < numTaps; i++) { // Show/hide Taplist.io tap number
+        document.getElementById('taplist.io_' + i).style.display = display;
+    }
 }

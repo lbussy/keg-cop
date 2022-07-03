@@ -11,7 +11,7 @@
 
     <title>Keg Cop</title>
 
-    <link rel="canonical" href="https://www.kegcop.com/">
+    <link rel="canonical" href="https://www.kegcop.com">
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -23,9 +23,10 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="/common.css">
-    <link rel="stylesheet" href="/loader.css">
-    <script src="/loader.js"></script>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="loader.css">
+    <script src="devServer.js"></script>
+    <script src="loader.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -34,7 +35,7 @@
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="">
                 <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
@@ -45,19 +46,19 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="">Home</a>
                     </li>
                     <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
-                        <a class="nav-link" href="/temps/">Temperatures</a>
+                        <a class="nav-link" href="temps">Temperatures</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/settings/">Settings <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="settings">Settings <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/help/">Help</a>
+                        <a class="nav-link" href="help">Help</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about/">About</a>
+                        <a class="nav-link" href="about">About</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -125,7 +126,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#flowcal">Calibrate Flowmeters</a>
                             <a class="dropdown-item" data-toggle="tab" href="#reset">Reset Controller</a>
-                            <a class="dropdown-item" href="/ota1/">Update Application</a>
+                            <a class="dropdown-item" href="ota1">Update Application</a>
                             <a class="dropdown-item" data-toggle="tab" href="#wifi">Reset WiFi</a>
                         </div>
                     </li>
@@ -153,7 +154,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap0" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap0" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="0">
 
@@ -165,6 +166,20 @@
                                     <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap0label" id="tap0label"
                                             min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <div id="taplist.io_0" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap0taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to which this tap will link. Set to 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap0taplistioTap"
+                                                id="tap0taplistioTap" min="0" max="255" step="1" placeholder="0" required>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -215,18 +230,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="tap0taplistioTap" class="col-sm-3 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
-                                        Taplist.io Tap Number
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="tap0taplistioTap"
-                                            id="tap0taplistioTap" min="0" max="255" step="1" placeholder="0" required>
-                                    </div>
-                                </div>
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-4">
@@ -272,7 +275,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap1" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap1" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="1">
 
@@ -284,6 +287,18 @@
                                     <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap1label" id="tap1label"
                                             min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" id="taplist.io_1" style="display: none;">
+                                    <label for="tap1taplistioTap" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                        Taplist.io Tap Number
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap1taplistioTap"
+                                            id="tap1taplistioTap" min="0" max="255" step="1" placeholder="0" required>
                                     </div>
                                 </div>
 
@@ -334,18 +349,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="tap1taplistioTap" class="col-sm-3 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
-                                        Taplist.io Tap Number
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="tap1taplistioTap"
-                                            id="tap1taplistioTap" min="0" max="255" step="1" placeholder="0" required>
-                                    </div>
-                                </div>
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-4">
@@ -391,7 +394,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap2" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap2" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="2">
 
@@ -403,6 +406,18 @@
                                     <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap2label" id="tap2label"
                                             min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" id="taplist.io_2" style="display: none;">
+                                    <label for="tap2taplistioTap" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                        Taplist.io Tap Number
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap2taplistioTap"
+                                            id="tap2taplistioTap" min="0" max="255" step="1" placeholder="0" required>
                                     </div>
                                 </div>
 
@@ -453,18 +468,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="tap2taplistioTap" class="col-sm-3 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
-                                        Taplist.io Tap Number
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="tap2taplistioTap"
-                                            id="tap2taplistioTap" min="0" max="255" step="1" placeholder="0" required>
-                                    </div>
-                                </div>
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-4">
@@ -510,7 +513,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap3" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap3" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="3">
 
@@ -522,6 +525,18 @@
                                     <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap3label" id="tap3label"
                                             min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" id="taplist.io_3" style="display: none;">
+                                    <label for="tap3taplistioTap" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                        Taplist.io Tap Number
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap3taplistioTap"
+                                            id="tap3taplistioTap" min="0" max="255" step="1" placeholder="0" required>
                                     </div>
                                 </div>
 
@@ -572,18 +587,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="tap3taplistioTap" class="col-sm-3 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
-                                        Taplist.io Tap Number
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="tap3taplistioTap"
-                                            id="tap3taplistioTap" min="0" max="255" step="1" placeholder="0" required>
-                                    </div>
-                                </div>
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-4">
@@ -629,7 +632,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap4" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap4" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="4">
 
@@ -641,6 +644,18 @@
                                     <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap4label" id="tap4label"
                                             min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" id="taplist.io_4" style="display: none;">
+                                    <label for="tap4taplistioTap" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                        Taplist.io Tap Number
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap4taplistioTap"
+                                            id="tap4taplistioTap" min="0" max="255" step="1" placeholder="0" required>
                                     </div>
                                 </div>
 
@@ -691,18 +706,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="tap4taplistioTap" class="col-sm-3 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
-                                        Taplist.io Tap Number
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="tap4taplistioTap"
-                                            id="tap4taplistioTap" min="0" max="255" step="1" placeholder="0" required>
-                                    </div>
-                                </div>
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-4">
@@ -748,7 +751,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap5" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap5" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="5">
 
@@ -760,6 +763,18 @@
                                     <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap5label" id="tap5label"
                                             min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" id="taplist.io_5" style="display: none;">
+                                    <label for="tap5taplistioTap" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                        Taplist.io Tap Number
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap5taplistioTap"
+                                            id="tap5taplistioTap" min="0" max="255" step="1" placeholder="0" required>
                                     </div>
                                 </div>
 
@@ -810,18 +825,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="tap5taplistioTap" class="col-sm-3 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
-                                        Taplist.io Tap Number
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="tap5taplistioTap"
-                                            id="tap5taplistioTap" min="0" max="255" step="1" placeholder="0" required>
-                                    </div>
-                                </div>
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-4">
@@ -867,7 +870,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap6" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap6" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="6">
 
@@ -879,6 +882,18 @@
                                     <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap6label" id="tap6label"
                                             min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" id="taplist.io_6" style="display: none;">
+                                    <label for="tap6taplistioTap" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                        Taplist.io Tap Number
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap6taplistioTap"
+                                            id="tap6taplistioTap" min="0" max="255" step="1" placeholder="0" required>
                                     </div>
                                 </div>
 
@@ -929,18 +944,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="tap6taplistioTap" class="col-sm-3 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
-                                        Taplist.io Tap Number
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="tap6taplistioTap"
-                                            id="tap6taplistioTap" min="0" max="255" step="1" placeholder="0" required>
-                                    </div>
-                                </div>
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-4">
@@ -986,7 +989,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap7" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap7" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="7">
 
@@ -998,6 +1001,18 @@
                                     <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap7label" id="tap7label"
                                             min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" id="taplist.io_7" style="display: none;">
+                                    <label for="tap7taplistioTap" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                        Taplist.io Tap Number
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap7taplistioTap"
+                                            id="tap7taplistioTap" min="0" max="255" step="1" placeholder="0" required>
                                     </div>
                                 </div>
 
@@ -1048,18 +1063,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="tap7taplistioTap" class="col-sm-3 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
-                                        Taplist.io Tap Number
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="tap7taplistioTap"
-                                            id="tap7taplistioTap" min="0" max="255" step="1" placeholder="0" required>
-                                    </div>
-                                </div>
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-4">
@@ -1105,7 +1108,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap8" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap8" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="7">
 
@@ -1117,6 +1120,18 @@
                                     <div class="col-sm-9">
                                         <input type="number" class="form-control" name="tap8label" id="tap8label"
                                             min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" id="taplist.io_8" style="display: none;">
+                                    <label for="tap8taplistioTap" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                        Taplist.io Tap Number
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap8taplistioTap"
+                                            id="tap8taplistioTap" min="0" max="255" placeholder="0">
                                     </div>
                                 </div>
 
@@ -1167,18 +1182,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="tap8taplistioTap" class="col-sm-3 col-form-label"
-                                        data-toggle="tooltip"
-                                        title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
-                                        Taplist.io Tap Number
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="tap8taplistioTap"
-                                            id="tap8taplistioTap" min="0" max="255" placeholder="0">
-                                    </div>
-                                </div>
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
                                         <div class="col-sm-4">
@@ -1224,7 +1227,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="controller" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="controller" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="hostname" class="col-sm-2 col-form-label"
@@ -1377,7 +1380,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form class="form-group" id="tempcontrol" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                            <form class="form-group" id="tempcontrol" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="row col-12">
 
@@ -1486,7 +1489,7 @@
                         <div class="card-body">
 
                             <!-- Sensor Control Form-->
-                            <form class="form-group" id="sensorcontrol" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                            <form class="form-group" id="sensorcontrol" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
 
                                 <!-- Room Sensor Control -->
                                 <div class="row col-sm-12 justify-content-center">
@@ -1723,7 +1726,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="kegscreen" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="kegscreen" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="kegscreen" class="col-sm-2 col-form-label"
@@ -1734,7 +1737,7 @@
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" name="kegscreen"
                                             id="kegscreen" minlength="3" maxlength="128"
-                                            placeholder="http://kegscreen.local/kegcop/">
+                                            placeholder="http://kegscreen.local/kegcop">
                                     </div>
                                 </div>
 
@@ -1756,7 +1759,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="taplistio" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="taplistio" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="taplistio_venue" class="col-sm-2 col-form-label"
@@ -1803,7 +1806,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="targeturl" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="targeturl" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="targeturl" class="col-sm-2 col-form-label"
@@ -1814,7 +1817,7 @@
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" name="targeturl"
                                             id="targeturl" minlength="3" maxlength="128"
-                                            placeholder="http://rpints.local/">
+                                            placeholder="http://rpints.local">
                                     </div>
                                 </div>
 
@@ -1850,7 +1853,7 @@
                                 Raspberry Pints MQTT broker.
                             </p>
 
-                            <form id="rpints" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                            <form id="rpints" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="rpintshost" class="col-sm-2 col-form-label"
@@ -2003,7 +2006,7 @@
 
                             <div id="calsubmit" style="display: none"> <!-- Calibration Form -->
 
-                                <form class="form-group" id="flowcal" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                                <form class="form-group" id="flowcal" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
 
                                     <div class="row col-sm-12 justify-content-center" id="calbyvolumeblock" style="display: none"> <!-- Cal by volume -->
                                         <div class="row col-sm-12 justify-content-center">
@@ -2118,7 +2121,7 @@
                             </p>
                             <div class="row col-sm-12 justify-content-center">
                                 <p class="card-text">
-                                    <a href="/controllerreset/" class="btn btn-warning">Reset Controller</a>
+                                    <a href="controllerreset" class="btn btn-warning">Reset Controller</a>
                                 </p>
                             </div>
                         </div>
@@ -2140,7 +2143,7 @@
                             </p>
                             <div class="row col-sm-12 justify-content-center">
                                 <p class="card-text">
-                                    <a href="/wifireset/" class="btn btn-danger">Reset WiFi</a>
+                                    <a href="wifireset" class="btn btn-danger">Reset WiFi</a>
                                 </p>
                             </div>
                         </div>
@@ -2170,11 +2173,11 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
 
-    <script src="/settings.js"></script>
+    <script src="settings.js"></script>
 
-    <script src="/flowcal.js"></script>
+    <script src="flowcal.js"></script>
 
-    <script src="/alerts.js"></script>
+    <script src="alerts.js"></script>
 
     <script type="text/javascript">
 

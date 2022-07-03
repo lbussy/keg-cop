@@ -11,7 +11,7 @@
 
     <title>Keg Cop</title>
 
-    <link rel="canonical" href="https://www.kegcop.com/">
+    <link rel="canonical" href="https://www.kegcop.com">
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -23,16 +23,17 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="/common.css">
-    <link rel="stylesheet" href="/loader.css">
-    <script src="/loader.js"></script>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="loader.css">
+    <script src="devServer.js"></script>
+    <script src="loader.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="">
                 <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
@@ -43,19 +44,19 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="">Home</a>
                     </li>
                     <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
-                        <a class="nav-link" href="/temps/">Temperatures</a>
+                        <a class="nav-link" href="temps">Temperatures</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/settings/">Settings <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="settings">Settings <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/help/">Help</a>
+                        <a class="nav-link" href="help">Help</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about/">About</a>
+                        <a class="nav-link" href="about">About</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -117,7 +118,7 @@
                             If you are sure you want to update firmware, click the red "Update
                             Application" button below.
                         </p>
-                        <form action="/ota2/">
+                        <form action="ota2">
                             <div class="row col-sm-12 justify-content-center">
                                 <button class="btn btn-danger" id="proceed" disabled="true">
                                     Update Application</button>
@@ -148,7 +149,7 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
 
-    <script src="/ota1.js"></script>
+    <script src="ota1.js"></script>
 
     <script type="text/javascript">
         // Attach the event after the page loads
