@@ -156,9 +156,9 @@ function populateConfig(callback = null) { // Get configuration settings
                 $('input[name="setpoint"]').val(parseFloat(config.temps.setpoint).toFixed(1));
                 $('select[name="controlpoint"] option[value=' + parseInt(config.temps.controlpoint, 10) + ']').attr('selected', 'selected');
                 if (config.temps.controlenabled) {
-                    $('input:radio[name="controleneabled"]')[0].checked = true;
+                    $('input:radio[name="controlenabled"]')[0].checked = true;
                 } else {
-                    $('input:radio[name="controleneabled"]')[1].checked = true;
+                    $('input:radio[name="controlenabled"]')[1].checked = true;
                 }
                 if (config.temps.coolonhigh) {
                     $('input:radio[name="coolonhigh"]')[1].checked = true;
@@ -509,14 +509,14 @@ function processTempControlPost(url, obj) {
     var $form = $(obj),
         setpoint = $form.find("input[name='setpoint']").val(),
         controlpoint = $form.find("select[name='controlpoint']").val(),
-        controleneabled = $form.find("input[name='controleneabled']:checked").val();
+        controlenabled = $form.find("input[name='controlenabled']:checked").val();
         coolonhigh = $form.find("input[name='coolonhigh']:checked").val();
 
     // Process put
     data = {
         setpoint: setpoint,
         controlpoint: controlpoint,
-        controleneabled: controleneabled,
+        controlenabled: controlenabled,
         coolonhigh: coolonhigh
     }
     putData(url, data);
