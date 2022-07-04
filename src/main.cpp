@@ -67,7 +67,7 @@ void setup()
     }
     else
     {
-        Log.verbose(F("Starting WiFi." CR));
+        Log.notice(F("Starting WiFi." CR));
         config.copconfig.nodrd = false;
         doWiFi();
     }

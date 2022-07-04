@@ -65,7 +65,7 @@ bool sendTaplistio(int tapid)
 
     if (WiFiClass::status() != WL_CONNECTED)
     {
-        Log.verbose(F("Taplist.io: Wifi not connected, skipping send.\r\n"));
+        Log.warning(F("Taplist.io: Wifi not connected, skipping send.\r\n"));
         return false;
     }
 
@@ -148,7 +148,6 @@ bool sendTaplistio(int tapid)
                 }
                 else
                 {
-                    Log.notice(F("Taplist.io: Tap %d sent to Taplist.io." CR), tapid);
                     result = true;
                 }
                 http.end();

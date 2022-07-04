@@ -46,7 +46,7 @@ void requestHandler(void *optParm, asyncHTTPrequest *request, int readyState)
     }
     else
     {
-        Log.verbose(F("Deserialized version information." CR));
+        Log.notice(F("Deserialized version information." CR));
     }
 }
 

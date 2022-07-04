@@ -66,19 +66,19 @@ void doUptime(bool reboot)
 
     if (reboot && lastSecondsSinceBoot == 0 && lastTimestamp == 0)
     { // Boot with clean filesystem
-        Log.verbose(F("UPTIME: Started with no history." CR));
+        Log.notice(F("UPTIME: Started with no history." CR));
         startType = START_UNKNOWN;
     }
     else if (reboot)
     { // Boot with history
         if ((now - uptime.lastTimestamp) < 60)
         { // This was a restart, reset or crash
-            Log.verbose(F("UPTIME: This was a restart/reset/crash." CR));
+            Log.notice(F("UPTIME: This was a restart/reset/crash." CR));
             startType = START_WARMBOOT;
         }
         else
         { // This was a cold start
-            Log.verbose(F("UPTIME: This was a cold start." CR));
+            Log.notice(F("UPTIME: This was a cold start." CR));
             startType = START_COLDBOOT;
         }
     }
