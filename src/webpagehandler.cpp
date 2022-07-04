@@ -839,7 +839,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
 
             // Sensor settings
             //
-            if (strcmp(name, "calroom") == 0) // Set the sensor calibration
+            if (strcmp(name, "roomcal") == 0) // Set the sensor calibration
             {
                 didChange = true;
                 const double val = atof(value);
@@ -870,7 +870,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "caltower") == 0) // Set the sensor calibration
+            if (strcmp(name, "towercal") == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -900,7 +900,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "calupper") == 0) // Set the sensor calibration
+            if (strcmp(name, "uppercal") == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -930,7 +930,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "callower") == 0) // Set the sensor calibration
+            if (strcmp(name, "lowercal") == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -960,7 +960,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     Log.warning(F("Settings update error, [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "calkeg") == 0) // Set the sensor calibration
+            if (strcmp(name, "kegcal") == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))

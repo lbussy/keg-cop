@@ -4,7 +4,7 @@
         "passphrase": "kegcop21"
     },
     "copconfig": {
-        "guid": "952DE6B40000A1A6",
+        "guid": "",
         "hostname": "kegcop",
         "nodrd": false,
         "breweryname": "Silver Fox Brewery",
@@ -25,15 +25,15 @@
         "controlenabled": true,
         "coolonhigh": false,
         "roomenabled": true,
-        "room": 1,
+        "roomcal": 1,
         "towerenabled": true,
-        "tower": 2,
+        "towercal": 2,
         "upperenabled": true,
-        "upper": -1,
+        "uppercal": -1,
         "lowerenabled": true,
-        "lower": -2,
+        "lowercal": -2,
         "kegenabled": true,
-        "keg": 3
+        "kegcal": 3
     },
     "kegscreen": {
         "url": "",
@@ -47,6 +47,12 @@
         "topic": "kegcop",
         "update": false
     },
+    "taplistio": {
+		"venue": "",
+		"secret": "",
+		"lastsent": 0,
+		"update": false
+	},
     "urltarget": {
         "url": "",
         "freq": 30,

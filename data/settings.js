@@ -170,31 +170,31 @@ function populateConfig(callback = null) { // Get configuration settings
                 } else {
                     $('input:radio[name="enableroom"]')[1].checked = true;
                 }
-                $('input[name="calroom"]').val(parseFloat(config.temps.room).toFixed(2));
+                $('input[name="roomcal"]').val(parseFloat(config.temps.roomcal).toFixed(2));
                 if (config.temps.towerenabled) {
                     $('input:radio[name="enabletower"]')[0].checked = true;
                 } else {
                     $('input:radio[name="enabletower"]')[1].checked = true;
                 }
-                $('input[name="caltower"]').val(parseFloat(config.temps.tower).toFixed(2));
+                $('input[name="towercal"]').val(parseFloat(config.temps.towercal).toFixed(2));
                 if (config.temps.upperenabled) {
                     $('input:radio[name="enableupper"]')[0].checked = true;
                 } else {
                     $('input:radio[name="enableupper"]')[1].checked = true;
                 }
-                $('input[name="calupper"]').val(parseFloat(config.temps.upper).toFixed(2));
+                $('input[name="uppercal"]').val(parseFloat(config.temps.uppercal).toFixed(2));
                 if (config.temps.lowerenabled) {
                     $('input:radio[name="enablelower"]')[0].checked = true;
                 } else {
                     $('input:radio[name="enablelower"]')[1].checked = true;
                 }
-                $('input[name="callower"]').val(parseFloat(config.temps.lower).toFixed(2));
+                $('input[name="lowercal"]').val(parseFloat(config.temps.lowercal).toFixed(2));
                 if (config.temps.kegenabled) {
                     $('input:radio[name="enablekeg"]')[0].checked = true;
                 } else {
                     $('input:radio[name="enablekeg"]')[1].checked = true;
                 }
-                $('input[name="calkeg"]').val(parseFloat(config.temps.keg).toFixed(2));
+                $('input[name="kegcal"]').val(parseFloat(config.temps.kegcal).toFixed(2));
 
                 $('input[name="kegscreen"]').val(config.kegscreen.url);
 
@@ -528,28 +528,28 @@ function processSensorControlPost(url, obj) {
 
     // Get form data
     var $form = $(obj),
-        calroom = $form.find("input[name='calroom']").val(),
+        roomcal = $form.find("input[name='roomcal']").val(),
         enableroom = $form.find("input[name='enableroom']:checked").val(),
-        caltower = $form.find("input[name='caltower']").val(),
+        towercal = $form.find("input[name='towercal']").val(),
         enabletower = $form.find("input[name='enabletower']:checked").val(),
-        calupper = $form.find("input[name='calupper']").val(),
+        uppercal = $form.find("input[name='uppercal']").val(),
         enableupper = $form.find("input[name='enableupper']:checked").val(),
-        callower = $form.find("input[name='callower']").val(),
+        lowercal = $form.find("input[name='lowercal']").val(),
         enablelower = $form.find("input[name='enablelower']:checked").val(),
-        calkeg = $form.find("input[name='calkeg']").val(),
+        kegcal = $form.find("input[name='kegcal']").val(),
         enablekeg = $form.find("input[name='enablekeg']:checked").val();
 
     // Process put
     data = {
-        calroom: calroom,
+        roomcal: roomcal,
         enableroom: enableroom,
-        caltower: caltower,
+        towercal: towercal,
         enabletower: enabletower,
-        calupper: calupper,
+        uppercal: uppercal,
         enableupper: enableupper,
-        callower: callower,
+        lowercal: lowercal,
         enablelower: enablelower,
-        calkeg: calkeg,
+        kegcal: kegcal,
         enablekeg: enablekeg
     }
     putData(url, data, true, true);
