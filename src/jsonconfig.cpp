@@ -447,15 +447,15 @@ void Temperatures::save(JsonObject obj) const
     obj["controlenabled"] = controlenabled;
     obj["coolonhigh"] = coolonhigh;
     obj["roomenabled"] = enabled[0];
-    obj["room"] = calibration[0];
+    obj["roomcal"] = calibration[0];
     obj["towerenabled"] = enabled[1];
-    obj["tower"] = calibration[1];
+    obj["towercal"] = calibration[1];
     obj["upperenabled"] = enabled[2];
-    obj["upper"] = calibration[2];
+    obj["uppercal"] = calibration[2];
     obj["lowerenabled"] = enabled[3];
-    obj["lower"] = calibration[3];
+    obj["lowercal"] = calibration[3];
     obj["kegenabled"] = enabled[4];
-    obj["keg"] = calibration[4];
+    obj["kegcal"] = calibration[4];
 }
 
 void Temperatures::load(JsonObjectConst obj)
@@ -512,13 +512,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[0] = en;
     }
 
-    if (obj["room"].isNull())
+    if (obj["roomcal"].isNull())
     {
         calibration[0] = 0.0;
     }
     else
     {
-        float rc = obj["room"];
+        float rc = obj["roomcal"];
         calibration[0] = rc;
     }
 
@@ -532,13 +532,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[1] = en;
     }
 
-    if (obj["tower"].isNull())
+    if (obj["towercal"].isNull())
     {
         calibration[1] = 0.0;
     }
     else
     {
-        float tc = obj["tower"];
+        float tc = obj["towercal"];
         calibration[1] = tc;
     }
 
@@ -552,13 +552,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[2] = en;
     }
 
-    if (obj["upper"].isNull())
+    if (obj["uppercal"].isNull())
     {
         calibration[2] = 0.0;
     }
     else
     {
-        float uc = obj["upper"];
+        float uc = obj["uppercal"];
         calibration[2] = uc;
     }
 
@@ -572,13 +572,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[3] = en;
     }
 
-    if (obj["lower"].isNull())
+    if (obj["lowercal"].isNull())
     {
         calibration[3] = 0.0;
     }
     else
     {
-        float lc = obj["lower"];
+        float lc = obj["lowercal"];
         calibration[3] = lc;
     }
 
@@ -592,13 +592,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[4] = en;
     }
 
-    if (obj["keg"].isNull())
+    if (obj["kegcal"].isNull())
     {
         calibration[4] = 0.0;
     }
     else
     {
-        float kc = obj["keg"];
+        float kc = obj["kegcal"];
         calibration[4] = kc;
     }
 }

@@ -375,15 +375,15 @@ GET
             "controlpoint": 4,
             "controlenabled": true,
             "roomenabled": true,
-            "room": 1,
+            "roomcal": 1,
             "towerenabled": true,
-            "tower": 2,
+            "towercal": 2,
             "upperenabled": true,
-            "upper": -1,
+            "uppercal": -1,
             "lowerenabled": true,
-            "lower": -2,
+            "lowercal": -2,
             "kegenabled": true,
-            "keg": 3
+            "kegcal": 3
         },
         "kegscreen": {
             "url": "http://mule.local/kegcop/",
@@ -440,15 +440,15 @@ temps
 - ``controlpoint`` - A zero-based index indicating the sensor_ by which the system will be cooled.
 - ``controleneabled`` - A boolean turning temperature control on and off.
 - ``enableroom`` - Enable the room sensor to be displayed.
-- ``calroom`` - A signed floating-point number by which the room sensor will be calibrated.
+- ``roomcal`` - A signed floating-point number by which the room sensor will be calibrated.
 - ``enabletower`` - Enable the tower sensor to be displayed.
-- ``caltower`` - A signed floating-point number by which the tower sensor will be calibrated.
-- ``enableupper`` - Enable the upper sensor to be displayed.
-- ``calupper`` - A signed floating-point number by which the upper sensor will be calibrated.
+- ``towercal`` - A signed floating-point number by which the tower sensor will be calibrated.
+- ``enableupper`` - Enable the uppercal sensor to be displayed.
+- ``uppercal`` - A signed floating-point number by which the upper sensor will be calibrated.
 - ``enablelower`` - Enable the lower sensor to be displayed.
-- ``callower`` - A signed floating-point number by which the lower sensor will be calibrated.
+- ``lowercal`` - A signed floating-point number by which the lower sensor will be calibrated.
 - ``enablekeg`` - Enable the keg sensor to be displayed.
-- ``calkeg`` - A signed floating-point number by which the keg sensor will be calibrated.
+- ``kegcal`` - A signed floating-point number by which the keg sensor will be calibrated.
 
 kegscreen (url)
 """""""""""""""
