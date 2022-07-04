@@ -214,7 +214,7 @@ bool isKicked(int meter)
 
     if (isKicked)
     {
-        Log.verbose(F("Tap %d is kicked." CR), meter);
+        Log.notice(F("Tap %d is kicked." CR), meter);
         return true;
     }
     else

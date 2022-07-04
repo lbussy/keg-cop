@@ -105,7 +105,7 @@ void initWebServer()
             }
             if (!rewrite == true)
             {
-                Log.verbose(F("Serving 404 for request to %s." CR), request->url().c_str());
+                Log.warning(F("Serving 404 for request to %s." CR), request->url().c_str());
                 request->redirect("/404/");                
             }
         } });
@@ -115,7 +115,7 @@ void initWebServer()
     server.begin();
 
     Log.notice(F("Async HTTP server started on port %l." CR), PORT);
-    Log.verbose(F("Open: http://%s.local to view application." CR), WiFi.getHostname());
+    Log.notice(F("Open: http://%s.local to view application." CR), WiFi.getHostname());
 }
 
 void setRegPageHandlers()
@@ -693,7 +693,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             hostnamechanged = false;
             tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.copconfig.hostname);
             mdnsreset();
-            Log.verbose(F("POSTed new mDNSid, reset mDNS stack." CR));
+            Log.notice(F("POSTed new mDNSid, reset mDNS stack." CR));
         }
     }
     if (saveConfig())

@@ -28,7 +28,7 @@ int cycleCount;
 
 void setupRPints()
 {
-    Log.verbose(F("MQTT: Creating process." CR));
+    Log.notice(F("MQTT: Creating process." CR));
     rpintsClient.onConnect(onRPintsConnect);
     rpintsClient.onDisconnect(onRPintsDisconnect);
     rpintsClient.onPublish(onRPintsPublish);
@@ -122,7 +122,7 @@ bool sendPulsesRPints(int tapID, unsigned int pulses)
         strcat(payload, count); // Count of pulses in report
 
         // Send report
-        Log.verbose(F("MQTT: Sending message to %s:%d, payload: %s" CR),
+        Log.notice(F("MQTT: Sending message to %s:%d, payload: %s" CR),
                 config.rpintstarget.host,
                 config.rpintstarget.port,
                 payload);
