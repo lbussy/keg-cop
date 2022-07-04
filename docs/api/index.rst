@@ -438,7 +438,7 @@ temps
 
 - ``setpoint`` - The temperature setpoint in the configured units to which the system will cool the cabinet.  This is a floating-point number.
 - ``controlpoint`` - A zero-based index indicating the sensor_ by which the system will be cooled.
-- ``controleneabled`` - A boolean turning temperature control on and off.
+- ``controlenabled`` - A boolean turning temperature control on and off.
 - ``enableroom`` - Enable the room sensor to be displayed.
 - ``roomcal`` - A signed floating-point number by which the room sensor will be calibrated.
 - ``enabletower`` - Enable the tower sensor to be displayed.
