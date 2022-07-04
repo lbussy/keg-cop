@@ -768,7 +768,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     config.temps.controlpoint = val;
                 }
             }
-            if (strcmp(name, "enablecontrol") == 0) // Enable control
+            if (strcmp(name, "controleneabled") == 0) // Enable control
             {
                 if (strcmp(value, "true") == 0)
                 {
