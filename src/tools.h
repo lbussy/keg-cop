@@ -32,6 +32,7 @@ SOFTWARE. */
 #include "wifihandler.h"
 #include "uptime.h"
 #include "uptimelog.h"
+#include "taplistio.h"
 
 #include <SPIFFS.h>
 #include <AsyncWiFiManager.h>
@@ -60,11 +61,12 @@ std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep
 void getGuid(char *str); // 17 chars including null terminator
 void setDoSaveUptime();
 
-static bool __attribute__((unused)) doReset = false;        // Semaphore for reset
-static bool __attribute__((unused)) doWiFiReset = false;    // Semaphore for wifi reset
-static bool __attribute__((unused)) doKSTempReport = false; // Semaphore for KegScreen Temps Report
-static bool __attribute__((unused)) doTargetReport = false; // Semaphore for URL Target Report
-static bool __attribute__((unused)) doRPintsConnect = false;  // Semaphore for MQTT (re)connect
+static bool __attribute__((unused)) doReset = false;            // Semaphore for reset
+static bool __attribute__((unused)) doWiFiReset = false;        // Semaphore for wifi reset
+static bool __attribute__((unused)) doKSTempReport = false;     // Semaphore for KegScreen Temps Report
+static bool __attribute__((unused)) doTargetReport = false;     // Semaphore for URL Target Report
+static bool __attribute__((unused)) doRPintsConnect = false;    // Semaphore for MQTT (re)connect
+static bool __attribute__((unused)) doTaplistIOConnect = false; // Semaphore for Taplist.IO Report
 static bool __attribute__((unused)) doTapInfoReport[NUMTAPS] = {
     false, false, false, false, false, false, false, false}; // Semaphore for reset
 static bool __attribute__((unused)) doSetSaveUptime = false; // Semaphore required to save reboot time

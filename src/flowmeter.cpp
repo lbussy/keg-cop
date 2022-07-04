@@ -114,7 +114,7 @@ bool initFlow()
         lastLoopTime[i] = millis();  // Compare for kickdetect
         lastPulseTime[i] = millis(); // For pour detector
         queuePourReport[i] = 0;      // Pour queue
-        queuePulseReport[i] = 0;          // Pulse queue
+        queuePulseReport[i] = 0;     // Pulse queue
         queueKickReport[i] = false;  // Kick queue
     }
     return loadFlowConfig();
@@ -152,8 +152,10 @@ void logFlow()
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
                     saveFlowConfig();
-                    queuePourReport[i] = pour;          // Queue upstream pour report
-                    queuePulseReport[i] = pulseCount;   // Queue upstream pulse report
+                    queuePourReport[i] = pour;        // Queue upstream pour report
+                    queuePulseReport[i] = pulseCount; // Queue upstream pulse report
+                    config.taplistio.update = true;   // Queue TIO report
+                    saveConfig();
                     // Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                 }
             }
@@ -196,7 +198,7 @@ bool isSmallPour(unsigned int count, int tap)
 }
 
 bool isKicked(int meter)
-{   // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
+{ // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
     // Get elapsed time and pulses
     const double secs = (millis() - lastLoopTime[meter]) / 1000;
     const int pulses = pulse[meter] - lastPulse[meter];
@@ -279,7 +281,7 @@ bool loadFlowFile()
 bool saveFlowConfig()
 {
     // Saves the configuration to a file on FILESYSTEM
-    File file = FILESYSTEM.open(flowfilename,FILE_WRITE);
+    File file = FILESYSTEM.open(flowfilename, FILE_WRITE);
     if (!file)
     {
         file.close();
@@ -333,7 +335,7 @@ bool serializeFlowConfig(Print &dst)
 bool printFlowFile()
 {
     // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(flowfilename,FILE_READ);
+    File file = FILESYSTEM.open(flowfilename, FILE_READ);
     if (!file)
         return false;
 
@@ -454,16 +456,16 @@ void convertFlowtoMetric()
 
 void Taps::save(JsonObject obj) const
 {
-    obj["tapid"] = tapid;             // Tap ID
-    obj["label"] = label;             // Tap display label
-    obj["pin"] = pin;                 // μC Pin
-    obj["ppu"] = ppu;                 // Pulses per Gallon
-    obj["name"] = name;               // Beverage Name
-    obj["capacity"] = capacity;       // Tap Capacity
-    obj["remaining"] = remaining;     // Tap remaining
-    obj["taplistioTap"] = taplistioTap;     // Tap number at Taplist.io
-    obj["active"] = active;           // Tap active
-    obj["calibrating"] = calibrating; // Tap calibrating
+    obj["tapid"] = tapid;               // Tap ID
+    obj["label"] = label;               // Tap display label
+    obj["taplistioTap"] = taplistioTap; // Taplist.io display label
+    obj["pin"] = pin;                   // μC Pin
+    obj["ppu"] = ppu;                   // Pulses per Gallon
+    obj["name"] = name;                 // Beverage Name
+    obj["capacity"] = capacity;         // Tap Capacity
+    obj["remaining"] = remaining;       // Tap remaining
+    obj["active"] = active;             // Tap active
+    obj["calibrating"] = calibrating;   // Tap calibrating
 }
 
 void Taps::load(JsonObjectConst obj, int numTap)
@@ -481,6 +483,16 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         int tl = obj["label"];
         label = tl;
+    }
+
+    if (obj["taplistioTap"].isNull() || obj["taplistioTap"] == 0)
+    {
+        taplistioTap = 0; // Default to sequential 1-based label
+    }
+    else
+    {
+        int tl = obj["taplistioTap"];
+        taplistioTap = tl;
     }
 
     if (obj["ppu"].isNull() || obj["ppu"] == 0)
@@ -521,16 +533,6 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         double rm = obj["remaining"];
         remaining = rm;
-    }
-
-    if (obj["taplistioTap"].isNull())
-    {
-        taplistioTap = 0;
-    }
-    else
-    {
-        uint8_t tioT = obj["taplistioTap"];
-        taplistioTap = tioT;
     }
 
     if (obj["active"].isNull())

@@ -88,7 +88,8 @@ function populateFlow(callback = null) { // Get flowmeter settings
             numTaps = flow["taps"].length;
             try {
                 for (var i = 0; i < numTaps; i++) {
-                    $('input[name="tap' + i + 'label"]').val(parseInt(flow.taps[i].taplabel), 10);
+                    // tap1label
+                    $('input[name="tap' + i + 'label"]').val(parseInt(flow.taps[i].label), 10);
                     $('input[name="tap' + i + 'taplistioTap"]').val(parseInt(flow.taps[i].taplistioTap), 10);
                     $('input[name="tap' + i + 'ppu"]').val(parseInt(flow.taps[i].ppu), 10);
                     $('input[name="tap' + i + 'bevname"]').val(flow.taps[i].name);
@@ -411,6 +412,7 @@ function processTapPost(url, obj, tapNum) {
         bevname = $form.find("input[name='tap" + tapNum + "bevname']").val(),
         cap = $form.find("input[name='tap" + tapNum + "cap']").val(),
         remain = $form.find("input[name='tap" + tapNum + "remain']").val(),
+        // tap1taplistioTap
         taplistioTap = $form.find("input[name='tap" + tapNum + "taplistioTap']").val(),
         active = $form.find("input[name='tap" + tapNum + "active']:checked").val();
 

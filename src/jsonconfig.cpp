@@ -638,6 +638,7 @@ void TaplistIO::save(JsonObject obj) const
 {
     obj["venue"] = venue;
     obj["secret"] = secret;
+    obj["lastsent"] = lastsent;
     obj["update"] = update;
 }
 
@@ -665,9 +666,19 @@ void TaplistIO::load(JsonObjectConst obj)
         strlcpy(secret, sc, sizeof(secret));
     }
 
+    if (obj["lastsent"].isNull())
+    {
+        lastsent = 0;
+    }
+    else
+    {
+        long long ls = obj["lostsent"];
+        lastsent = ls;
+    }
+
     if (obj["update"].isNull())
     {
-        update = false;
+        update = true;
     }
     else
     {

@@ -400,6 +400,7 @@ GET
         "taplistio": {
             "venue": "taplist-12345",
             "secret":"secret-abcdefghijk",
+            "lastsent":1656966278,
             "update":false
         },
         "urltarget": {
@@ -466,8 +467,10 @@ rpintstarget
 taplistio
 """"""""""""""
 
-- ``taplistio_venue`` - The taplist.io venue name.
-- ``taplistio_secret`` - The taplist.io API secret key.
+- ``venue`` - The taplist.io venue name.
+- ``secret`` - The taplist.io API secret key.
+- ``lastsent`` - Time (epoch) the report was last sent.  Used for rate limiting.
+- ``update`` - Whether there is a Taplist.io update pending.
 
 urltarget
 """""""""""
@@ -497,109 +500,109 @@ GET
         "taps": [
             {
                 "tapid": 0,
-                "taplabel": 1,
+                "label": 1,
+                "taplistioTap": 1,
                 "pin": 4,
                 "ppu": 21120,
                 "name": "Pudswiller Doors",
                 "capacity": 5,
                 "remaining": 4.2,
-                "taplistioTap": 1,
                 "active": true,
                 "calibrating": false
             },
             {
                 "tapid": 1,
-                "taplabel": 2,
+                "label": 2,
+                "taplistioTap": 0,
                 "pin": 16,
                 "ppu": 21120,
                 "name": "Bug's House Ale",
                 "capacity": 5,
                 "remaining": 3.3,
-                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
             {
                 "tapid": 2,
-                "taplabel": 3,
+                "label": 3,
+                "taplistioTap": 0,
                 "pin": 17,
                 "ppu": 21120,
                 "name": "Navelgazer IPA",
                 "capacity": 5,
                 "remaining": 1.5,
-                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
             {
                 "tapid": 3,
-                "taplabel": 4,
+                "label": 4,
+                "taplistioTap": 0,
                 "pin": 18,
                 "ppu": 21120,
                 "name": "Tanked 7",
                 "capacity": 5,
                 "remaining": 2.2,
-                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
             {
                 "tapid": 4,
-                "taplabel": 5,
+                "label": 5,
+                "taplistioTap": 0,
                 "pin": 19,
                 "ppu": 21120,
                 "name": "Ringaling Lager",
                 "capacity": 15.5,
                 "remaining": 13.1,
-                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
             {
                 "tapid": 5,
-                "taplabel": 6,
+                "label": 6,
+                "taplistioTap": 0,
                 "pin": 21,
                 "ppu": 21120,
                 "name": "Peter Skee",
                 "capacity": 5,
                 "remaining": 4.1,
-                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
             {
                 "tapid": 6,
-                "taplabel": 7,
+                "label": 7,
+                "taplistioTap": 0,
                 "pin": 22,
                 "ppu": 21120,
                 "name": "Undead Guy",
                 "capacity": 5,
                 "remaining": 3.9,
-                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
             {
                 "tapid": 7,
-                "taplabel": 8,
+                "label": 8,
+                "taplistioTap": 0,
                 "pin": 23,
                 "ppu": 21120,
                 "name": "Who's Garden",
                 "capacity": 5,
                 "remaining": 1.2,
-                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             },
             {
                 "tapid": 8,
-                "taplabel": 9,
+                "label": 9,
+                "taplistioTap": 0,
                 "pin": 13,
                 "ppu": 21120,
                 "name": "Mystery Mead",
                 "capacity": 5,
                 "remaining": 3.7,
-                "taplistioTap": 0,
                 "active": true,
                 "calibrating": false
             }
@@ -614,7 +617,8 @@ Where:
 Tap information follows the following format:
 
 - ``tapid`` = The zero-based index representing the tap number internally.
-- ``taplabel`` = The one-based label representing the tap number externally.
+- ``label`` = The one-based label representing the tap number externally.
+- ``taplistioTap`` = The one-based label representing the Taplist.io tap number externally.
 - ``pin`` = The microcontroller pin_ defined for the tap.
 - ``ppu`` = The pulses per configured flow unit.
 - ``name`` = The name of the beverage currently on tap.
