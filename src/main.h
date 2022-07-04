@@ -37,6 +37,7 @@ SOFTWARE. */
 #include "tools.h"
 #include "execota.h"
 #include "uptimelog.h"
+#include "taplistio.h"
 
 #include <ArduinoLog.h>
 #include <ESP_DoubleResetDetector.h>

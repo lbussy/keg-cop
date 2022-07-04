@@ -46,7 +46,9 @@ JSON Definition:
 	},
 	"taplistio": {
 		"venue": "taplist-0123456789",
-		"secret": "secret-abcdefghz5DxqHexX7hRLcaHLMM4JYLtHt4m4ByB"
+		"secret": "secret-abcdefghz5DxqHexX7hRLcaHLMM4JYLtHt4m4ByB",
+		"lastsent": 4294967295,
+		"update": false
 	},
 	"urltarget": {
 		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -68,7 +70,7 @@ Size:
 
 ```
 Deserial:	2048
-Serial:		1536
+Serial:		2048
 ```
 
 Parsing/Deserializing:
@@ -82,8 +84,8 @@ StaticJsonDocument<2048> doc;
 DeserializationError error = deserializeJson(doc, input);
 
 if (error) {
-  Serial.print(F("deserializeJson() failed: "));
-  Serial.println(error.f_str());
+  Serial.print("deserializeJson() failed: ");
+  Serial.println(error.c_str());
   return;
 }
 
@@ -106,6 +108,7 @@ bool ota_dospiffs2 = ota["dospiffs2"]; // false
 bool ota_didupdate = ota["didupdate"]; // false
 
 JsonObject temps = doc["temps"];
+bool temps_coolonhigh = temps["coolonhigh"]; // true
 int temps_setpoint = temps["setpoint"]; // 100
 int temps_controlpoint = temps["controlpoint"]; // 99
 bool temps_controlenabled = temps["controlenabled"]; // false
@@ -122,8 +125,11 @@ float temps_kegcal = temps["kegcal"]; // 99.99
 
 const char* kegscreen_url = doc["kegscreen"]["url"];
 
-const char* taplistio_venue = doc["taplistio"]["venue"]; // "taplist-0123456789"
-const char* taplistio_secret = doc["taplistio"]["secret"];
+JsonObject taplistio = doc["taplistio"];
+const char* taplistio_venue = taplistio["venue"]; // "taplist-0123456789"
+const char* taplistio_secret = taplistio["secret"]; // "secret-abcdefghz5DxqHexX7hRLcaHLMM4JYLtHt4m4ByB"
+long long taplistio_lastsent = taplistio["lastsent"]; // 4294967295
+bool taplistio_update = taplistio["update"]; // false
 
 JsonObject urltarget = doc["urltarget"];
 const char* urltarget_url = urltarget["url"];
@@ -164,6 +170,7 @@ ota["dospiffs2"] = false;
 ota["didupdate"] = false;
 
 JsonObject temps = doc.createNestedObject("temps");
+temps["coolonhigh"] = true;
 temps["setpoint"] = 100;
 temps["controlpoint"] = 99;
 temps["controlenabled"] = false;
@@ -182,6 +189,8 @@ doc["kegscreen"]["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 JsonObject taplistio = doc.createNestedObject("taplistio");
 taplistio["venue"] = "taplist-0123456789";
 taplistio["secret"] = "secret-abcdefghz5DxqHexX7hRLcaHLMM4JYLtHt4m4ByB";
+taplistio["lastsent"] = 4294967295;
+taplistio["update"] = false;
 
 JsonObject urltarget = doc.createNestedObject("urltarget");
 urltarget["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
@@ -195,5 +204,4 @@ rpintstarget["username"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 rpintstarget["password"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 rpintstarget["topic"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
-serializeJson(doc, output);
-```
+serializeJson(doc, output);```

@@ -89,8 +89,7 @@ struct TaplistIO
     // Stores TaplistIO configuration
     char venue[256];
     char secret[256];
-    
-    // Note - TaplistIO pin numbers are stored on Taps (see: flowmeter.h)
+    long long lastsent;
     bool update;
 
     void load(JsonObjectConst);

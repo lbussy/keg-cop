@@ -37,12 +37,12 @@ struct Taps
 {
     int tapid;                // Tap ID (internal)
     int label;                // Tap ID (external, user configurable)
+    int taplistioTap;         // Tap number at Taplist.io
     int pin;                  // μC Pin
     long ppu;                 // Pulses per Gallon
     char name[65];            // Beverage Name
     double capacity;          // Tap Capacity
     double remaining;         // Tap remaining
-    uint8_t taplistioTap;     // Tap number at Taplist.io
     bool active = false;      // Is tap active
     bool calibrating = false; // In calibration mode
 
@@ -84,8 +84,8 @@ void convertFlowtoImperial();
 void convertFlowtoMetric();
 
 extern struct Config config;
-extern float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
+extern float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
 extern unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pulses
-extern bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending kicks
+extern bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
 
 #endif // _FLOWMETER_H

@@ -36,7 +36,6 @@ void _delay(unsigned long ulDelay)
 
 void resetController()
 {
-    // TODO:  Log reboot time
     Log.notice(F("Reboot request - rebooting system." CR));
     config.copconfig.nodrd = true;
     saveConfig();
@@ -107,7 +106,6 @@ void tickerLoop()
         {
             sendPulsesRPints(i, queuePulseReport[i]);
             sendPourReport(i, queuePourReport[i]);
-            send_to_taplistio(i);
             queuePourReport[i] = 0;
             queuePulseReport[i] = 0;
         }
@@ -144,6 +142,18 @@ void tickerLoop()
     {
         doRPintsConnect = false;
         connectRPints();
+    }
+    if (doTaplistIOConnect)
+    {
+        time_t now;
+        struct tm timeinfo;
+        getLocalTime(&timeinfo);
+        time(&now);
+        if ((now - config.taplistio.lastsent > TIOLOOP) && config.taplistio.update && config.taplistio.update && (strlen(config.taplistio.secret) >= 7) && (strlen(config.taplistio.venue) >= 3))
+        {
+            doTaplistIOConnect = false; // Semaphore required for Taplist.io report
+            sendTIOTaps();
+        }
     }
 }
 
