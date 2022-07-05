@@ -143,7 +143,7 @@ void tickerLoop()
         doRPintsConnect = false;
         connectRPints();
     }
-    if (doTaplistIOConnect)
+    if (doTaplistIOConnect && !tioReporting)
     {
         time_t now;
         struct tm timeinfo;
