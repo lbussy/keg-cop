@@ -35,6 +35,18 @@ SOFTWARE. */
 
 void sendTIOTaps()
 {
+    if (WiFiClass::status() != WL_CONNECTED)
+    {
+        Log.warning(F("Taplist.io: Wifi not connected, skipping send." CR));
+        return;
+    }
+    else if (strlen(config.taplistio.secret) < 7 || strlen(config.taplistio.venue) < 3)
+    {
+        Log.verbose(F("Taplist.io: secret or venue not set, skipping send. ('%s' / '%s')" CR), config.taplistio.venue, config.taplistio.secret);
+        return;
+    }
+
+    tioReporting = true;
     time_t now;
     struct tm timeinfo;
     getLocalTime(&timeinfo);
@@ -42,12 +54,32 @@ void sendTIOTaps()
 
     for (int t = 0; t < NUMTAPS; t++)
     {
-        if (!sendTaplistio(t))
+        if (flow.taps[t].taplistioTap < 0 || flow.taps[t].taplistioTap > 255)
+        {
+            Log.notice(F("Taplist.io: Tap %d doesn't have a valid Taplist.io tap id set (%d)." CR), t, flow.taps[t].taplistioTap);
+            break;
+        }
+        else if (flow.taps[t].taplistioTap == 0)
+        {
+            Log.notice(F("Taplist.io: Tap %d has Taplist.io tap id set to 0 - skipping send." CR), t);
+            break;
+        }
+        else if (!flow.taps[t].active)
+        {
+            Log.verbose(F("Taplist.io: Tap %d not active." CR), t);
+            return;
+        }
+        else if (!sendTaplistio(t))
+        {
             Log.warning(F("Taplist.io: Failed to send tap %l to Taplist.io." CR), t);
+        }
         else
+        {
             Log.verbose(F("Taplist.io: Sent tap %l to Taplist.io." CR), t);
+        }
     }
 
+    tioReporting = false;
     config.taplistio.lastsent = now;
     config.taplistio.update = false;
     saveConfig();
@@ -62,42 +94,6 @@ bool sendTaplistio(int tapid)
     int httpResponseCode;
     bool result = true;
     uint32_t dispensed;
-
-    if (WiFiClass::status() != WL_CONNECTED)
-    {
-        Log.warning(F("Taplist.io: Wifi not connected, skipping send.\r\n"));
-        return false;
-    }
-
-    if (strlen(config.taplistio.secret) < 7 || strlen(config.taplistio.venue) < 3)
-    {
-        Log.verbose(F("Taplist.io: secret or venue not set, skipping send. (%s / %s)\r\n"), config.taplistio.secret, config.taplistio.venue);
-        return false;
-    }
-
-    if (tapid < 0 || tapid > NUMTAPS)
-    {
-        Log.error(F("Taplist.io: Invalid tap submitted (%d)." CR), tapid);
-        return false;
-    }
-
-    if (!flow.taps[tapid].active)
-    {
-        Log.verbose(F("Taplist.io: Tap %d not active." CR), tapid);
-        return false;
-    }
-
-    if (flow.taps[tapid].taplistioTap < 0 || flow.taps[tapid].taplistioTap > 255)
-    {
-        Log.notice(F("Taplist.io: Tap %d doesn't have a valid Taplist.io tap id set (%d)." CR), tapid, flow.taps[tapid].taplistioTap);
-        return false;
-    }
-
-    if (flow.taps[tapid].taplistioTap == 0)
-    {
-        Log.notice(F("Taplist.io: Tap %d has Taplist.io tap id set to 0 - skipping send." CR), tapid);
-        return false;
-    }
 
     snprintf(auth_header, sizeof(auth_header), "token %s", config.taplistio.secret);
 

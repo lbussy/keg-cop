@@ -26,4 +26,6 @@ SOFTWARE. */
 void sendTIOTaps();
 bool sendTaplistio(int tapid);
 
+static bool __attribute__((unused)) tioReporting = false; // Lock for Taplist.IO Report
+
 #endif // _TAPLISTIO_H
