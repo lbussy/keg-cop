@@ -35,7 +35,7 @@ void serial()
 #if DOTELNET == true
     char buffer[32];
     strcpy(buffer, (const char *)"Connected to ");
-    strcat(buffer, (const char *)API_KEY);
+    strcat(buffer, (const char *)apiKey);
     strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
 #endif

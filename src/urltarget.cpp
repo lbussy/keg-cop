@@ -32,8 +32,8 @@ bool sendTargetReport()
     if (config.urltarget.url != NULL && config.urltarget.url[0] != '\0') // If URL Target
     {
         UrlReport urlreport;
-        strlcpy(urlreport.api, API_KEY, sizeof(urlreport.api));
-        getGuid(urlreport.guid);
+        strlcpy(urlreport.api, apiKey, sizeof(urlreport.api));
+        strlcpy(urlreport.guid, config.copconfig.guid, sizeof(urlreport.guid));
         strlcpy(urlreport.hostname, config.copconfig.hostname, sizeof(urlreport.hostname));
         strlcpy(urlreport.breweryname, config.copconfig.breweryname, sizeof(urlreport.breweryname));
         strlcpy(urlreport.kegeratorname, config.copconfig.kegeratorname, sizeof(urlreport.kegeratorname));

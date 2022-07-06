@@ -178,4 +178,6 @@ bool deserializeConfig(Stream &);
 void convertConfigtoImperial();
 void convertConfigtoMetric();
 
+extern const char *apiKey;
+
 #endif // _JSONCONFIG_H
