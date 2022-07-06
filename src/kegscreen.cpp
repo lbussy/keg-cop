@@ -217,10 +217,7 @@ bool sendTempReport()
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
-        // TODO - Figure out if we want to do this (send the name as an integer)
-        // doc[KegscreenKeys::sensors][i][KegscreenKeys::name] = device.sensor[i].name;
-        // doc[KegscreenKeys::sensors][i][KegscreenKeys::name] = sensorName[i];
-        doc[KegscreenKeys::sensors][i][KegscreenKeys::name] = i;
+        doc[KegscreenKeys::sensors][i][KegscreenKeys::name] = device.sensor[i].name;
         doc[KegscreenKeys::sensors][i][KegscreenKeys::value] = device.sensor[i].average;  // Always send in C
         doc[KegscreenKeys::sensors][i][KegscreenKeys::enabled] = config.temps.enabled[i];
     }
@@ -276,7 +273,7 @@ bool sendReport(ReportKey thisKey, const char * json) {
                 }
                 else
                 {
-                    Log.verbose(F("%s POST to %s dispatched." CR), reportname[thisKey], connection.c_str());
+                    Log.verbose(F("%s: POST to %s dispatched." CR), reportname[thisKey], connection.c_str());
                 }
             }
             else
