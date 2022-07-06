@@ -55,69 +55,55 @@ bool reported[5];
 static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
     reportCBTapInfo, reportCBPourReport, reportCBKickReport, reportCBCoolState, reportCBTempReport};
 
+#define kegscreenIsEnabled (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0')
+
+
+void CommonReportFields(JsonDocument &doc, ReportKey reportkey) {
+    doc[KegscreenKeys::api] = apiKey;
+    doc[KegscreenKeys::guid] = config.copconfig.guid;
+    doc[KegscreenKeys::hostname] = config.copconfig.hostname;
+    doc[KegscreenKeys::breweryname] = config.copconfig.breweryname;
+    doc[KegscreenKeys::kegeratorname] = config.copconfig.kegeratorname;
+    doc[KegscreenKeys::reporttype] = reporttype[reportkey];
+}
+
 bool sendTapInfoReport(int tapid)
 { // Push complete tap info (single tap) when tap is flipped to active or the data is changed
     bool retval = true;
     ReportKey reportkey = KS_TAPINFO;
     if (tapid >= 0 && tapid <= NUMTAPS)
     {
-        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
+        if (kegscreenIsEnabled) // If KegScreen is enabled
         {
-            TapInfo tap;
-            strlcpy(tap.api, API_KEY, sizeof(tap.api));
-            getGuid(tap.guid);
-            strlcpy(tap.hostname, config.copconfig.hostname, sizeof(tap.hostname));
-            strlcpy(tap.breweryname, config.copconfig.breweryname, sizeof(tap.breweryname));
-            strlcpy(tap.kegeratorname, config.copconfig.kegeratorname, sizeof(tap.kegeratorname));
-            strlcpy(tap.reporttype, reporttype[reportkey], sizeof(tap.reporttype));
-            tap.imperial = config.copconfig.imperial;
-            tap.tapid = tapid;
-            strlcpy(tap.name, flow.taps[tapid].name, sizeof(tap.name));
-            tap.ppu = flow.taps[tapid].ppu;
-            tap.remaining = flow.taps[tapid].remaining;
-            tap.capacity = flow.taps[tapid].capacity;
-            tap.active = flow.taps[tapid].active;
-            tap.calibrating = flow.taps[tapid].calibrating;
 
             StaticJsonDocument<512> doc;
 
-            doc["api"] = (const char *)tap.api;
-            doc["guid"] = (const char *)tap.guid;
-            doc["hostname"] = (const char *)tap.hostname;
-            doc["breweryname"] = (const char *)tap.breweryname;
-            doc["kegeratorname"] = (const char *)tap.kegeratorname;
-            doc["reporttype"] = (const char *)tap.reporttype;
-            doc["imperial"] = (const int)tap.imperial;
-            doc["tapid"] = (const int)tapid;
-            doc["name"] = (const char *)tap.name;
-            doc["ppu"] = (const int)tap.ppu;
-            doc["remaining"] = (const float)tap.remaining;
-            doc["capacity"] = (const float)tap.capacity;
-            doc["active"] = tap.active;
-            doc["calibrating"] = tap.calibrating;
+            CommonReportFields(doc, reportkey);
 
-            String json;
-            serializeJson(doc, json);
+            doc[KegscreenKeys::imperial] = config.copconfig.imperial;
+            doc[KegscreenKeys::tapid] = tapid;
+            doc[KegscreenKeys::name] = flow.taps[tapid].name;
+            doc[KegscreenKeys::ppu] = flow.taps[tapid].ppu;
+            doc[KegscreenKeys::remaining] = flow.taps[tapid].remaining;
+            doc[KegscreenKeys::capacity] = flow.taps[tapid].capacity;
+            doc[KegscreenKeys::active] = flow.taps[tapid].active;
+            doc[KegscreenKeys::calibrating] = flow.taps[tapid].calibrating;
 
-            if (sendReport(reportkey, json.c_str()))
-            {
-                retval = true;
-            }
-            else
-            {
-                retval = false;
-            }
+            // String json;
+            // serializeJson(doc, json);
+
+            return sendReport(reportkey, doc);
         }
         else
         {
             Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
-            retval = false;
+            return false;
         }
     }
     else
     {
         Log.error(F("Error: Invalid tap submitted to %s (%d)." CR), reportname[reportkey], tapid);
-        retval = true;
+        return true;
     }
     return retval;
 }
@@ -128,44 +114,21 @@ bool sendPourReport(int tapid, float dispensed)
     ReportKey reportkey = KS_POURREPORT;
     if (tapid >= 0 && tapid <= NUMTAPS)
     {
-        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
+        if (kegscreenIsEnabled) // If KegScreen is enabled
         {
-            PourInfo pour;
-            strlcpy(pour.api, API_KEY, sizeof(pour.api));
-            getGuid(pour.guid);
-            strlcpy(pour.hostname, config.copconfig.hostname, sizeof(pour.hostname));
-            strlcpy(pour.breweryname, config.copconfig.breweryname, sizeof(pour.breweryname));
-            strlcpy(pour.kegeratorname, config.copconfig.kegeratorname, sizeof(pour.kegeratorname));
-            strlcpy(pour.reporttype, reporttype[reportkey], sizeof(pour.reporttype));
-            pour.tapid = tapid;
-            pour.imperial = config.copconfig.imperial;
-            pour.dispensed = dispensed;
-            pour.remaining = flow.taps[tapid].remaining;
-
             StaticJsonDocument<512> doc;
 
-            doc["api"] = (const char *)pour.api;
-            doc["guid"] = (const char *)pour.guid;
-            doc["hostname"] = (const char *)pour.hostname;
-            doc["breweryname"] = (const char *)pour.breweryname;
-            doc["kegeratorname"] = (const char *)pour.kegeratorname;
-            doc["reporttype"] = (const char *)pour.reporttype;
-            doc["tapid"] = (const int)tapid;
-            doc["imperial"] = (const bool)pour.imperial;
-            doc["dispensed"] = (const float)pour.dispensed;
-            doc["remaining"] = (const float)pour.remaining;
+            CommonReportFields(doc, reportkey);
 
-            String json;
-            serializeJson(doc, json);
+            doc[KegscreenKeys::tapid] = tapid;
+            doc[KegscreenKeys::imperial] = config.copconfig.imperial;
+            doc[KegscreenKeys::dispensed] = dispensed;
+            doc[KegscreenKeys::remaining] = flow.taps[tapid].remaining;
 
-            if (sendReport(reportkey, json.c_str()))
-            {
-                retval = true;
-            }
-            else
-            {
-                retval = false;
-            }
+            // String json;
+            // serializeJson(doc, json);
+
+            return sendReport(reportkey, doc);
         }
         else
         {
@@ -183,180 +146,95 @@ bool sendPourReport(int tapid, float dispensed)
 
 bool sendKickReport(int tapid)
 { // Send a kick report when keg kicks
-    bool retval = true;
     ReportKey reportkey = KS_KICKREPORT;
     if (tapid >= 0 && tapid <= NUMTAPS)
     {
-        if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
+        if (kegscreenIsEnabled) // If KegScreen is enabled
         {
-            KickReport kick;
-            strlcpy(kick.api, API_KEY, sizeof(kick.api));
-            getGuid(kick.guid);
-            strlcpy(kick.hostname, config.copconfig.hostname, sizeof(kick.hostname));
-            strlcpy(kick.breweryname, config.copconfig.breweryname, sizeof(kick.breweryname));
-            strlcpy(kick.kegeratorname, config.copconfig.kegeratorname, sizeof(kick.kegeratorname));
-            strlcpy(kick.reporttype, reporttype[reportkey], sizeof(kick.reporttype));
-            kick.tapid = tapid;
-
             StaticJsonDocument<384> doc;
 
-            doc["api"] = (const char *)kick.api;
-            doc["guid"] = (const char *)kick.guid;
-            doc["hostname"] = (const char *)kick.hostname;
-            doc["breweryname"] = (const char *)kick.breweryname;
-            doc["kegeratorname"] = (const char *)kick.kegeratorname;
-            doc["reporttype"] = (const char *)kick.reporttype;
-            doc["tapid"] = (const int)tapid;
+            CommonReportFields(doc, reportkey);
+            doc[KegscreenKeys::tapid] = tapid;
 
-            String json;
-            serializeJson(doc, json);
+            // String json;
+            // serializeJson(doc, json);
 
-            if (sendReport(reportkey, json.c_str()))
-            {
-                retval = true;
-            }
-            else
-            {
-                retval = false;
-            }
+            return sendReport(reportkey, doc);
         }
         else
         {
             Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
-            retval = false;
+            return false;
         }
     }
     else
     {
         Log.error(F("Error: Invalid tap submitted to %s (%d)." CR), reportname[reportkey], tapid);
-        retval = true;
+        return true;
     }
-    return retval;
 }
 
 bool sendCoolStateReport()
 { // Send cooling status when a cooling state changes
     bool retval = true;
-    ReportKey reportkey = KS_COOLSTATE;
-    if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
-    {
-        CoolState cool;
-        strlcpy(cool.api, API_KEY, sizeof(cool.api));
-        getGuid(cool.guid);
-        strlcpy(cool.hostname, config.copconfig.hostname, sizeof(cool.hostname));
-        strlcpy(cool.breweryname, config.copconfig.breweryname, sizeof(cool.breweryname));
-        strlcpy(cool.kegeratorname, config.copconfig.kegeratorname, sizeof(cool.kegeratorname));
-        strlcpy(cool.reporttype, reporttype[reportkey], sizeof(cool.reporttype));
-        cool.coolstate = tstat.state;
+    char guid[17];
+    const ReportKey reportkey = KS_COOLSTATE;
+    StaticJsonDocument<384> doc;
 
-        StaticJsonDocument<384> doc;
-
-        doc["api"] = (const char *)cool.api;
-        doc["guid"] = (const char *)cool.guid;
-        doc["hostname"] = (const char *)cool.hostname;
-        doc["breweryname"] = (const char *)cool.breweryname;
-        doc["kegeratorname"] = (const char *)cool.kegeratorname;
-        doc["reporttype"] = (const char *)cool.reporttype;
-        doc["coolstate"] = (const int)cool.coolstate;
-
-        String json;
-        serializeJson(doc, json);
-
-        if (sendReport(reportkey, json.c_str()))
-        {
-            retval = true;
-        }
-        else
-        {
-            retval = false;
-        }
-    }
-    else
-    {
+    if (!kegscreenIsEnabled) {
         Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
-        retval = false;
+        return false;
     }
-    return retval;
+
+    CommonReportFields(doc, reportkey);
+    doc[KegscreenKeys::coolstate] = tstat.state;
+
+    String json;
+    serializeJson(doc, json);
+
+
+    return sendReport(reportkey, json.c_str());
 }
 
 bool sendTempReport()
 { // Send a temp report on timer
-    bool retval = true;
-    ReportKey reportkey = KS_TEMPREPORT;
-    if (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0') // If KegScreen is enabled
-    {
-        TempReport temps;
-        strlcpy(temps.api, API_KEY, sizeof(temps.api));
-        getGuid(temps.guid);
-        strlcpy(temps.hostname, config.copconfig.hostname, sizeof(temps.hostname));
-        strlcpy(temps.breweryname, config.copconfig.breweryname, sizeof(temps.breweryname));
-        strlcpy(temps.kegeratorname, config.copconfig.kegeratorname, sizeof(temps.kegeratorname));
-        strlcpy(temps.reporttype, reporttype[reportkey], sizeof(temps.reporttype));
-        temps.imperial = config.copconfig.imperial;
-        temps.controlpoint = config.temps.controlpoint;
-        temps.setpoint = config.temps.setpoint;
-        temps.status = tstat.state;
-        temps.controlenabled = config.temps.controlenabled;
-
-        for (int i = 0; i < NUMSENSOR; i++)
-        {
-            strlcpy(temps.sensor[i].name, device.sensor[i].name, sizeof(temps.sensor[i].name));
-
-            if (config.copconfig.imperial)
-            {
-                temps.sensor[i].average = convertCtoF(device.sensor[i].average);
-            }
-            else
-            {
-                temps.sensor[i].average = device.sensor[i].average;
-            }
-
-            temps.sensor[i].enabled = config.temps.enabled[i];
-        }
-
-        StaticJsonDocument<1024> doc;
-
-        doc["api"] = (const char *)temps.api;
-        doc["guid"] = (const char *)temps.guid;
-        doc["hostname"] = (const char *)temps.hostname;
-        doc["breweryname"] = (const char *)temps.breweryname;
-        doc["kegeratorname"] = (const char *)temps.kegeratorname;
-        doc["reporttype"] = (const char *)temps.reporttype;
-        doc["imperial"] = temps.imperial;
-        doc["controlpoint"] = (const int)temps.controlpoint;
-        doc["setting"] = (const float)temps.setpoint;
-        doc["status"] = (const int)temps.status;
-        doc["controlenabled"] = temps.controlenabled;
-
-        for (int i = 0; i < NUMSENSOR; i++)
-        {
-            doc["sensors"][i]["name"] = (const char *)temps.sensor[i].name;
-            doc["sensors"][i]["value"] = (const float)temps.sensor[i].average;
-            doc["sensors"][i]["enabled"] = temps.sensor[i].enabled;
-        }
-
-        String json;
-        serializeJson(doc, json);
-
-        if (sendReport(reportkey, json.c_str()))
-        {
-            retval = true;
-        }
-        else
-        {
-            retval = false;
-        }
-    }
-    else
+    const ReportKey reportkey = KS_TEMPREPORT;
+    if (!kegscreenIsEnabled) // If KegScreen is enabled
     {
         Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
-        retval = false;
+        return false;
     }
-    return retval;
+
+    StaticJsonDocument<1024> doc;
+
+    CommonReportFields(doc, reportkey);
+
+    doc[KegscreenKeys::imperial] = config.copconfig.imperial;
+    doc[KegscreenKeys::controlpoint] = config.temps.controlpoint;
+    doc[KegscreenKeys::setting] = config.temps.setpoint;
+    doc[KegscreenKeys::status] = tstat.state;
+    doc[KegscreenKeys::controlenabled] = config.temps.controlenabled;
+
+    for (int i = 0; i < NUMSENSOR; i++)
+    {
+        doc[KegscreenKeys::sensors][i][KegscreenKeys::name] = device.sensor[i].name;
+        doc[KegscreenKeys::sensors][i][KegscreenKeys::value] = device.sensor[i].average;  // Always send in C
+        doc[KegscreenKeys::sensors][i][KegscreenKeys::enabled] = config.temps.enabled[i];
+    }
+    // String json;
+    // serializeJson(doc, json);
+
+    return sendReport(reportkey, doc);
 }
 
-bool sendReport(ReportKey thisKey, const String &json)
-{ // Handle sending all KegScreen reports
+bool sendReport(ReportKey thisKey, JsonDocument &doc) {
+    char json[1024];
+    serializeJson(doc, json);
+    return sendReport(thisKey, json);
+}
+
+
+bool sendReport(ReportKey thisKey, const char * json) {
     if (reports[thisKey].readyState() == 0 || reports[thisKey].readyState() == 4)
     {
         reported[thisKey] = false;
@@ -388,14 +266,14 @@ bool sendReport(ReportKey thisKey, const String &json)
             if (reports[thisKey].open("POST", connection.c_str()))
             {
                 reports[thisKey].setReqHeader("Content-Type", "application/json");
-                if (!reports[thisKey].send(json.c_str()))
+                if (!reports[thisKey].send(json))
                 {
                     Log.warning(F("Warning: Failed to dispatch %s POST to %s." CR), reportname[thisKey], connection.c_str());
                     return false;
                 }
                 else
                 {
-                    Log.verbose(F("%s POST to %s dispatched." CR), reportname[thisKey], connection.c_str());
+                    Log.verbose(F("%s: POST to %s dispatched." CR), reportname[thisKey], connection.c_str());
                 }
             }
             else
