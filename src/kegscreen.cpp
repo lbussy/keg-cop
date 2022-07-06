@@ -59,10 +59,8 @@ static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
 
 
 void CommonReportFields(JsonDocument &doc, ReportKey reportkey) {
-    char guid[17];
-    getGuid(guid);
-    doc[KegscreenKeys::api] = API_KEY;
-    doc[KegscreenKeys::guid] = guid;
+    doc[KegscreenKeys::api] = apiKey;
+    doc[KegscreenKeys::guid] = config.copconfig.guid;
     doc[KegscreenKeys::hostname] = config.copconfig.hostname;
     doc[KegscreenKeys::breweryname] = config.copconfig.breweryname;
     doc[KegscreenKeys::kegeratorname] = config.copconfig.kegeratorname;
