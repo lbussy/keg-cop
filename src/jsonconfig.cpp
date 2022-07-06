@@ -24,6 +24,7 @@ SOFTWARE. */
 
 Config config;
 static const char *filename = FILENAME;
+const char *apiKey = API_KEY;
 
 bool deleteConfigFile()
 {

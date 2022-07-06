@@ -109,7 +109,7 @@ void setup()
         nullDoc("d");
     else
     {
-        Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), API_KEY, fw_version(), fs_version(), branch(), build());
+        Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), apiKey, fw_version(), fs_version(), branch(), build());
     }
 }
 
