@@ -59,6 +59,8 @@ void sensorInit();
 void pollTemps();
 double getTempC(uint8_t);
 
+extern const char *sensorName[NUMSENSOR];
+
 extern struct Config config;
 
 #endif // _TEMPSENSORS_H
