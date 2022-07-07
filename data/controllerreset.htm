@@ -33,7 +33,7 @@
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="index">
                 <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
@@ -44,7 +44,7 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="index">Home</a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="settings">Settings <span class="sr-only">(current)</span></a>
@@ -137,7 +137,7 @@
                 fail: function () {
                     $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Failed; Redirect Pending</h4>");
                     $("#message").replaceWith("<p class='card-body'>The controller reset failed. You will be redirected momentarily.</p>");
-                    setTimeout(function () { window.location.href = ""; }, 5000);
+                    setTimeout(function () { window.location.href = "index"; }, 5000);
                 }
             });
         }
@@ -152,7 +152,7 @@
                         window.clearInterval(intervalID);
                         $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Complete; Redirect Pending</h4>");
                         $("#message").replaceWith("<p class='card-body'>The controller reset is complete. You will be redirected momentarily.</p>");
-                        setTimeout(function () { window.location.href = ""; }, 5000);
+                        setTimeout(function () { window.location.href = "index"; }, 5000);
                     }
                 });
             }, 5000);
