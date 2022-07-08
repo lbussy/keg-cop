@@ -101,6 +101,9 @@ list_envs() {
 create_version() {
     echo -e "\nCreating version JSON."
     sleep 1
+    if [ ! -d "$GITROOT"/"$BINLOC"/ ]; then
+        mkdir "$GITROOT"/"$BINLOC"
+    fi
     cat << EOF | tee "$GITROOT/data/version.json" "$GITROOT/$BINLOC/version.json" > /dev/null || exit
 {
     "fw_version": "$GITTAG",
