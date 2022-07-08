@@ -1449,7 +1449,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                     tapNum = val;
                 }
             }
-            if (strcmp(name, "label") == 0) // Set the tap label
+            if (strcmp(name, FlowmeterKeys::label) == 0) // Set the tap label
             {
                 const int val = atof(value);
                 if ((val < 0) || (val > 99))
@@ -1462,7 +1462,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                     flow.taps[tapNum].label = val;
                 }
             }
-            if (strcmp(name, "taplistioTap") == 0) // Set Taplist.io Tap Number
+            if (strcmp(name, FlowmeterKeys::taplistioTap) == 0) // Set Taplist.io Tap Number
             {
                 const uint8_t val = atoi(value);
                 if ((val < 0) || (val > 255))
@@ -1475,7 +1475,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                     flow.taps[tapNum].taplistioTap = val;
                 }
             }
-            if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
+            if ((strcmp(name, FlowmeterKeys::ppu) == 0) && tapNum >= 0) // Set the pulses per unit
             {
                 const int val = atof(value);
                 if ((val < 0) || (val > 999999))
@@ -1527,9 +1527,9 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                     flow.taps[tapNum].remaining = val;
                 }
             }
-            if (strcmp(name, "active") == 0) // Set active
+            if (strcmp(name, FlowmeterKeys::active) == 0) // Set active
             {
-                if (strcmp(value, "active") == 0)
+                if (strcmp(value, FlowmeterKeys::active) == 0)
                 {
                     Log.notice(F("Settings update [%d], [%s]:(%s) applied." CR), tapNum, name, value);
                     flow.taps[tapNum].active = true;
@@ -1593,7 +1593,7 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
                     tapNum = val;
                 }
             }
-            if ((strcmp(name, "ppu") == 0) && tapNum >= 0) // Set the pulses per unit
+            if ((strcmp(name, FlowmeterKeys::ppu) == 0) && tapNum >= 0) // Set the pulses per unit
             {
                 const int val = atof(value);
                 if ((val < 0) || (val > 999999))

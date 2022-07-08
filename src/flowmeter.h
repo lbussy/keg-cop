@@ -88,4 +88,18 @@ extern float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store 
 extern unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pulses
 extern bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
 
+
+namespace FlowmeterKeys {
+    constexpr auto tapid = "tapid";
+    constexpr auto label = "label";
+    constexpr auto taplistioTap = "taplistioTap";
+    constexpr auto pin = "pin";
+    constexpr auto ppu = "ppu";
+    constexpr auto name = "name";
+    constexpr auto capacity = "capacity";
+    constexpr auto remaining = "remaining";
+    constexpr auto active = "active";
+    constexpr auto calibrating = "calibrating";
+};
+
 #endif // _FLOWMETER_H
