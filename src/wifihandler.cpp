@@ -43,7 +43,11 @@ void doWiFi(bool dontUseStoredCreds)
 
 #ifndef DISABLE_LOGGING
     if (Log.getLevel())
+#ifdef _DEBUG_BUILD
         wm.setDebugOutput(true); // Verbose debug is enabled by default
+#else
+        wm.setDebugOutput(false);
+#endif
     else
         wm.setDebugOutput(false);
 #else
