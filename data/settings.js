@@ -665,7 +665,7 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
 }
 
 function updateHelp(hashLoc) {
-    var url = "https://docs.kegcop.com"
+    var url = "https://docs.kegcop.com/"
 
     // Switch here for hashLoc
     switch (hashLoc) {
