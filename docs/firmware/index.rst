@@ -28,7 +28,7 @@ Important Note:
 Preferred Method for Windows and Macs
 ========================================
 
-BrewFlasher_ is a stand-alone desktop application for Windows and macOS designed to simplify flashing Brew Bubbles (and other brewing-related firmware) to your controller.
+BrewFlasher_ is a stand-alone desktop application for Windows and macOS designed to simplify flashing Keg Cop (and other brewing-related firmware) to your controller.
 
 It handles everything - locating the correct firmware, downloading it, setting the correct flash options/offsets, and flashing the firmware. There is no fumbling with the command line or worrying about 'esptool' options. Select the project you want to flash, click a button, and you have finished.
 
