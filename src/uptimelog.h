@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -20,5 +20,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "taplistio.h"
+#ifndef _UPTIMELOG_H
+#define _UPTIMELOG_H
 
+#include "config.h"
+#include "tools.h"
+#include "serialhandler.h"
+
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <SPIFFS.h>
+#include <FS.h>
+#include <Ticker.h>
+
+#define CAP_SER_UPT 32
+#define CAP_DESER_UPT 96
+
+#define UPTIME_FILE "/uptime.json"
+#define UPTIME_LOG "/uptime.csv"
+
+struct Uptime
+{
+    // Stores the uptime data
+    int64_t lastSecondsSinceBoot;
+    int64_t lastTimestamp;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+void doUptime(bool reboot = false);
+bool deleteUptimeFile();
+bool loadUptime();
+bool saveUptime();
+bool loadUptimeFile();
+bool saveUptimeFile();
+bool printUptime();
+bool printUptimeFile();
+bool serializeUptime(Print &);
+bool deserializeUptime(Stream &);
+bool writeLog(char * logLine);
+
+#endif // _UPTIMELOG_H

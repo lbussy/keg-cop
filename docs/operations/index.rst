@@ -42,6 +42,7 @@ Targets:
 - :ref:`KegScreen Target <kegscreen>`
 - :ref:`URL Target <url>`
 - :ref:`Raspberry Pints Target <rpints>`
+- :ref:`Taplist.io <taplistio>`
 
 Advanced
 

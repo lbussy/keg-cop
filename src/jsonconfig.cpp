@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -24,6 +24,7 @@ SOFTWARE. */
 
 Config config;
 static const char *filename = FILENAME;
+const char *apiKey = API_KEY;
 
 bool deleteConfigFile()
 {
@@ -55,7 +56,7 @@ bool loadFile()
         return false;
     }
     // Loads the configuration from a file on FILESYSTEM
-    File file = FILESYSTEM.open(filename, "r");
+    File file = FILESYSTEM.open(filename,FILE_READ);
     if (!FILESYSTEM.exists(filename) || !file)
     {
         // File does not exist or unable to read file
@@ -85,7 +86,7 @@ bool saveConfig()
 bool saveFile()
 {
     // Saves the configuration to a file on FILESYSTEM
-    File file = FILESYSTEM.open(filename, "w");
+    File file = FILESYSTEM.open(filename,FILE_WRITE);
     if (!file)
     {
         file.close();
@@ -140,7 +141,7 @@ bool serializeConfig(Print &dst)
 bool printFile()
 {
     // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(filename, "r");
+    File file = FILESYSTEM.open(filename,FILE_READ);
     if (!file)
         return false;
 
@@ -336,7 +337,7 @@ void CopConfig::save(JsonObject obj) const
     obj["nodrd"] = nodrd;
     obj["breweryname"] = breweryname;
     obj["kegeratorname"] = kegeratorname;
-    obj["controllernumber"] = controllernumber;
+    obj["controlnum"] = controlnum;
     obj["serial"] = serial;
     obj["imperial"] = imperial;
     obj["tapsolenoid"] = tapsolenoid;
@@ -387,14 +388,14 @@ void CopConfig::load(JsonObjectConst obj)
         strlcpy(kegeratorname, kn, sizeof(kegeratorname));
     }
 
-    if (obj["controllernumber"].isNull())
+    if (obj["controlnum"].isNull())
     {
-        controllernumber = 0;
+        controlnum = 1;
     }
     else
     {
-        uint8_t cn = obj["controllernumber"];
-        controllernumber = cn;
+        uint8_t cn = obj["controlnum"];
+        controlnum = cn;
     }
 
     if (obj["imperial"].isNull())
@@ -445,16 +446,17 @@ void Temperatures::save(JsonObject obj) const
     obj["setpoint"] = setpoint;
     obj["controlpoint"] = controlpoint;
     obj["controlenabled"] = controlenabled;
+    obj["coolonhigh"] = coolonhigh;
     obj["roomenabled"] = enabled[0];
-    obj["room"] = calibration[0];
+    obj["roomcal"] = calibration[0];
     obj["towerenabled"] = enabled[1];
-    obj["tower"] = calibration[1];
+    obj["towercal"] = calibration[1];
     obj["upperenabled"] = enabled[2];
-    obj["upper"] = calibration[2];
+    obj["uppercal"] = calibration[2];
     obj["lowerenabled"] = enabled[3];
-    obj["lower"] = calibration[3];
+    obj["lowercal"] = calibration[3];
     obj["kegenabled"] = enabled[4];
-    obj["keg"] = calibration[4];
+    obj["kegcal"] = calibration[4];
 }
 
 void Temperatures::load(JsonObjectConst obj)
@@ -491,6 +493,16 @@ void Temperatures::load(JsonObjectConst obj)
         controlenabled = ce;
     }
 
+    if (obj["coolonhigh"].isNull())
+    {
+        coolonhigh = false;
+    }
+    else
+    {
+        bool ch = obj["coolonhigh"];
+        coolonhigh = ch;
+    }
+
     if (obj["roomenabled"].isNull())
     {
         enabled[0] = false;
@@ -501,13 +513,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[0] = en;
     }
 
-    if (obj["room"].isNull())
+    if (obj["roomcal"].isNull())
     {
         calibration[0] = 0.0;
     }
     else
     {
-        float rc = obj["room"];
+        float rc = obj["roomcal"];
         calibration[0] = rc;
     }
 
@@ -521,13 +533,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[1] = en;
     }
 
-    if (obj["tower"].isNull())
+    if (obj["towercal"].isNull())
     {
         calibration[1] = 0.0;
     }
     else
     {
-        float tc = obj["tower"];
+        float tc = obj["towercal"];
         calibration[1] = tc;
     }
 
@@ -541,13 +553,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[2] = en;
     }
 
-    if (obj["upper"].isNull())
+    if (obj["uppercal"].isNull())
     {
         calibration[2] = 0.0;
     }
     else
     {
-        float uc = obj["upper"];
+        float uc = obj["uppercal"];
         calibration[2] = uc;
     }
 
@@ -561,13 +573,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[3] = en;
     }
 
-    if (obj["lower"].isNull())
+    if (obj["lowercal"].isNull())
     {
         calibration[3] = 0.0;
     }
     else
     {
-        float lc = obj["lower"];
+        float lc = obj["lowercal"];
         calibration[3] = lc;
     }
 
@@ -581,13 +593,13 @@ void Temperatures::load(JsonObjectConst obj)
         enabled[4] = en;
     }
 
-    if (obj["keg"].isNull())
+    if (obj["kegcal"].isNull())
     {
         calibration[4] = 0.0;
     }
     else
     {
-        float kc = obj["keg"];
+        float kc = obj["kegcal"];
         calibration[4] = kc;
     }
 }
@@ -600,7 +612,7 @@ void KegScreen::save(JsonObject obj) const
 
 void KegScreen::load(JsonObjectConst obj)
 {
-    // Load Keg Screen configuration
+    // Load KegScreen configuration
     //
     if (obj["url"].isNull())
     {
@@ -627,6 +639,7 @@ void TaplistIO::save(JsonObject obj) const
 {
     obj["venue"] = venue;
     obj["secret"] = secret;
+    obj["lastsent"] = lastsent;
     obj["update"] = update;
 }
 
@@ -654,9 +667,19 @@ void TaplistIO::load(JsonObjectConst obj)
         strlcpy(secret, sc, sizeof(secret));
     }
 
+    if (obj["lastsent"].isNull())
+    {
+        lastsent = 0;
+    }
+    else
+    {
+        long long ls = obj["lostsent"];
+        lastsent = ls;
+    }
+
     if (obj["update"].isNull())
     {
-        update = false;
+        update = true;
     }
     else
     {
@@ -792,7 +815,7 @@ void Config::save(JsonObject obj) const
     ota.save(obj.createNestedObject("ota"));
     // Add Calibration object
     temps.save(obj.createNestedObject("temps"));
-    // Add Keg Screen object
+    // Add KegScreen object
     kegscreen.save(obj.createNestedObject("kegscreen"));
     // Add TaplistIO object
     taplistio.save(obj.createNestedObject("taplistio"));

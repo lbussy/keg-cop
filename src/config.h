@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -50,6 +50,11 @@ SOFTWARE. */
 // Uncomment #define for logging level desired.
 //
 #ifndef LOG_LEVEL
+#ifdef _DEBUG_BUILD
+#define LOG_LEVEL LOG_LEVEL_VERBOSE       // All
+#else
+#define LOG_LEVEL LOG_LEVEL_NOTICE        // Errors, warnings and notices
+#endif
 // #define DISABLE_LOGGING
 // #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
 // #define LOG_LEVEL LOG_LEVEL_FATAL      // Fatal errors
@@ -57,7 +62,7 @@ SOFTWARE. */
 // #define LOG_LEVEL LOG_LEVEL_WARNING    // Errors, and warnings
 // #define LOG_LEVEL LOG_LEVEL_NOTICE     // Errors, warnings and notices
 // #define LOG_LEVEL LOG_LEVEL_TRACE      // Errors, warnings, notices & traces
-#define LOG_LEVEL LOG_LEVEL_VERBOSE     // All
+// #define LOG_LEVEL LOG_LEVEL_VERBOSE     // All
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -81,7 +86,9 @@ SOFTWARE. */
 // Echo all serial output to telnet
 //
 #ifndef DOTELNET
+#ifdef _DEBUG_BUILD // Only enable Telnet on debug builds
 #define DOTELNET true
+#endif
 #endif
 //
 #if DOTELNET == true
@@ -127,7 +134,9 @@ SOFTWARE. */
 // Use FILESYSTEM Editor
 //
 #ifndef SPIFFSEDIT
+#ifdef _DEBUG_BUILD
 #define SPIFFSEDIT
+#endif
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -326,7 +335,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Default beer name
+// Default beverage name
 //
 #ifndef DEFAULTBEV
 #define DEFAULTBEV "Pudswiller Doors"
@@ -382,8 +391,8 @@ SOFTWARE. */
 #define IMPERIAL true
 #define FMIN (double)33
 #define FMAX (double)80
-#define CMIN (double)1
-#define CMAX (double).5
+#define CMIN (double)0.5
+#define CMAX (double)26.6
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -487,7 +496,7 @@ SOFTWARE. */
 // Cooling Delay - Default 5 mins (in millis())
 //
 #ifndef COOLDELAY
-#define COOLDELAY 2 * 60 * 1000
+#define COOLDELAY 5 * 60 * 1000
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -497,7 +506,7 @@ SOFTWARE. */
 // Minimum on time - Default 2 mins (in millis())
 //
 #ifndef MINON
-#define MINON 1 * 60 * 1000
+#define MINON 2 * 60 * 1000
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -519,15 +528,25 @@ SOFTWARE. */
 #ifndef TEMPAVG
 #define TEMPAVG 6
 #endif
+//LOOP
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Frequency at which temp reports are sent to KegScreen (when configured)
+//
+#ifndef KSTEMPREPORT
+#define KSTEMPREPORT 60
+#endif
 //
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Frequency at which temp reports are sent to Keg Screen (when configured)
+// Frequency at which tap reports are sent to Taplist.io (when configured)
 //
-#ifndef KSTEMPREPORT
-#define KSTEMPREPORT 60
+#ifndef TIOLOOP
+#define TIOLOOP 300
 #endif
 //
 //////////////////////////////////////////////////////////////////////////

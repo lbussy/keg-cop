@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright (C) 2019-2020 Lee C. Bussy (@LBussy)
+# Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 # This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -25,5 +25,17 @@
 Import("env")
 
 env.Append(CPPDEFINES=[
-  ("PIO_BOARD", env["BOARD"])
+    ("PIO_BOARD", env["BOARD"])
 ])
+
+if env.GetBuildType() == "debug":
+    env.Append(CPPDEFINES=[
+        ("_DEBUG_BUILD"),
+        ("BUILD_TYPE", "debug")
+    ])
+
+else:
+    env.Append(CPPDEFINES=[
+        ("_RELEASE_BUILD"),
+        ("BUILD_TYPE", "release")
+    ])

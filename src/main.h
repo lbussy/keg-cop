@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -36,6 +36,8 @@ SOFTWARE. */
 #include "flowmeter.h"
 #include "tools.h"
 #include "execota.h"
+#include "uptimelog.h"
+#include "taplistio.h"
 
 #include <ArduinoLog.h>
 #include <ESP_DoubleResetDetector.h>

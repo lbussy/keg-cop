@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -40,9 +40,8 @@ void setup()
     { // If configuration does not load, sit and blink slowly like an idiot
         pinMode(LED, OUTPUT);
         Ticker blinker;
-        blinker.attach_ms(CONFIGBLINK, []() {
-            digitalWrite(LED, !(digitalRead(LED)));
-        });
+        blinker.attach_ms(CONFIGBLINK, []()
+                          { digitalWrite(LED, !(digitalRead(LED))); });
         while (true)
         {
         };
@@ -68,14 +67,14 @@ void setup()
     }
     else
     {
-        Log.verbose(F("Starting WiFi." CR));
+        Log.notice(F("Starting WiFi." CR));
         config.copconfig.nodrd = false;
         doWiFi();
     }
 
     // Set pin for relay
     pinMode(COOL, OUTPUT);
-    digitalWrite(COOL, HIGH);
+    digitalWrite(COOL, (config.temps.coolonhigh) ? LOW : HIGH);
 
     setClock(); // Set NTP Time
 
@@ -85,28 +84,32 @@ void setup()
     else
         Log.error(F("Unable to load flowmeters." CR));
 
-    execspiffs();       // Check for pending FILESYSTEM update
-    mdnssetup();        // Set up mDNS responder
-    initWebServer();    // Turn on web server
-    sensorInit();       // Initialize temperature sensors
-    startControl();     // Initialize temperature control
-    doVersionPoll();    // Get server version at startup
-    setupRPints();      // Set up MQTT
+    execspiffs();    // Check for pending FILESYSTEM update
+    mdnssetup();     // Set up mDNS responder
+    initWebServer(); // Turn on web server
+    sensorInit();    // Initialize temperature sensors
+    startControl();  // Initialize temperature control
+    doVersionPoll(); // Get server version at startup
+    setupRPints();   // Set up MQTT
+#ifdef _DEBUG_BUILD
+    doUptime(true); // Uptime log start
+#endif
 
     // Setup tickers
-    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors
-    doControlTicker.attach(TEMPLOOP, controlLoop);                                  // Update temperature control loop
-    logPourTicker.attach(TAPLOOP, logFlow);                                         // Log pours
-    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                  // Poll for server version
-    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);                 // Send Keg Screen Temp Report
-    sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport);   // Send Target Report
-    rebootTimer.attach(86400 , setDoReset);                                         // Reboot every 24 hours
+    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                // Poll temperature sensors
+    doControlTicker.attach(TEMPLOOP, controlLoop);                                // Update temperature control loop
+    logPourTicker.attach(TAPLOOP, logFlow);                                       // Log pours
+    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                // Poll for server version
+    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);               // Send KegScreen Temp Report
+    sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport); // Send Target Report
+    rebootTimer.attach(86400, setDoReset);                                        // Reboot every 24 hours
+    sendTIOTaps();                                                                // Send initial Taplist.io keg levels
 
     if (!Log.getLevel())
         nullDoc("d");
     else
     {
-        Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), API_KEY, fw_version(), fs_version(), branch(), build());        
+        Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), apiKey, fw_version(), fs_version(), branch(), build());
     }
 }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -46,7 +46,7 @@ void requestHandler(void *optParm, asyncHTTPrequest *request, int readyState)
     }
     else
     {
-        Log.verbose(F("Deserialized version information." CR));
+        Log.notice(F("Deserialized version information." CR));
     }
 }
 

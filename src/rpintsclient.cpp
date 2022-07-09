@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -24,14 +24,16 @@ SOFTWARE. */
 
 AsyncMqttClient rpintsClient;
 Ticker rpintsReconnectTimer;
+static int cycleCount;
 
 void setupRPints()
 {
-    Log.verbose(F("MQTT: Creating process." CR));
+    Log.notice(F("MQTT: Creating process." CR));
     rpintsClient.onConnect(onRPintsConnect);
     rpintsClient.onDisconnect(onRPintsDisconnect);
     rpintsClient.onPublish(onRPintsPublish);
     rpintsReconnectTimer.attach(5, setDoRPintsConnect);
+    cycleCount = 10;
 }
 
 void connectRPints()
@@ -79,7 +81,13 @@ void connectRPints()
     }
     else
     {
-        Log.verbose(F("MQTT: No broker configured." CR));
+        if ( cycleCount >= 10 )
+        { // Reduce message spam a bit (verbose is only in debug mode)
+            cycleCount = 0;
+            Log.verbose(F("MQTT: No broker configured." CR));
+        }
+        else
+            cycleCount++;
     }
 }
 
@@ -116,7 +124,7 @@ bool sendPulsesRPints(int tapID, unsigned int pulses)
         strcat(payload, count); // Count of pulses in report
 
         // Send report
-        Log.verbose(F("MQTT: Sending message to %s:%d, payload: %s" CR),
+        Log.notice(F("MQTT: Sending message to %s:%d, payload: %s" CR),
                 config.rpintstarget.host,
                 config.rpintstarget.port,
                 payload);

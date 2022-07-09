@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html class="h-100" lang="en">
 
 <head>
@@ -10,7 +11,7 @@
 
     <title>Keg Cop</title>
 
-    <link rel="canonical" href="https://www.kegcop.com/">
+    <link rel="canonical" href="https://www.kegcop.com">
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -22,16 +23,17 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="/common.css">
-    <link rel="stylesheet" href="/loader.css">
-    <script src="/loader.js"></script>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="loader.css">
+    <script src="devServer.js"></script>
+    <script src="loader.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="index">
                 <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
@@ -42,19 +44,19 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link active" href="index">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
-                        <a class="nav-link" href="/temps/">Temperatures</a>
+                        <a class="nav-link" href="temps">Temperatures</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/settings/">Settings</a>
+                        <a class="nav-link" href="settings">Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/help/">Help</a>
+                        <a class="nav-link" href="help">Help</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about/">About</a>
+                        <a class="nav-link" href="about">About</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -84,7 +86,7 @@
                     </div>
                     <div class="float-right">
                         <h5 id="coolstate" class="text-right alert">
-                            <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="/temps/">
+                            <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="temps">
                                 <span id="controlPoint"></span>
                                 <span id="controlTemp"></span>
                                 <span id="tempFormat"></span>
@@ -106,7 +108,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Copyright © 2019-2020, Lee C. Bussy</span>
+            <span class="text-muted">Copyright © 2019-2022, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -128,9 +130,9 @@
         integrity="sha384-fIE8wIddxI8s1yO253uBKjQyxNZ5UuilW9rx7H4ePN7XS7Z9ukIeK+ECX5B8jDAj" crossorigin="anonymous">
         </script>
 
-    <script src="/index.js"></script>
+    <script src="index.js"></script>
 
-    <script src="/alerts.js"></script>
+    <script src="alerts.js"></script>
 
     <script>
 

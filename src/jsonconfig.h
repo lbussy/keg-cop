@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -51,7 +51,7 @@ struct CopConfig
     bool nodrd;
     char breweryname[64];
     char kegeratorname[64];
-    uint8_t controllernumber;
+    uint8_t controlnum;
     bool imperial;
     bool serial;
     bool tapsolenoid;
@@ -66,6 +66,7 @@ struct Temperatures
     float setpoint;
     int controlpoint;
     bool controlenabled;
+    bool coolonhigh;
     bool enabled[NUMSENSOR];
     float calibration[NUMSENSOR];
 
@@ -75,7 +76,7 @@ struct Temperatures
 
 struct KegScreen
 {
-    // Stores Keg Screen configuration
+    // Stores KegScreen configuration
     char url[128];
     bool update;
 
@@ -86,8 +87,9 @@ struct KegScreen
 struct TaplistIO
 {
     // Stores TaplistIO configuration
-    char venue[25];
-    char secret[57];
+    char venue[256];
+    char secret[256];
+    long long lastsent;
     bool update;
 
     void load(JsonObjectConst);
@@ -175,5 +177,7 @@ bool deserializeConfig(Stream &);
 // Conversions
 void convertConfigtoImperial();
 void convertConfigtoMetric();
+
+extern const char *apiKey;
 
 #endif // _JSONCONFIG_H

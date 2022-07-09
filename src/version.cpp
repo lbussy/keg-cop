@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -31,6 +31,7 @@ const char *fs_version() { fsver(); return (fs_ver); }
 const char *branch() { return stringify(PIO_SRC_BRH); }
 const char *build() { return stringify(PIO_SRC_REV); }
 const char *board() { return stringify(PIO_BOARD); }
+const char *build_mode() { return stringify(BUILD_TYPE); }
 
 void fsver()
 {
@@ -38,7 +39,7 @@ void fsver()
     if (FILESYSTEM.begin())
     {
         // Loads the configuration from a file on FILESYSTEM
-        File file = FILESYSTEM.open(filename, "r");
+        File file = FILESYSTEM.open(filename,FILE_READ);
         if (FILESYSTEM.exists(filename) || !file)
         {
             // Deserialize version
