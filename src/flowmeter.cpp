@@ -456,16 +456,16 @@ void convertFlowtoMetric()
 
 void Taps::save(JsonObject obj) const
 {
-    obj["tapid"] = tapid;               // Tap ID
-    obj["label"] = label;               // Tap display label
-    obj["taplistioTap"] = taplistioTap; // Taplist.io display label
-    obj["pin"] = pin;                   // μC Pin
-    obj["ppu"] = ppu;                   // Pulses per Gallon
-    obj["name"] = name;                 // Beverage Name
-    obj["capacity"] = capacity;         // Tap Capacity
-    obj["remaining"] = remaining;       // Tap remaining
-    obj["active"] = active;             // Tap active
-    obj["calibrating"] = calibrating;   // Tap calibrating
+    obj[FlowmeterKeys::tapid] = tapid;               // Tap ID
+    obj[FlowmeterKeys::label] = label;               // Tap display label
+    obj[FlowmeterKeys::taplistioTap] = taplistioTap; // Taplist.io display label
+    obj[FlowmeterKeys::pin] = pin;                   // μC Pin
+    obj[FlowmeterKeys::ppu] = ppu;                   // Pulses per Gallon
+    obj[FlowmeterKeys::name] = name;                 // Beverage Name
+    obj[FlowmeterKeys::capacity] = capacity;         // Tap Capacity
+    obj[FlowmeterKeys::remaining] = remaining;       // Tap remaining
+    obj[FlowmeterKeys::active] = active;             // Tap active
+    obj[FlowmeterKeys::calibrating] = calibrating;   // Tap calibrating
 }
 
 void Taps::load(JsonObjectConst obj, int numTap)
@@ -475,83 +475,83 @@ void Taps::load(JsonObjectConst obj, int numTap)
     tapid = numTap;
     pin = flowPins[numTap];
 
-    if (obj["label"].isNull() || obj["label"] == 0)
+    if (obj[FlowmeterKeys::label].isNull() || obj[FlowmeterKeys::label] == 0)
     {
         label = tapid + 1; // Default to sequential 1-based label
     }
     else
     {
-        int tl = obj["label"];
+        int tl = obj[FlowmeterKeys::label];
         label = tl;
     }
 
-    if (obj["taplistioTap"].isNull() || obj["taplistioTap"] == 0)
+    if (obj[FlowmeterKeys::taplistioTap].isNull() || obj[FlowmeterKeys::taplistioTap] == 0)
     {
         taplistioTap = 0; // Default to sequential 1-based label
     }
     else
     {
-        int tl = obj["taplistioTap"];
+        int tl = obj[FlowmeterKeys::taplistioTap];
         taplistioTap = tl;
     }
 
-    if (obj["ppu"].isNull() || obj["ppu"] == 0)
+    if (obj[FlowmeterKeys::ppu].isNull() || obj[FlowmeterKeys::ppu] == 0)
     {
         ppu = PPU;
     }
     else
     {
-        long pg = obj["ppu"];
+        long pg = obj[FlowmeterKeys::ppu];
         ppu = pg;
     }
 
-    if (obj["name"].isNull() || strlen(obj["name"]) == 0)
+    if (obj[FlowmeterKeys::name].isNull() || strlen(obj[FlowmeterKeys::name]) == 0)
     {
         strlcpy(name, DEFAULTBEV, sizeof(name));
     }
     else
     {
-        const char *nm = obj["name"];
+        const char *nm = obj[FlowmeterKeys::name];
         strlcpy(name, nm, sizeof(name));
     }
 
-    if (obj["capacity"].isNull() || obj["capacity"] == 0)
+    if (obj[FlowmeterKeys::capacity].isNull() || obj[FlowmeterKeys::capacity] == 0)
     {
         capacity = KEGSIZE;
     }
     else
     {
-        double cp = obj["capacity"];
+        double cp = obj[FlowmeterKeys::capacity];
         capacity = cp;
     }
 
-    if (obj["remaining"].isNull())
+    if (obj[FlowmeterKeys::remaining].isNull())
     {
         remaining = 0;
     }
     else
     {
-        double rm = obj["remaining"];
+        double rm = obj[FlowmeterKeys::remaining];
         remaining = rm;
     }
 
-    if (obj["active"].isNull())
+    if (obj[FlowmeterKeys::active].isNull())
     {
         active = false;
     }
     else
     {
-        bool a = obj["active"];
+        bool a = obj[FlowmeterKeys::active];
         active = a;
     }
 
-    if (obj["calibrating"].isNull())
+    if (obj[FlowmeterKeys::calibrating].isNull())
     {
         calibrating = false;
     }
     else
     {
-        bool c = obj["calibrating"];
+        bool c = obj[FlowmeterKeys::calibrating];
         calibrating = c;
     }
 }

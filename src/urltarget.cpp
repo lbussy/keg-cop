@@ -31,6 +31,7 @@ bool sendTargetReport()
     bool retval = true;
     if (config.urltarget.url != NULL && config.urltarget.url[0] != '\0') // If URL Target
     {
+        Log.verbose(F("Building URL Target report." CR));
         UrlReport urlreport;
         strlcpy(urlreport.api, apiKey, sizeof(urlreport.api));
         strlcpy(urlreport.guid, config.copconfig.guid, sizeof(urlreport.guid));
@@ -73,12 +74,12 @@ bool sendTargetReport()
         const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5 * JSON_OBJECT_SIZE(3) + 9 * JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(13);
         DynamicJsonDocument doc(capacity);
 
-        doc["api"] = (const char *)urlreport.api;
-        doc["guid"] = (const char *)urlreport.guid;
-        doc["hostname"] = (const char *)urlreport.hostname;
-        doc["breweryname"] = (const char *)urlreport.breweryname;
-        doc["kegeratorname"] = (const char *)urlreport.kegeratorname;
-        doc["reporttype"] = (const char *)urlreport.reporttype;
+        doc["api"] = urlreport.api;
+        doc["guid"] = urlreport.guid;
+        doc["hostname"] = urlreport.hostname;
+        doc["breweryname"] = urlreport.breweryname;
+        doc["kegeratorname"] = urlreport.kegeratorname;
+        doc["reporttype"] = urlreport.reporttype;
         doc["imperial"] = urlreport.imperial;
         doc["controlpoint"] = (const int)urlreport.controlpoint;
         doc["setting"] = (const float)urlreport.setpoint;
@@ -87,19 +88,19 @@ bool sendTargetReport()
 
         for (int i = 0; i < NUMSENSOR; i++)
         {
-            doc["sensors"][i]["name"] = (const char *)urlreport.sensor[i].name;
+            doc["sensors"][i]["name"] = urlreport.sensor[i].name;
             doc["sensors"][i]["value"] = (const float)urlreport.sensor[i].average;
             doc["sensors"][i]["enabled"] = urlreport.sensor[i].enabled;
         }
 
         for (int i = 0; i < NUMTAPS; i++)
         {
-            doc["taps"][i]["tapid"] = (const int)urlreport.tap[i].tapid;
-            doc["taps"][i]["ppu"] = (const int)urlreport.tap[i].ppu;
-            doc["taps"][i]["name"] = (const char *)urlreport.tap[i].name;
-            doc["taps"][i]["capacity"] = (const double)urlreport.tap[i].capacity;
-            doc["taps"][i]["remaining"] = (const double)urlreport.tap[i].remaining;
-            doc["taps"][i]["active"] = urlreport.tap[i].active;
+            doc["taps"][i][FlowmeterKeys::tapid] = urlreport.tap[i].tapid;
+            doc["taps"][i][FlowmeterKeys::ppu] = urlreport.tap[i].ppu;
+            doc["taps"][i][FlowmeterKeys::name] = urlreport.tap[i].name;
+            doc["taps"][i][FlowmeterKeys::capacity] = urlreport.tap[i].capacity;
+            doc["taps"][i][FlowmeterKeys::remaining] = urlreport.tap[i].remaining;
+            doc["taps"][i][FlowmeterKeys::active] = urlreport.tap[i].active;
         }
 
         String json;
@@ -110,6 +111,7 @@ bool sendTargetReport()
             if (sendTReport(json.c_str()))
             {
                 retval = true;
+                Log.notice(F("Sent URL Target report." CR));
             }
             else
             {
