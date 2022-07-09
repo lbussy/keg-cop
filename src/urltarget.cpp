@@ -31,6 +31,7 @@ bool sendTargetReport()
     bool retval = true;
     if (config.urltarget.url != NULL && config.urltarget.url[0] != '\0') // If URL Target
     {
+        Log.verbose(F("Building URL Target report." CR));
         UrlReport urlreport;
         strlcpy(urlreport.api, apiKey, sizeof(urlreport.api));
         strlcpy(urlreport.guid, config.copconfig.guid, sizeof(urlreport.guid));
@@ -110,6 +111,7 @@ bool sendTargetReport()
             if (sendTReport(json.c_str()))
             {
                 retval = true;
+                Log.notice(F("Sent URL Target report." CR));
             }
             else
             {
