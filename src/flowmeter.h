@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -35,11 +35,12 @@ SOFTWARE. */
 
 struct Taps
 {
-    int tapid;                // Tap ID
-    int taplabel;             // Tap ID
+    int tapid;                // Tap ID (internal)
+    int label;                // Tap ID (external, user configurable)
+    int taplistioTap;         // Tap number at Taplist.io
     int pin;                  // μC Pin
     long ppu;                 // Pulses per Gallon
-    char name[65];            // Beer Name
+    char name[65];            // Beverage Name
     double capacity;          // Tap Capacity
     double remaining;         // Tap remaining
     bool active = false;      // Is tap active
@@ -83,8 +84,22 @@ void convertFlowtoImperial();
 void convertFlowtoMetric();
 
 extern struct Config config;
-extern float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
+extern float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
 extern unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pulses
-extern bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending kicks
+extern bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
+
+
+namespace FlowmeterKeys {
+    constexpr auto tapid = "tapid";
+    constexpr auto label = "label";
+    constexpr auto taplistioTap = "taplistioTap";
+    constexpr auto pin = "pin";
+    constexpr auto ppu = "ppu";
+    constexpr auto name = "name";
+    constexpr auto capacity = "capacity";
+    constexpr auto remaining = "remaining";
+    constexpr auto active = "active";
+    constexpr auto calibrating = "calibrating";
+};
 
 #endif // _FLOWMETER_H

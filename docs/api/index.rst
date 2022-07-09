@@ -360,7 +360,7 @@ GET
             "nodrd": false,
             "breweryname": "Silver Fox Brewery",
             "kegeratorname": "Keezer",
-            "controllernumber": 0,
+            "controlnum": 0,
             "serial": false,
             "imperial": true,
             "tapsolenoid": true
@@ -375,15 +375,15 @@ GET
             "controlpoint": 4,
             "controlenabled": true,
             "roomenabled": true,
-            "room": 1,
+            "roomcal": 1,
             "towerenabled": true,
-            "tower": 2,
+            "towercal": 2,
             "upperenabled": true,
-            "upper": -1,
+            "uppercal": -1,
             "lowerenabled": true,
-            "lower": -2,
+            "lowercal": -2,
             "kegenabled": true,
-            "keg": 3
+            "kegcal": 3
         },
         "kegscreen": {
             "url": "http://mule.local/kegcop/",
@@ -396,6 +396,12 @@ GET
             "password": "",
             "topic": "kegcop",
             "update": false
+        },
+        "taplistio": {
+            "venue": "taplist-12345",
+            "secret":"secret-abcdefghijk",
+            "lastsent":1656966278,
+            "update":false
         },
         "urltarget": {
             "url": "http://mule.local",
@@ -423,6 +429,7 @@ copconfig
 - ``hostname`` - A string representing a valid hostname (without the .local portion) between 3 and 32 characters.
 - ``breweryname`` - A string representing the brewery name, used to logically group multiple controllers and display the web page.
 - ``kegeratorname`` - A string representing the kegerator name, used to identify the controller and displayed within the web page display.
+- ``controlnum`` - A 1-based index of the controller sequence.  This should be unique in the brewery and will help identify the same tapid across multiple controllers.
 - ``imperial`` - A boolean representing imperial versus metric units to be used by the controller.  Changing this value will result in a conversion of all stored values to the target units.  Multiple toggles could result in accrued rounding errors and some loss of accuracy.
 - ``tapsolenoid`` - A simple control point intended to control a local solenoid by an upstream system or the web UI.
 
@@ -431,17 +438,17 @@ temps
 
 - ``setpoint`` - The temperature setpoint in the configured units to which the system will cool the cabinet.  This is a floating-point number.
 - ``controlpoint`` - A zero-based index indicating the sensor_ by which the system will be cooled.
-- ``enablecontrol`` - A boolean turning temperature control on and off.
+- ``controlenabled`` - A boolean turning temperature control on and off.
 - ``enableroom`` - Enable the room sensor to be displayed.
-- ``calroom`` - A signed floating-point number by which the room sensor will be calibrated.
+- ``roomcal`` - A signed floating-point number by which the room sensor will be calibrated.
 - ``enabletower`` - Enable the tower sensor to be displayed.
-- ``caltower`` - A signed floating-point number by which the tower sensor will be calibrated.
-- ``enableupper`` - Enable the upper sensor to be displayed.
-- ``calupper`` - A signed floating-point number by which the upper sensor will be calibrated.
+- ``towercal`` - A signed floating-point number by which the tower sensor will be calibrated.
+- ``enableupper`` - Enable the uppercal sensor to be displayed.
+- ``uppercal`` - A signed floating-point number by which the upper sensor will be calibrated.
 - ``enablelower`` - Enable the lower sensor to be displayed.
-- ``callower`` - A signed floating-point number by which the lower sensor will be calibrated.
+- ``lowercal`` - A signed floating-point number by which the lower sensor will be calibrated.
 - ``enablekeg`` - Enable the keg sensor to be displayed.
-- ``calkeg`` - A signed floating-point number by which the keg sensor will be calibrated.
+- ``kegcal`` - A signed floating-point number by which the keg sensor will be calibrated.
 
 kegscreen (url)
 """""""""""""""
@@ -456,6 +463,14 @@ rpintstarget
 - ``rpintsusername`` - The MQTT user name, blank if not used.
 - ``rpintspassword`` - The MQTT password, blank if not used.
 - ``rpintstopic`` - The MQTT topic.
+
+taplistio
+""""""""""""""
+
+- ``venue`` - The taplist.io venue name.
+- ``secret`` - The taplist.io API secret key.
+- ``lastsent`` - Time (epoch) the report was last sent.  Used for rate limiting.
+- ``update`` - Whether there is a Taplist.io update pending.
 
 urltarget
 """""""""""
@@ -485,7 +500,8 @@ GET
         "taps": [
             {
                 "tapid": 0,
-                "taplabel": 1,
+                "label": 1,
+                "taplistioTap": 1,
                 "pin": 4,
                 "ppu": 21120,
                 "name": "Pudswiller Doors",
@@ -496,7 +512,8 @@ GET
             },
             {
                 "tapid": 1,
-                "taplabel": 2,
+                "label": 2,
+                "taplistioTap": 0,
                 "pin": 16,
                 "ppu": 21120,
                 "name": "Bug's House Ale",
@@ -507,7 +524,8 @@ GET
             },
             {
                 "tapid": 2,
-                "taplabel": 3,
+                "label": 3,
+                "taplistioTap": 0,
                 "pin": 17,
                 "ppu": 21120,
                 "name": "Navelgazer IPA",
@@ -518,7 +536,8 @@ GET
             },
             {
                 "tapid": 3,
-                "taplabel": 4,
+                "label": 4,
+                "taplistioTap": 0,
                 "pin": 18,
                 "ppu": 21120,
                 "name": "Tanked 7",
@@ -529,7 +548,8 @@ GET
             },
             {
                 "tapid": 4,
-                "taplabel": 5,
+                "label": 5,
+                "taplistioTap": 0,
                 "pin": 19,
                 "ppu": 21120,
                 "name": "Ringaling Lager",
@@ -540,7 +560,8 @@ GET
             },
             {
                 "tapid": 5,
-                "taplabel": 6,
+                "label": 6,
+                "taplistioTap": 0,
                 "pin": 21,
                 "ppu": 21120,
                 "name": "Peter Skee",
@@ -551,7 +572,8 @@ GET
             },
             {
                 "tapid": 6,
-                "taplabel": 7,
+                "label": 7,
+                "taplistioTap": 0,
                 "pin": 22,
                 "ppu": 21120,
                 "name": "Undead Guy",
@@ -562,7 +584,8 @@ GET
             },
             {
                 "tapid": 7,
-                "taplabel": 8,
+                "label": 8,
+                "taplistioTap": 0,
                 "pin": 23,
                 "ppu": 21120,
                 "name": "Who's Garden",
@@ -573,7 +596,8 @@ GET
             },
             {
                 "tapid": 8,
-                "taplabel": 9,
+                "label": 9,
+                "taplistioTap": 0,
                 "pin": 13,
                 "ppu": 21120,
                 "name": "Mystery Mead",
@@ -593,7 +617,8 @@ Where:
 Tap information follows the following format:
 
 - ``tapid`` = The zero-based index representing the tap number internally.
-- ``taplabel`` = The one-based label representing the tap number externally.
+- ``label`` = The one-based label representing the tap number externally.
+- ``taplistioTap`` = The one-based label representing the Taplist.io tap number externally.
 - ``pin`` = The microcontroller pin_ defined for the tap.
 - ``ppu`` = The pulses per configured flow unit.
 - ``name`` = The name of the beverage currently on tap.
@@ -622,7 +647,7 @@ The tap array follows the following format for each of the nine available taps:
 - ``tap`` = The zero-based index representing the tap number.
 - ``label`` = The one-based label representing the tap number externally.
 - ``ppu`` = The pulses per configured flow unit.
-- ``beername`` = The name of the beverage currently on tap.
+- ``bevname`` = The name of the beverage currently on tap.
 - ``cap`` = The capacity, in floating-point current units, of the attached keg.
 - ``remain`` = The amount remaining, in floating-point current units, of the attached keg.
 - ``active`` = Denotes whether the tap is active (displayed) or not.

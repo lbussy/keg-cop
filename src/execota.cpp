@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -40,7 +40,7 @@ void execfw()
     String fw_url = UPGRADEURL;
     fw_url += board();
     fw_url += "_firmware.bin";
-    Log.verbose(F("Pulling Firmware from: %s" CR), fw_url.c_str());
+    Log.notice(F("Pulling Firmware from: %s" CR), fw_url.c_str());
     LCBUrl lcburl;
     lcburl.setUrl(fw_url);
     char host[64], path[64];
@@ -111,7 +111,7 @@ void execspiffs()
         String fs_url = UPGRADEURL;
         fs_url += board();
         fs_url += "_spiffs.bin";
-        Log.verbose(F("Pulling Filesystem from: %s" CR), fs_url.c_str());
+        Log.notice(F("Pulling Filesystem from: %s" CR), fs_url.c_str());
         LCBUrl lcburl;
         lcburl.setUrl(fs_url);
         char host[64], path[64];

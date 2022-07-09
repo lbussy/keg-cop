@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -43,7 +43,11 @@ void doWiFi(bool dontUseStoredCreds)
 
 #ifndef DISABLE_LOGGING
     if (Log.getLevel())
+#ifdef _DEBUG_BUILD
         wm.setDebugOutput(true); // Verbose debug is enabled by default
+#else
+        wm.setDebugOutput(false);
+#endif
     else
         wm.setDebugOutput(false);
 #else
@@ -63,7 +67,7 @@ void doWiFi(bool dontUseStoredCreds)
     // wm.setCustomHeadElement("<style>html{filter: invert(100%); -webkit-filter: invert(100%);}</style>");
     // wm.setClass(F("invert"));   // Set dark theme
 
-    wm.setCountry(WIFI_COUNTRY);    // Setting wifi country seems to improve OSX soft ap connectivity
+    // wm.setCountry(WIFI_COUNTRY);    // Setting wifi country seems to improve OSX soft ap connectivity (TODO: crashes now)
     wm.setWiFiAPChannel(WIFI_CHAN); // Set WiFi channel
 
     wm.setShowStaticFields(true); // Force show static ip fields
@@ -199,9 +203,9 @@ void WiFiEvent(WiFiEvent_t event)
     Serial.printf("[WiFi-event] event: %d\n", event);
     if (! WiFi.isConnected())
     {
-        Log.warning(F("WiFi lost connection." CR));
+        Log.warning(F("WiFi lost connection, reconnecting .."));
         disconnectRPints();
-        WiFi.begin();
+        WiFi.reconnect();
 
         int WLcount = 0;
         while (! WiFi.isConnected() && WLcount < 190) {
@@ -209,6 +213,7 @@ void WiFiEvent(WiFiEvent_t event)
             printDot(true);
             ++WLcount;
         }
+        printCR();
 
         if (! WiFi.isConnected()) {
             // We failed to reconnect.

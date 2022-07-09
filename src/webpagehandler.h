@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -68,6 +68,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *);
 HANDLER_STATE handleControlPost(AsyncWebServerRequest *);
 HANDLER_STATE handleSensorPost(AsyncWebServerRequest *);
 HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *);
+HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *);
 HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *);

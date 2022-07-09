@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" class="h-100">
 
 <head>
@@ -11,7 +11,7 @@
 
     <title>Keg Cop</title>
 
-    <link rel="canonical" href="https://www.kegcop.com/">
+    <link rel="canonical" href="https://www.kegcop.com">
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -23,16 +23,17 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="/common.css">
-    <link rel="stylesheet" href="/loader.css">
-    <script src="/loader.js"></script>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="loader.css">
+    <script src="devServer.js"></script>
+    <script src="loader.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="index">
                 <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
@@ -43,16 +44,16 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="index">Home</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/settings/">Settings <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="settings">Settings <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/help/">Help</a>
+                        <a class="nav-link" href="help">Help</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about/">About</a>
+                        <a class="nav-link" href="about">About</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -109,7 +110,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Copyright &copy; 2019-2021, Lee C. Bussy</span>
+            <span class="text-muted">Copyright &copy; 2019-2022, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -156,14 +157,14 @@
                         });
                         $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
                         $("#message").replaceWith("<p class='card-body'>The firmware update is complete.  You will be redirected momentarily.</p>");
-                        setTimeout(function () { window.location.href = "/"; }, 5000);
+                        setTimeout(function () { window.location.href = "index"; }, 5000);
                     }
                 });
             }, 10000);
         }
 
         function checkSemaphore(callback) { // Check to see if the update is complete
-            var jqxhr = $.get("/api/v1/action/ping/")
+            var jqxhr = $.get("api/v1/action/ping")
                 .done(function (data) {
                     callback(true);
                 })

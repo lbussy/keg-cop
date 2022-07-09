@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -40,6 +40,7 @@ void fsver();
 const char *branch();
 const char *build();
 const char *board();
+const char *build_mode();
 
 int versionCompare(String, String);
 

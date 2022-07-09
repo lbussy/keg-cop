@@ -20,38 +20,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFI_H
-#define _WIFI_H
+#ifndef _TAPLISTIO_H
+#define _TAPLISTIO_H
 
-#include "config.h"
-#include "jsonconfig.h"
-#include "tools.h"
-#include "rpintsclient.h"
+void sendTIOTaps();
+bool sendTaplistio(int tapid);
 
-#include <WiFi.h>
-#include <AsyncWiFiManager.h>
-#include <Ticker.h>
-#include <ArduinoLog.h>
+static bool __attribute__((unused)) tioReporting = false; // Lock for Taplist.IO Report
 
-void wifiBlinker();
-void doWiFi();
-void doWiFi(bool dontUseStoredCreds);
-void resetWifi();
-
-// AsyncWiFiManager Callbacks
-void apCallback(AsyncWiFiManager *wiFiManager);
-void configResetCallback();
-void preSaveConfigCallback();
-void saveConfigCallback();
-void saveParamsCallback();
-void webServerCallback();
-void WiFiEvent(WiFiEvent_t event);
-
-extern struct Config config;
-
-struct tcp_pcb;
-extern struct tcp_pcb *tcp_tw_pcbs;
-extern "C" void tcp_abort(struct tcp_pcb *pcb);
-void tcpCleanup(void);
-
-#endif // _WIFI_H
+#endif // _TAPLISTIO_H

@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2021 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -21,11 +21,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "tools.h"
+#include "taplistio.h"
 
-float __attribute__((unused)) queuePourReport[NUMTAPS]; // Store pending pours
+float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
 unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pours
-bool __attribute__((unused)) queueKickReport[NUMTAPS];  // Store pending kicks
-bool __attribute__((unused)) queueStateChange;          // Store pending tstat state changes
+bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
+bool __attribute__((unused)) queueStateChange;                  // Store pending tstat state changes
 
 void _delay(unsigned long ulDelay)
 {
@@ -71,6 +72,11 @@ void setDoRPintsConnect()
     doRPintsConnect = true; // Semaphore required for MQTT (re)connect
 }
 
+void setDoSaveUptime()
+{
+    doSetSaveUptime = true; // Semaphore required to save reboot time
+}
+
 void tickerLoop()
 {
     // Necessary because we cannot delay or do radio work in a callback
@@ -84,6 +90,12 @@ void tickerLoop()
     { // Need to do this to prevent WDT
         doWiFiReset = false;
         resetWifi();
+    }
+
+    if (doSetSaveUptime)
+    { // Log uptime
+        doSetSaveUptime = false;
+        doUptime();
     }
 
     // // External Event Reports
@@ -100,36 +112,48 @@ void tickerLoop()
         // Send kick report
         if (queueKickReport[i] == true)
         {
-            sendKickReport(i);
             queueKickReport[i] = false;
+            sendKickReport(i);
         }
         // Send temp control state change
         if (queueStateChange == true)
         {
-            sendCoolStateReport();
             queueStateChange = false;
+            sendCoolStateReport();
         }
         // Send Tap Info Report
         if (doTapInfoReport[i] == true)
         {
-            sendTapInfoReport(i);
             doTapInfoReport[i] = false;
+            sendTapInfoReport(i);
         }
     }
     if (doKSTempReport)
     {
-        sendTempReport();
         doKSTempReport = false;
+        sendTempReport();
     }
     if (doTargetReport)
     {
-        sendTargetReport();
         doTargetReport = false;
+        sendTargetReport();
     }
     if (doRPintsConnect)
     {
-        connectRPints();
         doRPintsConnect = false;
+        connectRPints();
+    }
+    if (doTaplistIOConnect && !tioReporting)
+    {
+        time_t now;
+        struct tm timeinfo;
+        getLocalTime(&timeinfo);
+        time(&now);
+        if ((now - config.taplistio.lastsent > TIOLOOP) && config.taplistio.update && config.taplistio.update && (strlen(config.taplistio.secret) >= 7) && (strlen(config.taplistio.venue) >= 3))
+        {
+            doTaplistIOConnect = false; // Semaphore required for Taplist.io report
+            sendTIOTaps();
+        }
     }
 }
 
@@ -145,9 +169,7 @@ void maintenanceLoop()
         // The ms clock will rollover after ~49 days.  To be on the safe side,
         // restart the ESP after about 42 days to reset the ms clock.
         Log.warning(F("Maintenance: Six week routine restart."));
-        config.copconfig.nodrd = true;
-        saveConfig();
-        ESP.restart();
+        resetController();
     }
     if (lastNTPUpdate > NTPRESET)
     {

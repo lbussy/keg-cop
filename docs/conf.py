@@ -29,7 +29,7 @@ from sphinx.ext import todo
 # -- Project information -----------------------------------------------------
 
 project = u'Keg Cop'
-copyright = u'2019-2021 Lee C. Bussy'
+copyright = u'2019-2022 Lee C. Bussy'
 author = u'Lee C. Bussy'
 
 # Get 0.0.0 version from latest Git tag
