@@ -501,9 +501,12 @@ void setInfoPageHandlers()
         doc["status"] = tstat.state;
         doc["controlenabled"] = config.temps.enabled[config.temps.controlpoint];
         doc["coolonhigh"] = config.temps.coolonhigh;
+        doc["tfancontrolenabled"] = config.temps.tfancontrolenabled;
+        doc["tfansetpoint"] = config.temps.tfansetpoint;
+        doc["tfanstate"] = tfan.state;
 
         int numEnabled = 0;
-        char *sensorName[NUMSENSOR];
+        // char *sensorName[NUMSENSOR];
         double sensorAverage[NUMSENSOR];
 
         for (int i = 0; i < NUMSENSOR; i++)
@@ -781,26 +784,33 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "tapsolenoid") == 0) // Set active
+            if (strcmp(name, "tapsolenoid") == 0)
             {
-                if (strcmp(value, "energized") == 0)
+                if (config.temps.tfancontrolenabled) // Set active
                 {
-                    didChange = true;
-                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                    digitalWrite(SOLENOID, LOW);
-                    config.copconfig.tapsolenoid = true;
-                }
-                else if (strcmp(value, "deenergized") == 0)
-                {
-                    didChange = true;
-                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                    digitalWrite(SOLENOID, HIGH);
-                    config.copconfig.tapsolenoid = false;
+                    if (strcmp(value, "energized") == 0)
+                    {
+                        didChange = true;
+                        Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        digitalWrite(SOLENOID, LOW);
+                        config.copconfig.tapsolenoid = true;
+                    }
+                    else if (strcmp(value, "deenergized") == 0)
+                    {
+                        didChange = true;
+                        Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        digitalWrite(SOLENOID, HIGH);
+                        config.copconfig.tapsolenoid = false;
+                    }
+                    else
+                    {
+                        didFail = true;
+                        Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                    }
                 }
                 else
                 {
-                    didFail = true;
-                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid when tower fan control is enabled." CR), name, value);
                 }
             }
         }
@@ -845,7 +855,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Sensor settings
             //
@@ -921,6 +931,70 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     config.temps.coolonhigh = false;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "tfancontrolenabled") == 0) // Enable tower fan control
+            {
+                if (strcmp(value, "true") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfancontrolenabled = true;
+                }
+                else if (strcmp(value, "false") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfancontrolenabled = false;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "tfansetpoint") == 0) // Set Tower fan setpoint
+            {
+                didChange = true;
+                double min, max;
+                if (config.copconfig.imperial)
+                {
+                    min = FMIN;
+                    max = FMAX;
+                }
+                else
+                {
+                    min = CMIN;
+                    max = CMAX;
+                }
+                if ((atof(value) < min) || (atof(value) > max))
+                {
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfansetpoint = atof(value);
+                }
+            }
+            if (strcmp(name, "fanonhigh") == 0) // Enable fan on pin high (reverse)
+            {
+                if (strcmp(value, "true") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfanonhigh = true;
+                }
+                else if (strcmp(value, "false") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfanonhigh = false;
                 }
                 else
                 {
