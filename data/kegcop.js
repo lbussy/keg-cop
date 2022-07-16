@@ -8,6 +8,11 @@ $(window).bind("beforeunload", function () {
     unloadingState = true;
 });
 
+// Turn off tooltips on radio button change {" "}
+$('input[type=radio]').change(function () {
+    $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
+});
+
 // Attach the event after the page loads
 if (window.addEventListener) window.addEventListener("load", startLoad, false);
 else if (window.attachEvent) window.attachEvent("onload", startLoad);
