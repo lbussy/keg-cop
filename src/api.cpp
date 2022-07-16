@@ -166,6 +166,12 @@ void ActionAPI::save(JsonObject obj) const
     strcat(_url, setcalmode);
     strcat(_url, a_delim);
     obj["setcalmode"] = _url;
+
+    // Set development server Mode
+    strcpy(_url, _base);
+    strcat(_url, setdevhost);
+    strcat(_url, a_delim);
+    obj["setdevhost"] = _url;
 }
 
 void InfoAPI::save(JsonObject obj) const

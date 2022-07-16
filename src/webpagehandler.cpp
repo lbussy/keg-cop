@@ -119,7 +119,6 @@ void setRegPageHandlers()
     server.serveStatic("/settings/", FILESYSTEM, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
     server.serveStatic("/controllerreset/", FILESYSTEM, "/").setDefaultFile("controllerreset.htm").setCacheControl("max-age=600");
     server.serveStatic("/wifireset/", FILESYSTEM, "/").setDefaultFile("wifireset.htm").setCacheControl("max-age=600");
-    server.serveStatic("/404/", FILESYSTEM, "/").setDefaultFile("404.htm").setCacheControl("max-age=600");
 }
 
 void setAPIPageHandlers()
@@ -250,7 +249,7 @@ void setActionPageHandlers()
               {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
         setDoOTA(); // Trigger the OTA update
-        request->send(200, F("text/plain"), F("Ok.")); });
+        send_ok(request); });
 
     server.on("/api/v1/action/updatestart/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -269,7 +268,7 @@ void setActionPageHandlers()
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
         config.copconfig.nodrd = false;
-        request->send(200, F("text/plain"), F("Ok.")); });
+        send_ok(request); });
 
     server.on("/api/v1/action/clearupdate/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -561,7 +560,7 @@ void setConfigurationPageHandlers()
             HANDLER_STATE thisState = cf[i](request);
             if (thisState == PROCESSED)
             {
-                request->send(200, F("text/plain"), F("Ok"));
+                send_ok(request);
                 state = PROCESSED;
             }
             else if (thisState == FAIL_PROCESS)
@@ -605,7 +604,7 @@ void setConfigurationPageHandlers()
             HANDLER_STATE thisState = tf[i](request);
             if (thisState == PROCESSED)
             {
-                request->send(200, F("text/plain"), F("Ok"));
+                send_ok(request);
                 state = PROCESSED;
             }
             else if (thisState == FAIL_PROCESS)
