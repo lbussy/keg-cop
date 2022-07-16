@@ -48,6 +48,7 @@ struct ActionAPI
     const char clearupdate[12] = "clearupdate";
     const char clearcalmode[13] = "clearcalmode";
     const char setcalmode[11] = "setcalmode";
+    const char setdevhost[11] = "setdevhost";
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
