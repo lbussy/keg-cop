@@ -1,8 +1,8 @@
 // Supports OTA1 page
 
+toggleLoader("off");
 var numReq = 3;
 var loaded = 0;
-
 
 function finishLoad() { // Get page data
     loadThisVersion(); // Populate form with controller settings

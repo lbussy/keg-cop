@@ -1,5 +1,6 @@
 // Supports About Page
 
+toggleLoader("off");
 var numReq = 3;
 var loaded = 0;
 var heapReloadTimer = 60000;
@@ -12,13 +13,10 @@ function finishLoad() {
 
 function populatePage() { // Get page data
     heapToolTip();      // Set up tooltip for debug info
-
     loadThisVersion();  // Populate form with controller settings
-
     loadUptime();       // Load uptime information
     loadHeap();         // Load heap information
     loadResetReason();  // Load last reset reason
-
     pollComplete();
 }
 

@@ -1,5 +1,6 @@
 // Supports Controller Reset page
 
+toggleLoader("off");
 var okToReset = false;
 
 function finishLoad() {

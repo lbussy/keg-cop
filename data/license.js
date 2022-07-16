@@ -1,5 +1,6 @@
 // Supports License page
 
+toggleLoader("off");
 var numReq = 1;
 var loaded = 0;
 
