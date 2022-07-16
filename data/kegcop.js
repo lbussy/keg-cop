@@ -1,9 +1,9 @@
 // Common file/functions for all Keg Cop pages
 
 var thisHost = "";
-var unloadingState = false;
 
 // Detect unloading state during getJSON
+var unloadingState = false;
 $(window).bind("beforeunload", function () {
     unloadingState = true;
 });
@@ -14,22 +14,22 @@ $('input[type=radio]').change(function () {
 });
 
 // Attach the event after the page loads
-if (window.addEventListener) window.addEventListener("load", startLoad, false);
-else if (window.attachEvent) window.attachEvent("onload", startLoad);
-else window.onload = startLoad;
+if (window.addEventListener) window.addEventListener("load", preLoad, false);
+else if (window.attachEvent) window.attachEvent("onload", preLoad);
+else window.onload = preLoad;
 
-function startLoad() {
+function preLoad() {
     // Make sure the page is 100% loaded
     if (document.readyState === "ready" || document.readyState === "complete") {
-        allOnLoad();
+        startLoad();
     } else {
         document.onreadystatechange = function () {
-            allOnLoad();
+            startLoad();
         };
     }
 }
 
-function allOnLoad() {
+function startLoad() {
     $(document).tooltip({ // Enable tooltips
         'selector': '[data-toggle=tooltip]',
         'placement': 'left',
