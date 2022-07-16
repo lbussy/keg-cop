@@ -257,14 +257,6 @@ function barClick(event, array) { // Bar click handler
     window.open(url, "_self")
 }
 
-function pollComplete() {
-    if (loaded == numReq) {
-        finishPage();
-    } else {
-        setTimeout(pollComplete, 300); // try again in 300 milliseconds
-    }
-}
-
 function flowReload() {
     populateFlow(function callFunction() {
         doChart();

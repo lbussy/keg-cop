@@ -148,14 +148,6 @@ function loadResetReason(callback = null) { // Get last reset reason
         });
 }
 
-function pollComplete() {
-    if (loaded == numReq) {
-        finishPage();
-    } else {
-        setTimeout(pollComplete, 300); // try again in 300 milliseconds
-    }
-}
-
 function heapReload() {
     loadHeap(function callFunction() {
         setTimeout(heapReload, heapReloadTimer);

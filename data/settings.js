@@ -310,16 +310,8 @@ function isMDNS(hostname) { // Bool: Is this an mDNS host name
     }
 }
 
-function pollComplete() { // Poll to see if entire page is loaded
-    if (loaded == numReq) {
-        posted = true;
-        finishPage();
-    } else {
-        setTimeout(pollComplete, 300); // try again in 300 milliseconds
-    }
-}
-
 function finishPage() { // Display page
+    posted = true;
     toggleTIO();
     toggleLoader("off");
 }

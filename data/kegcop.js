@@ -2,6 +2,11 @@
 
 var thisHost = "";
 
+// Attach the event after the page loads
+if (window.addEventListener) window.addEventListener("load", preLoad, false);
+else if (window.attachEvent) window.attachEvent("onload", preLoad);
+else window.onload = preLoad;
+
 // Detect unloading state during getJSON
 var unloadingState = false;
 $(window).bind("beforeunload", function () {
@@ -12,11 +17,6 @@ $(window).bind("beforeunload", function () {
 $('input[type=radio]').change(function () {
     $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
 });
-
-// Attach the event after the page loads
-if (window.addEventListener) window.addEventListener("load", preLoad, false);
-else if (window.attachEvent) window.attachEvent("onload", preLoad);
-else window.onload = preLoad;
 
 function preLoad() {
     // Make sure the page is 100% loaded
@@ -201,4 +201,12 @@ settingsAlert.error = function (message) {
         _div += '<strong>Settings Error: </strong><span>' + message + '</span></p></div>'
     }
     $('#settingsAlert_placeholder').html(_div);
+}
+
+function pollComplete() {
+    if (loaded == numReq) {
+        finishPage();
+    } else {
+        setTimeout(pollComplete, 300); // try again in 300 milliseconds
+    }
 }

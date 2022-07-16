@@ -180,14 +180,6 @@ function clearState() {
     $("#coolstate").removeClass("alert-light");
 }
 
-function pollComplete() {
-    if (loaded == numReq) {
-        finishPage();
-    } else {
-        setTimeout(pollComplete, 300); // try again in 300 milliseconds
-    }
-}
-
 function chartReload() {
     populateTemps(function callFunction() {
         doChart();
