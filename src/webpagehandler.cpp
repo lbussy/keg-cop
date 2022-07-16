@@ -1222,7 +1222,6 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
     if (didChange)
     {
         setDoSaveConfig();
-        sensorReInit();
     }
     if (didFail)
     {
