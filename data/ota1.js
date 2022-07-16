@@ -1,15 +1,10 @@
 // Supports OTA1 page
 
-var unloadingState = false;
 var numReq = 3;
 var loaded = 0;
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
 
-function populatePage() { // Get page data
+function finishLoad() { // Get page data
     loadThisVersion(); // Populate form with controller settings
     loadThatVersion(); // Populate form with controller settings
     populateTemps();

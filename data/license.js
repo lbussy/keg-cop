@@ -1,15 +1,9 @@
 // Supports License page
 
-var unloadingState = false;
 var numReq = 1;
 var loaded = 0;
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
-
-function populatePage() { // Get page data
+function finishLoad() { // Get page data
     populateTemps();
     pollComplete();
 }

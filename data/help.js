@@ -4,12 +4,8 @@ var unloadingState = false;
 var numReq = 1;
 var loaded = 0;
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
-
-function populatePage() { // Get page data
+function finishLoad() {
+    // Catch event from kegcop.js
     populateTemps();
     pollComplete();
 }

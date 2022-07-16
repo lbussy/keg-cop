@@ -1,7 +1,6 @@
 // Supports Index page
 
 toggleLoader("on");
-var unloadingState = false;
 var numReq = 3;
 var loaded = 0;
 var imperial;
@@ -16,17 +15,8 @@ var tempsReloadTimer = 10000;
 calValue = 0;
 calLineType = '';
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
-
-function populatePage() { // Get page data
-    $(document).tooltip({ // Enable tooltips
-        'selector': '[data-toggle=tooltip]',
-        'placement': 'left',
-        'toggleEnabled': true
-    });
+function finishLoad() {
+    // Catch event from kegcop.js
     populateFlow();
     populateTemps();
     populateConfig();

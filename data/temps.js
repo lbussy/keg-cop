@@ -1,7 +1,6 @@
 // Supports temps page
 
 toggleLoader("on");
-var unloadingState = false;
 var imperial;
 var loaded = 0;
 var numReq = 2;
@@ -12,17 +11,7 @@ var setpoint = 0;
 var tempChart;
 var chartReloadTimer = 10000; // Reload every 10 seconds
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
-
-function populatePage() { // Get page data
-    $(document).tooltip({ // Enable tooltips
-        'selector': '[data-toggle=tooltip]',
-        'placement': 'left',
-        'toggleEnabled': true
-    });
+function finishLoad() { // Get page data
     populateTemps();
     populateConfig();
     pollComplete();

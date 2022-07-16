@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="loader.css">
-    <script src="devServer.js"></script>
+    <script src="kegcop.js"></script>
     <script src="loader.js"></script>
 </head>
 
@@ -111,35 +111,7 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
 
-    <script type="text/javascript">
-        var okToReset = false;
-        // Attach the event after the page loads
-        if (window.addEventListener)
-            window.addEventListener("load", loadPage, false);
-        else if (window.attachEvent)
-            window.attachEvent("onload", loadPage);
-        else window.onload = loadPage;
-
-        function loadPage() { // Make sure the page is 100% loaded
-            if (document.readyState === 'ready' || document.readyState === 'complete') {
-                doResetSignal();
-            } else {
-                document.onreadystatechange = function () {
-                    if (document.readyState == "complete") {
-                        doResetSignal();
-                    }
-                }
-            }
-        }
-
-        function doResetSignal() {
-            $.ajax({
-                url: '/api/v1/action/wifireset/',
-                type: 'PUT'
-            });
-        }
-
-    </script>
+    <script src="wifireset.js"></script>
 
 </body>
 

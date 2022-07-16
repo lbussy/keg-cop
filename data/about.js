@@ -1,21 +1,15 @@
 // Supports About Page
 
-var unloadingState = false;
 var numReq = 3;
 var loaded = 0;
 var heapReloadTimer = 60000;
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
+function finishLoad() {
+    // Catch event from kegcop.js
+    populatePage();
+}
 
 function populatePage() { // Get page data
-    $(document).tooltip({ // Enable tooltips
-        'selector': '[data-toggle=tooltip]',
-        'toggleEnabled': true
-    });
-
     heapToolTip();      // Set up tooltip for debug info
 
     loadThisVersion();  // Populate form with controller settings

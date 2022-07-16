@@ -1,7 +1,6 @@
 // Supports settings page
 
 toggleLoader("on");
-var unloadingState = false;
 var loaded = 0; // Hold data load status
 var numReq = 3; // Number of JSON required
 var hostname = window.location.hostname;
@@ -15,12 +14,8 @@ var numTaps = 0;
 var previousTab = "";
 var currentTab = "";
 
-// Handle unloading page while making a getJSON call
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
-
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+    // Actions to take when changing tabs
     previousTab = currentTab;
     currentTab = $(event.target).text();
 
@@ -38,16 +33,7 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
     updateHelp(hashLoc); // Set context-sensitive help
 });
 
-// Turn off tooltips on radio button change {" "}
-$('input[type=radio]').change(function () {
-    $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
-});
-
-function populatePage() { // Get page data
-    $(document).tooltip({
-        'selector': '[data-toggle=tooltip]',
-        'toggleEnabled': true
-    });
+function finishLoad() { // Get page data
     toggleCalMode(false);
     populateConfig();
     populateFlow();
