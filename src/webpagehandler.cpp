@@ -106,7 +106,7 @@ void initWebServer()
             if (!rewrite == true)
             {
                 Log.warning(F("Serving 404 for request to %s." CR), request->url().c_str());
-                request->send(SPIFFS, "/404.htm");
+                request->redirect("/404/");                
             }
         } });
 
@@ -132,6 +132,7 @@ void setRegPageHandlers()
     server.serveStatic("/settings/", FILESYSTEM, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
     server.serveStatic("/controllerreset/", FILESYSTEM, "/").setDefaultFile("controllerreset.htm").setCacheControl("max-age=600");
     server.serveStatic("/wifireset/", FILESYSTEM, "/").setDefaultFile("wifireset.htm").setCacheControl("max-age=600");
+    server.serveStatic("/404/", FILESYSTEM, "/").setDefaultFile("404.htm").setCacheControl("max-age=600");
 }
 
 void setAPIPageHandlers()
@@ -204,14 +205,14 @@ void setActionPageHandlers()
     server.on("/api/v1/action/ping/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
-        send_ok(request); });
+        request->send(200, F("text/plain"), F("Ok.")); });
 
     server.on("/api/v1/action/wifireset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         _delay(2000);
         setDoWiFiReset(); // Wipe settings, reset controller
-        send_ok(request); });
+        request->send(200, F("text/plain"), F("Ok.")); });
 
     server.on("/api/v1/action/wifireset/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
@@ -221,7 +222,7 @@ void setActionPageHandlers()
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         _delay(2000);
         setDoReset();
-        send_ok(request); });
+        request->send(200, F("text/plain"), F("Ok.")); });
 
     server.on("/api/v1/action/reset/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
@@ -230,7 +231,7 @@ void setActionPageHandlers()
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         setDoOTA(); // Trigger the OTA update
-        send_ok(request); });
+        request->send(200, F("text/plain"), F("Ok.")); });
 
     server.on("/api/v1/action/updatestart/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
@@ -242,7 +243,7 @@ void setActionPageHandlers()
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
         config.copconfig.nodrd = false;
-        send_ok(request); });
+        request->send(200, F("text/plain"), F("Ok.")); });
 
     server.on("/api/v1/action/clearupdate/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
@@ -255,7 +256,7 @@ void setActionPageHandlers()
             flow.taps[i].calibrating = false;
         }
         saveFlowConfig();
-        send_ok(request); });
+        request->send(200, F("text/plain"), F("Ok.")); });
 
     server.on("/api/v1/action/clearcalmode/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
@@ -268,41 +269,10 @@ void setActionPageHandlers()
             flow.taps[i].calibrating = true;
         }
         saveFlowConfig();
-        send_ok(request); });
+        request->send(200, F("text/plain"), F("Ok.")); });
 
     server.on("/api/v1/action/setcalmode/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
-
-    server.on("/api/v1/action/setdevhost/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
-
-        int paramsNr = request->params();
-
-        for (int i=0; i<paramsNr; i++){
-
-            AsyncWebParameter* p = request->getParam(i);
-            const String name = p->name();
-            const String value = p->value();
-
-            if (name == "hostname") // Set hostname
-            {
-                if (value.length() == 0)
-                {
-                    setDevHost();
-                }
-                else if ((value.length() < 3) || (value.length() > 128))
-                {
-                    Log.warning(F("Set dev hostname error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    setDevHost(value);
-                }
-            }
-        }
-
-        send_ok(request); });
 }
 
 void setInfoPageHandlers()
@@ -495,7 +465,7 @@ void setConfigurationPageHandlers()
             HANDLER_STATE thisState = cf[i](request);
             if (thisState == PROCESSED)
             {
-                send_ok(request);
+                request->send(200, F("text/plain"), F("Ok"));
                 state = PROCESSED;
             }
             else if (thisState == FAIL_PROCESS)
@@ -537,7 +507,7 @@ void setConfigurationPageHandlers()
             HANDLER_STATE thisState = tf[i](request);
             if (thisState == PROCESSED)
             {
-                send_ok(request);
+                request->send(200, F("text/plain"), F("Ok"));
                 state = PROCESSED;
             }
             else if (thisState == FAIL_PROCESS)
@@ -1726,43 +1696,4 @@ void send_json(AsyncWebServerRequest *request, String &json)
     Log.verbose(F("Sending %s." CR), request->url().c_str());
     request->header("Cache-Control: no-store");
     request->send(200, F("application/json"), json);
-}
-
-void send_ok(AsyncWebServerRequest *request)
-{
-    request->header("Cache-Control: no-store");
-    request->send(200, F("text/plain"), F("Ok"));
-}
-
-void setDevHost()
-{
-    setDevHost("");
-}
-
-void setDevHost(String hostName)
-{
-    String line = "thisHost=\"" + hostName + "\"";
-    if (!SPIFFS.begin(true))
-    {
-        Log.error(F("An Error has occurred while mounting SPIFFS to set devServer." CR));
-        return;
-    }
-
-    File file = SPIFFS.open("/devServer.js", FILE_WRITE);
-
-    if (!file)
-    {
-        Log.error(F("An error has occurred opening devServer.js for writing." CR));
-        return;
-    }
-    if (file.print(line))
-    {
-        Log.notice(F("Set hostName=\"%s\" in devServer.js." CR), hostName);
-    }
-    else
-    {
-        Log.error(F("An error has occurred writing devServer.js." CR));
-    }
-
-    file.close();
 }

@@ -76,9 +76,6 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *);
 
 void send_not_allowed(AsyncWebServerRequest *request);
 void send_json(AsyncWebServerRequest *request, String &json);
-void send_ok(AsyncWebServerRequest *request);
-void setDevHost();
-void setDevHost(String);
 
 extern struct ThatVersion thatVersion;
 extern struct Config config;
