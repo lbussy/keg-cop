@@ -1,7 +1,6 @@
 // Supports Index page
 
 toggleLoader("off");
-var unloadingState = false;
 var numReq = 1;
 var loaded = 0;
 

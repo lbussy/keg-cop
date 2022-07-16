@@ -8,7 +8,6 @@ var pulseReloadTimer = 2000;
 var byWeight = false;
 var byVolume = false;
 var clearCalibrate = false;
-var unloadingState = false;
 
 // Flowmeter Calibration Events
 //
