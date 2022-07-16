@@ -81,6 +81,22 @@ $("input[type='reset']").closest('form').on('reset', function (event) { // Reset
     resetFlowCalForm();
 });
 
+// Tower Fan Control Events
+//
+// Handle click on enable/disable radio buttons
+$('input[type=radio][name=tfancontrolenabled]').change(function () {
+    if (this.value == 'true') {
+        $("#tfansetpoint").prop("disabled", false);                // Enable radio control
+        $('input[name=tapsolenoid]').attr("disabled", true);    // Disable Solenoid control
+        $('input[name=tfanonhigh]').attr("disabled", false);    // Eable invert control
+    }
+    else if (this.value == 'false') {
+        $("#tfansetpoint").prop("disabled", true);                 // Enable radio control
+        $('input[name=tapsolenoid]').attr("disabled", false);   // Disable Solenoid control
+        $('input[name=tfanonhigh]').attr("disabled", true);     // Eable invert control
+    }
+});
+
 function finishLoad() { // Get page data
     toggleCalMode(false);
     loadHash();
@@ -199,6 +215,40 @@ function populateConfig(callback = null) { // Get configuration settings
                     imperial = false;
                     $('input:radio[name="imperial"]')[0].checked = true;
                 }
+
+                try { // DEBUG: TODO:  Remove the "oops I crapped myself" handler here
+                    if (config.temps.tfancontrolenabled) {
+                        $('input:radio[name="tfancontrolenabled"]')[0].checked = true; // Check enabled radio
+                        $('input[name=tapsolenoid]').attr("disabled", true);        // Disable Solenoid control
+                        $("#tfansetpoint").prop("disabled", false);                    // Enable setpoint control
+                        $("#tfansetpoint").val(config.temps.tfansetpoint);             // Populate setpoint
+                        $('input[name=tfanonhigh]').attr("disabled", false);        // Eable invert control
+                    } else {
+                        $('input:radio[name="tfancontrolenabled"]')[1].checked = true;    // Check enabled radio
+                        $('input[name=tapsolenoid]').attr("disabled", false);           // Disable Solenoid control
+                        $("#tfansetpoint").prop("disabled", true);                         // Enable setpoint control
+                        $("#tfansetpoint").val(config.temps.tfansetpoint);             // Populate setpoint
+                        $('input[name=tfanonhigh]').attr("disabled", true);             // Eanble invert control
+                    }
+                } catch {
+                    console.log("DEBUG: Shit myself.");
+                    $('input:radio[name="tfancontrolenabled"]')[0].checked = false;    // Check enabled radio
+                    $('input[name=tapsolenoid]').attr("disabled", false);           // Disable Solenoid control
+                    $("#tfansetpoint").prop("disabled", true);                         // Enable setpoint control
+                    $('input[name=tfanonhigh]').attr("disabled", true);             // Eanble invert control
+                }
+
+                try { // DEBUG: TODO:  Remove the "oops I crapped myself" handler here
+                    if (!config.temps.tcoolonhigh) {
+                        $('input:radio[name="tfanonhigh"]')[0].checked = true;  // Check enabled radio
+                    } else {
+                        $('input:radio[name="tfanonhigh"]')[0].checked = true;  // Check enabled radio
+                    }
+                } catch {
+                    $('input:radio[name="tfanonhigh"]')[0].checked = true;      // Check enabled radio
+                }
+
+
                 if (config.copconfig.tapsolenoid) {
                     $('input:radio[name="tapsolenoid"]')[0].checked = true;
                 } else {
@@ -298,7 +348,8 @@ function doUnits() { // Change names on page according to units in place
         $('.ozml').text("Ounces");
         $('.caplong').text('Capacity in Gallons'); // Tap config pages
         $('.remlong').text('Remaining in Gallons'); // Tap config pages
-        $('.setfarcel').text('Set point in °F'); // Temp control pages
+        $('.setfarcel').text('Chamber set point in °F'); // Temp control pages
+        $('.settfarcel').text('Tower set point in °F'); // Temp control pages
         $('.ppu').text('PPG'); // Flowmeter calibration pages
     } else {
         $('.setppu').text('Set PPL'); // Flow cal set button
@@ -308,7 +359,8 @@ function doUnits() { // Change names on page according to units in place
         $('.ozml').text("Milliliters");
         $('.caplong').text('Capacity in Liters'); // Tap config pages
         $('.remlong').text('Remaining in Liters'); // Tap config pages
-        $('.setfarcel').text('Set point in °C'); // Temp control pages
+        $('.setfarcel').text('Chamber set point in °C'); // Temp control pages
+        $('.settfarcel').text('Tower set point in °C'); // Temp control pages
         $('.ppu').text('PPL'); // Flowmeter calibration pages
     }
 }
@@ -504,15 +556,21 @@ function processTempControlPost(url, obj) {
     var $form = $(obj),
         setpoint = $form.find("input[name='setpoint']").val(),
         controlpoint = $form.find("select[name='controlpoint']").val(),
-        controlenabled = $form.find("input[name='controlenabled']:checked").val();
-    coolonhigh = $form.find("input[name='coolonhigh']:checked").val();
+        controlenabled = $form.find("input[name='controlenabled']:checked").val(),
+        coolonhigh = $form.find("input[name='coolonhigh']:checked").val(),
+        tfancontrolenabled = $form.find("input[name='tfancontrolenabled']:checked").val(),
+        tfansetpoint = $form.find("input[name='tfansetpoint']").val(),
+        tfanonhigh = $form.find("input[name='tfanonhigh']:checked").val()
 
     // Process put
     data = {
         setpoint: setpoint,
         controlpoint: controlpoint,
         controlenabled: controlenabled,
-        coolonhigh: coolonhigh
+        coolonhigh: coolonhigh,
+        tfancontrolenabled: tfancontrolenabled,
+        tfansetpoint: tfansetpoint,
+        tfanonhigh: tfanonhigh
     }
     putData(url, data);
 }

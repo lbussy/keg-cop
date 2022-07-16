@@ -1,4 +1,4 @@
-// Supports Index page
+// Supports Help page
 
 toggleLoader("off");
 var numReq = 2;
