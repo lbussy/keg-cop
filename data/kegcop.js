@@ -80,3 +80,43 @@ loadScript("devServer.js")
         console.log("Failed to load devScript.");
         console.error(err);
     });
+
+function populateTemps(callback = null) {
+    // Only show "Temperatures" tab if we have sensors
+    var url = thisHost + "api/v1/info/sensors";
+    var config = $.getJSON(url, function () {
+    })
+        .done(function (temps) {
+            try {
+                if (temps.displayenabled == true) {
+                    if (!$('#displaytemplink').is(':visible')) {
+                        $('#displaytemplink').toggle();
+                    }
+                } else {
+                    if ($('#displaytemplink').is(':visible')) {
+                        $('#displaytemplink').toggle();
+                    }
+                }
+
+                if (loaded < numReq) {
+                    loaded++;
+                }
+                if (typeof callback == "function") {
+                    callback();
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    // No need to handle an error here since this simply sets up the menu
+                }
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                // No need to handle an error here since this simply sets up the menu
+            }
+        })
+        .always(function () {
+            // Can post-process here
+        });
+}
