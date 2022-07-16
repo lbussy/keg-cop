@@ -14,7 +14,8 @@ JSON Definition:
         "updatestart": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/updatestart/",
         "clearupdate": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/clearupdate/",
         "clearcalmode": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/clearcalmode/",
-        "setcalmode": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/setcalmode/"
+        "setcalmode": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/setcalmode/",
+        "setdevhost": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/setdevhost/"
     },
     "infoAPI": {
         "information": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/",
