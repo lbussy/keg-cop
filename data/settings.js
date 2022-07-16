@@ -1,4 +1,4 @@
-// Supports settings page
+// Supports Settings page
 
 toggleLoader("on");
 var loaded = 0; // Hold data load status
@@ -217,46 +217,6 @@ function populateConfig(callback = null) { // Get configuration settings
             if (typeof callback == "function") {
                 callback();
             }
-        });
-}
-
-function populateTemps(callback = null) { // Get configuration settings
-    var url = thisHost + "api/v1/info/sensors";
-    var config = $.getJSON(url, function () {
-        tempAlert.warning();
-    })
-        .done(function (temps) {
-            try {
-                if (temps.displayenabled == true) {
-                    if (!$('#displaytemplink').is(':visible')) {
-                        $('#displaytemplink').toggle();
-                    }
-                } else {
-                    if ($('#displaytemplink').is(':visible')) {
-                        $('#displaytemplink').toggle();
-                    }
-                }
-
-                if (loaded < numReq) {
-                    loaded++;
-                }
-                if (typeof callback == "function") {
-                    callback();
-                }
-            }
-            catch {
-                if (!unloadingState) {
-                    tempAlert.warning("Unable to parse temperature data.");
-                }
-            }
-        })
-        .fail(function () {
-            if (!unloadingState) {
-                tempAlert.warning("Unable to retrieve temperature data.");
-            }
-        })
-        .always(function () {
-            // Can post-process here
         });
 }
 

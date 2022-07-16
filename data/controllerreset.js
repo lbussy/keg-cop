@@ -1,9 +1,10 @@
-// Supports controllerreset.htm
+// Supports Controller Reset page
 
 var okToReset = false;
 
 function finishLoad() {
     // Catch event from kegcop.js
+    populateTemps();
     doResetSignal();
 }
 

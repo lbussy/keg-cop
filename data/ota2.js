@@ -1,6 +1,7 @@
-// Support ota2.htm
+// Support OTA2 page
 
 function finishLoad() { // Load the page's JS elements
+    // populateTemps(); // We don't need this but it's here so I rememnber not to add it again
     $.ajax({ // Clear any previous update flags
         url: '/api/v1/action/clearupdate/',
         type: 'PUT'
