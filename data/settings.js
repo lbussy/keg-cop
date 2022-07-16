@@ -873,6 +873,7 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     } else {
         url += "/api/v1/action/clearcalmode/";
     }
+
     putData(url, data, false, false, function () {
         if (typeof callback == "function") {
             callback(true);

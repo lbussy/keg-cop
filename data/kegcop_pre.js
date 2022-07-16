@@ -31,6 +31,7 @@ window.onclick = function (event) {
 }
 
 function preLoad() {
+
     // Make sure the page is 100% loaded
     if (document.readyState === "ready" || document.readyState === "complete") {
         startLoad();
