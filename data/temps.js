@@ -1,7 +1,6 @@
-// Supports temps page
+// Supports Temps page
 
 toggleLoader("on");
-var unloadingState = false;
 var imperial;
 var loaded = 0;
 var numReq = 2;
@@ -12,17 +11,7 @@ var setpoint = 0;
 var tempChart;
 var chartReloadTimer = 10000; // Reload every 10 seconds
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
-
-function populatePage() { // Get page data
-    $(document).tooltip({ // Enable tooltips
-        'selector': '[data-toggle=tooltip]',
-        'placement': 'left',
-        'toggleEnabled': true
-    });
+function finishLoad() { // Get page data
     populateTemps();
     populateConfig();
     pollComplete();
@@ -53,133 +42,6 @@ function populateConfig() { // Get configuration settings
         .fail(function () {
             if (!unloadingState) {
                 configAlert.warning("Unable to retrieve configuration data.");
-            }
-        })
-        .always(function () {
-            // Can post-process here
-        });
-}
-
-function populateTemps(callback = null) { // Get configuration settings
-    var url = thisHost + "api/v1/info/sensors";
-    var okToClear = false;
-    if (labels.length) { // Clear arrays if we are re-running
-        okToClear = true;
-    }
-    var config = $.getJSON(url, function () {
-        tempAlert.warning();
-    })
-        .done(function (temps) {
-            try {
-                if (temps.displayenabled == true) {
-                    if (!$('#displaytemplink').is(':visible')) {
-                        $('#displaytemplink').toggle();
-                    }
-                } else {
-                    if ($('#displaytemplink').is(':visible')) {
-                        $('#displaytemplink').toggle();
-                    }
-                }
-
-                if (okToClear) {
-                    labels = [];
-                    temperatures = [];
-                    scaleTemps = [];
-                }
-
-                if (temps.imperial) {
-                    imperial = true;
-                } else {
-                    imperial = false;
-                }
-
-                var length = Object.keys(temps.sensors).length
-                var i;
-                for (i = 0; i < length; i++) {
-                    if (temps.sensors[i].enable) {
-                        labels.push(temps.sensors[i].name);
-                        temperatures.push(parseFloat(temps.sensors[i].value));
-                    }
-                }
-
-                $('#controlPoint').text(temps.sensors[temps.controlpoint].name);
-
-                setpoint = parseFloat(temps.setting).toFixed(1);
-                setpointLabel = "Setpoint: " + setpoint;
-                if (imperial) {
-                    setpointLabel += " ℉";
-                } else {
-                    setpointLabel += " ℃";
-                }
-
-                scaleTemps = temperatures;
-                scaleTemps.push(parseFloat(setpoint));
-
-                // Set indicator button
-                switch (temps.status) {
-                    case 0: // TSTAT_INACTIVE
-                        clearState();
-                        $("#coolstate").addClass("alert-secondary");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is disabled");
-                        break;
-                    case 1: // TSTAT_COOL_BEGIN
-                        clearState();
-                        $("#coolstate").addClass("alert-info");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is starting to cool");
-                        break;
-                    case 2: // TSTAT_COOL_MINOFF
-                        clearState();
-                        $("#coolstate").addClass("alert-danger");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is calling for cooling but in minimum off time");
-                        break;
-                    case 3: // TSTAT_COOL_ACTIVE
-                        clearState();
-                        $("#coolstate").addClass("alert-primary");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is actively cooling");
-                        break;
-                    case 4: // TSTAT_IDLE_END
-                        clearState();
-                        $("#coolstate").addClass("alert-warning");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, minimum off time ending");
-                        break;
-                    case 5: // TSTAT_IDLE_MINON
-                        clearState();
-                        $("#coolstate").addClass("alert-success");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling but in minimum on time");
-                        break;
-                    case 6: // TSTAT_IDLE_INACTIVE
-                        clearState();
-                        $("#coolstate").addClass("alert-light");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, in idle mode");
-                        break;
-                    case 7: // TSTAT_UNKNOWN
-                        clearState();
-                        $("#coolstate").addClass("alert-light");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
-                        break;
-                    default: // TSTAT_UNKNOWN
-                        clearState();
-                        $("#coolstate").addClass("alert-light");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
-                        break;
-                }
-
-                if (loaded < numReq) {
-                    loaded++;
-                }
-                if (typeof callback == "function") {
-                    callback();
-                }
-            }
-            catch {
-                if (!unloadingState) {
-                    tempAlert.warning("Unable to parse temperature data.");
-                }
-            }
-        })
-        .fail(function () {
-            if (!unloadingState) {
-                tempAlert.warning("Unable to retrieve temperatire data.");
             }
         })
         .always(function () {
@@ -316,14 +178,6 @@ function clearState() {
     $("#coolstate").removeClass("alert-primary");
     $("#coolstate").removeClass("alert-secondary");
     $("#coolstate").removeClass("alert-light");
-}
-
-function pollComplete() {
-    if (loaded == numReq) {
-        finishPage();
-    } else {
-        setTimeout(pollComplete, 300); // try again in 300 milliseconds
-    }
 }
 
 function chartReload() {

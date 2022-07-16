@@ -1,29 +1,22 @@
 // Supports About Page
 
-var unloadingState = false;
+toggleLoader("off");
 var numReq = 3;
 var loaded = 0;
 var heapReloadTimer = 60000;
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
+function finishLoad() {
+    // Catch event from kegcop_pre.js
+    populateTemps();
+    populatePage();
+}
 
 function populatePage() { // Get page data
-    $(document).tooltip({ // Enable tooltips
-        'selector': '[data-toggle=tooltip]',
-        'toggleEnabled': true
-    });
-
     heapToolTip();      // Set up tooltip for debug info
-
     loadThisVersion();  // Populate form with controller settings
-
     loadUptime();       // Load uptime information
     loadHeap();         // Load heap information
     loadResetReason();  // Load last reset reason
-
     pollComplete();
 }
 
@@ -153,14 +146,6 @@ function loadResetReason(callback = null) { // Get last reset reason
                 callback();
             }
         });
-}
-
-function pollComplete() {
-    if (loaded == numReq) {
-        finishPage();
-    } else {
-        setTimeout(pollComplete, 300); // try again in 300 milliseconds
-    }
 }
 
 function heapReload() {

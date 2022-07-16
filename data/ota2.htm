@@ -23,10 +23,8 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="loader.css">
-    <script src="devServer.js"></script>
-    <script src="loader.js"></script>
+    <link rel="stylesheet" href="kegcop.css">
+    <script src="kegcop_pre.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -45,6 +43,9 @@
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="index">Home</a>
+                    </li>
+                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
+                        <a class="nav-link" href="temps">Temperatures</a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="settings">Settings <span class="sr-only">(current)</span></a>
@@ -68,8 +69,14 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp">
-            <!-- Container -->
+        <div id="settingsAlert_placeholder"></div>
+        <div id="flowAlert_placeholder"></div>
+        <div id="tempAlert_placeholder"></div>
+        <div id="configAlert_placeholder"></div>
+
+        <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
+
+        <div class="container" id="settingsapp"> <!-- Container -->
 
             <div class="card border-dark mb-3">
 
@@ -124,56 +131,9 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
 
-    <script type="text/javascript">
-        // Attach the event after the page loads
-        if (window.addEventListener)
-            window.addEventListener("load", loadPage, false);
-        else if (window.attachEvent)
-            window.attachEvent("onload", loadPage);
-        else window.onload = loadPage;
+    <script src="kegcop_post.js"></script>
+    <script src="ota2.js"></script>
 
-        function loadPage() { // Load the page's JS elements
-            $.ajax({ // Clear any previous update flags
-                url: '/api/v1/action/clearupdate/',
-                type: 'PUT'
-            });
-
-            $.ajax({ // Semaphore the controller that it's safe to proceed
-                url: '/api/v1/action/updatestart/',
-                type: 'PUT'
-            });
-
-            // Wait for update to complete
-            var running = false;
-            var intervalID = window.setInterval(function () { // Poll every 5 seconds
-                checkSemaphore(function (semaphore) {
-                    didupdate = semaphore;
-                    if ((didupdate == true) && (running == false)) {
-                        running = true;
-                        // Update is complete
-                        $.ajax({
-                            url: '/api/v1/action/clearupdate/',
-                            type: 'PUT'
-                        });
-                        $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
-                        $("#message").replaceWith("<p class='card-body'>The firmware update is complete.  You will be redirected momentarily.</p>");
-                        setTimeout(function () { window.location.href = "index"; }, 5000);
-                    }
-                });
-            }, 10000);
-        }
-
-        function checkSemaphore(callback) { // Check to see if the update is complete
-            var jqxhr = $.get("api/v1/action/ping")
-                .done(function (data) {
-                    callback(true);
-                })
-                .fail(function () {
-                    // This will fail while controller resets
-                    callback(false);
-                });
-        }
-    </script>
 </body>
 
 </html>

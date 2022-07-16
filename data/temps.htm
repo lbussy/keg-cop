@@ -23,10 +23,8 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="loader.css">
-    <script src="devServer.js"></script>
-    <script src="loader.js"></script>
+    <link rel="stylesheet" href="kegcop.css">
+    <script src="kegcop_pre.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -70,10 +68,12 @@
 
     <main role="main" class="flex-shrink-0">
 
+        <div id="settingsAlert_placeholder"></div>
+        <div id="flowAlert_placeholder"></div>
         <div id="tempAlert_placeholder"></div>
         <div id="configAlert_placeholder"></div>
 
-        <div class="loader" id="loader"></div> <!-- Loading Spinner Container -->
+        <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
 
         <div class="container" id="tempsApp"> <!-- Container -->
 
@@ -127,31 +127,8 @@
         integrity="sha384-fIE8wIddxI8s1yO253uBKjQyxNZ5UuilW9rx7H4ePN7XS7Z9ukIeK+ECX5B8jDAj" crossorigin="anonymous">
         </script>
 
+    <script src="kegcop_post.js"></script>
     <script src="temps.js"></script>
-
-    <script src="alerts.js"></script>
-
-    <script>
-        // Attach the event after the page loads
-        if (window.addEventListener)
-            window.addEventListener("load", loadPage, false);
-        else if (window.attachEvent)
-            window.attachEvent("onload", loadPage);
-        else window.onload = loadPage;
-
-        function loadPage() { // Make sure the page is 100% loaded
-            if (document.readyState === 'ready' || document.readyState === 'complete') {
-                populatePage();
-            } else {
-                document.onreadystatechange = function () {
-                    if (document.readyState == "complete") {
-                        populatePage();
-                    }
-                }
-            }
-        }
-
-    </script>
 
 </body>
 
