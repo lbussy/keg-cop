@@ -16,7 +16,7 @@ calValue = 0;
 calLineType = '';
 
 function finishLoad() {
-    // Catch event from kegcop.js
+    // Catch event from kegcop_pre.js
     populateFlow();
     populateTemps();
     populateConfig();

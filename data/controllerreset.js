@@ -4,7 +4,7 @@ toggleLoader("off");
 var okToReset = false;
 
 function finishLoad() {
-    // Catch event from kegcop.js
+    // Catch event from kegcop_pre.js
     populateTemps();
     doResetSignal();
 }
