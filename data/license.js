@@ -5,7 +5,7 @@ var numReq = 1;
 var loaded = 0;
 
 function finishLoad() { // Get page data
-    populateTemps();
+    chooseTempMenu();
     pollComplete();
 }
 

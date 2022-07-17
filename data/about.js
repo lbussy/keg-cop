@@ -6,8 +6,8 @@ var loaded = 0;
 var heapReloadTimer = 60000;
 
 function finishLoad() {
-    // Catch event from kegcop_pre.js
-    populateTemps();
+    // Catch page finished event from kegcop_pre.js
+    chooseTempMenu();
     populatePage();
 }
 
