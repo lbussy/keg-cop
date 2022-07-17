@@ -10,16 +10,17 @@ var capacity = [];
 var remaining = [];
 var tapChart;
 var flowReloadTimer = 5000;
-var tempsReloadTimer = 10000;
+var tempReloadTimer = 10000;
 // Calibration mode variables
 calValue = 0;
 calLineType = '';
 
 function finishLoad() {
     // Catch event from kegcop_pre.js
+    chooseTempMenu();
     populateFlow();
-    populateTemps();
     populateConfig();
+    populateTemp();
     pollComplete();
 }
 
@@ -107,6 +108,98 @@ function populateConfig() { // Get configuration settings
         .fail(function () {
             if (!unloadingState) {
                 configAlert.warning("Unable to retrieve configuration data.");
+            }
+        })
+        .always(function () {
+            // Can post-process here
+        });
+}
+
+function populateTemp(callback = null) { // Get current temperature and state
+    var url = dataHost + "api/v1/info/sensors";
+    var config = $.getJSON(url, function () {
+        tempAlert.warning();
+    })
+        .done(function (temps) {
+            try {
+                if (temps.controlenabled) {
+                    // Set control point display
+                    $('#controlPoint').text(temps.sensors[temps.controlpoint].name + ":");
+                    $('#controlTemp').text(parseFloat(temps.sensors[temps.controlpoint].value).toFixed(1));
+
+                    // Set F or C
+                    if (temps.imperial) {
+                        $('#tempFormat').html("&#x2109;");
+                    } else {
+                        $('#tempFormat').html("&#x2103;");
+                    }
+
+                    // Set indicator button
+                    switch (temps.status) {
+                        case 0: // TSTAT_INACTIVE
+                            clearState();
+                            $("#coolstate").addClass("alert-secondary");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is disabled");
+                            break;
+                        case 1: // TSTAT_COOL_BEGIN
+                            clearState();
+                            $("#coolstate").addClass("alert-info");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is starting to cool");
+                            break;
+                        case 2: // TSTAT_COOL_MINOFF
+                            clearState();
+                            $("#coolstate").addClass("alert-danger");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is calling for cooling but in minimum off time");
+                            break;
+                        case 3: // TSTAT_COOL_ACTIVE
+                            clearState();
+                            $("#coolstate").addClass("alert-primary");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is actively cooling");
+                            break;
+                        case 4: // TSTAT_IDLE_END
+                            clearState();
+                            $("#coolstate").addClass("alert-warning");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, minimum off time ending");
+                            break;
+                        case 5: // TSTAT_IDLE_MINON
+                            clearState();
+                            $("#coolstate").addClass("alert-success");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling but in minimum on time");
+                            break;
+                        case 6: // TSTAT_IDLE_INACTIVE
+                            clearState();
+                            $("#coolstate").addClass("alert-light");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, in idle mode");
+                            break;
+                        case 7: // TSTAT_UNKNOWN
+                            clearState();
+                            $("#coolstate").addClass("alert-light");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
+                            break;
+                        default: // TSTAT_UNKNOWN
+                            clearState();
+                            $("#coolstate").addClass("alert-light");
+                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
+                            break;
+                    }
+                }
+
+                if (loaded < numReq) {
+                    loaded++;
+                }
+                if (typeof callback == "function") {
+                    callback();
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    tempAlert.warning("Unable to parse temperature data.");
+                }
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                tempAlert.warning("Unable to retrieve temperature data.");
             }
         })
         .always(function () {
@@ -253,7 +346,8 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 
 function barClick(event, array) { // Bar click handler
     var tapNum = array[0]._index;
-    var url = dataHost + "settings/#tap" + tapNum;
+    var url = "settings#tap" + tapNum;
+    alert(url);
     window.open(url, "_self")
 }
 
@@ -264,15 +358,15 @@ function flowReload() {
     });
 }
 
-function tempsReload() {
-    populateTemps(function callFunction() {
-        setTimeout(tempsReload, tempsReloadTimer);
+function tempReload() {
+    populateTemp(function callFunction() {
+        setTimeout(tempReload, tempReloadTimer);
     });
 }
 
 function finishPage() { // Display page
     toggleLoader("off");
     doChart();
-    setTimeout(tempsReload, tempsReloadTimer);
+    setTimeout(tempReload, tempReloadTimer);
     setTimeout(flowReload, flowReloadTimer);
 }
