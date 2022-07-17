@@ -111,6 +111,7 @@ void initWebServer()
         } });
 
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
+    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "*");
 
     server.begin();
 
@@ -395,6 +396,33 @@ void setInfoPageHandlers()
         String json;
         serializeJson(doc, json); // Serialize JSON to String
         send_json(request, json); });
+
+    server.on("/api/v1/info/tempcontrol/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Used to inform whether wee should be doing a temps menu or not
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
+
+        int numEnabled = 0;
+        for (int i = 0; i < NUMSENSOR; i++)
+        {
+            if (config.temps.enabled[i])
+            {
+                numEnabled++;
+            }
+        }
+
+        // If we have at least one temp sensor, display link in menu
+        const bool displayenabled = (numEnabled > 0);
+
+        if (displayenabled)
+        {
+            send_ok(request);
+        }
+        else
+        {
+            request->header("Cache-Control: no-store");
+            request->send(20, F("text/plain"), F("Method Not Allowed"));
+        } });
 
     server.on("/api/v1/info/sensors/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
