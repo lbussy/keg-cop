@@ -155,6 +155,7 @@ function populateConfig() { // Get configuration settings
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/settings/";
+
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
