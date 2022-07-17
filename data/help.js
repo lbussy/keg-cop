@@ -6,7 +6,7 @@ var loaded = 0;
 
 function finishLoad() {
     // Catch event from kegcop_pre.js
-    populateTemps();
+    chooseTempMenu();
     pollComplete();
 }
 
