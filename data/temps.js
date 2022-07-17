@@ -146,6 +146,7 @@ function populateTemps(callback = null) { // Get configuration settings
 }
 
 function populateConfig() { // Get configuration settings
+<<<<<<< HEAD
     if (!dataHostCheckDone) {
         setTimeout(populateConfig, 10);
         return;
@@ -155,6 +156,9 @@ function populateConfig() { // Get configuration settings
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/settings/";
+=======
+    var url = dataHost + "api/v1/config/settings";
+>>>>>>> 60b3cc3 (404 error (#60))
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -303,6 +307,7 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 }
 
 function barClick(event, array) { // Bar click handler
+<<<<<<< HEAD
     var newURL;
     var newPath = "settings/";
     var newSearch = "";
@@ -337,6 +342,11 @@ function barClick(event, array) { // Bar click handler
         console.error("Badly formatted URL passed to function.");
         return false;
     }
+=======
+    var tapNum = array[0]._index;
+    var url = dataHost + "settings/#sensorcontrol";
+    window.open(url, "_self");
+>>>>>>> 60b3cc3 (404 error (#60))
 }
 
 function clearState() {

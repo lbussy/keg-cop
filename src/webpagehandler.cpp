@@ -90,9 +90,30 @@ void initWebServer()
         }
         else
         {
+<<<<<<< HEAD
             AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
             response->setCode(404);
             request->send(response);
+=======
+            // Try adding a leading or trailing slash
+            String thisURL = request->url();
+            bool rewrite = false;
+            if (!thisURL.startsWith("/"))
+            { // Add a leading slash
+                request->redirect("/" + request->url());
+                rewrite = true;
+            }
+            if ((thisURL.indexOf(".") <= 0) && (!thisURL.endsWith("/")))
+            { // Add a trailing slash
+                request->redirect(request->url() + "/");
+                rewrite = true;
+            }
+            if (!rewrite == true)
+            {
+                Log.warning(F("Serving 404 for request to %s." CR), request->url().c_str());
+                request->redirect("/404.htm");
+            }
+>>>>>>> 60b3cc3 (404 error (#60))
         } });
 
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
@@ -296,6 +317,7 @@ void setActionPageHandlers()
         // Needed for pre-flights
         send_ok(request); });
 
+<<<<<<< HEAD
     server.on("/api/v1/action/clearcalmode/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Required for CORS preflight on some PUT/POST
@@ -344,6 +366,10 @@ void setActionPageHandlers()
               {
         // Required for CORS preflight on some PUT/POST
         send_not_allowed(request); });
+=======
+    server.on("/api/v1/action/setcalmode/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              { send_not_allowed(request); });
+>>>>>>> 60b3cc3 (404 error (#60))
 }
 
 void setInfoPageHandlers()

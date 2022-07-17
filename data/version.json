@@ -1,4 +1,9 @@
 {
+<<<<<<< HEAD
     "fw_version": "1.1.1",
     "fs_version": "1.1.1"
+=======
+    "fw_version": "1.1.1-Alpha.1",
+    "fs_version": "1.1.1-Alpha.1"
+>>>>>>> 60b3cc3 (404 error (#60))
 }
