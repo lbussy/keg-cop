@@ -7,12 +7,12 @@ var loaded = 0;
 function finishLoad() { // Get page data
     loadThisVersion(); // Populate form with controller settings
     loadThatVersion(); // Populate form with controller settings
-    populateTemps();
+    populateTempLink();
     pollComplete();
 }
 
 function loadThisVersion() { // Get current parameters
-    var thisVersionJson = thisHost + "api/v1/info/thisVersion";
+    var thisVersionJson = dataHost + "api/v1/info/thisVersion";
     var thisVersion = $.getJSON(thisVersionJson, function () {
     })
         .done(function (thisVersion) {
@@ -35,7 +35,7 @@ function loadThisVersion() { // Get current parameters
 }
 
 function loadThatVersion() { // Get current parameters
-    var thatVersionJson = thisHost + "api/v1/info/thatVersion";
+    var thatVersionJson = dataHost + "api/v1/info/thatVersion";
     var thatVersion = $.getJSON(thatVersionJson, function () {
     })
         .done(function (thatVersion) {
