@@ -48,7 +48,7 @@ void setClock()
 #ifdef LOG_LEVEL
             myPrintln();
 #endif
-            Log.verbose(F("Re-requesting time hack."));
+            Log.notice(F("Re-requesting time hack."));
             startSecs = millis() / 1000;
             cycle++;
         }
