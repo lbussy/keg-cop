@@ -18,7 +18,7 @@ function finishLoad() { // Get page data
 }
 
 function populateConfig() { // Get configuration settings
-    var url = thisHost + "api/v1/config/settings";
+    var url = dataHost + "api/v1/config/settings";
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -166,7 +166,7 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 
 function barClick(event, array) { // Bar click handler
     var tapNum = array[0]._index;
-    var url = thisHost + "settings/#sensorcontrol";
+    var url = dataHost + "settings/#sensorcontrol";
     window.open(url, "_self");
 }
 

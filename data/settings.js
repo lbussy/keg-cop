@@ -115,7 +115,7 @@ function loadHash() { // Link to tab via hash value
 }
 
 function populateFlow(callback = null) { // Get flowmeter settings
-    var url = thisHost + "api/v1/config/taps";
+    var url = dataHost + "api/v1/config/taps";
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -160,7 +160,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
-    var url = thisHost + "api/v1/config/settings";
+    var url = dataHost + "api/v1/config/settings";
     var config = $.getJSON(url, function () {
         configAlert.warning()
     })
@@ -790,14 +790,14 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     var url = '';
     var data = {};
     if (inCal) {
-        url = thisHost + "api/v1/action/setcalmode";
+        url = dataHost + "api/v1/action/setcalmode";
         // Get form data
         tapnum = $('#flowmeter').val();
         data = {
             tapnum: tapnum
         }
     } else {
-        url = thisHost + "api/v1/action/clearcalmode";
+        url = dataHost + "api/v1/action/clearcalmode";
     }
 
     putData(url, data, false, false, function () {
@@ -848,7 +848,7 @@ function resetFlowCalForm() {
 
 function pulseReload(callback = null) { // Get pulses
     var selectedIndex = $('#flowmeter').prop('selectedIndex');
-    var url = thisHost + "api/v1/info/pulses";
+    var url = dataHost + "api/v1/info/pulses";
     var pulses = $.getJSON(url, function () {
         flowAlert.warning();
     })

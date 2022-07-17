@@ -272,37 +272,6 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/setcalmode/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
-
-    server.on("/api/v1/action/setdevhost/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
-
-        int paramsNr = request->params();
-
-        for (int i=0; i<paramsNr; i++){
-
-            AsyncWebParameter* p = request->getParam(i);
-            const String name = p->name();
-            const String value = p->value();
-
-            if (name == "hostname") // Set hostname
-            {
-                if (value.length() == 0)
-                {
-                    setDevHost();
-                }
-                else if ((value.length() < 3) || (value.length() > 128))
-                {
-                    Log.warning(F("Set dev hostname error, [%s]:(%s) not valid." CR), name, value);
-                }
-                else
-                {
-                    setDevHost(value);
-                }
-            }
-        }
-
-        send_ok(request); });
 }
 
 void setInfoPageHandlers()
@@ -1732,37 +1701,4 @@ void send_ok(AsyncWebServerRequest *request)
 {
     request->header("Cache-Control: no-store");
     request->send(200, F("text/plain"), F("Ok"));
-}
-
-void setDevHost()
-{
-    setDevHost("");
-}
-
-void setDevHost(String hostName)
-{
-    String line = "thisHost=\"" + hostName + "\"";
-    if (!SPIFFS.begin(true))
-    {
-        Log.error(F("An Error has occurred while mounting SPIFFS to set devServer." CR));
-        return;
-    }
-
-    File file = SPIFFS.open("/devServer.js", FILE_WRITE);
-
-    if (!file)
-    {
-        Log.error(F("An error has occurred opening devServer.js for writing." CR));
-        return;
-    }
-    if (file.print(line))
-    {
-        Log.notice(F("Set hostName=\"%s\" in devServer.js." CR), hostName);
-    }
-    else
-    {
-        Log.error(F("An error has occurred writing devServer.js." CR));
-    }
-
-    file.close();
 }

@@ -1,6 +1,6 @@
 // Common file/functions for all Keg Cop pages
 
-var thisHost = "";
+var dataHost = "";
 
 // Detect unloading state during getJSON
 var unloadingState = false;
@@ -10,18 +10,18 @@ window.addEventListener('beforeunload', function (event) {
 
 function preLoad() {
     // Check for devServer setup
-    loadScript("devServer.js")
-        .then(data => {
-            if (!thisHost) {
-                console.log("Dev server script loaded successfully but 'devHost' was blank or missing.", data);
-            } else {
-                console.log("Dev server script loaded successfully.", data);
-            }
-        })
-        .catch(err => {
-            console.log("Failed to load devScript.");
-            console.error(err);
-        });
+
+    // To set data server, use the following syntax in console:
+    //
+    // >>   localStorage.setItem("dataHost", "http://kegcop.local/");
+    //
+    // Note that the full URL including 'http:// and
+    // trailing '/' is required
+    dataHost = localStorage.getItem("dataHost") || "";
+    // Also remember that this must be cleared for things to work
+    // normally again:
+    //
+    // >>   localStorage.setItem("dataHost", "http://kegcop.local/");
 
     // Make sure the page is 100% loaded
     if (document.readyState === "ready" || document.readyState === "complete") {
@@ -45,41 +45,14 @@ function startLoad() {
     };
 }
 
-const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
-    // Load a supporting file as a Promise event
-    return new Promise((resolve, reject) => {
-        try {
-            const scriptEle = document.createElement("script");
-            scriptEle.type = type;
-            scriptEle.async = async;
-            scriptEle.src = FILE_URL;
-
-            scriptEle.addEventListener("load", (ev) => {
-                resolve({ status: true });
-            });
-
-            scriptEle.addEventListener("error", (ev) => {
-                reject({
-                    status: false,
-                    message: `Failed to load script: ${FILE_URL}.`
-                });
-            });
-
-            document.body.appendChild(scriptEle);
-        } catch (error) {
-            reject(error);
-        }
-    });
-};
-
 function populateTemps(callback = null) {
     // Only show "Temperatures" tab if we have sensors
-    var url = thisHost + "api/v1/info/sensors";
+    var url = dataHost + "api/v1/info/sensors";
     var config = $.getJSON(url, function () {
     })
         .done(function (temps) {
             try {
-                if (temps.displayenabled == true || thisHost) {
+                if (temps.displayenabled == true || dataHost) {
                     if (!$('#displaytemplink').is(':visible')) {
                         $('#displaytemplink').toggle();
                     }

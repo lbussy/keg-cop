@@ -24,7 +24,7 @@ function finishLoad() {
 }
 
 function populateFlow(callback = null) { // Get flowmeter data
-    var url = thisHost + "api/v1/config/taps";
+    var url = dataHost + "api/v1/config/taps";
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -83,7 +83,7 @@ function populateFlow(callback = null) { // Get flowmeter data
 }
 
 function populateConfig() { // Get configuration settings
-    var url = thisHost + "api/v1/config/settings";
+    var url = dataHost + "api/v1/config/settings";
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -253,7 +253,7 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 
 function barClick(event, array) { // Bar click handler
     var tapNum = array[0]._index;
-    var url = thisHost + "settings/#tap" + tapNum;
+    var url = dataHost + "settings/#tap" + tapNum;
     window.open(url, "_self")
 }
 
