@@ -106,7 +106,7 @@ void initWebServer()
             if (!rewrite == true)
             {
                 Log.warning(F("Serving 404 for request to %s." CR), request->url().c_str());
-                request->send(SPIFFS, "/404.htm");
+                request->redirect("/404.htm");
             }
         } });
 
