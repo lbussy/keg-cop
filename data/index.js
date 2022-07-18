@@ -1,7 +1,7 @@
 // Supports Index page
 
 toggleLoader("on");
-var numReq = 3;
+var numReq = 4;
 var loaded = 0;
 var imperial;
 var labels = [];

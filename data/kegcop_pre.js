@@ -120,13 +120,11 @@ async function chooseTempMenu(callback = null) {
                 $('#displaytemplink').toggle();
             }
         }
-
-        return;
+        if (loaded < numReq) {
+            loaded++;
+        }
     } catch (err) {
         // Can check for (err) here
-    }
-    if (loaded < numReq) {
-        loaded++;
     }
     if (typeof callback == "function") {
         callback();
