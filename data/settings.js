@@ -325,7 +325,7 @@ function processPost(obj) {
     url = dataHost + $form.attr("action");
 
     if (dataHost) {
-        alert("DEBUG: Cannot process set/clearcalmode POST when using dataHost.");
+        alert("DEBUG: Cannot process settings POST when using dataHost.");
         return false;
     }
 
@@ -794,7 +794,7 @@ function followPulses() {
 function toggleCalMode(inCal = false, meter, callback = null) {
     var url = dataHost;
     if (dataHost) {
-        alert("DEBUG: Cannot process settings POST when using dataHost.");
+        alert("DEBUG: Cannot process set/clearcalmode POST when using dataHost.");
         return;
     }
     var data = {};
