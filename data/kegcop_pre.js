@@ -121,6 +121,7 @@ async function chooseTempMenu(callback = null) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/tempcontrol/";
+
     try {
         const response = await fetch(url);
         // response.status holds http code
