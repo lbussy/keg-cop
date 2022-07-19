@@ -12,7 +12,11 @@ function finishLoad() { // Get page data
 }
 
 function loadThisVersion() { // Get current parameters
-    var thisVersionJson = dataHost + "api/v1/info/thisVersion";
+    var thisVersionJson = dataHost;
+    if (thisVersionJson.endsWith("/")) {
+        thisVersionJson = thisVersionJson.slice(0, -1)
+    }
+    thisVersionJson += "/api/v1/info/thisVersion/";
     var thisVersion = $.getJSON(thisVersionJson, function () {
     })
         .done(function (thisVersion) {
@@ -35,7 +39,11 @@ function loadThisVersion() { // Get current parameters
 }
 
 function loadThatVersion() { // Get current parameters
-    var thatVersionJson = dataHost + "api/v1/info/thatVersion";
+    var thatVersionJson = dataHost;
+    if (thatVersionJson.endsWith("/")) {
+        thatVersionJson = thatVersionJson.slice(0, -1)
+    }
+    thatVersionJson += "/api/v1/info/thatVersion/";
     var thatVersion = $.getJSON(thatVersionJson, function () {
     })
         .done(function (thatVersion) {

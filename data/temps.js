@@ -19,7 +19,11 @@ function finishLoad() { // Get page data
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-    var url = dataHost + "api/v1/info/sensors";
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/sensors/";
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -136,7 +140,11 @@ function populateTemps(callback = null) { // Get configuration settings
 }
 
 function populateConfig() { // Get configuration settings
-    var url = dataHost + "api/v1/config/settings";
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/config/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })

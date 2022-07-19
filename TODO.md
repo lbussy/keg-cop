@@ -6,5 +6,5 @@
     - Be sure to do all pages, all data
     - Set reload timer on failure
     - Clear error on sucessfull load only
-- [ ] /settings/ page reloads inappropriately on sensor submit
 - [ ] Rewrite links to add "*.htm" to links when using devHost
+- [ ] Settings post doesn't work

@@ -115,7 +115,11 @@ function loadHash() { // Link to tab via hash value
 }
 
 function populateFlow(callback = null) { // Get flowmeter settings
-    var url = dataHost + "api/v1/config/taps";
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/config/taps/";
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -160,7 +164,11 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
-    var url = dataHost + "api/v1/config/settings";
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/config/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning()
     })
@@ -325,7 +333,7 @@ function processPost(obj) {
     url = dataHost + $form.attr("action");
 
     if (dataHost) {
-        alert("DEBUG: Cannot process settings POST when using dataHost.");
+        alert("Cannot process settings POST when using dataHost.");
         return false;
     }
 
@@ -629,6 +637,7 @@ function putData(url, data, newpage = false, newdata = false, callback = null) {
             settingsAlert.error();
         },
         error: function (data) {
+            console.log("In putData() I should be popping an error.");
             settingsAlert.error("Settings update failed.");
         },
         complete: function (data) {
@@ -792,21 +801,24 @@ function followPulses() {
 }
 
 function toggleCalMode(inCal = false, meter, callback = null) {
-    var url = dataHost;
     if (dataHost) {
-        alert("DEBUG: Cannot process set/clearcalmode POST when using dataHost.");
+        alert("Cannot process set/clearcalmode POST when using dataHost.");
         return;
+    }
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
     }
     var data = {};
     if (inCal) {
-        url += "api/v1/action/setcalmode/";
+        url += "/api/v1/action/setcalmode/";
         // Get form data
         tapnum = $('#flowmeter').val();
         data = {
             tapnum: tapnum
         }
     } else {
-        url += "api/v1/action/clearcalmode/";
+        url += "/api/v1/action/clearcalmode/";
     }
 
     putData(url, data, false, false, function () {
@@ -857,7 +869,11 @@ function resetFlowCalForm() {
 
 function pulseReload(callback = null) { // Get pulses
     var selectedIndex = $('#flowmeter').prop('selectedIndex');
-    var url = dataHost + "api/v1/info/pulses";
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/pulses/";
     var pulses = $.getJSON(url, function () {
         flowAlert.warning();
     })
