@@ -134,3 +134,19 @@ async function chooseTempMenu(callback = null) {
         callback();
     }
 }
+
+function checkSemaphore(callback) { // Check to see if the update is complete
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/action/ping/";
+    var jqxhr = $.get(url)
+        .done(function (data) {
+            callback(true);
+        })
+        .fail(function () {
+            // This will fail while controller resets
+            callback(false);
+        });
+}

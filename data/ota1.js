@@ -12,12 +12,12 @@ function finishLoad() { // Get page data
 }
 
 function loadThisVersion() { // Get current parameters
-    var thisVersionJson = dataHost;
-    if (thisVersionJson.endsWith("/")) {
-        thisVersionJson = thisVersionJson.slice(0, -1)
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
     }
-    thisVersionJson += "/api/v1/info/thisVersion/";
-    var thisVersion = $.getJSON(thisVersionJson, function () {
+    url += "/api/v1/info/thisVersion/";
+    var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
             try {
@@ -39,12 +39,12 @@ function loadThisVersion() { // Get current parameters
 }
 
 function loadThatVersion() { // Get current parameters
-    var thatVersionJson = dataHost;
-    if (thatVersionJson.endsWith("/")) {
-        thatVersionJson = thatVersionJson.slice(0, -1)
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
     }
-    thatVersionJson += "/api/v1/info/thatVersion/";
-    var thatVersion = $.getJSON(thatVersionJson, function () {
+    url += "/api/v1/info/thatVersion/";
+    var thatVersion = $.getJSON(url, function () {
     })
         .done(function (thatVersion) {
             try {
