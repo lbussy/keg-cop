@@ -28,20 +28,6 @@ const char *wh_urlstart = URLSTART;
 const char *wh_tld = TLD;
 const char *wh_delim = DELIM;
 
-// This BS is needed because a wierd combo of libs and core is causing the
-// methods to conflict
-enum KC_METHODS
-{
-    KC_HTTP_GET = 0b00000001,
-    KC_HTTP_POST = 0b00000010,
-    KC_HTTP_DELETE = 0b00000100,
-    KC_HTTP_PUT = 0b00001000,
-    KC_HTTP_PATCH = 0b00010000,
-    KC_HTTP_HEAD = 0b00100000,
-    KC_HTTP_OPTIONS = 0b01000000,
-    KC_HTTP_ANY = 0b01111111,
-};
-
 static int controlHandlers = 7;
 static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration functions
     handleControllerPost,
@@ -84,9 +70,11 @@ void initWebServer()
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request)
                       {
-        if (request->method() == KC_HTTP_OPTIONS)
+        if (request->method() == HTTP_OPTIONS)
         {
             request->send(200);
+            HTTP_GET;
+            HTTP_PUT;
         }
         else
         {
@@ -111,6 +99,8 @@ void initWebServer()
         } });
 
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
+    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "*");
+    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "*");
 
     server.begin();
 
@@ -136,7 +126,7 @@ void setRegPageHandlers()
 
 void setAPIPageHandlers()
 {
-    server.on("/api/v1/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
@@ -151,7 +141,7 @@ void setAPIPageHandlers()
 
         send_json(request, api); });
 
-    server.on("/api/v1/action/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
@@ -166,7 +156,7 @@ void setAPIPageHandlers()
 
         send_json(request, api); });
 
-    server.on("/api/v1/info/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
@@ -181,7 +171,7 @@ void setAPIPageHandlers()
 
         send_json(request, api); });
 
-    server.on("/api/v1/config/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
@@ -201,41 +191,41 @@ void setActionPageHandlers()
 {
     // Action Page Handlers
 
-    server.on("/api/v1/action/ping/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/ping/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request); });
 
-    server.on("/api/v1/action/wifireset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/wifireset/", HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         _delay(2000);
         setDoWiFiReset(); // Wipe settings, reset controller
         send_ok(request); });
 
-    server.on("/api/v1/action/wifireset/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/wifireset/", HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
 
-    server.on("/api/v1/action/reset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/reset/", HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         _delay(2000);
         setDoReset();
         send_ok(request); });
 
-    server.on("/api/v1/action/reset/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/reset/", HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
 
-    server.on("/api/v1/action/updatestart/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/updatestart/", HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         setDoOTA(); // Trigger the OTA update
         send_ok(request); });
 
-    server.on("/api/v1/action/updatestart/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/updatestart/", HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
 
-    server.on("/api/v1/action/clearupdate/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/clearupdate/", HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         config.ota.dospiffs1 = false;
@@ -244,12 +234,12 @@ void setActionPageHandlers()
         config.copconfig.nodrd = false;
         send_ok(request); });
 
-    server.on("/api/v1/action/clearupdate/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/clearupdate/", HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
 
-    server.on("/api/v1/action/clearcalmode/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/clearcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        Log.notice(F("Processing %s." CR), request->url().c_str());
         for (int i = 0; i < NUMTAPS; i++)
         {
             flow.taps[i].calibrating = false;
@@ -257,10 +247,10 @@ void setActionPageHandlers()
         saveFlowConfig();
         send_ok(request); });
 
-    server.on("/api/v1/action/clearcalmode/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
 
-    server.on("/api/v1/action/setcalmode/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/setcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         for (int i = 0; i < NUMTAPS; i++)
@@ -270,7 +260,7 @@ void setActionPageHandlers()
         saveFlowConfig();
         send_ok(request); });
 
-    server.on("/api/v1/action/setcalmode/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
 }
 
@@ -278,7 +268,7 @@ void setInfoPageHandlers()
 {
     // Info Page Handlers
 
-    server.on("/api/v1/info/resetreason/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/resetreason/", HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Used to provide the reset reason json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -294,7 +284,7 @@ void setInfoPageHandlers()
         serializeJson(doc, resetreason);
         send_json(request, resetreason); });
 
-    server.on("/api/v1/info/heap/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/heap/", HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Used to provide the heap json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -320,7 +310,7 @@ void setInfoPageHandlers()
         serializeJson(doc, heap);
         send_json(request, heap); });
 
-    server.on("/api/v1/info/uptime/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/uptime/", HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Used to provide the uptime json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -345,7 +335,7 @@ void setInfoPageHandlers()
         serializeJson(doc, ut);
         send_json(request, ut); });
 
-    server.on("/api/v1/info/thisVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/thisVersion/", HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(4);
@@ -361,7 +351,7 @@ void setInfoPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/info/thatVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/thatVersion/", HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(2);
@@ -376,7 +366,7 @@ void setInfoPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/info/pulses/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/pulses/", HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Used to provide the pulses json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -396,7 +386,34 @@ void setInfoPageHandlers()
         serializeJson(doc, json); // Serialize JSON to String
         send_json(request, json); });
 
-    server.on("/api/v1/info/sensors/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/tempcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Used to inform whether wee should be doing a temps menu or not
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
+
+        int numEnabled = 0;
+        for (int i = 0; i < NUMSENSOR; i++)
+        {
+            if (config.temps.enabled[i])
+            {
+                numEnabled++;
+            }
+        }
+
+        // If we have at least one temp sensor, display link in menu
+        const bool displayenabled = (numEnabled > 0);
+
+        if (displayenabled)
+        {
+            send_ok(request);
+        }
+        else
+        {
+            request->header("Cache-Control: no-store");
+            request->send(20, F("text/plain"), F("Method Not Allowed"));
+        } });
+
+    server.on("/api/v1/info/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         DynamicJsonDocument doc(capacityTempsSerial);
@@ -450,7 +467,7 @@ void setConfigurationPageHandlers()
 {
     // Settings Handlers:
 
-    server.on("/api/v1/config/settings/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/settings/", HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         // Process settings update
         Log.verbose(F("Processing put to %s." CR), request->url().c_str());
@@ -474,7 +491,7 @@ void setConfigurationPageHandlers()
             }
         } });
 
-    server.on("/api/v1/config/settings/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/settings/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         // Used to provide the Config json
         // Serialize configuration
@@ -486,13 +503,13 @@ void setConfigurationPageHandlers()
         serializeJson(doc, json); // Serialize JSON to String
         send_json(request, json); });
 
-    server.on("/api/v1/config/settings/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/settings/", HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
 
     // Settings Handlers^
     // Tap Handlers:
 
-    server.on("/api/v1/config/taps/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/taps/", HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         // Process taps update
         Log.verbose(F("Processing post to %s." CR), request->url().c_str());
@@ -516,7 +533,7 @@ void setConfigurationPageHandlers()
             }
         } });
 
-    server.on("/api/v1/config/taps/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/taps/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         // Serialize configuration
         DynamicJsonDocument doc(capacityFlowSerial); // Create doc
@@ -527,7 +544,7 @@ void setConfigurationPageHandlers()
         serializeJson(doc, json); // Serialize JSON to String
         send_json(request, json); });
 
-    server.on("/api/v1/config/taps/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/taps/", HTTP_ANY, [](AsyncWebServerRequest *request)
               { send_not_allowed(request); });
     // Tap Handlers^
 }
@@ -537,7 +554,7 @@ void setEditor()
 #ifdef SPIFFSEDIT
     // Setup FILESYSTEM editor
     server.addHandler(new SPIFFSEditor(FILESYSTEM, SPIFFSEDITUSER, SPIFFSEDITPW));
-    server.on("/edit/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/edit/", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->redirect("/edit"); });
 #endif
 }
@@ -1685,7 +1702,7 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
 
 void send_not_allowed(AsyncWebServerRequest *request)
 {
-    Log.verbose(F("Not processing %s." CR), request->url().c_str());
+    Log.notice(F("Not processing %s." CR), request->url().c_str());
     request->header("Cache-Control: no-store");
     request->send(405, F("text/plain"), F("Method Not Allowed"));
 }

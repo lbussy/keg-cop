@@ -1,6 +1,7 @@
 // Common file/functions for all Keg Cop pages
 
 var dataHost = "";
+var useTemps = false;
 
 // Detect unloading state during getJSON
 var unloadingState = false;
@@ -17,11 +18,27 @@ function preLoad() {
     //
     // Note that the full URL including 'http:// and
     // trailing '/' is required
+    //
     dataHost = localStorage.getItem("dataHost") || "";
+    //
     // Also remember that this must be cleared for things to work
     // normally again:
     //
     // >>   localStorage.setItem("dataHost", "http://kegcop.local/");
+    //
+
+    // To set temperature link display, use the following syntax in console:
+    //
+    // >>   localStorage.setItem("useTemps", true);
+    //
+    useTemps =  (JSON.parse(localStorage.getItem("useTemps")) === true);
+    // (We have to serialize the vlaue of lical storage to get a bool)
+    //
+    // Also remember that this must be set to false for things to work
+    // normally again:
+    //
+    // >>   localStorage.setItem("useTemps", false);
+    //
 
     // Make sure the page is 100% loaded
     if (document.readyState === "ready" || document.readyState === "complete") {
@@ -36,53 +53,13 @@ function preLoad() {
 function startLoad() {
     $(document).tooltip({ // Enable tooltips
         'selector': '[data-toggle=tooltip]',
-        'placement': 'left',
+        //'placement': 'left',
         'toggleEnabled': true
     });
     // Call finishLoad() if it exists (page handler)
     if (typeof finishLoad === "function") {
         finishLoad();
     };
-}
-
-function populateTemps(callback = null) {
-    // Only show "Temperatures" tab if we have sensors
-    var url = dataHost + "api/v1/info/sensors";
-    var config = $.getJSON(url, function () {
-    })
-        .done(function (temps) {
-            try {
-                if (temps.displayenabled == true || dataHost) {
-                    if (!$('#displaytemplink').is(':visible')) {
-                        $('#displaytemplink').toggle();
-                    }
-                } else {
-                    if ($('#displaytemplink').is(':visible')) {
-                        $('#displaytemplink').toggle();
-                    }
-                }
-
-                if (loaded < numReq) {
-                    loaded++;
-                }
-                if (typeof callback == "function") {
-                    callback();
-                }
-            }
-            catch {
-                if (!unloadingState) {
-                    // No need to handle an error here since this simply sets up the menu
-                }
-            }
-        })
-        .fail(function () {
-            if (!unloadingState) {
-                // No need to handle an error here since this simply sets up the menu
-            }
-        })
-        .always(function () {
-            // Can post-process here
-        });
 }
 
 function toggleLoader(status) {
@@ -125,5 +102,31 @@ function pollComplete() {
         finishPage();
     } else {
         setTimeout(pollComplete, 300); // try again in 300 milliseconds
+    }
+}
+
+async function chooseTempMenu(callback = null) {
+    var url = dataHost + "api/v1/info/tempcontrol";
+    try {
+        const response = await fetch(url);
+        // response.status holds http code
+
+        if (response.ok === true || useTemps === true) {
+            if (!$('#displaytemplink').is(':visible')) {
+                $('#displaytemplink').toggle();
+            }
+        } else {
+            if ($('#displaytemplink').is(':visible')) {
+                $('#displaytemplink').toggle();
+            }
+        }
+        if (loaded < numReq) {
+            loaded++;
+        }
+    } catch (err) {
+        // Can check for (err) here
+    }
+    if (typeof callback == "function") {
+        callback();
     }
 }

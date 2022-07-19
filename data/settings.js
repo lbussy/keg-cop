@@ -84,10 +84,10 @@ $("input[type='reset']").closest('form').on('reset', function (event) { // Reset
 
 function finishLoad() { // Get page data
     toggleCalMode(false);
+    loadHash();
+    chooseTempMenu();
     populateConfig();
     populateFlow();
-    populateTemps();
-    loadHash();
     pollComplete();
 }
 
@@ -96,9 +96,9 @@ function repopulatePage(doSpinner = false) { // Reload data if we need it
         toggleLoader("on");
     }
     loaded = 0;
+    chooseTempMenu();
     populateConfig();
     populateFlow();
-    populateTemps();
     pollComplete();
 }
 
@@ -322,7 +322,12 @@ function processPost(obj) {
     posted = false;
     hashLoc = window.location.hash;
     var $form = $(obj);
-    url = $form.attr("action");
+    url = dataHost + $form.attr("action");
+
+    if (dataHost) {
+        alert("DEBUG: Cannot process settings POST when using dataHost.");
+        return false;
+    }
 
     $("button[id='submitSettings']").prop('disabled', true);
     $("button[id='submitSettings']").html('<i class="fa fa-spinner fa-spin"></i> Updating');
@@ -787,17 +792,21 @@ function followPulses() {
 }
 
 function toggleCalMode(inCal = false, meter, callback = null) {
-    var url = '';
+    var url = dataHost;
+    if (dataHost) {
+        alert("DEBUG: Cannot process set/clearcalmode POST when using dataHost.");
+        return;
+    }
     var data = {};
     if (inCal) {
-        url = dataHost + "api/v1/action/setcalmode";
+        url += "api/v1/action/setcalmode/";
         // Get form data
         tapnum = $('#flowmeter').val();
         data = {
             tapnum: tapnum
         }
     } else {
-        url = dataHost + "api/v1/action/clearcalmode";
+        url += "api/v1/action/clearcalmode/";
     }
 
     putData(url, data, false, false, function () {

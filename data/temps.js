@@ -3,7 +3,7 @@
 toggleLoader("on");
 var imperial;
 var loaded = 0;
-var numReq = 2;
+var numReq = 3;
 var labels = [];
 var temperatures = [];
 var scaleTemps = [];
@@ -12,9 +12,127 @@ var tempChart;
 var chartReloadTimer = 10000; // Reload every 10 seconds
 
 function finishLoad() { // Get page data
+    chooseTempMenu(); // ????  TODO:  MAke a decision here.
     populateTemps();
     populateConfig();
     pollComplete();
+}
+
+function populateTemps(callback = null) { // Get configuration settings
+    var url = dataHost + "api/v1/info/sensors";
+    var okToClear = false;
+    if (labels.length) { // Clear arrays if we are re-running
+        okToClear = true;
+    }
+    var config = $.getJSON(url, function () {
+        tempAlert.warning();
+    })
+        .done(function (temps) {
+            try {
+                if (okToClear) {
+                    labels = [];
+                    temperatures = [];
+                    scaleTemps = [];
+                }
+
+                if (temps.imperial) {
+                    imperial = true;
+                } else {
+                    imperial = false;
+                }
+
+                var length = Object.keys(temps.sensors).length
+                var i;
+                for (i = 0; i < length; i++) {
+                    if (temps.sensors[i].enable) {
+                        labels.push(temps.sensors[i].name);
+                        temperatures.push(parseFloat(temps.sensors[i].value));
+                    }
+                }
+
+                $('#controlPoint').text(temps.sensors[temps.controlpoint].name);
+
+                setpoint = parseFloat(temps.setting).toFixed(1);
+                setpointLabel = "Setpoint: " + setpoint;
+                if (imperial) {
+                    setpointLabel += " ℉";
+                } else {
+                    setpointLabel += " ℃";
+                }
+
+                scaleTemps = temperatures;
+                scaleTemps.push(parseFloat(setpoint));
+
+                // Set indicator button
+                switch (temps.status) {
+                    case 0: // TSTAT_INACTIVE
+                        clearState();
+                        $("#coolstate").addClass("alert-secondary");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is disabled");
+                        break;
+                    case 1: // TSTAT_COOL_BEGIN
+                        clearState();
+                        $("#coolstate").addClass("alert-info");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is starting to cool");
+                        break;
+                    case 2: // TSTAT_COOL_MINOFF
+                        clearState();
+                        $("#coolstate").addClass("alert-danger");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is calling for cooling but in minimum off time");
+                        break;
+                    case 3: // TSTAT_COOL_ACTIVE
+                        clearState();
+                        $("#coolstate").addClass("alert-primary");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is actively cooling");
+                        break;
+                    case 4: // TSTAT_IDLE_END
+                        clearState();
+                        $("#coolstate").addClass("alert-warning");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, minimum off time ending");
+                        break;
+                    case 5: // TSTAT_IDLE_MINON
+                        clearState();
+                        $("#coolstate").addClass("alert-success");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling but in minimum on time");
+                        break;
+                    case 6: // TSTAT_IDLE_INACTIVE
+                        clearState();
+                        $("#coolstate").addClass("alert-light");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, in idle mode");
+                        break;
+                    case 7: // TSTAT_UNKNOWN
+                        clearState();
+                        $("#coolstate").addClass("alert-light");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
+                        break;
+                    default: // TSTAT_UNKNOWN
+                        clearState();
+                        $("#coolstate").addClass("alert-light");
+                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
+                        break;
+                }
+
+                if (loaded < numReq) {
+                    loaded++;
+                }
+                if (typeof callback == "function") {
+                    callback();
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    tempAlert.warning("Unable to parse temperature data.");
+                }
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                tempAlert.warning("Unable to retrieve temperatire data.");
+            }
+        })
+        .always(function () {
+            // Can post-process here
+        });
 }
 
 function populateConfig() { // Get configuration settings
@@ -166,7 +284,7 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 
 function barClick(event, array) { // Bar click handler
     var tapNum = array[0]._index;
-    var url = dataHost + "settings/#sensorcontrol";
+    var url = "settings#sensorcontrol";
     window.open(url, "_self");
 }
 
