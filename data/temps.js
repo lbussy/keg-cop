@@ -19,14 +19,10 @@ function finishLoad() { // Get page data
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-<<<<<<< HEAD
     if (!dataHostCheckDone) {
         setTimeout(populateTemps, 10);
         return;
     }
-=======
-
->>>>>>> f0e262f (Fix links (#62))
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -150,13 +146,10 @@ function populateTemps(callback = null) { // Get configuration settings
 }
 
 function populateConfig() { // Get configuration settings
-<<<<<<< HEAD
     if (!dataHostCheckDone) {
         setTimeout(populateConfig, 10);
         return;
     }
-=======
->>>>>>> f0e262f (Fix links (#62))
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
