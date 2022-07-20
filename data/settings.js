@@ -248,7 +248,6 @@ function populateConfig(callback = null) { // Get configuration settings
                     $('input:radio[name="tfanonhigh"]')[0].checked = true;      // Check enabled radio
                 }
 
-
                 if (config.copconfig.tapsolenoid) {
                     $('input:radio[name="tapsolenoid"]')[0].checked = true;
                 } else {
