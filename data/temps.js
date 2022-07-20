@@ -23,6 +23,7 @@ function populateTemps(callback = null) { // Get configuration settings
         setTimeout(populateTemps, 10);
         return;
     }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -150,6 +151,7 @@ function populateConfig() { // Get configuration settings
         setTimeout(populateConfig, 10);
         return;
     }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)

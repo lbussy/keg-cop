@@ -874,11 +874,10 @@ function toggleCalMode(inCal = false, meter, callback = null) {
         url += "/api/v1/action/clearcalmode/";
     }
 
-    putData(url, data, false, false, function () {
-        if (typeof callback == "function") {
-            callback(true);
-        }
-    });
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
 }
 
 function resetFlowCalForm() {
