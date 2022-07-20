@@ -302,22 +302,6 @@ function doUnits() { // Change names on page according to units in place
     }
 }
 
-function isIP(hostname) { // Bool: is this an IP address
-    if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(hostname)) {
-        return (true)
-    } else {
-        return (false)
-    }
-}
-
-function isMDNS(hostname) { // Bool: Is this an mDNS host name
-    if (hostname.endsWith(".local")) {
-        return (true);
-    } else {
-        return (false);
-    }
-}
-
 function finishPage() { // Display page
     posted = true;
     toggleTIO();
@@ -331,11 +315,6 @@ function processPost(obj) {
     hashLoc = window.location.hash;
     var $form = $(obj);
     url = dataHost + $form.attr("action");
-
-    if (dataHost) {
-        alert("Cannot process settings POST when using dataHost.");
-        return false;
-    }
 
     $("button[id='submitSettings']").prop('disabled', true);
     $("button[id='submitSettings']").html('<i class="fa fa-spinner fa-spin"></i> Updating');
@@ -637,7 +616,6 @@ function putData(url, data, newpage = false, newdata = false, callback = null) {
             settingsAlert.error();
         },
         error: function (data) {
-            console.log("In putData() I should be popping an error.");
             settingsAlert.error("Settings update failed.");
         },
         complete: function (data) {
@@ -801,10 +779,6 @@ function followPulses() {
 }
 
 function toggleCalMode(inCal = false, meter, callback = null) {
-    if (dataHost) {
-        alert("Cannot process set/clearcalmode POST when using dataHost.");
-        return;
-    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -821,11 +795,10 @@ function toggleCalMode(inCal = false, meter, callback = null) {
         url += "/api/v1/action/clearcalmode/";
     }
 
-    putData(url, data, false, false, function () {
-        if (typeof callback == "function") {
-            callback(true);
-        }
-    });
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
 }
 
 function resetFlowCalForm() {

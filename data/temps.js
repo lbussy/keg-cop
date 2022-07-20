@@ -12,7 +12,7 @@ var tempChart;
 var chartReloadTimer = 10000; // Reload every 10 seconds
 
 function finishLoad() { // Get page data
-    chooseTempMenu(); // ????  TODO:  MAke a decision here.
+    chooseTempMenu();
     populateTemps();
     populateConfig();
     pollComplete();

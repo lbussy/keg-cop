@@ -98,7 +98,7 @@ function loadUptime(callback = null) { // Get uptime information
 }
 
 function loadHeap(callback = null) { // Get heap information
-    var heapJson = dataHost;
+    var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
