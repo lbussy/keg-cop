@@ -296,9 +296,40 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 }
 
 function barClick(event, array) { // Bar click handler
-    var tapNum = array[0]._index;
-    var url = "settings#sensorcontrol";
-    window.open(url, "_self");
+    var newURL;
+    var newPath = "settings/";
+    var newSearch = "";
+    var newHash = "#sensorcontrol";
+    try {
+        const url = new URL(window.location.href);
+        if (dataHost || isIP(url.hostname)) {
+            // This all exists because we need to re-write URLs when
+            // using a dev server
+            newURL = url.protocol
+            newURL += "//";
+            newURL += url.host;
+            if (url.pathname.includes("data")) {
+                newPath = "/data/" + newPath;
+            }
+            newURL += newPath;
+            if (newURL.endsWith("/")) {
+                newURL = newURL.substring(0, newURL.length - 1);
+            }
+            if (!newURL.endsWith(".htm")) {
+                newURL += ".htm";
+            }
+            newURL += newSearch;
+            newURL += newHash;
+        } else {
+            newURL = newPath + newHash;
+        }
+        // Open the rewritten URL and return false to prevent default
+        window.open(newURL,"_self")
+        return false;
+    } catch (error) {
+        console.error("Badly formatted URL passed to function.");
+        return false;
+    }
 }
 
 function clearState() {

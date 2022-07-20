@@ -16,13 +16,13 @@ window.addEventListener("beforeunload", function (event) {
     unloadingState = true;
 });
 
-window.onclick = function (e) {
+window.onclick = function (event) {
+    var newURL;
     try {
-        const url = new URL(e.target.href);
+        const url = new URL(event.target.href);
         if (dataHost || isIP(url.hostname)) {
             // This all exists because we need to re-write URLs when
             // using a dev server
-            var newURL;
             newURL = url.protocol
             newURL += "//";
             newURL += url.host;
@@ -36,14 +36,29 @@ window.onclick = function (e) {
             newURL += url.search;
             newURL += url.hash;
             // Open the rewritten URL and return false to prevent default
-            window.open(newURL,"_self")
+            window.open(newURL,"_self");
+            return false;
+        } else {
+            const url = new URL(event.target.href);
+            newURL = url.pathname;
+            if (newURL.endsWith("/")) {
+                newURL = newURL.substring(0, newURL.length - 1);
+            }
+            if (newURL.startsWith("/")) {
+                newURL = newURL.substring(1, newURL.length);
+            }
+            if (newURL.includes("/")) newURL = "/" + newURL.split('/')[1];
+            newURL += "/";
+            newURL += url.search;
+            newURL += url.hash;
+            window.open(newURL,"_self");
             return false;
         }
-        // Thhis should be the default handler, return (true) to take default
+        // This should be the default handler, return (true) to take default
         return;
     } catch (error) {
         // Bad URL or click in a non-href area
-        return false;
+        return;
     }
 }
 
