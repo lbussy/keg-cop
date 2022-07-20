@@ -269,24 +269,7 @@ void setActionPageHandlers()
             flow.taps[i].calibrating = false;
         }
         saveFlowConfig();
-        send_ok(request);
-        // if (request->methodToString() == "PUT")
-        // {
-        //     Log.notice(F("Processing %s." CR), request->url().c_str());
-        //     for (int i = 0; i < NUMTAPS; i++)
-        //     {
-        //         flow.taps[i].calibrating = false;
-        //     }
-        //     saveFlowConfig();
-        //     send_ok(request);
-        // }
-        // else
-        // {
-        //     Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
-        //     request->header("Cache-Control: no-store");
-        //     request->send(405, F("text/plain"), F("Method Not Allowed"));
-        // }
-        });
+        send_ok(request); });
 
     server.on("/api/v1/action/setcalmode/", [](AsyncWebServerRequest *request)
               {
@@ -295,24 +278,7 @@ void setActionPageHandlers()
             flow.taps[i].calibrating = true;
         }
         saveFlowConfig();
-        send_ok(request);
-        // if (request->methodToString() == "PUT")
-        // {
-        //     for (int i = 0; i < NUMTAPS; i++)
-        //     {
-        //         flow.taps[i].calibrating = true;
-        //     }
-        //     saveFlowConfig();
-        //     send_ok(request);
-        // }
-        // else
-        // {
-        //     Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
-        //     request->header("Cache-Control: no-store");
-        //     request->send(405, F("text/plain"), F("Method Not Allowed"));
-        //     Log.verbose(F("Processing %s." CR), request->url().c_str());
-        // }
-        });
+        send_ok(request); });
 }
 
 void setInfoPageHandlers()

@@ -19,6 +19,7 @@ function finishLoad() { // Get page data
 }
 
 function populateTemps(callback = null) { // Get configuration settings
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
