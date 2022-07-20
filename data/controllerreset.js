@@ -39,14 +39,3 @@ function watchReset() {
         });
     }, 5000);
 }
-
-function checkSemaphore(callback) { // Check to see if the update is complete
-    var jqxhr = $.get("api/v1/action/ping")
-        .done(function (data) {
-            callback(true);
-        })
-        .fail(function () {
-            // This will fail while controller resets
-            callback(false);
-        });
-}

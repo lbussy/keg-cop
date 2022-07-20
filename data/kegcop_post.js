@@ -1,10 +1,5 @@
 // Common functions requiring jQuery
 
-// Attach the event after the page loads
-if (window.addEventListener) window.addEventListener("load", preLoad, false);
-else if (window.attachEvent) window.attachEvent("onload", preLoad);
-else window.onload = preLoad;
-
 // Turn off tooltips on radio button change {" "}
 $('input[type=radio]').change(function () {
     $('[data-toggle="tooltip"], .tooltip').tooltip("hide");

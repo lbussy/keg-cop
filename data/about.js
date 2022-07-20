@@ -33,8 +33,12 @@ function heapToolTip() {
 }
 
 function loadThisVersion() { // Get current parameters
-    var thisVersionJson = dataHost + "api/v1/info/thisVersion";
-    var thisVersion = $.getJSON(thisVersionJson, function () {
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/thisVersion/";
+    var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
             try {
@@ -59,8 +63,12 @@ function loadThisVersion() { // Get current parameters
 }
 
 function loadUptime(callback = null) { // Get uptime information
-    var uptimeJson = dataHost + "api/v1/info/uptime";
-    var uptime = $.getJSON(uptimeJson, function () {
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/uptime/";
+    var uptime = $.getJSON(url, function () {
     })
         .done(function (uptime) {
             try {
@@ -90,8 +98,12 @@ function loadUptime(callback = null) { // Get uptime information
 }
 
 function loadHeap(callback = null) { // Get heap information
-    var heapJson = dataHost + "api/v1/info/heap";
-    var heap = $.getJSON(heapJson, function () {
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/heap/";
+    var heap = $.getJSON(url, function () {
     })
         .done(function (heap) {
             try {
@@ -120,8 +132,12 @@ function loadHeap(callback = null) { // Get heap information
 }
 
 function loadResetReason(callback = null) { // Get last reset reason
-    var resetJson = dataHost + "api/v1/info/resetreason";
-    var reset = $.getJSON(resetJson, function () {
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/resetreason/";
+    var reset = $.getJSON(url, function () {
     })
         .done(function (reset) {
             try {
