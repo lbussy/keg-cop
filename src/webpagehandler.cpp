@@ -263,41 +263,56 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/clearcalmode/", [](AsyncWebServerRequest *request)
               {
-        if (request->methodToString() == "PUT")
+        Log.notice(F("Processing %s." CR), request->url().c_str());
+        for (int i = 0; i < NUMTAPS; i++)
         {
-            Log.notice(F("Processing %s." CR), request->url().c_str());
-            for (int i = 0; i < NUMTAPS; i++)
-            {
-                flow.taps[i].calibrating = false;
-            }
-            saveFlowConfig();
-            send_ok(request);
+            flow.taps[i].calibrating = false;
         }
-        else
-        {
-            Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
-            request->header("Cache-Control: no-store");
-            request->send(405, F("text/plain"), F("Method Not Allowed"));
-        } });
+        saveFlowConfig();
+        send_ok(request);
+        // if (request->methodToString() == "PUT")
+        // {
+        //     Log.notice(F("Processing %s." CR), request->url().c_str());
+        //     for (int i = 0; i < NUMTAPS; i++)
+        //     {
+        //         flow.taps[i].calibrating = false;
+        //     }
+        //     saveFlowConfig();
+        //     send_ok(request);
+        // }
+        // else
+        // {
+        //     Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
+        //     request->header("Cache-Control: no-store");
+        //     request->send(405, F("text/plain"), F("Method Not Allowed"));
+        // }
+        });
 
     server.on("/api/v1/action/setcalmode/", [](AsyncWebServerRequest *request)
               {
-        if (request->methodToString() == "PUT")
+        for (int i = 0; i < NUMTAPS; i++)
         {
-            for (int i = 0; i < NUMTAPS; i++)
-            {
-                flow.taps[i].calibrating = true;
-            }
-            saveFlowConfig();
-            send_ok(request);
+            flow.taps[i].calibrating = true;
         }
-        else
-        {
-            Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
-            request->header("Cache-Control: no-store");
-            request->send(405, F("text/plain"), F("Method Not Allowed"));
-            Log.verbose(F("Processing %s." CR), request->url().c_str());
-        } });
+        saveFlowConfig();
+        send_ok(request);
+        // if (request->methodToString() == "PUT")
+        // {
+        //     for (int i = 0; i < NUMTAPS; i++)
+        //     {
+        //         flow.taps[i].calibrating = true;
+        //     }
+        //     saveFlowConfig();
+        //     send_ok(request);
+        // }
+        // else
+        // {
+        //     Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
+        //     request->header("Cache-Control: no-store");
+        //     request->send(405, F("text/plain"), F("Method Not Allowed"));
+        //     Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // }
+        });
 }
 
 void setInfoPageHandlers()
@@ -505,7 +520,7 @@ void setConfigurationPageHandlers()
 
     server.on("/api/v1/config/settings/", [](AsyncWebServerRequest *request)
               {
-        if (request->method() == HTTP_PUT)
+        if (request->methodToString() == "PUT")
         {
             // Process settings update
             Log.verbose(F("Processing put to %s." CR), request->url().c_str());
@@ -547,7 +562,7 @@ void setConfigurationPageHandlers()
 
     server.on("/api/v1/config/taps/", [](AsyncWebServerRequest *request)
               {
-        if (request->method() == HTTP_PUT)
+        if (request->methodToString() == "PUT")
         {
             // Process taps update
             Log.verbose(F("Processing post to %s." CR), request->url().c_str());
@@ -591,7 +606,7 @@ void setEditor()
 #ifdef SPIFFSEDIT
     // Setup FILESYSTEM editor
     server.addHandler(new SPIFFSEditor(FILESYSTEM, SPIFFSEDITUSER, SPIFFSEDITPW));
-    server.on("/edit/", HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/edit/", [](AsyncWebServerRequest *request)
               { request->redirect("/edit"); });
 #endif
 }
