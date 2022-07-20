@@ -214,19 +214,10 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/reset/", [](AsyncWebServerRequest *request)
               {
-        if (request->methodToString() == "PUT")
-        {
-            Log.verbose(F("Processing %s." CR), request->url().c_str());
-            _delay(2000);
-            setDoReset();
-            send_ok(request);
-        }
-        else
-        {
-            Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
-            request->header("Cache-Control: no-store");
-            request->send(405, F("text/plain"), F("Method Not Allowed"));
-        } });
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        send_ok(request);
+        _delay(2000);
+        setDoReset(); });
 
     server.on("/api/v1/action/updatestart/", [](AsyncWebServerRequest *request)
               {
