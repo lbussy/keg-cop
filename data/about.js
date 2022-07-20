@@ -1,9 +1,9 @@
 // Supports About Page
 
 toggleLoader("off");
-var numReq = 3;
+var numReq = 4;
 var loaded = 0;
-var heapReloadTimer = 60000;
+var aboutReloadTimer = 60000;
 
 function finishLoad() {
     // Catch page finished event from kegcop_pre.js
@@ -45,17 +45,22 @@ function loadThisVersion() { // Get current parameters
                 $('#thisVersion').text("v" + thisVersion.fw_version);
                 $('#thisBranch').text(thisVersion.branch);
                 $('#thisBuild').text(thisVersion.build);
+                if (loaded < numReq) {
+                    loaded++;
+                }
             }
             catch {
                 $('#thisVersion').html("").html('<span class="text-danger">Error parsing version.</span>');
                 $('#thisBranch').text();
                 $('#thisBuild').text();
+                setTimeout(loadThisVersion, 10000);
             }
         })
         .fail(function () {
             $('#thisVersion').html("").html('<span class="text-danger">Error loading version.</span>');
             $('#thisBranch').text();
             $('#thisBuild').text();
+            setTimeout(loadThisVersion, 10000);
         })
         .always(function () {
             // Can post-process here
@@ -79,18 +84,20 @@ function loadUptime(callback = null) { // Get uptime information
 
                 var uptime = "Days: " + days + ", Hours: " + hours + ", Minutes: " + minutes + ", Seconds: " + seconds;
                 $('#uptime').text(uptime);
+                if (loaded < numReq) {
+                    loaded++;
+                }
             }
             catch {
                 $('#uptime').text("(Error parsing uptime.)");
+                if (loaded < numReq) setTimeout(loadUptime, 10000);
             }
         })
         .fail(function () {
             $('#uptime').text("(Error loading uptime.)");
+            if (loaded < numReq) setTimeout(loadUptime, 10000);
         })
         .always(function () {
-            if (loaded < numReq) {
-                loaded++;
-            }
             if (typeof callback == "function") {
                 callback();
             }
@@ -113,18 +120,20 @@ function loadHeap(callback = null) { // Get heap information
 
                 var heapinfo = "Free Heap: " + free + ", Max: " + max + ", Frags: " + frag;
                 $('#heap').text(heapinfo);
+                if (loaded < numReq) {
+                    loaded++;
+                }
             }
             catch {
                 $('#heap').text("(Error parsing heap.)");
+                if (loaded < numReq) setTimeout(loadHeap, 10000);
             }
         })
         .fail(function () {
             $('#heap').text("(Error loading heap.)");
+            if (loaded < numReq) setTimeout(loadHeap, 10000);
         })
         .always(function () {
-            if (loaded < numReq) {
-                loaded++;
-            }
             if (typeof callback == "function") {
                 callback();
             }
@@ -146,44 +155,46 @@ function loadResetReason(callback = null) { // Get last reset reason
 
                 var resetText = "Reason: " + resetReason + ", Description: " + resetDescription;
                 $('#resetreason').text(resetText);
+                if (loaded < numReq) {
+                    loaded++;
+                }
             }
             catch {
                 $('#resetreason').text("(Error parsing version.)");
+                if (loaded < numReq) setTimeout(loadResetReason, 10000);
             }
         })
         .fail(function () {
             $('#resetreason').text("(Error loading version.)");
+            if (loaded < numReq) setTimeout(loadResetReason, 10000);
         })
         .always(function () {
-            if (loaded < numReq) {
-                loaded++;
-            }
             if (typeof callback == "function") {
                 callback();
             }
         });
 }
 
-function heapReload() {
-    loadHeap(function callFunction() {
-        setTimeout(heapReload, heapReloadTimer);
+function uptimeReload() {
+    loadUptime(function callFunction() {
+        setTimeout(uptimeReload, aboutReloadTimer);
     });
 }
 
-function uptimeReload() {
-    loadUptime(function callFunction() {
-        setTimeout(uptimeReload, heapReloadTimer);
+function heapReload() {
+    loadHeap(function callFunction() {
+        setTimeout(heapReload, aboutReloadTimer);
     });
 }
 
 function reasonReload() {
     loadResetReason(function callFunction() {
-        setTimeout(reasonReload, heapReloadTimer);
+        setTimeout(reasonReload, aboutReloadTimer);
     });
 }
 
 function finishPage() { // Display page
-    setTimeout(heapReload, heapReloadTimer);
-    setTimeout(uptimeReload, heapReloadTimer);
-    setTimeout(reasonReload, heapReloadTimer);
+    setTimeout(heapReload, aboutReloadTimer);
+    setTimeout(uptimeReload, aboutReloadTimer);
+    setTimeout(reasonReload, aboutReloadTimer);
 }

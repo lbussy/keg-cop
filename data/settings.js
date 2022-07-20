@@ -140,23 +140,25 @@ function populateFlow(callback = null) { // Get flowmeter settings
                         $('input[name="tap' + i + 'active"]')[1].checked = true;
                     }
                 }
+                if (loaded < numReq) {
+                    loaded++;
+                }
             }
             catch {
                 if (!unloadingState) {
                     flowAlert.warning("Unable to parse flowmeter data.");
                 }
+                if (loaded < numReq) setTimeout(populateFlow, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 flowAlert.warning("Unable to retrieve flowmeter data.");
             }
+            if (loaded < numReq) setTimeout(populateFlow, 10000);
         })
         .always(function () {
             // Can post-process here
-            if (loaded < numReq) {
-                loaded++;
-            }
             if (typeof callback == "function") {
                 callback();
             }
@@ -186,11 +188,6 @@ function populateConfig(callback = null) { // Get configuration settings
                     imperial = false;
                     $('input:radio[name="imperial"]')[0].checked = true;
                 }
-                // if (config.copconfig.serial) {
-                //     $('input:radio[name="serial"]')[1].checked = true;
-                // } else {
-                //     $('input:radio[name="serial"]')[0].checked = true;
-                // }
                 if (config.copconfig.tapsolenoid) {
                     $('input:radio[name="tapsolenoid"]')[0].checked = true;
                 } else {
@@ -253,24 +250,27 @@ function populateConfig(callback = null) { // Get configuration settings
                 $('input[name="targeturl"]').val(config.urltarget.url);
                 $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
                 $('.updatepulsesecs').text(pulseReloadTimer / 1000);
+
+                doUnits(); // Set proper units on page
+                if (loaded < numReq) {
+                    loaded++;
+                }
             }
             catch {
                 if (!unloadingState) {
                     configAlert.warning("Unable to parse configuration data.");
                 }
+                if (loaded < numReq) setTimeout(populateConfig, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 configAlert.warning("Unable to retrieve configuration data.");
             }
+            if (loaded < numReq) setTimeout(populateConfig, 10000);
         })
         .always(function () {
             // Can post-process here
-            doUnits(); // Set proper units on page
-            if (loaded < numReq) {
-                loaded++;
-            }
             if (typeof callback == "function") {
                 callback();
             }
