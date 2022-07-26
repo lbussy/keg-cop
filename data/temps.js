@@ -133,7 +133,7 @@ function populateTemps(callback = null) { // Get configuration settings
         })
         .fail(function () {
             if (!unloadingState) {
-                tempAlert.warning("Unable to retrieve temperatire data.");
+                tempAlert.warning("Unable to retrieve temperature data.");
             }
             if (loaded < numReq) setTimeout(populateTemps, 10000);
         })
