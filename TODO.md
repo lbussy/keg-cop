@@ -1,5 +1,6 @@
 # TODO:
 
+<<<<<<< HEAD
 - [ ] `dataHost` is locked to PIO's `./data/` interpretation
 
 - [ ] Tower Fan Control
@@ -34,3 +35,8 @@
     - [ ] UI
         - [ ] Index indicator
         - [ ] Temps indocator
+=======
+- [ ] Fix SPIFFS Editor
+- [ ] Clicking bubblegum machine does not return to index
+- [ ] Move show temps to handle a session variable
+>>>>>>> 38882f5 (Fix settings (#65))
