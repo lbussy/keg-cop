@@ -38,6 +38,7 @@ function preLoad() {
 }
 
 function startLoad() {
+    fastTempsMenu();
     $(document).tooltip({ // Enable tooltips
         'selector': '[data-toggle=tooltip]',
         //'placement': 'left',
@@ -92,6 +93,19 @@ function pollComplete() {
     }
 }
 
+function fastTempsMenu() {
+    // Fast show/don't show
+    if (JSON.parse(sessionStorage.getItem("useTemps")) === true) {
+        if (!$('#displaytemplink').is(':visible')) {
+            $('#displaytemplink').toggle();
+        }
+    } else {
+        if ($('#displaytemplink').is(':visible')) {
+            $('#displaytemplink').toggle();
+        }
+    }
+}
+
 async function chooseTempMenu(callback = null) {
     var url = dataHost;
     if (url.endsWith("/")) {
@@ -103,10 +117,12 @@ async function chooseTempMenu(callback = null) {
         // response.status holds http code
 
         if (response.ok === true || useTemps === true) {
+            sessionStorage.setItem("useTemps", true);
             if (!$('#displaytemplink').is(':visible')) {
                 $('#displaytemplink').toggle();
             }
         } else {
+            sessionStorage.setItem("useTemps", false);
             if ($('#displaytemplink').is(':visible')) {
                 $('#displaytemplink').toggle();
             }
