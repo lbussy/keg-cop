@@ -154,7 +154,7 @@ function populateConfig() { // Get configuration settings
         .done(function (config) {
             try {
                 // Header text
-                var headerText = 'Temperature Sensors for <a class="no-underline" href="index">';
+                var headerText = 'Temperature Sensors for <a class="no-underline" href="/index/">';
                 headerText += config.copconfig.kegeratorname + '</a>';
                 $('#templistName').html(headerText);
 
