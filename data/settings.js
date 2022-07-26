@@ -313,8 +313,13 @@ function finishPage() { // Display page
 function processPost(obj) {
     posted = false;
     hashLoc = window.location.hash;
+    hostURL = dataHost;
     var $form = $(obj);
-    url = dataHost + $form.attr("action");
+    var actionURL = $form.attr("action");
+    while (actionURL.startsWith("/")) {
+        actionURL = actionURL.substring(1, actionURL.length);
+    }
+    url = hostURL + actionURL;
 
     $("button[id='submitSettings']").prop('disabled', true);
     $("button[id='submitSettings']").html('<i class="fa fa-spinner fa-spin"></i> Updating');

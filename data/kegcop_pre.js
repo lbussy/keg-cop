@@ -16,35 +16,14 @@ window.addEventListener("beforeunload", function (event) {
     unloadingState = true;
 });
 
-window.onclick = function (e) {
-    try {
-        const url = new URL(e.target.href);
-        if (dataHost || isIP(url.hostname)) {
-            // This all exists because we need to re-write URLs when
-            // using a dev server
-            var newURL;
-            newURL = url.protocol
-            newURL += "//";
-            newURL += url.host;
-            newURL += url.pathname;
-            if (url.pathname.endsWith("/")) {
-                newURL = url.pathname.substring(0, url.pathname.length - 1);
-            }
-            if (!url.pathname.endsWith(".htm")) {
-                newURL += ".htm";
-            }
-            newURL += url.search;
-            newURL += url.hash;
-            // Open the rewritten URL and return false to prevent default
-            window.open(newURL,"_self")
-            return false;
-        }
-        // Thhis should be the default handler, return (true) to take default
-        return;
-    } catch (error) {
-        // Bad URL or click in a non-href area
+window.onclick = function (event) {
+    // Open a rewritten URL and return false to prevent default
+    const newURL = cleanURL(event);
+    if (newURL) {
+        window.open(newURL, "_self");
         return false;
     }
+    return;
 }
 
 function preLoad() {
@@ -208,4 +187,48 @@ function getDataHost() {
     //
     // >>   localStorage.setItem("useTemps", false);
     //
+}
+
+function cleanURL(event) {
+    // This all exists because we need to re-write URLs when
+    // using a dev server
+    try {
+        const currentURL = new URL(window.location.href);
+        const targetURL = new URL(event.target.href);
+        var newURL;
+        newURL = targetURL.protocol
+        newURL += "//";
+        newURL += targetURL.host;
+        newURL += "/";
+        var newPath = targetURL.pathname;
+        while (newPath.startsWith("/")) {
+            newPath = newPath.substring(1, newPath.length);
+        }
+        while (newPath.endsWith("/")) {
+            newPath = newPath.substring(0, newPath.length - 1);
+        }
+        if (dataHost) {
+            // If we have a datahost configured:
+            if (newPath.includes("/")) newPath = newPath.split('/')[1];
+            var oldPath = currentURL.pathname;
+            while (oldPath.startsWith("/")) {
+                oldPath = oldPath.substring(1, oldPath.length);
+            }
+            while (oldPath.endsWith("/")) {
+                oldPath = oldPath.substring(0, oldPath.length - 1);
+            }
+            // Retain any actual path name
+            if (oldPath.includes("/")) oldPath = oldPath.split('/')[0];
+            if (!newPath.endsWith(".htm")) {
+                newPath += ".htm";
+            }
+            newPath = oldPath + "/" + newPath;
+        }
+        newURL += newPath;
+        newURL += targetURL.search;
+        newURL += targetURL.hash;
+        return newURL;
+    } catch {
+        return false; 
+    }
 }
