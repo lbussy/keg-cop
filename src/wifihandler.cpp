@@ -213,7 +213,7 @@ void WiFiEvent(WiFiEvent_t event)
             printDot(true);
             ++WLcount;
         }
-        printCR();
+        printCR(true);
 
         if (! WiFi.isConnected()) {
             // We failed to reconnect.
