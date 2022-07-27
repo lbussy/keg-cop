@@ -33,4 +33,4 @@
         - [ ] Tower fan setpoint
     - [ ] UI
         - [ ] Index indicator
-        - [ ] Temps indocator
+        - [ ] Temps indicator
