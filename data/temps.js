@@ -302,7 +302,7 @@ function barClick(event, array) { // Bar click handler
     var newHash = "#sensorcontrol";
     try {
         const url = new URL(window.location.href);
-        if (dataHost || isIP(url.hostname)) {
+        if (dataHost) {
             // This all exists because we need to re-write URLs when
             // using a dev server
             newURL = url.protocol
