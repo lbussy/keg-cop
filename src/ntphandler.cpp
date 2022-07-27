@@ -43,11 +43,16 @@ void setClock()
                 ESP.restart();
                 return;
             }
+<<<<<<< HEAD
             printCR(true);
 <<<<<<< HEAD
 =======
 
 >>>>>>> 588eef4 (Clean up debug printing (#75))
+=======
+
+            printCR(true);
+>>>>>>> bc4fc8b (More debug cleanup)
             Log.notice(F("Re-requesting time hack."));
             startSecs = millis() / 1000;
             cycle++;
