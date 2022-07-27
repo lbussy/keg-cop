@@ -172,6 +172,11 @@ void logFlow()
     }
 }
 
+void logFlow(int tapNum, int pulses)
+{ // Allow emulating pulses from calibration debug menu (serial)
+    pulse[tapNum] = pulse[tapNum] + pulses;
+}
+
 bool isSmallPour(unsigned int count, int tap)
 {
     // Small Pour Detector - Use SMALLPOUR as a constant volume to factor

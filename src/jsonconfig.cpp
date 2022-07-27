@@ -341,6 +341,7 @@ void CopConfig::save(JsonObject obj) const
     obj["serial"] = serial;
     obj["imperial"] = imperial;
     obj["tapsolenoid"] = tapsolenoid;
+    obj["pouremulate"] = pouremulate;
 }
 
 void CopConfig::load(JsonObjectConst obj)
@@ -438,6 +439,16 @@ void CopConfig::load(JsonObjectConst obj)
         {
             digitalWrite(SOLENOID, HIGH);
         }
+    }
+
+    if (obj["pouremulate"].isNull())
+    {
+        pouremulate = false;
+    }
+    else
+    {
+        bool em = obj["pouremulate"];
+        pouremulate = em;
     }
 }
 
