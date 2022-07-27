@@ -30,6 +30,15 @@ ESPTelnet SerialAndTelnet;
 #define SERIAL Serial // Use hardware serial
 #endif
 
+enum Sensors
+{
+    ROOM,
+    TOWER,
+    UPPER,
+    LOWER,
+    KEG
+};
+
 void serial()
 {
 #if DOTELNET == true
