@@ -41,9 +41,9 @@ void serial()
 #endif
     // _delay(3000); // Delay to allow a monitor to start
     SERIAL.begin(BAUD);
-    SERIAL.println();
+    printCR(true);
     SERIAL.flush();
-#ifndef DISABLE_LOGGING
+#if !defined(DISABLE_LOGGING) && !defined(LOG_LEVEL_SILENT)
     if (config.copconfig.serial)
     {
         SERIAL.setDebugOutput(false);
@@ -73,12 +73,12 @@ void printTimestamp(Print *_logOutput)
 
 size_t printDot()
 {
-    return printDot(false);
+    return SERIAL.print(F("."));
 }
 
 size_t printDot(bool safe)
 {
-#ifndef DISABLE_LOGGING
+#if !defined(DISABLE_LOGGING) && !defined(LOG_LEVEL_SILENT)
     return SERIAL.print(F("."));
 #else
     return 0;
@@ -87,12 +87,12 @@ size_t printDot(bool safe)
 
 size_t printChar(const char *chr)
 {
-    return printChar(false, chr);
+    return SERIAL.println(chr);
 }
 
 size_t printChar(bool safe, const char *chr)
 {
-#ifndef DISABLE_LOGGING
+#if !defined(DISABLE_LOGGING) && !defined(LOG_LEVEL_SILENT)
     return SERIAL.println(chr);
 #else
     return 0;
@@ -101,12 +101,12 @@ size_t printChar(bool safe, const char *chr)
 
 size_t printCR()
 {
-    return printCR(false);
+    return SERIAL.println();
 }
 
 size_t printCR(bool safe)
 {
-#ifndef DISABLE_LOGGING
+#if !defined(DISABLE_LOGGING) && !defined(LOG_LEVEL_SILENT)
     return SERIAL.println();
 #else
     return 0;
