@@ -55,6 +55,7 @@ struct CopConfig
     bool imperial;
     bool serial;
     bool tapsolenoid;
+    bool pouremulate;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
