@@ -44,6 +44,10 @@ void setClock()
                 return;
             }
             printCR(true);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 588eef4 (Clean up debug printing (#75))
             Log.notice(F("Re-requesting time hack."));
             startSecs = millis() / 1000;
             cycle++;
