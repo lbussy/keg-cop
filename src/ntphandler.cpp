@@ -43,8 +43,8 @@ void setClock()
                 ESP.restart();
                 return;
             }
-            printCR(true);
 
+            printCR(true);
             Log.notice(F("Re-requesting time hack."));
             startSecs = millis() / 1000;
             cycle++;

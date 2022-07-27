@@ -43,7 +43,7 @@ void serial()
     SERIAL.begin(BAUD);
     printCR(true);
     SERIAL.flush();
-#if !defined(DISABLE_LOGGING) && !defined(LOG_LEVEL_SILENT)
+#if !defined(DISABLE_LOGGING)
     if (config.copconfig.serial)
     {
         SERIAL.setDebugOutput(false);
@@ -78,8 +78,11 @@ size_t printDot()
 
 size_t printDot(bool safe)
 {
-#if !defined(DISABLE_LOGGING) && !defined(LOG_LEVEL_SILENT)
-    return SERIAL.print(F("."));
+#if !defined(DISABLE_LOGGING)
+    if (safe == true && config.copconfig.serial)
+        return 0;
+    else
+        return SERIAL.print(F("."));
 #else
     return 0;
 #endif
@@ -92,8 +95,11 @@ size_t printChar(const char *chr)
 
 size_t printChar(bool safe, const char *chr)
 {
-#if !defined(DISABLE_LOGGING) && !defined(LOG_LEVEL_SILENT)
-    return SERIAL.println(chr);
+#if !defined(DISABLE_LOGGING)
+    if (safe == true && config.copconfig.serial)
+        return 0;
+    else
+        return SERIAL.print(chr);
 #else
     return 0;
 #endif
@@ -106,8 +112,11 @@ size_t printCR()
 
 size_t printCR(bool safe)
 {
-#if !defined(DISABLE_LOGGING) && !defined(LOG_LEVEL_SILENT)
-    return SERIAL.println();
+#if !defined(DISABLE_LOGGING)
+    if (safe == true && config.copconfig.serial)
+        return 0;
+    else
+        return SERIAL.println();
 #else
     return 0;
 #endif
@@ -591,7 +600,7 @@ void handlePourEmulateCommands()
                     recvInProgress = false;
                     commandInProgress = false;
                     logFlow(tapNum, pulses);
-                    Serial.println();
+                    SERIAL.println();
                     SERIAL.print(F("Added "));
                     SERIAL.print(pulses);
                     SERIAL.print(F(" pulses to tap "));
