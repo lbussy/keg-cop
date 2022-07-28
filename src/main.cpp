@@ -47,15 +47,6 @@ void setup()
         };
     }
 
-     // Clear all tap calibration
-    config.copconfig.pouremulate = false;
-    for (int i = 0; i < NUMTAPS; i++)
-    {
-        flow.taps[i].calibrating = false;
-    }
-    saveFlowConfig();
-    saveConfig();
-
     serial();
 
     // Set wifi reset pin
@@ -92,6 +83,15 @@ void setup()
         Log.notice(F("Flowmeters loaded." CR));
     else
         Log.error(F("Unable to load flowmeters." CR));
+
+     // Clear all tap calibration
+    config.copconfig.pouremulate = false;
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        flow.taps[i].calibrating = false;
+    }
+    saveFlowConfig();
+    saveConfig();
 
     execspiffs();    // Check for pending FILESYSTEM update
     mdnssetup();     // Set up mDNS responder
