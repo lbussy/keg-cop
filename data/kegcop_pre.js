@@ -181,8 +181,16 @@ function getDataHost() {
     // Note that the full URL including 'http:// and
     // trailing '/' is required
     //
-    dataHost = localStorage.getItem("dataHost") || "";
-    if (dataHost) console.info("NOTICE: Using 'dataHost'.");
+    // Will additionally "ping" the api, if it is not found and we have
+    // a datahost, it will use the dataHost.  If the server is found
+    // (i.e. we are connected to the controller and not a dev server) 
+    // then it will ignore devServer.
+    //
+    if (localStorage.getItem("dataHost") && checkUsingDataHost()) {
+        dataHost = localStorage.getItem("dataHost") || "";
+        if (dataHost) console.info("NOTICE: Using 'dataHost'.");
+    }
+
     //
     // Also remember that this must be cleared for things to work
     // normally again:
@@ -205,6 +213,28 @@ function getDataHost() {
     //
 }
 
+function checkUsingDataHost() {
+    // Check to see if we are using a data host or not
+    // A "failure" means we are using a data host (true)
+    const ping = new XMLHttpRequest();
+    ping.open('GET', '/api/v1/action/ping/', false);
+
+    try {
+        ping.send();
+        if (ping.status != 200) {
+            // alert(`Error ${ping.status}: ${ping.statusText}`);
+            return true;
+        } else {
+            // alert(ping.response);
+            return false;
+        }
+        localStorage.setItem("dataHostAge", Date.now());
+    } catch (err) { // instead of onerror
+        // alert("Request failed");
+        return true;
+    }
+}
+
 function cleanURL(event) {
     // This all exists because we need to re-write URLs when
     // using a dev server
@@ -217,12 +247,14 @@ function cleanURL(event) {
         newURL += targetURL.host;
         newURL += "/";
         var newPath = targetURL.pathname;
+
         while (newPath.startsWith("/")) {
             newPath = newPath.substring(1, newPath.length);
         }
         while (newPath.endsWith("/")) {
             newPath = newPath.substring(0, newPath.length - 1);
         }
+
         if (dataHost) {
             // If we have a datahost configured:
             if (newPath.includes("/")) newPath = newPath.split('/')[1];
@@ -245,6 +277,6 @@ function cleanURL(event) {
         newURL += targetURL.hash;
         return newURL;
     } catch {
-        return false; 
+        return false;
     }
 }
