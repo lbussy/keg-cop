@@ -1,17 +1,22 @@
 // Supports OTA1 page
 
 toggleLoader("off");
-var numReq = 3;
+var numReq = 4;
 var loaded = 0;
 
 function finishLoad() { // Get page data
     loadThisVersion(); // Populate form with controller settings
     loadThatVersion(); // Populate form with controller settings
     populateTempLink();
+    checkDataHost();    // Check if we are using a dataHost
     pollComplete();
 }
 
 function loadThisVersion() { // Get current parameters
+    if (!dataHostCheckDone) {
+        setTimeout(loadThisVersion, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -39,6 +44,10 @@ function loadThisVersion() { // Get current parameters
 }
 
 function loadThatVersion() { // Get current parameters
+    if (!dataHostCheckDone) {
+        setTimeout(loadThatVersion, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)

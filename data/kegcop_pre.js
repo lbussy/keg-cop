@@ -1,9 +1,11 @@
 // Common file/functions for all Keg Cop pages
 
 var dataHost = "";
+var usingDataHost = false;
+var dataHostCheckDone = false;
 var useTemps = false;
 
-getDataHost();
+getUseTemps();
 
 // Attach the event after the page loads
 if (window.addEventListener) window.addEventListener("load", preLoad, false);
@@ -107,6 +109,10 @@ function fastTempsMenu() {
 }
 
 async function chooseTempMenu(callback = null) {
+    if (!dataHostCheckDone) {
+        setTimeout(chooseTempMenu, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -171,33 +177,7 @@ function isMDNS(hostname) { // Bool: Is this an mDNS host name
     }
 }
 
-function getDataHost() {
-    // Check for devServer setup
-
-    // To set data server, use the following syntax in console:
-    //
-    // >>   localStorage.setItem("dataHost", "http://kegcop.local/");
-    //
-    // Note that the full URL including 'http:// and
-    // trailing '/' is required
-    //
-    // Will additionally "ping" the api, if it is not found and we have
-    // a datahost, it will use the dataHost.  If the server is found
-    // (i.e. we are connected to the controller and not a dev server) 
-    // then it will ignore devServer.
-    //
-    if (localStorage.getItem("dataHost") && checkUsingDataHost()) {
-        dataHost = localStorage.getItem("dataHost") || "";
-        if (dataHost) console.info("NOTICE: Using 'dataHost'.");
-    }
-
-    //
-    // Also remember that this must be cleared for things to work
-    // normally again:
-    //
-    // >>   localStorage.setItem("dataHost", "");
-    //
-
+function getUseTemps() {
     // To set temperature link display, use the following syntax in console:
     //
     // >>   localStorage.setItem("useTemps", true);
@@ -213,25 +193,54 @@ function getDataHost() {
     //
 }
 
-function checkUsingDataHost() {
-    // Check to see if we are using a data host or not
-    // A "failure" means we are using a data host (true)
-    const ping = new XMLHttpRequest();
-    ping.open('GET', '/api/v1/action/ping/', false);
+function checkDataHost() {
+    if (localStorage.getItem("dataHost")) {
+        // Check to see if we are using a data host or not
+        // A "failure" means we are using a data host (true)
+        const ping = new XMLHttpRequest();
+        ping.open('GET', '/api/v1/action/ping/');
 
-    try {
-        ping.send();
-        if (ping.status != 200) {
-            // alert(`Error ${ping.status}: ${ping.statusText}`);
-            return true;
-        } else {
-            // alert(ping.response);
-            return false;
+        try {
+            ping.send();
+            ping.onload = function() {
+                if (ping.status != 200) {
+                    // To set data server, use the following syntax in console:
+                    //
+                    // >>   localStorage.setItem("dataHost", "http://kegcop.local/");
+                    //
+                    // Note that the full URL including 'http:// and
+                    // trailing '/' is required
+                    //
+                    // Will additionally "ping" the api, if it is not found and we have
+                    // a datahost, it will use the dataHost.  If the server is found
+                    // (i.e. we are connected to the controller and not a dev server) 
+                    // then it will ignore devServer.
+                    //
+                    dataHost = localStorage.getItem("dataHost") || "";
+                    if (dataHost) console.info("NOTICE: Using 'dataHost' (a single 404 for /api/v1/action/ping/ is normal.)");
+                    //
+                    // Also remember that this must be cleared for things to work
+                    // normally again:
+                    //
+                    // >>   localStorage.setItem("dataHost", "");
+                    //
+                } else {
+                    console.info("NOTICE: Not using 'dataHost'.");
+                }
+                dataHostCheckDone = true;
+                if (loaded < numReq) {
+                    loaded++;
+                }
+            };
+        } catch (err) {
+            console.error("ERROR: 'dataHost' check failed.");
+            setTimeout(checkDataHost, 10000);
         }
-        localStorage.setItem("dataHostAge", Date.now());
-    } catch (err) { // instead of onerror
-        // alert("Request failed");
-        return true;
+    } else {
+        dataHostCheckDone = true;
+        if (loaded < numReq) {
+            loaded++;
+        }
     }
 }
 

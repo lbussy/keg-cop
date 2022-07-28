@@ -1,9 +1,14 @@
 // Support OTA2 page
 
 toggleLoader("off");
+checkDataHost();    // Check if we are using a dataHost
 
 function finishLoad() { // Load the page's JS elements
     // populateTemps(); // We don't need this but it's here so I rememnber not to add it again
+    if (!dataHostCheckDone) {
+        setTimeout(finishLoad, 10);
+        return;
+    }
     $.ajax({ // Clear any previous update flags
         url: '/api/v1/action/clearupdate/',
         type: 'PUT'

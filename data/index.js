@@ -1,7 +1,7 @@
 // Supports Index page
 
 toggleLoader("on");
-var numReq = 4;
+var numReq = 5;
 var loaded = 0;
 var imperial;
 var labels = [];
@@ -21,15 +21,21 @@ function finishLoad() {
     populateFlow();
     populateConfig();
     populateTemp();
+    checkDataHost();    // Check if we are using a dataHost
     pollComplete();
 }
 
 function populateFlow(callback = null) { // Get flowmeter data
+    if (!dataHostCheckDone) {
+        setTimeout(populateFlow, 10);
+        return;
+    }
     var url = dataHost;
-    if (url.endsWith("/")) {
+    while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/taps/";
+
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -90,11 +96,16 @@ function populateFlow(callback = null) { // Get flowmeter data
 }
 
 function populateConfig() { // Get configuration settings
+    if (!dataHostCheckDone) {
+        setTimeout(populateConfig, 10);
+        return;
+    }
     var url = dataHost;
-    if (url.endsWith("/")) {
+    while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/settings/";
+
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -130,8 +141,12 @@ function populateConfig() { // Get configuration settings
 }
 
 function populateTemp(callback = null) { // Get current temperature and state
+    if (!dataHostCheckDone) {
+        setTimeout(populateTemp, 10);
+        return;
+    }
     var url = dataHost;
-    if (url.endsWith("/")) {
+    while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/sensors/";
@@ -367,7 +382,7 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 function barClick(event, array) { // Bar click handler
     var tapNum = array[0]._index;
     var url = dataHost;
-    if (url.endsWith("/")) {
+    while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/settings/#tap" + tapNum;

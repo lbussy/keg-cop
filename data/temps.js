@@ -3,7 +3,7 @@
 toggleLoader("on");
 var imperial;
 var loaded = 0;
-var numReq = 3;
+var numReq = 4;
 var labels = [];
 var temperatures = [];
 var scaleTemps = [];
@@ -15,11 +15,15 @@ function finishLoad() { // Get page data
     chooseTempMenu();
     populateTemps();
     populateConfig();
+    checkDataHost();    // Check if we are using a dataHost
     pollComplete();
 }
 
 function populateTemps(callback = null) { // Get configuration settings
-
+    if (!dataHostCheckDone) {
+        setTimeout(populateTemps, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -143,6 +147,10 @@ function populateTemps(callback = null) { // Get configuration settings
 }
 
 function populateConfig() { // Get configuration settings
+    if (!dataHostCheckDone) {
+        setTimeout(populateConfig, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
