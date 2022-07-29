@@ -98,12 +98,12 @@ function loadUptime(callback = null) { // Get uptime information
             }
             catch {
                 $('#uptime').text("(Error parsing uptime.)");
-                if (loaded < numReq) setTimeout(loadUptime, 10000);
+                setTimeout(loadUptime, 10000);
             }
         })
         .fail(function () {
             $('#uptime').text("(Error loading uptime.)");
-            if (loaded < numReq) setTimeout(loadUptime, 10000);
+            setTimeout(loadUptime, 10000);
         })
         .always(function () {
             if (typeof callback == "function") {
@@ -138,12 +138,12 @@ function loadHeap(callback = null) { // Get heap information
             }
             catch {
                 $('#heap').text("(Error parsing heap.)");
-                if (loaded < numReq) setTimeout(loadHeap, 10000);
+                setTimeout(loadHeap, 10000);
             }
         })
         .fail(function () {
             $('#heap').text("(Error loading heap.)");
-            if (loaded < numReq) setTimeout(loadHeap, 10000);
+            setTimeout(loadHeap, 10000);
         })
         .always(function () {
             if (typeof callback == "function") {
@@ -177,12 +177,12 @@ function loadResetReason(callback = null) { // Get last reset reason
             }
             catch {
                 $('#resetreason').text("(Error parsing version.)");
-                if (loaded < numReq) setTimeout(loadResetReason, 10000);
+                setTimeout(loadResetReason, 10000);
             }
         })
         .fail(function () {
             $('#resetreason').text("(Error loading version.)");
-            if (loaded < numReq) setTimeout(loadResetReason, 10000);
+            setTimeout(loadResetReason, 10000);
         })
         .always(function () {
             if (typeof callback == "function") {

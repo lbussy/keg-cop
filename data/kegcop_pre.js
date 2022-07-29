@@ -139,7 +139,7 @@ async function chooseTempMenu(callback = null) {
         }
     } catch (err) {
         // Can check for (err) here
-        if (loaded < numReq) setTimeout(chooseTempMenu, 10000);
+        setTimeout(chooseTempMenu, 10000);
     }
     if (typeof callback == "function") {
         callback();
