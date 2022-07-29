@@ -815,6 +815,9 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     xhr.open("PUT", url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
+    if (typeof callback == "function") {
+        callback(true);
+    }
 }
 
 function resetFlowCalForm() {

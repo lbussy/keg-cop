@@ -156,7 +156,7 @@ void logFlow()
                     queuePulseReport[i] = pulseCount; // Queue upstream pulse report
                     config.taplistio.update = true;   // Queue TIO report
                     saveConfig();
-                    // Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                 }
             }
             else
