@@ -11,17 +11,21 @@ function finishLoad() { // Load the page's JS elements
         setTimeout(finishLoad, 10);
         return;
     }
+
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
+    var urlClear = url + '/api/v1/action/clearupdate/';
+    var urlStart = url + '/api/v1/action/updatestart/';
+
     $.ajax({ // Clear any previous update flags
-        url: url + '/api/v1/action/clearupdate/',
+        url: urlClear,
         type: 'PUT'
     });
 
     $.ajax({ // Semaphore the controller that it's safe to proceed
-        url: url + '/api/v1/action/updatestart/',
+        url: urlStart,
         type: 'PUT'
     });
 
@@ -34,12 +38,12 @@ function finishLoad() { // Load the page's JS elements
                 running = true;
                 // Update is complete
                 $.ajax({
-                    url: url + '/api/v1/action/clearupdate/',
+                    url: urlClear,
                     type: 'PUT'
                 });
                 $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
                 $("#message").replaceWith("<p class='card-body'>The firmware update is complete.  You will be redirected momentarily.</p>");
-                setTimeout(function () { window.location.href = "index"; }, 5000);
+                setTimeout(function () { window.location.href = rewriteURL("/index/"); }, 5000);
             }
         });
     }, 10000);

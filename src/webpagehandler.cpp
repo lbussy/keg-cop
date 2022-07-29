@@ -205,36 +205,18 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/updatestart/", [](AsyncWebServerRequest *request)
               {
-        if (request->methodToString() == "PUT" )
-        {
-            Log.verbose(F("Processing %s." CR), request->url().c_str());
-            setDoOTA(); // Trigger the OTA update
-            send_ok(request);
-        }
-        else
-        {
-            Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
-            request->header("Cache-Control: no-store");
-            request->send(405, F("text/plain"), F("Method Not Allowed"));
-        } });
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        setDoOTA(); // Trigger the OTA update
+        send_ok(request); });
 
     server.on("/api/v1/action/clearupdate/", [](AsyncWebServerRequest *request)
               {
-        if (request->methodToString() == "PUT")
-        {
-            Log.verbose(F("Processing %s." CR), request->url().c_str());
-            config.ota.dospiffs1 = false;
-            config.ota.dospiffs2 = false;
-            config.ota.didupdate = false;
-            config.copconfig.nodrd = false;
-            send_ok(request);
-        }
-        else
-        {
-            Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
-            request->header("Cache-Control: no-store");
-            request->send(405, F("text/plain"), F("Method Not Allowed"));
-        } });
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        config.ota.dospiffs1 = false;
+        config.ota.dospiffs2 = false;
+        config.ota.didupdate = false;
+        config.copconfig.nodrd = false;
+        send_ok(request); });
 
     server.on("/api/v1/action/clearcalmode/", [](AsyncWebServerRequest *request)
               {

@@ -246,6 +246,10 @@ function checkDataHost() {
 }
 
 function cleanURL(event) {
+    if (!dataHostCheckDone) {
+        setTimeout(chooseTempMenu, 10);
+        return;
+    }
     // This all exists because we need to re-write URLs when
     // using a dev server
     try {
@@ -285,6 +289,57 @@ function cleanURL(event) {
         newURL += newPath;
         newURL += targetURL.search;
         newURL += targetURL.hash;
+        return newURL;
+    } catch {
+        return false;
+    }
+}
+
+function rewriteURL(newTarget) {
+    if (!dataHostCheckDone) {
+        setTimeout(rewriteURL, 10);
+        return;
+    }
+    // This all exists because we need to re-write URLs when
+    // using a dev server
+    try {
+        // Concatenate authority segment
+        const currentURL = new URL(window.location.href);
+        var currentAuthority;
+        currentAuthority = currentURL.protocol
+        currentAuthority += "//";
+        currentAuthority += currentURL.host;
+        currentAuthority += "/";
+
+        var currentPath = currentURL.pathname;
+        while (currentPath.startsWith("/")) {
+            currentPath = currentPath.substring(1, currentPath.length);
+        }
+        while (currentPath.endsWith("/")) {
+            currentPath = currentPath.substring(0, currentPath.length - 1);
+        }
+        if (currentPath.includes("/"))
+            currentPath = currentPath.split('/')[0];
+        else
+            currentPath = "";
+        if (currentPath)
+            currentPath += "/";
+
+        while (newTarget.startsWith("/")) {
+            newTarget = newTarget.substring(1, newTarget.length);
+        }
+        while (newTarget.endsWith("/")) {
+            newTarget = newTarget.substring(0, newTarget.length - 1);
+        }
+        if (newTarget) {
+            if (dataHost)
+                newTarget += ".htm";
+            else
+                newTarget += "/";
+        }
+
+        var newURL = currentAuthority + currentPath + newTarget;
+
         return newURL;
     } catch {
         return false;
