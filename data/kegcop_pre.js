@@ -48,6 +48,7 @@ function startLoad() {
     });
     // Call finishLoad() if it exists (page handler)
     if (typeof finishLoad === "function") {
+        checkDataHost();    // Check if we are using a dataHost
         finishLoad();
     };
 }

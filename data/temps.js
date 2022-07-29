@@ -15,7 +15,6 @@ function finishLoad() { // Get page data
     chooseTempMenu();
     populateTemps();
     populateConfig();
-    checkDataHost();    // Check if we are using a dataHost
     pollComplete();
 }
 

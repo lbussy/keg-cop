@@ -12,7 +12,6 @@ function finishLoad() {
 }
 
 function populatePage() { // Get page data
-    checkDataHost();    // Check if we are using a dataHost
     heapToolTip();      // Set up tooltip for debug info
     loadThisVersion();  // Populate form with controller settings
     loadUptime();       // Load uptime information

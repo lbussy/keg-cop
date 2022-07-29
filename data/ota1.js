@@ -8,7 +8,6 @@ function finishLoad() { // Get page data
     loadThisVersion(); // Populate form with controller settings
     loadThatVersion(); // Populate form with controller settings
     populateTempLink();
-    checkDataHost();    // Check if we are using a dataHost
     pollComplete();
 }
 
@@ -18,7 +17,7 @@ function loadThisVersion() { // Get current parameters
         return;
     }
     var url = dataHost;
-    if (url.endsWith("/")) {
+    while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/thisVersion/";
@@ -48,8 +47,12 @@ function loadThatVersion() { // Get current parameters
         setTimeout(loadThatVersion, 10);
         return;
     }
+    if (!dataHostCheckDone) {
+        setTimeout(populateFlow, 10);
+        return;
+    }
     var url = dataHost;
-    if (url.endsWith("/")) {
+    while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/thatVersion/";

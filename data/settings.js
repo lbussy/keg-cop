@@ -88,7 +88,6 @@ function finishLoad() { // Get page data
     chooseTempMenu();
     populateConfig();
     populateFlow();
-    checkDataHost();    // Check if we are using a dataHost
     pollComplete();
 }
 

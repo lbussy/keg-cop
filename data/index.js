@@ -21,7 +21,6 @@ function finishLoad() {
     populateFlow();
     populateConfig();
     populateTemp();
-    checkDataHost();    // Check if we are using a dataHost
     pollComplete();
 }
 
