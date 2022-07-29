@@ -80,14 +80,14 @@ function populateFlow(callback = null) { // Get flowmeter data
                 if (!unloadingState) {
                     flowAlert.warning("Unable to parse flowmeter data.");
                 }
-                if (loaded < numReq) setTimeout(populateFlow, 10000);
+                setTimeout(populateFlow, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 flowAlert.warning("Unable to retrieve flowmeter data.");
             }
-            if (loaded < numReq) setTimeout(populateFlow, 10000);
+            setTimeout(populateFlow, 10000);
         })
         .always(function () {
             // Can post-process here
@@ -124,14 +124,14 @@ function populateConfig() { // Get configuration settings
                 if (!unloadingState) {
                     configAlert.warning("Unable to parse configuration data.");
                 }
-                if (loaded < numReq) setTimeout(populateConfig, 10000);
+                setTimeout(populateConfig, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 configAlert.warning("Unable to retrieve configuration data.");
             }
-            if (loaded < numReq) setTimeout(populateConfig, 10000);
+            setTimeout(populateConfig, 10000);
 
         })
         .always(function () {
@@ -227,14 +227,14 @@ function populateTemp(callback = null) { // Get current temperature and state
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
-                if (loaded < numReq) setTimeout(populateTemp, 10000);
+                setTimeout(populateTemp, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 tempAlert.warning("Unable to retrieve temperature data.");
             }
-            if (loaded < numReq) setTimeout(populateTemp, 10000);
+            setTimeout(populateTemp, 10000);
         })
         .always(function () {
             // Can post-process here
