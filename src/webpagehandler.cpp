@@ -221,6 +221,7 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/setcalmode/", [](AsyncWebServerRequest *request)
               {
+        Log.notice(F("Processing %s." CR), request->url().c_str());
         for (int i = 0; i < NUMTAPS; i++)
         {
             flow.taps[i].calibrating = true;
