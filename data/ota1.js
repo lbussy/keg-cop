@@ -7,7 +7,7 @@ var loaded = 0;
 function finishLoad() { // Get page data
     loadThisVersion(); // Populate form with controller settings
     loadThatVersion(); // Populate form with controller settings
-    populateTempLink();
+    chooseTempMenu();
     pollComplete();
 }
 
@@ -45,10 +45,6 @@ function loadThisVersion() { // Get current parameters
 function loadThatVersion() { // Get current parameters
     if (!dataHostCheckDone) {
         setTimeout(loadThatVersion, 10);
-        return;
-    }
-    if (!dataHostCheckDone) {
-        setTimeout(populateFlow, 10);
         return;
     }
     var url = dataHost;

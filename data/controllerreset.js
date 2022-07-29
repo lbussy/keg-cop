@@ -13,7 +13,7 @@ function finishLoad() {
 
 function doResetSignal() {
     if (!dataHostCheckDone) {
-        setTimeout(populateFlow, 10);
+        setTimeout(doResetSignal, 10);
         return;
     }
     var url = dataHost;
