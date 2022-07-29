@@ -370,14 +370,14 @@ function populateTemp(callback = null) { // Get current temperature and state
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
-                if (loaded < numReq) setTimeout(populateTemp, 10000);
+                setTimeout(populateTemp, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 tempAlert.warning("Unable to retrieve temperature data.");
             }
-            if (loaded < numReq) setTimeout(populateTemp, 10000);
+            setTimeout(populateTemp, 10000);
         })
         .always(function () {
             // Can post-process here
