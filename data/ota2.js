@@ -4,13 +4,21 @@ toggleLoader("off");
 
 function finishLoad() { // Load the page's JS elements
     // populateTemps(); // We don't need this but it's here so I rememnber not to add it again
+    if (!dataHostCheckDone) {
+        setTimeout(finishLoad, 10);
+        return;
+    }
+    var url = dataHost;
+    while (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
     $.ajax({ // Clear any previous update flags
-        url: '/api/v1/action/clearupdate/',
+        url: url + '/api/v1/action/clearupdate/',
         type: 'PUT'
     });
 
     $.ajax({ // Semaphore the controller that it's safe to proceed
-        url: '/api/v1/action/updatestart/',
+        url: url + '/api/v1/action/updatestart/',
         type: 'PUT'
     });
 
@@ -23,7 +31,7 @@ function finishLoad() { // Load the page's JS elements
                 running = true;
                 // Update is complete
                 $.ajax({
-                    url: '/api/v1/action/clearupdate/',
+                    url: url + '/api/v1/action/clearupdate/',
                     type: 'PUT'
                 });
                 $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");

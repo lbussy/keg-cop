@@ -2,7 +2,7 @@
 
 toggleLoader("on");
 var loaded = 0; // Hold data load status
-var numReq = 3; // Number of JSON required
+var numReq = 4; // Number of JSON required
 var hostname = window.location.hostname;
 var originalHostnameConfig;
 var imperial;
@@ -115,6 +115,10 @@ function loadHash() { // Link to tab via hash value
 }
 
 function populateFlow(callback = null) { // Get flowmeter settings
+    if (!dataHostCheckDone) {
+        setTimeout(populateFlow, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -166,6 +170,10 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
+    if (!dataHostCheckDone) {
+        setTimeout(populateConfig, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -784,11 +792,14 @@ function followPulses() {
 }
 
 function toggleCalMode(inCal = false, meter, callback = null) {
+    if (!dataHostCheckDone) {
+        setTimeout(toggleCalMode, 10);
+        return;
+    }
     var url = dataHost;
-    if (url.endsWith("/")) {
+    while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
-    var data = {};
     if (inCal) {
         url += "/api/v1/action/setcalmode/";
         // Get form data
@@ -799,9 +810,9 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     } else {
         url += "/api/v1/action/clearcalmode/";
     }
-
+    var data = {};
     var xhr = new XMLHttpRequest();
-    xhr.open("PUT", url, true);
+    xhr.open("PUT", url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
 }

@@ -12,8 +12,12 @@ function finishLoad() {
 }
 
 function doResetSignal() {
+    if (!dataHostCheckDone) {
+        setTimeout(populateFlow, 10);
+        return;
+    }
     var url = dataHost;
-    if (url.endsWith("/")) {
+    while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/action/reset/";

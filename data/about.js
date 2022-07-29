@@ -1,7 +1,7 @@
 // Supports About Page
 
 toggleLoader("off");
-var numReq = 4;
+var numReq = 5;
 var loaded = 0;
 var aboutReloadTimer = 60000;
 
@@ -33,6 +33,10 @@ function heapToolTip() {
 }
 
 function loadThisVersion() { // Get current parameters
+    if (!dataHostCheckDone) {
+        setTimeout(loadThisVersion, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -68,6 +72,10 @@ function loadThisVersion() { // Get current parameters
 }
 
 function loadUptime(callback = null) { // Get uptime information
+    if (!dataHostCheckDone) {
+        setTimeout(loadUptime, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -105,6 +113,10 @@ function loadUptime(callback = null) { // Get uptime information
 }
 
 function loadHeap(callback = null) { // Get heap information
+    if (!dataHostCheckDone) {
+        setTimeout(loadHeap, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -141,6 +153,10 @@ function loadHeap(callback = null) { // Get heap information
 }
 
 function loadResetReason(callback = null) { // Get last reset reason
+    if (!dataHostCheckDone) {
+        setTimeout(loadResetReason, 10);
+        return;
+    }
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
