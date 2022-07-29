@@ -47,15 +47,6 @@ void setup()
         };
     }
 
-     // Clear all tap calibration
-    config.copconfig.pouremulate = false;
-    for (int i = 0; i < NUMTAPS; i++)
-    {
-        flow.taps[i].calibrating = false;
-    }
-    saveFlowConfig();
-    saveConfig();
-
     serial();
 
     // Set wifi reset pin
