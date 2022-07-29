@@ -222,9 +222,34 @@ void setActionPageHandlers()
     server.on("/api/v1/action/setcalmode/", [](AsyncWebServerRequest *request)
               {
         Log.notice(F("Processing %s." CR), request->url().c_str());
-        for (int i = 0; i < NUMTAPS; i++)
+        // Loop through all parameters
+        int params = request->params();
+        for (int i = 0; i < params; i++)
         {
-            flow.taps[i].calibrating = true;
+            AsyncWebParameter *p = request->getParam(i);
+            if (p->isPost())
+            {
+                // Process any p->name().c_str() / p->value().c_str() pairs
+                const char *name = p->name().c_str();
+                const char *value = p->value().c_str();
+
+                // Calibrating tap
+                //
+                if (strcmp(name, "tapnum") == 0) // Start calibration for tapnum
+                {
+                    int tapNum = atof(value);
+                    if ((tapNum > 0) || (tapNum < NUMTAPS))
+                    {
+                        Log.notice(F("Setting calibration mode on tap %d." CR), tapNum);
+                        int tapNum = atof(value);
+                        flow.taps[tapNum].calibrating = true;
+                    }
+                    else
+                    {
+                        Log.warning(F("Passed invalid tapnumber (%d) to setcalmode." CR), tapNum);
+                    }
+                }
+            }
         }
         saveFlowConfig();
         send_ok(request); });
