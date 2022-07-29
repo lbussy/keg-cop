@@ -544,7 +544,7 @@ function processSensorControlPost(url, obj) {
         kegcal: kegcal,
         enablekeg: enablekeg
     }
-    putData(url, data, true, true);
+    putData(url, data);
 }
 
 function processKegScreenPost(url, obj) {
@@ -944,6 +944,6 @@ function processTapCalPost(url, obj) {
         tapnum: tapnum,
         ppu: ppu
     }
-    putData(url, data, false, true);
+    putData(url, data, false, true); // TODO:  See if we can do this without "newdata"
     resetFlowCalForm();
 }
