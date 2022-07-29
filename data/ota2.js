@@ -1,5 +1,8 @@
 // Support OTA2 page
 
+var loaded = 0;
+var numReq = 1;
+
 toggleLoader("off");
 
 function finishLoad() { // Load the page's JS elements

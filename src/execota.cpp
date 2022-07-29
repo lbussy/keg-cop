@@ -255,7 +255,7 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
     else
     {
         // Connect to webserver failed
-        Log.error(F("Connection to %d failed, please check configuration." CR), host);
+        Log.error(F("Connection to %s failed, please check configuration." CR), host);
         client.stop(); // Free resources
         return HTTP_UPDATE_FAILED;
     }
