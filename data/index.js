@@ -288,7 +288,7 @@ function populateTemp(callback = null) { // Get current temperature and state
 
 function populateTemp(callback = null) { // Get current temperature and state
     var url = dataHost;
-    if (url.endsWith("/")) {
+    while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/sensors/";

@@ -105,6 +105,7 @@ void setRegPageHandlers()
     server.serveStatic("/settings/", FILESYSTEM, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
     server.serveStatic("/controllerreset/", FILESYSTEM, "/").setDefaultFile("controllerreset.htm").setCacheControl("max-age=600");
     server.serveStatic("/wifireset/", FILESYSTEM, "/").setDefaultFile("wifireset.htm").setCacheControl("max-age=600");
+    server.serveStatic("/404/", FILESYSTEM, "/").setDefaultFile("404.htm").setCacheControl("max-age=600");
 }
 
 void setAPIPageHandlers()
@@ -544,7 +545,7 @@ void setConfigurationPageHandlers()
             {
                 if (state == FAIL_PROCESS)
                     break;
-                Log.verbose(F("Checking %s." CR), cf_str[i]);
+                // Log.verbose(F("Checking %s." CR), cf_str[i]);
                 HANDLER_STATE thisState = cf[i](request);
                 if (thisState == PROCESSED)
                 {
@@ -862,7 +863,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Sensor settings
             //

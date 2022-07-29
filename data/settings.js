@@ -853,7 +853,6 @@ function followPulses() {
 
 function toggleCalMode(inCal = false, meter, callback = null) {
     if (!dataHostCheckDone) {
-        console.log
         setTimeout(toggleCalMode, 10);
         return;
     }
@@ -872,9 +871,9 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     } else {
         url += "/api/v1/action/clearcalmode/";
     }
-
+    var data = {};
     var xhr = new XMLHttpRequest();
-    xhr.open("PUT", url, true);
+    xhr.open("PUT", url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
 }
