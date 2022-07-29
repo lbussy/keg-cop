@@ -3,8 +3,9 @@
 - [ ] Fix SPIFFS Editor
 - [ ] Clicking bubblegum machine does not return to index
 - [ ] Temperature data will not reload after failure on Temps
-- [ ] Move `/ota1` to Settings page?
-- [ ] Check `/settings.htm#sensorcontrol`
+- [ ] Error Loading available version
+- [ ] WiFi Reset: CORS preflight failed on: `http://kegcop.local/api/v1/action/wifireset/`
+- [ ] Test
     - [ ] dataHost On
         - [ ] Dev Web Server
         - [ ] IP address
