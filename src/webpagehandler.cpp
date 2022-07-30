@@ -560,6 +560,8 @@ void stopWebServer()
 
 // Settings Handlers:
 
+// TODO: DEBUG:  Comment out: Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
 HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle controller settings
 {
     bool didChange = false;
@@ -574,7 +576,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Controller settings
             //
@@ -582,7 +584,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             {
                 if ((strlen(value) < 3) || (strlen(value) > 32))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -599,7 +601,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             {
                 if ((strlen(value) < 1) || (strlen(value) > 64))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -611,7 +613,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             {
                 if ((strlen(value) < 1) || (strlen(value) > 64))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -624,7 +626,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                 const uint8_t val = atof(value);
                 if ((val < 1) || (val > 9))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -654,7 +656,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "serial") == 0) // Set serial
@@ -673,7 +675,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "tapsolenoid") == 0) // Set active
@@ -692,7 +694,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }
@@ -735,7 +737,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Sensor settings
             //
@@ -755,7 +757,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 }
                 if ((atof(value) < min) || (atof(value) > max))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -768,7 +770,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 const double val = atof(value);
                 if ((val < 0) || (val > 4))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -790,7 +792,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "coolonhigh") == 0) // Enable cooling on pin high (reverse)
@@ -807,7 +809,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }
@@ -843,7 +845,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Sensor settings
             //
@@ -853,7 +855,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -875,7 +877,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "towercal") == 0) // Set the sensor calibration
@@ -883,7 +885,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -905,7 +907,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "uppercal") == 0) // Set the sensor calibration
@@ -913,7 +915,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -935,7 +937,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "lowercal") == 0) // Set the sensor calibration
@@ -943,7 +945,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -965,7 +967,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "kegcal") == 0) // Set the sensor calibration
@@ -973,7 +975,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -995,7 +997,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }
@@ -1031,7 +1033,7 @@ HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // KegScreen url settings
             //
@@ -1050,7 +1052,7 @@ HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL 
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }
@@ -1086,7 +1088,7 @@ HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *request) // Handle URL 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Taplist.io Venue
             //
@@ -1105,7 +1107,7 @@ HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *request) // Handle URL 
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
 
@@ -1126,7 +1128,7 @@ HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *request) // Handle URL 
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }
@@ -1162,7 +1164,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // MQTT Target settings
             //
@@ -1185,7 +1187,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "rpintsport") == 0) // Set the broker port
@@ -1193,7 +1195,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                 const double val = atof(value);
                 if ((val < 1) || (val > 65535))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1218,7 +1220,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "rpintspassword") == 0) // Set MQTT user password
@@ -1237,7 +1239,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "rpintstopic") == 0) // Set MQTT topic
@@ -1250,7 +1252,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (changedMqtt)
@@ -1291,7 +1293,7 @@ HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Target url settings
             //
@@ -1310,7 +1312,7 @@ HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL 
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
             if (strcmp(name, "targetfreq") == 0) // Set the push frequency
@@ -1318,7 +1320,7 @@ HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL 
                 const double val = atof(value);
                 if ((val < 5) || (val > 120))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1360,7 +1362,7 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cl
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Cloud target settings
             //
@@ -1370,7 +1372,7 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cl
                 const double val = atof(value);
                 if ((val < 0) || (val > 4))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1382,7 +1384,7 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cl
             {
                 if ((strlen(value) < 3) || (strlen(value) > 128))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1395,7 +1397,7 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cl
                 const double val = atof(value);
                 if ((val < 10) || (val > 900))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1440,7 +1442,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("DEBUG handleTapPost(): Processing [%s]:(%s) pair." CR), name, value);
 
             // Tap settings
             //
@@ -1449,11 +1451,11 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 const int val = atof(value);
                 if ((val < 0) || (val > NUMTAPS))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings Update: processing [%s]:(%s)." CR), name, value);
+                    Log.notice(F("Settings Update: Processing [%s]:(%s)." CR), name, value);
                     tapNum = val;
                 }
             }
@@ -1462,11 +1464,11 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 const int val = atof(value);
                 if ((val < 0) || (val > 99))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings Update: processing [%s]:(%s)." CR), name, value);
+                    Log.notice(F("Settings Update: Processing [%s]:(%s)." CR), name, value);
                     flow.taps[tapNum].label = val;
                 }
             }
@@ -1475,7 +1477,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 const uint8_t val = atoi(value);
                 if ((val < 0) || (val > 255))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1488,7 +1490,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 const int val = atof(value);
                 if ((val < 0) || (val > 999999))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1501,7 +1503,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
             {
                 if ((strlen(value) < 1) || (strlen(value) > 64))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1514,7 +1516,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 const float val = atof(value);
                 if ((val < 0) || (val > 99999))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1527,7 +1529,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 const float val = atof(value);
                 if ((val < 0) || (val > 99999))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1549,7 +1551,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
                 }
                 else
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }
@@ -1584,7 +1586,7 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("DEBUG handleTapCal(): Processing [%s]:(%s) pair." CR), name, value);
 
             // Tap Calibration
             //
@@ -1593,11 +1595,11 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
                 const int val = atof(value);
                 if ((val < 0) || (val > NUMTAPS))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
-                    Log.notice(F("Settings Update: processing [%s]:(%s)." CR), name, value);
+                    Log.notice(F("Settings Update: Processing [%s]:(%s)." CR), name, value);
                     tapNum = val;
                 }
             }
@@ -1606,7 +1608,7 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
                 const int val = atof(value);
                 if ((val < 0) || (val > 999999))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {
@@ -1663,7 +1665,7 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
                 const int val = atof(value);
                 if ((val < 0) || (val >= NUMTAPS))
                 {
-                    Log.warning(F("Settings Update: Error - [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error:  [%s]:(%s) not valid." CR), name, value);
                 }
                 else
                 {

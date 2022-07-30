@@ -796,6 +796,7 @@ function toggleCalMode(inCal = false, meter, callback = null) {
         setTimeout(toggleCalMode, 10);
         return;
     }
+    var data = {};
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -810,14 +811,11 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     } else {
         url += "/api/v1/action/clearcalmode/";
     }
-    var data = {};
-    var xhr = new XMLHttpRequest();
-    xhr.open("PUT", url);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send();
-    if (typeof callback == "function") {
-        callback(true);
-    }
+    putData(url, data, false, false, function () {
+        if (typeof callback == "function") {
+            callback(true);
+        }
+    });
 }
 
 function resetFlowCalForm() {
@@ -935,18 +933,22 @@ function pulseReload(callback = null) { // Get pulses
 }
 
 function processTapCalPost(url, obj) {
+    console.log("DEBUG: In processTapCalPost(): url = " + url);
     toggleLoader("on");
     // Handle tap calibration posts
 
     // Get form data
     tapnum = $('#flowmeter').val();
     ppu = $('#ppu').val();
+    console.log("DEBUG: In processTapCalPost(): ppu = " + ppu);
 
     // Process put
     data = {
-        tapnum: tapnum,
+        tap: tapnum,
         ppu: ppu
     }
-    putData(url, data, false, true); // TODO:  See if we can do this without "newdata"
+
+    console.log("DEBUG: In processTapCalPost(): data = " + JSON.stringify(data));
+    putData(url, data);// DEBUG, false, true); // TODO:  See if we can do this without "newdata"
     resetFlowCalForm();
 }

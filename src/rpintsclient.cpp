@@ -81,7 +81,7 @@ void connectRPints()
     }
     else
     {
-        if ( cycleCount >= 10 )
+        if ( cycleCount >= 50 )
         { // Reduce message spam a bit (verbose is only in debug mode)
             cycleCount = 0;
             Log.verbose(F("MQTT: No broker configured." CR));
