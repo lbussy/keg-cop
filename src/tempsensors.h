@@ -56,6 +56,7 @@ struct Devices
 };
 
 void sensorInit();
+void sensorReInit();
 void pollTemps();
 double getTempC(uint8_t);
 

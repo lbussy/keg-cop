@@ -85,6 +85,7 @@ bool saveConfig()
 
 bool saveFile()
 {
+    Log.verbose(F("Config: Saving configuration." CR));
     // Saves the configuration to a file on FILESYSTEM
     File file = FILESYSTEM.open(filename,FILE_WRITE);
     if (!file)
