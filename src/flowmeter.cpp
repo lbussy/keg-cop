@@ -167,7 +167,7 @@ void logFlow()
         }
         else
         {
-            Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CR), pulse[i], i, flow.taps[i].pin);
+            // Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CR), pulse[i], i, flow.taps[i].pin);
         }
     }
 }

@@ -620,6 +620,7 @@ function processRPintsPost(url, obj) {
 }
 
 function putData(url, data, newpage = false, newdata = false, callback = null) {
+    console.log("DEBUG: URL=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata);
     var loadNew = (newpage.length > 0);
     $.ajax({
         url: url,
@@ -933,22 +934,21 @@ function pulseReload(callback = null) { // Get pulses
 }
 
 function processTapCalPost(url, obj) {
-    console.log("DEBUG: In processTapCalPost(): url = " + url);
     toggleLoader("on");
     // Handle tap calibration posts
 
     // Get form data
-    tapnum = $('#flowmeter').val();
+    tapNum = $('#flowmeter').val();
     ppu = $('#ppu').val();
-    console.log("DEBUG: In processTapCalPost(): ppu = " + ppu);
+    $("tap" + tapnum + "ppu").val(parseInt(ppu));
+    console.log("DEBUG: Tap " + tapNum + " ppu: " + ppu);
 
     // Process put
     data = {
-        tap: tapnum,
+        tapnum: tapNum,
         ppu: ppu
     }
-
-    console.log("DEBUG: In processTapCalPost(): data = " + JSON.stringify(data));
-    putData(url, data);// DEBUG, false, true); // TODO:  See if we can do this without "newdata"
+    //putData(url, data, false, true);
+    putData(url, data);
     resetFlowCalForm();
 }
