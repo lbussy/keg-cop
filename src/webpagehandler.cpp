@@ -237,16 +237,16 @@ void setActionPageHandlers()
                 //
                 if (strcmp(name, "tapnum") == 0) // Start calibration for tapnum
                 {
-                    int tapNum = atof(value);
-                    if ((tapNum > 0) || (tapNum < NUMTAPS))
+                    int tapnum = atof(value);
+                    Log.notice(F("Setting calibration mode on tap %d." CR), tapnum);
+                    if ((tapnum > 0) || (tapnum < NUMTAPS))
                     {
-                        Log.notice(F("Setting calibration mode on tap %d." CR), tapNum);
-                        int tapNum = atof(value);
-                        flow.taps[tapNum].calibrating = true;
+                        Log.notice(F("Setting calibration mode on tap %d." CR), tapnum);
+                        flow.taps[tapnum].calibrating = true;
                     }
                     else
                     {
-                        Log.warning(F("Passed invalid tapnumber (%d) to setcalmode." CR), tapNum);
+                        Log.warning(F("Passed invalid tapnumber (%d) to setcalmode." CR), tapnum);
                     }
                 }
             }
