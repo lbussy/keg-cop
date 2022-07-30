@@ -77,6 +77,11 @@ void setDoSaveUptime()
     doSetSaveUptime = true; // Semaphore required to save reboot time
 }
 
+void setDoSaveConfig()
+{
+    doSetSaveConfig = true; // Semaphore required to save config
+}
+
 void tickerLoop()
 {
     // Necessary because we cannot delay or do radio work in a callback
@@ -96,6 +101,12 @@ void tickerLoop()
     { // Log uptime
         doSetSaveUptime = false;
         doUptime();
+    }
+
+    if (doSetSaveConfig)
+    { // Save Config
+        doSetSaveConfig = false;
+        saveConfig();
     }
 
     // // External Event Reports
