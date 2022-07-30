@@ -1516,8 +1516,8 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
         if (tapNum >= 0)
         {
             setDoTapInfoReport(tapNum);
-            return PROCESSED;
         }
+        return PROCESSED;
     }
     else
     {
@@ -1579,8 +1579,8 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
         if (tapNum >= 0)
         {
             setDoTapInfoReport(tapNum);
-            return PROCESSED;
         }
+        return PROCESSED;
     }
     else
     {
@@ -1636,8 +1636,8 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
         if (tapNum >= 0)
         {
             setDoTapInfoReport(tapNum);
-            return PROCESSED;
         }
+        return PROCESSED;
     }
     else
     {
