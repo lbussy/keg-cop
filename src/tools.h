@@ -60,6 +60,7 @@ double convertLtoG(double);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
 void getGuid(char *str); // 17 chars including null terminator
 void setDoSaveUptime();
+void setDoSaveConfig();
 
 static bool __attribute__((unused)) doReset = false;            // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;        // Semaphore for wifi reset
@@ -70,5 +71,6 @@ static bool __attribute__((unused)) doTaplistIOConnect = false; // Semaphore for
 static bool __attribute__((unused)) doTapInfoReport[NUMTAPS] = {
     false, false, false, false, false, false, false, false}; // Semaphore for reset
 static bool __attribute__((unused)) doSetSaveUptime = false; // Semaphore required to save reboot time
+static bool __attribute__((unused)) doSetSaveConfig = false; // Semaphore required to save config
 
 #endif
