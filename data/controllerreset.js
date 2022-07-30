@@ -33,7 +33,7 @@ function doResetSignal() {
         fail: function () {
             $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Failed; Redirect Pending</h4>");
             $("#message").replaceWith("<p class='card-body'>The controller reset failed. You will be redirected momentarily.</p>");
-            setTimeout(function () { window.location.href = "index"; }, 5000);
+            setTimeout(function () { window.location.href = "/index/"; }, 5000);
         }
     });
 }
