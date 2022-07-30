@@ -250,7 +250,7 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/clearupdate/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
@@ -535,10 +535,11 @@ void setConfigurationPageHandlers()
 
     server.on("/api/v1/config/settings/", [](AsyncWebServerRequest *request)
               {
+        Log.verbose(F("DEBUG: I entered Settings/" CR));
         if (request->methodToString() == "PUT")
         {
             // Process settings update
-            Log.verbose(F("Processing put to %s." CR), request->url().c_str());
+            // Log.verbose(F("Processing put to %s." CR), request->url().c_str());
 
             HANDLER_STATE state = NOT_PROCCESSED;
             for (int i = 0; i < controlHandlers; i++)
@@ -601,7 +602,7 @@ void setConfigurationPageHandlers()
         for (int i = 0; i < tapHandlers; i++)
         {
             // Process taps update
-            Log.verbose(F("Processing post to %s." CR), request->url().c_str());
+            // Log.verbose(F("Processing post to %s." CR), request->url().c_str());
 
             HANDLER_STATE state = NOT_PROCCESSED;
             for (int i = 0; i < tapHandlers; i++)
@@ -1196,6 +1197,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+
                 }
                 else
                 {
