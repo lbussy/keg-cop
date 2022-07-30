@@ -620,6 +620,7 @@ function processRPintsPost(url, obj) {
 }
 
 function putData(url, data, newpage = false, newdata = false, callback = null) {
+    console.log("DEBUG: URL=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata);
     var loadNew = (newpage.length > 0);
     $.ajax({
         url: url,
@@ -796,6 +797,7 @@ function toggleCalMode(inCal = false, meter, callback = null) {
         setTimeout(toggleCalMode, 10);
         return;
     }
+    var data = {};
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -810,11 +812,11 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     } else {
         url += "/api/v1/action/clearcalmode/";
     }
-    var data = {};
-    var xhr = new XMLHttpRequest();
-    xhr.open("PUT", url);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send();
+    putData(url, data, false, false, function () {
+        if (typeof callback == "function") {
+            callback(true);
+        }
+    });
 }
 
 function resetFlowCalForm() {
@@ -936,14 +938,17 @@ function processTapCalPost(url, obj) {
     // Handle tap calibration posts
 
     // Get form data
-    tapnum = $('#flowmeter').val();
+    tapNum = $('#flowmeter').val();
     ppu = $('#ppu').val();
+    $("tap" + tapnum + "ppu").val(parseInt(ppu));
+    console.log("DEBUG: Tap " + tapNum + " ppu: " + ppu);
 
     // Process put
     data = {
-        tapnum: tapnum,
+        tapnum: tapNum,
         ppu: ppu
     }
-    putData(url, data, false, true); // TODO:  See if we can do this without "newdata"
+    //putData(url, data, false, true);
+    putData(url, data);
     resetFlowCalForm();
 }

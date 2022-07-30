@@ -112,7 +112,7 @@ void setAPIPageHandlers()
 {
     server.on("/api/v1/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize API
         StaticJsonDocument<CAP_API> doc;
@@ -127,7 +127,7 @@ void setAPIPageHandlers()
 
     server.on("/api/v1/action/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
         StaticJsonDocument<CAP_ACTION_API> doc;
@@ -142,7 +142,7 @@ void setAPIPageHandlers()
 
     server.on("/api/v1/info/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
         StaticJsonDocument<CAP_INFO_API> doc;
@@ -157,7 +157,7 @@ void setAPIPageHandlers()
 
     server.on("/api/v1/config/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
         StaticJsonDocument<CAP_CONFIG_API> doc;
@@ -177,32 +177,32 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/ping/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request); });
 
     server.on("/api/v1/action/wifireset/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
         _delay(2000);
         setDoWiFiReset(); // Wipe settings, reset controller
         send_ok(request); });
 
     server.on("/api/v1/action/reset/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request);
         _delay(2000);
         setDoReset(); });
 
     server.on("/api/v1/action/updatestart/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
         setDoOTA(); // Trigger the OTA update
         send_ok(request); });
 
     server.on("/api/v1/action/clearupdate/", [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Log.verbose(F("Processing %s." CR), request->url().c_str());
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
@@ -221,9 +221,35 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/setcalmode/", [](AsyncWebServerRequest *request)
               {
-        for (int i = 0; i < NUMTAPS; i++)
+        Log.notice(F("Processing %s." CR), request->url().c_str());
+        // Loop through all parameters
+        int params = request->params();
+        for (int i = 0; i < params; i++)
         {
-            flow.taps[i].calibrating = true;
+            AsyncWebParameter *p = request->getParam(i);
+            if (p->isPost())
+            {
+                // Process any p->name().c_str() / p->value().c_str() pairs
+                const char *name = p->name().c_str();
+                const char *value = p->value().c_str();
+
+                // Calibrating tap
+                //
+                if (strcmp(name, "tapnum") == 0) // Start calibration for tapnum
+                {
+                    int tapnum = atof(value);
+                    Log.notice(F("Setting calibration mode on tap %d." CR), tapnum);
+                    if ((tapnum > 0) || (tapnum < NUMTAPS))
+                    {
+                        Log.notice(F("Setting calibration mode on tap %d." CR), tapnum);
+                        flow.taps[tapnum].calibrating = true;
+                    }
+                    else
+                    {
+                        Log.warning(F("Passed invalid tapnumber (%d) to setcalmode." CR), tapnum);
+                    }
+                }
+            }
         }
         saveFlowConfig();
         send_ok(request); });
@@ -434,10 +460,11 @@ void setConfigurationPageHandlers()
 
     server.on("/api/v1/config/settings/", [](AsyncWebServerRequest *request)
               {
+        Log.verbose(F("DEBUG: I entered Settings/" CR));
         if (request->methodToString() == "PUT")
         {
             // Process settings update
-            Log.verbose(F("Processing put to %s." CR), request->url().c_str());
+            // Log.verbose(F("Processing put to %s." CR), request->url().c_str());
 
             HANDLER_STATE state = NOT_PROCCESSED;
             for (int i = 0; i < controlHandlers; i++)
@@ -479,7 +506,7 @@ void setConfigurationPageHandlers()
         if (request->methodToString() == "PUT")
         {
             // Process taps update
-            Log.verbose(F("Processing post to %s." CR), request->url().c_str());
+            // Log.verbose(F("Processing post to %s." CR), request->url().c_str());
 
             HANDLER_STATE state = NOT_PROCCESSED;
             for (int i = 0; i < tapHandlers; i++)
@@ -533,6 +560,8 @@ void stopWebServer()
 }
 
 // Settings Handlers:
+
+// TODO: DEBUG:  Comment out: // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
 HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle controller settings
 {
@@ -646,7 +675,6 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     config.copconfig.serial = false;
                 }
                 else
-                {
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
@@ -945,6 +973,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if ((val < -25) || (val > 25))
                 {
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+
                 }
                 else
                 {
@@ -1387,7 +1416,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("DEBUG: handleTapPost(): Processing [%s]:(%s) pair." CR), name, value);
 
             // Tap settings
             //
@@ -1539,7 +1568,7 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("DEBUG: handleTapCal(): Processing [%s]:(%s) pair." CR), name, value);
 
             // Tap Calibration
             //
@@ -1553,7 +1582,6 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
                 else
                 {
                     didChange = true;
-                    Log.notice(F("Settings Update: processing [%s]:(%s)." CR), name, value);
                     tapNum = val;
                 }
             }
@@ -1609,7 +1637,7 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Calibration Mode Set
             //
