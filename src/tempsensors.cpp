@@ -31,6 +31,7 @@ Devices device;
 
 void sensorInit()
 {
+    Log.notice(F("Sensors: Initializing sensors." CR));
     for (int i = 0; i < NUMSENSOR; i++)
     {
         strlcpy(device.sensor[i].name, sensorName[i], sizeof(device.sensor[i].name));
@@ -39,6 +40,19 @@ void sensorInit()
         device.sensor[i].average = DEVICE_DISCONNECTED_C;
         device.sensor[i].calibration = config.temps.calibration[i];
         device.sensor[i].buffer.clear();
+    }
+    pollTemps();
+}
+
+void sensorReInit()
+{
+    Log.notice(F("Sensors: Reinitializing sensors." CR));
+    for (int i = 0; i < NUMSENSOR; i++)
+    {
+        device.sensor[i].buffer.clear();
+        device.sensor[i].value = DEVICE_DISCONNECTED_C;
+        device.sensor[i].average = DEVICE_DISCONNECTED_C;
+        device.sensor[i].calibration = config.temps.calibration[i];
     }
     pollTemps();
 }
