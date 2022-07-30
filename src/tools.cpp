@@ -27,6 +27,7 @@ float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending
 unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pours
 bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
 bool __attribute__((unused)) queueStateChange;                  // Store pending tstat state changes
+bool __attribute__((unused)) queueFanStateChange;               // Store pending tstat state changes
 
 void _delay(unsigned long ulDelay)
 {
@@ -138,9 +139,10 @@ void tickerLoop()
             sendKickReport(i);
         }
         // Send temp control state change
-        if (queueStateChange == true)
+        if (queueStateChange == true || queueFanStateChange == true)
         {
             queueStateChange = false;
+            queueFanStateChange = false;
             sendCoolStateReport();
         }
         // Send Tap Info Report
