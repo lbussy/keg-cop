@@ -675,6 +675,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     config.copconfig.serial = false;
                 }
                 else
+                {
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
@@ -973,7 +974,6 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if ((val < -25) || (val > 25))
                 {
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
-
                 }
                 else
                 {
