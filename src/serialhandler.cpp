@@ -163,156 +163,156 @@ void serialLoop()
         { // Handle regulare debug commands
             switch (SERIAL.read())
             {
-                // Handle random shit
-                case ' ':
-                case '\n':
-                case '\r':
-                case 1:
-                case 3:
-                case 29:
-                case 31:
-                case '\'':
-                case 251:
-                case 253:
-                case 255:
-                    break;
-                // End handling random shit
+            // Handle random shit
+            case ' ':
+            case '\n':
+            case '\r':
+            case 1:
+            case 3:
+            case 29:
+            case 31:
+            case '\'':
+            case 251:
+            case 253:
+            case 255:
+                break;
+            // End handling random shit
 
-                // Serial command menu
-                case 'h': // /heap/
-                {
-                    // From: multi_heap.h
-                    // /** @brief Structure to access heap metadata via multi_heap_get_info */
-                    // typedef struct {
-                    //     size_t total_free_bytes;      ///<  Total free bytes in the heap. Equivalent to multi_free_heap_size().
-                    //     size_t total_allocated_bytes; ///<  Total bytes allocated to data in the heap.
-                    //     size_t largest_free_block;    ///<  Size of largest free block in the heap. This is the largest malloc-able size.
-                    //     size_t minimum_free_bytes;    ///<  Lifetime minimum free heap size. Equivalent to multi_minimum_free_heap_size().
-                    //     size_t allocated_blocks;      ///<  Number of (variable size) blocks allocated in the heap.
-                    //     size_t free_blocks;           ///<  Number of (variable size) free blocks in the heap.
-                    //     size_t total_blocks;          ///<  Total number of (variable size) blocks in the heap.
-                    // } multi_heap_info_t;
+            // Serial command menu
+            case 'h': // /heap/
+            {
+                // From: multi_heap.h
+                // /** @brief Structure to access heap metadata via multi_heap_get_info */
+                // typedef struct {
+                //     size_t total_free_bytes;      ///<  Total free bytes in the heap. Equivalent to multi_free_heap_size().
+                //     size_t total_allocated_bytes; ///<  Total bytes allocated to data in the heap.
+                //     size_t largest_free_block;    ///<  Size of largest free block in the heap. This is the largest malloc-able size.
+                //     size_t minimum_free_bytes;    ///<  Lifetime minimum free heap size. Equivalent to multi_minimum_free_heap_size().
+                //     size_t allocated_blocks;      ///<  Number of (variable size) blocks allocated in the heap.
+                //     size_t free_blocks;           ///<  Number of (variable size) free blocks in the heap.
+                //     size_t total_blocks;          ///<  Total number of (variable size) blocks in the heap.
+                // } multi_heap_info_t;
 
-                    multi_heap_info_t info;
-                    heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
-                    const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 70;
-                    StaticJsonDocument<capacity> doc;
-                    JsonObject h = doc.createNestedObject("h");
-                    h["totFreeK"] = info.total_free_bytes / 1024;
-                    h["totAllocK"] = info.total_allocated_bytes / 1024;
-                    h["lrgFreeK"] = info.largest_free_block / 1024;
-                    h["minFreeK"] = info.minimum_free_bytes / 1024;
-                    h["frgPct"] = 100 - (info.largest_free_block * 100) / info.total_free_bytes;
-                    serializeJson(doc, SERIAL);
-                    printCR();
-                    break;
-                }
-                case 'a': // /thatVersion/
-                {
-                    const size_t capacity = 2 * JSON_OBJECT_SIZE(2);
-                    StaticJsonDocument<capacity> doc;
-                    JsonObject a = doc.createNestedObject("a");
-                    a["fw_available"] = (const char *)thatVersion.fw_version;
-                    a["fs_available"] = (const char *)thatVersion.fs_version;
-                    serializeJson(doc, SERIAL);
-                    printCR();
-                    break;
-                }
-                case 'o': // Perform OTA
-                {
-                    setDoOTA(); // Trigger the OTA update
-                }
-                case 'v': // /thisVersion/
-                {
-                    const size_t capacity = 2 * JSON_OBJECT_SIZE(2);
-                    StaticJsonDocument<capacity> doc;
-                    JsonObject v = doc.createNestedObject("v");
-                    v["fw_version"] = (const char *)fw_version();
-                    v["fs_version"] = (const char *)fs_version();
-                    serializeJson(doc, SERIAL);
-                    printCR();
-                    break;
-                }
-                case 'r': // Reset reason
-                {
-                    const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2);
-                    StaticJsonDocument<capacity> doc;
-                    JsonObject r = doc.createNestedObject("r");
+                multi_heap_info_t info;
+                heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
+                const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 70;
+                StaticJsonDocument<capacity> doc;
+                JsonObject h = doc.createNestedObject("h");
+                h["totFreeK"] = info.total_free_bytes / 1024;
+                h["totAllocK"] = info.total_allocated_bytes / 1024;
+                h["lrgFreeK"] = info.largest_free_block / 1024;
+                h["minFreeK"] = info.minimum_free_bytes / 1024;
+                h["frgPct"] = 100 - (info.largest_free_block * 100) / info.total_free_bytes;
+                serializeJson(doc, SERIAL);
+                printCR();
+                break;
+            }
+            case 'a': // /thatVersion/
+            {
+                const size_t capacity = 2 * JSON_OBJECT_SIZE(2);
+                StaticJsonDocument<capacity> doc;
+                JsonObject a = doc.createNestedObject("a");
+                a["fw_available"] = (const char *)thatVersion.fw_version;
+                a["fs_available"] = (const char *)thatVersion.fs_version;
+                serializeJson(doc, SERIAL);
+                printCR();
+                break;
+            }
+            case 'o': // Perform OTA
+            {
+                setDoOTA(); // Trigger the OTA update
+            }
+            case 'v': // /thisVersion/
+            {
+                const size_t capacity = 2 * JSON_OBJECT_SIZE(2);
+                StaticJsonDocument<capacity> doc;
+                JsonObject v = doc.createNestedObject("v");
+                v["fw_version"] = (const char *)fw_version();
+                v["fs_version"] = (const char *)fs_version();
+                serializeJson(doc, SERIAL);
+                printCR();
+                break;
+            }
+            case 'r': // Reset reason
+            {
+                const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2);
+                StaticJsonDocument<capacity> doc;
+                JsonObject r = doc.createNestedObject("r");
 
-                    r["reason"] = rstReason();
-                    r["description"] = rstDescription();
+                r["reason"] = rstReason();
+                r["description"] = rstDescription();
 
-                    serializeJson(r, SERIAL);
-                    printCR();
-                    break;
-                }
-                case 'd': // Toggle Debug
-                    toggleSerialCompat(!config.copconfig.serial);
-                    break;
-                case 'u': // Display uptime
-                {
-                    // Get uptime in millisseconds
-                    unsigned int mill = millis();
+                serializeJson(r, SERIAL);
+                printCR();
+                break;
+            }
+            case 'd': // Toggle Debug
+                toggleSerialCompat(!config.copconfig.serial);
+                break;
+            case 'u': // Display uptime
+            {
+                // Get uptime in millisseconds
+                unsigned int mill = millis();
 
-                    // 86400000 millis in a day
-                    const int days = (int)floor(mill / 86400000);
-                    mill = mill - 86400000 * days;
+                // 86400000 millis in a day
+                const int days = (int)floor(mill / 86400000);
+                mill = mill - 86400000 * days;
 
-                    // 3600000 millis in an hour
-                    const int hours = (int)floor(mill / 3600000);
-                    mill = mill - 3600000 * hours;
+                // 3600000 millis in an hour
+                const int hours = (int)floor(mill / 3600000);
+                mill = mill - 3600000 * hours;
 
-                    // 60000 millis in a minute
-                    const int minutes = (int)floor(mill / 60000);
-                    mill = mill - 60000 * minutes;
+                // 60000 millis in a minute
+                const int minutes = (int)floor(mill / 60000);
+                mill = mill - 60000 * minutes;
 
-                    // 1000 millis in a second
-                    const int seconds = (int)floor(mill / 1000);
-                    mill = mill - 1000 * seconds;
+                // 1000 millis in a second
+                const int seconds = (int)floor(mill / 1000);
+                mill = mill - 1000 * seconds;
 
-                    // Need a const int for ArduinoJson
-                    const int milliseconds = mill;
+                // Need a const int for ArduinoJson
+                const int milliseconds = mill;
 
-                    const size_t capacity = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 50;
-                    StaticJsonDocument<capacity> doc;
-                    JsonObject u = doc.createNestedObject("u");
+                const size_t capacity = JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(5) + 50;
+                StaticJsonDocument<capacity> doc;
+                JsonObject u = doc.createNestedObject("u");
 
-                    u["days"] = days;
-                    u["hours"] = hours;
-                    u["minutes"] = minutes;
-                    u["seconds"] = seconds;
-                    u["millis"] = milliseconds;
+                u["days"] = days;
+                u["hours"] = hours;
+                u["minutes"] = minutes;
+                u["seconds"] = seconds;
+                u["millis"] = milliseconds;
 
-                    serializeJson(doc, SERIAL);
-                    printCR();
-                    break;
-                }
-                case 'b': // Reset controller
-                    setDoReset();
-                    nullDoc("b");
-                    break;
-                case 'p': // /ping/
-                    nullDoc("");
-                    break;
-                case 'c': // Toggle Pour Emulate
-                    togglePourEmulation(!config.copconfig.pouremulate);
-                    break;
-                case '?': // Help
-                    SERIAL.println(F("Keg Cop - Available serial commands:"));
-                    SERIAL.println(F("\th:\tDisplay heap information"));
-                    SERIAL.println(F("\tp:\t'Ping, e.g. {}' (null json)"));
-                    SERIAL.println(F("\tv:\tDisplay current version"));
-                    SERIAL.println(F("\ta:\tDisplay available version"));
-                    SERIAL.println(F("\to:\tPerform online update"));
-                    SERIAL.println(F("\td:\tEnter/exit Debug mode"));
-                    SERIAL.println(F("\tu:\tUptime"));
-                    SERIAL.println(F("\tc:\tEnter calibration or pour emulation"));
-                    SERIAL.println(F("\tb:\tRestart controller"));
-                    SERIAL.println(F("\t?:\tHelp (this menu)"));
-                    SERIAL.flush();
-                    break;
-                default:
-                    break;
+                serializeJson(doc, SERIAL);
+                printCR();
+                break;
+            }
+            case 'b': // Reset controller
+                setDoReset();
+                nullDoc("b");
+                break;
+            case 'p': // /ping/
+                nullDoc("");
+                break;
+            case 'c': // Toggle Pour Emulate
+                togglePourEmulation(!config.copconfig.pouremulate);
+                break;
+            case '?': // Help
+                SERIAL.println(F("Keg Cop - Available serial commands:"));
+                SERIAL.println(F("\th:\tDisplay heap information"));
+                SERIAL.println(F("\tp:\t'Ping, e.g. {}' (null json)"));
+                SERIAL.println(F("\tv:\tDisplay current version"));
+                SERIAL.println(F("\ta:\tDisplay available version"));
+                SERIAL.println(F("\to:\tPerform online update"));
+                SERIAL.println(F("\td:\tEnter/exit Debug mode"));
+                SERIAL.println(F("\tu:\tUptime"));
+                SERIAL.println(F("\tc:\tEnter calibration or pour emulation"));
+                SERIAL.println(F("\tb:\tRestart controller"));
+                SERIAL.println(F("\t?:\tHelp (this menu)"));
+                SERIAL.flush();
+                break;
+            default:
+                break;
             }
         }
     }
@@ -529,6 +529,7 @@ void handlePourEmulateCommands()
     char rc;
 
     rc = SERIAL.read();
+    // Single Char Commands (no [ENTER] needed)
     if (rc == '?')
     { // Show help
         SERIAL.println(F("\nKeg Cop - Pour Emulation Menu:"));
@@ -543,8 +544,22 @@ void handlePourEmulateCommands()
     { // Exit mode
         SERIAL.println(rc);
         togglePourEmulation(false);
+        recvInProgress = false;
+        commandInProgress = false;
+        pulses = 0;
         return;
     }
+    if (rc == '\b')
+    { // Hnadle a backspace
+        if (commandInProgress)
+        { // We are entering a number
+            const char backspace[] = {char(0x08), char(0x20), char(0x08), char(0x00)};
+            Serial.write(backspace);
+            pulses = trunc(pulses / 10);
+        }
+    }
+
+    // Multi-character commands (requires multiple chars or [ENTER] to complete)
     if (isAlphaNumeric(rc))
     {
         if (isAlpha(rc))
@@ -555,7 +570,7 @@ void handlePourEmulateCommands()
                 {
                     // We received our first letter
                     SERIAL.print(rc);
-                    recvInProgress = true;                    
+                    recvInProgress = true;
                 }
                 SERIAL.flush();
                 return;
@@ -593,24 +608,27 @@ void handlePourEmulateCommands()
     { // Handle anything not alphanumeric
         switch (rc)
         {
-            case '\n':
-            case '\r':
-                if (commandInProgress)
-                {
-                    recvInProgress = false;
-                    commandInProgress = false;
-                    logFlow(tapNum, pulses);
-                    SERIAL.println();
-                    SERIAL.print(F("Added "));
-                    SERIAL.print(pulses);
-                    SERIAL.print(F(" pulses to tap "));
-                    SERIAL.print(tapNum);
-                    SERIAL.println(F("."));
-                    SERIAL.print(F("Command > "));
-                    pulses = 0;
-                    tapNum = 0;
-                }
-                break;
+        // Handle [ENTER]
+        case '\n':
+        case '\r':
+            if (commandInProgress)
+            {
+                recvInProgress = false;
+                commandInProgress = false;
+                logFlow(tapNum, pulses);
+                SERIAL.println();
+                SERIAL.print(F("Added "));
+                SERIAL.print(pulses);
+                SERIAL.print(F(" pulses to tap "));
+                SERIAL.print(tapNum);
+                SERIAL.println(F("."));
+                SERIAL.print(F("Command > "));
+                pulses = 0;
+                tapNum = 0;
+            }
+            break;
+        default:
+            break;
         }
         SERIAL.flush();
         return;
