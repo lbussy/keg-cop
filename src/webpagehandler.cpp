@@ -28,6 +28,20 @@ const char *wh_urlstart = URLSTART;
 const char *wh_tld = TLD;
 const char *wh_delim = DELIM;
 
+// This BS is needed because a wierd combo of libs and core is causing the
+// methods to conflict
+enum KC_METHODS
+{
+    KC_HTTP_GET = 0b00000001,
+    KC_HTTP_POST = 0b00000010,
+    KC_HTTP_DELETE = 0b00000100,
+    KC_HTTP_PUT = 0b00001000,
+    KC_HTTP_PATCH = 0b00010000,
+    KC_HTTP_HEAD = 0b00100000,
+    KC_HTTP_OPTIONS = 0b01000000,
+    KC_HTTP_ANY = 0b01111111,
+};
+
 static int controlHandlers = 7;
 static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration functions
     handleControllerPost,
@@ -70,7 +84,7 @@ void initWebServer()
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request)
                       {
-        if (request->method() == HTTP_OPTIONS)
+        if (request->method() == KC_HTTP_OPTIONS)
         {
             send_ok(request);
         }
@@ -110,7 +124,8 @@ void setRegPageHandlers()
 
 void setAPIPageHandlers()
 {
-    server.on("/api/v1/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize API
@@ -122,10 +137,15 @@ void setAPIPageHandlers()
         String api;
         serializeJson(doc, api);
 
-        send_json(request, api);
-    });
+        send_json(request, api); });
 
-    server.on("/api/v1/action/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/action/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
@@ -139,7 +159,13 @@ void setAPIPageHandlers()
 
         send_json(request, api); });
 
-    server.on("/api/v1/info/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/action/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/info/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
@@ -153,7 +179,13 @@ void setAPIPageHandlers()
 
         send_json(request, api); });
 
-    server.on("/api/v1/config/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/config/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
@@ -166,47 +198,72 @@ void setAPIPageHandlers()
         serializeJson(doc, api);
 
         send_json(request, api); });
+
+    server.on("/api/v1/config/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
 }
 
 void setActionPageHandlers()
 {
     // Action Page Handlers
 
-    server.on("/api/v1/action/ping/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/action/ping/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request); });
 
-    server.on("/api/v1/action/wifireset/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/action/wifireset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request);
         setDoWiFiReset(); });
 
-    server.on("/api/v1/action/wifireset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        // Required for CORS preflight on some PUT/POST
-        send_ok(request);
-    });
+    server.on("/api/v1/action/wifireset/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
 
-    server.on("/api/v1/action/reset/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/action/wifireset/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on("/api/v1/action/reset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request);
         setDoReset(); });
 
-    server.on("/api/v1/action/reset/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        // Required for CORS preflight on some PUT/POST
-        send_ok(request);
-    });
+    server.on("/api/v1/action/reset/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
 
-    server.on("/api/v1/action/updatestart/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/action/reset/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on("/api/v1/action/updatestart/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
         setDoOTA(); // Trigger the OTA update
         send_ok(request); });
 
-    server.on("/api/v1/action/updatestart/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        // Required for CORS preflight on some PUT/POST
-        send_ok(request);
-    });
+    server.on("/api/v1/action/updatestart/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
 
-    server.on("/api/v1/action/clearupdate/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/action/updatestart/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on("/api/v1/action/clearupdate/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
@@ -214,26 +271,38 @@ void setActionPageHandlers()
         config.copconfig.nodrd = false;
         send_ok(request); });
 
-    server.on("/api/v1/action/clearupdate/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        // Required for CORS preflight on some PUT/POST
-        send_ok(request);
-    });
+    server.on("/api/v1/action/clearupdate/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
 
-    server.on("/api/v1/action/clearcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/action/clearupdate/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on("/api/v1/action/clearcalmode/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
         Log.verbose(F("Processing %s to %s." CR), request->methodToString(),request->url().c_str());
         for (int i = 0; i < NUMTAPS; i++)
         {
             flow.taps[i].calibrating = false;
         }
-        saveFlowConfig();
+        setDoSaveFlowConfig();
         send_ok(request); });
 
-    server.on("/api/v1/action/clearcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        // Required for CORS preflight on some PUT/POST
-        send_ok(request);
-    });
+    server.on("/api/v1/action/clearcalmode/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
 
-    server.on("/api/v1/action/setcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/action/clearcalmode/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on("/api/v1/action/setcalmode/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         int params = request->params();
         for (int i = 0; i < params; i++)
@@ -263,20 +332,26 @@ void setActionPageHandlers()
                 }
             }
         }
-        saveFlowConfig();
+        setDoSaveFlowConfig();
         send_ok(request); });
 
-    server.on("/api/v1/action/setcalmode/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/action/setcalmode/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/action/setcalmode/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         // Required for CORS preflight on some PUT/POST
-        send_ok(request);
-    });
+        send_not_allowed(request); });
 }
 
 void setInfoPageHandlers()
 {
     // Info Page Handlers
 
-    server.on("/api/v1/info/resetreason/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/resetreason/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         // Used to provide the reset reason json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -291,7 +366,8 @@ void setInfoPageHandlers()
         serializeJson(doc, resetreason);
         send_json(request, resetreason); });
 
-    server.on("/api/v1/info/heap/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/heap/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         // Used to provide the heap json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -316,7 +392,8 @@ void setInfoPageHandlers()
         serializeJson(doc, heap);
         send_json(request, heap); });
 
-    server.on("/api/v1/info/uptime/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/uptime/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         // Used to provide the uptime json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -340,7 +417,8 @@ void setInfoPageHandlers()
         serializeJson(doc, ut);
         send_json(request, ut); });
 
-    server.on("/api/v1/info/thisVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/thisVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(4);
         DynamicJsonDocument doc(capacity);
@@ -355,7 +433,8 @@ void setInfoPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/info/thatVersion/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/thatVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(2);
         DynamicJsonDocument doc(capacity);
@@ -369,7 +448,8 @@ void setInfoPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/info/pulses/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/info/pulses/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         // Used to provide the pulses json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -388,7 +468,7 @@ void setInfoPageHandlers()
         serializeJson(doc, json); // Serialize JSON to String
         send_json(request, json); });
 
-    server.on("/api/v1/info/tempcontrol/", HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/tempcontrol/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Used to inform whether we should be doing a temps menu or not
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -406,15 +486,11 @@ void setInfoPageHandlers()
         const bool displayenabled = (numEnabled > 0);
 
         if (displayenabled)
-        {
-            send_ok(request);
-        }
+           send_ok(request);
         else
-        {
-            send_not_allowed(request);
-        } });
+            send_not_allowed(request); });
 
-    server.on("/api/v1/info/sensors/", HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/sensors/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         DynamicJsonDocument doc(capacityTempsSerial);
@@ -468,7 +544,8 @@ void setConfigurationPageHandlers()
 {
     // Settings Handlers:
 
-    server.on("/api/v1/config/settings/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/settings/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
         // Process settings update
         Log.verbose(F("Processing put to %s." CR), request->url().c_str());
 
@@ -489,10 +566,10 @@ void setConfigurationPageHandlers()
                 request->send(500, F("text/plain"), F("Unable to process data"));
                 state = FAIL_PROCESS;
             }
-        }
-    });
+        } });
 
-    server.on("/api/v1/config/settings/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/settings/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
         // Used to provide the Config json
         // Serialize configuration
         StaticJsonDocument<CAP_SER_CONF> doc;   // Create doc
@@ -501,20 +578,20 @@ void setConfigurationPageHandlers()
 
         String json;
         serializeJson(doc, json); // Serialize JSON to String
-        send_json(request, json);
-    });
+        send_json(request, json); });
 
-    server.on("/api/v1/config/settings/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/settings/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         // Required for CORS preflight on some PUT/POST
-        send_ok(request);
-    });
+        send_ok(request); });
 
     // Settings Handlers^
     // Tap Handlers:
 
-    server.on("/api/v1/config/taps/", HTTP_PUT, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/taps/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
         // Process taps update
-        Log.verbose(F("Processing post to %s." CR), request->url().c_str());
+        Log.verbose(F("Processing put to %s." CR), request->url().c_str());
 
         HANDLER_STATE state = NOT_PROCCESSED;
         for (int i = 0; i < tapHandlers; i++)
@@ -533,10 +610,10 @@ void setConfigurationPageHandlers()
                 send_failed(request);
                 state = FAIL_PROCESS;
             }
-        }
-    });
+        } });
 
-    server.on("/api/v1/config/taps/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/taps/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
         // Serialize configuration
         DynamicJsonDocument doc(capacityFlowSerial); // Create doc
         JsonObject root = doc.to<JsonObject>();      // Create JSON object
@@ -544,13 +621,12 @@ void setConfigurationPageHandlers()
 
         String json;
         serializeJson(doc, json); // Serialize JSON to String
-        send_json(request, json);
-    });
+        send_json(request, json); });
 
-    server.on("/api/v1/config/taps/", HTTP_ANY, [](AsyncWebServerRequest *request) {
+    server.on("/api/v1/config/taps/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
         // Required for CORS preflight on some PUT/POST
-        send_ok(request);
-    });
+        send_ok(request); });
     // Tap Handlers^
 }
 
@@ -559,8 +635,8 @@ void setEditor()
 #ifdef SPIFFSEDIT
     // Setup FILESYSTEM editor
     server.addHandler(new SPIFFSEditor(FILESYSTEM, SPIFFSEDITUSER, SPIFFSEDITPW));
-    server.on("/edit/", HTTP_ANY, [](AsyncWebServerRequest *request) {
-        request->redirect("/edit"); });
+    server.on("/edit/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              { request->redirect("/edit"); });
 #endif
 }
 
@@ -1399,6 +1475,13 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cl
             }
         }
     }
+    // TODO:  Handle processed, not processed, failed
+    // enum HANDLER_STATE
+    // {
+    //     NOT_PROCCESSED = -1,
+    //     FAIL_PROCESS,
+    //     PROCESSED
+    // };
     if (didChange)
     {
         setDoSaveConfig();
@@ -1594,6 +1677,7 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
                 else
                 {
                     didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     tapNum = val;
                 }
             }
@@ -1637,7 +1721,7 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
     {
         flow.taps[i].calibrating = false;
     }
-    saveFlowConfig();
+    setDoSaveFlowConfig();
 
     // Loop through all parameters
     int params = request->params();
@@ -1696,7 +1780,7 @@ void send_not_allowed(AsyncWebServerRequest *request)
 
 void send_failed(AsyncWebServerRequest *request)
 {
-	Log.notice(F("Failed to process data %s; request type was %s." CR), request->url().c_str(), request->methodToString());
+    Log.notice(F("Failed to process data %s; request type was %s." CR), request->url().c_str(), request->methodToString());
     request->header("Cache-Control: no-store");
     request->send(500, F("text/plain"), F("Unable to process data"));
 }
