@@ -82,6 +82,11 @@ void setDoSaveConfig()
     doSetSaveConfig = true; // Semaphore required to save config
 }
 
+void setDoSaveFlowConfig()
+{
+    doSetSaveFlowConfig = true; // Semaphore required to save flowconfig
+}
+
 void tickerLoop()
 {
     // Necessary because we cannot delay or do radio work in a callback
@@ -107,6 +112,12 @@ void tickerLoop()
     { // Save Config
         doSetSaveConfig = false;
         saveConfig();
+    }
+
+    if (doSetSaveFlowConfig)
+    { // Save Flow Config
+        doSetSaveFlowConfig = false;
+        saveFlowConfig();
     }
 
     // // External Event Reports

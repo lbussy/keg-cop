@@ -318,6 +318,7 @@ function finishPage() { // Display page
 
 // PUT Handlers:
 
+var debugProcessPost = true;
 function processPost(obj) {
     posted = false;
     hashLoc = window.location.hash;
@@ -383,6 +384,7 @@ function processPost(obj) {
             processControllerPost(url, obj);
             break;
         case "#flowcal":
+            if (debugProcessPost) console.log("DEBUG: processPost() processTapCalPost(" + url + ", " + obj.name + ")");
             processTapCalPost(url, obj);
             break;
         default:
@@ -619,8 +621,12 @@ function processRPintsPost(url, obj) {
     putData(url, data);
 }
 
+var debugPutData = true;
 function putData(url, data, newpage = false, newdata = false, callback = null) {
-    console.log("DEBUG: URL=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata);
+    if (callback)
+        if (debugPutData) console.log("DEBUG: Entered putData(url=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata + ", callback=" + callback.name + ")");
+    else
+        if (debugPutData) console.log("DEBUG: Entered putData(url=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata + ", callback=null)");
     var loadNew = (newpage.length > 0);
     $.ajax({
         url: url,
@@ -633,6 +639,7 @@ function putData(url, data, newpage = false, newdata = false, callback = null) {
             settingsAlert.error("Settings update failed.");
         },
         complete: function (data) {
+            if (debugPutData) console.log("DEBUG: Completed putData()");
             if (loadNew) {
                 window.location.href = newpage;
             } else if (newdata) {
@@ -759,17 +766,22 @@ function clickByVolume() {
     byVolume = true;
 }
 
+var debugDoFollowPulses = false;
 function followPulses() {
     if (doFollowPulse) {
+        if (debugDoFollowPulses) console.log("DEBUG: In followPulses() with doFollowPulses==true.");
         if (inCalMode) { // If we are already in calibration mode
+            if (debugDoFollowPulses) console.log("DEBUG: In followPulses() setting looping.");
             pulseReload(function callFunction() { // Reload pulses
                 setTimeout(followPulses, pulseReloadTimer);
             });
         } else { // We are not yet in calibration mode
+            if (debugDoFollowPulses) console.log("DEBUG: In followPulses() setting first time stuff.");
             var intervalID = window.setInterval(function () { // Poll every pulseReloadTimer/2 seconds
                 if (calSetting == false) { // Run only if we have not run it once
                     calSetting = true; // Make sure we only run this once
                     var selectedIndex = $('#flowmeter').prop('selectedIndex');
+                    if (debugDoFollowPulses) console.log("DEBUG: In followPulses() with doFollowPulses==true)");
                     toggleCalMode(true, selectedIndex, function (semaphore) {
                         if (semaphore == true) {
                             calSetting = false;
@@ -782,6 +794,7 @@ function followPulses() {
             }, pulseReloadTimer / 2);
         }
     } else {
+        if (debugDoFollowPulses) console.log("DEBUG: In followPulses() with doFollowPulses==false calling toggleCalMode(false, 0, function(" + semaphore + ")");
         toggleCalMode(false, 0, function (semaphore) {
             if (semaphore == true) {
                 calSetting = false;
@@ -792,11 +805,17 @@ function followPulses() {
     }
 }
 
+var debugtoggleCalMode = true;
 function toggleCalMode(inCal = false, meter, callback = null) {
     if (!dataHostCheckDone) {
+        console.log
         setTimeout(toggleCalMode, 10);
         return;
     }
+    if (callback)
+        if (debugtoggleCalMode) console.log("DEBUG: Entered toggleCalMode(inCal=" + inCal + ", callback=null)");
+    else
+        if (debugtoggleCalMode) console.log("DEBUG: Entered toggleCalMode(inCal=" + inCal + ", callback=" + callback + ")");
     var data = {};
     var url = dataHost;
     while (url.endsWith("/")) {
@@ -812,6 +831,7 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     } else {
         url += "/api/v1/action/clearcalmode/";
     }
+    if (debugtoggleCalMode) console.log("DEBUG: toggleCalMode() calling " + url + ".");
     putData(url, data, false, false, function () {
         if (typeof callback == "function") {
             callback(true);
@@ -933,22 +953,24 @@ function pulseReload(callback = null) { // Get pulses
         );
 }
 
+var debugProcessTapCalMode = true;
 function processTapCalPost(url, obj) {
-    toggleLoader("on");
+    //toggleLoader("on");
     // Handle tap calibration posts
 
     // Get form data
     tapNum = $('#flowmeter').val();
     ppu = $('#ppu').val();
-    $("tap" + tapnum + "ppu").val(parseInt(ppu));
-    console.log("DEBUG: Tap " + tapNum + " ppu: " + ppu);
+    // Set tap form to this value to save a round trip
+    $('input[name="tap' + tapnum + 'ppu"]').val(parseInt(ppu), 10);
 
     // Process put
     data = {
         tapnum: tapNum,
         ppu: ppu
     }
-    //putData(url, data, false, true);
-    putData(url, data);
-    resetFlowCalForm();
+    if (debugProcessTapCalMode) console.log("DEBUG: processTapCalPost() calling putData(" + url + ", " + JSON.stringify(data) + ")");
+    //putData(url, data);
+    //resetFlowCalForm();
+    return false;
 }
