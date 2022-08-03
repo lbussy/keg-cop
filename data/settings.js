@@ -623,10 +623,6 @@ function processRPintsPost(url, obj) {
 
 var debugPutData = true;
 function putData(url, data, newpage = false, newdata = false, callback = null) {
-    if (callback)
-        if (debugPutData) console.log("DEBUG: Entered putData(url=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata + ", callback=" + callback.name + ")");
-    else
-        if (debugPutData) console.log("DEBUG: Entered putData(url=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata + ", callback=null)");
     var loadNew = (newpage.length > 0);
     $.ajax({
         url: url,
@@ -955,7 +951,6 @@ function pulseReload(callback = null) { // Get pulses
 
 var debugProcessTapCalMode = true;
 function processTapCalPost(url, obj) {
-    //toggleLoader("on");
     // Handle tap calibration posts
 
     // Get form data
@@ -969,8 +964,7 @@ function processTapCalPost(url, obj) {
         tapnum: tapNum,
         ppu: ppu
     }
-    if (debugProcessTapCalMode) console.log("DEBUG: processTapCalPost() calling putData(" + url + ", " + JSON.stringify(data) + ")");
-    //putData(url, data);
-    //resetFlowCalForm();
-    return false;
+    putData(url, data, false, false, function () {
+        resetFlowCalForm();
+    });
 }
