@@ -683,10 +683,6 @@ function processRPintsPost(url, obj) {
 
 var debugPutData = true;
 function putData(url, data, newpage = false, newdata = false, callback = null) {
-    if (callback)
-        if (debugPutData) console.log("DEBUG: Entered putData(url=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata + ", callback=" + callback.name + ")");
-    else
-        if (debugPutData) console.log("DEBUG: Entered putData(url=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata + ", callback=null)");
     var loadNew = (newpage.length > 0);
     $.ajax({
         url: url,
