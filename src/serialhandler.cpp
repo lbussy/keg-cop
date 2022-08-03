@@ -310,9 +310,12 @@ void serialLoop()
             case 'c': // Toggle Pour Emulate
                 togglePourEmulation(!config.copconfig.pouremulate);
                 break;
+<<<<<<< HEAD
             case 't': // Toggle Pour Emulate
                 toggleTempEmulation(!config.copconfig.tempemulate);
                 break;
+=======
+>>>>>>> 281c3eb (Flow cal (#87))
             case '?': // Help
                 SERIAL.println(F("Keg Cop - Available serial commands:"));
                 SERIAL.println(F("\th:\tDisplay heap information"));
@@ -323,7 +326,10 @@ void serialLoop()
                 SERIAL.println(F("\td:\tEnter/exit Debug mode"));
                 SERIAL.println(F("\tu:\tUptime"));
                 SERIAL.println(F("\tc:\tEnter calibration or pour emulation"));
+<<<<<<< HEAD
                 SERIAL.println(F("\tct:\tEnter temperature emulation"));
+=======
+>>>>>>> 281c3eb (Flow cal (#87))
                 SERIAL.println(F("\tb:\tRestart controller"));
                 SERIAL.println(F("\t?:\tHelp (this menu)"));
                 SERIAL.flush();
@@ -566,7 +572,11 @@ void handlePourEmulateCommands()
         return;
     }
     if (rc == '\b')
+<<<<<<< HEAD
     { // Handle a backspace
+=======
+    { // Hnadle a backspace
+>>>>>>> 281c3eb (Flow cal (#87))
         if (commandInProgress)
         { // We are entering a number
             const char backspace[] = {char(0x08), char(0x20), char(0x08), char(0x00)};
@@ -638,7 +648,11 @@ void handlePourEmulateCommands()
                 SERIAL.print(F(" pulses to tap "));
                 SERIAL.print(tapNum);
                 SERIAL.println(F("."));
+<<<<<<< HEAD
                 SERIAL.print(F("Tap Command > "));
+=======
+                SERIAL.print(F("Command > "));
+>>>>>>> 281c3eb (Flow cal (#87))
                 pulses = 0;
                 tapNum = 0;
             }

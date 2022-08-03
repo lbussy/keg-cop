@@ -28,6 +28,20 @@ const char *wh_urlstart = URLSTART;
 const char *wh_tld = TLD;
 const char *wh_delim = DELIM;
 
+// This BS is needed because a wierd combo of libs and core is causing the
+// methods to conflict
+enum KC_METHODS
+{
+    KC_HTTP_GET = 0b00000001,
+    KC_HTTP_POST = 0b00000010,
+    KC_HTTP_DELETE = 0b00000100,
+    KC_HTTP_PUT = 0b00001000,
+    KC_HTTP_PATCH = 0b00010000,
+    KC_HTTP_HEAD = 0b00100000,
+    KC_HTTP_OPTIONS = 0b01000000,
+    KC_HTTP_ANY = 0b01111111,
+};
+
 static int controlHandlers = 7;
 static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration functions
     handleControllerPost,
@@ -70,7 +84,7 @@ void initWebServer()
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request)
                       {
-        if (request->method() == HTTP_OPTIONS)
+        if (request->method() == KC_HTTP_OPTIONS)
         {
             send_ok(request);
         }
@@ -110,7 +124,7 @@ void setRegPageHandlers()
 
 void setAPIPageHandlers()
 {
-    server.on("/api/v1/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
 
@@ -200,7 +214,7 @@ void setActionPageHandlers()
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request); });
 
-    server.on("/api/v1/action/wifireset/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/wifireset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         // Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request);
@@ -250,7 +264,17 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/clearupdate/", [](AsyncWebServerRequest *request)
               {
-        // Log.verbose(F("Processing %s." CR), request->url().c_str());
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/action/updatestart/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on("/api/v1/action/clearupdate/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
@@ -336,7 +360,7 @@ void setInfoPageHandlers()
 {
     // Info Page Handlers
 
-    server.on("/api/v1/info/resetreason/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/resetreason/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Used to provide the reset reason json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -352,7 +376,7 @@ void setInfoPageHandlers()
         serializeJson(doc, resetreason);
         send_json(request, resetreason); });
 
-    server.on("/api/v1/info/heap/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/heap/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Used to provide the heap json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -378,7 +402,7 @@ void setInfoPageHandlers()
         serializeJson(doc, heap);
         send_json(request, heap); });
 
-    server.on("/api/v1/info/uptime/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/uptime/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Used to provide the uptime json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -403,7 +427,7 @@ void setInfoPageHandlers()
         serializeJson(doc, ut);
         send_json(request, ut); });
 
-    server.on("/api/v1/info/thisVersion/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/thisVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(4);
@@ -419,7 +443,7 @@ void setInfoPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/info/thatVersion/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/thatVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(2);
@@ -434,7 +458,7 @@ void setInfoPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/info/pulses/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/pulses/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Used to provide the pulses json
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -533,44 +557,28 @@ void setConfigurationPageHandlers()
 {
     // Settings Handlers:
 
-    server.on("/api/v1/config/settings/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/settings/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
-        Log.verbose(F("DEBUG: I entered Settings/" CR));
-        if (request->methodToString() == "PUT")
-        {
-            // Process settings update
-            // Log.verbose(F("Processing put to %s." CR), request->url().c_str());
+        // Process settings update
+        Log.verbose(F("Processing put to %s." CR), request->url().c_str());
 
-            HANDLER_STATE state = NOT_PROCCESSED;
-            for (int i = 0; i < controlHandlers; i++)
+        HANDLER_STATE state = NOT_PROCCESSED;
+        for (int i = 0; i < controlHandlers; i++)
+        {
+            if (state == FAIL_PROCESS)
+                break;
+            Log.verbose(F("Checking %s." CR), cf_str[i]);
+            HANDLER_STATE thisState = cf[i](request);
+            if (thisState == PROCESSED)
             {
-                if (state == FAIL_PROCESS)
-                    break;
-                // Log.verbose(F("Checking %s." CR), cf_str[i]);
-                HANDLER_STATE thisState = cf[i](request);
-                if (thisState == PROCESSED)
-                {
-                    send_ok(request);
-                    state = PROCESSED;
-                }
-                else if (thisState == FAIL_PROCESS)
-                {
-                    request->send(500, F("text/plain"), F("Unable to process data"));
-                    state = FAIL_PROCESS;
-                }
+                send_ok(request);
+                state = PROCESSED;
             }
-        }
-        else
-        {
-            // Used to provide the Config json
-            // Serialize configuration
-            StaticJsonDocument<CAP_SER_CONF> doc;   // Create doc
-            JsonObject root = doc.to<JsonObject>(); // Create JSON object
-            config.save(root);                      // Fill the object with current config
-
-            String json;
-            serializeJson(doc, json); // Serialize JSON to String
-            send_json(request, json);
+            else if (thisState == FAIL_PROCESS)
+            {
+                request->send(500, F("text/plain"), F("Unable to process data"));
+                state = FAIL_PROCESS;
+            }
         } });
 
     server.on("/api/v1/config/settings/", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -593,7 +601,7 @@ void setConfigurationPageHandlers()
     // Settings Handlers^
     // Tap Handlers:
 
-    server.on("/api/v1/config/taps/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/taps/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         // Process taps update
         Log.verbose(F("Processing put to %s." CR), request->url().c_str());
@@ -604,23 +612,18 @@ void setConfigurationPageHandlers()
             // Process taps update
             // Log.verbose(F("Processing post to %s." CR), request->url().c_str());
 
-            HANDLER_STATE state = NOT_PROCCESSED;
-            for (int i = 0; i < tapHandlers; i++)
+        HANDLER_STATE state = NOT_PROCCESSED;
+        for (int i = 0; i < tapHandlers; i++)
+        {
+            if (state == FAIL_PROCESS)
+                break;
+            Log.verbose(F("Checking %s." CR), tf_str[i]);
+            HANDLER_STATE thisState = tf[i](request);
+            if (thisState == PROCESSED)
             {
                 send_failed(request);
                 state = FAIL_PROCESS;
             }
-        }
-        else
-        {
-            // Serialize configuration
-            DynamicJsonDocument doc(capacityFlowSerial); // Create doc
-            JsonObject root = doc.to<JsonObject>();      // Create JSON object
-            flow.save(root);                             // Fill the object with current kegs
-
-            String json;
-            serializeJson(doc, json); // Serialize JSON to String
-            send_json(request, json);
         } });
 
     server.on("/api/v1/config/taps/", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -647,7 +650,7 @@ void setEditor()
 #ifdef SPIFFSEDIT
     // Setup FILESYSTEM editor
     server.addHandler(new SPIFFSEditor(FILESYSTEM, SPIFFSEDITUSER, SPIFFSEDITPW));
-    server.on("/edit/", [](AsyncWebServerRequest *request)
+    server.on("/edit/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               { request->redirect("/edit"); });
 #endif
 }
@@ -1197,7 +1200,6 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
-
                 }
                 else
                 {
