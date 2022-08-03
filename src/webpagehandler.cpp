@@ -635,7 +635,7 @@ void setEditor()
 #ifdef SPIFFSEDIT
     // Setup FILESYSTEM editor
     server.addHandler(new SPIFFSEditor(FILESYSTEM, SPIFFSEDITUSER, SPIFFSEDITPW));
-    server.on("/edit/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/edit/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               { request->redirect("/edit"); });
 #endif
 }
@@ -1448,7 +1448,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
 
 HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL target
 {
-    bool didFail = true;
+    bool didFail = false;
     bool didChange = false;
     // Loop through all parameters
     int params = request->params();
