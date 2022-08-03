@@ -318,6 +318,7 @@ function finishPage() { // Display page
 
 // PUT Handlers:
 
+var debugProcessPost = true;
 function processPost(obj) {
     posted = false;
     hashLoc = window.location.hash;
@@ -383,6 +384,7 @@ function processPost(obj) {
             processControllerPost(url, obj);
             break;
         case "#flowcal":
+            if (debugProcessPost) console.log("DEBUG: processPost() processTapCalPost(" + url + ", " + obj.name + ")");
             processTapCalPost(url, obj);
             break;
         default:
@@ -621,7 +623,10 @@ function processRPintsPost(url, obj) {
 
 var debugPutData = true;
 function putData(url, data, newpage = false, newdata = false, callback = null) {
-    if (debugPutData) console.log("DEBUG: Entered putData(url=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata + ", callback=" + callback.name + ")");
+    if (callback)
+        if (debugPutData) console.log("DEBUG: Entered putData(url=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata + ", callback=" + callback.name + ")");
+    else
+        if (debugPutData) console.log("DEBUG: Entered putData(url=" + url + ", data=" + JSON.stringify(data) + ", newpage=" + newpage + ", newdata=" + newdata + ", callback=null)");
     var loadNew = (newpage.length > 0);
     $.ajax({
         url: url,
@@ -948,22 +953,24 @@ function pulseReload(callback = null) { // Get pulses
         );
 }
 
+var debugProcessTapCalMode = true;
 function processTapCalPost(url, obj) {
-    toggleLoader("on");
+    //toggleLoader("on");
     // Handle tap calibration posts
 
     // Get form data
     tapNum = $('#flowmeter').val();
     ppu = $('#ppu').val();
-    $("tap" + tapnum + "ppu").val(parseInt(ppu));
-    console.log("DEBUG: Tap " + tapNum + " ppu: " + ppu);
+    // Set tap form to this value to save a round trip
+    $('input[name="tap' + tapnum + 'ppu"]').val(parseInt(ppu), 10);
 
     // Process put
     data = {
         tapnum: tapNum,
         ppu: ppu
     }
-    //putData(url, data, false, true);
-    putData(url, data);
-    resetFlowCalForm();
+    if (debugProcessTapCalMode) console.log("DEBUG: processTapCalPost() calling putData(" + url + ", " + JSON.stringify(data) + ")");
+    //putData(url, data);
+    //resetFlowCalForm();
+    return false;
 }

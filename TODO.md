@@ -5,3 +5,5 @@
 - Calibrations
     - [ ] setcalmode not turning off loader page after setting ppg
     - [ ] Not going into calibration mode
+- [ ] `dataHost` is locked to PIO `./data/` interpretation
+- [ ] `dataHost` help redirects to https://docs.kegcop.com/data/*.htm
