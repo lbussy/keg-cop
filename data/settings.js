@@ -39,9 +39,8 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
         clearCalibrate = false;
         resetFlowCalForm();
     }
-    var url = $(event.target).attr("href") // URL of activated tab
-    var hashLoc = url.substring(url.indexOf('#')); // Get hash
-    updateHelp(hashLoc); // Set context-sensitive help
+    var url = $(event.target).attr("href"); // URL of activated tab
+    updateHelp(url.substring(url.indexOf('#'))); // Set context-sensitive help
 });
 
 // Flowmeter Calibration Events
@@ -89,6 +88,10 @@ function finishLoad() { // Get page data
     populateConfig();
     populateFlow();
     pollComplete();
+    if (window.location.hash) {
+        var url = window.location.href; // URL of current page
+        updateHelp(url.substring(url.indexOf('#'))); // Set context-sensitive help
+    }
 }
 
 function repopulatePage(doSpinner = false) { // Reload data if we need it
@@ -318,7 +321,6 @@ function finishPage() { // Display page
 
 // PUT Handlers:
 
-var debugProcessPost = true;
 function processPost(obj) {
     posted = false;
     hashLoc = window.location.hash;
@@ -384,7 +386,6 @@ function processPost(obj) {
             processControllerPost(url, obj);
             break;
         case "#flowcal":
-            if (debugProcessPost) console.log("DEBUG: processPost() processTapCalPost(" + url + ", " + obj.name + ")");
             processTapCalPost(url, obj);
             break;
         default:
@@ -621,7 +622,6 @@ function processRPintsPost(url, obj) {
     putData(url, data);
 }
 
-var debugPutData = true;
 function putData(url, data, newpage = false, newdata = false, callback = null) {
     var loadNew = (newpage.length > 0);
     $.ajax({
@@ -635,7 +635,6 @@ function putData(url, data, newpage = false, newdata = false, callback = null) {
             settingsAlert.error("Settings update failed.");
         },
         complete: function (data) {
-            if (debugPutData) console.log("DEBUG: Completed putData()");
             if (loadNew) {
                 window.location.href = newpage;
             } else if (newdata) {
@@ -661,7 +660,7 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
 }
 
 function updateHelp(hashLoc) {
-    var url = "https://docs.kegcop.com/"
+    var url = "https://docs.kegcop.com"
 
     // Switch here for hashLoc
     switch (hashLoc) {
@@ -674,28 +673,28 @@ function updateHelp(hashLoc) {
         case "#tap6":
         case "#tap7":
         case "#tap8":
-            url = url + "en/latest/context/settings/taps/index.html";
+            url = url + "/en/latest/context/settings/taps/index.html";
             break;
         case "#tempcontrol":
-            url = url + "en/latest/context/settings/temperature/control/index.html";
+            url = url + "/en/latest/context/settings/temperature/control/index.html";
             break;
         case "#sensorcontrol":
-            url = url + "en/latest/context/settings/temperature/sensors/index.html";
+            url = url + "/en/latest/context/settings/temperature/sensors/index.html";
             break;
         case "#kegscreen":
-            url = url + "en/latest/context/settings/targets/kegscreen/index.html";
+            url = url + "/en/latest/context/settings/targets/kegscreen/index.html";
             break;
         case "#targeturl":
-            url = url + "en/latest/context/settings/targets/url/index.html";
+            url = url + "/en/latest/context/settings/targets/url/index.html";
             break;
         case "#rpints":
-            url = url + "en/latest/context/settings/targets/rpints/index.html";
+            url = url + "/en/latest/context/settings/targets/rpints/index.html";
             break;
         case "#controller":
-            url = url + "en/latest/context/settings/controller/index.html";
+            url = url + "/en/latest/context/settings/controller/index.html";
             break;
         case "#flowcal":
-            url = url + "en/latest/context/settings/advanced/calibrate/index.html";
+            url = url + "/en/latest/context/settings/advanced/calibrate/index.html";
             break;
         default:
             // Unknown hash location passed
@@ -762,22 +761,17 @@ function clickByVolume() {
     byVolume = true;
 }
 
-var debugDoFollowPulses = false;
 function followPulses() {
     if (doFollowPulse) {
-        if (debugDoFollowPulses) console.log("DEBUG: In followPulses() with doFollowPulses==true.");
         if (inCalMode) { // If we are already in calibration mode
-            if (debugDoFollowPulses) console.log("DEBUG: In followPulses() setting looping.");
             pulseReload(function callFunction() { // Reload pulses
                 setTimeout(followPulses, pulseReloadTimer);
             });
         } else { // We are not yet in calibration mode
-            if (debugDoFollowPulses) console.log("DEBUG: In followPulses() setting first time stuff.");
             var intervalID = window.setInterval(function () { // Poll every pulseReloadTimer/2 seconds
                 if (calSetting == false) { // Run only if we have not run it once
                     calSetting = true; // Make sure we only run this once
                     var selectedIndex = $('#flowmeter').prop('selectedIndex');
-                    if (debugDoFollowPulses) console.log("DEBUG: In followPulses() with doFollowPulses==true)");
                     toggleCalMode(true, selectedIndex, function (semaphore) {
                         if (semaphore == true) {
                             calSetting = false;
@@ -790,7 +784,6 @@ function followPulses() {
             }, pulseReloadTimer / 2);
         }
     } else {
-        if (debugDoFollowPulses) console.log("DEBUG: In followPulses() with doFollowPulses==false calling toggleCalMode(false, 0, function(" + semaphore + ")");
         toggleCalMode(false, 0, function (semaphore) {
             if (semaphore == true) {
                 calSetting = false;
@@ -801,17 +794,12 @@ function followPulses() {
     }
 }
 
-var debugtoggleCalMode = true;
 function toggleCalMode(inCal = false, meter, callback = null) {
     if (!dataHostCheckDone) {
         console.log
         setTimeout(toggleCalMode, 10);
         return;
     }
-    if (callback)
-        if (debugtoggleCalMode) console.log("DEBUG: Entered toggleCalMode(inCal=" + inCal + ", callback=null)");
-    else
-        if (debugtoggleCalMode) console.log("DEBUG: Entered toggleCalMode(inCal=" + inCal + ", callback=" + callback + ")");
     var data = {};
     var url = dataHost;
     while (url.endsWith("/")) {
@@ -827,7 +815,6 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     } else {
         url += "/api/v1/action/clearcalmode/";
     }
-    if (debugtoggleCalMode) console.log("DEBUG: toggleCalMode() calling " + url + ".");
     putData(url, data, false, false, function () {
         if (typeof callback == "function") {
             callback(true);
@@ -949,7 +936,6 @@ function pulseReload(callback = null) { // Get pulses
         );
 }
 
-var debugProcessTapCalMode = true;
 function processTapCalPost(url, obj) {
     // Handle tap calibration posts
 

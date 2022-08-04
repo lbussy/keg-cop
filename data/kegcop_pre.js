@@ -19,6 +19,8 @@ window.addEventListener("beforeunload", function (event) {
 });
 
 window.onclick = function (event) {
+    if (event.target.id == "noChange")
+        return; // Skip rewriting context help
     // Open a rewritten URL and return false to prevent default
     const newURL = cleanURL(event);
     if (newURL) {
