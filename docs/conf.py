@@ -34,7 +34,10 @@ author = u'Lee C. Bussy'
 
 # Get 0.0.0 version from latest Git tag
 tagcmd = "git describe --tags --abbrev=0"
-version = subprocess.check_output(tagcmd, shell=True).decode().strip()
+try:
+    version = subprocess.check_output(tagcmd, shell=True).decode().strip()
+except:
+    version = "0.0.0"
 
 # The short X.Y version
 version = version
