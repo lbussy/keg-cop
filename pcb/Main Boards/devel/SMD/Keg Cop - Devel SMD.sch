@@ -1363,13 +1363,13 @@ D32_NO-KEEPOUT removes the keepout area beneath the antenna on the D32 and provi
 <part name="C2" library="JBJLC" deviceset="CAP_SMD" device="0805" value="1.0μF"/>
 <part name="SOLENOID" library="JBJLC" deviceset="LED_0603" device="LED_SMD_0603"/>
 <part name="COOL" library="JBJLC" deviceset="LED_0603" device="LED_SMD_0603"/>
-<part name="R11" library="JBJLC" deviceset="RES_SMD" device="0805" value="2k2Ω"/>
+<part name="R11" library="JBJLC" deviceset="RES_SMD" device="0805" value="60.4Ω"/>
 <part name="KEG" library="JBJLC" deviceset="DS18B20Z" device=""/>
 <part name="LOWER" library="JBJLC" deviceset="DS18B20Z" device=""/>
 <part name="UPPER" library="JBJLC" deviceset="DS18B20Z" device=""/>
 <part name="TOWER" library="JBJLC" deviceset="DS18B20Z" device=""/>
 <part name="ROOM" library="JBJLC" deviceset="DS18B20Z" device=""/>
-<part name="R10" library="JBJLC" deviceset="RES_SMD" device="0805" value="2k2Ω"/>
+<part name="R10" library="JBJLC" deviceset="RES_SMD" device="0805" value="60.4Ω"/>
 <part name="R8" library="JBJLC" deviceset="RES_SMD" device="0805" value="2.2kΩ"/>
 <part name="R7" library="JBJLC" deviceset="RES_SMD" device="0805" value="2.2kΩ"/>
 <part name="R6" library="JBJLC" deviceset="RES_SMD" device="0805" value="2.2kΩ"/>
