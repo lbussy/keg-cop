@@ -81,6 +81,18 @@ $("input[type='reset']").closest('form').on('reset', function (event) { // Reset
     resetFlowCalForm();
 });
 
+// Tower Fan Control Events
+//
+// Handle click on enable/disable radio buttons
+$('input[type=radio][name=tcontrolenabled]').change(function() {
+    if (this.value == 'true') {
+        $( "#tsetpoint" ).prop( "disabled", false );
+    }
+    else if (this.value == 'false') {
+        $( "#tsetpoint" ).prop( "disabled", true );
+    }
+});
+
 function finishLoad() { // Get page data
     toggleCalMode(false);
     loadHash();
@@ -299,6 +311,7 @@ function doUnits() { // Change names on page according to units in place
         $('.caplong').text('Capacity in Gallons'); // Tap config pages
         $('.remlong').text('Remaining in Gallons'); // Tap config pages
         $('.setfarcel').text('Set point in °F'); // Temp control pages
+        $('.settfarcel').text('Tower set point in °F'); // Temp control pages
         $('.ppu').text('PPG'); // Flowmeter calibration pages
     } else {
         $('.setppu').text('Set PPL'); // Flow cal set button
@@ -309,6 +322,7 @@ function doUnits() { // Change names on page according to units in place
         $('.caplong').text('Capacity in Liters'); // Tap config pages
         $('.remlong').text('Remaining in Liters'); // Tap config pages
         $('.setfarcel').text('Set point in °C'); // Temp control pages
+        $('.settfarcel').text('Tower set point in °C'); // Temp control pages
         $('.ppu').text('PPL'); // Flowmeter calibration pages
     }
 }
