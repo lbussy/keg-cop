@@ -95,5 +95,6 @@ extern const size_t capacityPulseSerial;
 extern struct Devices device;
 extern const size_t capacityTempsSerial;
 extern struct Thermostat tstat;
+extern struct TowerFan tfan;
 
 #endif //_SERIALLOG_H

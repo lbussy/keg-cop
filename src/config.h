@@ -51,9 +51,9 @@ SOFTWARE. */
 //
 #ifndef LOG_LEVEL
 #ifdef _DEBUG_BUILD
-#define LOG_LEVEL LOG_LEVEL_VERBOSE       // All
+#define LOG_LEVEL LOG_LEVEL_VERBOSE // All
 #else
-#define LOG_LEVEL LOG_LEVEL_NOTICE        // Errors, warnings and notices
+#define LOG_LEVEL LOG_LEVEL_NOTICE // Errors, warnings and notices
 #endif
 // #define DISABLE_LOGGING
 // #define LOG_LEVEL LOG_LEVEL_SILENT     // No output
@@ -62,7 +62,7 @@ SOFTWARE. */
 // #define LOG_LEVEL LOG_LEVEL_WARNING    // Errors, and warnings
 // #define LOG_LEVEL LOG_LEVEL_NOTICE     // Errors, warnings and notices
 // #define LOG_LEVEL LOG_LEVEL_TRACE      // Errors, warnings, notices & traces
-// #define LOG_LEVEL LOG_LEVEL_VERBOSE     // All
+// #define LOG_LEVEL LOG_LEVEL_VERBOSE    // All
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -493,6 +493,16 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
+// Fan Delay - Default 10 seconds (in millis())
+//
+#ifndef FANDELAY
+#define FANDELAY 10 * 1000
+#endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
 // Cooling Delay - Default 5 mins (in millis())
 //
 #ifndef COOLDELAY
@@ -528,7 +538,7 @@ SOFTWARE. */
 #ifndef TEMPAVG
 #define TEMPAVG 6
 #endif
-//LOOP
+// LOOP
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////

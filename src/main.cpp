@@ -26,6 +26,7 @@ DoubleResetDetector *drd;
 
 Ticker pollSensorsTicker;
 Ticker doControlTicker;
+Ticker doFanControlTicker;
 Ticker logPourTicker;
 Ticker getThatVersionTicker;
 Ticker sendKSTempReportTicker;
@@ -72,9 +73,19 @@ void setup()
         doWiFi();
     }
 
-    // Set pin for relay
+    // Set pins for relays
+    pinMode(SOLENOID, OUTPUT);
+    if (config.temps.tfancontrolenable)
+    {
+         digitalWrite(SOLENOID, (config.temps.tfanonhigh) ? LOW : HIGH);
+    }
+    else
+    {
+        digitalWrite(SOLENOID, (config.copconfig.tapsolenoid) ? LOW : HIGH);     
+    }
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, (config.temps.coolonhigh) ? LOW : HIGH);
+
 
     setClock(); // Set NTP Time
 
@@ -84,7 +95,7 @@ void setup()
     else
         Log.error(F("Unable to load flowmeters." CR));
 
-     // Clear all tap calibration
+    // Clear all tap calibration
     config.copconfig.pouremulate = false;
     for (int i = 0; i < NUMTAPS; i++)
     {
@@ -93,13 +104,14 @@ void setup()
     saveFlowConfig();
     saveConfig();
 
-    execspiffs();    // Check for pending FILESYSTEM update
-    mdnssetup();     // Set up mDNS responder
-    initWebServer(); // Turn on web server
-    sensorInit();    // Initialize temperature sensors
-    startControl();  // Initialize temperature control
-    doVersionPoll(); // Get server version at startup
-    setupRPints();   // Set up MQTT
+    execspiffs();      // Check for pending FILESYSTEM update
+    mdnssetup();       // Set up mDNS responder
+    initWebServer();   // Turn on web server
+    sensorInit();      // Initialize temperature sensors
+    startControl();    // Initialize temperature control
+    startFanControl(); // Initialize fan control
+    doVersionPoll();   // Get server version at startup
+    setupRPints();     // Set up MQTT
 #ifdef _DEBUG_BUILD
     doUptime(true); // Uptime log start
 #endif
@@ -107,6 +119,7 @@ void setup()
     // Setup tickers
     pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                // Poll temperature sensors
     doControlTicker.attach(TEMPLOOP, controlLoop);                                // Update temperature control loop
+    doFanControlTicker.attach(TEMPLOOP, fanControlLoop);                          // Update fan control loop
     logPourTicker.attach(TAPLOOP, logFlow);                                       // Log pours
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                // Poll for server version
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);               // Send KegScreen Temp Report

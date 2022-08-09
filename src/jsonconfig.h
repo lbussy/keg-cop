@@ -31,7 +31,7 @@ SOFTWARE. */
 #include <FS.h>
 
 #define CAP_SER_CONF 2048
-#define CAP_DESER_CONF 2048
+#define CAP_DESER_CONF 3072
 
 struct ApConfig
 {
@@ -70,6 +70,9 @@ struct Temperatures
     bool coolonhigh;
     bool enabled[NUMSENSOR];
     float calibration[NUMSENSOR];
+    bool tfancontrolenable;
+	bool tfansetpoint;
+	bool tfanonhigh;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;

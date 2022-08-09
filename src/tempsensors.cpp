@@ -24,8 +24,8 @@ SOFTWARE. */
 
 const char *sensorName[NUMSENSOR] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
 int sensorPin[NUMSENSOR] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
-extern const size_t capacityTempsSerial = JSON_ARRAY_SIZE(5) + 5 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(7);
-extern const size_t capacityTempsDeserial = capacityTempsSerial + 370;
+extern const size_t capacityTempsSerial = 768;
+extern const size_t capacityTempsDeserial = 1024;
 
 Devices device;
 
