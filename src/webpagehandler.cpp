@@ -503,7 +503,7 @@ void setInfoPageHandlers()
         doc["coolonhigh"] = config.temps.coolonhigh;
 
         int numEnabled = 0;
-        char *sensorName[NUMSENSOR];
+        // char *sensorName[NUMSENSOR];
         double sensorAverage[NUMSENSOR];
 
         for (int i = 0; i < NUMSENSOR; i++)
