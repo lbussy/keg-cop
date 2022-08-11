@@ -13,9 +13,13 @@
         "tapsolenoid": true
     },
     "temps": {
+        "coolonhigh": false,
         "setpoint": 35,
         "controlpoint": 4,
         "controlenabled": true,
+        "tfancontrolenable": true,
+		"tfansetpoint": 38.0,
+        "tfanonhigh": false,
         "roomenabled": true,
         "room": 1,
         "towerenabled": true,

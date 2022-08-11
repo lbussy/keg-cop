@@ -57,7 +57,6 @@ static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
 
 #define kegscreenIsEnabled (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0')
 
-
 void CommonReportFields(JsonDocument &doc, ReportKey reportkey) {
     doc[KegscreenKeys::api] = apiKey;
     doc[KegscreenKeys::guid] = config.copconfig.guid;
@@ -179,6 +178,7 @@ bool sendCoolStateReport()
     bool retval = true;
     char guid[17];
     const ReportKey reportkey = KS_COOLSTATE;
+
     StaticJsonDocument<384> doc;
 
     if (!kegscreenIsEnabled) {
@@ -188,6 +188,8 @@ bool sendCoolStateReport()
 
     CommonReportFields(doc, reportkey);
     doc[KegscreenKeys::coolstate] = tstat.state;
+    // TODO:  
+    //doc[KegscreenKeys::coolstate] = tstat.state;
 
     String json;
     serializeJson(doc, json);
@@ -214,6 +216,10 @@ bool sendTempReport()
     doc[KegscreenKeys::setting] = config.temps.setpoint;
     doc[KegscreenKeys::status] = tstat.state;
     doc[KegscreenKeys::controlenabled] = config.temps.controlenabled;
+    doc[KegscreenKeys::coolonhigh] = config.temps.coolonhigh;
+    doc[KegscreenKeys::tfancontrolenable] = config.temps.tfancontrolenable;
+    doc[KegscreenKeys::tfansetpoint] = config.temps.tfansetpoint;
+    doc[KegscreenKeys::tfanstatus] = tfan.state;
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
@@ -221,8 +227,6 @@ bool sendTempReport()
         doc[KegscreenKeys::sensors][i][KegscreenKeys::value] = device.sensor[i].average;  // Always send in C
         doc[KegscreenKeys::sensors][i][KegscreenKeys::enabled] = config.temps.enabled[i];
     }
-    // String json;
-    // serializeJson(doc, json);
 
     return sendReport(reportkey, doc);
 }
@@ -232,7 +236,6 @@ bool sendReport(ReportKey thisKey, JsonDocument &doc) {
     serializeJson(doc, json);
     return sendReport(thisKey, json);
 }
-
 
 bool sendReport(ReportKey thisKey, const char * json) {
     if (reports[thisKey].readyState() == 0 || reports[thisKey].readyState() == 4)
