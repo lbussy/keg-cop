@@ -825,6 +825,11 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid when tower fan control is enabled." CR), name, value);
                 }
             }
+            else
+            {
+                Log.warning(F("Settings Update Error: [%s]:(%s) not valid when tower fan control is enabled." CR), name, value);
+            }
+
         }
         if (hostnamechanged)
         { // We reset hostname, process

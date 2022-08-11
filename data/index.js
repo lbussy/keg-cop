@@ -210,7 +210,6 @@ function populateTemp(callback = null) { // Get current temperature and state
                         }
                     }
 
-
                     // Set indicator button
                     switch (temps.status) {
                         case 0: // TSTAT_INACTIVE
