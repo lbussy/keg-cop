@@ -20,7 +20,7 @@ JSON Definition:
     "setting": 999.999,
     "status": 99,
     "controlenabled": false,
-    "tfancontrolenable": false,
+    "tfancontrolenabled": false,
     "tfansetpoint": 100,
     "tfanstate": 99,
     "tfanonhigh": true,
@@ -91,7 +91,7 @@ int controlpoint = doc["controlpoint"]; // 99
 float setting = doc["setting"]; // 999.999
 int status = doc["status"]; // 99
 bool controlenabled = doc["controlenabled"]; // false
-bool tfancontrolenable = doc["tfancontrolenable"]; // false
+bool tfancontrolenabled = doc["tfancontrolenabled"]; // false
 int tfansetpoint = doc["tfansetpoint"]; // 100
 
 for (JsonObject sensor : doc["sensors"].as<JsonArray>()) {
@@ -121,7 +121,7 @@ doc["controlpoint"] = 99;
 doc["setting"] = 999.999;
 doc["status"] = 99;
 doc["controlenabled"] = false;
-doc["tfancontrolenable"] = false;
+doc["tfancontrolenabled"] = false;
 doc["tfansetpoint"] = 100;
 
 JsonArray sensors = doc.createNestedArray("sensors");

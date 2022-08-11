@@ -71,8 +71,8 @@ struct Temperatures
     bool coolonhigh;
     bool enabled[NUMSENSOR];
     float calibration[NUMSENSOR];
-    bool tfancontrolenable;
-	bool tfansetpoint;
+    bool tfancontrolenabled;
+	float tfansetpoint;
 	bool tfanonhigh;
 
     void load(JsonObjectConst);

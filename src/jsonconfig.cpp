@@ -470,7 +470,7 @@ void Temperatures::save(JsonObject obj) const
     obj["controlpoint"] = controlpoint;
     obj["controlenabled"] = controlenabled;
     obj["coolonhigh"] = coolonhigh;
-    obj["tfancontrolenable"] = tfancontrolenable;
+    obj["tfancontrolenabled"] = tfancontrolenabled;
     obj["tfansetpoint"] = tfansetpoint;
     obj["tfanonhigh"] = tfanonhigh;
     obj["roomenabled"] = enabled[0];
@@ -529,14 +529,14 @@ void Temperatures::load(JsonObjectConst obj)
         coolonhigh = ch;
     }
 
-    if (obj["tfancontrolenable"].isNull())
+    if (obj["tfancontrolenabled"].isNull())
     {
-        tfancontrolenable = false;
+        tfancontrolenabled = false;
     }
     else
     {
-        bool te = obj["tfancontrolenable"];
-        tfancontrolenable = te;
+        bool te = obj["tfancontrolenabled"];
+        tfancontrolenabled = te;
     }
 
     if (obj["tfansetpoint"].isNull())
@@ -545,7 +545,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        float ts = obj["setpoint"];
+        float ts = obj["tfansetpoint"];
         tfansetpoint = ts;
     }
 

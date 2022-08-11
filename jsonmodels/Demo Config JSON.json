@@ -17,7 +17,7 @@
         "setpoint": 35,
         "controlpoint": 4,
         "controlenabled": true,
-        "tfancontrolenable": true,
+        "tfancontrolenabled": true,
 		"tfansetpoint": 38.0,
         "tfanonhigh": false,
         "roomenabled": true,

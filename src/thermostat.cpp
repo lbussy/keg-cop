@@ -147,7 +147,7 @@ void fanControlLoop()
     ThermostatState start = tfan.state;
 
     // If the assigned control point or fan control is disabled
-    if (!config.temps.enabled[1] || (!config.temps.tfancontrolenable))
+    if (!config.temps.enabled[1] || (!config.temps.tfancontrolenabled))
     {
         // If fan is on, turn off turn off fan
         if (tfan.cooling)
@@ -158,7 +158,7 @@ void fanControlLoop()
         }
 
         // Disable fan control and display
-        config.temps.tfancontrolenable = false;
+        config.temps.tfancontrolenabled = false;
         tfan.state = TSTAT_INACTIVE;
         return;
     }

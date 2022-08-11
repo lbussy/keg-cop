@@ -22,8 +22,6 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
-const char *sensorName[NUMSENSOR] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
-int sensorPin[NUMSENSOR] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
 extern const size_t capacityTempsSerial = 768;
 extern const size_t capacityTempsDeserial = 1024;
 

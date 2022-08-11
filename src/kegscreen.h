@@ -173,7 +173,7 @@ constexpr auto status = "status";
 constexpr auto controlenabled = "controlenabled";
 constexpr auto coolonhigh = "coolonhigh";
 
-constexpr auto tfancontrolenable = "tfancontrolenable";
+constexpr auto tfancontrolenabled = "tfancontrolenabled";
 constexpr auto tfansetpoint = "tfansetpoint";
 constexpr auto tfanstatus = "tfanstatus";
 
