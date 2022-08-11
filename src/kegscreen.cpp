@@ -188,8 +188,6 @@ bool sendCoolStateReport()
 
     CommonReportFields(doc, reportkey);
     doc[KegscreenKeys::coolstate] = tstat.state;
-    // TODO:  
-    //doc[KegscreenKeys::coolstate] = tstat.state;
 
     String json;
     serializeJson(doc, json);
