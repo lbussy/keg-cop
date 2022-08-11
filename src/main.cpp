@@ -86,6 +86,7 @@ void setup()
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, (config.temps.coolonhigh) ? LOW : HIGH);
 
+
     setClock(); // Set NTP Time
 
     // Initialize flowmeters before checking for FILESYSTEM update
