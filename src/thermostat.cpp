@@ -23,6 +23,7 @@ SOFTWARE. */
 #include "thermostat.h"
 
 Thermostat tstat;
+TowerFan tfan;
 
 void startControl()
 {
@@ -30,8 +31,16 @@ void startControl()
     tstat.lastOn = millis();
     tstat.cooling = false;
     tstat.state = TSTAT_UNKNOWN;
-    config.temps.controlenabled = config.temps.controlenabled;
     queueStateChange = false;
+}
+
+void startFanControl()
+{
+    tfan.lastOff = millis();
+    tfan.lastOn = millis();
+    tfan.cooling = false;
+    tfan.state = TSTAT_UNKNOWN;
+    queueFanStateChange = false;
 }
 
 void controlLoop()
@@ -126,6 +135,102 @@ void controlLoop()
     if (tstat.state != start)
     { // Log a state change to KegScreen
         queueStateChange = true;
+    }
+}
+
+void fanControlLoop()
+{
+    // TODO:  Change min/max times
+    unsigned long now = millis();
+    double setpoint;
+    double tempNow = device.sensor[1].average;
+    ThermostatState start = tfan.state;
+
+    // If the assigned control point or fan control is disabled
+    if (!config.temps.enabled[1] || (!config.temps.tfancontrolenable))
+    {
+        // If fan is on, turn off turn off fan
+        if (tfan.cooling)
+        {
+            tfan.lastOff = now;
+            digitalWrite(SOLENOID, (config.temps.tfanonhigh)? LOW: HIGH);
+            tfan.cooling = false;
+        }
+
+        // Disable fan control and display
+        config.temps.tfancontrolenable = false;
+        tfan.state = TSTAT_INACTIVE;
+        return;
+    }
+
+    if (config.copconfig.imperial)
+    {
+        // Sensors and control work in C, convert setpoint
+        setpoint = convertFtoC(config.temps.tfansetpoint);
+    }
+    else
+    {
+        // Sensors and control work in C, no conversion needed
+        setpoint = config.temps.tfansetpoint;
+    }
+
+    if (tempNow > setpoint)
+    {
+        // Calling for fan
+        unsigned long wait = now - tfan.lastOff;
+        if (!tfan.cooling && (wait >= FANDELAY))
+        {
+            // Fan not yet on, no delay, turn on fan relay
+            tfan.lastOn = now;
+            digitalWrite(SOLENOID, (config.temps.tfanonhigh)? HIGH: LOW);
+            tfan.cooling = true;
+            tfan.state = TSTAT_COOL_BEGIN;
+        }
+        else if (!tfan.cooling && (wait <= FANDELAY))
+        {
+            // Fan not on, delay, waiting to turn on fan
+            tfan.state = TSTAT_COOL_MINOFF;
+        }
+        else
+        {
+            // Fan on
+            tfan.state = TSTAT_COOL_ACTIVE;
+        }
+    }
+    else if (tempNow <= setpoint)
+    {
+        // Not calling for fan
+        if (tfan.cooling) // Still running
+        {
+            int runtime = now - tfan.lastOn;
+            if (runtime >= MINON)
+            {
+                // Turn off cooling
+                tfan.lastOff = now;
+                digitalWrite(SOLENOID, (config.temps.tfanonhigh)? LOW: HIGH);
+                tfan.cooling = false;
+                tfan.state = TSTAT_OFF_END;
+            }
+            else if (runtime <= MINON)
+            {
+                // Waiting for minimum on time
+                tfan.state = TSTAT_OFF_MINON;
+            }
+        }
+        else // Not running
+        {
+            // Inactive
+            tfan.state = TSTAT_OFF_INACTIVE;
+        }
+    }
+    else
+    {
+        tfan.state = TSTAT_UNKNOWN;
+    }
+
+    if (tfan.state != start)
+    { // Log a state change to KegScreen
+        queueFanStateChange = true;
     }
 }
 
@@ -227,6 +332,108 @@ void tstatReport()
 
     case TSTAT_UNKNOWN:
         Log.verbose(F("[TSTAT_UNKNOWN] Thermostat is in an unknown state." CR));
+        break;
+    }
+}
+
+void tfanReport()
+{ // For thermostat state messages debugging
+    unsigned long now = millis();
+    char tempFormat[1];
+    double setpoint = config.temps.setpoint;
+    double tempNow;
+    double wait = (double)(now - tfan.lastOff) / 1000;
+    double runtime = (double)(now - tfan.lastOn) / 1000;
+    double lastontime = (double)(now - tfan.lastOn) / 1000;
+    double lastofftime = (double)(now - tfan.lastOff) / 1000;
+    if (config.copconfig.imperial)
+    {
+        strlcpy(tempFormat, "F", sizeof(tempFormat));
+        tempNow = convertCtoF(device.sensor[config.temps.controlpoint].average);
+    }
+    else
+    {
+        strlcpy(tempFormat, "C", sizeof(tempFormat));
+        tempNow = device.sensor[config.temps.controlpoint].average;
+    }
+
+    switch (tfan.state)
+    {
+    case TSTAT_INACTIVE:
+        Log.verbose(F("[TSTAT_INACTIVE] Fan is disabled." CR));
+        break;
+
+    case TSTAT_COOL_BEGIN:
+        Log.verbose(F("[TSTAT_COOL_BEGIN] Fan is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
+                    tfan.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    lastofftime,
+                    runtime);
+        break;
+
+    case TSTAT_COOL_MINOFF:
+        Log.verbose(F("[TSTAT_COOL_MINOFF] Fan is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, wait time has been %D seconds." CR),
+                    tfan.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    lastofftime,
+                    wait);
+        break;
+
+    case TSTAT_COOL_ACTIVE:
+        Log.verbose(F("[TSTAT_COOL_ACTIVE] Fan is %T, control point %D°%s, setpoint %D°%s. Run started %D seconds ago, runnning for %D seconds." CR),
+                    tfan.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    runtime);
+        break;
+
+    case TSTAT_OFF_END:
+        Log.verbose(F("[TSTAT_OFF_END] Fan is %T, control point %D°%s, setpoint,  %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
+                    tfan.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    wait);
+        break;
+
+    case TSTAT_OFF_MINON:
+        Log.verbose(F("[TSTAT_OFF_MINON] Fan is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
+                    tfan.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    lastofftime,
+                    runtime);
+        break;
+
+    case TSTAT_OFF_INACTIVE:
+        Log.verbose(F("[TSTAT_OFF_INACTIVE] Fan is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
+                    tfan.cooling,
+                    tempNow,
+                    tempFormat,
+                    setpoint,
+                    tempFormat,
+                    lastontime,
+                    lastofftime);
+        break;
+
+    case TSTAT_UNKNOWN:
+        Log.verbose(F("[TSTAT_UNKNOWN] Fan is in an unknown state." CR));
         break;
     }
 }

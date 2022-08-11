@@ -22,8 +22,8 @@
     <meta name="theme-color" content="#ffffff">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <link rel="stylesheet" href="kegcop.css">
+    <script src="https://kit.fontawesome.com/e51821420e.js" crossorigin="anonymous"></script>
     <script src="kegcop_pre.js"></script>
 </head>
 
@@ -1411,7 +1411,7 @@
                                             </label>
                                         </div>
                                         <div class="row form-group">
-                                            <label for="controlenabled" class="col-form-label" data-toggle="tooltip"
+                                            <label for="coolonhigh" class="col-form-label" data-toggle="tooltip"
                                                 title="Invert cooling control pin (logical pin high == cooling on)">
                                                 Invert Cooling Control
                                             </label>
@@ -1483,6 +1483,76 @@
                                     </div>
 
                                 </div>
+
+                                <div class="row col-12"> <!-- Tower Fan Control -->
+                                    <div class="col-3">
+                                        <div class="row form-group">
+                                            <label for="tsetpoint" class="col-form-label" data-toggle="tooltip"
+                                                title="Enter the temperature setpoint in your selected units (&#x2109; or &#x2103;)">
+                                                <span class="settfarcel">Tower Fan Set Point</span>
+                                            </label>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label for="tcoolonhigh" class="col-form-label" data-toggle="tooltip"
+                                                title="Invert tower fan control pin (logical pin high == cooling on)">
+                                                Invert Tower Fan Control
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-5">
+                                        <div class="row form-group">
+                                            <input type="number" class="form-control" name="tsetpoint" id="tsetpoint" min="0" max="80"
+                                                step=".1" placeholder="40">
+                                        </div>
+                                        <div class="row form-group">
+                                            <fieldset class="form-group">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-sm-3">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Fan pin normal (flow on pin low)">
+                                                                <input type="radio" class="form-check-input" name="tfanonhigh" id="tfanonhigh"
+                                                                value="false">
+                                                                Normal
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Invert fan control pin (flow on pin high)">
+                                                                <input type="radio" class="form-check-input" name="tfanonhigh" id="tfanonhigh"
+                                                                value="true">
+                                                                Inverted
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Tower fan control control enabled">
+                                                            <input type="radio" class="form-check-input" name="tcontrolenabled" id="tcontrolenabled"
+                                                            value="true">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Tower fan control disabled">
+                                                            <input type="radio" class="form-check-input" name="tcontrolenabled" id="tcontrolenabled"
+                                                            value="false">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div> <!-- Tower Fan Control -->
 
                                 <div class="row col-sm-12 justify-content-center">
                                     <button class="btn btn-primary" id="submitSettings"
@@ -1984,7 +2054,7 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Calibrate by weight">
-                                                            <input type="radio" class="form-check-input" name="calbyweight" id="calbyweight"
+                                                            <input type="radio" class="form-check-input" name="calbyvolume" id="calbyweight"
                                                                 value="false">
                                                             Weight
                                                         </label>

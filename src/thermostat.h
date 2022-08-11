@@ -49,12 +49,25 @@ struct Thermostat
     unsigned long lastOn;  // Timestamp for last on
 };
 
+struct TowerFan
+{
+    bool control;          // Turn on/off temp control
+    ThermostatState state; // Holds return value from control
+    bool cooling;          // Cooling state
+    unsigned long lastOff; // Timestamp for last off
+    unsigned long lastOn;  // Timestamp for last on
+};
+
 void startControl();
 void controlLoop();
+void startFanControl();
+void fanControlLoop();
 void tstatReport();
+void tfanReport();
 
 extern struct Config config;
 extern struct Devices device;
-extern bool __attribute__((unused)) queueStateChange; // Store pending state changes
+extern bool __attribute__((unused)) queueStateChange;    // Store pending state changes
+extern bool __attribute__((unused)) queueFanStateChange; // Store pending fan state changes
 
 #endif // _THERMOSTAT_H

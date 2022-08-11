@@ -143,7 +143,7 @@ extern struct Config config;
 extern struct Flowmeter flow;
 extern struct Devices device;
 extern struct Thermostat tstat;
-
+extern struct TowerFan tfan;
 
 /**
  * \brief Strings used for JSON keys
@@ -171,8 +171,11 @@ constexpr auto controlpoint = "controlpoint";
 constexpr auto setting = "setting";
 constexpr auto status = "status";
 constexpr auto controlenabled = "controlenabled";
+constexpr auto coolonhigh = "coolonhigh";
 
-
+constexpr auto tfancontrolenable = "tfancontrolenable";
+constexpr auto tfansetpoint = "tfansetpoint";
+constexpr auto tfanstatus = "tfanstatus";
 
 constexpr auto sensors = "sensors";
 constexpr auto value = "value";
