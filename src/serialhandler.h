@@ -43,8 +43,6 @@ SOFTWARE. */
 // Basic Serial handlers
 void serial();
 void toggleSerialCompat(bool);
-void togglePourEmulation(bool);
-void handlePourEmulateCommands();
 void printTimestamp(Print *_logOutput);
 void serialLoop();
 
