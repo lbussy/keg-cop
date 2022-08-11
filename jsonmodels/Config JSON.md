@@ -30,7 +30,7 @@ JSON Definition:
 		"setpoint": 100,
 		"controlpoint": 99,
 		"controlenabled": false,
-		"tfancontrolenable": false,
+		"tfancontrolenabled": false,
 		"tfansetpoint": 100,
     	"tfanonhigh": false,
 		"roomenable": false,
@@ -115,7 +115,7 @@ bool temps_coolonhigh = temps["coolonhigh"]; // true
 int temps_setpoint = temps["setpoint"]; // 100
 int temps_controlpoint = temps["controlpoint"]; // 99
 bool temps_controlenabled = temps["controlenabled"]; // false
-bool temps_tfancontrolenable = temps["tfancontrolenable"]; // false
+bool temps_tfancontrolenable = temps["tfancontrolenabled"]; // false
 int temps_tfansetpoint = temps["tfansetpoint"]; // 100
 bool temps_roomenable = temps["roomenable"]; // false
 float temps_roomcal = temps["roomcal"]; // 99.99
@@ -179,7 +179,7 @@ temps["coolonhigh"] = true;
 temps["setpoint"] = 100;
 temps["controlpoint"] = 99;
 temps["controlenabled"] = false;
-temps["tfancontrolenable"] = false;
+temps["tfancontrolenabled"] = false;
 temps["tfansetpoint"] = 100;
 temps["roomenable"] = false;
 temps["roomcal"] = 99.99;

@@ -75,7 +75,7 @@ void setup()
 
     // Set pins for relays
     pinMode(SOLENOID, OUTPUT);
-    if (config.temps.tfancontrolenable)
+    if (config.temps.tfancontrolenabled)
     {
          digitalWrite(SOLENOID, (config.temps.tfanonhigh) ? LOW : HIGH);
     }

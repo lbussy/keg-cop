@@ -188,8 +188,6 @@ bool sendCoolStateReport()
 
     CommonReportFields(doc, reportkey);
     doc[KegscreenKeys::coolstate] = tstat.state;
-    // TODO:  
-    //doc[KegscreenKeys::coolstate] = tstat.state;
 
     String json;
     serializeJson(doc, json);
@@ -217,7 +215,7 @@ bool sendTempReport()
     doc[KegscreenKeys::status] = tstat.state;
     doc[KegscreenKeys::controlenabled] = config.temps.controlenabled;
     doc[KegscreenKeys::coolonhigh] = config.temps.coolonhigh;
-    doc[KegscreenKeys::tfancontrolenable] = config.temps.tfancontrolenable;
+    doc[KegscreenKeys::tfancontrolenabled] = config.temps.tfancontrolenabled;
     doc[KegscreenKeys::tfansetpoint] = config.temps.tfansetpoint;
     doc[KegscreenKeys::tfanstatus] = tfan.state;
 

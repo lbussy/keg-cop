@@ -84,14 +84,14 @@ $("input[type='reset']").closest('form').on('reset', function (event) { // Reset
 // Tower Fan Control Events
 //
 // Handle click on enable/disable radio buttons
-$('input[type=radio][name=tcontrolenabled]').change(function () {
+$('input[type=radio][name=tfancontrolenabled]').change(function () {
     if (this.value == 'true') {
-        $("#tsetpoint").prop("disabled", false);                // Enable radio control
+        $("#tfansetpoint").prop("disabled", false);                // Enable radio control
         $('input[name=tapsolenoid]').attr("disabled", true);    // Disable Solenoid control
         $('input[name=tfanonhigh]').attr("disabled", false);    // Eable invert control
     }
     else if (this.value == 'false') {
-        $("#tsetpoint").prop("disabled", true);                 // Enable radio control
+        $("#tfansetpoint").prop("disabled", true);                 // Enable radio control
         $('input[name=tapsolenoid]').attr("disabled", false);   // Disable Solenoid control
         $('input[name=tfanonhigh]').attr("disabled", true);     // Eable invert control
     }
@@ -217,21 +217,24 @@ function populateConfig(callback = null) { // Get configuration settings
                 }
 
                 try { // DEBUG: TODO:  Remove the "oops I crapped myself" handler here
-                    if (config.temps.tfancontrolenable) {
-                        $('input:radio[name="tcontrolenabled"]')[0].checked = true; // Check enabled radio
+                    if (config.temps.tfancontrolenabled) {
+                        $('input:radio[name="tfancontrolenabled"]')[0].checked = true; // Check enabled radio
                         $('input[name=tapsolenoid]').attr("disabled", true);        // Disable Solenoid control
-                        $("#tsetpoint").prop("disabled", false);                    // Enable radio control
+                        $("#tfansetpoint").prop("disabled", false);                    // Enable setpoint control
+                        $("#tfansetpoint").val(config.temps.tfansetpoint);             // Populate setpoint
                         $('input[name=tfanonhigh]').attr("disabled", false);        // Eable invert control
                     } else {
-                        $('input:radio[name="tcontrolenabled"]')[0].checked = false;    // Check enabled radio
+                        $('input:radio[name="tfancontrolenabled"]')[1].checked = true;    // Check enabled radio
                         $('input[name=tapsolenoid]').attr("disabled", false);           // Disable Solenoid control
-                        $("#tsetpoint").prop("disabled", true);                         // Enable radio control
+                        $("#tfansetpoint").prop("disabled", true);                         // Enable setpoint control
+                        $("#tfansetpoint").val(config.temps.tfansetpoint);             // Populate setpoint
                         $('input[name=tfanonhigh]').attr("disabled", true);             // Eanble invert control
                     }
                 } catch {
-                    $('input:radio[name="tcontrolenabled"]')[0].checked = false;    // Check enabled radio
+                    console.log("DEBUG: Shit myself.");
+                    $('input:radio[name="tfancontrolenabled"]')[0].checked = false;    // Check enabled radio
                     $('input[name=tapsolenoid]').attr("disabled", false);           // Disable Solenoid control
-                    $("#tsetpoint").prop("disabled", true);                         // Enable radio control
+                    $("#tfansetpoint").prop("disabled", true);                         // Enable setpoint control
                     $('input[name=tfanonhigh]').attr("disabled", true);             // Eanble invert control
                 }
 
@@ -244,7 +247,7 @@ function populateConfig(callback = null) { // Get configuration settings
                 } catch {
                     $('input:radio[name="tfanonhigh"]')[0].checked = true;      // Check enabled radio
                 }
- 
+
 
                 if (config.copconfig.tapsolenoid) {
                     $('input:radio[name="tapsolenoid"]')[0].checked = true;
@@ -553,15 +556,21 @@ function processTempControlPost(url, obj) {
     var $form = $(obj),
         setpoint = $form.find("input[name='setpoint']").val(),
         controlpoint = $form.find("select[name='controlpoint']").val(),
-        controlenabled = $form.find("input[name='controlenabled']:checked").val();
-    coolonhigh = $form.find("input[name='coolonhigh']:checked").val();
+        controlenabled = $form.find("input[name='controlenabled']:checked").val(),
+        coolonhigh = $form.find("input[name='coolonhigh']:checked").val(),
+        tfancontrolenabled = $form.find("input[name='tfancontrolenabled']:checked").val(),
+        tfansetpoint = $form.find("input[name='tfansetpoint']").val(),
+        tfanonhigh = $form.find("input[name='tfanonhigh']:checked").val()
 
     // Process put
     data = {
         setpoint: setpoint,
         controlpoint: controlpoint,
         controlenabled: controlenabled,
-        coolonhigh: coolonhigh
+        coolonhigh: coolonhigh,
+        tfancontrolenabled: tfancontrolenabled,
+        tfansetpoint: tfansetpoint,
+        tfanonhigh: tfanonhigh
     }
     putData(url, data);
 }

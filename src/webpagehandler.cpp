@@ -501,7 +501,7 @@ void setInfoPageHandlers()
         doc["status"] = tstat.state;
         doc["controlenabled"] = config.temps.enabled[config.temps.controlpoint];
         doc["coolonhigh"] = config.temps.coolonhigh;
-        doc["tfancontrolenable"] = config.temps.tfancontrolenable;
+        doc["tfancontrolenabled"] = config.temps.tfancontrolenabled;
         doc["tfansetpoint"] = config.temps.tfansetpoint;
         doc["tfanstate"] = tfan.state;
 
@@ -784,9 +784,9 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (!config.temps.tfancontrolenable)
+            if (strcmp(name, "tapsolenoid") == 0)
             {
-                if (strcmp(name, "tapsolenoid") == 0) // Set active
+                if (config.temps.tfancontrolenabled) // Set active
                 {
                     if (strcmp(value, "energized") == 0)
                     {
@@ -808,12 +808,11 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                         Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                     }
                 }
+                else
+                {
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid when tower fan control is enabled." CR), name, value);
+                }
             }
-            else
-            {
-                Log.warning(F("Settings Update Error: [%s]:(%s) not valid when tower fan control is enabled." CR), name, value);
-            }
-
         }
         if (hostnamechanged)
         { // We reset hostname, process
@@ -856,7 +855,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Sensor settings
             //
@@ -939,19 +938,19 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "tfancontrolenable") == 0) // Enable tower fan control
+            if (strcmp(name, "tfancontrolenabled") == 0) // Enable tower fan control
             {
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                    config.temps.tfancontrolenable = true;
+                    config.temps.tfancontrolenabled = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                    config.temps.tfancontrolenable = false;
+                    config.temps.tfancontrolenabled = false;
                 }
                 else
                 {

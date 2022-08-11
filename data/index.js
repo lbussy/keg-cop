@@ -166,7 +166,7 @@ function populateTemp(callback = null) { // Get current temperature and state
                         $('#tempFormat').html("&#x2103;");
                     }
 
-                    if (temps.tfancontrolenable) {
+                    if (temps.tfancontrolenabled) {
                         // Set tower fan indicator
                         switch (temps.tfanstate) {
                             case 0: // TSTAT_INACTIVE
