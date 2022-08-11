@@ -84,6 +84,8 @@ void setup()
     else
         Log.error(F("Unable to load flowmeters." CR));
 
+    // Clear temperature sensor emulation
+    config.copconfig.tempemulate = false;
      // Clear all tap calibration
     config.copconfig.pouremulate = false;
     for (int i = 0; i < NUMTAPS; i++)

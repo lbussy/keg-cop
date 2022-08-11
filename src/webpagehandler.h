@@ -46,13 +46,6 @@ SOFTWARE. */
 #include <ESPAsyncWebServer.h>
 #include <Arduino.h>
 
-enum HANDLER_STATE
-{
-    NOT_PROCCESSED = -1,
-    FAIL_PROCESS,
-    PROCESSED
-};
-
 void initWebServer();
 void setRegPageHandlers();
 void setAPIPageHandlers();
@@ -61,6 +54,13 @@ void setInfoPageHandlers();
 void setConfigurationPageHandlers();
 void setEditor();
 void stopWebServer();
+
+enum HANDLER_STATE
+{
+    NOT_PROCCESSED = -1,
+    FAIL_PROCESS,
+    PROCESSED
+};
 
 HANDLER_STATE handleTapPost(AsyncWebServerRequest *);
 HANDLER_STATE handleTapCal(AsyncWebServerRequest *);
