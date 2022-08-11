@@ -343,6 +343,7 @@ void CopConfig::save(JsonObject obj) const
     obj["imperial"] = imperial;
     obj["tapsolenoid"] = tapsolenoid;
     obj["pouremulate"] = pouremulate;
+    obj["tempemulate"] = tempemulate;
 }
 
 void CopConfig::load(JsonObjectConst obj)
@@ -450,6 +451,16 @@ void CopConfig::load(JsonObjectConst obj)
     {
         bool em = obj["pouremulate"];
         pouremulate = em;
+    }
+
+    if (obj["tempemulate"].isNull())
+    {
+        tempemulate = false;
+    }
+    else
+    {
+        bool te = obj["tempemulate"];
+        tempemulate = te;
     }
 }
 

@@ -506,7 +506,7 @@ void setInfoPageHandlers()
         doc["tfanstate"] = tfan.state;
 
         int numEnabled = 0;
-        char *sensorName[NUMSENSOR];
+        // char *sensorName[NUMSENSOR];
         double sensorAverage[NUMSENSOR];
 
         for (int i = 0; i < NUMSENSOR; i++)

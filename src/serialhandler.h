@@ -30,6 +30,7 @@ SOFTWARE. */
 #include "version.h"
 #include "thatVersion.h"
 #include "resetreasons.h"
+#include "tempsensors.h"
 #include <ArduinoLog.h>
 #include <WiFiUdp.h>
 #include <ArduinoJson.h>
@@ -39,12 +40,17 @@ SOFTWARE. */
 #include <esptelnet.h>
 #endif
 
+// Basic Serial handlers
 void serial();
 void toggleSerialCompat(bool);
-void togglePourEmulation(bool);
-void handlePourEmulateCommands();
 void printTimestamp(Print *_logOutput);
 void serialLoop();
+
+// Debug Commands
+void togglePourEmulation(bool);
+void handlePourEmulateCommands();
+void toggleTempEmulation(bool enable);
+void handleTempEmulateCommands();
 
 // Print outputs
 size_t printChar(bool, const char *);

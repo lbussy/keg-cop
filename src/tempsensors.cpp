@@ -59,6 +59,11 @@ void sensorReInit()
 
 void pollTemps()
 {
+    if (config.copconfig.tempemulate == true)
+    {
+        // Skip polling if we are emulating temps
+        return;
+    }
     for (int i = 0; i < NUMSENSOR; i++)
     {
         device.sensor[i].value = getTempC(device.sensor[i].pin);
@@ -112,4 +117,18 @@ double getTempC(uint8_t pin)
         retVal = sensor.getTempC();
     }
     return retVal;
+}
+
+void logTempEmulation(int sensor, double temp)
+{
+    if (config.copconfig.imperial)
+    { // We store values in C
+        temp = convertFtoC(temp);
+    }
+    device.sensor[sensor].buffer.clear();
+    // Calibration: Values will be stored corrected
+    device.sensor[sensor].value = temp + device.sensor[sensor].calibration;
+    // Push to buffer
+    device.sensor[sensor].buffer.push(device.sensor[sensor].value);
+    device.sensor[sensor].average = temp;
 }
