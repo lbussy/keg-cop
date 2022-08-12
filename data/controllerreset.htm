@@ -23,17 +23,15 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="loader.css">
-    <script src="devServer.js"></script>
-    <script src="loader.js"></script>
+    <link rel="stylesheet" href="kegcop.css">
+    <script src="kegcop_pre.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="index">
+            <a class="navbar-brand" href="/index/">
                 <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
@@ -44,22 +42,21 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index">Home</a>
+                        <a class="nav-link" id="home" href="/index/">Home</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="settings">Settings <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/settings/">Settings <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="help">Help</a>
+                        <a class="nav-link" href="/help/">Help</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about">About</a>
+                        <a class="nav-link" href="/about/">About</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="navbar-brand nav-link active" target="_blank"
-                            href="https://docs.kegcop.com/en/latest/context/settings/advanced/reset/index.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/advanced/reset/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -68,8 +65,14 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div class="container" id="settingsapp">
-            <!-- Container -->
+        <div id="settingsAlert_placeholder"></div>
+        <div id="flowAlert_placeholder"></div>
+        <div id="tempAlert_placeholder"></div>
+        <div id="configAlert_placeholder"></div>
+
+        <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
+
+        <div class="container" id="settingsapp"> <!-- Container -->
 
             <div class="card border-dark mb-3">
 
@@ -79,9 +82,7 @@
                 </div>
                 <div class="card-body" id="message">
                     <p class="card-text">
-                        Your Keg Cop's controller is being reset and will return momentarily. You will be redirected to
-                        the home page when
-                        that is complete.
+                        Please hold.
                     </p>
                 </div>
             </div> <!-- Controller Reset Information -->
@@ -106,69 +107,8 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
 
-    <script type="text/javascript">
-        var okToReset = false;
-        // Attach the event after the page loads
-        if (window.addEventListener)
-            window.addEventListener("load", loadPage, false);
-        else if (window.attachEvent)
-            window.attachEvent("onload", loadPage);
-        else window.onload = loadPage;
-
-        function loadPage() { // Make sure the page is 100% loaded
-            if (document.readyState === 'ready' || document.readyState === 'complete') {
-                doResetSignal();
-            } else {
-                document.onreadystatechange = function () {
-                    if (document.readyState == "complete") {
-                        doResetSignal();
-                    }
-                }
-            }
-        }
-
-        function doResetSignal() {
-            $.ajax({
-                url: '/api/v1/action/reset/',
-                type: 'put',
-                success: function () {
-                    myVar = setTimeout(watchReset, 5000);
-                },
-                fail: function () {
-                    $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Failed; Redirect Pending</h4>");
-                    $("#message").replaceWith("<p class='card-body'>The controller reset failed. You will be redirected momentarily.</p>");
-                    setTimeout(function () { window.location.href = "index"; }, 5000);
-                }
-            });
-        }
-
-        function watchReset() {
-            // Wait for restart to complete
-            var intervalID = window.setInterval(function () { // Poll every 5 seconds
-                checkSemaphore(function (semaphore) {
-                    didreset = semaphore;
-                    if (didreset == true) {
-                        // Reset is complete
-                        window.clearInterval(intervalID);
-                        $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Complete; Redirect Pending</h4>");
-                        $("#message").replaceWith("<p class='card-body'>The controller reset is complete. You will be redirected momentarily.</p>");
-                        setTimeout(function () { window.location.href = "index"; }, 5000);
-                    }
-                });
-            }, 5000);
-        }
-
-        function checkSemaphore(callback) { // Check to see if the update is complete
-            var jqxhr = $.get("api/v1/action/ping")
-                .done(function (data) {
-                    callback(true);
-                })
-                .fail(function () {
-                    // This will fail while controller resets
-                    callback(false);
-                });
-        }
-    </script>
+    <script src="kegcop_post.js"></script>
+    <script src="controllerreset.js"></script>
 
 </body>
 

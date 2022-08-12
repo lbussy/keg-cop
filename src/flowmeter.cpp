@@ -156,7 +156,7 @@ void logFlow()
                     queuePulseReport[i] = pulseCount; // Queue upstream pulse report
                     config.taplistio.update = true;   // Queue TIO report
                     saveConfig();
-                    // Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                 }
             }
             else
@@ -167,9 +167,14 @@ void logFlow()
         }
         else
         {
-            Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CR), pulse[i], i, flow.taps[i].pin);
+            // Log.verbose(F("Calibrating: Accumulated %d pulses from tap %d on pin %d." CR), pulse[i], i, flow.taps[i].pin);
         }
     }
+}
+
+void logFlow(int tapNum, int pulses)
+{ // Allow emulating pulses from calibration debug menu (serial)
+    pulse[tapNum] = pulse[tapNum] + pulses;
 }
 
 bool isSmallPour(unsigned int count, int tap)

@@ -1,4 +1,12 @@
-// Common file for AJAX errors
+// Common functions requiring jQuery
+
+// Turn off tooltips on radio button change {" "}
+$('input[type=radio]').change(function () {
+    $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
+});
+
+// AJAX errors
+// Used in index, settings, temps
 
 tempAlert = function () { }
 tempAlert.warning = function (message) {

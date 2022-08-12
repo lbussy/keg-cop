@@ -23,19 +23,17 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="loader.css">
-    <script src="devServer.js"></script>
-    <script src="loader.js"></script>
+    <link rel="stylesheet" href="kegcop.css">
+    <script src="kegcop_pre.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
 
-    <div class="loader" id="loader"></div>
+    <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="index">
+            <a class="navbar-brand" href="/index/">
                 <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
@@ -46,25 +44,24 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index">Home</a>
+                        <a class="nav-link" id="home" href="/index/">Home</a>
                     </li>
                     <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
-                        <a class="nav-link" href="temps">Temperatures</a>
+                        <a class="nav-link" href="/temps/">Temperatures</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="settings">Settings <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/settings/">Settings <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="help">Help</a>
+                        <a class="nav-link" href="/help/">Help</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about">About</a>
+                        <a class="nav-link" href="/about/">About</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a id="contexthelp" name="contexthelp" class="navbar-brand nav-link active" target="_blank"
-                        href="https://docs.kegcop.com/en/latest/context/settings/index.html">?</a>
+                        <a id="noChange" id="contexthelp" name="contexthelp" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -126,7 +123,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#flowcal">Calibrate Flowmeters</a>
                             <a class="dropdown-item" data-toggle="tab" href="#reset">Reset Controller</a>
-                            <a class="dropdown-item" href="ota1">Update Application</a>
+                            <a class="dropdown-item" href="/ota1/">Update Application</a>
                             <a class="dropdown-item" data-toggle="tab" href="#wifi">Reset WiFi</a>
                         </div>
                     </li>
@@ -154,7 +151,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap0" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap0" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="0">
 
@@ -275,7 +272,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap1" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap1" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="1">
 
@@ -396,7 +393,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap2" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap2" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="2">
 
@@ -517,7 +514,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap3" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap3" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="3">
 
@@ -638,7 +635,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap4" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap4" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="4">
 
@@ -759,7 +756,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap5" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap5" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="5">
 
@@ -880,7 +877,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap6" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap6" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="6">
 
@@ -1001,7 +998,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="tap7" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap7" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="7">
 
@@ -1118,11 +1115,11 @@
                     <div class="tab-pane fade" id="tap8"> <!-- Tap 8 Tab -->
 
                         <div class="card-header">
-                            <h4 class="card-title">Tap 8 Configuration</h4>
+                            <h4 class="card-title">Tap 9 Configuration</h4>
                         </div>
                         <div class="card-body">
 
-                            <form id="tap8" action="api/v1/config/taps" method="PUT" onsubmit="return processPost(this);">
+                            <form id="tap8" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                 <input type="hidden" id="tapnum" name="tapnum" value="7">
 
@@ -1243,7 +1240,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="controller" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
+                            <form id="controller" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="hostname" class="col-sm-2 col-form-label"
@@ -1396,7 +1393,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form class="form-group" id="tempcontrol" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
+                            <form class="form-group" id="tempcontrol" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="row col-12">
 
@@ -1505,7 +1502,7 @@
                         <div class="card-body">
 
                             <!-- Sensor Control Form-->
-                            <form class="form-group" id="sensorcontrol" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
+                            <form class="form-group" id="sensorcontrol" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
 
                                 <!-- Room Sensor Control -->
                                 <div class="row col-sm-12 justify-content-center">
@@ -1742,7 +1739,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="kegscreen" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
+                            <form id="kegscreen" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="kegscreen" class="col-sm-2 col-form-label"
@@ -1775,7 +1772,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="taplistio" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
+                            <form id="taplistio" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="taplistio_venue" class="col-sm-2 col-form-label"
@@ -1822,7 +1819,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="targeturl" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
+                            <form id="targeturl" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="targeturl" class="col-sm-2 col-form-label"
@@ -1869,7 +1866,7 @@
                                 Raspberry Pints MQTT broker.
                             </p>
 
-                            <form id="rpints" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
+                            <form id="rpints" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
 
                                 <div class="form-group row">
                                     <label for="rpintshost" class="col-sm-2 col-form-label"
@@ -1987,7 +1984,7 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Calibrate by weight">
-                                                            <input type="radio" class="form-check-input" name="calbyvolume" id="calbyweight"
+                                                            <input type="radio" class="form-check-input" name="calbyweight" id="calbyweight"
                                                                 value="false">
                                                             Weight
                                                         </label>
@@ -2022,7 +2019,7 @@
 
                             <div id="calsubmit" style="display: none"> <!-- Calibration Form -->
 
-                                <form class="form-group" id="flowcal" action="api/v1/config/settings" method="PUT" onsubmit="return processPost(this);">
+                                <form class="form-group" id="flowcal" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
 
                                     <div class="row col-sm-12 justify-content-center" id="calbyvolumeblock" style="display: none"> <!-- Cal by volume -->
                                         <div class="row col-sm-12 justify-content-center">
@@ -2137,7 +2134,7 @@
                             </p>
                             <div class="row col-sm-12 justify-content-center">
                                 <p class="card-text">
-                                    <a href="controllerreset" class="btn btn-warning">Reset Controller</a>
+                                    <a href="/controllerreset/" class="btn btn-warning">Reset Controller</a>
                                 </p>
                             </div>
                         </div>
@@ -2159,7 +2156,7 @@
                             </p>
                             <div class="row col-sm-12 justify-content-center">
                                 <p class="card-text">
-                                    <a href="wifireset" class="btn btn-danger">Reset WiFi</a>
+                                    <a href="/wifireset/" class="btn btn-danger">Reset WiFi</a>
                                 </p>
                             </div>
                         </div>
@@ -2189,34 +2186,8 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
 
+    <script src="kegcop_post.js"></script>
     <script src="settings.js"></script>
-
-    <script src="flowcal.js"></script>
-
-    <script src="alerts.js"></script>
-
-    <script type="text/javascript">
-
-        // Attach the event after the page loads (multi-browser)
-        if (window.addEventListener)
-            window.addEventListener("load", loadPage, false);
-        else if (window.attachEvent)
-            window.attachEvent("onload", loadPage);
-        else window.onload = loadPage;
-
-        function loadPage() { // Page data load - make triple sure the whole DOM loaded
-            if (document.readyState === 'ready' || document.readyState === 'complete') {
-                populatePage();
-            } else {
-                document.onreadystatechange = function () {
-                    if (document.readyState == "complete") {
-                        populatePage();
-                    }
-                }
-            }
-        }
-
-    </script>
 
 </body>
 

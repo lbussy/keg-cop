@@ -16,7 +16,7 @@ It would be best if you did a little planning before you begin.  Keg Cop is conf
 - **Temp Sensor Choice**: Since this system provides temperature control of your keg chamber, temperature sensors are naturally supported and required for temperature control. Keg Cop supports up to five temperature sensors, including one for room temperature.
 - **Main Board - One main board per system:**: It provides a single Ethernet going to the flowmeter chain and another Ethernet port connecting to the chamber sensors. A temperature sensor for Room temperature mounted to the board.
 - **Sensor/Meter Boards - Connectors to the physical aspects of the system:**
-    - Daisy-Chain Boards: These small boards, one per flowmeter, connect the flowmeter(2) into the system. There is an "In" and an "Out" port, creating a chain of up to six sensors. The first on the chain is always number one, and so on.
+    - Daisy-Chain Boards: These small boards, one per flowmeter, connect the flowmeter(s) into the system. There is an "In" and an "Out" connector, creating a chain of up to nine sensors. The first on the chain is always number one, and so on.
     - Sensor Board: This is a breakout board for connecting up to five temperature sensors.
 
 The BOM for the electronics may be found on the :doc:`PCB Assembly </pcbassembly/index>` page.

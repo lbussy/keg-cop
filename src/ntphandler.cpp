@@ -37,31 +37,24 @@ void setClock()
         {
             if (cycle > 9)
             {
-#ifdef LOG_LEVEL
-                myPrintln();
-#endif
+                printCR(true);
                 Log.warning(F("Unable to get time hack from server, restarting." CR));
                 blinker.detach();
                 ESP.restart();
                 return;
             }
-#ifdef LOG_LEVEL
-            myPrintln();
-#endif
-            Log.verbose(F("Re-requesting time hack."));
+
+            printCR(true);
+            Log.notice(F("Re-requesting time hack."));
             startSecs = millis() / 1000;
             cycle++;
         }
-#ifdef LOG_LEVEL
-        myPrint(F("."));
-#endif
+        printDot(true);
         delay(1000);
         yield();
     }
     blinker.detach();
-#ifdef LOG_LEVEL
-    myPrintln();
-#endif
+    printCR(true);
     Log.notice(F("NTP time set." CR));
 }
 

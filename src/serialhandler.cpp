@@ -41,9 +41,9 @@ void serial()
 #endif
     // _delay(3000); // Delay to allow a monitor to start
     SERIAL.begin(BAUD);
-    SERIAL.println();
+    printCR(true);
     SERIAL.flush();
-#ifndef DISABLE_LOGGING
+#if !defined(DISABLE_LOGGING)
     if (config.copconfig.serial)
     {
         SERIAL.setDebugOutput(false);
@@ -73,13 +73,16 @@ void printTimestamp(Print *_logOutput)
 
 size_t printDot()
 {
-    return printDot(false);
+    return SERIAL.print(F("."));
 }
 
 size_t printDot(bool safe)
 {
-#ifndef DISABLE_LOGGING
-    return SERIAL.print(F("."));
+#if !defined(DISABLE_LOGGING)
+    if (safe == true && config.copconfig.serial)
+        return 0;
+    else
+        return SERIAL.print(F("."));
 #else
     return 0;
 #endif
@@ -87,13 +90,16 @@ size_t printDot(bool safe)
 
 size_t printChar(const char *chr)
 {
-    return printChar(false, chr);
+    return SERIAL.println(chr);
 }
 
 size_t printChar(bool safe, const char *chr)
 {
-#ifndef DISABLE_LOGGING
-    return SERIAL.println(chr);
+#if !defined(DISABLE_LOGGING)
+    if (safe == true && config.copconfig.serial)
+        return 0;
+    else
+        return SERIAL.print(chr);
 #else
     return 0;
 #endif
@@ -101,13 +107,16 @@ size_t printChar(bool safe, const char *chr)
 
 size_t printCR()
 {
-    return printCR(false);
+    return SERIAL.println();
 }
 
 size_t printCR(bool safe)
 {
-#ifndef DISABLE_LOGGING
-    return SERIAL.println();
+#if !defined(DISABLE_LOGGING)
+    if (safe == true && config.copconfig.serial)
+        return 0;
+    else
+        return SERIAL.println();
 #else
     return 0;
 #endif
@@ -134,7 +143,7 @@ void serialLoop()
     {
 #endif
         if (!config.copconfig.serial)
-        {
+        { // Turn on/off Serial Mode
             switch (SERIAL.read())
             {
             case 'd': // Toggle Debug
@@ -145,8 +154,13 @@ void serialLoop()
                 break;
             }
         }
+        else if (config.copconfig.pouremulate)
+        { // Handle things while we are emulating pours
+            handlePourEmulateCommands();
+        }
+
         else
-        {
+        { // Handle regulare debug commands
             switch (SERIAL.read())
             {
             // Handle random shit
@@ -280,6 +294,9 @@ void serialLoop()
             case 'p': // /ping/
                 nullDoc("");
                 break;
+            case 'c': // Toggle Pour Emulate
+                togglePourEmulation(!config.copconfig.pouremulate);
+                break;
             case '?': // Help
                 SERIAL.println(F("Keg Cop - Available serial commands:"));
                 SERIAL.println(F("\th:\tDisplay heap information"));
@@ -289,6 +306,7 @@ void serialLoop()
                 SERIAL.println(F("\to:\tPerform online update"));
                 SERIAL.println(F("\td:\tEnter/exit Debug mode"));
                 SERIAL.println(F("\tu:\tUptime"));
+                SERIAL.println(F("\tc:\tEnter calibration or pour emulation"));
                 SERIAL.println(F("\tb:\tRestart controller"));
                 SERIAL.println(F("\t?:\tHelp (this menu)"));
                 SERIAL.flush();
@@ -471,4 +489,148 @@ void nullDoc(const char *wrapper)
     doc[wrapper] = nullptr;
     serializeJson(doc, SERIAL);
     printCR();
+}
+
+void togglePourEmulation(bool enable)
+{
+    if (config.copconfig.serial)
+    { // Only use this if we are in serial mode
+        if (enable && !config.copconfig.pouremulate)
+        {
+            config.copconfig.pouremulate = true;
+            saveConfig();
+            SERIAL.println(F("Pour emulation mode on."));
+            // TODO:  Indicate if we are in tap calibration mode or not
+            SERIAL.print(F("Command > "));
+        }
+        else if (!enable && config.copconfig.pouremulate)
+        {
+            config.copconfig.pouremulate = false;
+            saveConfig();
+            SERIAL.println(F("Pour emulation mode off."));
+        }
+        else
+        {
+            // Not changing
+        }
+    }
+    else
+    {
+        Log.warning(F("Not setting pour emulation as we are not in serial mode." CR));
+    }
+}
+
+void handlePourEmulateCommands()
+{
+    static bool recvInProgress = false;
+    static bool commandInProgress = false;
+    static int pulses = 0;
+    static int tapNum;
+    char rc;
+
+    rc = SERIAL.read();
+    // Single Char Commands (no [ENTER] needed)
+    if (rc == '?')
+    { // Show help
+        SERIAL.println(F("\nKeg Cop - Pour Emulation Menu:"));
+        SERIAL.println(F("\tt{n}:\tSelect tap where {n} is 0 to 9"));
+        SERIAL.println(F("\tx:\tExit pour emulation mode"));
+        SERIAL.println(F("\t?:\tHelp (this menu)"));
+        SERIAL.print(F("Command > "));
+        SERIAL.flush();
+        return;
+    }
+    if (rc == 'x' || rc == 'c' || rc == 'q')
+    { // Exit mode
+        SERIAL.println(rc);
+        togglePourEmulation(false);
+        recvInProgress = false;
+        commandInProgress = false;
+        pulses = 0;
+        return;
+    }
+    if (rc == '\b')
+    { // Hnadle a backspace
+        if (commandInProgress)
+        { // We are entering a number
+            const char backspace[] = {char(0x08), char(0x20), char(0x08), char(0x00)};
+            Serial.write(backspace);
+            pulses = trunc(pulses / 10);
+        }
+    }
+
+    // Multi-character commands (requires multiple chars or [ENTER] to complete)
+    if (isAlphaNumeric(rc))
+    {
+        if (isAlpha(rc))
+        {
+            if (!recvInProgress)
+            {
+                if (rc == 't')
+                {
+                    // We received our first letter
+                    SERIAL.print(rc);
+                    recvInProgress = true;
+                }
+                SERIAL.flush();
+                return;
+            }
+            else
+            {
+                // We received two letters in a row, discard all
+                recvInProgress = false;
+                SERIAL.println();
+                SERIAL.print(F("Command > "));
+                SERIAL.flush();
+                return;
+            }
+        }
+        else if (isDigit(rc))
+        {
+            if (recvInProgress && !commandInProgress)
+            { // We received a number after a letter
+                SERIAL.println(rc);
+                SERIAL.print(F("Enter pulses to add to tap "));
+                tapNum = (int)rc - 48;
+                SERIAL.print(tapNum);
+                Serial.print(F(": "));
+                commandInProgress = true;
+            }
+            else if (commandInProgress)
+            {
+                int x = (int)rc - 48;
+                SERIAL.print(x);
+                pulses = (pulses * 10) + x;
+            }
+        }
+    }
+    else
+    { // Handle anything not alphanumeric
+        switch (rc)
+        {
+        // Handle [ENTER]
+        case '\n':
+        case '\r':
+            if (commandInProgress)
+            {
+                recvInProgress = false;
+                commandInProgress = false;
+                logFlow(tapNum, pulses);
+                SERIAL.println();
+                SERIAL.print(F("Added "));
+                SERIAL.print(pulses);
+                SERIAL.print(F(" pulses to tap "));
+                SERIAL.print(tapNum);
+                SERIAL.println(F("."));
+                SERIAL.print(F("Command > "));
+                pulses = 0;
+                tapNum = 0;
+            }
+            break;
+        default:
+            break;
+        }
+        SERIAL.flush();
+        return;
+    }
 }

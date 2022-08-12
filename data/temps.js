@@ -1,10 +1,9 @@
-// Supports temps page
+// Supports Temps page
 
 toggleLoader("on");
-var unloadingState = false;
 var imperial;
 var loaded = 0;
-var numReq = 2;
+var numReq = 4;
 var labels = [];
 var temperatures = [];
 var scaleTemps = [];
@@ -12,56 +11,23 @@ var setpoint = 0;
 var tempChart;
 var chartReloadTimer = 10000; // Reload every 10 seconds
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
-
-function populatePage() { // Get page data
-    $(document).tooltip({ // Enable tooltips
-        'selector': '[data-toggle=tooltip]',
-        'placement': 'left',
-        'toggleEnabled': true
-    });
+function finishLoad() { // Get page data
+    chooseTempMenu();
     populateTemps();
     populateConfig();
     pollComplete();
 }
 
-function populateConfig() { // Get configuration settings
-    var url = thisHost + "api/v1/config/settings";
-    var config = $.getJSON(url, function () {
-        configAlert.warning();
-    })
-        .done(function (config) {
-            try {
-                // Header text
-                var headerText = 'Temperature Sensors for <a class="no-underline" href="index">';
-                headerText += config.copconfig.kegeratorname + '</a>';
-                $('#templistName').html(headerText);
-
-                if (loaded < numReq) {
-                    loaded++;
-                }
-            }
-            catch {
-                if (!unloadingState) {
-                    configAlert.warning("Unable to parse configuration data.");
-                }
-            }
-        })
-        .fail(function () {
-            if (!unloadingState) {
-                configAlert.warning("Unable to retrieve configuration data.");
-            }
-        })
-        .always(function () {
-            // Can post-process here
-        });
-}
-
 function populateTemps(callback = null) { // Get configuration settings
-    var url = thisHost + "api/v1/info/sensors";
+    if (!dataHostCheckDone) {
+        setTimeout(populateTemps, 10);
+        return;
+    }
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/sensors/";
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -71,16 +37,6 @@ function populateTemps(callback = null) { // Get configuration settings
     })
         .done(function (temps) {
             try {
-                if (temps.displayenabled == true) {
-                    if (!$('#displaytemplink').is(':visible')) {
-                        $('#displaytemplink').toggle();
-                    }
-                } else {
-                    if ($('#displaytemplink').is(':visible')) {
-                        $('#displaytemplink').toggle();
-                    }
-                }
-
                 if (okToClear) {
                     labels = [];
                     temperatures = [];
@@ -175,12 +131,56 @@ function populateTemps(callback = null) { // Get configuration settings
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
+                setTimeout(populateTemps, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                tempAlert.warning("Unable to retrieve temperatire data.");
+                tempAlert.warning("Unable to retrieve temperature data.");
             }
+            setTimeout(populateTemps, 10000);
+        })
+        .always(function () {
+            // Can post-process here
+        });
+}
+
+function populateConfig() { // Get configuration settings
+    if (!dataHostCheckDone) {
+        setTimeout(populateConfig, 10);
+        return;
+    }
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/config/settings/";
+    var config = $.getJSON(url, function () {
+        configAlert.warning();
+    })
+        .done(function (config) {
+            try {
+                // Header text
+                var headerText = 'Temperature Sensors for <a class="no-underline" href="/index/">';
+                headerText += config.copconfig.kegeratorname + '</a>';
+                $('#templistName').html(headerText);
+
+                if (loaded < numReq) {
+                    loaded++;
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    configAlert.warning("Unable to parse configuration data.");
+                }
+                setTimeout(populateConfig, 10000);
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                configAlert.warning("Unable to retrieve configuration data.");
+            }
+            setTimeout(populateConfig, 10000);
         })
         .always(function () {
             // Can post-process here
@@ -303,9 +303,40 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 }
 
 function barClick(event, array) { // Bar click handler
-    var tapNum = array[0]._index;
-    var url = thisHost + "settings/#sensorcontrol";
-    window.open(url, "_self");
+    var newURL;
+    var newPath = "settings/";
+    var newSearch = "";
+    var newHash = "#sensorcontrol";
+    try {
+        const url = new URL(window.location.href);
+        if (dataHost) {
+            // This all exists because we need to re-write URLs when
+            // using a dev server
+            newURL = url.protocol
+            newURL += "//";
+            newURL += url.host;
+            if (url.pathname.includes("data")) {
+                newPath = "/data/" + newPath;
+            }
+            newURL += newPath;
+            if (newURL.endsWith("/")) {
+                newURL = newURL.substring(0, newURL.length - 1);
+            }
+            if (!newURL.endsWith(".htm")) {
+                newURL += ".htm";
+            }
+            newURL += newSearch;
+            newURL += newHash;
+        } else {
+            newURL = newPath + newHash;
+        }
+        // Open the rewritten URL and return false to prevent default
+        window.open(newURL,"_self")
+        return false;
+    } catch (error) {
+        console.error("Badly formatted URL passed to function.");
+        return false;
+    }
 }
 
 function clearState() {
@@ -316,14 +347,6 @@ function clearState() {
     $("#coolstate").removeClass("alert-primary");
     $("#coolstate").removeClass("alert-secondary");
     $("#coolstate").removeClass("alert-light");
-}
-
-function pollComplete() {
-    if (loaded == numReq) {
-        finishPage();
-    } else {
-        setTimeout(pollComplete, 300); // try again in 300 milliseconds
-    }
 }
 
 function chartReload() {

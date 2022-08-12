@@ -1,8 +1,7 @@
 // Supports Index page
 
 toggleLoader("on");
-var unloadingState = false;
-var numReq = 3;
+var numReq = 5;
 var loaded = 0;
 var imperial;
 var labels = [];
@@ -11,30 +10,31 @@ var capacity = [];
 var remaining = [];
 var tapChart;
 var flowReloadTimer = 5000;
-var tempsReloadTimer = 10000;
+var tempReloadTimer = 10000;
 // Calibration mode variables
 calValue = 0;
 calLineType = '';
 
-// Detect unloading state during getJSON
-$(window).bind("beforeunload", function () {
-    unloadingState = true;
-});
-
-function populatePage() { // Get page data
-    $(document).tooltip({ // Enable tooltips
-        'selector': '[data-toggle=tooltip]',
-        'placement': 'left',
-        'toggleEnabled': true
-    });
+function finishLoad() {
+    // Catch event from kegcop_pre.js
+    chooseTempMenu();
     populateFlow();
-    populateTemps();
     populateConfig();
+    populateTemp();
     pollComplete();
 }
 
 function populateFlow(callback = null) { // Get flowmeter data
-    var url = thisHost + "api/v1/config/taps";
+    if (!dataHostCheckDone) {
+        setTimeout(populateFlow, 10);
+        return;
+    }
+    var url = dataHost;
+    while (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/config/taps/";
+
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -80,12 +80,14 @@ function populateFlow(callback = null) { // Get flowmeter data
                 if (!unloadingState) {
                     flowAlert.warning("Unable to parse flowmeter data.");
                 }
+                setTimeout(populateFlow, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 flowAlert.warning("Unable to retrieve flowmeter data.");
             }
+            setTimeout(populateFlow, 10000);
         })
         .always(function () {
             // Can post-process here
@@ -93,7 +95,16 @@ function populateFlow(callback = null) { // Get flowmeter data
 }
 
 function populateConfig() { // Get configuration settings
-    var url = thisHost + "api/v1/config/settings";
+    if (!dataHostCheckDone) {
+        setTimeout(populateConfig, 10);
+        return;
+    }
+    var url = dataHost;
+    while (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/config/settings/";
+
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -105,37 +116,44 @@ function populateConfig() { // Get configuration settings
                     headerText += " in " + config.copconfig.breweryname;
                 }
                 $('#taplistName').text(headerText);
-
-                loaded++;
+                if (loaded < numReq) {
+                    loaded++;
+                }
             }
             catch {
                 if (!unloadingState) {
                     configAlert.warning("Unable to parse configuration data.");
                 }
+                setTimeout(populateConfig, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 configAlert.warning("Unable to retrieve configuration data.");
             }
+            setTimeout(populateConfig, 10000);
+
         })
         .always(function () {
             // Can post-process here
         });
 }
 
-function populateTemps(callback = null) { // Get configuration settings
-    var url = thisHost + "api/v1/info/sensors";
+function populateTemp(callback = null) { // Get current temperature and state
+    if (!dataHostCheckDone) {
+        setTimeout(populateTemp, 10);
+        return;
+    }
+    var url = dataHost;
+    while (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/sensors/";
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
         .done(function (temps) {
             try {
-                if (temps.displayenabled == true) {
-                    $('#displaytemplink').show();
-                } else {
-                    $('#displaytemplink').hide();
-                }
                 if (temps.controlenabled) {
                     // Set control point display
                     $('#controlPoint').text(temps.sensors[temps.controlpoint].name + ":");
@@ -209,12 +227,14 @@ function populateTemps(callback = null) { // Get configuration settings
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
+                setTimeout(populateTemp, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 tempAlert.warning("Unable to retrieve temperature data.");
             }
+            setTimeout(populateTemp, 10000);
         })
         .always(function () {
             // Can post-process here
@@ -360,16 +380,12 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 
 function barClick(event, array) { // Bar click handler
     var tapNum = array[0]._index;
-    var url = thisHost + "settings/#tap" + tapNum;
-    window.open(url, "_self")
-}
-
-function pollComplete() {
-    if (loaded == numReq) {
-        finishPage();
-    } else {
-        setTimeout(pollComplete, 300); // try again in 300 milliseconds
+    var url = dataHost;
+    while (url.endsWith("/")) {
+        url = url.slice(0, -1)
     }
+    url += "/settings/#tap" + tapNum;
+    window.open(url, "_self")
 }
 
 function flowReload() {
@@ -379,15 +395,15 @@ function flowReload() {
     });
 }
 
-function tempsReload() {
-    populateTemps(function callFunction() {
-        setTimeout(tempsReload, tempsReloadTimer);
+function tempReload() {
+    populateTemp(function callFunction() {
+        setTimeout(tempReload, tempReloadTimer);
     });
 }
 
 function finishPage() { // Display page
     toggleLoader("off");
     doChart();
-    setTimeout(tempsReload, tempsReloadTimer);
+    setTimeout(tempReload, tempReloadTimer);
     setTimeout(flowReload, flowReloadTimer);
 }

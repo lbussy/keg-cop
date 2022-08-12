@@ -84,6 +84,15 @@ void setup()
     else
         Log.error(F("Unable to load flowmeters." CR));
 
+     // Clear all tap calibration
+    config.copconfig.pouremulate = false;
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        flow.taps[i].calibrating = false;
+    }
+    saveFlowConfig();
+    saveConfig();
+
     execspiffs();    // Check for pending FILESYSTEM update
     mdnssetup();     // Set up mDNS responder
     initWebServer(); // Turn on web server
@@ -105,12 +114,14 @@ void setup()
     rebootTimer.attach(86400, setDoReset);                                        // Reboot every 24 hours
     sendTIOTaps();                                                                // Send initial Taplist.io keg levels
 
-    if (!Log.getLevel())
+#if !defined(DISABLE_LOGGING)
+    if (config.copconfig.serial)
         nullDoc("d");
     else
-    {
         Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), apiKey, fw_version(), fs_version(), branch(), build());
-    }
+#else
+    nullDoc("d");
+#endif
 }
 
 void loop()

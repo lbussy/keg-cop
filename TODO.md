@@ -1,3 +1,3 @@
 # TODO:
 
-- [ ] Fix SPIFFS Editor
+- [ ] `dataHost` is locked to PIO's `./data/` interpretation

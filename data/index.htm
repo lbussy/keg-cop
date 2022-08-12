@@ -23,17 +23,15 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="loader.css">
-    <script src="devServer.js"></script>
-    <script src="loader.js"></script>
+    <link rel="stylesheet" href="kegcop.css">
+    <script src="kegcop_pre.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="index">
+            <a class="navbar-brand" href="/index/">
                 <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
@@ -44,24 +42,24 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link active" href="/index/">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
-                        <a class="nav-link" href="temps">Temperatures</a>
+                        <a class="nav-link" href="/temps/">Temperatures</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="settings">Settings</a>
+                        <a class="nav-link" href="/settings/">Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="help">Help</a>
+                        <a class="nav-link" href="/help/">Help</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about">About</a>
+                        <a class="nav-link" href="/about/">About</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/home/index.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/home/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -70,11 +68,12 @@
 
     <main role="main" class="flex-shrink-0">
 
+        <div id="settingsAlert_placeholder"></div>
         <div id="flowAlert_placeholder"></div>
         <div id="tempAlert_placeholder"></div>
         <div id="configAlert_placeholder"></div>
 
-        <div class="loader" id="loader"></div> <!-- Loading Spinner Container -->
+        <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
 
         <div class="container" id="indexApp"> <!-- Container -->
 
@@ -86,7 +85,7 @@
                     </div>
                     <div class="float-right">
                         <h5 id="coolstate" class="text-right alert">
-                            <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="temps">
+                            <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="/temps/">
                                 <span id="controlPoint"></span>
                                 <span id="controlTemp"></span>
                                 <span id="tempFormat"></span>
@@ -130,32 +129,8 @@
         integrity="sha384-fIE8wIddxI8s1yO253uBKjQyxNZ5UuilW9rx7H4ePN7XS7Z9ukIeK+ECX5B8jDAj" crossorigin="anonymous">
         </script>
 
+    <script src="kegcop_post.js"></script>
     <script src="index.js"></script>
-
-    <script src="alerts.js"></script>
-
-    <script>
-
-        // Attach the event after the page loads
-        if (window.addEventListener)
-            window.addEventListener("load", startLoad, false);
-        else if (window.attachEvent)
-            window.attachEvent("onload", startLoad);
-        else window.onload = startLoad;
-
-        function startLoad() { // Make sure the page is 100% loaded
-            if (document.readyState === 'ready' || document.readyState === 'complete') {
-                populatePage();
-            } else {
-                document.onreadystatechange = function () {
-                    if (document.readyState == "complete") {
-                        populatePage();
-                    }
-                }
-            }
-        }
-
-    </script>
 
 </body>
 

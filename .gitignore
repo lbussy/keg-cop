@@ -6,7 +6,7 @@
 *.code-workspace
 *.log
 rpints-arduino/
-firmware/
+/firmware
 
 # Documentation working files
 docs/_build/

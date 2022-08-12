@@ -308,7 +308,7 @@ SOFTWARE. */
 // Upgrade URL
 //
 #ifndef UPGRADEURL
-#define UPGRADEURL "http://firmware.kegcop.com/"
+#define UPGRADEURL "http://firmware1-1.kegcop.com/"
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
