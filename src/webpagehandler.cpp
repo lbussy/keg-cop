@@ -508,12 +508,12 @@ void setInfoPageHandlers()
         doc["imperial"] = config.copconfig.imperial;
         doc["controlpoint"] = config.temps.controlpoint;
         doc["setting"] = config.temps.setpoint;
-        doc["status"] = tstat.state;
+        doc["status"] = tstat[TS_TYPE_CHAMBER].state;
         doc["controlenabled"] = config.temps.enabled[config.temps.controlpoint];
         doc["coolonhigh"] = config.temps.coolonhigh;
         doc["tfancontrolenabled"] = config.temps.tfancontrolenabled;
         doc["tfansetpoint"] = config.temps.tfansetpoint;
-        doc["tfanstate"] = tfan.state;
+        doc["tfanstate"] = tstat[TS_TYPE_TOWER].state;
 
         int numEnabled = 0;
         // char *sensorName[NUMSENSOR];

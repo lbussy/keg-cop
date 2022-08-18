@@ -80,7 +80,6 @@ void send_json(AsyncWebServerRequest *request, String &json);
 void send_ok(AsyncWebServerRequest *request);
 
 extern struct ThatVersion thatVersion;
-extern struct Config config;
 extern struct Flowmeter flow;
 extern const size_t capacityFlowDeserial;
 extern const size_t capacityFlowSerial;
@@ -89,7 +88,6 @@ extern const size_t capacityPulseSerial;
 extern struct Devices device;
 extern const size_t capacityTempsDeserial;
 extern const size_t capacityTempsSerial;
-extern struct Thermostat tstat;
 extern struct API api;
 
 #endif // _WEBPAGEHANDLER_H

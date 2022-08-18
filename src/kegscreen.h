@@ -139,11 +139,8 @@ void reportCBCoolState(void *, asyncHTTPrequest *, int);
 void reportCBTempReport(void *, asyncHTTPrequest *, int);
 void resultHandler(ReportKey report, int readyState); // Generic (synchronous) result handler
 
-extern struct Config config;
 extern struct Flowmeter flow;
 extern struct Devices device;
-extern struct Thermostat tstat;
-extern struct TowerFan tfan;
 
 /**
  * \brief Strings used for JSON keys

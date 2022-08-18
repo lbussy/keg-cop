@@ -31,6 +31,7 @@ SOFTWARE. */
 #include "thatVersion.h"
 #include "resetreasons.h"
 #include "tempsensors.h"
+#include "thermostat.h"
 #include <ArduinoLog.h>
 #include <WiFiUdp.h>
 #include <ArduinoJson.h>
@@ -94,13 +95,10 @@ void nullDoc(const char *);
 #define prefLen 22
 
 extern struct ThatVersion thatVersion;
-extern struct Config config;
 extern struct Flowmeter flow;
 extern const size_t capacityFlowSerial;
 extern const size_t capacityPulseSerial;
 extern struct Devices device;
 extern const size_t capacityTempsSerial;
-extern struct Thermostat tstat;
-extern struct TowerFan tfan;
 
 #endif //_SERIALLOG_H

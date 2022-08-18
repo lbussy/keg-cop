@@ -35,39 +35,46 @@ enum ThermostatState
     TSTAT_COOL_MINOFF,  // Waiting to cool because of MINOFF
     TSTAT_COOL_ACTIVE,  // Actively cooling
     TSTAT_OFF_END,      // Turning off cooling
-    TSTAT_OFF_MINON,    // Temp => Setpoint, still running because of MINON
+    TSTAT_OFF_MINON,    // Temp => Setpoint, still running because of MIN_ON
     TSTAT_OFF_INACTIVE, // Not cooling
     TSTAT_UNKNOWN       // Should never get this
 };
 
+enum ThermostatType
+{
+    TS_TYPE_CHAMBER,
+    TS_TYPE_TOWER,
+    TS_COUNT
+};
+
+enum ControlPoint
+{
+    CP_COOL = COOL,
+    CP_SOLENOID = SOLENOID,
+    CP_COUNT = 2 // Need this stated explicitly since it's not a normal enum
+};
+
+static const char *thermostatName[TS_COUNT] = {"Chamber", "Tower"};
+
 struct Thermostat
 {
-    bool control;          // Turn on/off temp control
-    ThermostatState state; // Holds return value from control
-    bool cooling;          // Cooling state
-    unsigned long lastOff; // Timestamp for last off
-    unsigned long lastOn;  // Timestamp for last on
+    int controlPoint;       // Pin for control
+    bool coolOnHigh;        // Host inversion state
+    bool control;           // Turn on/off temp control
+    ThermostatState state;  // Holds return value from control
+    bool cooling;           // Cooling state
+    unsigned long lastOff;  // Timestamp for last off
+    unsigned long lastOn;   // Timestamp for last on
+    bool queueStateChange;  // Store all pending Thermostat state changes
 };
 
-struct TowerFan
-{
-    bool control;          // Turn on/off temp control
-    ThermostatState state; // Holds return value from control
-    bool cooling;          // Cooling state
-    unsigned long lastOff; // Timestamp for last off
-    unsigned long lastOn;  // Timestamp for last on
-};
+void startTstat(int ts);
+void loopTstat(int ts);
+void newStatReport(int ts);
 
-void startControl();
-void controlLoop();
-void startFanControl();
-void fanControlLoop();
-void tstatReport();
-void tfanReport();
-
-extern struct Config config;
 extern struct Devices device;
-extern bool __attribute__((unused)) queueStateChange;    // Store pending state changes
-extern bool __attribute__((unused)) queueFanStateChange; // Store pending fan state changes
+
+extern Thermostat tstat[TS_COUNT];
+extern ControlPoint cp[TS_COUNT];
 
 #endif // _THERMOSTAT_H

@@ -42,7 +42,7 @@ bool sendTargetReport()
         urlreport.imperial = config.copconfig.imperial;
         urlreport.controlpoint = config.temps.controlpoint;
         urlreport.setpoint = config.temps.setpoint;
-        urlreport.state = tstat.state;
+        urlreport.state = tstat[TS_TYPE_CHAMBER].state;
         urlreport.controlenabled = config.temps.controlenabled;
 
         for (int i = 0; i < NUMSENSOR; i++)

@@ -30,6 +30,4 @@ SOFTWARE. */
 void mdnssetup();
 void mdnsreset();
 
-extern struct Config config;
-
 #endif // _MDNSHANDLER_H
