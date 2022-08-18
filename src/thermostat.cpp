@@ -52,7 +52,7 @@ void loopTstat(int ts)
         case TS_TYPE_CHAMBER:
             tempNow = device.sensor[config.temps.controlpoint].average;
             sensorEnabled = config.temps.enabled[config.temps.controlpoint];
-            *controlEnabled = &config.temps.controlenabled;
+            controlEnabled = &config.temps.controlenabled;
             tstat[ts].coolOnHigh = config.temps.coolonhigh;
             setPoint = config.temps.setpoint;
             controlPoint = COOL;
@@ -62,7 +62,7 @@ void loopTstat(int ts)
         case TS_TYPE_TOWER:
             tempNow = device.sensor[TOWER].average;
             sensorEnabled = config.temps.enabled[TOWER];
-            *controlEnabled = &config.temps.tfancontrolenabled;
+            controlEnabled = &config.temps.tfancontrolenabled;
             tstat[ts].coolOnHigh = config.temps.tfanonhigh;
             setPoint = config.temps.tfansetpoint;
             controlPoint = SOLENOID;

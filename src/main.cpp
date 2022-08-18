@@ -106,30 +106,30 @@ void setup()
     saveFlowConfig();
     saveConfig();
 
-    execspiffs();                     // Check for pending FILESYSTEM update
-    mdnssetup();                      // Set up mDNS responder
-    initWebServer();                  // Turn on web server
-    sensorInit();                     // Initialize temperature sensors
+    execspiffs();                // Check for pending FILESYSTEM update
+    mdnssetup();                 // Set up mDNS responder
+    initWebServer();             // Turn on web server
+    sensorInit();                // Initialize temperature sensors
     startTstat(TS_TYPE_CHAMBER); // Initialize temperature control
     startTstat(TS_TYPE_TOWER);   // Initialize fan control
-    doVersionPoll();                  // Get server version at startup
-    setupRPints();                    // Set up MQTT
+    doVersionPoll();             // Get server version at startup
+    setupRPints();               // Set up MQTT
 #ifdef _DEBUG_BUILD
     doUptime(true); // Uptime log start
 #endif
 
     // Setup tickers
-    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors
-    logPourTicker.attach(TAPLOOP, logFlow);                                         // Log pours
-    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                  // Poll for server version
-    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);                 // Send KegScreen Temp Report
-    sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport);   // Send Target Report
-    rebootTimer.attach(86400, setDoReset);                                          // Reboot every 24 hours
+    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                // Poll temperature sensors
+    logPourTicker.attach(TAPLOOP, logFlow);                                       // Log pours
+    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                // Poll for server version
+    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);               // Send KegScreen Temp Report
+    sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport); // Send Target Report
+    rebootTimer.attach(86400, setDoReset);                                        // Reboot every 24 hours
     doControlTicker.attach(TEMPLOOP, []()
-                           { loopTstat(TS_TYPE_CHAMBER); });                   // Update temperature control loop
+                           { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
     doFanControlTicker.attach(TEMPLOOP, []()
-                              { loopTstat(TS_TYPE_TOWER); });                  // Update fan control loop
-    sendTIOTaps();                                                                  // Send initial Taplist.io keg levels
+                              { loopTstat(TS_TYPE_TOWER); }); // Update fan control loop
+    sendTIOTaps();                                            // Send initial Taplist.io keg levels
 
 #if !defined(DISABLE_LOGGING)
     if (config.copconfig.serial)
