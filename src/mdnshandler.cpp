@@ -24,6 +24,7 @@ SOFTWARE. */
 
 void mdnssetup()
 {
+    WiFi.setSleep(false);  // Required to make mDNS service discovery reliable until https://github.com/espressif/arduino-esp32/issues/7156 is resolved
     if (!MDNS.begin(WiFi.getHostname()))
     { // Start the mDNS responder
         Log.error(F("Error setting up mDNS responder." CR));
