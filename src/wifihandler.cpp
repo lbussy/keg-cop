@@ -143,6 +143,7 @@ void doWiFi(bool dontUseStoredCreds)
     blinker.detach();        // Turn off blinker
     digitalWrite(LED, HIGH); // Turn off LED
 
+    WiFi.setSleep(false);  // Required to make mDNS service discovery reliable until https://github.com/espressif/arduino-esp32/issues/7156 is resolved 
     WiFi.onEvent(WiFiEvent);
 }
 
