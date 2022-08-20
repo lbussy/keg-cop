@@ -74,7 +74,6 @@ void setup()
     }
 
     // Set pins for relays
-    // TODO:  Move this to TStat area?
     pinMode(SOLENOID, OUTPUT);
     if (config.temps.tfancontrolenabled)
     {

@@ -216,7 +216,7 @@ function populateConfig(callback = null) { // Get configuration settings
                     $('input:radio[name="imperial"]')[0].checked = true;
                 }
 
-                try { // DEBUG: TODO:  Remove the "oops I crapped myself" handler here
+                try {
                     if (config.temps.tfancontrolenabled) {
                         $('input:radio[name="tfancontrolenabled"]')[0].checked = true; // Check enabled radio
                         $('input[name=tapsolenoid]').attr("disabled", true);        // Disable Solenoid control
@@ -238,7 +238,7 @@ function populateConfig(callback = null) { // Get configuration settings
                     $('input[name=tfanonhigh]').attr("disabled", true);             // Eanble invert control
                 }
 
-                try { // DEBUG: TODO:  Remove the "oops I crapped myself" handler here
+                try {
                     if (!config.temps.tcoolonhigh) {
                         $('input:radio[name="tfanonhigh"]')[0].checked = true;  // Check enabled radio
                     } else {

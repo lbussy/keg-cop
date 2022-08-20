@@ -262,7 +262,6 @@ bool sendReport(ReportKey thisKey, const char * json) {
         }
         if (connection.length() > 0)
         {
-            // reports[thisKey].setDebug(true);
             reports[thisKey].onData(pf[thisKey]);
             if (reports[thisKey].open("POST", connection.c_str()))
             {
