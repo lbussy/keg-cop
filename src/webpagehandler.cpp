@@ -605,12 +605,7 @@ void setConfigurationPageHandlers()
               {
         // Process taps update
         Log.verbose(F("Processing put to %s." CR), request->url().c_str());
-
-        HANDLER_STATE state = NOT_PROCCESSED;
-        for (int i = 0; i < tapHandlers; i++)
-        {
-            // Process taps update
-            Log.verbose(F("Processing post to %s." CR), request->url().c_str());
+        bool didFail = false;
 
         HANDLER_STATE state = NOT_PROCCESSED;
         for (int i = 0; i < tapHandlers; i++)
@@ -620,6 +615,11 @@ void setConfigurationPageHandlers()
             Log.verbose(F("Checking %s." CR), tf_str[i]);
             HANDLER_STATE thisState = tf[i](request);
             if (thisState == PROCESSED)
+            {
+                send_ok(request);
+                state = PROCESSED;
+            }
+            else if (thisState == FAIL_PROCESS)
             {
                 send_failed(request);
                 state = FAIL_PROCESS;

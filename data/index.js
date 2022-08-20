@@ -20,7 +20,7 @@ function finishLoad() {
     chooseTempMenu();
     populateFlow();
     populateConfig();
-    populateTemp();
+    populateTemps();
     pollComplete();
 }
 
@@ -139,9 +139,9 @@ function populateConfig() { // Get configuration settings
         });
 }
 
-function populateTemp(callback = null) { // Get current temperature and state
+function populateTemps(callback = null) { // Get current temperature and state
     if (!dataHostCheckDone) {
-        setTimeout(populateTemp, 10);
+        setTimeout(populateTemps, 10);
         return;
     }
     var url = dataHost;
@@ -271,21 +271,21 @@ function populateTemp(callback = null) { // Get current temperature and state
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
-                setTimeout(populateTemp, 10000);
+                setTimeout(populateTemps, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 tempAlert.warning("Unable to retrieve temperature data.");
             }
-            setTimeout(populateTemp, 10000);
+            setTimeout(populateTemps, 10000);
         })
         .always(function () {
             // Can post-process here
         });
 }
 
-function populateTemp(callback = null) { // Get current temperature and state
+function populateTemps(callback = null) { // Get current temperature and state
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -369,14 +369,14 @@ function populateTemp(callback = null) { // Get current temperature and state
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
-                setTimeout(populateTemp, 10000);
+                setTimeout(populateTemps, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 tempAlert.warning("Unable to retrieve temperature data.");
             }
-            setTimeout(populateTemp, 10000);
+            setTimeout(populateTemps, 10000);
         })
         .always(function () {
             // Can post-process here
@@ -538,7 +538,7 @@ function flowReload() {
 }
 
 function tempReload() {
-    populateTemp(function callFunction() {
+    populateTemps(function callFunction() {
         setTimeout(tempReload, tempReloadTimer);
     });
 }

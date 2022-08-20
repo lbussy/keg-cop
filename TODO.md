@@ -12,7 +12,7 @@
         - [x] Handle data load for Settings
         - [x] Add `tfanonhigh` setting
     - [x] Enable temp control loop
-    - [ ] Add a "fan on" graphic to Temps
+    - [x] Add a "fan on" graphic to Temps
     - [x] Add a "fan on" graphic to Index
     - [x] Do JSON sizes
     - [ ] Add Tower Fan state to reports
