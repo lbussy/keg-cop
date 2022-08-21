@@ -5,6 +5,8 @@ var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
 
+dataHost = localStorage.getItem("dataHost") || ""; // Use this here to enforce running first
+
 getUseTemps();
 
 // Attach the event after the page loads
