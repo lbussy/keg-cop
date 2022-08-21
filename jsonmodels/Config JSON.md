@@ -26,10 +26,13 @@ JSON Definition:
 		"didupdate": false
 	},
 	"temps": {
-		"coolonhigh: true,
+		"coolonhigh": false,
 		"setpoint": 100,
 		"controlpoint": 99,
 		"controlenabled": false,
+		"tfancontrolenabled": false,
+		"tfansetpoint": 100,
+    	"tfanonhigh": false,
 		"roomenable": false,
 		"roomcal": 99.99,
 		"towerenable": false,
@@ -69,7 +72,7 @@ Size:
 -----
 
 ```
-Deserial:	2048
+Deserial:	3072
 Serial:		2048
 ```
 
@@ -79,7 +82,7 @@ Parsing/Deserializing:
 ```
 // Stream& input;
 
-StaticJsonDocument<2048> doc;
+DynamicJsonDocument doc(3072);
 
 DeserializationError error = deserializeJson(doc, input);
 
@@ -112,6 +115,8 @@ bool temps_coolonhigh = temps["coolonhigh"]; // true
 int temps_setpoint = temps["setpoint"]; // 100
 int temps_controlpoint = temps["controlpoint"]; // 99
 bool temps_controlenabled = temps["controlenabled"]; // false
+bool temps_tfancontrolenable = temps["tfancontrolenabled"]; // false
+int temps_tfansetpoint = temps["tfansetpoint"]; // 100
 bool temps_roomenable = temps["roomenable"]; // false
 float temps_roomcal = temps["roomcal"]; // 99.99
 bool temps_towerenable = temps["towerenable"]; // false
@@ -174,6 +179,8 @@ temps["coolonhigh"] = true;
 temps["setpoint"] = 100;
 temps["controlpoint"] = 99;
 temps["controlenabled"] = false;
+temps["tfancontrolenabled"] = false;
+temps["tfansetpoint"] = 100;
 temps["roomenable"] = false;
 temps["roomcal"] = 99.99;
 temps["towerenable"] = false;
@@ -204,4 +211,5 @@ rpintstarget["username"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 rpintstarget["password"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 rpintstarget["topic"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
-serializeJson(doc, output);```
+serializeJson(doc, output);
+```

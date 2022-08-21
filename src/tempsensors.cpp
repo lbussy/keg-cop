@@ -22,10 +22,8 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
-const char *sensorName[NUMSENSOR] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
-int sensorPin[NUMSENSOR] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
-extern const size_t capacityTempsSerial = JSON_ARRAY_SIZE(5) + 5 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(7);
-extern const size_t capacityTempsDeserial = capacityTempsSerial + 370;
+extern const size_t capacityTempsSerial = 768;
+extern const size_t capacityTempsDeserial = 1024;
 
 Devices device;
 
@@ -59,6 +57,11 @@ void sensorReInit()
 
 void pollTemps()
 {
+    if (config.copconfig.tempemulate == true)
+    {
+        // Skip polling if we are emulating temps
+        return;
+    }
     for (int i = 0; i < NUMSENSOR; i++)
     {
         device.sensor[i].value = getTempC(device.sensor[i].pin);
@@ -112,4 +115,18 @@ double getTempC(uint8_t pin)
         retVal = sensor.getTempC();
     }
     return retVal;
+}
+
+void logTempEmulation(int sensor, double temp)
+{
+    if (config.copconfig.imperial)
+    { // We store values in C
+        temp = convertFtoC(temp);
+    }
+    device.sensor[sensor].buffer.clear();
+    // Calibration: Values will be stored corrected
+    device.sensor[sensor].value = temp + device.sensor[sensor].calibration;
+    // Push to buffer
+    device.sensor[sensor].buffer.push(device.sensor[sensor].value);
+    device.sensor[sensor].average = temp;
 }

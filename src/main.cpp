@@ -26,6 +26,7 @@ DoubleResetDetector *drd;
 
 Ticker pollSensorsTicker;
 Ticker doControlTicker;
+Ticker doFanControlTicker;
 Ticker logPourTicker;
 Ticker getThatVersionTicker;
 Ticker sendKSTempReportTicker;
@@ -72,7 +73,16 @@ void setup()
         doWiFi();
     }
 
-    // Set pin for relay
+    // Set pins for relays
+    pinMode(SOLENOID, OUTPUT);
+    if (config.temps.tfancontrolenabled)
+    {
+        digitalWrite(SOLENOID, (config.temps.tfanonhigh) ? LOW : HIGH);
+    }
+    else
+    {
+        digitalWrite(SOLENOID, (config.copconfig.tapsolenoid) ? LOW : HIGH);
+    }
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, (config.temps.coolonhigh) ? LOW : HIGH);
 
@@ -84,7 +94,9 @@ void setup()
     else
         Log.error(F("Unable to load flowmeters." CR));
 
-     // Clear all tap calibration
+    // Clear temperature sensor emulation
+    config.copconfig.tempemulate = false;
+    // Clear all tap calibration
     config.copconfig.pouremulate = false;
     for (int i = 0; i < NUMTAPS; i++)
     {
@@ -93,26 +105,30 @@ void setup()
     saveFlowConfig();
     saveConfig();
 
-    execspiffs();    // Check for pending FILESYSTEM update
-    mdnssetup();     // Set up mDNS responder
-    initWebServer(); // Turn on web server
-    sensorInit();    // Initialize temperature sensors
-    startControl();  // Initialize temperature control
-    doVersionPoll(); // Get server version at startup
-    setupRPints();   // Set up MQTT
+    execspiffs();                // Check for pending FILESYSTEM update
+    mdnssetup();                 // Set up mDNS responder
+    initWebServer();             // Turn on web server
+    sensorInit();                // Initialize temperature sensors
+    startTstat(TS_TYPE_CHAMBER); // Initialize temperature control
+    startTstat(TS_TYPE_TOWER);   // Initialize fan control
+    doVersionPoll();             // Get server version at startup
+    setupRPints();               // Set up MQTT
 #ifdef _DEBUG_BUILD
     doUptime(true); // Uptime log start
 #endif
 
     // Setup tickers
     pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                // Poll temperature sensors
-    doControlTicker.attach(TEMPLOOP, controlLoop);                                // Update temperature control loop
     logPourTicker.attach(TAPLOOP, logFlow);                                       // Log pours
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                // Poll for server version
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);               // Send KegScreen Temp Report
     sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport); // Send Target Report
     rebootTimer.attach(86400, setDoReset);                                        // Reboot every 24 hours
-    sendTIOTaps();                                                                // Send initial Taplist.io keg levels
+    doControlTicker.attach(TEMPLOOP, []()
+                           { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
+    doFanControlTicker.attach(TEMPLOOP, []()
+                              { loopTstat(TS_TYPE_TOWER); }); // Update fan control loop
+    sendTIOTaps();                                            // Send initial Taplist.io keg levels
 
 #if !defined(DISABLE_LOGGING)
     if (config.copconfig.serial)

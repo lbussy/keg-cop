@@ -1,3 +1,5 @@
+TODO:  Redo the size and code here (tfanstate)
+
 Temps Report JSON Model:
 ========================
 
@@ -6,11 +8,16 @@ JSON Definition:
 
 ```
 {
+    "coolonhigh": true,
     "imperial": false,
     "controlpoint": 99,
     "setting": 999.999,
     "status": 99,
     "controlenabled": false,
+	"tfancontrolenabled": false,
+	"tfansetpoint": 100,
+    "tfanstate": 99,
+	"tfanonhigh": false,
     "displayenabled": false,
     "sensors": [
     {
@@ -46,68 +53,57 @@ Size:
 -----
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(7) + 370;
-432+330 = 762
+Serialize: 768
+Deserialize = 1024
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(7) + 370;
-DynamicJsonDocument doc(capacity);
+// Stream& input;
 
-const char* json = "{\"imperial\":false,\"controlpoint\":99,\"setting\":999.999,\"status\":99,\"controlenabled\":false,\"displayenabled\":false,\"sensors\":[{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999},{\"name\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"enable\":false,\"value\":999.999}]}";
+StaticJsonDocument<1024> doc;
 
-deserializeJson(doc, json);
+DeserializationError error = deserializeJson(doc, input);
+
+if (error) {
+  Serial.print("deserializeJson() failed: ");
+  Serial.println(error.c_str());
+  return;
+}
 
 bool imperial = doc["imperial"]; // false
 int controlpoint = doc["controlpoint"]; // 99
 float setting = doc["setting"]; // 999.999
 int status = doc["status"]; // 99
 bool controlenabled = doc["controlenabled"]; // false
+bool tfancontrolenabled = doc["tfancontrolenabled"]; // false
+int tfansetpoint = doc["tfansetpoint"]; // 100
 bool displayenabled = doc["displayenabled"]; // false
 
-JsonArray sensors = doc["sensors"];
+for (JsonObject sensor : doc["sensors"].as<JsonArray>()) {
 
-JsonObject sensors_0 = sensors[0];
-const char* sensors_0_name = sensors_0["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-bool sensors_0_enable = sensors_0["enable"]; // false
-float sensors_0_value = sensors_0["value"]; // 999.999
+  const char* sensor_name = sensor["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", ...
+  bool sensor_enable = sensor["enable"]; // false, false, false, false, false
+  float sensor_value = sensor["value"]; // 999.999, 999.999, 999.999, 999.999, 999.999
 
-JsonObject sensors_1 = sensors[1];
-const char* sensors_1_name = sensors_1["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-bool sensors_1_enable = sensors_1["enable"]; // false
-float sensors_1_value = sensors_1["value"]; // 999.999
-
-JsonObject sensors_2 = sensors[2];
-const char* sensors_2_name = sensors_2["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-bool sensors_2_enable = sensors_2["enable"]; // false
-float sensors_2_value = sensors_2["value"]; // 999.999
-
-JsonObject sensors_3 = sensors[3];
-const char* sensors_3_name = sensors_3["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-bool sensors_3_enable = sensors_3["enable"]; // false
-float sensors_3_value = sensors_3["value"]; // 999.999
-
-JsonObject sensors_4 = sensors[4];
-const char* sensors_4_name = sensors_4["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-bool sensors_4_enable = sensors_4["enable"]; // false
-float sensors_4_value = sensors_4["value"]; // 999.999
+}
 ```
 
 Serializing / Saving:
 ---------------------
 
 ```
-const size_t capacity = JSON_ARRAY_SIZE(5) + 5*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(7);
-DynamicJsonDocument doc(capacity);
+StaticJsonDocument<768> doc;
 
 doc["imperial"] = false;
 doc["controlpoint"] = 99;
 doc["setting"] = 999.999;
 doc["status"] = 99;
 doc["controlenabled"] = false;
+doc["tfancontrolenabled"] = false;
+doc["tfansetpoint"] = 100;
 doc["displayenabled"] = false;
 
 JsonArray sensors = doc.createNestedArray("sensors");
@@ -137,5 +133,5 @@ sensors_4["name"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 sensors_4["enable"] = false;
 sensors_4["value"] = 999.999;
 
-serializeJson(doc, Serial);
+serializeJson(doc, output);
 ```

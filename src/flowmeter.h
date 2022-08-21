@@ -84,11 +84,9 @@ bool printFlowConfig();
 void convertFlowtoImperial();
 void convertFlowtoMetric();
 
-extern struct Config config;
 extern float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
 extern unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pulses
 extern bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
-
 
 namespace FlowmeterKeys {
     constexpr auto tapid = "tapid";

@@ -84,6 +84,4 @@ static const char __attribute__((unused)) * DAYS_OF_WEEK_3[] = {"Sun", "Mon", "T
 
 static uint32_t __attribute__((unused)) lastNTPUpdate = 0;
 
-extern struct Config config;
-
 #endif // _NTP_H

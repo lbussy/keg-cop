@@ -158,6 +158,10 @@ void serialLoop()
         { // Handle things while we are emulating pours
             handlePourEmulateCommands();
         }
+        else if (config.copconfig.tempemulate)
+        { // Handle things while we are emulating temperatures
+            handleTempEmulateCommands();
+        }
 
         else
         { // Handle regulare debug commands
@@ -297,6 +301,9 @@ void serialLoop()
             case 'c': // Toggle Pour Emulate
                 togglePourEmulation(!config.copconfig.pouremulate);
                 break;
+            case 't': // Toggle Pour Emulate
+                toggleTempEmulation(!config.copconfig.tempemulate);
+                break;
             case '?': // Help
                 SERIAL.println(F("Keg Cop - Available serial commands:"));
                 SERIAL.println(F("\th:\tDisplay heap information"));
@@ -307,6 +314,7 @@ void serialLoop()
                 SERIAL.println(F("\td:\tEnter/exit Debug mode"));
                 SERIAL.println(F("\tu:\tUptime"));
                 SERIAL.println(F("\tc:\tEnter calibration or pour emulation"));
+                SERIAL.println(F("\tct:\tEnter temperature emulation"));
                 SERIAL.println(F("\tb:\tRestart controller"));
                 SERIAL.println(F("\t?:\tHelp (this menu)"));
                 SERIAL.flush();
@@ -500,8 +508,7 @@ void togglePourEmulation(bool enable)
             config.copconfig.pouremulate = true;
             saveConfig();
             SERIAL.println(F("Pour emulation mode on."));
-            // TODO:  Indicate if we are in tap calibration mode or not
-            SERIAL.print(F("Command > "));
+            SERIAL.print(F("Tap Command > "));
         }
         else if (!enable && config.copconfig.pouremulate)
         {
@@ -536,7 +543,7 @@ void handlePourEmulateCommands()
         SERIAL.println(F("\tt{n}:\tSelect tap where {n} is 0 to 9"));
         SERIAL.println(F("\tx:\tExit pour emulation mode"));
         SERIAL.println(F("\t?:\tHelp (this menu)"));
-        SERIAL.print(F("Command > "));
+        SERIAL.print(F("Tap Command > "));
         SERIAL.flush();
         return;
     }
@@ -550,7 +557,7 @@ void handlePourEmulateCommands()
         return;
     }
     if (rc == '\b')
-    { // Hnadle a backspace
+    { // Handle a backspace
         if (commandInProgress)
         { // We are entering a number
             const char backspace[] = {char(0x08), char(0x20), char(0x08), char(0x00)};
@@ -580,7 +587,7 @@ void handlePourEmulateCommands()
                 // We received two letters in a row, discard all
                 recvInProgress = false;
                 SERIAL.println();
-                SERIAL.print(F("Command > "));
+                SERIAL.print(F("Tap Command > "));
                 SERIAL.flush();
                 return;
             }
@@ -622,7 +629,7 @@ void handlePourEmulateCommands()
                 SERIAL.print(F(" pulses to tap "));
                 SERIAL.print(tapNum);
                 SERIAL.println(F("."));
-                SERIAL.print(F("Command > "));
+                SERIAL.print(F("Tap Command > "));
                 pulses = 0;
                 tapNum = 0;
             }
@@ -633,4 +640,160 @@ void handlePourEmulateCommands()
         SERIAL.flush();
         return;
     }
+}
+
+void toggleTempEmulation(bool enable)
+{
+    if (config.copconfig.serial)
+    { // Only use this if we are in serial mode
+        if (enable && !config.copconfig.tempemulate)
+        {
+            config.copconfig.tempemulate = true;
+            saveConfig();
+            SERIAL.println(F("Temperature emulation mode on."));
+            SERIAL.print(F("Temp Command > "));
+        }
+        else if (!enable && config.copconfig.tempemulate)
+        {
+            config.copconfig.tempemulate = false;
+            saveConfig();
+            SERIAL.println(F("Temperature emulation mode off."));
+        }
+        else
+        {
+            // Not changing
+        }
+    }
+    else
+    {
+        Log.warning(F("Not setting temperature emulation as we are not in serial mode." CR));
+    }
+}
+
+void handleTempEmulateCommands()
+{
+    static bool recvInProgress = false;
+    static bool commandInProgress = false;
+    static String tempString;
+    static int sensor =  -1;
+    char rc;
+
+    rc = SERIAL.read();
+    // Single Char Commands (no [ENTER] needed)
+    if (rc == '?') // Show help
+    {
+        // {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
+        SERIAL.println(F("\nKeg Cop - Temperature Emulation Menu:"));
+        SERIAL.println(F("\ts{x}:\tSelect sensor where {x} is:"));
+        SERIAL.println(F("\t\t\t0: Room sensor"));
+        SERIAL.println(F("\t\t\t1: Tower sensor"));
+        SERIAL.println(F("\t\t\t2: Upper sensor"));
+        SERIAL.println(F("\t\t\t3: Lower sensor"));
+        SERIAL.println(F("\t\t\t4: Keg sensor"));
+        SERIAL.println(F("\tx:\tExit temperature emulation mode"));
+        SERIAL.println(F("\t?:\tHelp (this menu)"));
+        SERIAL.print(F("Temp Command > "));
+    }
+    else if (rc == 'x' || rc == 'c' || rc == 'q') // Exit mode
+    {
+        SERIAL.println(rc);
+        toggleTempEmulation(false);
+        recvInProgress = false;
+        commandInProgress = false;
+        tempString = "";
+    }
+    else if (rc == '\b')
+    { // Handle a backspace
+        if (commandInProgress)
+        { // We are entering a number
+            const char backspace[] = {char(0x08), char(0x20), char(0x08), char(0x00)};
+            Serial.write(backspace);
+            tempString.remove(tempString.length() - 1, 1);
+        }
+    }
+     // Multi-character commands (requires multiple chars or [ENTER] to complete)
+    else if (isAlphaNumeric(rc))
+    {
+        if (isAlpha(rc)) // Is alphanumeric
+        {
+            if (!recvInProgress)
+            {
+                if (rc == 's')
+                { // We received our first letter
+                    SERIAL.print(rc);
+                    recvInProgress = true;
+                }
+            }
+            else
+            { // We received two letters in a row, discard all
+                recvInProgress = false;
+                SERIAL.println();
+                SERIAL.print(F("Temp Command > "));
+            }
+        }
+        else if (isDigit(rc))
+        {
+            if (recvInProgress && !commandInProgress)
+            { // We received a sensor number after a letter
+                sensor = (int)rc - 48;
+                if (sensor >= 0 && sensor < NUMSENSOR)
+                {
+                    SERIAL.println(rc);
+                    SERIAL.print(F("Enter temperature to assign to "));
+                    String s = sensorName[sensor];
+                    s.toLowerCase();
+                    SERIAL.print(s);
+                    SERIAL.print(": ");
+                    commandInProgress = true;
+                }
+            }
+            else if (commandInProgress)
+            { // We received a number indicating a temp value
+                SERIAL.print(rc);
+                tempString += rc;
+            }
+        }
+    }
+    else if (rc == '.' && commandInProgress) // Handle decimal pointa in value
+    {
+        if (tempString.indexOf('.') == -1)
+        { // Only allow one decimal in the entry
+            SERIAL.print(rc);
+            tempString += rc;
+        }
+    }
+    else if (rc == '\r' && commandInProgress) // Handle [ENTER] on value
+    {
+        recvInProgress = false;
+        commandInProgress = false;
+        double temp = tempString.toDouble();
+        if (!temp == 0.0)
+        {
+            logTempEmulation(sensor, temp);
+            SERIAL.println();
+            SERIAL.print(F("Set "));
+            String s = sensorName[sensor];
+            s.toLowerCase();
+            SERIAL.print(s);
+            SERIAL.print(F(" sensor to "));
+            SERIAL.print(temp);
+            if (config.copconfig.imperial)
+            {
+                Serial.println(" deg F.");
+            }
+            else
+            {
+                Serial.println(" deg C.");
+            }
+        }
+        else
+        {
+            SERIAL.println(F("\nInvalid value."));
+        }
+        SERIAL.print(F("Temp Command > "));
+        tempString = "";
+        sensor = -1;
+    }
+    SERIAL.flush();
+    return;
 }

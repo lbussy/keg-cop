@@ -126,7 +126,7 @@ void setAPIPageHandlers()
 {
     server.on("/api/v1/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
-        // Log.verbose(F("Processing %s." CR), request->url().c_str());
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize API
         StaticJsonDocument<CAP_API> doc;
@@ -146,7 +146,7 @@ void setAPIPageHandlers()
 
     server.on("/api/v1/action/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
-        // Log.verbose(F("Processing %s." CR), request->url().c_str());
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
         StaticJsonDocument<CAP_ACTION_API> doc;
@@ -166,7 +166,7 @@ void setAPIPageHandlers()
 
     server.on("/api/v1/info/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
-        // Log.verbose(F("Processing %s." CR), request->url().c_str());
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
         StaticJsonDocument<CAP_INFO_API> doc;
@@ -186,7 +186,7 @@ void setAPIPageHandlers()
 
     server.on("/api/v1/config/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
-        // Log.verbose(F("Processing %s." CR), request->url().c_str());
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
         StaticJsonDocument<CAP_CONFIG_API> doc;
@@ -211,12 +211,12 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/ping/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
-        // Log.verbose(F("Processing %s." CR), request->url().c_str());
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request); });
 
     server.on("/api/v1/action/wifireset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
-        // Log.verbose(F("Processing %s." CR), request->url().c_str());
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request);
         setDoWiFiReset(); });
 
@@ -230,9 +230,9 @@ void setActionPageHandlers()
         // Required for CORS preflight on some PUT/POST
         send_not_allowed(request); });
 
-    server.on("/api/v1/action/reset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/reset/", [](AsyncWebServerRequest *request)
               {
-        // Log.verbose(F("Processing %s." CR), request->url().c_str());
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         send_ok(request);
         setDoReset(); });
 
@@ -246,13 +246,23 @@ void setActionPageHandlers()
         // Required for CORS preflight on some PUT/POST
         send_not_allowed(request); });
 
-    server.on("/api/v1/action/updatestart/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/updatestart/", [](AsyncWebServerRequest *request)
               {
-        // Log.verbose(F("Processing %s." CR), request->url().c_str());
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
         setDoOTA(); // Trigger the OTA update
         send_ok(request); });
 
     server.on("/api/v1/action/updatestart/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/action/updatestart/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on("/api/v1/action/clearupdate/", [](AsyncWebServerRequest *request)
               {
         // Needed for pre-flights
         send_ok(request); });
@@ -281,7 +291,7 @@ void setActionPageHandlers()
         // Required for CORS preflight on some PUT/POST
         send_not_allowed(request); });
 
-    server.on("/api/v1/action/clearcalmode/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/clearcalmode/", [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s to %s." CR), request->methodToString(),request->url().c_str());
         for (int i = 0; i < NUMTAPS; i++)
@@ -301,7 +311,7 @@ void setActionPageHandlers()
         // Required for CORS preflight on some PUT/POST
         send_not_allowed(request); });
 
-    server.on("/api/v1/action/setcalmode/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/setcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
         int params = request->params();
@@ -498,12 +508,15 @@ void setInfoPageHandlers()
         doc["imperial"] = config.copconfig.imperial;
         doc["controlpoint"] = config.temps.controlpoint;
         doc["setting"] = config.temps.setpoint;
-        doc["status"] = tstat.state;
+        doc["status"] = tstat[TS_TYPE_CHAMBER].state;
         doc["controlenabled"] = config.temps.enabled[config.temps.controlpoint];
         doc["coolonhigh"] = config.temps.coolonhigh;
+        doc["tfancontrolenabled"] = config.temps.tfancontrolenabled;
+        doc["tfansetpoint"] = config.temps.tfansetpoint;
+        doc["tfanstate"] = tstat[TS_TYPE_TOWER].state;
 
         int numEnabled = 0;
-        char *sensorName[NUMSENSOR];
+        // char *sensorName[NUMSENSOR];
         double sensorAverage[NUMSENSOR];
 
         for (int i = 0; i < NUMSENSOR; i++)
@@ -568,7 +581,7 @@ void setConfigurationPageHandlers()
             }
         } });
 
-    server.on("/api/v1/config/settings/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/settings/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         // Used to provide the Config json
         // Serialize configuration
@@ -592,6 +605,7 @@ void setConfigurationPageHandlers()
               {
         // Process taps update
         Log.verbose(F("Processing put to %s." CR), request->url().c_str());
+        bool didFail = false;
 
         HANDLER_STATE state = NOT_PROCCESSED;
         for (int i = 0; i < tapHandlers; i++)
@@ -612,7 +626,7 @@ void setConfigurationPageHandlers()
             }
         } });
 
-    server.on("/api/v1/config/taps/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/config/taps/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         // Serialize configuration
         DynamicJsonDocument doc(capacityFlowSerial); // Create doc
@@ -627,6 +641,7 @@ void setConfigurationPageHandlers()
               {
         // Required for CORS preflight on some PUT/POST
         send_ok(request); });
+
     // Tap Handlers^
 }
 
@@ -649,8 +664,6 @@ void stopWebServer()
 
 // Settings Handlers:
 
-// TODO: DEBUG:  Comment out: // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
-
 HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle controller settings
 {
     bool didFail = false;
@@ -666,7 +679,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Controller settings
             //
@@ -781,26 +794,33 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "tapsolenoid") == 0) // Set active
+            if (strcmp(name, "tapsolenoid") == 0)
             {
-                if (strcmp(value, "energized") == 0)
+                if (config.temps.tfancontrolenabled) // Set active
                 {
-                    didChange = true;
-                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                    digitalWrite(SOLENOID, LOW);
-                    config.copconfig.tapsolenoid = true;
-                }
-                else if (strcmp(value, "deenergized") == 0)
-                {
-                    didChange = true;
-                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                    digitalWrite(SOLENOID, HIGH);
-                    config.copconfig.tapsolenoid = false;
+                    if (strcmp(value, "energized") == 0)
+                    {
+                        didChange = true;
+                        Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        digitalWrite(SOLENOID, LOW);
+                        config.copconfig.tapsolenoid = true;
+                    }
+                    else if (strcmp(value, "deenergized") == 0)
+                    {
+                        didChange = true;
+                        Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        digitalWrite(SOLENOID, HIGH);
+                        config.copconfig.tapsolenoid = false;
+                    }
+                    else
+                    {
+                        didFail = true;
+                        Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                    }
                 }
                 else
                 {
-                    didFail = true;
-                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid when tower fan control is enabled." CR), name, value);
                 }
             }
         }
@@ -845,7 +865,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Sensor settings
             //
@@ -928,6 +948,70 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
+            if (strcmp(name, "tfancontrolenabled") == 0) // Enable tower fan control
+            {
+                if (strcmp(value, "true") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfancontrolenabled = true;
+                }
+                else if (strcmp(value, "false") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfancontrolenabled = false;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "tfansetpoint") == 0) // Set Tower fan setpoint
+            {
+                didChange = true;
+                double min, max;
+                if (config.copconfig.imperial)
+                {
+                    min = FMIN;
+                    max = FMAX;
+                }
+                else
+                {
+                    min = CMIN;
+                    max = CMAX;
+                }
+                if ((atof(value) < min) || (atof(value) > max))
+                {
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfansetpoint = atof(value);
+                }
+            }
+            if (strcmp(name, "fanonhigh") == 0) // Enable fan on pin high (reverse)
+            {
+                if (strcmp(value, "true") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfanonhigh = true;
+                }
+                else if (strcmp(value, "false") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    config.temps.tfanonhigh = false;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
         }
     }
     // Return values
@@ -963,7 +1047,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Sensor settings
             //
@@ -1178,7 +1262,7 @@ HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // KegScreen url settings
             //
@@ -1237,7 +1321,7 @@ HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *request) // Handle URL 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Taplist.io Venue
             //
@@ -1318,7 +1402,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // MQTT Target settings
             //
@@ -1461,7 +1545,7 @@ HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Target url settings
             //
@@ -1536,7 +1620,7 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cl
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Cloud target settings
             //
@@ -1624,7 +1708,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("DEBUG: handleTapPost(): Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("handleTapPost(): Processing [%s]:(%s) pair." CR), name, value);
 
             // Tap settings
             //
@@ -1794,7 +1878,7 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("DEBUG: handleTapCal(): Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("handleTapCal(): Processing [%s]:(%s) pair." CR), name, value);
 
             // Tap Calibration
             //
@@ -1880,7 +1964,7 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Calibration Mode Set
             //

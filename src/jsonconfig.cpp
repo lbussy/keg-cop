@@ -343,6 +343,7 @@ void CopConfig::save(JsonObject obj) const
     obj["imperial"] = imperial;
     obj["tapsolenoid"] = tapsolenoid;
     obj["pouremulate"] = pouremulate;
+    obj["tempemulate"] = tempemulate;
 }
 
 void CopConfig::load(JsonObjectConst obj)
@@ -451,6 +452,16 @@ void CopConfig::load(JsonObjectConst obj)
         bool em = obj["pouremulate"];
         pouremulate = em;
     }
+
+    if (obj["tempemulate"].isNull())
+    {
+        tempemulate = false;
+    }
+    else
+    {
+        bool te = obj["tempemulate"];
+        tempemulate = te;
+    }
 }
 
 void Temperatures::save(JsonObject obj) const
@@ -459,6 +470,9 @@ void Temperatures::save(JsonObject obj) const
     obj["controlpoint"] = controlpoint;
     obj["controlenabled"] = controlenabled;
     obj["coolonhigh"] = coolonhigh;
+    obj["tfancontrolenabled"] = tfancontrolenabled;
+    obj["tfansetpoint"] = tfansetpoint;
+    obj["tfanonhigh"] = tfanonhigh;
     obj["roomenabled"] = enabled[0];
     obj["roomcal"] = calibration[0];
     obj["towerenabled"] = enabled[1];
@@ -513,6 +527,36 @@ void Temperatures::load(JsonObjectConst obj)
     {
         bool ch = obj["coolonhigh"];
         coolonhigh = ch;
+    }
+
+    if (obj["tfancontrolenabled"].isNull())
+    {
+        tfancontrolenabled = false;
+    }
+    else
+    {
+        bool te = obj["tfancontrolenabled"];
+        tfancontrolenabled = te;
+    }
+
+    if (obj["tfansetpoint"].isNull())
+    {
+        tfansetpoint = DEFSET;
+    }
+    else
+    {
+        float ts = obj["tfansetpoint"];
+        tfansetpoint = ts;
+    }
+
+    if (obj["tfanonhigh"].isNull())
+    {
+        tfanonhigh = false;
+    }
+    else
+    {
+        bool th = obj["tfanonhigh"];
+        tfanonhigh = th;
     }
 
     if (obj["roomenabled"].isNull())
