@@ -1,3 +1,5 @@
+TODO:  Redo the size and code here (tfanstate)
+
 Temps Report JSON Model:
 ========================
 
