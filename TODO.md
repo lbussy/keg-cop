@@ -18,7 +18,11 @@
     - [x] Add a "fan on" graphic to Temps
     - [x] Add a "fan on" graphic to Index
     - [x] Do JSON sizes
-    - [ ] Add Tower Fan state to reports
+    - [ ] Add Tower Fan state to json
+        - [x] Kegscreen coolstate
+        - [x] Config JSON
+        - [x] Temps JSON
+        - [ ] URL Report
     - [ ] Do documentation:
         - [ ] Kegscreen coolstate
         - [ ] Config JSON

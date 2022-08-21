@@ -51,7 +51,7 @@ enum ControlPoint
 {
     CP_COOL = COOL,
     CP_SOLENOID = SOLENOID,
-    CP_COUNT = 2 // Need this stated explicitly since it's not a normal enum
+    CP_COUNT = 2 // Need this bound stated explicitly since it's not a normal enum
 };
 
 static const char *thermostatName[TS_COUNT] = {"Chamber", "Tower"};
