@@ -44,6 +44,9 @@ bool sendTargetReport()
         urlreport.setpoint = config.temps.setpoint;
         urlreport.state = tstat[TS_TYPE_CHAMBER].state;
         urlreport.controlenabled = config.temps.controlenabled;
+        urlreport.tfansetpoint = config.temps.tfansetpoint;
+        urlreport.tfanstate = tstat[TS_TYPE_TOWER].state;
+        urlreport.tfancontrolenabled = config.temps.tfancontrolenabled;
 
         for (int i = 0; i < NUMSENSOR; i++)
         {
@@ -71,8 +74,7 @@ bool sendTargetReport()
             urlreport.tap[i].active = flow.taps[i].active;
         }
 
-        const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5 * JSON_OBJECT_SIZE(3) + 9 * JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(13);
-        DynamicJsonDocument doc(capacity);
+        DynamicJsonDocument doc(3072);
 
         doc["api"] = urlreport.api;
         doc["guid"] = urlreport.guid;
@@ -85,6 +87,9 @@ bool sendTargetReport()
         doc["setting"] = (const float)urlreport.setpoint;
         doc["status"] = (const int)urlreport.state;
         doc["controlenabled"] = urlreport.controlenabled;
+        doc["tfansetpoint"] = (const float)urlreport.tfansetpoint;
+        doc["tfanstate"] = (const int)urlreport.tfanstate;
+        doc["tfancontrolenabled"] = urlreport.tfancontrolenabled;
 
         for (int i = 0; i < NUMSENSOR; i++)
         {
