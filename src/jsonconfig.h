@@ -167,6 +167,8 @@ struct Config
     void save(JsonObject) const;
 };
 
+extern Config config;
+
 bool deleteConfigFile();
 bool loadConfig();
 bool saveConfig();

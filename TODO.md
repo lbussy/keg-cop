@@ -1,6 +1,9 @@
 # TODO:
 
 - [ ] `dataHost` is locked to PIO's `./data/` interpretation
+- [ [ Add KegScreeen:
+    - [x] Service
+    - [ ] REST API
 
 - [ ] Tower Fan Control
     - [x] Settings JSON:
@@ -12,9 +15,10 @@
         - [x] Handle data load for Settings
         - [x] Add `tfanonhigh` setting
     - [x] Enable temp control loop
-    - [ ] Add a "fan on" graphic to Temps
+    - [x] Add a "fan on" graphic to Temps
     - [x] Add a "fan on" graphic to Index
     - [x] Do JSON sizes
+    - [ ] Add Tower Fan state to reports
     - [ ] Do documentation:
         - [ ] Kegscreen coolstate
         - [ ] Config JSON
@@ -33,4 +37,4 @@
         - [ ] Tower fan setpoint
     - [ ] UI
         - [ ] Index indicator
-        - [ ] Temps indocator
+        - [ ] Temps indicator

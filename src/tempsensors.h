@@ -41,6 +41,14 @@ SOFTWARE. */
 // #define DEVICE_DISCONNECTED_RAW -7040
 
 // Temperature sensor definitions
+enum SensorList
+{
+    ROOM,
+    TOWER,
+    UPPER,
+    LOWER,
+    KEG
+};
 static const char *sensorName[NUMSENSOR] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
 static int sensorPin[NUMSENSOR] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
 
@@ -64,7 +72,5 @@ void sensorReInit();
 void pollTemps();
 double getTempC(uint8_t);
 void logTempEmulation(int sensor, double temp);
-
-extern struct Config config;
 
 #endif // _TEMPSENSORS_H

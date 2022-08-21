@@ -187,7 +187,7 @@ bool sendCoolStateReport()
     }
 
     CommonReportFields(doc, reportkey);
-    doc[KegscreenKeys::coolstate] = tstat.state;
+    doc[KegscreenKeys::coolstate] = tstat[TS_TYPE_CHAMBER].state;
 
     String json;
     serializeJson(doc, json);
@@ -212,12 +212,12 @@ bool sendTempReport()
     doc[KegscreenKeys::imperial] = config.copconfig.imperial;
     doc[KegscreenKeys::controlpoint] = config.temps.controlpoint;
     doc[KegscreenKeys::setting] = config.temps.setpoint;
-    doc[KegscreenKeys::status] = tstat.state;
+    doc[KegscreenKeys::status] = tstat[TS_TYPE_CHAMBER].state;
     doc[KegscreenKeys::controlenabled] = config.temps.controlenabled;
     doc[KegscreenKeys::coolonhigh] = config.temps.coolonhigh;
     doc[KegscreenKeys::tfancontrolenabled] = config.temps.tfancontrolenabled;
     doc[KegscreenKeys::tfansetpoint] = config.temps.tfansetpoint;
-    doc[KegscreenKeys::tfanstatus] = tfan.state;
+    doc[KegscreenKeys::tfanstatus] = tstat[TS_TYPE_CHAMBER].state;
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
@@ -262,7 +262,6 @@ bool sendReport(ReportKey thisKey, const char * json) {
         }
         if (connection.length() > 0)
         {
-            // reports[thisKey].setDebug(true);
             reports[thisKey].onData(pf[thisKey]);
             if (reports[thisKey].open("POST", connection.c_str()))
             {

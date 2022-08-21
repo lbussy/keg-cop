@@ -47,6 +47,7 @@ function loadThatVersion() { // Get current parameters
         setTimeout(loadThatVersion, 10);
         return;
     }
+
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)

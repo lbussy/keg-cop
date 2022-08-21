@@ -47,8 +47,6 @@ void saveParamsCallback();
 void webServerCallback();
 void WiFiEvent(WiFiEvent_t event);
 
-extern struct Config config;
-
 struct tcp_pcb;
 extern struct tcp_pcb *tcp_tw_pcbs;
 extern "C" void tcp_abort(struct tcp_pcb *pcb);

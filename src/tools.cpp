@@ -139,10 +139,10 @@ void tickerLoop()
             sendKickReport(i);
         }
         // Send temp control state change
-        if (queueStateChange == true || queueFanStateChange == true)
+        if (tstat[TS_TYPE_CHAMBER].queueStateChange == true || tstat[TS_TYPE_TOWER].queueStateChange == true)
         {
-            queueStateChange = false;
-            queueFanStateChange = false;
+            tstat[TS_TYPE_CHAMBER].queueStateChange = false;
+            tstat[TS_TYPE_TOWER].queueStateChange = false;
             sendCoolStateReport();
         }
         // Send Tap Info Report
