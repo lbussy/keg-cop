@@ -86,7 +86,6 @@ void setup()
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, (config.temps.coolonhigh) ? LOW : HIGH);
 
-
     setClock(); // Set NTP Time
 
     // Initialize flowmeters before checking for FILESYSTEM update
@@ -97,7 +96,10 @@ void setup()
 
     // Clear temperature sensor emulation
     config.copconfig.tempemulate = false;
+<<<<<<< HEAD
 
+=======
+>>>>>>> d380890 (New tstat (#103))
     // Clear all tap calibration
     config.copconfig.pouremulate = false;
     for (int i = 0; i < NUMTAPS; i++)

@@ -266,16 +266,16 @@ void reportTstat(int ts)
     }
 }
 
-void tfanReport()
+void reportTstat(int ts)
 { // For thermostat state messages debugging
     unsigned long now = millis();
     char tempFormat[1];
     double setpoint = config.temps.setpoint;
     double tempNow;
-    double wait = (double)(now - tfan.lastOff) / 1000;
-    double runtime = (double)(now - tfan.lastOn) / 1000;
-    double lastontime = (double)(now - tfan.lastOn) / 1000;
-    double lastofftime = (double)(now - tfan.lastOff) / 1000;
+    double wait = (double)(now - tstat[ts].lastOff) / 1000;
+    double runtime = (double)(now - tstat[ts].lastOn) / 1000;
+    double lastontime = (double)(now - tstat[ts].lastOn) / 1000;
+    double lastofftime = (double)(now - tstat[ts].lastOff) / 1000;
     if (config.copconfig.imperial)
     {
         strlcpy(tempFormat, "F", sizeof(tempFormat));
@@ -287,15 +287,16 @@ void tfanReport()
         tempNow = device.sensor[config.temps.controlpoint].average;
     }
 
-    switch (tfan.state)
+    switch (tstat[ts].state)
     {
     case TSTAT_INACTIVE:
-        Log.verbose(F("[TSTAT_INACTIVE] Fan is disabled." CR));
+        Log.verbose(F("[TSTAT_INACTIVE] %s cooling is disabled." CR), thermostatName[ts]);
         break;
 
     case TSTAT_COOL_BEGIN:
-        Log.verbose(F("[TSTAT_COOL_BEGIN] Fan is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
-                    tfan.cooling,
+        Log.verbose(F("[TSTAT_COOL_BEGIN] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
+                    thermostatName[ts],
+                    tstat[ts].cooling,
                     tempNow,
                     tempFormat,
                     setpoint,
@@ -306,8 +307,9 @@ void tfanReport()
         break;
 
     case TSTAT_COOL_MINOFF:
-        Log.verbose(F("[TSTAT_COOL_MINOFF] Fan is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, wait time has been %D seconds." CR),
-                    tfan.cooling,
+        Log.verbose(F("[TSTAT_COOL_MINOFF] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, wait time has been %D seconds." CR),
+                    thermostatName[ts], 
+                    tstat[ts].cooling,
                     tempNow,
                     tempFormat,
                     setpoint,
@@ -318,8 +320,9 @@ void tfanReport()
         break;
 
     case TSTAT_COOL_ACTIVE:
-        Log.verbose(F("[TSTAT_COOL_ACTIVE] Fan is %T, control point %D°%s, setpoint %D°%s. Run started %D seconds ago, runnning for %D seconds." CR),
-                    tfan.cooling,
+        Log.verbose(F("[TSTAT_COOL_ACTIVE] %s cooling is %T, control point %D°%s, setpoint %D°%s. Run started %D seconds ago, runnning for %D seconds." CR),
+                    thermostatName[ts],
+                    tstat[ts].cooling,
                     tempNow,
                     tempFormat,
                     setpoint,
@@ -329,8 +332,9 @@ void tfanReport()
         break;
 
     case TSTAT_OFF_END:
-        Log.verbose(F("[TSTAT_OFF_END] Fan is %T, control point %D°%s, setpoint,  %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
-                    tfan.cooling,
+        Log.verbose(F("[TSTAT_OFF_END] %s cooling is %T, control point %D°%s, setpoint,  %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
+                    thermostatName[ts],
+                    tstat[ts].cooling,
                     tempNow,
                     tempFormat,
                     setpoint,
@@ -340,8 +344,9 @@ void tfanReport()
         break;
 
     case TSTAT_OFF_MINON:
-        Log.verbose(F("[TSTAT_OFF_MINON] Fan is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
-                    tfan.cooling,
+        Log.verbose(F("[TSTAT_OFF_MINON] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
+                    thermostatName[ts],
+                    tstat[ts].cooling,
                     tempNow,
                     tempFormat,
                     setpoint,
@@ -352,8 +357,9 @@ void tfanReport()
         break;
 
     case TSTAT_OFF_INACTIVE:
-        Log.verbose(F("[TSTAT_OFF_INACTIVE] Fan is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
-                    tfan.cooling,
+        Log.verbose(F("[TSTAT_OFF_INACTIVE] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
+                    thermostatName[ts],
+                    tstat[ts].cooling,
                     tempNow,
                     tempFormat,
                     setpoint,
@@ -363,7 +369,7 @@ void tfanReport()
         break;
 
     case TSTAT_UNKNOWN:
-        Log.verbose(F("[TSTAT_UNKNOWN] Fan is in an unknown state." CR));
+        Log.verbose(F("[TSTAT_UNKNOWN] %s thermostat is in an unknown state." CR), thermostatName[ts]);
         break;
     }
 }
