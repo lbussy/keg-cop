@@ -31,10 +31,10 @@
         - [ ] Cool State Report
         - [ ] Temps Report
     - [ ] URL Report
-    - [ ] Settings
-        - [ ] Enable Tower Fan
-        - [ ] Disable solenoid
-        - [ ] Tower fan setpoint
-    - [ ] UI
-        - [ ] Index indicator
-        - [ ] Temps indicator
+    - [x] Settings
+        - [x] Enable Tower Fan
+        - [x] Disable solenoid
+        - [x] Tower fan setpoint
+    - [x] UI
+        - [x] Index indicator
+        - [x] Temps indicator
