@@ -22,7 +22,19 @@ SOFTWARE. */
 
 #include "mdnshandler.h"
 
-void mdnssetup()
+enum MDNS_SERVICES
+{
+    MDNS_HTTP,
+    MDNS_KEGCOP,
+    MDNS_KEGSCREEN,
+    MDNS_KSTV,
+    MDNS_TELNET,
+    MDNS_MAX
+};
+static const char *mDNSService[MDNS_MAX] = {"kc_http", "keg_cop", "kegscreen", "ks_tv", "kc_telnet"};
+static int mDNSPort[MDNS_MAX] = {PORT, PORT, PORT, PORT, TELNETPORT};
+
+void mDNSSetup()
 {
     if (!MDNS.begin(WiFi.getHostname()))
     { // Start the mDNS responder
@@ -31,16 +43,11 @@ void mdnssetup()
     else
     {
         Log.notice(F("mDNS responder started for %s.local." CR), WiFi.getHostname());
-        MDNS.addService("http", "tcp", PORT);
-        MDNS.addService("kegcop", "tcp", PORT);
-#if DOTELNET == true
-        MDNS.addService("telnet", "tcp", TELNETPORT);
-#endif
-        Log.notice(F("HTTP registered via mDNS on port %i." CR), PORT);
+        mDNSServiceAdvert();
     }
 }
 
-void mdnsreset()
+void mDNSReset()
 {
     MDNS.end();
     if (!MDNS.begin(config.copconfig.hostname))
@@ -50,10 +57,14 @@ void mdnsreset()
     else
     {
         Log.notice(F("mDNS responder restarted for %s.local." CR), WiFi.getHostname());
-        MDNS.addService("http", "tcp", PORT);
-        MDNS.addService("kegcop", "tcp", PORT);
-#if DOTELNET == true
-        MDNS.addService("telnet", "tcp", TELNETPORT);
-#endif
+        mDNSServiceAdvert();
+    }
+}
+
+void mDNSServiceAdvert()
+{
+    for (int service = 0; service < MDNS_MAX; service++)
+    {
+        MDNS.addService(mDNSService[service], "tcp", mDNSPort[service]);
     }
 }

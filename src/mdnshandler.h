@@ -27,7 +27,8 @@ SOFTWARE. */
 #include <ArduinoLog.h>
 #include <ESPmDNS.h>
 
-void mdnssetup();
-void mdnsreset();
+void mDNSSetup();
+void mDNSReset();
+void mDNSServiceAdvert();
 
 #endif // _MDNSHANDLER_H
