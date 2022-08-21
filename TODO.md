@@ -4,6 +4,7 @@
 - [ [ Add KegScreeen:
     - [x] Service
     - [ ] REST API
+- [ ] Add secret for impactful posts
 
 - [ ] Tower Fan Control
     - [x] Settings JSON:
