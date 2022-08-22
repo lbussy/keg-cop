@@ -162,50 +162,6 @@ function populateTemps(callback = null) { // Get current temperature and state
                         $('#tempFormat').html("&#x2103;");
                     }
 
-                    if (temps.tfancontrolenabled) {
-                        // Set tower fan indicator
-                        switch (temps.tfanstate) {
-                            case 0: // TSTAT_INACTIVE
-                                $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
-                                $("#fanstatetooltip").attr("data-original-title", "Tower fan is off.");
-                                break;
-                            case 1: // TSTAT_COOL_BEGIN
-                                $('#towerFan').html('<i class="fa-solid fa-fan"></i>');
-                                $("#fanstatetooltip").attr("data-original-title", "Tower fan is on.");
-                                break;
-                            case 2: // TSTAT_COOL_MINOFF
-                                $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
-                                $("#fanstatetooltip").attr("data-original-title", "Tower fan is off.");
-                                break;
-                            case 3: // TSTAT_COOL_ACTIVE
-                                $('#towerFan').html('<i class="fa-solid fa-fan"></i>');
-                                $("#fanstatetooltip").attr("data-original-title", "Tower fan is on.");
-                                break;
-                            case 4: // TSTAT_IDLE_END
-                                $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
-                                $("#fanstatetooltip").attr("data-original-title", "Tower fan is off.");
-                                break;
-                            case 5: // TSTAT_IDLE_MINON
-                                $('#towerFan').html('<i class="fa-solid fa-fan"></i>');
-                                $("#fanstatetooltip").attr("data-original-title", "Tower fan is on.");
-                                break;
-                            case 6: // TSTAT_IDLE_INACTIVE
-                                $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
-                                $("#fanstatetooltip").attr("data-original-title", "Tower fan is off.");
-                                break;
-                            case 7: // TSTAT_UNKNOWN
-                                $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
-                                $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                                console.log("DEBUG: Tower state unknown (7).");
-                                break;
-                            default: // TSTAT_UNKNOWN
-                                $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
-                                $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                                console.log("DEBUG: Tower state unknown (default).");
-                                break;
-                        }
-                    }
-
                     // Set indicator button
                     switch (temps.status) {
                         case 0: // TSTAT_INACTIVE
@@ -242,6 +198,7 @@ function populateTemps(callback = null) { // Get current temperature and state
                             clearState();
                             $("#coolstate").addClass("alert-light");
                             $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, in idle mode");
+                            $("#coolstatetooltip").attr("href", "/temps/");
                             break;
                         case 7: // TSTAT_UNKNOWN
                             clearState();
@@ -254,7 +211,6 @@ function populateTemps(callback = null) { // Get current temperature and state
                             $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
                             break;
                     }
-                }
 
                 if (loaded < numReq) {
                     loaded++;

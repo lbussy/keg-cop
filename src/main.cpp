@@ -96,10 +96,7 @@ void setup()
 
     // Clear temperature sensor emulation
     config.copconfig.tempemulate = false;
-<<<<<<< HEAD
-
-=======
->>>>>>> d380890 (New tstat (#103))
+    
     // Clear all tap calibration
     config.copconfig.pouremulate = false;
     for (int i = 0; i < NUMTAPS; i++)

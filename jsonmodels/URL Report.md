@@ -1,5 +1,3 @@
-TODO:  Redo the size and code here (tfanstate)
-
 URL Target Report JSON Model:
 ================================
 
