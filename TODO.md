@@ -20,7 +20,7 @@
     - [x] Do JSON sizes
     - [x] Add Tower Fan state to json
         - [x] Kegscreen coolstate
-        - [ ] Kegscreen temps
+        - [x] Kegscreen temps
         - [x] Config JSON
         - [x] Temps JSON
         - [x] URL Report
@@ -29,8 +29,8 @@
         - [x] Config JSON
         - [x] Temps JSON
         - [x] URL Report
-- [ ] `coolstatetooltip` URL not re-writing
-- [ ] `fanstatetooltip` URL not re-writing
+- [x] `coolstatetooltip` URL not re-writing
+- [x] `fanstatetooltip` URL not re-writing
 - [ ] Test:
     - [ ] Kegscreen
         - [ ] Cool State Report

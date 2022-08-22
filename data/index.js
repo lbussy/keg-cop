@@ -140,7 +140,6 @@ function populateConfig() { // Get configuration settings
 }
 
 function populateTemps(callback = null) { // Get current temperature and state
-    console.log("DEBUG: Starting here - 1");
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -199,6 +198,7 @@ function populateTemps(callback = null) { // Get current temperature and state
                             clearState();
                             $("#coolstate").addClass("alert-light");
                             $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, in idle mode");
+                            $("#coolstatetooltip").attr("href", "/temps/");
                             break;
                         case 7: // TSTAT_UNKNOWN
                             clearState();
@@ -246,12 +246,10 @@ function populateTemps(callback = null) { // Get current temperature and state
                             case 7: // TSTAT_UNKNOWN
                                 $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                                 $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                                console.log("DEBUG: Tower state unknown (7).");
                                 break;
                             default: // TSTAT_UNKNOWN
                                 $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                                 $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                                console.log("DEBUG: Tower state unknown (default).");
                                 break;
                         }
                     }

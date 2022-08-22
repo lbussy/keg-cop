@@ -106,12 +106,10 @@ function populateTemps(callback = null) { // Get configuration settings
                         case 7: // TSTAT_UNKNOWN
                             $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                            console.log("DEBUG: Tower state unknown (7).");
                             break;
                         default: // TSTAT_UNKNOWN
                             $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                            console.log("DEBUG: Tower state unknown (default).");
                             break;
                     }
                 }
