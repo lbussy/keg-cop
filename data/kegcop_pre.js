@@ -21,6 +21,9 @@ window.addEventListener("beforeunload", function (event) {
 });
 
 window.onclick = function (event) {
+    var type = event.target.type;
+    if (type == "submit" || type == "radio")
+        return; // Skip form items
     if (event.target.id == "noChange")
         return; // Skip rewriting context help
     // Open a rewritten URL and return false to prevent default
@@ -260,7 +263,6 @@ function cleanURL(event) {
     // using a dev server
     try {
         const currentURL = new URL(window.location.href);
-
         // The following if/else is needed because of clickable spans inside an anchor element
         var targetURL = "";
         if (!event.target.href) {
