@@ -294,12 +294,10 @@ function populateTemps(callback = null) { // Get current temperature and state
                             case 7: // TSTAT_UNKNOWN
                                 $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
                                 $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                                console.log("DEBUG: Tower state unknown (7).");
                                 break;
                             default: // TSTAT_UNKNOWN
                                 $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
                                 $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                                console.log("DEBUG: Tower state unknown (default).");
                                 break;
                         }
                     }
