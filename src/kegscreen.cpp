@@ -50,6 +50,43 @@ const char *reportname[5] = {
     "Cool",
     "Temps"};
 
+/**
+ * \brief Strings used for JSON keys
+ * \see ControlConstants
+ */
+namespace KegscreenKeys {
+    constexpr auto api = "api";
+    constexpr auto guid = "guid";
+    constexpr auto hostname = "hostname";
+    constexpr auto breweryname = "breweryname";
+    constexpr auto kegeratorname = "kegeratorname";
+    constexpr auto reporttype = "reporttype";
+    constexpr auto imperial = "imperial";
+    constexpr auto tapid = "tapid";
+    constexpr auto name = "name";
+    constexpr auto ppu = "ppu";
+    constexpr auto remaining = "remaining";
+    constexpr auto capacity = "capacity";
+    constexpr auto active = "active";
+    constexpr auto calibrating = "calibrating";
+    constexpr auto dispensed = "dispensed";
+    constexpr auto coolstate = "coolstate";
+    constexpr auto controlpoint = "controlpoint";
+
+    constexpr auto setting = "setting";
+    constexpr auto status = "status";
+    constexpr auto controlenabled = "controlenabled";
+    constexpr auto coolonhigh = "coolonhigh";
+
+    constexpr auto tfancontrolenabled = "tfancontrolenabled";
+    constexpr auto tfansetpoint = "tfansetpoint";
+    constexpr auto tfanstatus = "tfanstatus";
+
+    constexpr auto sensors = "sensors";
+    constexpr auto value = "value";
+    constexpr auto enabled = "enabled";
+};
+
 bool reported[5];
 
 static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
@@ -88,9 +125,6 @@ bool sendTapInfoReport(int tapid)
             doc[KegscreenKeys::active] = flow.taps[tapid].active;
             doc[KegscreenKeys::calibrating] = flow.taps[tapid].calibrating;
 
-            // String json;
-            // serializeJson(doc, json);
-
             return sendReport(reportkey, doc);
         }
         else
@@ -124,9 +158,6 @@ bool sendPourReport(int tapid, float dispensed)
             doc[KegscreenKeys::dispensed] = dispensed;
             doc[KegscreenKeys::remaining] = flow.taps[tapid].remaining;
 
-            // String json;
-            // serializeJson(doc, json);
-
             return sendReport(reportkey, doc);
         }
         else
@@ -154,9 +185,6 @@ bool sendKickReport(int tapid)
 
             CommonReportFields(doc, reportkey);
             doc[KegscreenKeys::tapid] = tapid;
-
-            // String json;
-            // serializeJson(doc, json);
 
             return sendReport(reportkey, doc);
         }
@@ -188,12 +216,9 @@ bool sendCoolStateReport()
 
     CommonReportFields(doc, reportkey);
     doc[KegscreenKeys::coolstate] = tstat[TS_TYPE_CHAMBER].state;
+    doc[KegscreenKeys::tfanstatus] = tstat[TS_TYPE_TOWER].state;
 
-    String json;
-    serializeJson(doc, json);
-
-
-    return sendReport(reportkey, json.c_str());
+    return sendReport(reportkey, doc);
 }
 
 bool sendTempReport()

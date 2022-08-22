@@ -321,6 +321,9 @@ Where:
 - ``setting`` = Temperature setting in current units.
 - ``status`` = Zero based index representing the current temperature control state_.
 - ``controlenabled`` = Boolean for enabling temperature control.
+- ``tfansetpoint`` = Temperature setting for tower fan in current units.
+- ``tfanstate`` = Zero based index representing the current tower temperature control state_.
+- ``tfancontrolenabled`` = Boolean for enabling tower temperature control.
 - ``sensors`` = An array of temperature sensors denoting the ``name``, ``enable`` status, and current ``value`` of each.
 - ``displayenabled`` = Boolean to display temperatures on the web UI or not.
 
@@ -374,6 +377,9 @@ GET
             "setpoint": 35,
             "controlpoint": 4,
             "controlenabled": true,
+            "tfancontrolenabled": true,
+            "tfansetpoint": 38.5,
+            "tfanonhigh": false,
             "roomenabled": true,
             "roomcal": 1,
             "towerenabled": true,
@@ -439,6 +445,9 @@ temps
 - ``setpoint`` - The temperature setpoint in the configured units to which the system will cool the cabinet.  This is a floating-point number.
 - ``controlpoint`` - A zero-based index indicating the sensor_ by which the system will be cooled.
 - ``controlenabled`` - A boolean turning temperature control on and off.
+- ``tfansetpoint`` = The temperature setpoint for cooling in the configured units to which the system will cool the tower.  This is a floating-point number.
+- ``tfanstate`` = Zero based index representing the current tower temperature control state_.
+- ``tfancontrolenabled`` = Boolean for enabling tower temperature control.
 - ``enableroom`` - Enable the room sensor to be displayed.
 - ``roomcal`` - A signed floating-point number by which the room sensor will be calibrated.
 - ``enabletower`` - Enable the tower sensor to be displayed.
@@ -747,7 +756,10 @@ Whenever the cooling state changes, a state report is triggered for the KegScree
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
         "reporttype":"coolstate",
-        "state":3
+        "state":3,
+        "tfancontrolenabled": true,
+        "tfansetpoint": 38.5,
+        "tfanonhigh": false
     }
 
 Where:
@@ -757,7 +769,10 @@ Where:
 - ``hostname`` = Current mDNS hostname.
 - ``brewername`` = A name used to group several Keg Cops logically.
 - ``reporttype`` = The type of information to be found in this report.
-- ``state`` = A zero-based index representing the current temperature control state_ 
+- ``state`` = A zero-based index representing the current temperature control state_
+- ``tfansetpoint`` = Temperature setting for tower fan in current units.
+- ``tfanstate`` = Zero based index representing the current tower temperature control state_.
+- ``tfancontrolenabled`` = Boolean for enabling tower temperature control.
 
 Send Temperature Report
 ------------------------------
@@ -778,6 +793,9 @@ A report containing all temperature points is sent to the KegScreen system every
         "setting":35,
         "status":3,
         "controlenabled":true,
+        "tfancontrolenabled": true,
+        "tfansetpoint": 38.5,
+        "tfanonhigh": false,
         "sensors":[
             {
                 "name":"Room",
@@ -826,6 +844,9 @@ The Target URL Report provides a holistic picture of the system to a custom/thir
         "setting":35,
         "status":2,
         "controlenabled":true,
+        "tfancontrolenabled": true,
+        "tfansetpoint": 38.5,
+        "tfanonhigh": false,
         "sensors":[
             {
                 "name":"Room",

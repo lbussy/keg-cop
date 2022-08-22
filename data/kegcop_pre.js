@@ -5,6 +5,8 @@ var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
 
+dataHost = localStorage.getItem("dataHost") || ""; // Use this here to enforce running first
+
 getUseTemps();
 
 // Attach the event after the page loads
@@ -19,9 +21,13 @@ window.addEventListener("beforeunload", function (event) {
 });
 
 window.onclick = function (event) {
+    var type = event.target.type;
+    if (type == "submit" || type == "radio")
+        return; // Skip form items
     if (event.target.id == "noChange")
         return; // Skip rewriting context help
     // Open a rewritten URL and return false to prevent default
+    event.preventDefault();
     const newURL = cleanURL(event);
     if (newURL) {
         window.open(newURL, "_self");
@@ -206,7 +212,7 @@ function checkDataHost() {
 
         try {
             ping.send();
-            ping.onload = function() {
+            ping.onload = function () {
                 if (ping.status != 200) {
                     // To set data server, use the following syntax in console:
                     //
@@ -257,7 +263,19 @@ function cleanURL(event) {
     // using a dev server
     try {
         const currentURL = new URL(window.location.href);
-        const targetURL = new URL(event.target.href);
+        // The following if/else is needed because of clickable spans inside an anchor element
+        var targetURL = "";
+        if (!event.target.href) {
+            var tempElement = event.target.parentNode;
+            while (!tempElement.href && tempElement.parentNode) {
+                // Dig for the parent element URL
+                tempElement = tempElement.parentNode;
+            }
+            targetURL = new URL(tempElement.href);
+        } else {
+            targetURL = new URL(event.target.href);
+        }
+
         var newURL;
         newURL = targetURL.protocol
         newURL += "//";

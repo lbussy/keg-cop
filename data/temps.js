@@ -76,7 +76,7 @@ function populateTemps(callback = null) { // Get configuration settings
                     // Set tower fan indicator
                     switch (temps.tfanstate) {
                         case 0: // TSTAT_INACTIVE
-                            $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
+                            $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan is off.");
                             break;
                         case 1: // TSTAT_COOL_BEGIN
@@ -84,7 +84,7 @@ function populateTemps(callback = null) { // Get configuration settings
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan is on.");
                             break;
                         case 2: // TSTAT_COOL_MINOFF
-                            $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
+                            $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan is off.");
                             break;
                         case 3: // TSTAT_COOL_ACTIVE
@@ -92,7 +92,7 @@ function populateTemps(callback = null) { // Get configuration settings
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan is on.");
                             break;
                         case 4: // TSTAT_IDLE_END
-                            $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
+                            $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan is off.");
                             break;
                         case 5: // TSTAT_IDLE_MINON
@@ -100,18 +100,16 @@ function populateTemps(callback = null) { // Get configuration settings
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan is on.");
                             break;
                         case 6: // TSTAT_IDLE_INACTIVE
-                            $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
+                            $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan is off.");
                             break;
                         case 7: // TSTAT_UNKNOWN
-                            $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
+                            $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                            console.log("DEBUG: Tower state unknown (7).");
                             break;
                         default: // TSTAT_UNKNOWN
-                            $('#towerFan').html('<i class="fa-solid fa-ban"></i>');
+                            $('#towerFan').html('<i class="fa-regular fa-circle-pause"></i>');
                             $("#fanstatetooltip").attr("data-original-title", "Tower fan state unknown.");
-                            console.log("DEBUG: Tower state unknown (default).");
                             break;
                     }
                 }

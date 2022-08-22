@@ -96,6 +96,7 @@ void setup()
 
     // Clear temperature sensor emulation
     config.copconfig.tempemulate = false;
+
     // Clear all tap calibration
     config.copconfig.pouremulate = false;
     for (int i = 0; i < NUMTAPS; i++)
@@ -106,7 +107,7 @@ void setup()
     saveConfig();
 
     execspiffs();                // Check for pending FILESYSTEM update
-    mdnssetup();                 // Set up mDNS responder
+    mDNSSetup();                 // Set up mDNS responder
     initWebServer();             // Turn on web server
     sensorInit();                // Initialize temperature sensors
     startTstat(TS_TYPE_CHAMBER); // Initialize temperature control
