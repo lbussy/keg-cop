@@ -29,17 +29,17 @@
         - [x] Config JSON
         - [x] Temps JSON
         - [x] URL Report
-- [x] `coolstatetooltip` URL not re-writing
-- [x] `fanstatetooltip` URL not re-writing
-- [ ] Test:
-    - [ ] Kegscreen
-        - [ ] Cool State Report
-        - [ ] Temps Report
-    - [ ] URL Report
-    - [x] Settings
-        - [x] Enable Tower Fan
-        - [x] Disable solenoid
-        - [x] Tower fan setpoint
-    - [x] UI
-        - [x] Index indicator
-        - [x] Temps indicator
+    - [x] `coolstatetooltip` URL not re-writing
+    - [x] `fanstatetooltip` URL not re-writing
+    - [x] Test:
+        - [x] Kegscreen
+            - [x] Cool State Report
+            - [x] Temps Report
+        - [ ] URL Report
+        - [x] Settings
+            - [x] Enable Tower Fan
+            - [x] Disable solenoid
+            - [x] Tower fan setpoint
+        - [x] UI
+            - [x] Index indicator
+            - [x] Temps indicator
