@@ -828,7 +828,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
         { // We reset hostname, process
             hostnamechanged = false;
             tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.copconfig.hostname);
-            mdnsreset();
+            mDNSReset();
             Log.notice(F("POSTed new mDNSid, reset mDNS stack." CR));
         }
     }

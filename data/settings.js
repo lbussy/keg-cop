@@ -231,7 +231,6 @@ function populateConfig(callback = null) { // Get configuration settings
                         $('input[name=tfanonhigh]').attr("disabled", true);             // Eanble invert control
                     }
                 } catch {
-                    console.log("DEBUG: Shit myself.");
                     $('input:radio[name="tfancontrolenabled"]')[0].checked = false;    // Check enabled radio
                     $('input[name=tapsolenoid]').attr("disabled", false);           // Disable Solenoid control
                     $("#tfansetpoint").prop("disabled", true);                         // Enable setpoint control

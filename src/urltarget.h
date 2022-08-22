@@ -66,6 +66,9 @@ struct UrlReport
     float setpoint;
     int state;
     bool controlenabled;
+    float tfansetpoint;
+    int tfanstate;
+    bool tfancontrolenabled;
     TapsReport tap[NUMTAPS];
     SensorsReport sensor[NUMSENSOR];
 };

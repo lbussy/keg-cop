@@ -13,7 +13,7 @@ JSON Definition:
     "kegeratorname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "reporttype":"xxxxxxxxxxxxxxxx",
     "coolstate":99,
-    "fanon":false
+    "tfanstatus":99
 }
 ```
 

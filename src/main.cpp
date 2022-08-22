@@ -106,7 +106,7 @@ void setup()
     saveConfig();
 
     execspiffs();                // Check for pending FILESYSTEM update
-    mdnssetup();                 // Set up mDNS responder
+    mDNSSetup();                 // Set up mDNS responder
     initWebServer();             // Turn on web server
     sensorInit();                // Initialize temperature sensors
     startTstat(TS_TYPE_CHAMBER); // Initialize temperature control

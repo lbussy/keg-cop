@@ -18,23 +18,28 @@
     - [x] Add a "fan on" graphic to Temps
     - [x] Add a "fan on" graphic to Index
     - [x] Do JSON sizes
-    - [ ] Add Tower Fan state to reports
-    - [ ] Do documentation:
-        - [ ] Kegscreen coolstate
-        - [ ] Config JSON
-        - [ ] Temps JSON
+    - [x] Add Tower Fan state to json
+        - [x] Kegscreen coolstate
+        - [x] Kegscreen temps
+        - [x] Config JSON
+        - [x] Temps JSON
+        - [x] URL Report
+    - [x] Do documentation:
+        - [x] Kegscreen coolstate
+        - [x] Config JSON
+        - [x] Temps JSON
+        - [x] URL Report
+    - [x] `coolstatetooltip` URL not re-writing
+    - [x] `fanstatetooltip` URL not re-writing
+    - [x] Test:
+        - [x] Kegscreen
+            - [x] Cool State Report
+            - [x] Temps Report
         - [ ] URL Report
-- [ ] `coolstatetooltip` URL not re-writing
-- [ ] `fanstatetooltip` URL not re-writing
-- [ ] Test:
-    - [ ] Kegscreen
-        - [ ] Cool State Report
-        - [ ] Temps Report
-    - [ ] URL Report
-    - [ ] Settings
-        - [ ] Enable Tower Fan
-        - [ ] Disable solenoid
-        - [ ] Tower fan setpoint
-    - [ ] UI
-        - [ ] Index indicator
-        - [ ] Temps indicator
+        - [x] Settings
+            - [x] Enable Tower Fan
+            - [x] Disable solenoid
+            - [x] Tower fan setpoint
+        - [x] UI
+            - [x] Index indicator
+            - [x] Temps indicator

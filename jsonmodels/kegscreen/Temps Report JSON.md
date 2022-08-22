@@ -1,5 +1,3 @@
-TODO:  Redo the size and code here (tfanstate)
-
 Temperatures Report JSON Model:
 ================================
 
