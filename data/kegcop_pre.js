@@ -5,7 +5,9 @@ var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
 
-dataHost = localStorage.getItem("dataHost") || ""; // Use this here to enforce running first
+// Use this here to enforce running first
+dataHost = localStorage.getItem("dataHost");
+if (dataHost && !dataHost.endsWith("/")) dataHost += "/";
 
 getUseTemps();
 
@@ -22,13 +24,13 @@ window.addEventListener("beforeunload", function (event) {
 
 window.onclick = function (event) {
     var type = event.target.type;
-    if (type == "submit" || type == "radio")
-        return; // Skip form items
-    if (event.target.id == "noChange")
-        return; // Skip rewriting context help
+    if (type == "submit" || type == "radio" || event.target.id == "noChange") {
+        return;
+    }
+    //    return; // Skip form items and context help
     // Open a rewritten URL and return false to prevent default
     event.preventDefault();
-    const newURL = cleanURL(event);
+    const newURL = cleanURL(getEventTarget(event));
     if (newURL) {
         window.open(newURL, "_self");
         return false;
@@ -122,6 +124,7 @@ async function chooseTempMenu(callback = null) {
         setTimeout(chooseTempMenu, 10);
         return;
     }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -156,11 +159,17 @@ async function chooseTempMenu(callback = null) {
 }
 
 function checkSemaphore(callback) { // Check to see if the update is complete
+    if (!dataHostCheckDone) {
+        setTimeout(chooseTempMenu, 10);
+        return;
+    }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/action/ping/";
+
     var jqxhr = $.get(url)
         .done(function (data) {
             callback(true);
@@ -226,7 +235,8 @@ function checkDataHost() {
                     // (i.e. we are connected to the controller and not a dev server) 
                     // then it will ignore devServer.
                     //
-                    dataHost = localStorage.getItem("dataHost") || null;
+                    dataHost = localStorage.getItem("dataHost");
+                    if (dataHost && !dataHost.endsWith("/")) dataHost += "/";
                     if (dataHost) console.info("NOTICE: Using 'dataHost' (a single 404 for /api/v1/action/ping/ is normal.)");
                     //
                     // Also remember that this must be cleared for things to work
@@ -235,7 +245,7 @@ function checkDataHost() {
                     // >>   localStorage.setItem("dataHost", "");
                     //
                 } else {
-                    localStorage.setIte,("dataHost", null);
+                    dataHost = "";
                     console.info("NOTICE: Not using 'dataHost'.");
                 }
                 dataHostCheckDone = true;
@@ -255,35 +265,43 @@ function checkDataHost() {
     }
 }
 
-function cleanURL(event) {
+function getEventTarget(event) {
+    var targetURL = "";
+    // The following is needed because of clickable spans inside an anchor element
+    if (!event.target.href) {
+        var tempElement = event.target.parentNode;
+        while (!tempElement.href && tempElement.parentNode) {
+            // Dig for the parent element URL
+            tempElement = tempElement.parentNode;
+        }
+        targetURL = new URL(tempElement.href);
+    } else {
+        targetURL = new URL(event.target.href);
+    }
+    return targetURL;
+}
+
+function cleanURL(tempURL) {
+    targetURL = tempURL;
     if (!dataHostCheckDone) {
         setTimeout(chooseTempMenu, 10);
         return;
     }
-    // This all exists because we need to re-write URLs when
-    // using a dev server
+    // This all exists because we need to re-write URLs when using a dev server
     try {
         const currentURL = new URL(window.location.href);
-        // The following if/else is needed because of clickable spans inside an anchor element
-        var targetURL = "";
-        if (!event.target.href) {
-            var tempElement = event.target.parentNode;
-            while (!tempElement.href && tempElement.parentNode) {
-                // Dig for the parent element URL
-                tempElement = tempElement.parentNode;
-            }
-            targetURL = new URL(tempElement.href);
-        } else {
-            targetURL = new URL(event.target.href);
+        try {
+            targetURL = new URL(targetURL);
+        } catch {
+            targetURL = new URL(currentURL.protocol + "//" + currentURL.host + "/" + targetURL);
         }
-
         var newURL;
-        newURL = targetURL.protocol
+        newURL = targetURL.protocol;
         newURL += "//";
         newURL += targetURL.host;
         newURL += "/";
-        var newPath = targetURL.pathname;
 
+        var newPath = targetURL.pathname;
         while (newPath.startsWith("/")) {
             newPath = newPath.substring(1, newPath.length);
         }
@@ -307,63 +325,15 @@ function cleanURL(event) {
                 newPath += ".htm";
             }
             newPath = oldPath + "/" + newPath;
+        } else {
+            newPath += "/";
         }
         newURL += newPath;
         newURL += targetURL.search;
         newURL += targetURL.hash;
         return newURL;
     } catch {
-        return false;
-    }
-}
-
-function rewriteURL(newTarget) {
-    if (!dataHostCheckDone) {
-        setTimeout(rewriteURL, 10);
+        console.warn("WARNING: Unable to clean URL: " + tempURL);
         return;
-    }
-    // This all exists because we need to re-write URLs when
-    // using a dev server
-    try {
-        // Concatenate authority segment
-        const currentURL = new URL(window.location.href);
-        var currentAuthority;
-        currentAuthority = currentURL.protocol
-        currentAuthority += "//";
-        currentAuthority += currentURL.host;
-        currentAuthority += "/";
-
-        var currentPath = currentURL.pathname;
-        while (currentPath.startsWith("/")) {
-            currentPath = currentPath.substring(1, currentPath.length);
-        }
-        while (currentPath.endsWith("/")) {
-            currentPath = currentPath.substring(0, currentPath.length - 1);
-        }
-        if (currentPath.includes("/"))
-            currentPath = currentPath.split('/')[0];
-        else
-            currentPath = "";
-        if (currentPath)
-            currentPath += "/";
-
-        while (newTarget.startsWith("/")) {
-            newTarget = newTarget.substring(1, newTarget.length);
-        }
-        while (newTarget.endsWith("/")) {
-            newTarget = newTarget.substring(0, newTarget.length - 1);
-        }
-        if (newTarget) {
-            if (dataHost)
-                newTarget += ".htm";
-            else
-                newTarget += "/";
-        }
-
-        var newURL = currentAuthority + currentPath + newTarget;
-
-        return newURL;
-    } catch {
-        return false;
     }
 }

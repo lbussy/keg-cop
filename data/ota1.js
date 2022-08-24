@@ -16,11 +16,13 @@ function loadThisVersion() { // Get current parameters
         setTimeout(loadThisVersion, 10);
         return;
     }
+
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/thisVersion/";
+
     var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
@@ -53,6 +55,7 @@ function loadThatVersion() { // Get current parameters
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/thatVersion/";
+
     var thatVersion = $.getJSON(url, function () {
     })
         .done(function (thatVersion) {

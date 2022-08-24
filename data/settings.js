@@ -138,11 +138,14 @@ function populateFlow(callback = null) { // Get flowmeter settings
         setTimeout(populateFlow, 10);
         return;
     }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
+
     url += "/api/v1/config/taps/";
+
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -193,10 +196,12 @@ function populateConfig(callback = null) { // Get configuration settings
         setTimeout(populateConfig, 10);
         return;
     }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
+
     url += "/api/v1/config/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning()
@@ -374,13 +379,14 @@ function finishPage() { // Display page
 function processPost(obj) {
     posted = false;
     hashLoc = window.location.hash;
-    hostURL = dataHost;
     var $form = $(obj);
     var actionURL = $form.attr("action");
-    while (actionURL.startsWith("/")) {
-        actionURL = actionURL.substring(1, actionURL.length);
+
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
     }
-    url = hostURL + actionURL;
+    url += actionURL;
 
     $("button[id='submitSettings']").prop('disabled', true);
     $("button[id='submitSettings']").html('<i class="fa fa-spinner fa-spin"></i> Updating');
@@ -856,6 +862,7 @@ function toggleCalMode(inCal = false, meter, callback = null) {
         return;
     }
     var data = {};
+
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -870,6 +877,7 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     } else {
         url += "/api/v1/action/clearcalmode/";
     }
+
     putData(url, data, false, false, function () {
         if (typeof callback == "function") {
             callback(true);
@@ -918,11 +926,13 @@ function resetFlowCalForm() {
 
 function pulseReload(callback = null) { // Get pulses
     var selectedIndex = $('#flowmeter').prop('selectedIndex');
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/pulses/";
+
     var pulses = $.getJSON(url, function () {
         flowAlert.warning();
     })

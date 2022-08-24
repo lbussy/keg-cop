@@ -37,11 +37,13 @@ function loadThisVersion() { // Get current parameters
         setTimeout(loadThisVersion, 10);
         return;
     }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/thisVersion/";
+
     var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
@@ -76,11 +78,13 @@ function loadUptime(callback = null) { // Get uptime information
         setTimeout(loadUptime, 10);
         return;
     }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/uptime/";
+
     var uptime = $.getJSON(url, function () {
     })
         .done(function (uptime) {
@@ -117,11 +121,13 @@ function loadHeap(callback = null) { // Get heap information
         setTimeout(loadHeap, 10);
         return;
     }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/heap/";
+
     var heap = $.getJSON(url, function () {
     })
         .done(function (heap) {
@@ -157,11 +163,13 @@ function loadResetReason(callback = null) { // Get last reset reason
         setTimeout(loadResetReason, 10);
         return;
     }
+
     var url = dataHost;
     if (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/resetreason/";
+
     var reset = $.getJSON(url, function () {
     })
         .done(function (reset) {

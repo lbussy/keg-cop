@@ -29,6 +29,17 @@ function finishLoad() { // Load the page's JS elements
         type: 'PUT'
     });
 
+    // TODO:  Test OTA process
+    setTimeout(setupWatchReset, 5000);
+}
+
+function setupWatchReset() {
+    dataHostCheckDone = false;
+    checkDataHost();
+    watchReset();
+}
+
+function watchReset() {
     // Wait for update to complete
     var running = false;
     var intervalID = window.setInterval(function () { // Poll every 5 seconds
@@ -43,7 +54,7 @@ function finishLoad() { // Load the page's JS elements
                 });
                 $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
                 $("#message").replaceWith("<p class='card-body'>The firmware update is complete.  You will be redirected momentarily.</p>");
-                setTimeout(function () { window.location.href = rewriteURL("/index/"); }, 5000);
+                setTimeout(function () { window.location.href = clean("/index/"); }, 5000);
             }
         });
     }, 10000);
