@@ -34,14 +34,25 @@ function finishLoad() { // Load the page's JS elements
 }
 
 function setupWatchReset() {
+    var running = false;
     dataHostCheckDone = false;
     checkDataHost();
     watchReset();
 }
 
 function watchReset() {
+    if (!dataHostCheckDone) {
+        setTimeout(finishLoad, 10);
+        return;
+    }
+
+    var url = dataHost;
+    while (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += '/api/v1/action/clearupdate/';
+
     // Wait for update to complete
-    var running = false;
     var intervalID = window.setInterval(function () { // Poll every 5 seconds
         checkSemaphore(function (semaphore) {
             didupdate = semaphore;
@@ -49,7 +60,7 @@ function watchReset() {
                 running = true;
                 // Update is complete
                 $.ajax({
-                    url: urlClear,
+                    url: url,
                     type: 'PUT'
                 });
                 $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
