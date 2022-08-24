@@ -226,7 +226,7 @@ function checkDataHost() {
                     // (i.e. we are connected to the controller and not a dev server) 
                     // then it will ignore devServer.
                     //
-                    dataHost = localStorage.getItem("dataHost") || "";
+                    dataHost = localStorage.getItem("dataHost") || null;
                     if (dataHost) console.info("NOTICE: Using 'dataHost' (a single 404 for /api/v1/action/ping/ is normal.)");
                     //
                     // Also remember that this must be cleared for things to work
@@ -235,6 +235,7 @@ function checkDataHost() {
                     // >>   localStorage.setItem("dataHost", "");
                     //
                 } else {
+                    localStorage.setIte,("dataHost", null);
                     console.info("NOTICE: Not using 'dataHost'.");
                 }
                 dataHostCheckDone = true;

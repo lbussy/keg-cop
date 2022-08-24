@@ -852,7 +852,6 @@ function followPulses() {
 
 function toggleCalMode(inCal = false, meter, callback = null) {
     if (!dataHostCheckDone) {
-        console.log
         setTimeout(toggleCalMode, 10);
         return;
     }
