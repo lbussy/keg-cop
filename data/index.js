@@ -75,8 +75,7 @@ function populateFlow(callback = null) { // Get flowmeter data
                 if (typeof callback == "function") {
                     callback();
                 }
-            }
-            catch {
+            } catch {
                 if (!unloadingState) {
                     flowAlert.warning("Unable to parse flowmeter data.");
                 }
@@ -119,8 +118,7 @@ function populateConfig() { // Get configuration settings
                 if (loaded < numReq) {
                     loaded++;
                 }
-            }
-            catch {
+            } catch {
                 if (!unloadingState) {
                     configAlert.warning("Unable to parse configuration data.");
                 }
@@ -211,15 +209,14 @@ function populateTemps(callback = null) { // Get current temperature and state
                             $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
                             break;
                     }
-
+                }
                 if (loaded < numReq) {
                     loaded++;
                 }
                 if (typeof callback == "function") {
                     callback();
                 }
-            }
-            catch {
+            } catch {
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
@@ -358,8 +355,7 @@ function populateTemps(callback = null) { // Get current temperature and state
                 if (typeof callback == "function") {
                     callback();
                 }
-            }
-            catch {
+            } catch {
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
@@ -499,8 +495,7 @@ function populateTemps(callback = null) { // Get current temperature and state
                 if (typeof callback == "function") {
                     callback();
                 }
-            }
-            catch {
+            } catch {
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
