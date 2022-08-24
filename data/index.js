@@ -29,6 +29,7 @@ function populateFlow(callback = null) { // Get flowmeter data
         setTimeout(populateFlow, 10);
         return;
     }
+
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -98,6 +99,7 @@ function populateConfig() { // Get configuration settings
         setTimeout(populateConfig, 10);
         return;
     }
+
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -138,11 +140,17 @@ function populateConfig() { // Get configuration settings
 }
 
 function populateTemps(callback = null) { // Get current temperature and state
+    if (!dataHostCheckDone) {
+        setTimeout(chooseTempMenu, 10);
+        return;
+    }
+
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/sensors/";
+
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
@@ -160,7 +168,7 @@ function populateTemps(callback = null) { // Get current temperature and state
                         $('#tempFormat').html("&#x2103;");
                     }
 
-                    tempStatus(temps); // Populate/format temperature and fan control display
+                    tempStatus(temps); // Populate temperature and fan control display
                 }
 
                 if (loaded < numReq) {
@@ -326,11 +334,18 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 
 function barClick(event, array) { // Bar click handler
     var tapNum = array[0]._index;
+
+    if (!dataHostCheckDone) {
+        setTimeout(chooseTempMenu, 10);
+        return;
+    }
+
     var url = dataHost;
     while (url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/settings/#tap" + tapNum;
+
     window.open(url, "_self")
 }
 

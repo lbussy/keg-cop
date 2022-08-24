@@ -29,6 +29,7 @@ function populateTemps(callback = null) { // Get configuration settings
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/sensors/";
+
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -72,7 +73,7 @@ function populateTemps(callback = null) { // Get configuration settings
                 scaleTemps = temperatures;
                 scaleTemps.push(parseFloat(setpoint));
 
-                tempStatus(temps); // Populate/format temperature and fan control display
+                tempStatus(temps); // Populate temperature and fan control display
 
                 if (loaded < numReq) {
                     loaded++;
