@@ -34,13 +34,14 @@ function finishLoad() { // Load the page's JS elements
 }
 
 function setupWatchReset() {
-    var running = false;
     dataHostCheckDone = false;
     checkDataHost();
     watchReset();
 }
 
 function watchReset() {
+    var running = false;
+
     if (!dataHostCheckDone) {
         setTimeout(finishLoad, 10);
         return;
@@ -65,7 +66,7 @@ function watchReset() {
                 });
                 $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Firmware Update Complete; Redirect Pending</h4>");
                 $("#message").replaceWith("<p class='card-body'>The firmware update is complete.  You will be redirected momentarily.</p>");
-                setTimeout(function () { window.location.href = clean("/index/"); }, 5000);
+                setTimeout(function () { window.location.href = cleanURL("/index/"); }, 5000);
             }
         });
     }, 10000);

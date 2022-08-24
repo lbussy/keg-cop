@@ -282,6 +282,7 @@ function getEventTarget(event) {
 }
 
 function cleanURL(tempURL) {
+    // TODO:  A 404 keeps the "bad" page as it's href and blows this up.
     targetURL = tempURL;
     if (!dataHostCheckDone) {
         setTimeout(chooseTempMenu, 10);
