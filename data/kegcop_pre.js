@@ -24,11 +24,10 @@ window.addEventListener("beforeunload", function (event) {
 
 window.onclick = function (event) {
     var type = event.target.type;
-    if (type == "submit" || type == "radio" || event.target.id == "noChange") {
+    // Skip random clicks, form items and context help
+    if (typeof type === 'undefined' || type == "submit" || type == "radio" || event.target.id == "noChange") {
         return;
     }
-    //    return; // Skip form items and context help
-    // Open a rewritten URL and return false to prevent default
     event.preventDefault();
     const newURL = cleanURL(getEventTarget(event));
     if (newURL) {
@@ -274,9 +273,18 @@ function getEventTarget(event) {
             // Dig for the parent element URL
             tempElement = tempElement.parentNode;
         }
-        targetURL = new URL(tempElement.href);
+        try {
+            targetURL = new URL(tempElement.href);
+        } catch {
+            ;
+        }
+
     } else {
-        targetURL = new URL(event.target.href);
+        try {
+            targetURL = new URL(tempElement.href);
+        } catch {
+            ;
+        }
     }
     return targetURL;
 }
