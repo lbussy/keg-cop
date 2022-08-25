@@ -10,3 +10,4 @@
     - [ ] We fail to connect to WiFi and restart
     - [ ] We failed to get a time hack and restart
 - [ ] Stop all online processing if we lose WiFi
+- [ ] Reduce KegScreen (not)reporting spam
