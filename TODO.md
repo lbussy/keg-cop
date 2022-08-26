@@ -11,3 +11,6 @@
     - [ ] We failed to get a time hack and restart
 - [ ] Stop all online processing if we lose WiFi
 - [ ] Reduce KegScreen (not)reporting spam
+- [ ] Add some form of bulk load:
+    - [ ] `http://kegcop.local/api/v1/config/settings/`
+    - [ ] `/api/v1/config/taps/`
