@@ -272,6 +272,7 @@ function getEventTarget(event) {
         while (!tempElement.href && tempElement.parentNode) {
             // Dig for the parent element URL
             tempElement = tempElement.parentNode;
+            var type = event.target.type;
         }
         try {
             targetURL = new URL(tempElement.href);
@@ -281,9 +282,8 @@ function getEventTarget(event) {
 
     } else {
         try {
-            targetURL = new URL(tempElement.href);
+            targetURL = new URL(event.target.href);
         } catch {
-            ;
         }
     }
     return targetURL;
@@ -291,7 +291,7 @@ function getEventTarget(event) {
 
 function cleanURL(tempURL) {
     // TODO:  A 404 keeps the "bad" page as it's href and blows this up.
-    targetURL = tempURL;
+    targetURL = tempURL; // Yes we're actually going to use both of these
     if (!dataHostCheckDone) {
         setTimeout(chooseTempMenu, 10);
         return;
