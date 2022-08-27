@@ -45,6 +45,7 @@ void setClock()
             }
             printCR(true);
             Log.notice(F("Re-requesting time hack."));
+            killDRD();
             startSecs = millis() / 1000;
             cycle++;
         }

@@ -95,8 +95,7 @@ void execspiffs()
         saveConfig();
         saveFlowConfig();
 
-        if (FILESYSTEM.begin())
-            FILESYSTEM.remove("/drd.dat");
+        killDRD();
         config.copconfig.nodrd = true;
         saveConfig();
         ESP.restart();

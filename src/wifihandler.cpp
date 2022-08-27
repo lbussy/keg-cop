@@ -109,6 +109,7 @@ void doWiFi(bool dontUseStoredCreds)
         if (!wm.autoConnect(config.apconfig.ssid, config.apconfig.passphrase))
         {
             Log.warning(F("Failed to connect and/or hit timeout." CR));
+            killDRD();
             blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
             _delay(3000);

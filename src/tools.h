@@ -62,6 +62,7 @@ void getGuid(char *str); // 17 chars including null terminator
 void setDoSaveUptime();
 void setDoSaveConfig();
 void setDoSaveFlowConfig();
+void killDRD();
 
 static bool __attribute__((unused)) doReset = false;            // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;        // Semaphore for wifi reset

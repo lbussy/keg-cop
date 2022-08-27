@@ -308,3 +308,15 @@ void getGuid(char *str)
     strcpy(str, first);
     strcat(str, secon);
 }
+
+void killDRD()
+{
+    const char * filename = "/drd.dat";
+    if (FILESYSTEM.begin())
+    {
+        if (SPIFFS.exists(filename))
+        {
+            FILESYSTEM.remove(filename);
+        }
+    }
+}
