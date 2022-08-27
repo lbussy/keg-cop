@@ -10,9 +10,9 @@
     - [x] Update Application `ota2.js`
     - [x] Reset WiFi `wifireset.js`
 - [ ] Add bad update flag (i.e. if firmware failed)
-- [ ] Kill DRD if:
-    - [ ] We fail to connect to WiFi and restart
-    - [ ] We failed to get a time hack and restart
+- [x] Kill DRD if:
+    - [x] We fail to connect to WiFi and restart
+    - [x] We failed to get a time hack and restart
 - [ ] Stop all online processing if we lose WiFi
 - [ ] Reduce KegScreen (not)reporting spam
 - [ ] Add some form of bulk load:
