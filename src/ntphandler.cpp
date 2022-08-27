@@ -40,8 +40,9 @@ void setClock()
                 printCR(true);
                 Log.warning(F("Unable to get time hack from server, restarting." CR));
                 blinker.detach();
+                killDRD();
                 ESP.restart();
-                return;
+                delay(1000); // Leave this here to avoid weirdness
             }
             printCR(true);
             Log.notice(F("Re-requesting time hack."));

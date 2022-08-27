@@ -127,16 +127,16 @@ void doWiFi(bool dontUseStoredCreds)
         }
     }
 
-    if (shouldSaveConfig) { // Save configuration
+    if (shouldSaveConfig)
+    { // Save configuration
         if (custom_hostname.getValue() != config.copconfig.hostname)
         {
             Log.notice(F("Saving custom hostname configuration: %s." CR), custom_hostname.getValue());
             strlcpy(config.copconfig.hostname, custom_hostname.getValue(), sizeof(config.copconfig.hostname));
             WiFi.setHostname(config.copconfig.hostname);
-            config.copconfig.nodrd = true;
-            saveConfig();
+            killDRD();
             Log.notice(F("Restarting to pick up custom hostname." CR));
-            ESP.restart();
+            resetController();
         }
     }
 
@@ -144,7 +144,7 @@ void doWiFi(bool dontUseStoredCreds)
     blinker.detach();        // Turn off blinker
     digitalWrite(LED, HIGH); // Turn off LED
 
-    WiFi.setSleep(false);  // Required to make mDNS service discovery reliable until https://github.com/espressif/arduino-esp32/issues/7156 is resolved 
+    WiFi.setSleep(false); // Required to make mDNS service discovery reliable until https://github.com/espressif/arduino-esp32/issues/7156 is resolved
     WiFi.onEvent(WiFiEvent);
 }
 
@@ -154,9 +154,7 @@ void resetWifi()
     blinker.detach();       // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
     Log.notice(F("Restarting after clearing wifi settings." CR));
-    config.copconfig.nodrd = true;
-    saveConfig();
-    ESP.restart();
+    resetController();
 }
 
 void wifiBlinker()
@@ -170,7 +168,7 @@ void apCallback(AsyncWiFiManager *wiFiManager)
 { // Entered Access Point mode
     Log.verbose(F("[CALLBACK]: setAPCallback fired." CR));
 #ifdef ESP32
-    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20);  // Set the bandwidth of ESP32 interface
+    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // Set the bandwidth of ESP32 interface
 #endif
     blinker.detach(); // Turn off blinker
     blinker.attach_ms(APBLINK, wifiBlinker);
@@ -187,12 +185,14 @@ void apCallback(AsyncWiFiManager *wiFiManager)
 //     Log.verbose(F("[CALLBACK]: preSaveConfigCallback fired." CR));
 // }
 
-void saveConfigCallback() {
+void saveConfigCallback()
+{
     Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
     shouldSaveConfig = true;
 }
 
-void saveParamsCallback() {
+void saveParamsCallback()
+{
     Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CR));
 }
 
@@ -203,24 +203,27 @@ void saveParamsCallback() {
 void WiFiEvent(WiFiEvent_t event)
 {
     Serial.printf("[WiFi-event] event: %d\n", event);
-    if (! WiFi.isConnected())
+    if (!WiFi.isConnected())
     {
         Log.warning(F("WiFi lost connection, reconnecting .."));
         disconnectRPints();
         WiFi.reconnect();
 
         int WLcount = 0;
-        while (! WiFi.isConnected() && WLcount < 190) {
+        while (!WiFi.isConnected() && WLcount < 190)
+        {
             delay(100);
             printDot(true);
             ++WLcount;
         }
         printCR(true);
 
-        if (! WiFi.isConnected()) {
+        if (!WiFi.isConnected())
+        {
             // We failed to reconnect.
             Log.error(F("Unable to reconnect WiFI, restarting." CR));
             delay(1000);
+            killDRD();
             ESP.restart();
         }
         setDoRPintsConnect();

@@ -33,7 +33,7 @@ void execfw()
     config.ota.dospiffs1 = true;
     config.ota.dospiffs2 = false;
     config.ota.didupdate = false;
-    config.copconfig.nodrd = true;
+    killDRD();
     saveConfig();
     saveFlowConfig();
 
@@ -56,7 +56,7 @@ void execfw()
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
-        config.copconfig.nodrd = true;
+        killDRD();
         saveConfig();
         saveFlowConfig();
         ESP.restart();
@@ -68,7 +68,7 @@ void execfw()
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
-        config.copconfig.nodrd = true;
+        killDRD();
         saveConfig();
         saveFlowConfig();
         ESP.restart();
@@ -76,7 +76,7 @@ void execfw()
 
     case HTTP_UPDATE_OK:
         Log.notice(F("HTTP Firmware OTA Update complete, restarting." CR));
-        config.copconfig.nodrd = true;
+        killDRD();
         saveConfig();
         ESP.restart();
         break;
@@ -91,12 +91,12 @@ void execspiffs()
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = true;
         config.ota.didupdate = false;
-        config.copconfig.nodrd = true;
+        killDRD();
         saveConfig();
         saveFlowConfig();
 
         killDRD();
-        config.copconfig.nodrd = true;
+        killDRD();
         saveConfig();
         ESP.restart();
     }
@@ -133,7 +133,7 @@ void execspiffs()
             config.ota.dospiffs1 = false;
             config.ota.dospiffs2 = false;
             config.ota.didupdate = true;
-            config.copconfig.nodrd = true;
+            killDRD();
             saveConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
             saveFlowConfig(); // Save previous flowmeter data
             Log.notice(F("HTTP FILESYSTEM OTA Update complete, restarting." CR));

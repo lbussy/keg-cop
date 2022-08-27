@@ -38,8 +38,9 @@ void _delay(unsigned long ulDelay)
 void resetController()
 {
     Log.notice(F("Reboot request - rebooting system." CR));
-    config.copconfig.nodrd = true;
+    killDRD();
     saveConfig();
+    saveFlowConfig();
     ESP.restart();
 }
 
@@ -311,6 +312,7 @@ void getGuid(char *str)
 
 void killDRD()
 {
+    config.copconfig.nodrd = true;
     const char * filename = "/drd.dat";
     if (FILESYSTEM.begin())
     {
