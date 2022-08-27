@@ -1,13 +1,16 @@
 // Supports Controller Reset page
 
-toggleLoader("off");
-var okToReset = false;
-var loaded; // Just a placeholder here
-var numReq; // Just a placeholder here
+toggleLoader("off");``
+var loaded = 0;
+var numReq = 0 + numReqPre; // Just a placeholder here
 
 function finishLoad() {
     // Catch event from kegcop_pre.js
     chooseTempMenu();
+    pollComplete();
+}
+
+function finishPage() {
     doResetSignal();
 }
 
@@ -25,19 +28,19 @@ function doResetSignal() {
 
     $.ajax({
         url: url,
-        type: 'PUT',
-        data: {},
-        success: function () {
+        data: { secret: secret },
+        type: 'PUT'
+    })
+        .done(function () {
             $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Complete</h4>");
             $("#message").replaceWith("<p class='card-body'>Your Keg Cop's controller has been reset and will return momentarily. You will be redirected to the home page when that is complete.</p>");
             setTimeout(setupWatchReset, 5000);
-        },
-        fail: function () {
+        })
+        .fail(function () {
             $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Failed; Redirect Pending</h4>");
             $("#message").replaceWith("<p class='card-body'>The controller reset failed. You will be redirected momentarily.</p>");
             setTimeout(function () { window.location.href = cleanURL("/index/"); }, 5000);
-        }
-    });
+        });
 }
 
 function setupWatchReset() {
@@ -46,7 +49,6 @@ function setupWatchReset() {
     watchReset();
 }
 
-var debugWatchReset = true;
 function watchReset() {
     // Wait for restart to complete
     if (!dataHostCheckDone) {
@@ -61,7 +63,7 @@ function watchReset() {
                 window.clearInterval(intervalID);
                 $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Complete; Redirect Pending</h4>");
                 $("#message").replaceWith("<p class='card-body'>The controller reset is complete. You will be redirected momentarily.</p>");
-                setTimeout(function () { window.location.href = cleanURL("/index/");}, 5000);
+                setTimeout(function () { window.location.href = cleanURL("/index/"); }, 5000);
             }
         });
     }, 5000);

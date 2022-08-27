@@ -1,7 +1,7 @@
 // Supports About Page
 
 toggleLoader("off");
-var numReq = 5;
+var numReq = 4 + numReqPre;
 var loaded = 0;
 var aboutReloadTimer = 60000;
 

@@ -4,6 +4,8 @@ var dataHost = "";
 var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
+var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
+var numReqPre = 2;      // How many common calls exist here - to be added to the page specific numbers (checkDataHost and getSecret)
 
 // Use this here to enforce running first
 dataHost = localStorage.getItem("dataHost");
@@ -25,7 +27,7 @@ window.addEventListener("beforeunload", function (event) {
 window.onclick = function (event) {
     var type = event.target.type;
     // Skip random clicks, form items and context help
-    if (typeof type === 'undefined' || type == "submit" || type == "radio" || event.target.id == "noChange") {
+    if (typeof type === 'undefined' || type == "submit" || type == "reset" || type == "number" || type == "text" || type == "radio" || event.target.id == "noChange") {
         return;
     }
     event.preventDefault();
@@ -58,6 +60,7 @@ function startLoad() {
     // Call finishLoad() if it exists (page handler)
     if (typeof finishLoad === "function") {
         checkDataHost();    // Check if we are using a dataHost
+        getSecret();        // Get controller secret
         finishLoad();
     };
 }
@@ -159,7 +162,7 @@ async function chooseTempMenu(callback = null) {
 
 function checkSemaphore(callback) { // Check to see if the update is complete
     if (!dataHostCheckDone) {
-        setTimeout(chooseTempMenu, 10);
+        setTimeout(checkSemaphore, 10);
         return;
     }
 
@@ -264,6 +267,50 @@ function checkDataHost() {
     }
 }
 
+function getSecret(callback = null) { // Get secret for PUTs
+    if (!dataHostCheckDone) {
+        setTimeout(getSecret, 10);
+        return;
+    }
+
+    var url = dataHost;
+    if (url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+
+    url += "/api/v1/info/secret/";
+
+    var flow = $.getJSON(url, function () {
+        flowAlert.warning();
+    })
+        .done(function (secretJson) {
+            try {
+                secret = secretJson["secret"];
+                if (loaded < numReq) {
+                    loaded++;
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    console.warning("Unable to parse secret.");
+                }
+                setTimeout(getSecret, 10000);
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                console.warning("Unable to retrieve secret.");
+            }
+            setTimeout(getSecret, 10000);
+        })
+        .always(function () {
+            // Can post-process here
+            if (typeof callback == "function") {
+                callback();
+            }
+        });
+}
+
 function getEventTarget(event) {
     var targetURL = "";
     // The following is needed because of clickable spans inside an anchor element
@@ -293,7 +340,7 @@ function cleanURL(tempURL) {
     // TODO:  A 404 keeps the "bad" page as it's href and blows this up.
     targetURL = tempURL; // Yes we're actually going to use both of these
     if (!dataHostCheckDone) {
-        setTimeout(chooseTempMenu, 10);
+        setTimeout(cleanURL, 10);
         return;
     }
     // This all exists because we need to re-write URLs when using a dev server

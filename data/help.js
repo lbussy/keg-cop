@@ -1,7 +1,7 @@
 // Supports Help page
 
 toggleLoader("off");
-var numReq = 2;
+var numReq = 0 + numReqPre;
 var loaded = 0;
 
 function finishLoad() {

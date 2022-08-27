@@ -217,8 +217,19 @@ void setActionPageHandlers()
     server.on("/api/v1/action/wifireset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
-        send_ok(request);
-        setDoWiFiReset(); });
+        switch (handleSecret(request))
+        {
+            case PROCESSED:
+                send_ok(request);
+                setDoWiFiReset();
+                break;
+            case FAIL_PROCESS:
+                send_failed(request);
+                break;
+            case NOT_PROCCESSED:
+                send_not_allowed(request);
+                break;
+        } });
 
     server.on("/api/v1/action/wifireset/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -230,11 +241,22 @@ void setActionPageHandlers()
         // Required for CORS preflight on some PUT/POST
         send_not_allowed(request); });
 
-    server.on("/api/v1/action/reset/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/reset/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
-        send_ok(request);
-        setDoReset(); });
+        switch (handleSecret(request))
+        {
+            case PROCESSED:
+                send_ok(request);
+                setDoReset();
+                break;
+            case FAIL_PROCESS:
+                send_failed(request);
+                break;
+            case NOT_PROCCESSED:
+                send_not_allowed(request);
+                break;
+        } });
 
     server.on("/api/v1/action/reset/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -246,23 +268,24 @@ void setActionPageHandlers()
         // Required for CORS preflight on some PUT/POST
         send_not_allowed(request); });
 
-    server.on("/api/v1/action/updatestart/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/updatestart/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
-        setDoOTA(); // Trigger the OTA update
-        send_ok(request); });
+        switch (handleSecret(request))
+        {
+            case PROCESSED:
+                send_ok(request);
+                setDoOTA(); // Trigger the OTA update
+                break;
+            case FAIL_PROCESS:
+                send_failed(request);
+                break;
+            case NOT_PROCCESSED:
+                send_not_allowed(request);
+                break;
+        } });
 
     server.on("/api/v1/action/updatestart/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
-              {
-        // Needed for pre-flights
-        send_ok(request); });
-
-    server.on("/api/v1/action/updatestart/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
-              {
-        // Required for CORS preflight on some PUT/POST
-        send_not_allowed(request); });
-
-    server.on("/api/v1/action/clearupdate/", [](AsyncWebServerRequest *request)
               {
         // Needed for pre-flights
         send_ok(request); });
@@ -288,18 +311,28 @@ void setActionPageHandlers()
 
     server.on("/api/v1/action/clearupdate/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
-        // Required for CORS preflight on some PUT/POST
         send_not_allowed(request); });
 
-    server.on("/api/v1/action/clearcalmode/", [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/clearcalmode/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s to %s." CR), request->methodToString(),request->url().c_str());
-        for (int i = 0; i < NUMTAPS; i++)
+        switch (handleSecret(request))
         {
-            flow.taps[i].calibrating = false;
-        }
-        setDoSaveFlowConfig();
-        send_ok(request); });
+            case PROCESSED:
+                for (int i = 0; i < NUMTAPS; i++)
+                {
+                    flow.taps[i].calibrating = false;
+                }
+                setDoSaveFlowConfig();
+                send_ok(request);
+                break;
+            case FAIL_PROCESS:
+                send_failed(request);
+                break;
+            case NOT_PROCCESSED:
+                send_not_allowed(request);
+                break;
+        } });
 
     server.on("/api/v1/action/clearcalmode/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -311,39 +344,52 @@ void setActionPageHandlers()
         // Required for CORS preflight on some PUT/POST
         send_not_allowed(request); });
 
-    server.on("/api/v1/action/setcalmode/", HTTP_PUT, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/action/setcalmode/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
-        int params = request->params();
-        for (int i = 0; i < params; i++)
+        switch (handleSecret(request))
         {
-            AsyncWebParameter *p = request->getParam(i);
-            if (p->isPost())
-            {
-                // Process any p->name().c_str() / p->value().c_str() pairs
-                const char *name = p->name().c_str();
-                const char *value = p->value().c_str();
-
-                // Calibrating tap
-                //
-                if (strcmp(name, "tapnum") == 0) // Start calibration for tapnum
+            case PROCESSED:
                 {
-                    int tapnum = atof(value);
-                    Log.notice(F("Setting calibration mode on tap %d." CR), tapnum);
-                    if ((tapnum > 0) || (tapnum < NUMTAPS))
+                    int params = request->params();
+                    for (int i = 0; i < params; i++)
                     {
-                        Log.notice(F("Setting calibration mode on tap %d." CR), tapnum);
-                        flow.taps[tapnum].calibrating = true;
+                        AsyncWebParameter *p = request->getParam(i);
+                        if (p->isPost())
+                        {
+                            // Process any p->name().c_str() / p->value().c_str() pairs
+                            const char *name = p->name().c_str();
+                            const char *value = p->value().c_str();
+
+                            // Calibrating tap
+                            //
+                            if (strcmp(name, "tapnum") == 0) // Start calibration for tapnum
+                            {
+                                int tapnum = atof(value);
+                                Log.notice(F("Setting calibration mode on tap %d." CR), tapnum);
+                                if ((tapnum > 0) || (tapnum < NUMTAPS))
+                                {
+                                    Log.notice(F("Setting calibration mode on tap %d." CR), tapnum);
+                                    flow.taps[tapnum].calibrating = true;
+                                }
+                                else
+                                {
+                                    Log.warning(F("Passed invalid tapnumber (%d) to setcalmode." CR), tapnum);
+                                }
+                            }
+                        }
                     }
-                    else
-                    {
-                        Log.warning(F("Passed invalid tapnumber (%d) to setcalmode." CR), tapnum);
-                    }
+                    setDoSaveFlowConfig();
+                    send_ok(request);
+                    break;
                 }
-            }
-        }
-        setDoSaveFlowConfig();
-        send_ok(request); });
+            case FAIL_PROCESS:
+                send_failed(request);
+                break;
+            case NOT_PROCCESSED:
+                send_not_allowed(request);
+                break;
+        } });
 
     server.on("/api/v1/action/setcalmode/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -551,6 +597,18 @@ void setInfoPageHandlers()
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
+
+    server.on("/api/v1/info/secret/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
+        StaticJsonDocument<48> doc;
+
+        doc["secret"] = config.copconfig.guid;
+
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
+
 }
 
 void setConfigurationPageHandlers()
@@ -2011,6 +2069,60 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
 }
 
 // Tap Handlers^
+
+// Secret Handler:
+
+HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking secred
+{
+    bool didPass = false;
+    bool didProcess = false;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Reset Controller procesing
+            //
+            if (strcmp(name, "secret") == 0) // Secret was passed
+            {
+                didProcess = true;
+                if (strcmp(value, config.copconfig.guid) == 0)
+                {
+                    didPass = true;
+                    Log.notice(F("Secret Check: [%s]:(%s) received." CR), name, value);
+                }
+                else
+                {
+                    didPass = false;
+                    Log.warning(F("Secret Check: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+        }
+    }
+    if (!didProcess)
+    {
+        Log.warning(F("Secret Check: secret not received." CR));
+        return NOT_PROCCESSED;
+    }
+    // Return values
+    if (didProcess && didPass)
+    {
+        return PROCESSED;
+    }
+    else
+    {
+        return FAIL_PROCESS;
+    }
+}
+
+// Secret Handler^
 
 void send_not_allowed(AsyncWebServerRequest *request)
 {
