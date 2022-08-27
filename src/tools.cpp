@@ -100,6 +100,7 @@ void tickerLoop()
     if (doWiFiReset)
     { // Need to do this to prevent WDT
         doWiFiReset = false;
+        sleep(3);
         resetWifi();
     }
 

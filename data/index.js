@@ -1,7 +1,7 @@
 // Supports Index page
 
 toggleLoader("on");
-var numReq = 5;
+var numReq = 4 + numReqPre;
 var loaded = 0;
 var imperial;
 var labels = [];
@@ -141,7 +141,7 @@ function populateConfig() { // Get configuration settings
 
 function populateTemps(callback = null) { // Get current temperature and state
     if (!dataHostCheckDone) {
-        setTimeout(chooseTempMenu, 10);
+        setTimeout(populateTemps, 10);
         return;
     }
 

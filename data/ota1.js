@@ -1,7 +1,7 @@
 // Supports OTA1 page
 
 toggleLoader("off");
-var numReq = 4;
+var numReq = 3 + numReqPre;
 var loaded = 0;
 
 function finishLoad() { // Get page data

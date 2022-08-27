@@ -92,13 +92,23 @@ function startUpdate(callback = null) {
 
     $.ajax({
         method: "PUT",
+        data: { secret: secret },
         url: url
     })
         .done(function (data) {
+            $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Application Update Executing</h4>");
+            var message = "<p class='card-body'>Your Keg Cop's firmware is being updated to the latest version. This can take up to 5 minutes, during which your Keg Cop will be unresponsive. Please do not disconnect the power or reset your Keg Cop while this process is taking place.";
+            message += "<br /><br />If you wish to observe your controller's LED during the process, the LED will flash as the update is in progress.";
+            message += "<br /><br />When the update is complete, the controller will re-load your original application settings. If this step fails, you will need to manually reconfigure all application settings. WiFi settings will not be affected.";
+            message += "<br /><br />Be sure to check the update page again when finished to see if the versions you expect are present on both the Firmware and the Filesystem.  If the versions are not what you expect, there is no harm in performing the actions again.</p>";
+            message += "<p class='card-body text-danger' style='display: inline-block;'><strong>Do not refresh this page. If you do, you will lose your settings and not be able to track the upgrade process.</strong></p>";
+            $("#message").replaceWith(message);
             callback(true);
         })
         .fail(function () {
             // This will fail while controller resets
-            callback(false);
+            $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Application Update Failed; Redirect Pending</h4>");
+            $("#message").replaceWith("<p class='card-body'>The application update failed. You will be redirected momentarily.</p>");
+            setTimeout(function () { window.location.href = cleanURL("/index/"); }, 5000);
         });
 }   

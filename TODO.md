@@ -4,7 +4,11 @@
 - [ [ Add KegScreeen:
     - [x] Service
     - [ ] REST API
-- [ ] Add `secret` for impactful posts
+- [x] Add `secret` for impactful posts
+    - [x] Calibrate `settings.js`
+    - [x] Reset Controller `controllerreset.js`
+    - [x] Update Application `ota2.js`
+    - [x] Reset WiFi `wifireset.js`
 - [ ] Add bad update flag (i.e. if firmware failed)
 - [ ] Kill DRD if:
     - [ ] We fail to connect to WiFi and restart
@@ -12,5 +16,5 @@
 - [ ] Stop all online processing if we lose WiFi
 - [ ] Reduce KegScreen (not)reporting spam
 - [ ] Add some form of bulk load:
-    - [ ] `http://kegcop.local/api/v1/config/settings/`
+    - [ ] `/api/v1/config/settings/`
     - [ ] `/api/v1/config/taps/`

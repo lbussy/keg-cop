@@ -1,7 +1,7 @@
 // Supports License page
 
 toggleLoader("off");
-var numReq = 2;
+var numReq = 1 + numReqPre;
 var loaded = 0;
 
 function finishLoad() { // Get page data

@@ -2,7 +2,7 @@
 
 toggleLoader("on");
 var loaded = 0; // Hold data load status
-var numReq = 4; // Number of JSON required
+var numReq = 2 + numReqPre; // Number of JSON required
 var hostname = window.location.hostname;
 var originalHostnameConfig;
 var imperial;
@@ -98,7 +98,6 @@ $('input[type=radio][name=tfancontrolenabled]').change(function () {
 });
 
 function finishLoad() { // Get page data
-    toggleCalMode(false);
     loadHash();
     chooseTempMenu();
     populateConfig();
@@ -369,6 +368,7 @@ function doUnits() { // Change names on page according to units in place
 }
 
 function finishPage() { // Display page
+    toggleCalMode(false);
     posted = true;
     toggleTIO();
     toggleLoader("off");
@@ -669,9 +669,9 @@ function processRPintsPost(url, obj) {
     var $form = $(obj),
         rpintshost = $form.find("input[name='rpintshost']").val(),
         rpintsport = $form.find("input[name='rpintsport']").val();
-    rpintsusername = $form.find("input[name='rpintsusername']").val();
-    rpintspassword = $form.find("input[name='rpintspassword']").val();
-    rpintstopic = $form.find("input[name='rpintstopic']").val();
+        rpintsusername = $form.find("input[name='rpintsusername']").val();
+        rpintspassword = $form.find("input[name='rpintspassword']").val();
+        rpintstopic = $form.find("input[name='rpintstopic']").val();
 
     // Process put
     data = {
@@ -686,17 +686,19 @@ function processRPintsPost(url, obj) {
 
 function putData(url, data, newpage = false, newdata = false, callback = null) {
     var loadNew = (newpage.length > 0);
+    console.log("[DEBUG] putData() data: " + JSON.stringify(data) + " URL: " + url);
     $.ajax({
         url: url,
-        type: 'PUT',
         data: data,
-        success: function (data) {
+        type: 'PUT'
+    })
+        .done(function (data) {
             settingsAlert.error();
-        },
-        error: function (data) {
+        })
+        .fail(function (data) {
             settingsAlert.error("Settings update failed.");
-        },
-        complete: function (data) {
+        })
+        .always(function (data) {
             if (loadNew) {
                 window.location.href = newpage;
             } else if (newdata) {
@@ -706,8 +708,7 @@ function putData(url, data, newpage = false, newdata = false, callback = null) {
             if (typeof callback == "function") {
                 callback();
             }
-        }
-    });
+        });
 }
 
 function buttonClearDelay() { // Poll to see if entire page is loaded
@@ -861,7 +862,7 @@ function toggleCalMode(inCal = false, meter, callback = null) {
         setTimeout(toggleCalMode, 10);
         return;
     }
-    var data = {};
+    var data = { secret: secret };
 
     var url = dataHost;
     while (url.endsWith("/")) {
@@ -872,7 +873,8 @@ function toggleCalMode(inCal = false, meter, callback = null) {
         // Get form data
         tapnum = $('#flowmeter').val();
         data = {
-            tapnum: tapnum
+            tapnum: tapnum,
+            secret: secret
         }
     } else {
         url += "/api/v1/action/clearcalmode/";

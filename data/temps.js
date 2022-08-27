@@ -3,7 +3,7 @@
 toggleLoader("on");
 var imperial;
 var loaded = 0;
-var numReq = 4;
+var numReq = 3 + numReqPre;
 var labels = [];
 var temperatures = [];
 var scaleTemps = [];
