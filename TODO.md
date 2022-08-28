@@ -1,6 +1,7 @@
 # TODO:
 
 - [ ] `dataHost` is locked to PIO's `./data/` interpretation
+- [ ] Allow setting `dataHost` from file in application store
 - [ [ Add KegScreeen:
     - [x] Service
     - [ ] REST API
@@ -12,3 +13,8 @@
     - [ ] `/api/v1/config/taps/`
 - [ ] Cut down on iteration when processing posts
 - [ ] Add dark mode
+
+# Bugs:
+
+- [ ] Clicking on a bar (index only, temps work) always takes us to the controller's page (not live host)
+- [ ] A 404 keeps the "bad" page as it's href and blows this up - top links do not work

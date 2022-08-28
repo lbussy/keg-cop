@@ -1,6 +1,5 @@
 // Supports Settings page
 
-toggleLoader("on");
 var loaded = 0; // Hold data load status
 var numReq = 2 + numReqPre; // Number of JSON required
 var hostname = window.location.hostname;

@@ -1,11 +1,17 @@
 // Common file/functions for all Keg Cop pages
 
+toggleLoader("on");
 var dataHost = "";
 var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
 var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
-var numReqPre = 2;      // How many common calls exist here - to be added to the page specific numbers (checkDataHost and getSecret)
+var numReqPre = 2;      // How many common AJJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+
+// Use last known theme:
+document.getElementById('theme').href = localStorage.getItem("theme") || "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css";
+document.getElementById('theme_aux').href = localStorage.getItem("theme_aux") || "cerulean_aux.css";
+document.querySelector('meta[name="theme-color"]').setAttribute("content", localStorage.getItem("theme_color") || "#ffffff");
 
 // Use this here to enforce running first
 dataHost = localStorage.getItem("dataHost") || "";
@@ -50,8 +56,29 @@ function preLoad() {
     }
 }
 
+function setTheme(theme = "", theme_aux = "", theme_color = "") {
+    // Set theme in local storage (or blank for default)
+    //
+    // setTheme("https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/superhero/bootstrap.min.css", "superhero_aux.css", "#000000");
+    //
+    if (theme) localStorage.setItem("theme", theme);
+    if (theme_aux) localStorage.setItem("theme_aux", theme_aux);
+    if (theme_color) localStorage.setItem("theme_color", theme_color);
+
+    // Obtain a reference to the theme stylesheets
+    var cssTheme = document.getElementById('theme');
+    var cssTheme_aux = document.getElementById('theme_aux');
+    var cssTheme_color = document.querySelector('meta[name="theme-color"]')
+
+    // Apply theme from local storage
+    cssTheme.href = localStorage.getItem("theme") || "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css";
+    cssTheme_aux.href = localStorage.getItem("theme_aux") || "cerulean_aux.css";
+    cssTheme_color.setAttribute("content", localStorage.getItem("theme_color") || "#ffffff");
+};
+
 function startLoad() {
     fastTempsMenu();
+    setTheme();
     $(document).tooltip({ // Enable tooltips
         'selector': '[data-toggle=tooltip]',
         //'placement': 'left',
@@ -337,8 +364,7 @@ function getEventTarget(event) {
 }
 
 function cleanURL(tempURL = "", newHost = "") {
-    // This all exists because we need to re-write URLs when using a dev server
-    // TODO:  A 404 keeps the "bad" page as it's href and blows this up - top links do not work
+    // This is to re-write URLs when using a dev server
     const currentURL = new URL(window.location.href);
 
     if (!dataHostCheckDone) {

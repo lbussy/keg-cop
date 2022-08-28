@@ -1,6 +1,5 @@
 // Supports Index page
 
-toggleLoader("on");
 var numReq = 4 + numReqPre;
 var loaded = 0;
 var imperial;
@@ -222,6 +221,11 @@ function removeData(chart) {
 }
 
 function doChart() { // Draw chart.js chart
+    // Get font color from CSS
+    const element = document.querySelector('.chart');
+    const style = getComputedStyle(element);
+    var fontColor = style.color;
+
     if (tapChart) {
         tapChart.data.datasets.forEach((dataset) => {
             // Update data
@@ -271,10 +275,16 @@ function doChart() { // Draw chart.js chart
                         ticks: {
                             min: 0,
                             max: 100,
+                            fontColor: fontColor,
                             callback: function (value, index, values) {
                                 return value + "%";
                             }
                         }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            fontColor: fontColor
+                        },
                     }]
                 },
 
