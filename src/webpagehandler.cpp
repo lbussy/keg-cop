@@ -885,7 +885,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
         if (hostnamechanged)
         { // We reset hostname, process
             hostnamechanged = false;
-            tcpip_adapter_set_hostname(TCPIP_ADAPTER_IF_STA, config.copconfig.hostname);
+            WiFi.setHostname(config.copconfig.hostname);
             mDNSReset();
             Log.notice(F("POSTed new mDNSid, reset mDNS stack." CR));
         }
