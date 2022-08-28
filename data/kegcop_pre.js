@@ -292,14 +292,14 @@ function getSecret(callback = null) { // Get secret for PUTs
             }
             catch {
                 if (!unloadingState) {
-                    console.warning("Unable to parse secret.");
+                    console.warn("Unable to parse secret.");
                 }
                 setTimeout(getSecret, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                console.warning("Unable to retrieve secret.");
+                console.warn("Unable to retrieve secret.");
             }
             setTimeout(getSecret, 10000);
         })
@@ -401,9 +401,9 @@ function cleanURL(tempURL = "", newHost = "") {
         return newURL;
     } catch {
         if (newHost) { // Change hostname if we are resetting controller name
-            console.warning("WARNING: Unable to clean URL: " + tempURL);
+            console.warn("WARNING: Unable to clean URL: " + tempURL);
         } else {
-            console.warning("WARNING: Unable to rewrite new URL for '" + newHost + "'.");
+            console.warn("WARNING: Unable to rewrite new URL for '" + newHost + "'.");
         }
         return;
     }
