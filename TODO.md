@@ -10,3 +10,5 @@
 - [ ] Add some form of bulk load:
     - [ ] `/api/v1/config/settings/`
     - [ ] `/api/v1/config/taps/`
+- [ ] Cut down on iteration when processing posts
+- [ ] Add dark mode

@@ -8,7 +8,7 @@ var secret = "";        // Hold the secret to help avoid spurious changes to app
 var numReqPre = 2;      // How many common calls exist here - to be added to the page specific numbers (checkDataHost and getSecret)
 
 // Use this here to enforce running first
-dataHost = localStorage.getItem("dataHost");
+dataHost = localStorage.getItem("dataHost") || "";
 if (dataHost && !dataHost.endsWith("/")) dataHost += "/";
 
 getUseTemps();
@@ -128,7 +128,7 @@ async function chooseTempMenu(callback = null) {
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/tempcontrol/";
@@ -167,7 +167,7 @@ function checkSemaphore(callback) { // Check to see if the update is complete
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/action/ping/";
@@ -274,7 +274,7 @@ function getSecret(callback = null) { // Get secret for PUTs
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
 
@@ -292,14 +292,14 @@ function getSecret(callback = null) { // Get secret for PUTs
             }
             catch {
                 if (!unloadingState) {
-                    console.warning("Unable to parse secret.");
+                    console.warn("Unable to parse secret.");
                 }
                 setTimeout(getSecret, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
-                console.warning("Unable to retrieve secret.");
+                console.warn("Unable to retrieve secret.");
             }
             setTimeout(getSecret, 10000);
         })
@@ -336,16 +336,23 @@ function getEventTarget(event) {
     return targetURL;
 }
 
-function cleanURL(tempURL) {
-    // TODO:  A 404 keeps the "bad" page as it's href and blows this up.
-    targetURL = tempURL; // Yes we're actually going to use both of these
+function cleanURL(tempURL = "", newHost = "") {
+    // This all exists because we need to re-write URLs when using a dev server
+    // TODO:  A 404 keeps the "bad" page as it's href and blows this up - top links do not work
+    const currentURL = new URL(window.location.href);
+
     if (!dataHostCheckDone) {
         setTimeout(cleanURL, 10);
         return;
     }
-    // This all exists because we need to re-write URLs when using a dev server
+
+    // Allow re-writing a cleaned current URL with a new hostname
+    if (!tempURL) {
+        tempURL = new URL(window.location.href);
+    }
+    targetURL = tempURL; // Yes we're actually going to use both of these
+
     try {
-        const currentURL = new URL(window.location.href);
         try {
             targetURL = new URL(targetURL);
         } catch {
@@ -354,7 +361,11 @@ function cleanURL(tempURL) {
         var newURL;
         newURL = targetURL.protocol;
         newURL += "//";
-        newURL += targetURL.host;
+        if (newHost) { // Change hostname if we are resetting controller name
+            newURL += newHost;
+        } else {
+            newURL += targetURL.host;
+        }
         newURL += "/";
 
         var newPath = targetURL.pathname;
@@ -389,7 +400,11 @@ function cleanURL(tempURL) {
         newURL += targetURL.hash;
         return newURL;
     } catch {
-        console.warn("WARNING: Unable to clean URL: " + tempURL);
+        if (newHost) { // Change hostname if we are resetting controller name
+            console.warn("WARNING: Unable to clean URL: " + tempURL);
+        } else {
+            console.warn("WARNING: Unable to rewrite new URL for '" + newHost + "'.");
+        }
         return;
     }
 }

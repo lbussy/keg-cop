@@ -21,7 +21,7 @@ function doResetSignal() {
     }
 
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/action/reset/";

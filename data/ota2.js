@@ -65,7 +65,7 @@ function watchReset() {
 
 function clearUpdate(callback = null) {
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += '/api/v1/action/clearupdate/';
@@ -85,7 +85,7 @@ function clearUpdate(callback = null) {
 
 function startUpdate(callback = null) {
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += '/api/v1/action/updatestart/';

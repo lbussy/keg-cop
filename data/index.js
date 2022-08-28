@@ -31,7 +31,7 @@ function populateFlow(callback = null) { // Get flowmeter data
     }
 
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/taps/";
@@ -101,7 +101,7 @@ function populateConfig() { // Get configuration settings
     }
 
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/settings/";
@@ -146,7 +146,7 @@ function populateTemps(callback = null) { // Get current temperature and state
     }
 
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/sensors/";
@@ -341,7 +341,7 @@ function barClick(event, array) { // Bar click handler
     }
 
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/settings/#tap" + tapNum;

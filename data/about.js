@@ -39,7 +39,7 @@ function loadThisVersion() { // Get current parameters
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/thisVersion/";
@@ -80,7 +80,7 @@ function loadUptime(callback = null) { // Get uptime information
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/uptime/";
@@ -123,7 +123,7 @@ function loadHeap(callback = null) { // Get heap information
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/heap/";
@@ -165,7 +165,7 @@ function loadResetReason(callback = null) { // Get last reset reason
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/resetreason/";
