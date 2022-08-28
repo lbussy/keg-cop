@@ -128,7 +128,7 @@ async function chooseTempMenu(callback = null) {
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/tempcontrol/";
@@ -167,7 +167,7 @@ function checkSemaphore(callback) { // Check to see if the update is complete
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/action/ping/";
@@ -274,7 +274,7 @@ function getSecret(callback = null) { // Get secret for PUTs
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
 

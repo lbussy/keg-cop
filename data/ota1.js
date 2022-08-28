@@ -18,7 +18,7 @@ function loadThisVersion() { // Get current parameters
     }
 
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/thisVersion/";
@@ -51,7 +51,7 @@ function loadThatVersion() { // Get current parameters
     }
 
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/thatVersion/";

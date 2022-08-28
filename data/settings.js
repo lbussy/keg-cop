@@ -139,7 +139,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
 
@@ -197,7 +197,7 @@ function populateConfig(callback = null) { // Get configuration settings
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
 
@@ -383,7 +383,7 @@ function processPost(obj) {
     var actionURL = $form.attr("action");
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += actionURL;
@@ -493,7 +493,7 @@ function processControllerPost(url, obj) {
         controlnumVal = $form.find("select[name='controlnum']").val(),
         imperialVal = $("[name='imperial']:checked").val(),
         serialVal = $("[name='serial']:checked").val(),
-        tapsolenoidVal = $("[name='tapsolenoid']:checked").val()
+        tapsolenoidVal = $("[name='tapsolenoid']:checked").val();
 
     // Hold some data about what we changed
     var reloadpage = false;
@@ -864,7 +864,7 @@ function toggleCalMode(inCal = false, meter, callback = null) {
     var data = { secret: secret };
 
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     if (inCal) {
@@ -929,7 +929,7 @@ function pulseReload(callback = null) { // Get pulses
     var selectedIndex = $('#flowmeter').prop('selectedIndex');
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/pulses/";

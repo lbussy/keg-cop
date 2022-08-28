@@ -25,7 +25,7 @@ function populateTemps(callback = null) { // Get configuration settings
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/sensors/";
@@ -107,7 +107,7 @@ function populateConfig() { // Get configuration settings
     }
 
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/settings/";
