@@ -89,10 +89,16 @@ void setup()
     setClock(); // Set NTP Time
 
     // Initialize flowmeters before checking for FILESYSTEM update
-    if (initFlow())
-        Log.notice(F("Flowmeters loaded." CR));
-    else
-        Log.error(F("Unable to load flowmeters." CR));
+    if (!initFlow())
+    { // If flowmeter configuration does not load, sit and blink slowly like an idiot
+        pinMode(LED, OUTPUT);
+        Ticker blinker;
+        blinker.attach_ms(CONFIGBLINK, []()
+                          { digitalWrite(LED, !(digitalRead(LED))); });
+        while (true)
+        {
+        };
+    }
 
     // Clear temperature sensor emulation
     config.copconfig.tempemulate = false;

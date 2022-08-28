@@ -151,11 +151,11 @@ void logFlow()
                 { // Log a pour
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
-                    saveFlowConfig();
+                    setDoSaveFlowConfig();
                     queuePourReport[i] = pour;        // Queue upstream pour report
                     queuePulseReport[i] = pulseCount; // Queue upstream pulse report
                     config.taplistio.update = true;   // Queue TIO report
-                    saveConfig();
+                    setDoSaveConfig();
                     Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                 }
             }
@@ -229,18 +229,91 @@ bool isKicked(int meter)
 }
 
 bool loadFlowConfig()
-{ // Manage loading the configuration
-    if (!loadFlowFile())
+{
+    Log.verbose(F("Flow Load: Loading flowmeter configuration." CR));
+    bool loadOK = false;
+    // Make sure FILESTYSTEM exists
+    if (!FILESYSTEM.begin())
     {
-        Log.warning(F("Warning: Unable to load flowmeter configuration." CR));
-        saveFlowConfig();    // Save a blank config
-        if (!loadFlowFile()) // Try one more time to load the default config
+        Log.error(F("Flow Load: Unable to mount filesystem, partition may be corrupt." CR));
+        loadOK = false;
+    }
+    else
+    {
+        // Loads the configuration from a file on FILESYSTEM
+        File file = FILESYSTEM.open(flowfilename, FILE_READ);
+        if (!FILESYSTEM.exists(flowfilename) || !file)
         {
-            Log.error(F("Error: Unable to generate default flowmeter configuration." CR));
-            return false;
+            Log.warning(F("Flow Load: Flowmeter configuration does not exist, default values will be attempted." CR));
+            loadOK = false;
+        }
+        else if (!deserializeFlowConfig(file))
+        {
+            Log.warning(F("Flow Load: Failed to load flowmeter configuration from filesystem, default values have been used." CR));
+            loadOK = false;
+        }
+        else
+        {
+            loadOK = true;
+        }
+        file.close();
+
+        // Try to create a default configuration file
+        if (!loadOK)
+        {
+            if (!saveFlowConfig())  // Save a default config
+            {
+                Log.error(F("Flow Load: Unable to generate default flowmeter configuration." CR));
+                loadOK = false;
+            }
+            else if (!loadFlowConfig()) // Try one more time to load the default config
+            {
+                Log.error(F("Flow Load: Unable to read default flowmeter configuration." CR));
+                loadOK = false;
+            }
+            else
+            {
+                loadOK = true;
+            }
         }
     }
-    return saveFlowConfig();
+    return loadOK;
+}
+
+bool saveFlowConfig()
+{
+    Log.verbose(F("Config Save: Saving configuration." CR));
+    bool saveOK = false;
+    // Make sure FILESTYSTEM exists
+    if (!FILESYSTEM.begin())
+    {
+        Log.error(F("Config Save: Unable to mount filesystem, partition may be corrupt." CR));
+        saveOK = false;
+    }
+    else
+    {
+        // Saves the configuration to a file on FILESYSTEM
+        File file = FILESYSTEM.open(flowfilename, FILE_WRITE);
+        if (!file)
+        {
+            Log.error(F("Config Save: Unable to open or create file, partition may be corrupt." CR));
+            saveOK = false;
+        }
+        // Serialize JSON to file
+        else if (!serializeFlowConfig(file))
+        {
+            Log.error(F("Config Save: Failed to save configuration, data may be lost." CR));
+            saveOK = false;
+        }
+        else
+        {
+            Log.verbose(F("Config Save: Configuration saved." CR));
+            saveOK = true;
+        }
+        file.close();
+        return true;
+    }
+    return saveOK;
 }
 
 bool deleteFlowConfigFile()
@@ -250,57 +323,6 @@ bool deleteFlowConfigFile()
         return false;
     }
     return FILESYSTEM.remove(flowfilename);
-}
-
-bool loadFlowFile()
-{
-    if (!FILESYSTEM.begin())
-    {
-        Log.error(F("Error: Unable to start FILESYSTEM." CR));
-        return false;
-    }
-    // Loads the configuration from a file on FILESYSTEM
-    File file = FILESYSTEM.open(flowfilename, FILE_READ);
-    if (!FILESYSTEM.exists(flowfilename) || !file)
-    {
-        Log.warning(F("Warning: Flow json does not exist, generating new %s." CR), flowfilename);
-    }
-    else
-    {
-        // Existing configuration present
-    }
-
-    if (!deserializeFlowConfig(file))
-    {
-        Log.error(F("Error: Unable to deserialize flow config." CR));
-        file.close();
-        return false;
-    }
-    else
-    {
-        file.close();
-        return true;
-    }
-}
-
-bool saveFlowConfig()
-{
-    // Saves the configuration to a file on FILESYSTEM
-    File file = FILESYSTEM.open(flowfilename, FILE_WRITE);
-    if (!file)
-    {
-        file.close();
-        return false;
-    }
-
-    // Serialize JSON to file
-    if (!serializeFlowConfig(file))
-    {
-        file.close();
-        return false;
-    }
-    file.close();
-    return true;
 }
 
 bool deserializeFlowConfig(Stream &src)
@@ -369,60 +391,6 @@ bool printFlowConfig()
     printCR(true);
     return retval;
 }
-
-// bool mergeFlowJsonString(String newJson)
-// {
-//     // Serialize configuration
-//     DynamicJsonDocument doc(capacityFlowDeserial);
-
-//     // Parse directly from file
-//     DeserializationError err = deserializeJson(doc, newJson);
-//     if (err)
-//     {
-//         printChar(true, err.c_str());
-//         printCR(true);
-//     }
-//     return mergeJsonObject(doc);
-// }
-
-// bool mergeFlowJsonObject(JsonVariantConst src)
-// {
-//     // Serialize configuration
-//     DynamicJsonDocument doc(capacityFlowDeserial);
-
-//     // Create an object at the root
-//     JsonObject root = doc.to<JsonObject>();
-
-//     // Fill the object
-//     flow.save(root);
-
-//     // Merge in the configuration
-//     if (merge(root, src))
-//     {
-//         // Move new object to config
-//         flow.load(root);
-//         saveFile();
-//         return true;
-//     }
-
-//     return false;
-// }
-
-// bool mergeFlow(JsonVariant dst, JsonVariantConst src)
-// {
-//     if (src.is<JsonObject>())
-//     {
-//         for (auto kvp : src.as<JsonObject>())
-//         {
-//             merge(dst.getOrAddMember(kvp.key()), kvp.value());
-//         }
-//     }
-//     else
-//     {
-//         dst.set(src);
-//     }
-//     return true;
-// }
 
 void convertFlowtoImperial()
 {

@@ -37,71 +37,90 @@ bool deleteConfigFile()
 
 bool loadConfig()
 {
-    // Manage loading the configuration
-    if (!loadFile())
-    {
-        return false;
-    }
-    else
-    {
-        saveFile();
-        return true;
-    }
-}
-
-bool loadFile()
-{
+    Log.verbose(F("Config Load: Loading configuration." CR));
+    bool loadOK = false;
+    // Make sure FILESTYSTEM exists
     if (!FILESYSTEM.begin())
     {
-        return false;
-    }
-    // Loads the configuration from a file on FILESYSTEM
-    File file = FILESYSTEM.open(filename,FILE_READ);
-    if (!FILESYSTEM.exists(filename) || !file)
-    {
-        // File does not exist or unable to read file
+        Log.error(F("Config Load: Unable to mount filesystem, partition may be corrupt." CR));
+        loadOK = false;
     }
     else
     {
-        // Existing configuration present
-    }
+        // Loads the configuration from a file on FILESYSTEM
+        File file = FILESYSTEM.open(filename, FILE_READ);
+        if (!FILESYSTEM.exists(filename) || !file)
+        {
+            Log.warning(F("Config Load: Configuration does not exist, default values will be attempted." CR));
+            loadOK = false;
+        }
+        else if (!deserializeConfig(file))
+        {
+            Log.warning(F("Config Load: Failed to load configuration from filesystem, default values have been used." CR));
+            loadOK = false;
+        }
+        else
+        {
+            loadOK = true;
+        }
+        file.close();
 
-    if (!deserializeConfig(file))
-    {
-        file.close();
-        return false;
+        // Try to create a default configuration file
+        if (!loadOK)
+        {
+            if (!saveFlowConfig())  // Save a default config
+            {
+                Log.error(F("Config Load: Unable to generate default configuration." CR));
+                loadOK = false;
+            }
+            else if (!loadConfig()) // Try one more time to load the default config
+            {
+                Log.error(F("Config Load: Unable to read default configuration." CR));
+                loadOK = false;
+            }
+            else
+            {
+                loadOK = true;
+            }
+        }
     }
-    else
-    {
-        file.close();
-        return true;
-    }
+    return loadOK;
 }
 
 bool saveConfig()
 {
-    return saveFile();
-}
-
-bool saveFile()
-{
-    Log.verbose(F("Config: Saving configuration." CR));
-    // Saves the configuration to a file on FILESYSTEM
-    File file = FILESYSTEM.open(filename,FILE_WRITE);
-    if (!file)
+    Log.verbose(F("Config Save: Saving configuration." CR));
+    bool saveOK = false;
+    // Make sure FILESTYSTEM exists
+    if (!FILESYSTEM.begin())
     {
-        file.close();
-        return false;
+        Log.error(F("Config Save: Unable to mount filesystem, partition may be corrupt." CR));
+        saveOK = false;
     }
-
-    // Serialize JSON to file
-    if (!serializeConfig(file))
+    else
     {
+        // Saves the configuration to a file on FILESYSTEM
+        File file = FILESYSTEM.open(filename, FILE_WRITE);
+        if (!file)
+        {
+            Log.error(F("Config Save: Unable to open or create file, partition may be corrupt." CR));
+            saveOK = false;
+        }
+        // Serialize JSON to file
+        else if (!serializeConfig(file))
+        {
+            Log.error(F("Config Save: Failed to save configuration, data may be lost." CR));
+            saveOK = false;
+        }
+        else
+        {
+            Log.verbose(F("Config Save: Configuration saved." CR));
+            saveOK = true;
+        }
         file.close();
-        return false;
+        return true;
     }
-    file.close();
-    return true;
+    return saveOK;
 }
 
 bool deserializeConfig(Stream &src)
@@ -139,10 +158,10 @@ bool serializeConfig(Print &dst)
     return serializeJsonPretty(doc, dst) > 0;
 }
 
-bool printFile()
+bool printConfigFile()
 {
     // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(filename,FILE_READ);
+    File file = FILESYSTEM.open(filename, FILE_READ);
     if (!file)
         return false;
 
@@ -204,7 +223,7 @@ bool printConfig()
 //     {
 //         // Move new object to config
 //         config.load(root);
-//         saveFile();
+//         saveConfig();
 //         return true;
 //     }
 
@@ -240,7 +259,7 @@ void convertConfigtoImperial()
             if (!config.temps.calibration[i] == 0)
                 config.temps.calibration[i] = convertOneCtoF(config.temps.calibration[i]);
         }
-        saveConfig();
+        setDoSaveConfig(); // Set a semaphore because this is called from Web Page
     }
 }
 
@@ -257,7 +276,7 @@ void convertConfigtoMetric()
             if (!config.temps.calibration[i] == 0)
                 config.temps.calibration[i] = convertOneFtoC(config.temps.calibration[i]);
         }
-        saveConfig();
+        setDoSaveConfig(); // Set a semaphore because this is called from Web Page
     }
 }
 
