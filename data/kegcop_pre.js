@@ -8,7 +8,7 @@ var secret = "";        // Hold the secret to help avoid spurious changes to app
 var numReqPre = 2;      // How many common calls exist here - to be added to the page specific numbers (checkDataHost and getSecret)
 
 // Use this here to enforce running first
-dataHost = localStorage.getItem("dataHost");
+dataHost = localStorage.getItem("dataHost") || "";
 if (dataHost && !dataHost.endsWith("/")) dataHost += "/";
 
 getUseTemps();

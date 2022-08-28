@@ -508,7 +508,6 @@ function processControllerPost(url, obj) {
     }
 
     // Decide if we accessed via IP or non-mDNS name
-    // TODO:  Figure out if we have an issue not using dataHost and using an IP here
     var confirmText = '';
     if (hostnameVal != originalHostnameConfig) {
         hostnamechanged = true;
