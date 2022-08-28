@@ -873,12 +873,12 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     else
                     {
                         didFail = true;
-                        Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                        Log.warning(F("Settings Update: [%s]:(%s) not valid." CR), name, value);
                     }
                 }
                 else
                 {
-                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid when tower fan control is enabled." CR), name, value);
+                    Log.notice(F("Settings Update: [%s]:(%s) not valid when tower fan control is enabled - skipping." CR), name, value);
                 }
             }
         }
