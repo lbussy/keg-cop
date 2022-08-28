@@ -508,6 +508,7 @@ function processControllerPost(url, obj) {
     }
 
     // Decide if we accessed via IP or non-mDNS name
+    // TODO:  Figure out if we have an issue not using dataHost and using an IP here
     var confirmText = '';
     if (hostnameVal != originalHostnameConfig) {
         hostnamechanged = true;
@@ -522,10 +523,10 @@ function processControllerPost(url, obj) {
         }
     }
     if (confirmText && (!confirm(confirmText))) {
-        // Bail out on put
+        // Bail out on resetting host name
         return;
     } else {
-        // Process put
+        // Process host name change
         toggleLoader("on");
         originalHostnameConfig = hostnameVal; // Pick up changed host name
         data = {
@@ -538,10 +539,8 @@ function processControllerPost(url, obj) {
             tapsolenoid: tapsolenoidVal,
         }
         if (hostnamechanged && reloadpage) {
-            var protocol = window.location.protocol;
-            var path = window.location.pathname;
-            var newpage = protocol + "" + hostnameVal + ".local" + path + hashLoc;
-            putData(url, data, newpage);
+            var newpage = cleanURL(window.location.href, hostnameVal + ".local")
+            putData(url, data, newpage, false, false);
         } else if (unitschanged) {
             putData(url, data, false, true);
         } else {
@@ -686,7 +685,7 @@ function processRPintsPost(url, obj) {
 
 function putData(url, data, newpage = false, newdata = false, callback = null) {
     var loadNew = (newpage.length > 0);
-    console.log("[DEBUG] putData() data: " + JSON.stringify(data) + " URL: " + url);
+
     $.ajax({
         url: url,
         data: data,
