@@ -13,6 +13,10 @@
     - [ ] `/api/v1/config/taps/`
 - [ ] Cut down on iteration when processing posts
 - [ ] Add dark mode
+    - [x] Change font color on X and Y axis when using Superhero
+        - [x] `index`
+        - [x] `temps`
+    - [ ] Allow change of theme in UI
 
 # Bugs:
 

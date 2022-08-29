@@ -9,7 +9,7 @@ var secret = "";        // Hold the secret to help avoid spurious changes to app
 var numReqPre = 2;      // How many common AJJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
 
 // Use last known theme:
-document.getElementById('theme').href = localStorage.getItem("theme") || "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css";
+document.getElementById('theme').href = localStorage.getItem("theme") || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
 document.getElementById('theme_aux').href = localStorage.getItem("theme_aux") || "cerulean_aux.css";
 document.querySelector('meta[name="theme-color"]').setAttribute("content", localStorage.getItem("theme_color") || "#ffffff");
 
@@ -56,10 +56,15 @@ function preLoad() {
     }
 }
 
-function setTheme(theme = "", theme_aux = "", theme_color = "") {
+function setTheme(theme = "", theme_aux = "", theme_color = "", reload = false) {
+    if (reload) {
+        toggleLoader("on");
+    }
     // Set theme in local storage (or blank for default)
     //
-    // setTheme("https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/superhero/bootstrap.min.css", "superhero_aux.css", "#000000");
+    // Toggle between:
+    // setTheme("https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", "superhero_aux.css", "#000000");
+    // setTheme("https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", "cerulean_aux.css", "#FFFFFF");
     //
     if (theme) localStorage.setItem("theme", theme);
     if (theme_aux) localStorage.setItem("theme_aux", theme_aux);
@@ -74,6 +79,10 @@ function setTheme(theme = "", theme_aux = "", theme_color = "") {
     cssTheme.href = localStorage.getItem("theme") || "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css";
     cssTheme_aux.href = localStorage.getItem("theme_aux") || "cerulean_aux.css";
     cssTheme_color.setAttribute("content", localStorage.getItem("theme_color") || "#ffffff");
+
+    if (reload) {
+        location.reload()
+    }
 };
 
 function startLoad() {
