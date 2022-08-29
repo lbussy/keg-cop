@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html class="h-100" lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description" content="Keg Cop, a Home Brewing application">
+    <meta name="author" content="Lee Bussy">
+
+    <title>Keg Cop</title>
+
+    <link rel="canonical" href="https://www.kegcop.com">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta id="theme_color" name="theme-color" content="#ffffff">
+
+    <link id="theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css">
+    <link id="theme_aux" rel="stylesheet" href="cerulean_aux.css">
+    <link rel="stylesheet" href="kegcop.css">
+    <script src="https://kit.fontawesome.com/e51821420e.js" crossorigin="anonymous"></script>
+    <script src="kegcop_pre.js"></script>
+</head>
+
+<body class="d-flex flex-column h-100">
+
+    <main role="main" class="flex-shrink-0">
+
+        <div id="settingsAlert_placeholder"></div>
+        <div id="flowAlert_placeholder"></div>
+        <div id="tempAlert_placeholder"></div>
+        <div id="configAlert_placeholder"></div>
+
+        <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
+
+        <div class="container" id="indexApp"> <!-- Container -->
+
+            <div class="card border-dark mb-3"> <!-- Taps Information -->
+
+                <div class="card-header d-flex"> <!-- Double Header -->
+                    <ul class="navbar me-auto">
+                        <h4><span id="taplistName"></span></h4>
+                    </ul>
+                    <ul class="navbar ms-auto">
+                        <h5 id="coolstate" class="alert">
+                            <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="/temps/">
+                                <span id="controlPoint"></span>
+                                <span id="controlTemp"></span>
+                                <span id="tempFormat"></span>
+                            </a>
+                            <a style="display:none;" id="fanstatetooltip" data-toggle="tooltip" data-placement="right" class="no-underline" href="/settings/#tempcontrol">
+                                <span class="fa-stack" id="towerFan"></span>
+                            </a>
+                        </h5>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div> <!-- Double Header -->
+                <div class="card-body"> <!-- Chart Container -->
+                    <canvas class="chart" id="tapChart"></canvas>
+                </div> <!-- Chart Container -->
+
+            </div> <!-- Taps Information -->
+
+        </div> <!-- Container -->
+
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+        </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+        </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+        integrity="sha384-i+dHPTzZw7YVZOx9lbH5l6lP74sLRtMtwN2XjVqjf3uAGAREAF4LMIUDTWEVs4LI" crossorigin="anonymous">
+        </script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"
+        integrity="sha384-fIE8wIddxI8s1yO253uBKjQyxNZ5UuilW9rx7H4ePN7XS7Z9ukIeK+ECX5B8jDAj" crossorigin="anonymous">
+        </script>
+
+    <script src="kegcop_post.js"></script>
+    <script src="index.js"></script>
+
+</body>
+
+</html>

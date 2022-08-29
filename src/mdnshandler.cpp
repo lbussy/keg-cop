@@ -64,13 +64,13 @@ void mDNSReset()
 
 void mDNSServiceAdvert()
 {
-    // TODO:  Clean this shit up
-    MDNS.addServiceTxt("ks-tv", "tcp", "device", "kegcop");
-    MDNS.addServiceTxt("ks-tv", "tcp", "method", "http");
-    MDNS.addServiceTxt("ks-tv", "tcp", "displayPath", "/");
-    MDNS.addServiceTxt("ks-tv", "tcp", "appendID", "no");
     for (int service = 0; service < MDNS_MAX; service++)
     {
         MDNS.addService(mDNSService[service], "tcp", mDNSPort[service]);
     }
+    // TODO:  Clean this shit up
+    MDNS.addServiceTxt("ks-tv", "tcp", "device", "kegcop");
+    MDNS.addServiceTxt("ks-tv", "tcp", "method", "http");
+    MDNS.addServiceTxt("ks-tv", "tcp", "displayPath", "/ks-tv.htm");
+    MDNS.addServiceTxt("ks-tv", "tcp", "appendID", "no");
 }

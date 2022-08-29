@@ -9,9 +9,11 @@ var numReqPre = 2;      // How many common AJJAX calls exist here - to be added 
 
 // Use last known theme:
 var theme = localStorage.getItem('theme');
-document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
-document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
-document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
+if (theme) {
+    document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
+    document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
+}
 
 // Use this here to enforce running first
 dataHost = localStorage.getItem("dataHost") || "";
