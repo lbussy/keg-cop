@@ -82,6 +82,13 @@ $("input[type='reset']").closest('form').on('reset', function (event) { // Reset
     resetFlowCalForm();
 });
 
+$('#cerulean').on('click', function (event) {
+    setTheme("cerulean");
+});
+$('#superhero').on('click', function (event) {
+    setTheme("superhero");
+});
+
 // Tower Fan Control Events
 //
 // Handle click on enable/disable radio buttons

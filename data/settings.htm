@@ -1573,19 +1573,28 @@
 
                             <form id="themeselect" method="PUT" onsubmit="return processPost(this);">
 
-                                <div class="d-grid gap-2 col-3 mx-auto">
-                                    <button id="submitsettings" class="btn btn-primary"
-                                        onclick="{setTheme('Cerulean');}">Cerulean (light)
-                                    </button>
-                                </div>
-
-                                <p></p>
-
-                                <div class="d-grid gap-2 col-3 mx-auto">
-                                    <button id="submitsettings" class="btn btn-primary"
-                                        onclick="{setTheme('Superhero');}">Superhero (dark)
-                                    </button>
-                                </div>
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Change active UI theme">Apply Theme:</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change to a light theme">
+                                                    <input type="radio" class="form-check-input" name="dark" id="cerulean" value="false">
+                                                    Cerulean (light)
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change to a dark theme">
+                                                    <input type="radio" class="form-check-input" name="dark" id="superhero" value="true"
+                                                        checked="">
+                                                    Superhero (dark)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
 
                             </form>
 
