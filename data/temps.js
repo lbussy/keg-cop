@@ -1,6 +1,7 @@
 // Supports Temps page
 
 toggleLoader("on");
+
 var imperial;
 var loaded = 0;
 var numReq = 3 + numReqPre;
@@ -163,6 +164,11 @@ function updateScales(chart) {
 }
 
 function doChart() { // Draw chart.js chart
+    // Get font color from CSS
+    const element = document.querySelector('.chart');
+    const style = getComputedStyle(element);
+    var fontColor = style.color;
+
     if (tempChart) {
         tempChart.data.datasets.forEach((dataset) => {
             // Update data
@@ -210,9 +216,15 @@ function doChart() { // Draw chart.js chart
                 },
 
                 scales: {
+                    xAxes: [{
+                        ticks: {
+                            fontColor: fontColor
+                        },
+                    }],
                     yAxes: [{
                         display: true,
                         ticks: {
+                            fontColor: fontColor,
                             min: Math.floor(Math.min.apply(this, scaleTemps) - 2),
                             max: Math.ceil(Math.max.apply(this, scaleTemps) + 1),
                             callback: function (value, index, values) {

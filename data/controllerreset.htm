@@ -19,9 +19,10 @@
     <link rel="manifest" href="site.webmanifest">
     <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <meta id="theme_color" name="theme-color" content="#ffffff">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
+    <link id="theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css">
+    <link id="theme_aux" rel="stylesheet" href="cerulean_aux.css">
     <link rel="stylesheet" href="kegcop.css">
     <script src="https://kit.fontawesome.com/e51821420e.js" crossorigin="anonymous"></script>
     <script src="kegcop_pre.js"></script>
@@ -40,7 +41,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" id="home" href="/index/">Home</a>
                     </li>
@@ -54,7 +55,7 @@
                         <a class="nav-link" href="/about/">About</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/advanced/reset/index.html">?</a>
                     </li>
@@ -78,7 +79,7 @@
 
                 <!-- Controller Reset Information -->
                 <div class="card-header" id="subtitle">
-                    <h4 class="card-title">Controller Reset In Progress</h4>
+                    <h4 >Controller Reset In Progress</h4>
                 </div>
                 <div class="card-body" id="message">
                     <p class="card-text">

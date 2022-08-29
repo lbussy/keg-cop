@@ -5,7 +5,13 @@ var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
 var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
-var numReqPre = 2;      // How many common calls exist here - to be added to the page specific numbers (checkDataHost and getSecret)
+var numReqPre = 2;      // How many common AJJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+
+// Use last known theme:
+var theme = localStorage.getItem('theme');
+document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
+document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
+document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
 
 // Use this here to enforce running first
 dataHost = localStorage.getItem("dataHost") || "";
@@ -50,8 +56,44 @@ function preLoad() {
     }
 }
 
+function setTheme(selection, reload = false) {
+    if (reload) {
+        toggleLoader("on");
+    }
+
+    var theme = {};
+    var themes = [
+        {name:"cerulean", displayname: "Cerulean (light)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", css: "cerulean_aux.css", color: "#FFFFFF"},
+        {name:"superhero", displayname: "Superhero (dark)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", css: "superhero_aux.css",  color: "#000000"},
+    ];
+
+    try {
+        if (selection) {
+            theme = themes.find(theme => theme.name === selection.toLowerCase());
+        } else {
+            if (!localStorage.getItem('theme')) {
+                console.warn("setTheme(): Unknown theme, default theme selected.");
+                theme = themes.find(theme => theme.name === "cerulean");
+            } else {
+                theme = JSON.parse(localStorage.getItem('theme'));
+            }
+        }
+    } catch {
+        theme = themes.find(theme => theme.name === "cerulean");
+    }
+    localStorage.setItem('theme', JSON.stringify(theme));
+    document.getElementById('theme').href = theme.url;
+    document.getElementById('theme_aux').href = theme.css;
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color);
+
+    if (reload) {
+        location.reload()
+    }
+};
+
 function startLoad() {
     fastTempsMenu();
+    setTheme();
     $(document).tooltip({ // Enable tooltips
         'selector': '[data-toggle=tooltip]',
         //'placement': 'left',
@@ -337,8 +379,7 @@ function getEventTarget(event) {
 }
 
 function cleanURL(tempURL = "", newHost = "") {
-    // This all exists because we need to re-write URLs when using a dev server
-    // TODO:  A 404 keeps the "bad" page as it's href and blows this up - top links do not work
+    // This is to re-write URLs when using a dev server
     const currentURL = new URL(window.location.href);
 
     if (!dataHostCheckDone) {

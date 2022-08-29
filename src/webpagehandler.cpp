@@ -114,8 +114,7 @@ void setRegPageHandlers()
     server.serveStatic("/about/", FILESYSTEM, "/").setDefaultFile("about.htm").setCacheControl("max-age=600");
     server.serveStatic("/help/", FILESYSTEM, "/").setDefaultFile("help.htm").setCacheControl("max-age=600");
     server.serveStatic("/temps/", FILESYSTEM, "/").setDefaultFile("temps.htm").setCacheControl("max-age=600");
-    server.serveStatic("/ota1/", FILESYSTEM, "/").setDefaultFile("ota1.htm").setCacheControl("max-age=600");
-    server.serveStatic("/ota2/", FILESYSTEM, "/").setDefaultFile("ota2.htm").setCacheControl("max-age=600");
+    server.serveStatic("/ota/", FILESYSTEM, "/").setDefaultFile("ota.htm").setCacheControl("max-age=600");
     server.serveStatic("/settings/", FILESYSTEM, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
     server.serveStatic("/controllerreset/", FILESYSTEM, "/").setDefaultFile("controllerreset.htm").setCacheControl("max-age=600");
     server.serveStatic("/wifireset/", FILESYSTEM, "/").setDefaultFile("wifireset.htm").setCacheControl("max-age=600");
