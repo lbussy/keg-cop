@@ -19,7 +19,6 @@
         - [x] `temps`
     - [ ] Allow change of theme in UI
     - [x] Fix alignment (temp box and help link)
-- [x] Move App update to Settings card (like WiFi Reset)
 
 # Bugs:
 
