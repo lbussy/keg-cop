@@ -4,7 +4,8 @@
 - [ ] Allow setting `dataHost` from file in application store
 - [ [ Add KegScreeen:
     - [x] Service
-    - [ ] REST API
+    - [ ] REST application
+    - [ ] Create index with no header/footer
 - [ ] Add bad update flag (i.e. if firmware failed)
 - [ ] Stop all online processing if we lose WiFi
 - [ ] Reduce KegScreen (not)reporting spam
@@ -18,6 +19,7 @@
         - [x] `temps`
     - [ ] Allow change of theme in UI
     - [x] Fix alignment (temp box and help link)
+- [ ] Move App update to Settings card (like WiFi Reset)
 
 # Bugs:
 

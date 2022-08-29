@@ -1,5 +1,7 @@
 // Supports Index page
 
+toggleLoader("on");
+
 var numReq = 4 + numReqPre;
 var loaded = 0;
 var imperial;

@@ -1,5 +1,7 @@
 // Supports Temps page
 
+toggleLoader("on");
+
 var imperial;
 var loaded = 0;
 var numReq = 3 + numReqPre;

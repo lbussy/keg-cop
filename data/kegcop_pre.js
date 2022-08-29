@@ -1,6 +1,5 @@
 // Common file/functions for all Keg Cop pages
 
-toggleLoader("on");
 var dataHost = "";
 var usingDataHost = false;
 var dataHostCheckDone = false;
