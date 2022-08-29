@@ -8,9 +8,10 @@ var secret = "";        // Hold the secret to help avoid spurious changes to app
 var numReqPre = 2;      // How many common AJJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
 
 // Use last known theme:
-document.getElementById('theme').href = localStorage.getItem("theme") || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
-document.getElementById('theme_aux').href = localStorage.getItem("theme_aux") || "cerulean_aux.css";
-document.querySelector('meta[name="theme-color"]').setAttribute("content", localStorage.getItem("theme_color") || "#ffffff");
+var theme = localStorage.getItem('theme');
+document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
+document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
+document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
 
 // Use this here to enforce running first
 dataHost = localStorage.getItem("dataHost") || "";
@@ -55,30 +56,35 @@ function preLoad() {
     }
 }
 
-function setTheme(theme = "", theme_aux = "", theme_color = "", reload = false) {
+function setTheme(selection, reload = false) {
     if (reload) {
         toggleLoader("on");
     }
-    // Set theme in local storage (or blank for default)
-    //
-    // Toggle between:
-    //
-    // setTheme("https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", "superhero_aux.css", "#000000");
-    // setTheme("https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", "cerulean_aux.css", "#FFFFFF");
-    //
-    if (theme) localStorage.setItem("theme", theme);
-    if (theme_aux) localStorage.setItem("theme_aux", theme_aux);
-    if (theme_color) localStorage.setItem("theme_color", theme_color);
 
-    // Obtain a reference to the theme stylesheets
-    var cssTheme = document.getElementById('theme');
-    var cssTheme_aux = document.getElementById('theme_aux');
-    var cssTheme_color = document.querySelector('meta[name="theme-color"]')
+    var theme = {};
+    var themes = [
+        {name:"cerulean", displayname: "Cerulean (light)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", css: "cerulean_aux.css", color: "#FFFFFF"},
+        {name:"superhero", displayname: "Superhero (dark)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", css: "superhero_aux.css",  color: "#000000"},
+    ];
 
-    // Apply theme from local storage
-    cssTheme.href = localStorage.getItem("theme") || "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css";
-    cssTheme_aux.href = localStorage.getItem("theme_aux") || "cerulean_aux.css";
-    cssTheme_color.setAttribute("content", localStorage.getItem("theme_color") || "#ffffff");
+    try {
+        if (selection) {
+            theme = themes.find(theme => theme.name === selection.toLowerCase());
+        } else {
+            if (!localStorage.getItem('theme')) {
+                console.warn("setTheme(): Unknown theme, default theme selected.");
+                theme = themes.find(theme => theme.name === "cerulean");
+            } else {
+                theme = JSON.parse(localStorage.getItem('theme'));
+            }
+        }
+    } catch {
+        theme = themes.find(theme => theme.name === "cerulean");
+    }
+    localStorage.setItem('theme', JSON.stringify(theme));
+    document.getElementById('theme').href = theme.url;
+    document.getElementById('theme_aux').href = theme.css;
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color);
 
     if (reload) {
         location.reload()
