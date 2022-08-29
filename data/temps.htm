@@ -80,12 +80,12 @@
 
             <div class="card border-dark mb-3"> <!-- Temperature Information -->
 
-                <div class="card-header"> <!-- Double Header -->
-                    <div class="float-left">
+                <div class="card-header d-flex"> <!-- Double Header -->
+                    <ul class="navbar me-auto">
                         <h4><span id="templistName"></span></h4>
-                    </div>
-                    <div class="float-right">
-                        <h5 id="coolstate" class="text-right alert">
+                    </ul>
+                    <ul class="navbar ms-auto">
+                        <h5 id="coolstate" class="alert">
                             <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="settings/#tempcontrol">
                                 Control point: <span id="controlPoint"></span> Sensor
                             </a>
@@ -93,7 +93,7 @@
                                 <span class="fa-stack" id="towerFan"></span>
                             </a>
                         </h5>
-                    </div>
+                    </ul>
                     <div class="clearfix"></div>
                 </div> <!-- Double Header -->
 
