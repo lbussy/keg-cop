@@ -98,7 +98,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link plain-link" data-toggle="tab" href="#controller">Controller</a>
+                        <a class="nav-link" data-toggle="tab" href="#controller" role="button">Controller</a>
                     </li>
 
                     <li class="nav-item dropdown">
@@ -124,6 +124,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#flowcal">Calibrate Flowmeters</a>
                             <a class="dropdown-item" data-toggle="tab" href="#reset">Reset Controller</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#update">Update Application</a>
                             <a class="dropdown-item" href="/ota1/">Update Application</a>
                             <a class="dropdown-item" data-toggle="tab" href="#wifi">Reset WiFi</a>
                         </div>
@@ -2262,6 +2263,57 @@
                             </div>
                         </div>
                     </div> <!-- Reset Controller Tab -->
+
+                    <div class="tab-pane fade" id="update"> <!-- Update Controller Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Update Controller</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                Below are the current and available versions for your controller.
+                            </p>
+                            <p>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Current</th>
+                                            <th scope="col">Available</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="table-firmware table-success">
+                                            <th scope="row">Firmware</th>
+                                            <td>
+                                                <div id="thisFWVersion">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="thatFWVersion">... loading</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="table-firmware table-info">
+                                            <th scope="row">Filesystem</th>
+                                            <td>
+                                                <div id="thisFSVersion">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="thatFSVersion">... loading</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </p>
+                            <p>
+                                If you are sure you want to update firmware, click the red "Update
+                                Application" button below.
+                            </p>
+                            <div class="d-grid gap-2 col-3 mx-auto">
+                                <a href="/ota/" id="proceed" class="btn btn-danger" type="button">Update Application</a>
+                            </div>
+                        </div>
+                    </div> <!-- Update Controller Tab -->
 
                     <div class="tab-pane fade" id="wifi"> <!-- Reset WiFi Tab -->
                         <div class="card-header d-flex">

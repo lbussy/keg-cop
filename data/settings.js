@@ -3,7 +3,7 @@
 toggleLoader("on");
 
 var loaded = 0; // Hold data load status
-var numReq = 2 + numReqPre; // Number of JSON required
+var numReq = 4 + numReqPre; // Number of JSON required
 var hostname = window.location.hostname;
 var originalHostnameConfig;
 var imperial;
@@ -100,6 +100,8 @@ $('input[type=radio][name=tfancontrolenabled]').change(function () {
 
 function finishLoad() { // Get page data
     loadHash();
+    loadThisVersion(); // Populate form with controller settings
+    loadThatVersion(); // Populate form with controller settings
     chooseTempMenu();
     populateConfig();
     populateFlow();
@@ -338,6 +340,79 @@ function populateConfig(callback = null) { // Get configuration settings
             if (typeof callback == "function") {
                 callback();
             }
+        });
+}
+
+function loadThisVersion() { // Get current parameters
+    if (!dataHostCheckDone) {
+        setTimeout(loadThisVersion, 10);
+        return;
+    }
+
+    var url = dataHost;
+    while (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/thisVersion/";
+
+    var thisVersion = $.getJSON(url, function () {
+    })
+        .done(function (thisVersion) {
+            try {
+                $('#thisFWVersion').text(thisVersion.fw_version);
+                $('#thisFSVersion').text(thisVersion.fs_version);
+            }
+            catch {
+                $('#thisFWVersion').text("Error loading.");
+                $('#thisFSVersion').text("Error loading.");
+            }
+            if (loaded < numReq) {
+                loaded++;
+            }
+        })
+        .fail(function () {
+            $('#thisFWVersion').text("Error loading.");
+            $('#thisFSVersion').text("Error loading.");
+        })
+        .always(function () {
+            // Can post-process here
+        });
+}
+
+function loadThatVersion() { // Get current parameters
+    if (!dataHostCheckDone) {
+        setTimeout(loadThatVersion, 10);
+        return;
+    }
+
+    var url = dataHost;
+    while (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/info/thatVersion/";
+
+    var thatVersion = $.getJSON(url, function () {
+    })
+        .done(function (thatVersion) {
+            try {
+                $('#thatFWVersion').text(thatVersion.fw_version);
+                $('#thatFSVersion').text(thatVersion.fs_version);
+                document.getElementById("proceed").disabled = false;
+            }
+            catch {
+                $('#thatFWVersion').text("Error loading.");
+                $('#thatFSVersion').text("Error loading.");
+            }
+            if (loaded < numReq) {
+                loaded++;
+            }
+        })
+        .fail(function () {
+            $('#thatFWVersion').text("Error loading.");
+            $('#thatFSVersion').text("Error loading.");
+        })
+        .always(function () {
+            // Can post-process here
         });
 }
 
