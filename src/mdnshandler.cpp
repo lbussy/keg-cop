@@ -25,14 +25,15 @@ SOFTWARE. */
 enum MDNS_SERVICES
 {
     MDNS_HTTP,
+    MDNS_KCHTTP,
     MDNS_KEGCOP,
     MDNS_KEGSCREEN,
     MDNS_KSTV,
     MDNS_TELNET,
     MDNS_MAX
 };
-static const char *mDNSService[MDNS_MAX] = {"kc_http", "keg_cop", "kegscreen", "ks_tv", "kc_telnet"};
-static int mDNSPort[MDNS_MAX] = {PORT, PORT, PORT, PORT, TELNETPORT};
+static const char *mDNSService[MDNS_MAX] = {"http", "kc_http", "keg_cop", "kegscreen", "ks-tv", "kc_telnet"};
+static int mDNSPort[MDNS_MAX] = {PORT, PORT, PORT, PORT, PORT, TELNETPORT};
 
 void mDNSSetup()
 {
@@ -63,6 +64,11 @@ void mDNSReset()
 
 void mDNSServiceAdvert()
 {
+    // TODO:  Clean this shit up
+    MDNS.addServiceTxt("ks-tv", "tcp", "device", "kegcop");
+    MDNS.addServiceTxt("ks-tv", "tcp", "method", "http");
+    MDNS.addServiceTxt("ks-tv", "tcp", "displayPath", "/");
+    MDNS.addServiceTxt("ks-tv", "tcp", "appendID", "no");
     for (int service = 0; service < MDNS_MAX; service++)
     {
         MDNS.addService(mDNSService[service], "tcp", mDNSPort[service]);
