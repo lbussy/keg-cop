@@ -97,8 +97,12 @@
                         </div>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#controller" role="button">Controller</a>
+                    <li class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Application</span>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#controller">Controller Behavior</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#themeselect">Theme</a>
+                        </div>
                     </li>
 
                     <li class="nav-item dropdown">
@@ -1557,6 +1561,37 @@
                         </div>
 
                     </div> <!-- Controller Tab -->
+
+                    <div class="tab-pane fade" id="themeselect"> <!-- Themes Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>UI Theme</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="themeselect" method="PUT" onsubmit="return processPost(this);">
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="{setTheme('Cerulean');}">Cerulean (light)
+                                    </button>
+                                </div>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="{setTheme('Superhero');}">Superhero (dark)
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Themes Tab -->
 
 					<div class="tab-pane fade" id="tempcontrol"> <!-- Temp Control Tab -->
                         <div class="card-header d-flex">
