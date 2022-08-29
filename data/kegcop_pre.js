@@ -63,6 +63,7 @@ function setTheme(theme = "", theme_aux = "", theme_color = "", reload = false) 
     // Set theme in local storage (or blank for default)
     //
     // Toggle between:
+    //
     // setTheme("https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", "superhero_aux.css", "#000000");
     // setTheme("https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", "cerulean_aux.css", "#FFFFFF");
     //

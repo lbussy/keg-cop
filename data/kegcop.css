@@ -17,6 +17,16 @@ main>.container {
     text-decoration: none !important;
 }
 
+.plain-link {
+    text-decoration: none;
+    color: var(--bs-nav-link-color);
+}
+
+#mstile-150x150.png {
+    width: 25px;
+    height: 25px;
+}
+
 /*
     Spinning loader graphic setup
 */

@@ -17,6 +17,7 @@
         - [x] `index`
         - [x] `temps`
     - [ ] Allow change of theme in UI
+    - [ ] Fix alignment (temp box and help link)
 
 # Bugs:
 
