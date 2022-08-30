@@ -5,13 +5,17 @@ var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
 var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
-var numReqPre = 2;      // How many common AJJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+var numReqPre = 2;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+
+const UA = navigator.userAgent;
 
 // Use last known theme:
 var theme = localStorage.getItem('theme');
-document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
-document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
-document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
+if (theme) {
+    document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
+    document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
+}
 
 // Use this here to enforce running first
 dataHost = localStorage.getItem("dataHost") || "";

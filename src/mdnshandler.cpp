@@ -22,18 +22,6 @@ SOFTWARE. */
 
 #include "mdnshandler.h"
 
-enum MDNS_SERVICES
-{
-    MDNS_HTTP,
-    MDNS_KEGCOP,
-    MDNS_KEGSCREEN,
-    MDNS_KSTV,
-    MDNS_TELNET,
-    MDNS_MAX
-};
-static const char *mDNSService[MDNS_MAX] = {"kc_http", "keg_cop", "kegscreen", "ks_tv", "kc_telnet"};
-static int mDNSPort[MDNS_MAX] = {PORT, PORT, PORT, PORT, TELNETPORT};
-
 void mDNSSetup()
 {
     if (!MDNS.begin(WiFi.getHostname()))
@@ -63,8 +51,15 @@ void mDNSReset()
 
 void mDNSServiceAdvert()
 {
-    for (int service = 0; service < MDNS_MAX; service++)
-    {
-        MDNS.addService(mDNSService[service], "tcp", mDNSPort[service]);
-    }
+    MDNS.addService("http", "tcp", PORT);
+    MDNS.addService("kc_http", "tcp", PORT);
+    MDNS.addService("keg_cop", "tcp", PORT);
+    MDNS.addService("kc_telnet", "tcp",  PORT);
+
+    MDNS.addService("kegscreen", "tcp", PORT);
+    MDNS.addService("ks-tv", "tcp", TELNETPORT);
+    MDNS.addServiceTxt("ks-tv", "tcp", "device", "kegcop");
+    MDNS.addServiceTxt("ks-tv", "tcp", "method", "http");
+    MDNS.addServiceTxt("ks-tv", "tcp", "displayPath", "/ks-tv/");
+    MDNS.addServiceTxt("ks-tv", "tcp", "appendID", "no");
 }

@@ -21,6 +21,8 @@
     - [x] Allow change of theme in UI
     - [x] Fix alignment (temp box and help link)
     - [ ] Add theme setting to settings storage
+- [ ] Re-format the About page
+- [ ] Try template processing
 
 # Bugs:
 
