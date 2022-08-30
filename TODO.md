@@ -4,9 +4,8 @@
 - [ ] Allow setting `dataHost` from file in application store
 - [ [ Add KegScreeen:
     - [x] Service
-    - [ ] TXT
-    - [ ] REST application
-    - [ ] Create index with no header/footer
+    - [x] TXT
+    - [x] Create index with no header/footer
 - [ ] Add bad update flag (i.e. if firmware failed)
 - [ ] Stop all online processing if we lose WiFi
 - [ ] Reduce KegScreen (not)reporting spam
