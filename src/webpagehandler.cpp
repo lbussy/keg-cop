@@ -90,6 +90,7 @@ void initWebServer()
         }
         else
         {
+            Log.verbose(F("Processing 404 for %s." CR), request->url().c_str());
             AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
             response->setCode(404);
             request->send(response);
@@ -111,8 +112,10 @@ void setRegPageHandlers()
 
     server.serveStatic("/", FILESYSTEM, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
     server.serveStatic("/index/", FILESYSTEM, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
+    server.serveStatic("/ks-tv/", FILESYSTEM, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
     server.serveStatic("/about/", FILESYSTEM, "/").setDefaultFile("about.htm").setCacheControl("max-age=600");
     server.serveStatic("/help/", FILESYSTEM, "/").setDefaultFile("help.htm").setCacheControl("max-age=600");
+    server.serveStatic("/license/", FILESYSTEM, "/").setDefaultFile("license.htm").setCacheControl("max-age=600");
     server.serveStatic("/temps/", FILESYSTEM, "/").setDefaultFile("temps.htm").setCacheControl("max-age=600");
     server.serveStatic("/ota/", FILESYSTEM, "/").setDefaultFile("ota.htm").setCacheControl("max-age=600");
     server.serveStatic("/settings/", FILESYSTEM, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
