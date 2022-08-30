@@ -17,6 +17,7 @@ function populatePage() { // Get page data
     loadUptime();       // Load uptime information
     loadHeap();         // Load heap information
     loadResetReason();  // Load last reset reason
+    $("#useragent").text(UA);
     pollComplete();
 }
 

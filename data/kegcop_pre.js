@@ -5,7 +5,9 @@ var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
 var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
-var numReqPre = 2;      // How many common AJJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+var numReqPre = 2;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+
+const UA = navigator.userAgent;
 
 // Use last known theme:
 var theme = localStorage.getItem('theme');
