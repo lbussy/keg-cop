@@ -8,6 +8,13 @@ main>.container {
     padding: 20px 15px 0;
 }
 
+.ks-tv {
+    width: auto;
+    height: auto;
+    max-width: 90%;
+    max-height: 90%;
+}
+
 .footer>.container {
     padding-right: 15px;
     padding-left: 15px;
@@ -20,11 +27,6 @@ main>.container {
 .plain-link {
     text-decoration: none;
     color: var(--bs-nav-link-color);
-}
-
-#mstile-150x150.png {
-    width: 25px;
-    height: 25px;
 }
 
 /*

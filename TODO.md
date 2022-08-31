@@ -2,11 +2,6 @@
 
 - [ ] `dataHost` is locked to PIO's `./data/` interpretation
 - [ ] Allow setting `dataHost` from file in application store
-- [ [ Add KegScreeen:
-    - [x] Service
-    - [ ] TXT
-    - [ ] REST application
-    - [ ] Create index with no header/footer
 - [ ] Add bad update flag (i.e. if firmware failed)
 - [ ] Stop all online processing if we lose WiFi
 - [ ] Reduce KegScreen (not)reporting spam
@@ -22,9 +17,8 @@
     - [x] Fix alignment (temp box and help link)
     - [ ] Add theme setting to settings storage
 - [ ] Re-format the About page
-- [ ] Try template processing
 
 # Bugs:
 
 - [ ] Clicking on a bar (index only, temps work) always takes us to the controller's page (not live host)
-- [ ] A 404 keeps the "bad" page as it's href and blows this up - top links do not work
+- [ ] A 404 keeps the "bad" page as it's href and blows this up - top links do not work (use template or query string)

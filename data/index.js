@@ -375,8 +375,31 @@ function tempReload() {
 }
 
 function finishPage() { // Display page
+    show_ksTV();
     toggleLoader("off");
     doChart();
     setTimeout(tempReload, tempReloadTimer);
     setTimeout(flowReload, flowReloadTimer);
+}
+
+function show_ksTV() {
+    if (isKSTV) {
+        // Get references ONCE for performance reasons
+        var app = document.getElementById('indexApp');
+        var card = document.getElementById('indexCard');
+        var header = document.getElementsByTagName('header')[0];
+        var footer = document.getElementsByTagName('footer')[0];
+
+        // Clear header and footer
+        header.innerHTML = "";
+        footer.className = "";
+        footer.innerHTML = "";
+
+        app.removeAttribute("style");
+        app.classList.remove("container");
+        app.classList.add("ks-tv");
+        app.classList.add("mx-auto");
+        app.classList.add("align-middle");
+        card.classList.add("m-5");
+    }
 }

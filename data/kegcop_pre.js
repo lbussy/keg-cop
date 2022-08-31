@@ -6,6 +6,7 @@ var dataHostCheckDone = false;
 var useTemps = false;
 var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
 var numReqPre = 2;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+var isKSTV = false;     // Semaphore for KegScreen-TV
 
 const UA = navigator.userAgent;
 
@@ -15,6 +16,11 @@ if (theme) {
     document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
     document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
     document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
+}
+
+var thisURL = new URL(window.location.href);
+if (thisURL.pathname.includes("/ks-tv") || getQueryVariable('feature')) {
+    isKSTV = true;
 }
 
 // Use this here to enforce running first
@@ -451,5 +457,16 @@ function cleanURL(tempURL = "", newHost = "") {
             console.warn("WARNING: Unable to rewrite new URL for '" + newHost + "'.");
         }
         return;
+    }
+}
+
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
     }
 }
