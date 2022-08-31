@@ -383,32 +383,23 @@ function finishPage() { // Display page
 }
 
 function show_ksTV() {
-    var thisURL = new URL(window.location.href);
-    if (thisURL.pathname.includes("/ks-tv") || thisURL.search.includes("ks-tv")) {
+    if (isKSTV) {
+        // Get references ONCE for performance reasons
+        var app = document.getElementById('indexApp');
+        var card = document.getElementById('indexCard');
+        var header = document.getElementsByTagName('header')[0];
+        var footer = document.getElementsByTagName('footer')[0];
+
         // Clear header and footer
-        document.getElementsByTagName('header')[0].innerHTML = "";
-        document.getElementsByTagName('footer')[0].className = "";
-        document.getElementsByTagName('footer')[0].innerHTML = "";
+        header.innerHTML = "";
+        footer.className = "";
+        footer.innerHTML = "";
 
-        // var app = document.getElementById('indexApp');
-        // app.classList = "";
-        // app.classList.add("d-flex");
-        // app.classList.add("flex-column");
-        // app.classList.add("min-vh-100");
-        // app.classList.add("justify-content-center");
-        // app.classList.add("align-items-center");
-
-        // var card = document.getElementById('sizeMe');
-        // card.classList = "";
-        // card.classList.add("card");
-        // card.classList.add("border-dark");
-        // card.classList.add("mb-3");
-        // card.classList.add("d-flex");
-        // card.classList.add("flex-column");
-        // card.classList.add("min-vh-100");
-        // card.classList.add("justify-content-center");
-        // card.classList.add("align-items-center");
-        // card.style.width = '90%';
-        // card.style.height = '90%';
+        app.removeAttribute("style");
+        app.classList.remove("container");
+        app.classList.add("ks-tv");
+        app.classList.add("mx-auto");
+        app.classList.add("align-middle");
+        card.classList.add("m-5");
     }
 }
