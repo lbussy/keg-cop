@@ -51,13 +51,17 @@ void mDNSReset()
 
 void mDNSServiceAdvert()
 {
+    // Services
     MDNS.addService("http", "tcp", PORT);
     MDNS.addService("kc_http", "tcp", PORT);
     MDNS.addService("keg_cop", "tcp", PORT);
-    MDNS.addService("kc_telnet", "tcp",  PORT);
-
+#ifdef _DEBUG_BUILD
+    MDNS.addService("kc_telnet", "tcp",  TELNETPORT);
+#endif
     MDNS.addService("kegscreen", "tcp", PORT);
-    MDNS.addService("ks-tv", "tcp", TELNETPORT);
+    MDNS.addService("ks-tv", "tcp", PORT);
+
+// TXT records
     MDNS.addServiceTxt("ks-tv", "tcp", "device", "kegcop");
     MDNS.addServiceTxt("ks-tv", "tcp", "method", "http");
     MDNS.addServiceTxt("ks-tv", "tcp", "displayPath", "/ks-tv/");

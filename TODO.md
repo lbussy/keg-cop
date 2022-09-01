@@ -1,5 +1,6 @@
 # TODO:
 
+- [ ] SPIFFS Editor doesn't work, [issue #34](https://github.com/lbussy/keg-cop/issues/34)
 - [ ] `dataHost` is locked to PIO's `./data/` interpretation
 - [ ] Allow setting `dataHost` from file in application store
 - [ ] Add bad update flag (i.e. if firmware failed)
