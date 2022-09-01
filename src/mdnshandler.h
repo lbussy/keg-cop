@@ -24,6 +24,7 @@ SOFTWARE. */
 #define _MDNSHANDLER_H
 
 #include "jsonconfig.h"
+#include "config.h"
 #include <ArduinoLog.h>
 #include <ESPmDNS.h>
 
