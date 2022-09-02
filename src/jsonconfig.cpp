@@ -363,6 +363,7 @@ void CopConfig::save(JsonObject obj) const
     obj["tapsolenoid"] = tapsolenoid;
     obj["pouremulate"] = pouremulate;
     obj["tempemulate"] = tempemulate;
+    obj["theme"] = theme;
 }
 
 void CopConfig::load(JsonObjectConst obj)
@@ -480,6 +481,16 @@ void CopConfig::load(JsonObjectConst obj)
     {
         bool te = obj["tempemulate"];
         tempemulate = te;
+    }
+
+    if (obj["theme"].isNull())
+    {
+        strlcpy(theme, THEME, sizeof(theme));
+    }
+    else
+    {
+        const char *tm = obj["theme"];
+        strlcpy(theme, tm, sizeof(theme));
     }
 }
 
