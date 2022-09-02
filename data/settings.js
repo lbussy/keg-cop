@@ -82,13 +82,6 @@ $("input[type='reset']").closest('form').on('reset', function (event) { // Reset
     resetFlowCalForm();
 });
 
-$('#cerulean').on('click', function (event) {
-    setTheme("cerulean");
-});
-$('#superhero').on('click', function (event) {
-    setTheme("superhero");
-});
-
 // Tower Fan Control Events
 //
 // Handle click on enable/disable radio buttons
@@ -255,6 +248,20 @@ function populateConfig(callback = null) { // Get configuration settings
                     $('input[name=tapsolenoid]').attr("disabled", false);           // Disable Solenoid control
                     $("#tfansetpoint").prop("disabled", true);                         // Enable setpoint control
                     $('input[name=tfanonhigh]').attr("disabled", true);             // Eanble invert control
+                }
+
+                var theme = config.copconfig.theme.toLowerCase();
+                var setThemeCheck = false;
+                for (var i = 0; i < document.themeselect.theme.length; i++) {
+                    if (document.themeselect.theme[i].value == theme) {
+                        document.themeselect.theme[i].checked = true;
+                        setThemeCheck = true;
+                        setTheme(theme);
+                        break;
+                    }
+                }
+                if (!setThemeCheck) {
+                    setTheme("cerulean");
                 }
 
                 try {
@@ -512,6 +519,9 @@ function processPost(obj) {
         case "#tempcontrol":
             processTempControlPost(url, obj);
             break;
+        case "#themeselect":
+            processThemePost(url, obj);
+            break;
         case "#sensorcontrol":
             processSensorControlPost(url, obj);
             break;
@@ -546,15 +556,15 @@ function processTapPost(url, obj, tapNum) {
     var data = {};
 
     // Get form data
-    var $form = $(obj),
-        label = $form.find("input[name='tap" + tapNum + "label']").val(),
-        ppu = $form.find("input[name='tap" + tapNum + "ppu']").val(),
-        bevname = $form.find("input[name='tap" + tapNum + "bevname']").val(),
-        cap = $form.find("input[name='tap" + tapNum + "cap']").val(),
-        remain = $form.find("input[name='tap" + tapNum + "remain']").val(),
-        // tap1taplistioTap
-        taplistioTap = $form.find("input[name='tap" + tapNum + "taplistioTap']").val(),
-        active = $form.find("input[name='tap" + tapNum + "active']:checked").val();
+    var $form = $(obj);
+    label = $form.find("input[name='tap" + tapNum + "label']").val();
+    ppu = $form.find("input[name='tap" + tapNum + "ppu']").val();
+    bevname = $form.find("input[name='tap" + tapNum + "bevname']").val();
+    cap = $form.find("input[name='tap" + tapNum + "cap']").val();
+    remain = $form.find("input[name='tap" + tapNum + "remain']").val();
+    // tap1taplistioTap
+    taplistioTap = $form.find("input[name='tap" + tapNum + "taplistioTap']").val();
+    active = $form.find("input[name='tap" + tapNum + "active']:checked").val();
 
     // Process put
     data = {
@@ -566,7 +576,7 @@ function processTapPost(url, obj, tapNum) {
         remain: remain,
         taplistioTap: taplistioTap,
         active: active
-    }
+    };
     putData(url, data);
 }
 
@@ -575,14 +585,14 @@ function processControllerPost(url, obj) {
     var data = {};
 
     // Get form data
-    var $form = $(obj),
-        hostnameVal = $form.find("input[name='hostname']").val(),
-        brewerynameVal = $form.find("input[name='breweryname']").val(),
-        kegeratornameVal = $form.find("input[name='kegeratorname']").val(),
-        controlnumVal = $form.find("select[name='controlnum']").val(),
-        imperialVal = $("[name='imperial']:checked").val(),
-        serialVal = $("[name='serial']:checked").val(),
-        tapsolenoidVal = $("[name='tapsolenoid']:checked").val();
+    var $form = $(obj);
+    hostnameVal = $form.find("input[name='hostname']").val();
+    brewerynameVal = $form.find("input[name='breweryname']").val();
+    kegeratornameVal = $form.find("input[name='kegeratorname']").val();
+    controlnumVal = $form.find("select[name='controlnum']").val();
+    imperialVal = $("[name='imperial']:checked").val();
+    serialVal = $("[name='serial']:checked").val();
+    tapsolenoidVal = $("[name='tapsolenoid']:checked").val();
 
     // Hold some data about what we changed
     var reloadpage = false;
@@ -644,14 +654,14 @@ function processTempControlPost(url, obj) {
     var data = {};
 
     // Get form data
-    var $form = $(obj),
-        setpoint = $form.find("input[name='setpoint']").val(),
-        controlpoint = $form.find("select[name='controlpoint']").val(),
-        controlenabled = $form.find("input[name='controlenabled']:checked").val(),
-        coolonhigh = $form.find("input[name='coolonhigh']:checked").val(),
-        tfancontrolenabled = $form.find("input[name='tfancontrolenabled']:checked").val(),
-        tfansetpoint = $form.find("input[name='tfansetpoint']").val(),
-        tfanonhigh = $form.find("input[name='tfanonhigh']:checked").val()
+    var $form = $(obj);
+    setpoint = $form.find("input[name='setpoint']").val();
+    controlpoint = $form.find("select[name='controlpoint']").val();
+    controlenabled = $form.find("input[name='controlenabled']:checked").val();
+    coolonhigh = $form.find("input[name='coolonhigh']:checked").val();
+    tfancontrolenabled = $form.find("input[name='tfancontrolenabled']:checked").val();
+    tfansetpoint = $form.find("input[name='tfansetpoint']").val();
+    tfanonhigh = $form.find("input[name='tfanonhigh']:checked").val();
 
     // Process put
     data = {
@@ -662,8 +672,25 @@ function processTempControlPost(url, obj) {
         tfancontrolenabled: tfancontrolenabled,
         tfansetpoint: tfansetpoint,
         tfanonhigh: tfanonhigh
-    }
+    };
     putData(url, data);
+}
+
+function processThemePost(url, obj) {
+    // Handle temperature control posts
+    var data = {};
+
+    // Get form data
+    var $form = $(obj);
+    theme = $form.find("input[name='theme']:checked").val();
+
+    // Set theme live
+    setTheme(theme);
+    // Process put
+    data = {
+        theme: theme
+    };
+    putData(url, data, false, false, null);
 }
 
 function processSensorControlPost(url, obj) {
@@ -671,17 +698,17 @@ function processSensorControlPost(url, obj) {
     var data = {};
 
     // Get form data
-    var $form = $(obj),
-        roomcal = $form.find("input[name='roomcal']").val(),
-        enableroom = $form.find("input[name='enableroom']:checked").val(),
-        towercal = $form.find("input[name='towercal']").val(),
-        enabletower = $form.find("input[name='enabletower']:checked").val(),
-        uppercal = $form.find("input[name='uppercal']").val(),
-        enableupper = $form.find("input[name='enableupper']:checked").val(),
-        lowercal = $form.find("input[name='lowercal']").val(),
-        enablelower = $form.find("input[name='enablelower']:checked").val(),
-        kegcal = $form.find("input[name='kegcal']").val(),
-        enablekeg = $form.find("input[name='enablekeg']:checked").val();
+    var $form = $(obj);
+    roomcal = $form.find("input[name='roomcal']").val();
+    enableroom = $form.find("input[name='enableroom']:checked").val();
+    towercal = $form.find("input[name='towercal']").val();
+    enabletower = $form.find("input[name='enabletower']:checked").val();
+    uppercal = $form.find("input[name='uppercal']").val();
+    enableupper = $form.find("input[name='enableupper']:checked").val();
+    lowercal = $form.find("input[name='lowercal']").val();
+    enablelower = $form.find("input[name='enablelower']:checked").val();
+    kegcal = $form.find("input[name='kegcal']").val();
+    enablekeg = $form.find("input[name='enablekeg']:checked").val();
 
     // Process put
     data = {
@@ -695,7 +722,7 @@ function processSensorControlPost(url, obj) {
         enablelower: enablelower,
         kegcal: kegcal,
         enablekeg: enablekeg
-    }
+    };
     putData(url, data);
 }
 
@@ -704,13 +731,13 @@ function processKegScreenPost(url, obj) {
     var data = {};
 
     // Get form data
-    var $form = $(obj),
-        kegscreen = $form.find("input[name='kegscreen']").val(),
+    var $form = $(obj);
+    kegscreen = $form.find("input[name='kegscreen']").val();
 
-        // Process put
-        data = {
-            kegscreen: kegscreen
-        };
+    // Process put
+    data = {
+        kegscreen: kegscreen
+    };
     putData(url, data);
 }
 
@@ -719,15 +746,15 @@ function processTaplistIOPost(url, obj) {
     var data = {};
 
     // Get form data
-    var $form = $(obj),
-        taplistio_venue = $form.find("input[name='taplistio_venue']").val(),
-        taplistio_secret = $form.find("input[name='taplistio_secret']").val(),
+    var $form = $(obj);
+    taplistio_venue = $form.find("input[name='taplistio_venue']").val();
+    taplistio_secret = $form.find("input[name='taplistio_secret']").val();
 
-        // Process put
-        data = {
-            taplistio_venue: taplistio_venue,
-            taplistio_secret: taplistio_secret
-        };
+    // Process put
+    data = {
+        taplistio_venue: taplistio_venue,
+        taplistio_secret: taplistio_secret
+    };
     putData(url, data);
 }
 
@@ -736,9 +763,9 @@ function processTargetUrlPost(url, obj) {
     var data = {};
 
     // Get form data
-    var $form = $(obj),
-        targeturl = $form.find("input[name='targeturl']").val(),
-        targetfreq = $form.find("input[name='targetfreq']").val();
+    var $form = $(obj);
+    targeturl = $form.find("input[name='targeturl']").val();
+    targetfreq = $form.find("input[name='targetfreq']").val();
 
     // Process put
     data = {
@@ -753,12 +780,12 @@ function processRPintsPost(url, obj) {
     var data = {};
 
     // Get form data
-    var $form = $(obj),
-        rpintshost = $form.find("input[name='rpintshost']").val(),
-        rpintsport = $form.find("input[name='rpintsport']").val();
-        rpintsusername = $form.find("input[name='rpintsusername']").val();
-        rpintspassword = $form.find("input[name='rpintspassword']").val();
-        rpintstopic = $form.find("input[name='rpintstopic']").val();
+    var $form = $(obj);
+    rpintshost = $form.find("input[name='rpintshost']").val();
+    rpintsport = $form.find("input[name='rpintsport']").val();
+    rpintsusername = $form.find("input[name='rpintsusername']").val();
+    rpintspassword = $form.find("input[name='rpintspassword']").val();
+    rpintstopic = $form.find("input[name='rpintstopic']").val();
 
     // Process put
     data = {

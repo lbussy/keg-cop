@@ -57,6 +57,7 @@ struct CopConfig
     bool tapsolenoid;
     bool pouremulate;
     bool tempemulate;
+    char theme[32];
 
     void load(JsonObjectConst);
     void save(JsonObject) const;

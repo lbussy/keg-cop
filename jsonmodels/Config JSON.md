@@ -18,7 +18,8 @@ JSON Definition:
 		"kegeratorname": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"imperial": false,
 		"serial": false,
-		"tapsolenoid": false
+		"tapsolenoid": false,
+		"theme": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	},
 	"ota": {
 		"dospiffs1": false,
@@ -104,6 +105,7 @@ const char* copconfig_kegeratorname = copconfig["kegeratorname"];
 bool copconfig_imperial = copconfig["imperial"]; // false
 bool copconfig_serial = copconfig["serial"]; // false
 bool copconfig_tapsolenoid = copconfig["tapsolenoid"]; // false
+const char* copconfig_theme = copconfig["theme"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 JsonObject ota = doc["ota"];
 bool ota_dospiffs1 = ota["dospiffs1"]; // false
@@ -111,12 +113,13 @@ bool ota_dospiffs2 = ota["dospiffs2"]; // false
 bool ota_didupdate = ota["didupdate"]; // false
 
 JsonObject temps = doc["temps"];
-bool temps_coolonhigh = temps["coolonhigh"]; // true
+bool temps_coolonhigh = temps["coolonhigh"]; // false
 int temps_setpoint = temps["setpoint"]; // 100
 int temps_controlpoint = temps["controlpoint"]; // 99
 bool temps_controlenabled = temps["controlenabled"]; // false
-bool temps_tfancontrolenable = temps["tfancontrolenabled"]; // false
+bool temps_tfancontrolenabled = temps["tfancontrolenabled"]; // false
 int temps_tfansetpoint = temps["tfansetpoint"]; // 100
+bool temps_tfanonhigh = temps["tfanonhigh"]; // false
 bool temps_roomenable = temps["roomenable"]; // false
 float temps_roomcal = temps["roomcal"]; // 99.99
 bool temps_towerenable = temps["towerenable"]; // false
@@ -168,6 +171,7 @@ copconfig["kegeratorname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 copconfig["imperial"] = false;
 copconfig["serial"] = false;
 copconfig["tapsolenoid"] = false;
+copconfig["theme"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 JsonObject ota = doc.createNestedObject("ota");
 ota["dospiffs1"] = false;
@@ -175,12 +179,13 @@ ota["dospiffs2"] = false;
 ota["didupdate"] = false;
 
 JsonObject temps = doc.createNestedObject("temps");
-temps["coolonhigh"] = true;
+temps["coolonhigh"] = false;
 temps["setpoint"] = 100;
 temps["controlpoint"] = 99;
 temps["controlenabled"] = false;
 temps["tfancontrolenabled"] = false;
 temps["tfansetpoint"] = 100;
+temps["tfanonhigh"] = false;
 temps["roomenable"] = false;
 temps["roomcal"] = 99.99;
 temps["towerenable"] = false;

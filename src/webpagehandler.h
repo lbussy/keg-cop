@@ -74,6 +74,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *);
 HANDLER_STATE handleSecret(AsyncWebServerRequest *);
+HANDLER_STATE handleThemePost(AsyncWebServerRequest *);
 
 void send_not_allowed(AsyncWebServerRequest *request);
 void send_failed(AsyncWebServerRequest *request);

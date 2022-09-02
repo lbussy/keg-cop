@@ -42,7 +42,6 @@ enum KC_METHODS
     KC_HTTP_ANY = 0b01111111,
 };
 
-static int controlHandlers = 7;
 static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration functions
     handleControllerPost,
     handleControlPost,
@@ -51,7 +50,8 @@ static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration funct
     handleTaplistIOPost,
     handleMQTTTargetPost,
     handleUrlTargetPost,
-    handleCloudTargetPost};
+    handleCloudTargetPost,
+    handleThemePost};
 static const char *cf_str[] = {
     "handleControllerPost",
     "handleControlPost",
@@ -60,9 +60,10 @@ static const char *cf_str[] = {
     "handleTaplistIOPost",
     "handleMQTTTargetPost",
     "handleUrlTargetPost",
-    "handleCloudTargetPost"};
+    "handleCloudTargetPost",
+    "handleThemePost"};
+static int controlHandlers = sizeof(cf_str)/sizeof(cf_str[0]);
 
-static int tapHandlers = 3;
 static HANDLER_STATE (*tf[])(AsyncWebServerRequest *) = { // Tap functions
     handleTapPost,
     handleTapCal,
@@ -71,6 +72,7 @@ static const char *tf_str[] = {
     "handleTapPost",
     "handleTapCal",
     "handleSetCalMode"};
+static int tapHandlers = sizeof(tf_str)/sizeof(tf_str[0]);
 
 void initWebServer()
 {
@@ -1726,6 +1728,59 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cl
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     config.cloud.freq = val;
+                }
+            }
+        }
+    }
+    // Return values
+    if (didChange)
+    {
+        setDoSaveConfig();
+    }
+    if (didFail)
+    {
+        return FAIL_PROCESS;
+    }
+    else if (didChange)
+    {
+        return PROCESSED;
+    }
+    else
+    {
+        return NOT_PROCCESSED;
+    }
+}
+
+HANDLER_STATE handleThemePost(AsyncWebServerRequest *request) // Handle URL target
+{
+    bool didFail = false;
+    bool didChange = false;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // KegScreen url settings
+            //
+            if (strcmp(name, "theme") == 0) // Change Theme name
+            {
+                if ((strlen(value) > 3) && (strlen(value) < 32))
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    strlcpy(config.copconfig.theme, value, sizeof(config.copconfig.theme));
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }
