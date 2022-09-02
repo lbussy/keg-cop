@@ -22,6 +22,7 @@ SOFTWARE. */
 
 #include "wifihandler.h"
 
+bool wifiPause = false;
 bool shouldSaveConfig = false;
 Ticker blinker;
 
@@ -205,6 +206,7 @@ void WiFiEvent(WiFiEvent_t event)
     Serial.printf("[WiFi-event] event: %d\n", event);
     if (!WiFi.isConnected())
     {
+        wifiPause = true;
         Log.warning(F("WiFi lost connection, reconnecting .."));
         disconnectRPints();
         WiFi.reconnect();
@@ -227,5 +229,6 @@ void WiFiEvent(WiFiEvent_t event)
             ESP.restart();
         }
         setDoRPintsConnect();
+        wifiPause = false;
     }
 }
