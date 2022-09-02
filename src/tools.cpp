@@ -123,62 +123,66 @@ void tickerLoop()
         saveFlowConfig();
     }
 
-    // // External Event Reports
-    for (int i = 0; i < NUMTAPS; i++)
-    {
-        // Send report from pour queue
-        if (queuePourReport[i] > 0)
+    // External Event Reports
+    // Requires WiFi, so skip if we are reconnecting
+    if (!wifiPause)
         {
-            sendPulsesRPints(i, queuePulseReport[i]);
-            sendPourReport(i, queuePourReport[i]);
-            queuePourReport[i] = 0;
-            queuePulseReport[i] = 0;
+        for (int i = 0; i < NUMTAPS; i++)
+        {
+            // Send report from pour queue
+            if (queuePourReport[i] > 0)
+            {
+                sendPulsesRPints(i, queuePulseReport[i]);
+                sendPourReport(i, queuePourReport[i]);
+                queuePourReport[i] = 0;
+                queuePulseReport[i] = 0;
+            }
+            // Send kick report
+            if (queueKickReport[i] == true)
+            {
+                queueKickReport[i] = false;
+                sendKickReport(i);
+            }
+            // Send temp control state change
+            if (tstat[TS_TYPE_CHAMBER].queueStateChange == true || tstat[TS_TYPE_TOWER].queueStateChange == true)
+            {
+                tstat[TS_TYPE_CHAMBER].queueStateChange = false;
+                tstat[TS_TYPE_TOWER].queueStateChange = false;
+                sendCoolStateReport();
+            }
+            // Send Tap Info Report
+            if (doTapInfoReport[i] == true)
+            {
+                doTapInfoReport[i] = false;
+                sendTapInfoReport(i);
+            }
         }
-        // Send kick report
-        if (queueKickReport[i] == true)
+        if (doKSTempReport)
         {
-            queueKickReport[i] = false;
-            sendKickReport(i);
+            doKSTempReport = false;
+            sendTempReport();
         }
-        // Send temp control state change
-        if (tstat[TS_TYPE_CHAMBER].queueStateChange == true || tstat[TS_TYPE_TOWER].queueStateChange == true)
+        if (doTargetReport)
         {
-            tstat[TS_TYPE_CHAMBER].queueStateChange = false;
-            tstat[TS_TYPE_TOWER].queueStateChange = false;
-            sendCoolStateReport();
+            doTargetReport = false;
+            sendTargetReport();
         }
-        // Send Tap Info Report
-        if (doTapInfoReport[i] == true)
+        if (doRPintsConnect)
         {
-            doTapInfoReport[i] = false;
-            sendTapInfoReport(i);
+            doRPintsConnect = false;
+            connectRPints();
         }
-    }
-    if (doKSTempReport)
-    {
-        doKSTempReport = false;
-        sendTempReport();
-    }
-    if (doTargetReport)
-    {
-        doTargetReport = false;
-        sendTargetReport();
-    }
-    if (doRPintsConnect)
-    {
-        doRPintsConnect = false;
-        connectRPints();
-    }
-    if (doTaplistIOConnect && !tioReporting)
-    {
-        time_t now;
-        struct tm timeinfo;
-        getLocalTime(&timeinfo);
-        time(&now);
-        if ((now - config.taplistio.lastsent > TIOLOOP) && config.taplistio.update && config.taplistio.update && (strlen(config.taplistio.secret) >= 7) && (strlen(config.taplistio.venue) >= 3))
+        if (doTaplistIOConnect && !tioReporting)
         {
-            doTaplistIOConnect = false; // Semaphore required for Taplist.io report
-            sendTIOTaps();
+            time_t now;
+            struct tm timeinfo;
+            getLocalTime(&timeinfo);
+            time(&now);
+            if ((now - config.taplistio.lastsent > TIOLOOP) && config.taplistio.update && config.taplistio.update && (strlen(config.taplistio.secret) >= 7) && (strlen(config.taplistio.venue) >= 3))
+            {
+                doTaplistIOConnect = false; // Semaphore required for Taplist.io report
+                sendTIOTaps();
+            }
         }
     }
 }
