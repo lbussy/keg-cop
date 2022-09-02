@@ -1571,7 +1571,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="themeselect" method="PUT" onsubmit="return processPost(this);">
+                            <form name="themeselect" id="themeselect" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -1581,19 +1581,27 @@
                                         <div class="col-sm-8">
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="Change to a light theme" data-placement="right">
-                                                    <input type="radio" class="form-check-input" name="dark" id="cerulean" value="false">
+                                                    <input type="radio" class="form-check-input" name="theme" id="theme" value="cerulean">
                                                     Cerulean (light)
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <label class="form-check-label" data-toggle="tooltip" title="Change to a dark theme" data-placement="right">
-                                                    <input type="radio" class="form-check-input" name="dark" id="superhero" value="true">
+                                                    <input type="radio" class="form-check-input" name="theme" id="theme" value="superhero">
                                                     Superhero (dark)
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
 
                             </form>
 
