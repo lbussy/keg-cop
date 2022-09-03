@@ -7,4 +7,3 @@
 - [ ] Settings POST iteration
     - [ ] Cut down on iteration when processing posts
     - [ ] Make sure we send back success or fail considering all the post processing
-- [ ] Re-format the About page
