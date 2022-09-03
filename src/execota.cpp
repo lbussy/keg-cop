@@ -25,6 +25,9 @@ SOFTWARE. */
 void execfw()
 {
     Log.notice(F("Starting the Firmware OTA pull, will reboot without notice." CR));
+    // Clear fail flags
+    logBadFWUpdate(true);
+    logBadFSUpdate(true);
 
     // Stop web server before OTA update - will restart on reset
     stopWebServer();
@@ -56,6 +59,7 @@ void execfw()
         config.ota.dospiffs1 = false;
         config.ota.dospiffs2 = false;
         config.ota.didupdate = false;
+        logBadFWUpdate();
         killDRD();
         saveConfig();
         saveFlowConfig();
@@ -85,6 +89,17 @@ void execfw()
 
 void execspiffs()
 {
+    if (config.ota.badfw)
+    {
+        config.ota.dospiffs1 = false;
+        config.ota.dospiffs2 = false;
+        config.ota.didupdate = false;
+        killDRD();
+        saveConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
+        saveFlowConfig(); // Save previous flowmeter data
+        Log.notice(F("HTTP FILESYSTEM OTA not attempted due to bad firmware update." CR));
+        return;
+    }
     if (config.ota.dospiffs1)
     {
         Log.notice(F("Rebooting a second time before FILESYSTEM OTA pull." CR));
@@ -94,11 +109,10 @@ void execspiffs()
         killDRD();
         saveConfig();
         saveFlowConfig();
-
-        killDRD();
-        killDRD();
         saveConfig();
         ESP.restart();
+        delay(1000);
+        return;
     }
     else if (config.ota.dospiffs2)
     {
@@ -122,6 +136,15 @@ void execspiffs()
         {
         case HTTP_UPDATE_FAILED:
             Log.error(F("HTTP FILESYSTEM OTA Update failed." CR));
+            config.ota.dospiffs1 = false;
+            config.ota.dospiffs2 = false;
+            config.ota.didupdate = false;
+            logBadFSUpdate();
+            killDRD();
+            saveConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
+            saveFlowConfig(); // Save previous flowmeter data
+            Log.notice(F("HTTP FILESYSTEM OTA Update complete, restarting." CR));
+            ESP.restart();
             break;
 
         case HTTP_UPDATE_NO_UPDATES:
@@ -335,5 +358,31 @@ void doOTALoop()
     {
         doOTA = false;
         execfw();
+    }
+}
+
+void logBadFWUpdate(bool clear)
+{
+    if (clear)
+    {
+        config.ota.badfw = false;
+    }
+    else
+    {
+        config.ota.badfw = true;
+        config.ota.badfwtime = getTime();
+    }
+}
+
+void logBadFSUpdate(bool clear)
+{
+    if (clear)
+    {
+        config.ota.badfs = false;
+    }
+    else
+    {
+        config.ota.badfs = true;
+        config.ota.badfstime = getTime();
     }
 }
