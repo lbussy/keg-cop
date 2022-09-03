@@ -99,24 +99,34 @@
                             <a id="noChange" href="https://www.homebrewtalk.com">
                             HomeBrewTalk Forums</a> (free registration required).
                     </p>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong>Uptime: </strong>
-                            <span id="uptime" data-html="true" data-toggle="tooltip">...loading</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong>Reset Reason: </strong>
-                            <span id="resetreason" data-html="true" data-toggle="tooltip">...loading</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong>Heap Information: </strong>
-                            <span id="heap" data-html="true" data-toggle="tooltip">...loading</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong>User Agent: </strong>
-                            <span id="useragent" data-html="true" data-original-title="Information about your current browser." data-toggle="tooltip">...loading</span>
-                        </li>
-                    </ul>
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr class="table-firmware table-success">
+                                <th scope="row">Uptime:</th>
+                                <td>
+                                    <div id="uptime" data-html="true" data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-info">
+                                <th scope="row">Reset Reason:</th>
+                                <td>
+                                    <div id="resetreason" data-html="true" data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-success">
+                                <th scope="row">Heap Information:</th>
+                                <td>
+                                    <div id="heap" data-html="true" data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-info">
+                                <th scope="row">User Agent:</th>
+                                <td>
+                                    <div id="useragent" data-html="true" data-original-title="Information about your current browser." data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div> <!-- About Keg Cop Information -->
 
