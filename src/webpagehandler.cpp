@@ -617,6 +617,16 @@ void setInfoPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
+    server.on("/api/v1/config/theme/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
+        StaticJsonDocument<48> doc;
+
+        doc["theme"] = config.copconfig.theme;
+
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 }
 
 void setConfigurationPageHandlers()

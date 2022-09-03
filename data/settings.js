@@ -194,7 +194,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
-    // Redet calibration buttons
+    // Reset calibration buttons
     $('input[id="calbyvolume"]').prop('checked', false);
     $('input[id="calbyvolume"]').attr("disabled", false);
     $('input[id="calbyweight"]').prop('checked', false);

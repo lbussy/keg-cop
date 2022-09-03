@@ -305,7 +305,8 @@ void serialLoop()
                 toggleTempEmulation(!config.copconfig.tempemulate);
                 break;
             case '?': // Help
-                SERIAL.println(F("Keg Cop - Available serial commands:"));
+                SERIAL.print(apiKey);
+                SERIAL.println(F(" - Available serial commands:"));
                 SERIAL.println(F("\th:\tDisplay heap information"));
                 SERIAL.println(F("\tp:\t'Ping, e.g. {}' (null json)"));
                 SERIAL.println(F("\tv:\tDisplay current version"));
