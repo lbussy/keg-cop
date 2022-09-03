@@ -6,6 +6,7 @@ var useTemps = false;
 var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
 var numReqPre = 2;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
 var isKSTV = false;     // Semaphore for KegScreen-TV
+var is404 = false;      // Semaphore for 404 page
 
 const UA = navigator.userAgent;
 
@@ -13,7 +14,11 @@ const UA = navigator.userAgent;
 var theme = localStorage.getItem('theme');
 if (theme) {
     document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
-    document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
+    if (is404) {
+        document.getElementById('theme_aux').href = theme.css || "/cerulean_aux.css";
+    } else {
+        document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
+    }
     document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
 }
 
@@ -389,6 +394,9 @@ function getEventTarget(event) {
 
 function cleanURL(tempURL = "", newHost = "") {
     // This is to re-write URLs when using a dev server
+    if (is404) {
+        return tempURL;
+    }
     const currentURL = new URL(window.location.href);
 
     if (!dataHostCheckDone) {
@@ -411,7 +419,7 @@ function cleanURL(tempURL = "", newHost = "") {
         var newURL;
         newURL = targetURL.protocol;
         newURL += "//";
-        if (newHost) { // Change hostname if we are resetting controller name
+        if (newHost && !is404) { // Change hostname if we are resetting controller name (and not 404)
             newURL += newHost;
         } else {
             newURL += targetURL.host;
