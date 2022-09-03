@@ -631,9 +631,9 @@ void setConfigurationPageHandlers()
         HANDLER_STATE state = NOT_PROCCESSED;
         for (int i = 0; i < controlHandlers; i++)
         {
-            if (state == FAIL_PROCESS)
+            if (state == FAIL_PROCESS || state == PROCESSED)
                 break;
-            Log.verbose(F("Checking %s." CR), cf_str[i]);
+            // Log.verbose(F("Checking %s." CR), cf_str[i]); // Only really need this for debug
             HANDLER_STATE thisState = cf[i](request);
             if (thisState == PROCESSED)
             {
@@ -642,7 +642,7 @@ void setConfigurationPageHandlers()
             }
             else if (thisState == FAIL_PROCESS)
             {
-                request->send(500, F("text/plain"), F("Unable to process data"));
+                send_failed(request);
                 state = FAIL_PROCESS;
             }
         } });
@@ -676,7 +676,7 @@ void setConfigurationPageHandlers()
         HANDLER_STATE state = NOT_PROCCESSED;
         for (int i = 0; i < tapHandlers; i++)
         {
-            if (state == FAIL_PROCESS)
+            if (state == FAIL_PROCESS || state == PROCESSED)
                 break;
             Log.verbose(F("Checking %s." CR), tf_str[i]);
             HANDLER_STATE thisState = tf[i](request);
@@ -745,7 +745,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Controller settings
             //
@@ -931,7 +931,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Sensor settings
             //
@@ -1113,7 +1113,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Sensor settings
             //
@@ -1328,7 +1328,7 @@ HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // KegScreen url settings
             //
@@ -1387,7 +1387,7 @@ HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *request) // Handle URL 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Taplist.io Venue
             //
@@ -1468,7 +1468,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // MQTT Target settings
             //
@@ -1611,7 +1611,7 @@ HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL 
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Target url settings
             //
@@ -1686,7 +1686,7 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cl
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Cloud target settings
             //
@@ -1769,7 +1769,7 @@ HANDLER_STATE handleThemePost(AsyncWebServerRequest *request) // Handle URL targ
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // KegScreen url settings
             //
@@ -2083,7 +2083,7 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Calibration Mode Set
             //
@@ -2147,7 +2147,7 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
             // Reset Controller procesing
             //

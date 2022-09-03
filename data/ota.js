@@ -108,7 +108,7 @@ function startUpdate(callback = null) {
         .fail(function () {
             // This will fail while controller resets
             $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Application Update Failed; Redirect Pending</h4>");
-            $("#message").replaceWith("<p class='card-body'>The application update failed. You will be redirected momentarily.</p>");
+            $("#message").replaceWith("<p class='card-body'>The application update failed. You will be redirected momentarily. Additional details may be found in the application update tab.</p>");
             setTimeout(function () { window.location.href = cleanURL("/index/"); }, 5000);
         });
 }   
