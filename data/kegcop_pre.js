@@ -4,7 +4,7 @@ var dataHost = "";
 var dataHostCheckDone = false;
 var useTemps = false;
 var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
-var numReqPre = 2;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+var numReqPre = 3;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
 var isKSTV = false;     // Semaphore for KegScreen-TV
 var is404 = false;      // Semaphore for 404 page
 
@@ -70,44 +70,9 @@ function preLoad() {
     }
 }
 
-function setTheme(selection, reload = false) {
-    if (reload) {
-        toggleLoader("on");
-    }
-
-    var theme = {};
-    var themes = [
-        {name:"cerulean", displayname: "Cerulean (light)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", css: "cerulean_aux.css", color: "#FFFFFF"},
-        {name:"superhero", displayname: "Superhero (dark)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", css: "superhero_aux.css",  color: "#000000"},
-    ];
-
-    try {
-        if (selection) {
-            theme = themes.find(theme => theme.name === selection.toLowerCase());
-        } else {
-            if (!localStorage.getItem('theme')) {
-                console.warn("setTheme(): Unknown theme, default theme selected.");
-                theme = themes.find(theme => theme.name === "cerulean");
-            } else {
-                theme = JSON.parse(localStorage.getItem('theme'));
-            }
-        }
-    } catch {
-        theme = themes.find(theme => theme.name === "cerulean");
-    }
-    localStorage.setItem('theme', JSON.stringify(theme));
-    document.getElementById('theme').href = theme.url;
-    document.getElementById('theme_aux').href = theme.css;
-    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color);
-
-    if (reload) {
-        location.reload()
-    }
-};
-
 function startLoad() {
     fastTempsMenu();
-    setTheme();
+    getTheme();
     $(document).tooltip({ // Enable tooltips
         'selector': '[data-toggle=tooltip]',
         //'placement': 'left',
@@ -162,6 +127,82 @@ function pollComplete() {
     } else {
         setTimeout(pollComplete, 300); // try again in 300 milliseconds
     }
+}
+
+function setTheme(selection, reload = false) {
+    if (reload) {
+        toggleLoader("on");
+    }
+
+    var theme = {};
+    var themes = [
+        {name:"cerulean", displayname: "Cerulean (light)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", css: "cerulean_aux.css", color: "#FFFFFF"},
+        {name:"superhero", displayname: "Superhero (dark)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", css: "superhero_aux.css",  color: "#000000"},
+    ];
+
+    try {
+        if (selection) {
+            theme = themes.find(theme => theme.name === selection.toLowerCase());
+        } else {
+            if (!localStorage.getItem('theme')) {
+                console.warn("setTheme(): Unknown theme, default theme selected.");
+                theme = themes.find(theme => theme.name === "cerulean");
+            } else {
+                theme = JSON.parse(localStorage.getItem('theme'));
+            }
+        }
+    } catch {
+        theme = themes.find(theme => theme.name === "cerulean");
+    }
+    localStorage.setItem('theme', JSON.stringify(theme));
+    document.getElementById('theme').href = theme.url;
+    document.getElementById('theme_aux').href = theme.css;
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color);
+
+    if (reload) {
+        location.reload()
+    }
+}
+
+function getTheme(callback = null) { // Get theme settings
+    if (!dataHostCheckDone) {
+        setTimeout(getTheme, 10);
+        return;
+    }
+
+    var url = dataHost;
+    if (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+
+    url += "/api/v1/config/theme/";
+    var theme = $.getJSON(url, function () {})
+        .done(function (theme) {
+            try {
+                setTheme(theme.theme.toLowerCase());
+                if (loaded < numReq) {
+                    loaded++;
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    //
+                }
+                setTimeout(getTheme, 10000);
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                //
+            }
+            setTimeout(getTheme, 10000);
+        })
+        .always(function () {
+            // Can post-process here
+            if (typeof callback == "function") {
+                callback();
+            }
+        });
 }
 
 function fastTempsMenu() {
