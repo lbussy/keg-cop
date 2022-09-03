@@ -115,6 +115,7 @@ void setRegPageHandlers()
     server.serveStatic("/", FILESYSTEM, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
     server.serveStatic("/index/", FILESYSTEM, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
     server.serveStatic("/ks-tv/", FILESYSTEM, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
+    server.serveStatic("/bulkload/", FILESYSTEM, "/").setDefaultFile("bulkload.htm").setCacheControl("max-age=600");
     server.serveStatic("/about/", FILESYSTEM, "/").setDefaultFile("about.htm").setCacheControl("max-age=600");
     server.serveStatic("/help/", FILESYSTEM, "/").setDefaultFile("help.htm").setCacheControl("max-age=600");
     server.serveStatic("/license/", FILESYSTEM, "/").setDefaultFile("license.htm").setCacheControl("max-age=600");
