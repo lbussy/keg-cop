@@ -68,7 +68,7 @@ bool loadConfig()
         // Try to create a default configuration file
         if (!loadOK)
         {
-            if (!saveFlowConfig())  // Save a default config
+            if (!saveFlowConfig()) // Save a default config
             {
                 Log.error(F("Config Load: Unable to generate default configuration." CR));
                 loadOK = false;
@@ -191,60 +191,60 @@ bool printConfig()
     return retval;
 }
 
-// bool mergeJsonString(String newJson)
-// {
-//     // Serialize configuration
-//     StaticJsonDocument<CAP_SER_CONF> doc;
+bool mergeJsonString(String newJson)
+{
+    StaticJsonDocument<CAP_SER_CONF> doc;
+    // Serialize the string that was passed
+    DeserializationError err = deserializeJson(doc, newJson);
+    if (err)
+    {
+        printChar(true, err.c_str());
+        printCR(true);
+        return false;
+    }
+    else
+    {
+        mergeJsonObject(doc);
+        return true;
+    }
+}
 
-//     // Parse directly from file
-//     DeserializationError err = deserializeJson(doc, newJson);
-//     if (err)
-//     {
-//         printChar(true, err.c_str());
-//         printCR(true);
-//     }
+void mergeJsonObject(JsonVariantConst src)
+{
+    // Serialize configuration
+    StaticJsonDocument<CAP_SER_CONF> doc;
 
-//     return mergeJsonObject(doc);
-// }
+    // Create an object at the root
+    JsonObject root = doc.to<JsonObject>();
 
-// bool mergeJsonObject(JsonVariantConst src)
-// {
-//     // Serialize configuration
-//     StaticJsonDocument<CAP_SER_CONF> doc;
+    // Fill the object
+    // TODO:  Can we use the config object here?
+    config.save(root);
 
-//     // Create an object at the root
-//     JsonObject root = doc.to<JsonObject>();
+    // Merge in the configuration
+    merge(root, src);
+    // Move new object to config
+    config.load(root);
+    setDoSaveConfig();
+}
 
-//     // Fill the object
-//     config.save(root);
-
-//     // Merge in the configuration
-//     if (merge(root, src))
-//     {
-//         // Move new object to config
-//         config.load(root);
-//         saveConfig();
-//         return true;
-//     }
-
-//     return false;
-// }
-
-// bool merge(JsonVariant dst, JsonVariantConst src)
-// {
-//     if (src.is<JsonObject>())
-//     {
-//         for (auto kvp : src.as<JsonObject>())
-//         {
-//             merge(dst.getOrAddMember(kvp.key()), kvp.value());
-//         }
-//     }
-//     else
-//     {
-//         dst.set(src);
-//     }
-//     return true;
-// }
+void merge(JsonVariant dst, JsonVariantConst src)
+{
+    if (src.is<JsonObjectConst>())
+    {
+        for (JsonPairConst kvp : src.as<JsonObjectConst>())
+        {
+            if (dst.containsKey(kvp.key()))
+                merge(dst[kvp.key()], kvp.value());
+            else
+                dst[kvp.key()] = kvp.value();
+        }
+    }
+    else
+    {
+        dst.set(src);
+    }
+}
 
 void convertConfigtoImperial()
 {
@@ -316,10 +316,10 @@ void OTA::save(JsonObject obj) const
     obj["dospiffs1"] = dospiffs1;
     obj["dospiffs2"] = dospiffs2;
     obj["didupdate"] = didupdate;
-	obj["badfw"] = badfw;
-	obj["badfwtime"] = badfwtime;
-	obj["badfs"] = badfs;
-	obj["badfstime"] = badfstime;
+    obj["badfw"] = badfw;
+    obj["badfwtime"] = badfwtime;
+    obj["badfs"] = badfs;
+    obj["badfstime"] = badfstime;
 }
 
 void OTA::load(JsonObjectConst obj)
@@ -353,7 +353,7 @@ void OTA::load(JsonObjectConst obj)
         didupdate = obj["didupdate"];
     }
 
-	if (obj["badfw"].isNull())
+    if (obj["badfw"].isNull())
     {
         badfw = false;
     }
@@ -362,7 +362,7 @@ void OTA::load(JsonObjectConst obj)
         badfw = obj["badfw"];
     }
 
-	if (obj["badfwtime"].isNull())
+    if (obj["badfwtime"].isNull())
     {
         badfwtime = getTime();
     }
