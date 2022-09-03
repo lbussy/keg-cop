@@ -4,6 +4,3 @@
 - [ ] Add some form of bulk load:
     - [ ] `/api/v1/config/settings/`
     - [ ] `/api/v1/config/taps/`
-- [ ] Settings POST iteration
-    - [ ] Cut down on iteration when processing posts
-    - [ ] Make sure we send back success or fail considering all the post processing
