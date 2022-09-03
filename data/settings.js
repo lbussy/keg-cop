@@ -386,6 +386,33 @@ function loadThisVersion() { // Get current parameters
                 $('#thisFWVersion').text("Error loading.");
                 $('#thisFSVersion').text("Error loading.");
             }
+
+            if (thisVersion.badfw || thisVersion.badfs) {
+                document.getElementById("badota").style.display = "block";
+                try {
+                    $('#badfw').text(thisVersion.badfw ? "True" : "False");
+                    $('#badfs').text(thisVersion.badfs ? "True" : "False");
+                    if (thisVersion.badfw) {
+                        var dtw = new Date(thisVersion.badfwtime * 1000);
+                        $('#badfwtime').text(dtw.toString());
+                    } else {
+                        $('#badfwtime').text("N/A");
+                    }
+                    if (thisVersion.badfs) {
+                        var dts = new Date(thisVersion.badfstime * 1000);
+                        $('#badfstime').text(dts.toString());
+                    } else {
+                        $('#badfstime').text("N/A");
+                    }
+                }
+                catch {
+                    $('#badfw').text("Error loading.");
+                    $('#badfs').text("Error loading.");
+                    $('#badfwtime').text("Error loading.");
+                    $('#badfstime').text("Error loading.");
+                }
+
+            }
             if (loaded < numReq) {
                 loaded++;
             }

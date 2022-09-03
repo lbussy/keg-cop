@@ -2522,9 +2522,40 @@
                                     </tbody>
                                 </table>
                             </p>
+                            <div class="alert alert-danger" id="badota" style="display:none;">
+                                <p>Warning: Keg Cop has recorded a failed OTA attempt:</p>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Failed</th>
+                                            <th scope="col">Date/Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Firmware</th>
+                                            <td>
+                                                <div id="badfw">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="badfwtime">... loading</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Filesystem</th>
+                                            <td>
+                                                <div id="badfs">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="badfstime">... loading</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <p>
-                                If you are sure you want to update firmware, click the red "Update
-                                Application" button below.
+                                If you would like to update your firmware and filesystem, click the button below.
                             </p>
                             <div class="d-grid gap-2 col-3 mx-auto">
                                 <a href="/ota/" id="proceed" class="btn btn-danger" type="button">Update Application</a>
