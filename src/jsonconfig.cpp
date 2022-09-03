@@ -316,6 +316,10 @@ void OTA::save(JsonObject obj) const
     obj["dospiffs1"] = dospiffs1;
     obj["dospiffs2"] = dospiffs2;
     obj["didupdate"] = didupdate;
+	obj["badfw"] = badfw;
+	obj["badfwtime"] = badfwtime;
+	obj["badfs"] = badfs;
+	obj["badfstime"] = badfstime;
 }
 
 void OTA::load(JsonObjectConst obj)
@@ -347,6 +351,44 @@ void OTA::load(JsonObjectConst obj)
     else
     {
         didupdate = obj["didupdate"];
+    }
+
+	if (obj["badfw"].isNull())
+    {
+        badfw = false;
+    }
+    else
+    {
+        badfw = obj["badfw"];
+    }
+
+	if (obj["badfwtime"].isNull())
+    {
+        badfwtime = getTime();
+    }
+    else
+    {
+        unsigned long ls = obj["badfwtime"];
+        badfwtime = ls;
+    }
+
+    if (obj["badfs"].isNull())
+    {
+        badfs = false;
+    }
+    else
+    {
+        badfs = obj["badfs"];
+    }
+
+    if (obj["badfstime"].isNull())
+    {
+        badfwtime = getTime();
+    }
+    else
+    {
+        unsigned long ls = obj["badfstime"];
+        badfstime = ls;
     }
 }
 
@@ -759,7 +801,7 @@ void TaplistIO::load(JsonObjectConst obj)
     }
     else
     {
-        long long ls = obj["lostsent"];
+        long long ls = obj["lastsent"];
         lastsent = ls;
     }
 

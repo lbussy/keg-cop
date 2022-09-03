@@ -146,6 +146,10 @@ struct OTA
     bool dospiffs1;
     bool dospiffs2;
     bool didupdate;
+	bool badfw;
+	unsigned long badfwtime;
+	bool badfs;
+	unsigned long badfstime;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;

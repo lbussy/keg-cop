@@ -39,6 +39,8 @@ void execspiffs();
 
 void setDoOTA();
 void doOTALoop();
+void logBadFWUpdate(bool clear = false);
+void logBadFSUpdate(bool clear = false);
 
 #ifdef ESP32
 enum HTTPUpdateResult

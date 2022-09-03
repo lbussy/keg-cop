@@ -24,7 +24,11 @@ JSON Definition:
 	"ota": {
 		"dospiffs1": false,
 		"dospiffs2": false,
-		"didupdate": false
+		"didupdate": false,
+		"badfw": false,
+		"badfwtime": 18446744073709551615,
+		"badfs": false,
+		"badfstime": 18446744073709551615
 	},
 	"temps": {
 		"coolonhigh": false,
@@ -111,6 +115,10 @@ JsonObject ota = doc["ota"];
 bool ota_dospiffs1 = ota["dospiffs1"]; // false
 bool ota_dospiffs2 = ota["dospiffs2"]; // false
 bool ota_didupdate = ota["didupdate"]; // false
+bool ota_badfw = ota["badfw"]; // false
+double ota_badfwtime = ota["badfwtime"]; // 18446744073709552000
+bool ota_badfs = ota["badfs"]; // false
+double ota_badfstime = ota["badfstime"]; // 18446744073709552000
 
 JsonObject temps = doc["temps"];
 bool temps_coolonhigh = temps["coolonhigh"]; // false
@@ -177,6 +185,10 @@ JsonObject ota = doc.createNestedObject("ota");
 ota["dospiffs1"] = false;
 ota["dospiffs2"] = false;
 ota["didupdate"] = false;
+ota["badfw"] = false;
+ota["badfwtime"] = 18446744073709552000;
+ota["badfs"] = false;
+ota["badfstime"] = 18446744073709552000;
 
 JsonObject temps = doc.createNestedObject("temps");
 temps["coolonhigh"] = false;
