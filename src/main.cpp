@@ -112,7 +112,9 @@ void setup()
     saveFlowConfig();
     saveConfig();
 
-    execspiffs();                // Check for pending FILESYSTEM update
+    if (!config.ota.badfw)
+        execspiffs(); // Check for pending FILESYSTEM update
+
     mDNSSetup();                 // Set up mDNS responder
     initWebServer();             // Turn on web server
     sensorInit();                // Initialize temperature sensors
