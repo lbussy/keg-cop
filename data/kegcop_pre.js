@@ -1,7 +1,6 @@
 // Common file/functions for all Keg Cop pages
 
 var dataHost = "";
-var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
 var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
