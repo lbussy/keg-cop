@@ -126,7 +126,7 @@ void tickerLoop()
     // External Event Reports
     // Requires WiFi, so skip if we are reconnecting
     if (!wifiPause)
-        {
+    {
         for (int i = 0; i < NUMTAPS; i++)
         {
             // Send report from pour queue
@@ -317,7 +317,7 @@ void getGuid(char *str)
 void killDRD()
 {
     config.copconfig.nodrd = true;
-    const char * filename = "/drd.dat";
+    const char *filename = "/drd.dat";
     if (FILESYSTEM.begin())
     {
         if (SPIFFS.exists(filename))
@@ -325,4 +325,17 @@ void killDRD()
             FILESYSTEM.remove(filename);
         }
     }
+}
+
+unsigned long getTime()
+{
+    time_t now;
+    struct tm timeinfo;
+    if (!getLocalTime(&timeinfo))
+    {
+        // Serial.println("Failed to obtain time");
+        return (0);
+    }
+    time(&now);
+    return now;
 }

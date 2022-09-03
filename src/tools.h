@@ -63,6 +63,7 @@ void setDoSaveUptime();
 void setDoSaveConfig();
 void setDoSaveFlowConfig();
 void killDRD();
+unsigned long getTime();
 
 static bool __attribute__((unused)) doReset = false;            // Semaphore for reset
 static bool __attribute__((unused)) doWiFiReset = false;        // Semaphore for wifi reset
