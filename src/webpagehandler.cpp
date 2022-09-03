@@ -480,14 +480,18 @@ void setInfoPageHandlers()
     server.on("/api/v1/info/thisVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
-        const size_t capacity = JSON_OBJECT_SIZE(4);
-        DynamicJsonDocument doc(capacity);
+        StaticJsonDocument<192> doc;
 
         doc["fw_version"] = fw_version();
         doc["fs_version"] = fs_version();
 
         doc["branch"] = branch();
         doc["build"] = build();
+
+        doc["badfw"] = config.ota.badfw;
+        doc["badfwtime"] = config.ota.badfwtime;
+        doc["badfs"] = config.ota.badfs;
+        doc["badfstime"] = config.ota.badfstime;
 
         String json;
         serializeJson(doc, json);
