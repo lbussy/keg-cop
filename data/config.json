@@ -12,12 +12,17 @@
         "controlnum": 1,
         "serial": false,
         "imperial": true,
-        "tapsolenoid": true
+        "tapsolenoid": true,
+		"theme": "cerulean"
     },
     "ota": {
         "dospiffs1": false,
         "dospiffs2": false,
-        "didupdate": false
+        "didupdate": false,
+		"badfw": false,
+		"badfwtime": 1662212343,
+		"badfs": false,
+		"badfstime": 1662212343
     },
     "temps": {
         "setpoint": 35,
