@@ -30,8 +30,9 @@ SOFTWARE. */
 #include <SPIFFS.h>
 #include <FS.h>
 
-#define CAP_SER_CONF 2048
-#define CAP_DESER_CONF 3072
+#define APP_FILENAME "/appconfig.json"
+#define CAPACITY_APP_SERIAL 2048
+#define CAPACITY_APP_DESERIAL 3072
 
 struct ApConfig
 {
@@ -155,7 +156,7 @@ struct OTA
     void save(JsonObject) const;
 };
 
-struct Config
+struct AppConfig
 {
     // Stores the complete configuration
     ApConfig apconfig;
@@ -172,22 +173,11 @@ struct Config
     void save(JsonObject) const;
 };
 
-extern Config config;
+extern AppConfig app;
 
-bool deleteConfigFile();
-bool loadConfig();
-bool saveConfig();
-bool printConfig();
-bool printConfigFile();
-bool serializeConfig(Print &);
-bool deserializeConfig(Stream &);
-void merge(JsonVariant, JsonVariantConst);
-void mergeJsonObject(JsonVariantConst);
-bool mergeJsonString(String);
-// Conversions
-void convertConfigtoImperial();
-void convertConfigtoMetric();
-
-extern const char *apiKey;
+bool loadAppConfig();
+bool saveAppConfig();
+bool serializeAppConfig(Print &);
+bool deserializeAppConfig(Stream &);
 
 #endif // _JSONCONFIG_H

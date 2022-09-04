@@ -20,43 +20,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "jsonconfig.h"
+#include "appconfig.h"
 
-Config config;
-static const char *filename = FILENAME;
-const char *apiKey = API_KEY;
+AppConfig app;
 
-bool deleteConfigFile()
+bool loadAppConfig()
 {
-    if (!FILESYSTEM.begin())
-    {
-        return false;
-    }
-    return FILESYSTEM.remove(filename);
-}
-
-bool loadConfig()
-{
-    Log.verbose(F("Config Load: Loading configuration." CR));
+    Log.verbose(F("AppConfig Load: Loading configuration." CR));
     bool loadOK = false;
     // Make sure FILESTYSTEM exists
     if (!FILESYSTEM.begin())
     {
-        Log.error(F("Config Load: Unable to mount filesystem, partition may be corrupt." CR));
+        Log.error(F("AppConfig Load: Unable to mount filesystem, partition may be corrupt." CR));
         loadOK = false;
     }
     else
     {
         // Loads the configuration from a file on FILESYSTEM
-        File file = FILESYSTEM.open(filename, FILE_READ);
-        if (!FILESYSTEM.exists(filename) || !file)
+        File file = FILESYSTEM.open(APP_FILENAME, FILE_READ);
+        if (!FILESYSTEM.exists(APP_FILENAME) || !file)
         {
-            Log.warning(F("Config Load: Configuration does not exist, default values will be attempted." CR));
+            Log.warning(F("AppConfig Load: Configuration does not exist, default values will be attempted." CR));
             loadOK = false;
         }
-        else if (!deserializeConfig(file))
+        else if (!deserializeAppConfig(file))
         {
-            Log.warning(F("Config Load: Failed to load configuration from filesystem, default values have been used." CR));
+            Log.warning(F("AppConfig Load: Failed to load configuration from filesystem, default values have been used." CR));
             loadOK = false;
         }
         else
@@ -68,14 +57,14 @@ bool loadConfig()
         // Try to create a default configuration file
         if (!loadOK)
         {
-            if (!saveFlowConfig()) // Save a default config
+            if (!saveAppConfig()) // Save a default config
             {
-                Log.error(F("Config Load: Unable to generate default configuration." CR));
+                Log.error(F("AppConfig Load: Unable to generate default configuration." CR));
                 loadOK = false;
             }
-            else if (!loadConfig()) // Try one more time to load the default config
+            else if (!loadAppConfig()) // Try one more time to load the default config
             {
-                Log.error(F("Config Load: Unable to read default configuration." CR));
+                Log.error(F("AppConfig Load: Unable to read default configuration." CR));
                 loadOK = false;
             }
             else
@@ -87,34 +76,34 @@ bool loadConfig()
     return loadOK;
 }
 
-bool saveConfig()
+bool saveAppConfig()
 {
-    Log.verbose(F("Config Save: Saving configuration." CR));
+    Log.verbose(F("AppConfig Save: Saving configuration." CR));
     bool saveOK = false;
     // Make sure FILESTYSTEM exists
     if (!FILESYSTEM.begin())
     {
-        Log.error(F("Config Save: Unable to mount filesystem, partition may be corrupt." CR));
+        Log.error(F("AppConfig Save: Unable to mount filesystem, partition may be corrupt." CR));
         saveOK = false;
     }
     else
     {
         // Saves the configuration to a file on FILESYSTEM
-        File file = FILESYSTEM.open(filename, FILE_WRITE);
+        File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
         if (!file)
         {
-            Log.error(F("Config Save: Unable to open or create file, partition may be corrupt." CR));
+            Log.error(F("AppConfig Save: Unable to open or create file, partition may be corrupt." CR));
             saveOK = false;
         }
         // Serialize JSON to file
-        else if (!serializeConfig(file))
+        else if (!serializeAppConfig(file))
         {
-            Log.error(F("Config Save: Failed to save configuration, data may be lost." CR));
+            Log.error(F("AppConfig Save: Failed to save configuration, data may be lost." CR));
             saveOK = false;
         }
         else
         {
-            Log.verbose(F("Config Save: Configuration saved." CR));
+            Log.verbose(F("AppConfig Save: Configuration saved." CR));
             saveOK = true;
         }
         file.close();
@@ -123,161 +112,39 @@ bool saveConfig()
     return saveOK;
 }
 
-bool deserializeConfig(Stream &src)
+bool deserializeAppConfig(Stream &src)
 {
     // Deserialize configuration
-    StaticJsonDocument<CAP_DESER_CONF> doc;
+    StaticJsonDocument<CAPACITY_APP_DESERIAL> doc;
 
     // Parse the JSON object in the file
     DeserializationError err = deserializeJson(doc, src);
 
     if (err)
     {
-        config.load(doc.as<JsonObject>());
+        app.load(doc.as<JsonObject>());
         return true;
     }
     else
     {
-        config.load(doc.as<JsonObject>());
+        app.load(doc.as<JsonObject>());
         return true;
     }
 }
 
-bool serializeConfig(Print &dst)
+bool serializeAppConfig(Print &dst)
 {
     // Serialize configuration
-    StaticJsonDocument<CAP_SER_CONF> doc;
+    StaticJsonDocument<CAPACITY_APP_SERIAL> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
 
     // Fill the object
-    config.save(root);
+    app.save(root);
 
     // Serialize JSON to file
     return serializeJsonPretty(doc, dst) > 0;
-}
-
-bool printConfigFile()
-{
-    // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(filename, FILE_READ);
-    if (!file)
-        return false;
-
-    while (file.available())
-        printChar(true, (const char *)file.read());
-
-    printCR(true);
-    file.close();
-    return true;
-}
-
-bool printConfig()
-{
-    // Serialize configuration
-    StaticJsonDocument<CAP_SER_CONF> doc;
-
-    // Create an object at the root
-    JsonObject root = doc.to<JsonObject>();
-
-    // Fill the object
-    config.save(root);
-
-    bool retval = true;
-    // Serialize JSON to file
-    retval = serializeJson(doc, Serial) > 0;
-    printCR(true);
-    return retval;
-}
-
-bool mergeJsonString(String newJson)
-{
-    StaticJsonDocument<CAP_SER_CONF> doc;
-    // Serialize the string that was passed
-    DeserializationError err = deserializeJson(doc, newJson);
-    if (err)
-    {
-        printChar(true, err.c_str());
-        printCR(true);
-        return false;
-    }
-    else
-    {
-        mergeJsonObject(doc);
-        return true;
-    }
-}
-
-void mergeJsonObject(JsonVariantConst src)
-{
-    // Serialize configuration
-    StaticJsonDocument<CAP_SER_CONF> doc;
-
-    // Create an object at the root
-    JsonObject root = doc.to<JsonObject>();
-
-    // Fill the object
-    // TODO:  Can we use the config object here?
-    config.save(root);
-
-    // Merge in the configuration
-    merge(root, src);
-    // Move new object to config
-    config.load(root);
-    setDoSaveConfig();
-}
-
-void merge(JsonVariant dst, JsonVariantConst src)
-{
-    if (src.is<JsonObjectConst>())
-    {
-        for (JsonPairConst kvp : src.as<JsonObjectConst>())
-        {
-            if (dst.containsKey(kvp.key()))
-                merge(dst[kvp.key()], kvp.value());
-            else
-                dst[kvp.key()] = kvp.value();
-        }
-    }
-    else
-    {
-        dst.set(src);
-    }
-}
-
-void convertConfigtoImperial()
-{
-    // Loop through all config numbers and convert to Imperial
-    if (!config.copconfig.imperial) // Make sure it's not already set
-    {
-        Log.verbose(F("Converting metric config to imperial." CR));
-        config.copconfig.imperial = true;
-        config.temps.setpoint = convertCtoF(config.temps.setpoint);
-        for (int i = 0; i < NUMSENSOR; i++)
-        {
-            if (!config.temps.calibration[i] == 0)
-                config.temps.calibration[i] = convertOneCtoF(config.temps.calibration[i]);
-        }
-        setDoSaveConfig(); // Set a semaphore because this is called from Web Page
-    }
-}
-
-void convertConfigtoMetric()
-{
-    // Loop through all config numbers and convert to Metric
-    if (config.copconfig.imperial) // Make sure it's not already set
-    {
-        Log.verbose(F("Converting imperial config to metric." CR));
-        config.copconfig.imperial = false;
-        config.temps.setpoint = convertFtoC(config.temps.setpoint);
-        for (int i = 0; i < NUMSENSOR; i++)
-        {
-            if (!config.temps.calibration[i] == 0)
-                config.temps.calibration[i] = convertOneFtoC(config.temps.calibration[i]);
-        }
-        setDoSaveConfig(); // Set a semaphore because this is called from Web Page
-    }
 }
 
 void ApConfig::save(JsonObject obj) const
@@ -933,7 +800,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
 }
 
-void Config::save(JsonObject obj) const
+void AppConfig::save(JsonObject obj) const
 {
     // Add Access Point object
     apconfig.save(obj.createNestedObject("apconfig"));
@@ -953,7 +820,7 @@ void Config::save(JsonObject obj) const
     urltarget.save(obj.createNestedObject("urltarget"));
 }
 
-void Config::load(JsonObjectConst obj)
+void AppConfig::load(JsonObjectConst obj)
 {
     // Load all config objects
     //
