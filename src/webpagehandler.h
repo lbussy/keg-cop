@@ -25,7 +25,8 @@ SOFTWARE. */
 
 #include "uptime.h"
 #include "wifihandler.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
+#include "jsontools.h"
 #include "version.h"
 #include "config.h"
 #include "thatVersion.h"
@@ -53,6 +54,7 @@ void setActionPageHandlers();
 void setInfoPageHandlers();
 void setConfigurationPageHandlers();
 void setEditor();
+void setBulkLoader();
 void stopWebServer();
 
 enum HANDLER_STATE
@@ -82,14 +84,8 @@ void send_json(AsyncWebServerRequest *request, String &json);
 void send_ok(AsyncWebServerRequest *request);
 
 extern struct ThatVersion thatVersion;
-extern struct Flowmeter flow;
-extern const size_t capacityFlowDeserial;
-extern const size_t capacityFlowSerial;
 extern const size_t capacityPulseDeserial;
 extern const size_t capacityPulseSerial;
 extern struct Devices device;
-extern const size_t capacityTempsDeserial;
-extern const size_t capacityTempsSerial;
-extern struct API api;
 
 #endif // _WEBPAGEHANDLER_H
