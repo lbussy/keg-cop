@@ -35,7 +35,7 @@ void serial()
 #if DOTELNET == true
     char buffer[32];
     strcpy(buffer, (const char *)"Connected to ");
-    strcat(buffer, (const char *)apiKey);
+    strcat(buffer, (const char *)API_KEY);
     strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
 #endif
@@ -44,13 +44,13 @@ void serial()
     printCR(true);
     SERIAL.flush();
 #if !defined(DISABLE_LOGGING)
-    if (config.copconfig.serial)
+    if (app.copconfig.serial)
     {
         SERIAL.setDebugOutput(false);
         Log.begin(LOG_LEVEL_SILENT, &SERIAL, true);
         Log.setPrefix(printTimestamp);
     }
-    else if (!config.copconfig.serial)
+    else if (!app.copconfig.serial)
     {
         SERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &SERIAL, true);
@@ -79,7 +79,7 @@ size_t printDot()
 size_t printDot(bool safe)
 {
 #if !defined(DISABLE_LOGGING)
-    if (safe == true && config.copconfig.serial)
+    if (safe == true && app.copconfig.serial)
         return 0;
     else
         return SERIAL.print(F("."));
@@ -96,7 +96,7 @@ size_t printChar(const char *chr)
 size_t printChar(bool safe, const char *chr)
 {
 #if !defined(DISABLE_LOGGING)
-    if (safe == true && config.copconfig.serial)
+    if (safe == true && app.copconfig.serial)
         return 0;
     else
         return SERIAL.print(chr);
@@ -113,7 +113,7 @@ size_t printCR()
 size_t printCR(bool safe)
 {
 #if !defined(DISABLE_LOGGING)
-    if (safe == true && config.copconfig.serial)
+    if (safe == true && app.copconfig.serial)
         return 0;
     else
         return SERIAL.println();
@@ -142,23 +142,23 @@ void serialLoop()
     if (Serial.available() > 0)
     {
 #endif
-        if (!config.copconfig.serial)
+        if (!app.copconfig.serial)
         { // Turn on/off Serial Mode
             switch (SERIAL.read())
             {
             case 'd': // Toggle Debug
-                toggleSerialCompat(!config.copconfig.serial);
+                toggleSerialCompat(!app.copconfig.serial);
                 nullDoc("d");
                 break;
             default:
                 break;
             }
         }
-        else if (config.copconfig.pouremulate)
+        else if (app.copconfig.pouremulate)
         { // Handle things while we are emulating pours
             handlePourEmulateCommands();
         }
-        else if (config.copconfig.tempemulate)
+        else if (app.copconfig.tempemulate)
         { // Handle things while we are emulating temperatures
             handleTempEmulateCommands();
         }
@@ -251,7 +251,7 @@ void serialLoop()
                 break;
             }
             case 'd': // Toggle Debug
-                toggleSerialCompat(!config.copconfig.serial);
+                toggleSerialCompat(!app.copconfig.serial);
                 break;
             case 'u': // Display uptime
             {
@@ -299,13 +299,13 @@ void serialLoop()
                 nullDoc("");
                 break;
             case 'c': // Toggle Pour Emulate
-                togglePourEmulation(!config.copconfig.pouremulate);
+                togglePourEmulation(!app.copconfig.pouremulate);
                 break;
             case 't': // Toggle Pour Emulate
-                toggleTempEmulation(!config.copconfig.tempemulate);
+                toggleTempEmulation(!app.copconfig.tempemulate);
                 break;
             case '?': // Help
-                SERIAL.print(apiKey);
+                SERIAL.print(API_KEY);
                 SERIAL.println(F(" - Available serial commands:"));
                 SERIAL.println(F("\th:\tDisplay heap information"));
                 SERIAL.println(F("\tp:\t'Ping, e.g. {}' (null json)"));
@@ -467,18 +467,18 @@ size_t myPrintln(struct tm *timeinfo, const char *format)
 
 void toggleSerialCompat(bool enable)
 {
-    if (enable && !config.copconfig.serial)
+    if (enable && !app.copconfig.serial)
     {
-        config.copconfig.serial = true;
-        saveConfig();
+        app.copconfig.serial = true;
+        saveAppConfig();
         SERIAL.flush();
         SERIAL.setDebugOutput(false);
         Log.setLevel(LOG_LEVEL_SILENT);
     }
-    else if (!enable && config.copconfig.serial)
+    else if (!enable && app.copconfig.serial)
     {
-        config.copconfig.serial = false;
-        saveConfig();
+        app.copconfig.serial = false;
+        saveAppConfig();
         SERIAL.flush();
         SERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &SERIAL, true);
@@ -502,19 +502,19 @@ void nullDoc(const char *wrapper)
 
 void togglePourEmulation(bool enable)
 {
-    if (config.copconfig.serial)
+    if (app.copconfig.serial)
     { // Only use this if we are in serial mode
-        if (enable && !config.copconfig.pouremulate)
+        if (enable && !app.copconfig.pouremulate)
         {
-            config.copconfig.pouremulate = true;
-            saveConfig();
+            app.copconfig.pouremulate = true;
+            saveAppConfig();
             SERIAL.println(F("Pour emulation mode on."));
             SERIAL.print(F("Tap Command > "));
         }
-        else if (!enable && config.copconfig.pouremulate)
+        else if (!enable && app.copconfig.pouremulate)
         {
-            config.copconfig.pouremulate = false;
-            saveConfig();
+            app.copconfig.pouremulate = false;
+            saveAppConfig();
             SERIAL.println(F("Pour emulation mode off."));
         }
         else
@@ -645,19 +645,19 @@ void handlePourEmulateCommands()
 
 void toggleTempEmulation(bool enable)
 {
-    if (config.copconfig.serial)
+    if (app.copconfig.serial)
     { // Only use this if we are in serial mode
-        if (enable && !config.copconfig.tempemulate)
+        if (enable && !app.copconfig.tempemulate)
         {
-            config.copconfig.tempemulate = true;
-            saveConfig();
+            app.copconfig.tempemulate = true;
+            saveAppConfig();
             SERIAL.println(F("Temperature emulation mode on."));
             SERIAL.print(F("Temp Command > "));
         }
-        else if (!enable && config.copconfig.tempemulate)
+        else if (!enable && app.copconfig.tempemulate)
         {
-            config.copconfig.tempemulate = false;
-            saveConfig();
+            app.copconfig.tempemulate = false;
+            saveAppConfig();
             SERIAL.println(F("Temperature emulation mode off."));
         }
         else
@@ -778,7 +778,7 @@ void handleTempEmulateCommands()
             SERIAL.print(s);
             SERIAL.print(F(" sensor to "));
             SERIAL.print(temp);
-            if (config.copconfig.imperial)
+            if (app.copconfig.imperial)
             {
                 Serial.println(" deg F.");
             }

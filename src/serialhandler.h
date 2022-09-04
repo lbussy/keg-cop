@@ -25,7 +25,7 @@ SOFTWARE. */
 
 #include "tools.h"
 #include "config.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "execota.h"
 #include "version.h"
 #include "thatVersion.h"
@@ -96,7 +96,6 @@ void nullDoc(const char *);
 
 extern struct ThatVersion thatVersion;
 extern struct Flowmeter flow;
-extern const size_t capacityFlowSerial;
 extern const size_t capacityPulseSerial;
 extern struct Devices device;
 extern const size_t capacityTempsSerial;

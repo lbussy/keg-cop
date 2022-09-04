@@ -37,7 +37,7 @@ void setup()
 {
     drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
 
-    if (!loadConfig())
+    if (!loadAppConfig())
     { // If configuration does not load, sit and blink slowly like an idiot
         pinMode(LED, OUTPUT);
         Ticker blinker;
@@ -56,7 +56,7 @@ void setup()
     pinMode(LED, OUTPUT);
 
     // Check if portal is requested
-    if (!config.copconfig.nodrd && drd->detectDoubleReset())
+    if (!app.copconfig.nodrd && drd->detectDoubleReset())
     {
         Log.notice(F("DRD: Portal requested." CR));
         doWiFi(true);
@@ -69,22 +69,22 @@ void setup()
     else
     {
         Log.notice(F("Starting WiFi." CR));
-        config.copconfig.nodrd = false;
+        app.copconfig.nodrd = false;
         doWiFi();
     }
 
     // Set pins for relays
     pinMode(SOLENOID, OUTPUT);
-    if (config.temps.tfancontrolenabled)
+    if (app.temps.tfancontrolenabled)
     {
-        digitalWrite(SOLENOID, (config.temps.tfanonhigh) ? LOW : HIGH);
+        digitalWrite(SOLENOID, (app.temps.tfanonhigh) ? LOW : HIGH);
     }
     else
     {
-        digitalWrite(SOLENOID, (config.copconfig.tapsolenoid) ? LOW : HIGH);
+        digitalWrite(SOLENOID, (app.copconfig.tapsolenoid) ? LOW : HIGH);
     }
     pinMode(COOL, OUTPUT);
-    digitalWrite(COOL, (config.temps.coolonhigh) ? LOW : HIGH);
+    digitalWrite(COOL, (app.temps.coolonhigh) ? LOW : HIGH);
 
     setClock(); // Set NTP Time
 
@@ -101,18 +101,18 @@ void setup()
     }
 
     // Clear temperature sensor emulation
-    config.copconfig.tempemulate = false;
+    app.copconfig.tempemulate = false;
 
     // Clear all tap calibration
-    config.copconfig.pouremulate = false;
+    app.copconfig.pouremulate = false;
     for (int i = 0; i < NUMTAPS; i++)
     {
         flow.taps[i].calibrating = false;
     }
     saveFlowConfig();
-    saveConfig();
+    saveAppConfig();
 
-    if (!config.ota.badfw)
+    if (!app.ota.badfw)
         execspiffs(); // Check for pending FILESYSTEM update
 
     mDNSSetup();                 // Set up mDNS responder
@@ -131,7 +131,7 @@ void setup()
     logPourTicker.attach(TAPLOOP, logFlow);                                       // Log pours
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                // Poll for server version
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);               // Send KegScreen Temp Report
-    sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport); // Send Target Report
+    sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport); // Send Target Report
     rebootTimer.attach(86400, setDoReset);                                        // Reboot every 24 hours
     doControlTicker.attach(TEMPLOOP, []()
                            { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
@@ -140,10 +140,10 @@ void setup()
     sendTIOTaps();                                            // Send initial Taplist.io keg levels
 
 #if !defined(DISABLE_LOGGING)
-    if (config.copconfig.serial)
+    if (app.copconfig.serial)
         nullDoc("d");
     else
-        Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), apiKey, fw_version(), fs_version(), branch(), build());
+        Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), API_KEY, fw_version(), fs_version(), branch(), build());
 #else
     nullDoc("d");
 #endif
@@ -152,12 +152,12 @@ void setup()
 void loop()
 {
     // Check for Target URL Timing reset
-    if (config.urltarget.update)
+    if (app.urltarget.update)
     {
-        Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), config.urltarget.freq);
+        Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), app.urltarget.freq);
         sendTargetReportTicker.detach();
-        sendTargetReportTicker.attach(config.urltarget.freq * 60, setDoTargetReport);
-        config.urltarget.update = false;
+        sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport);
+        app.urltarget.update = false;
     }
 
     doOTALoop();

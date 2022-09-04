@@ -23,7 +23,7 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "serialhandler.h"
 #include "config.h"
 #include "ntphandler.h"

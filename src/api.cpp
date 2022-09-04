@@ -23,14 +23,14 @@ SOFTWARE. */
 #include "api.h"
 
 API api;
-const char* a_urlstart = URLSTART;
-const char* a_tld = TLD;
-const char* a_delim = DELIM;
+const char* a_urlstart = "http://";
+const char* a_tld = ".local";
+const char* a_delim = "/";
 
 bool serializeActionAPI(Print &dst)
 {
     // Serialize configuration
-    StaticJsonDocument<CAP_ACTION_API> doc;
+    StaticJsonDocument<CAPACITY_ACTION_API> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -45,7 +45,7 @@ bool serializeActionAPI(Print &dst)
 bool serializeInfoAPI(Print &dst)
 {
     // Serialize configuration
-    StaticJsonDocument<CAP_INFO_API> doc;
+    StaticJsonDocument<CAPACITY_INFO_API> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -60,7 +60,7 @@ bool serializeInfoAPI(Print &dst)
 bool serializeConfigAPI(Print &dst)
 {
     // Serialize configuration
-    StaticJsonDocument<CAP_CONFIG_API> doc;
+    StaticJsonDocument<CAPACITY_CONFIG_API> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -75,7 +75,7 @@ bool serializeConfigAPI(Print &dst)
 bool serializeAPI(Print &dst)
 {
     // Serialize configuration
-    StaticJsonDocument<CAP_API> doc;
+    StaticJsonDocument<CAPACITY_API> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -90,7 +90,7 @@ bool serializeAPI(Print &dst)
 bool printAPI()
 {
     // Serialize configuration
-    StaticJsonDocument<CAP_SER_CONF> doc;
+    StaticJsonDocument<CAPACITY_APP_SERIAL> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -111,7 +111,7 @@ void ActionAPI::save(JsonObject obj) const
     // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/vX/xxxxxxxxxxxxx/
     char _base[68];
     strcpy(_base, a_urlstart);
-    strcat(_base, config.copconfig.hostname);
+    strcat(_base, app.copconfig.hostname);
     strcat(_base, a_tld);
     strcat(_base, a_delim);
     strcat(_base, api.base);
@@ -174,7 +174,7 @@ void InfoAPI::save(JsonObject obj) const
     // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/vX/xxxxxxxxxxxxx/
     char _base[68];
     strcpy(_base, a_urlstart);
-    strcat(_base, config.copconfig.hostname);
+    strcat(_base, app.copconfig.hostname);
     strcat(_base, a_tld);
     strcat(_base, a_delim);
     strcat(_base, api.base);
@@ -231,7 +231,7 @@ void ConfigAPI::save(JsonObject obj) const
     // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/vX/xxxxxxxxxxxxx/
     char _base[68];
     strcpy(_base, a_urlstart);
-    strcat(_base, config.copconfig.hostname);
+    strcat(_base, app.copconfig.hostname);
     strcat(_base, a_tld);
     strcat(_base, a_delim);
     strcat(_base, api.base);
@@ -264,7 +264,7 @@ void API::save(JsonObject obj) const
     // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/
     char _base[54];
     strcpy(_base, a_urlstart);
-    strcat(_base, config.copconfig.hostname);
+    strcat(_base, app.copconfig.hostname);
     strcat(_base, a_tld);
     strcat(_base, a_delim);
     strcat(_base, base);
@@ -285,7 +285,7 @@ void API::save(JsonObject obj) const
     strcat(_url, a_delim);
     obj["info"] = _url;
 
-    // Config API
+    // AppConfig API
     strcpy(_url, _base);
     strcat(_url, configAPI.base);
     strcat(_url, a_delim);

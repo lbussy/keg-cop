@@ -30,7 +30,7 @@ SOFTWARE. */
 #include <HTTPClient.h>
 
 #include "taplistio.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "flowmeter.h"
 
 void sendTIOTaps()
@@ -40,9 +40,9 @@ void sendTIOTaps()
         Log.warning(F("Taplist.io: Wifi not connected, skipping send." CR));
         return;
     }
-    else if (strlen(config.taplistio.secret) < 7 || strlen(config.taplistio.venue) < 3)
+    else if (strlen(app.taplistio.secret) < 7 || strlen(app.taplistio.venue) < 3)
     {
-        Log.verbose(F("Taplist.io: secret or venue not set, skipping send. ('%s' / '%s')" CR), config.taplistio.venue, config.taplistio.secret);
+        Log.verbose(F("Taplist.io: secret or venue not set, skipping send. ('%s' / '%s')" CR), app.taplistio.venue, app.taplistio.secret);
         return;
     }
 
@@ -80,9 +80,9 @@ void sendTIOTaps()
     }
 
     tioReporting = false;
-    config.taplistio.lastsent = now;
-    config.taplistio.update = false;
-    saveConfig();
+    app.taplistio.lastsent = now;
+    app.taplistio.update = false;
+    saveAppConfig();
 }
 
 bool sendTaplistio(int tapid)
@@ -95,7 +95,7 @@ bool sendTaplistio(int tapid)
     bool result = true;
     uint32_t dispensed;
 
-    snprintf(auth_header, sizeof(auth_header), "token %s", config.taplistio.secret);
+    snprintf(auth_header, sizeof(auth_header), "token %s", app.taplistio.secret);
 
     // For Taplist.io, we are sending the volume dispensed in mL
     if (flow.imperial)
@@ -109,7 +109,7 @@ bool sendTaplistio(int tapid)
 
     snprintf(taplistio_url, sizeof(taplistio_url),
              "https://api.taplist.io/api/v1/venues/%s/taps/%d/current-keg",
-             config.taplistio.venue, flow.taps[tapid].taplistioTap);
+             app.taplistio.venue, flow.taps[tapid].taplistioTap);
 
     Log.verbose(F("Taplist.io: Sending %s to %s\r\n"), payload_string, taplistio_url);
 

@@ -38,14 +38,14 @@ void setupRPints()
 
 void connectRPints()
 {
-    if (config.rpintstarget.host != NULL && config.rpintstarget.host[0] != '\0' && !rpintsClient.connected())
+    if (app.rpintstarget.host != NULL && app.rpintstarget.host[0] != '\0' && !rpintsClient.connected())
     {
         rpintsReconnectTimer.detach();
 
         // Set username/password
-        if (config.rpintstarget.username != NULL && config.rpintstarget.username[0] != '\0')
+        if (app.rpintstarget.username != NULL && app.rpintstarget.username[0] != '\0')
         {
-            rpintsClient.setCredentials(config.rpintstarget.username, config.rpintstarget.password);
+            rpintsClient.setCredentials(app.rpintstarget.username, app.rpintstarget.password);
         }
         else
         {
@@ -54,25 +54,25 @@ void connectRPints()
 
         // Set up connection to broker
         Log.verbose(F("MQTT: Initializing connection to broker: %s on port: %d" CR),
-                    config.rpintstarget.host,
-                    config.rpintstarget.port);
+                    app.rpintstarget.host,
+                    app.rpintstarget.port);
         LCBUrl url;
-        if (url.isMDNS(config.rpintstarget.host))
+        if (url.isMDNS(app.rpintstarget.host))
         {
             Log.verbose(F("MQTT: Resolved mDNS broker name: %s (%s)" CR),
-                        config.rpintstarget.host,
-                        url.getIP(config.rpintstarget.host).toString().c_str(),
-                        config.rpintstarget.port);
-            rpintsClient.setServer(url.getIP(config.rpintstarget.host), config.rpintstarget.port);
+                        app.rpintstarget.host,
+                        url.getIP(app.rpintstarget.host).toString().c_str(),
+                        app.rpintstarget.port);
+            rpintsClient.setServer(url.getIP(app.rpintstarget.host), app.rpintstarget.port);
         }
-        else if (url.isValidIP(config.rpintstarget.host) || url.isValidHostName(config.rpintstarget.host))
+        else if (url.isValidIP(app.rpintstarget.host) || url.isValidHostName(app.rpintstarget.host))
         {
             IPAddress hostIP;
-            rpintsClient.setServer(hostIP.fromString(config.rpintstarget.host), config.rpintstarget.port);
+            rpintsClient.setServer(hostIP.fromString(app.rpintstarget.host), app.rpintstarget.port);
         }
         else
         {
-            rpintsClient.setServer(config.rpintstarget.host, config.rpintstarget.port);
+            rpintsClient.setServer(app.rpintstarget.host, app.rpintstarget.port);
         }
 
         Log.verbose(F("MQTT: Connecting." CR));
@@ -125,10 +125,10 @@ bool sendPulsesRPints(int tapID, unsigned int pulses)
 
         // Send report
         Log.notice(F("MQTT: Sending message to %s:%d, payload: %s" CR),
-                config.rpintstarget.host,
-                config.rpintstarget.port,
+                app.rpintstarget.host,
+                app.rpintstarget.port,
                 payload);
-        if (rpintsClient.publish(config.rpintstarget.topic, 0, false, payload) > 1)
+        if (rpintsClient.publish(app.rpintstarget.topic, 0, false, payload) > 1)
         {
             return true;
         }

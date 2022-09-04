@@ -94,14 +94,14 @@ bool reported[5];
 static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
     reportCBTapInfo, reportCBPourReport, reportCBKickReport, reportCBCoolState, reportCBTempReport};
 
-#define kegscreenIsEnabled (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0')
+#define kegscreenIsEnabled (app.kegscreen.url != NULL && app.kegscreen.url[0] != '\0')
 
 void CommonReportFields(JsonDocument &doc, ReportKey reportkey) {
-    doc[KegscreenKeys::api] = apiKey;
-    doc[KegscreenKeys::guid] = config.copconfig.guid;
-    doc[KegscreenKeys::hostname] = config.copconfig.hostname;
-    doc[KegscreenKeys::breweryname] = config.copconfig.breweryname;
-    doc[KegscreenKeys::kegeratorname] = config.copconfig.kegeratorname;
+    doc[KegscreenKeys::api] = API_KEY;
+    doc[KegscreenKeys::guid] = app.copconfig.guid;
+    doc[KegscreenKeys::hostname] = app.copconfig.hostname;
+    doc[KegscreenKeys::breweryname] = app.copconfig.breweryname;
+    doc[KegscreenKeys::kegeratorname] = app.copconfig.kegeratorname;
     doc[KegscreenKeys::reporttype] = reporttype[reportkey];
 }
 
@@ -118,7 +118,7 @@ bool sendTapInfoReport(int tapid)
 
             CommonReportFields(doc, reportkey);
 
-            doc[KegscreenKeys::imperial] = config.copconfig.imperial;
+            doc[KegscreenKeys::imperial] = app.copconfig.imperial;
             doc[KegscreenKeys::tapid] = tapid;
             doc[KegscreenKeys::name] = flow.taps[tapid].name;
             doc[KegscreenKeys::ppu] = flow.taps[tapid].ppu;
@@ -156,7 +156,7 @@ bool sendPourReport(int tapid, float dispensed)
             CommonReportFields(doc, reportkey);
 
             doc[KegscreenKeys::tapid] = tapid;
-            doc[KegscreenKeys::imperial] = config.copconfig.imperial;
+            doc[KegscreenKeys::imperial] = app.copconfig.imperial;
             doc[KegscreenKeys::dispensed] = dispensed;
             doc[KegscreenKeys::remaining] = flow.taps[tapid].remaining;
 
@@ -238,21 +238,21 @@ bool sendTempReport()
 
     CommonReportFields(doc, reportkey);
 
-    doc[KegscreenKeys::imperial] = config.copconfig.imperial;
-    doc[KegscreenKeys::controlpoint] = config.temps.controlpoint;
-    doc[KegscreenKeys::setting] = config.temps.setpoint;
+    doc[KegscreenKeys::imperial] = app.copconfig.imperial;
+    doc[KegscreenKeys::controlpoint] = app.temps.controlpoint;
+    doc[KegscreenKeys::setting] = app.temps.setpoint;
     doc[KegscreenKeys::status] = tstat[TS_TYPE_CHAMBER].state;
-    doc[KegscreenKeys::controlenabled] = config.temps.controlenabled;
-    doc[KegscreenKeys::coolonhigh] = config.temps.coolonhigh;
-    doc[KegscreenKeys::tfancontrolenabled] = config.temps.tfancontrolenabled;
-    doc[KegscreenKeys::tfansetpoint] = config.temps.tfansetpoint;
+    doc[KegscreenKeys::controlenabled] = app.temps.controlenabled;
+    doc[KegscreenKeys::coolonhigh] = app.temps.coolonhigh;
+    doc[KegscreenKeys::tfancontrolenabled] = app.temps.tfancontrolenabled;
+    doc[KegscreenKeys::tfansetpoint] = app.temps.tfansetpoint;
     doc[KegscreenKeys::tfanstatus] = tstat[TS_TYPE_CHAMBER].state;
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
         doc[KegscreenKeys::sensors][i][KegscreenKeys::name] = device.sensor[i].name;
         doc[KegscreenKeys::sensors][i][KegscreenKeys::value] = device.sensor[i].average;  // Always send in C
-        doc[KegscreenKeys::sensors][i][KegscreenKeys::enabled] = config.temps.enabled[i];
+        doc[KegscreenKeys::sensors][i][KegscreenKeys::enabled] = app.temps.enabled[i];
     }
 
     return sendReport(reportkey, doc);
@@ -269,7 +269,7 @@ bool sendReport(ReportKey thisKey, const char * json) {
     {
         reported[thisKey] = false;
         LCBUrl url;
-        url.setUrl(config.kegscreen.url);
+        url.setUrl(app.kegscreen.url);
 
         IPAddress connectionIP = url.getIP(url.getHost().c_str());
         if (connectionIP == (IPAddress)INADDR_NONE)

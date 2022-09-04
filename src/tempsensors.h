@@ -24,7 +24,7 @@ SOFTWARE. */
 #define _TEMPSENSORS_H
 
 #include "config.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include <CircularBuffer.h>
 #include <OneWire.h>
 #include <DS18B20.h>

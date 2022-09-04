@@ -25,7 +25,7 @@ SOFTWARE. */
 
 #include "config.h"
 #include "tempsensors.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "thermostat.h"
 
 enum ThermostatState

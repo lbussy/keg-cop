@@ -75,9 +75,9 @@ void doWiFi(bool dontUseStoredCreds)
     wm.setShowDnsFields(true);    // Force show dns field always
 
     // Allow non-default host name
-    // AsyncWiFiManagerParameter custom_mqtt_server("server", "mqtt server", config.hostname, 40);
+    // AsyncWiFiManagerParameter custom_mqtt_server("server", "mqtt server", app.hostname, 40);
     // wm.addParameter(&custom_mqtt_server);
-    AsyncWiFiManagerParameter custom_hostname("name", "Host Name", config.copconfig.hostname, 32);
+    AsyncWiFiManagerParameter custom_hostname("name", "Host Name", app.copconfig.hostname, 32);
     wm.addParameter(&custom_hostname);
 
     if (dontUseStoredCreds)
@@ -86,7 +86,7 @@ void doWiFi(bool dontUseStoredCreds)
         blinker.attach_ms(APBLINK, wifiBlinker);
         wm.setConfigPortalTimeout(120);
 
-        if (wm.startConfigPortal(config.apconfig.ssid, config.apconfig.passphrase))
+        if (wm.startConfigPortal(app.apconfig.ssid, app.apconfig.passphrase))
         {
             // We finished with portal, do we need this?
         }
@@ -107,7 +107,7 @@ void doWiFi(bool dontUseStoredCreds)
         blinker.attach_ms(STABLINK, wifiBlinker);
         wm.setConnectTimeout(30);
         wm.setConfigPortalTimeout(120);
-        if (!wm.autoConnect(config.apconfig.ssid, config.apconfig.passphrase))
+        if (!wm.autoConnect(app.apconfig.ssid, app.apconfig.passphrase))
         {
             Log.warning(F("Failed to connect and/or hit timeout." CR));
             killDRD();
@@ -124,17 +124,17 @@ void doWiFi(bool dontUseStoredCreds)
             // We finished with portal (We were configured)
             blinker.detach();        // Turn off blinker
             digitalWrite(LED, HIGH); // Turn off LED
-            WiFi.setHostname(config.copconfig.hostname);
+            WiFi.setHostname(app.copconfig.hostname);
         }
     }
 
     if (shouldSaveConfig)
     { // Save configuration
-        if (custom_hostname.getValue() != config.copconfig.hostname)
+        if (custom_hostname.getValue() != app.copconfig.hostname)
         {
             Log.notice(F("Saving custom hostname configuration: %s." CR), custom_hostname.getValue());
-            strlcpy(config.copconfig.hostname, custom_hostname.getValue(), sizeof(config.copconfig.hostname));
-            WiFi.setHostname(config.copconfig.hostname);
+            strlcpy(app.copconfig.hostname, custom_hostname.getValue(), sizeof(app.copconfig.hostname));
+            WiFi.setHostname(app.copconfig.hostname);
             killDRD();
             Log.notice(F("Restarting to pick up custom hostname." CR));
             resetController();

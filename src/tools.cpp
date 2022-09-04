@@ -39,7 +39,7 @@ void resetController()
 {
     Log.notice(F("Reboot request - rebooting system." CR));
     killDRD();
-    saveConfig();
+    saveAppConfig();
     saveFlowConfig();
     ESP.restart();
 }
@@ -112,9 +112,9 @@ void tickerLoop()
     }
 
     if (doSetSaveConfig)
-    { // Save Config
+    { // Save AppConfig
         doSetSaveConfig = false;
-        saveConfig();
+        saveAppConfig();
     }
 
     if (doSetSaveFlowConfig)
@@ -178,7 +178,7 @@ void tickerLoop()
             struct tm timeinfo;
             getLocalTime(&timeinfo);
             time(&now);
-            if ((now - config.taplistio.lastsent > TIOLOOP) && config.taplistio.update && config.taplistio.update && (strlen(config.taplistio.secret) >= 7) && (strlen(config.taplistio.venue) >= 3))
+            if ((now - app.taplistio.lastsent > TIOLOOP) && app.taplistio.update && app.taplistio.update && (strlen(app.taplistio.secret) >= 7) && (strlen(app.taplistio.venue) >= 3))
             {
                 doTaplistIOConnect = false; // Semaphore required for Taplist.io report
                 sendTIOTaps();
@@ -316,13 +316,13 @@ void getGuid(char *str)
 
 void killDRD()
 {
-    config.copconfig.nodrd = true;
-    const char *filename = "/drd.dat";
+    app.copconfig.nodrd = true;
+    const char *drdfile = "/drd.dat";
     if (FILESYSTEM.begin())
     {
-        if (SPIFFS.exists(filename))
+        if (SPIFFS.exists(drdfile))
         {
-            FILESYSTEM.remove(filename);
+            FILESYSTEM.remove(drdfile);
         }
     }
 }

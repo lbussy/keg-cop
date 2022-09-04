@@ -24,7 +24,7 @@ SOFTWARE. */
 #define _KEGSCREEN_H
 
 #include "config.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "flowmeter.h"
 #include "tempsensors.h"
 #include "thermostat.h"

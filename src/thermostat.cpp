@@ -50,21 +50,21 @@ void loopTstat(int ts)
     switch(ts)
     { // Set up different control/sensor points
         case TS_TYPE_CHAMBER:
-            tempNow = device.sensor[config.temps.controlpoint].average;
-            sensorEnabled = config.temps.enabled[config.temps.controlpoint];
-            controlEnabled = &config.temps.controlenabled;
-            tstat[ts].coolOnHigh = config.temps.coolonhigh;
-            setPoint = config.temps.setpoint;
+            tempNow = device.sensor[app.temps.controlpoint].average;
+            sensorEnabled = app.temps.enabled[app.temps.controlpoint];
+            controlEnabled = &app.temps.controlenabled;
+            tstat[ts].coolOnHigh = app.temps.coolonhigh;
+            setPoint = app.temps.setpoint;
             controlPoint = COOL;
             minOn = MIN_ON;
             minOff = MIN_OFF;
             break;
         case TS_TYPE_TOWER:
             tempNow = device.sensor[TOWER].average;
-            sensorEnabled = config.temps.enabled[TOWER];
-            controlEnabled = &config.temps.tfancontrolenabled;
-            tstat[ts].coolOnHigh = config.temps.tfanonhigh;
-            setPoint = config.temps.tfansetpoint;
+            sensorEnabled = app.temps.enabled[TOWER];
+            controlEnabled = &app.temps.tfancontrolenabled;
+            tstat[ts].coolOnHigh = app.temps.tfanonhigh;
+            setPoint = app.temps.tfansetpoint;
             controlPoint = SOLENOID;
             minOn = 0;
             minOff = 0;
@@ -88,7 +88,7 @@ void loopTstat(int ts)
         return;
     }
 
-    if (config.copconfig.imperial)
+    if (app.copconfig.imperial)
     {
         // Sensors and control work in C, convert setpoint
         setPoint = convertFtoC(setPoint);
@@ -162,21 +162,21 @@ void reportTstat(int ts)
 { // For thermostat state messages debugging
     unsigned long now = millis();
     char tempFormat[1];
-    double setpoint = config.temps.setpoint;
+    double setpoint = app.temps.setpoint;
     double tempNow;
     double wait = (double)(now - tstat[ts].lastOff) / 1000;
     double runtime = (double)(now - tstat[ts].lastOn) / 1000;
     double lastontime = (double)(now - tstat[ts].lastOn) / 1000;
     double lastofftime = (double)(now - tstat[ts].lastOff) / 1000;
-    if (config.copconfig.imperial)
+    if (app.copconfig.imperial)
     {
         strlcpy(tempFormat, "F", sizeof(tempFormat));
-        tempNow = convertCtoF(device.sensor[config.temps.controlpoint].average);
+        tempNow = convertCtoF(device.sensor[app.temps.controlpoint].average);
     }
     else
     {
         strlcpy(tempFormat, "C", sizeof(tempFormat));
-        tempNow = device.sensor[config.temps.controlpoint].average;
+        tempNow = device.sensor[app.temps.controlpoint].average;
     }
 
     switch (tstat[ts].state)

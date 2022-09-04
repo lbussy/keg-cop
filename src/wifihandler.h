@@ -24,7 +24,7 @@ SOFTWARE. */
 #define _WIFI_H
 
 #include "config.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "tools.h"
 #include "rpintsclient.h"
 
