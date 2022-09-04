@@ -109,9 +109,7 @@ bool initFlow()
         lastPulse[i] = 0;            // For kick detector
         lastLoopTime[i] = millis();  // Compare for kickdetect
         lastPulseTime[i] = millis(); // For pour detector
-        queuePourReport[i] = 0;      // Pour queue
-        queuePulseReport[i] = 0;     // Pulse queue
-        queueKickReport[i] = false;  // Kick queue
+        initPourPulseKick();
     }
     return loadFlowConfig();
 }
@@ -127,7 +125,7 @@ void logFlow()
             {                            // If the keg is blowing foam and active
                 pulse[i] = lastPulse[i]; // Discard the foam pulses
                 flow.taps[i].active = false;
-                queueKickReport[i] = true;
+                setQueueKickReport(i);
                 saveFlowConfig();
             }
             else if ((millis() - lastPulseTime[i] > POURDELAY) && (pulse[i] > 0))
@@ -147,11 +145,11 @@ void logFlow()
                 { // Log a pour
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
-                    setDoSaveFlowConfig();
-                    queuePourReport[i] = pour;        // Queue upstream pour report
-                    queuePulseReport[i] = pulseCount; // Queue upstream pulse report
+                    setDoSaveFlow();
+                    setQueuePourReport(i, pour);        // Queue upstream pour report
+                    setQueuePulseReport(i, pulseCount); // Queue upstream pulse report
                     app.taplistio.update = true;   // Queue TIO report
-                    setDoSaveConfig();
+                    setDoSaveFlow();
                     Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                 }
             }

@@ -23,11 +23,31 @@ SOFTWARE. */
 #include "tools.h"
 #include "taplistio.h"
 
-float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
-unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pours
-bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
-bool __attribute__((unused)) queueStateChange;                  // Store pending tstat state changes
-bool __attribute__((unused)) queueFanStateChange;               // Store pending tstat state changes
+float queuePourReport[NUMTAPS];         // Store pending pours
+unsigned int queuePulseReport[NUMTAPS]; // Store pending pulses
+bool queueKickReport[NUMTAPS];          // Store pending kicks
+
+bool doReset = false;             // Semaphore for reset
+bool doWiFiReset = false;         // Semaphore for wifi reset
+bool doKSTempReport = false;      // Semaphore for KegScreen Temps Report
+bool doTargetReport = false;      // Semaphore for URL Target Report
+bool doRPintsConnect = false;     // Semaphore for MQTT (re)connect
+bool doTaplistIOConnect = false;  // Semaphore for Taplist.IO Report
+bool doSetSaveUptime = false;     // Semaphore required to save reboot time
+bool doSetSaveApp = false;        // Semaphore required to save config
+bool doSetSaveFlowConfig = false; // Semaphore required to save flowconfig
+bool doTapInfoReport[NUMTAPS] = {
+    false, false, false, false, false, false, false, false}; // Semaphore for reset
+
+void initPourPulseKick()
+{
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        queuePourReport[i] = 0.0;
+        queuePulseReport[i] = 0;
+        queueKickReport[i] = false;
+    }
+}
 
 void _delay(unsigned long ulDelay)
 {
@@ -79,14 +99,29 @@ void setDoSaveUptime()
     doSetSaveUptime = true; // Semaphore required to save reboot time
 }
 
-void setDoSaveConfig()
+void setDoSaveApp()
 {
-    doSetSaveConfig = true; // Semaphore required to save config
+    doSetSaveApp = true; // Semaphore required to save config
 }
 
-void setDoSaveFlowConfig()
+void setDoSaveFlow()
 {
     doSetSaveFlowConfig = true; // Semaphore required to save flowconfig
+}
+
+void setQueuePourReport(int tapNum, float pour)
+{
+    queuePourReport[tapNum] = pour;
+}
+
+void setQueuePulseReport(int tapNum, int pulses)
+{
+    queuePulseReport[tapNum] = pulses;
+}
+
+void setQueueKickReport(int tapNum)
+{
+    queueKickReport[tapNum] = true;
 }
 
 void tickerLoop()
@@ -111,9 +146,9 @@ void tickerLoop()
         doUptime();
     }
 
-    if (doSetSaveConfig)
+    if (doSetSaveApp)
     { // Save AppConfig
-        doSetSaveConfig = false;
+        doSetSaveApp = false;
         saveAppConfig();
     }
 

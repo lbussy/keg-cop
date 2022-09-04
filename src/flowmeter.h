@@ -44,9 +44,6 @@ bool isKicked(int);
 // Control
 bool initFlow();
 
-extern float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
-extern unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pulses
-extern bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
 extern int flowPins[];
 
 #endif // _FLOWMETER_H

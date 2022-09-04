@@ -59,7 +59,7 @@ void mergeJsonObject(JsonVariantConst src, JSON_TYPE type)
     merge(root, src);
     // Move new object to config
     app.load(root);
-    setDoSaveConfig();
+    setDoSaveApp();
 }
 
 void merge(JsonVariant dst, JsonVariantConst src)
@@ -145,7 +145,7 @@ void convertConfigtoImperial()
             if (!app.temps.calibration[i] == 0)
                 app.temps.calibration[i] = convertOneCtoF(app.temps.calibration[i]);
         }
-        setDoSaveConfig(); // Set a semaphore because this is called from Web Page
+        setDoSaveApp(); // Set a semaphore because this is called from Web Page
     }
 }
 
@@ -162,7 +162,7 @@ void convertConfigtoMetric()
             if (!app.temps.calibration[i] == 0)
                 app.temps.calibration[i] = convertOneFtoC(app.temps.calibration[i]);
         }
-        setDoSaveConfig(); // Set a semaphore because this is called from Web Page
+        setDoSaveApp(); // Set a semaphore because this is called from Web Page
     }
 }
 

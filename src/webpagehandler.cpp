@@ -324,7 +324,7 @@ void setActionPageHandlers()
                 {
                     flow.taps[i].calibrating = false;
                 }
-                setDoSaveFlowConfig();
+                setDoSaveFlow();
                 send_ok(request);
                 break;
             case FAIL_PROCESS:
@@ -380,7 +380,7 @@ void setActionPageHandlers()
                             }
                         }
                     }
-                    setDoSaveFlowConfig();
+                    setDoSaveFlow();
                     send_ok(request);
                     break;
                 }
@@ -775,6 +775,7 @@ void setBulkLoader()
                                         {
                                             // TODO:  Do change hostname processing??
                                         }
+                                        setDoSaveApp();
                                         send_ok(request);
                                         break;
                                     }
@@ -809,6 +810,7 @@ void setBulkLoader()
                                                 flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
                                             }
                                         }
+                                        setDoSaveFlow();
                                         send_ok(request);
                                         break;
                                     }
@@ -1029,7 +1031,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
     // Return values
     if (didChange)
     {
-        setDoSaveConfig();
+        setDoSaveApp();
     }
     if (didFail)
     {
@@ -1211,7 +1213,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
     // Return values
     if (didChange)
     {
-        setDoSaveConfig();
+        setDoSaveApp();
     }
     if (didFail)
     {
@@ -1425,7 +1427,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
     // Return values
     if (didChange)
     {
-        setDoSaveConfig();
+        setDoSaveApp();
         sensorReInit();
     }
     if (didFail)
@@ -1485,7 +1487,7 @@ HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL 
     // Return values
     if (didChange)
     {
-        setDoSaveConfig();
+        setDoSaveApp();
     }
     if (didFail)
     {
@@ -1566,7 +1568,7 @@ HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *request) // Handle URL 
     // Return values
     if (didChange)
     {
-        setDoSaveConfig();
+        setDoSaveApp();
     }
     if (didFail)
     {
@@ -1709,7 +1711,7 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
     // Return values
     if (didChange)
     {
-        setDoSaveConfig();
+        setDoSaveApp();
     }
     if (didFail)
     {
@@ -1784,7 +1786,7 @@ HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *request) // Handle URL 
     // Return values
     if (didChange)
     {
-        setDoSaveConfig();
+        setDoSaveApp();
     }
     if (didFail)
     {
@@ -1867,7 +1869,7 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *request) // Handle cl
     // Return values
     if (didChange)
     {
-        setDoSaveConfig();
+        setDoSaveApp();
     }
     if (didFail)
     {
@@ -1920,7 +1922,7 @@ HANDLER_STATE handleThemePost(AsyncWebServerRequest *request) // Handle URL targ
     // Return values
     if (didChange)
     {
-        setDoSaveConfig();
+        setDoSaveApp();
     }
     if (didFail)
     {
@@ -2089,7 +2091,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
     // Return values
     if (didChange)
     {
-        setDoSaveFlowConfig();
+        setDoSaveFlow();
         if (tapNum >= 0)
         {
             setDoTapInfoReport(tapNum);
@@ -2164,7 +2166,7 @@ HANDLER_STATE handleTapCal(AsyncWebServerRequest *request) // Handle tap setting
     // Return values
     if (didChange)
     {
-        setDoSaveFlowConfig();
+        setDoSaveFlow();
         if (tapNum >= 0)
         {
             setDoTapInfoReport(tapNum);
@@ -2234,7 +2236,7 @@ HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *request) // Handle setting
     // Return values
     if (didChange)
     {
-        setDoSaveFlowConfig();
+        setDoSaveFlow();
         if (tapNum >= 0)
         {
             setDoTapInfoReport(tapNum);
