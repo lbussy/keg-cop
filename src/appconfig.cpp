@@ -163,8 +163,7 @@ void ApConfig::load(JsonObjectConst obj)
     }
     else
     {
-        const char *sd = obj[AppKeys::ssid];
-        strlcpy(ssid, sd, sizeof(ssid));
+        strlcpy(ssid, obj[AppKeys::ssid], sizeof(ssid));
     }
 
     if (obj[AppKeys::passphrase].isNull())
@@ -173,8 +172,7 @@ void ApConfig::load(JsonObjectConst obj)
     }
     else
     {
-        const char *ps = obj[AppKeys::passphrase];
-        strlcpy(passphrase, ps, sizeof(passphrase));
+        strlcpy(passphrase, obj[AppKeys::passphrase], sizeof(passphrase));
     }
 }
 
@@ -235,8 +233,7 @@ void OTA::load(JsonObjectConst obj)
     }
     else
     {
-        unsigned long ls = obj[AppKeys::badfwtime];
-        badfwtime = ls;
+        badfwtime = obj[AppKeys::badfwtime];
     }
 
     if (obj[AppKeys::badfs].isNull())
@@ -254,8 +251,7 @@ void OTA::load(JsonObjectConst obj)
     }
     else
     {
-        unsigned long ls = obj[AppKeys::badfstime];
-        badfstime = ls;
+        badfstime = obj[AppKeys::badfstime];
     }
 }
 
@@ -287,8 +283,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
     else
     {
-        const char *hn = obj[AppKeys::hostname];
-        strlcpy(hostname, hn, sizeof(hostname));
+        strlcpy(hostname, obj[AppKeys::hostname], sizeof(hostname));
     }
 
     if (obj[AppKeys::nodrd].isNull())
@@ -306,8 +301,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
     else
     {
-        const char *bn = obj[AppKeys::breweryname];
-        strlcpy(breweryname, bn, sizeof(breweryname));
+        strlcpy(breweryname, obj[AppKeys::breweryname], sizeof(breweryname));
     }
 
     if (obj[AppKeys::kegeratorname].isNull())
@@ -316,8 +310,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
     else
     {
-        const char *kn = obj[AppKeys::kegeratorname];
-        strlcpy(kegeratorname, kn, sizeof(kegeratorname));
+        strlcpy(kegeratorname, obj[AppKeys::kegeratorname], sizeof(kegeratorname));
     }
 
     if (obj[AppKeys::controlnum].isNull())
@@ -326,8 +319,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
     else
     {
-        uint8_t cn = obj[AppKeys::controlnum];
-        controlnum = cn;
+        controlnum = obj[AppKeys::controlnum];
     }
 
     if (obj[AppKeys::imperial].isNull())
@@ -336,8 +328,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
     else
     {
-        bool units = obj[AppKeys::imperial];
-        imperial = units;
+        imperial = obj[AppKeys::imperial];
     }
 
     if (obj[AppKeys::serial].isNull())
@@ -378,8 +369,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
     else
     {
-        bool em = obj[AppKeys::pouremulate];
-        pouremulate = em;
+        pouremulate = obj[AppKeys::pouremulate];
     }
 
     if (obj[AppKeys::tempemulate].isNull())
@@ -388,8 +378,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
     else
     {
-        bool te = obj[AppKeys::tempemulate];
-        tempemulate = te;
+        tempemulate = obj[AppKeys::tempemulate];
     }
 
     if (obj[AppKeys::theme].isNull())
@@ -398,8 +387,7 @@ void CopConfig::load(JsonObjectConst obj)
     }
     else
     {
-        const char *tm = obj[AppKeys::theme];
-        strlcpy(theme, tm, sizeof(theme));
+        strlcpy(theme, obj[AppKeys::theme], sizeof(theme));
     }
 }
 
@@ -434,8 +422,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        float sp = obj[AppKeys::setpoint];
-        setpoint = sp;
+        setpoint = obj[AppKeys::setpoint];
     }
 
     if (obj[AppKeys::controlpoint].isNull())
@@ -444,8 +431,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        int cp = obj[AppKeys::controlpoint];
-        controlpoint = cp;
+        controlpoint = obj[AppKeys::controlpoint];
     }
 
     if (obj[AppKeys::controlenabled].isNull())
@@ -454,8 +440,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        bool ce = obj[AppKeys::controlenabled];
-        controlenabled = ce;
+        controlenabled = obj[AppKeys::controlenabled];
     }
 
     if (obj[AppKeys::coolonhigh].isNull())
@@ -464,8 +449,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        bool ch = obj[AppKeys::coolonhigh];
-        coolonhigh = ch;
+        coolonhigh = obj[AppKeys::coolonhigh];
     }
 
     if (obj[AppKeys::tfancontrolenabled].isNull())
@@ -474,8 +458,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        bool te = obj[AppKeys::tfancontrolenabled];
-        tfancontrolenabled = te;
+        tfancontrolenabled = obj[AppKeys::tfancontrolenabled];
     }
 
     if (obj[AppKeys::tfansetpoint].isNull())
@@ -484,8 +467,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        float ts = obj[AppKeys::tfansetpoint];
-        tfansetpoint = ts;
+        tfansetpoint = obj[AppKeys::tfansetpoint];
     }
 
     if (obj[AppKeys::tfanonhigh].isNull())
@@ -494,8 +476,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        bool th = obj[AppKeys::tfanonhigh];
-        tfanonhigh = th;
+        tfanonhigh = obj[AppKeys::tfanonhigh];
     }
 
     if (obj["roomenabled"].isNull())
@@ -504,8 +485,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        bool en = obj["roomenabled"];
-        enabled[0] = en;
+        enabled[0] = obj["roomenabled"];
     }
 
     if (obj["roomcal"].isNull())
@@ -514,8 +494,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        float rc = obj["roomcal"];
-        calibration[0] = rc;
+        calibration[0] = obj["roomcal"];
     }
 
     if (obj["towerenabled"].isNull())
@@ -524,8 +503,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        bool en = obj["towerenabled"];
-        enabled[1] = en;
+        enabled[1] = obj["towerenabled"];
     }
 
     if (obj["towercal"].isNull())
@@ -534,8 +512,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        float tc = obj["towercal"];
-        calibration[1] = tc;
+        calibration[1] = obj["towercal"];
     }
 
     if (obj["upperenabled"].isNull())
@@ -544,8 +521,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        bool en = obj["upperenabled"];
-        enabled[2] = en;
+        enabled[2] = obj["upperenabled"];
     }
 
     if (obj["uppercal"].isNull())
@@ -554,8 +530,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        float uc = obj["uppercal"];
-        calibration[2] = uc;
+        calibration[2] = obj["uppercal"];
     }
 
     if (obj["lowerenabled"].isNull())
@@ -564,8 +539,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        bool en = obj["lowerenabled"];
-        enabled[3] = en;
+        enabled[3] = obj["lowerenabled"];
     }
 
     if (obj["lowercal"].isNull())
@@ -574,8 +548,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        float lc = obj["lowercal"];
-        calibration[3] = lc;
+        calibration[3] = obj["lowercal"];
     }
 
     if (obj["kegenabled"].isNull())
@@ -584,8 +557,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        bool en = obj["kegenabled"];
-        enabled[4] = en;
+        enabled[4] = obj["kegenabled"];
     }
 
     if (obj["kegcal"].isNull())
@@ -594,8 +566,7 @@ void Temperatures::load(JsonObjectConst obj)
     }
     else
     {
-        float kc = obj["kegcal"];
-        calibration[4] = kc;
+        calibration[4] = obj["kegcal"];
     }
 }
 
@@ -615,8 +586,7 @@ void KegScreen::load(JsonObjectConst obj)
     }
     else
     {
-        const char *ul = obj[AppKeys::url];
-        strlcpy(url, ul, sizeof(url));
+        strlcpy(url, obj[AppKeys::url], sizeof(url));
     }
 
     if (obj[AppKeys::update].isNull())
@@ -625,8 +595,7 @@ void KegScreen::load(JsonObjectConst obj)
     }
     else
     {
-        bool up = obj[AppKeys::update];
-        update = up;
+        update = obj[AppKeys::update];
     }
 }
 
@@ -648,8 +617,7 @@ void TaplistIO::load(JsonObjectConst obj)
     }
     else
     {
-        const char *vn = obj[AppKeys::venue];
-        strlcpy(venue, vn, sizeof(venue));
+        strlcpy(venue, obj[AppKeys::venue], sizeof(venue));
     }
 
     if (obj[AppKeys::secret].isNull())
@@ -658,8 +626,7 @@ void TaplistIO::load(JsonObjectConst obj)
     }
     else
     {
-        const char *sc = obj[AppKeys::secret];
-        strlcpy(secret, sc, sizeof(secret));
+        strlcpy(secret, obj[AppKeys::secret], sizeof(secret));
     }
 
     if (obj[AppKeys::lastsent].isNull())
@@ -668,8 +635,7 @@ void TaplistIO::load(JsonObjectConst obj)
     }
     else
     {
-        long long ls = obj[AppKeys::lastsent];
-        lastsent = ls;
+        lastsent = obj[AppKeys::lastsent];
     }
 
     if (obj[AppKeys::update].isNull())
@@ -678,8 +644,7 @@ void TaplistIO::load(JsonObjectConst obj)
     }
     else
     {
-        bool up = obj[AppKeys::update];
-        update = up;
+        update = obj[AppKeys::update];
     }
 }
 
@@ -700,8 +665,7 @@ void URLTarget::load(JsonObjectConst obj)
     }
     else
     {
-        const char *tu = obj[AppKeys::url];
-        strlcpy(url, tu, sizeof(url));
+        strlcpy(url, obj[AppKeys::url], sizeof(url));
     }
 
     if (obj[AppKeys::freq].isNull() || obj[AppKeys::freq] < 5)
@@ -710,8 +674,7 @@ void URLTarget::load(JsonObjectConst obj)
     }
     else
     {
-        int f = obj[AppKeys::freq];
-        freq = f;
+        freq = obj[AppKeys::freq];
     }
 
     if (obj[AppKeys::update].isNull())
@@ -720,8 +683,7 @@ void URLTarget::load(JsonObjectConst obj)
     }
     else
     {
-        bool u = obj[AppKeys::update];
-        update = u;
+        update = obj[AppKeys::update];
     }
 }
 
@@ -745,8 +707,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
     else
     {
-        const char *ht = obj[AppKeys::host];
-        strlcpy(host, ht, sizeof(host));
+        strlcpy(host, obj[AppKeys::host], sizeof(host));
     }
 
     if (obj[AppKeys::port].isNull())
@@ -755,8 +716,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
     else
     {
-        const int pt = obj[AppKeys::port];
-        port = pt;
+        port = obj[AppKeys::port];
     }
 
     if (obj[AppKeys::username].isNull())
@@ -765,8 +725,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
     else
     {
-        const char *un = obj[AppKeys::username];
-        strlcpy(username, un, sizeof(username));
+        strlcpy(username, obj[AppKeys::username], sizeof(username));
     }
 
     if (obj[AppKeys::password].isNull())
@@ -775,8 +734,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
     else
     {
-        const char *pw = obj[AppKeys::password];
-        strlcpy(password, pw, sizeof(password));
+        strlcpy(password, obj[AppKeys::password], sizeof(password));
     }
 
     if (obj[AppKeys::topic].isNull())
@@ -785,8 +743,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
     else
     {
-        const char *to = obj[AppKeys::topic];
-        strlcpy(topic, to, sizeof(topic));
+        strlcpy(topic, obj[AppKeys::topic], sizeof(topic));
     }
 
     if (obj[AppKeys::update].isNull())
@@ -795,8 +752,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     }
     else
     {
-        const bool up = obj[AppKeys::update];
-        update = up;
+        update = obj[AppKeys::update];
     }
 }
 

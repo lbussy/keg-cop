@@ -182,8 +182,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     }
     else
     {
-        int tl = obj[FlowmeterKeys::label];
-        label = tl;
+        label = obj[FlowmeterKeys::label];
     }
 
     if (obj[FlowmeterKeys::taplistioTap].isNull() || obj[FlowmeterKeys::taplistioTap] == 0)
@@ -192,8 +191,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     }
     else
     {
-        int tl = obj[FlowmeterKeys::taplistioTap];
-        taplistioTap = tl;
+        taplistioTap = obj[FlowmeterKeys::taplistioTap];
     }
 
     if (obj[FlowmeterKeys::ppu].isNull() || obj[FlowmeterKeys::ppu] == 0)
@@ -202,8 +200,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     }
     else
     {
-        long pg = obj[FlowmeterKeys::ppu];
-        ppu = pg;
+        ppu = obj[FlowmeterKeys::ppu];
     }
 
     if (obj[FlowmeterKeys::name].isNull() || strlen(obj[FlowmeterKeys::name]) == 0)
@@ -212,8 +209,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     }
     else
     {
-        const char *nm = obj[FlowmeterKeys::name];
-        strlcpy(name, nm, sizeof(name));
+        strlcpy(name, obj[FlowmeterKeys::name], sizeof(name));
     }
 
     if (obj[FlowmeterKeys::capacity].isNull() || obj[FlowmeterKeys::capacity] == 0)
@@ -222,8 +218,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     }
     else
     {
-        double cp = obj[FlowmeterKeys::capacity];
-        capacity = cp;
+        capacity = obj[FlowmeterKeys::capacity];
     }
 
     if (obj[FlowmeterKeys::remaining].isNull())
@@ -232,8 +227,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     }
     else
     {
-        double rm = obj[FlowmeterKeys::remaining];
-        remaining = rm;
+        remaining = obj[FlowmeterKeys::remaining];
     }
 
     if (obj[FlowmeterKeys::active].isNull())
@@ -242,8 +236,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     }
     else
     {
-        bool a = obj[FlowmeterKeys::active];
-        active = a;
+        active = obj[FlowmeterKeys::active];
     }
 
     if (obj[FlowmeterKeys::calibrating].isNull())
@@ -252,8 +245,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     }
     else
     {
-        bool c = obj[FlowmeterKeys::calibrating];
-        calibrating = c;
+        calibrating = obj[FlowmeterKeys::calibrating];
     }
 }
 
