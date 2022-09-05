@@ -27,8 +27,6 @@ volatile static unsigned long pulse[NUMTAPS];         // Unregistered pulse coun
 volatile static unsigned long lastPulse[NUMTAPS];     // Pulses pending at last poll
 volatile static unsigned long lastPulseTime[NUMTAPS]; // Monitor ongoing active pours
 volatile static unsigned long lastLoopTime[NUMTAPS];  // Monitor ongoing active pours
-extern const size_t capacityPulseSerial = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(1);
-extern const size_t capacityPulseDeserial = capacityPulseSerial + 10;
 
 static IRAM_ATTR void HandleIntISR0(void)
 {

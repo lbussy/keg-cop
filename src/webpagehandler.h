@@ -83,9 +83,4 @@ void send_failed(AsyncWebServerRequest *request);
 void send_json(AsyncWebServerRequest *request, String &json);
 void send_ok(AsyncWebServerRequest *request);
 
-extern struct ThatVersion thatVersion;
-extern const size_t capacityPulseDeserial;
-extern const size_t capacityPulseSerial;
-extern struct Devices device;
-
 #endif // _WEBPAGEHANDLER_H

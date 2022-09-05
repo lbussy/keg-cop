@@ -22,9 +22,6 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
-extern const size_t capacityTempsSerial = 768;
-extern const size_t capacityTempsDeserial = 1024;
-
 Devices device;
 
 void sensorInit()

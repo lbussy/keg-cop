@@ -57,8 +57,6 @@ HTTPUpdateResult execSPIFFSOTA(char *host, int port, char *path);
 HTTPUpdateResult execOTA(char *host, int port, char *path, int type);
 String getHeaderValue(String header, String headerName); // Return header value
 
-extern bool saveAppConfig();
-
 static bool __attribute__((unused)) doOTA = false; // Semaphore for OTA
 
 #endif //_EXECOTA_H

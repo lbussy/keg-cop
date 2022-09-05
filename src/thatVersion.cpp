@@ -23,7 +23,7 @@ SOFTWARE. */
 #include "thatVersion.h"
 
 asyncHTTPrequest request;
-ThatVersion __attribute__((unused)) thatVersion;
+ThatVersion thatVersion;
 
 void sendRequest()
 {

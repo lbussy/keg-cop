@@ -7,6 +7,5 @@
     - [ ] Add to documentation
 - [ ] Add new API items to API list
 - [ ] Add new API items to Docs
-- [ ] Continue to clean up static/extern declarations
 - [ ] Review docs for Config to AppConfig change
 - [ ] Add a semaphore to AJAX calls to prevent a storm of GETs

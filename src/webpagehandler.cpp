@@ -515,7 +515,7 @@ void setInfoPageHandlers()
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
         // Serialize pulses
-        DynamicJsonDocument doc(capacityPulseSerial); // Create doc
+        StaticJsonDocument<192> doc; // Create doc
         // Add "pulses" array
         JsonArray _pulse = doc.createNestedArray("pulses");
 
@@ -554,7 +554,7 @@ void setInfoPageHandlers()
     server.on("/api/v1/info/sensors/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
-        DynamicJsonDocument doc(capacityTempsSerial);
+        StaticJsonDocument<768> doc;
 
         doc[AppKeys::imperial] = app.copconfig.imperial;
         doc[AppKeys::controlpoint] = app.temps.controlpoint;

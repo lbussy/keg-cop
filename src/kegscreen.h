@@ -62,7 +62,4 @@ void reportCBCoolState(void *, asyncHTTPrequest *, int);
 void reportCBTempReport(void *, asyncHTTPrequest *, int);
 void resultHandler(ReportKey report, int readyState); // Generic (synchronous) result handler
 
-extern struct Flowmeter flow;
-extern struct Devices device;
-
 #endif // _KEGSCREEN_H

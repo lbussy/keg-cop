@@ -66,7 +66,7 @@ void printTimestamp(Print *_logOutput)
     time_t rawtime = time(&now);
     struct tm ts;
     ts = *localtime(&rawtime);
-    char locTime[prefLen] = {'\0'};
+    char locTime[22] = {'\0'};
     strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
     _logOutput->print(locTime);
 }

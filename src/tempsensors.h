@@ -73,4 +73,6 @@ void pollTemps();
 double getTempC(uint8_t);
 void logTempEmulation(int sensor, double temp);
 
+extern Devices device;
+
 #endif // _TEMPSENSORS_H

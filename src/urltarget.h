@@ -77,7 +77,4 @@ bool sendTargetReport();                                   // Push complete repo
 bool sendTReport(const String &);                          // Handle the business of sending report
 void targetResultHandler(void *, asyncHTTPrequest *, int); // Callback method for asynch
 
-extern struct Flowmeter flow;
-extern struct Devices device;
-
 #endif // _URLTARGET_H

@@ -92,12 +92,4 @@ size_t myPrintln(const Printable &x);
 size_t myPrintln(struct tm *timeinfo, const char *format);
 void nullDoc(const char *);
 
-#define prefLen 22
-
-extern struct ThatVersion thatVersion;
-extern struct Flowmeter flow;
-extern const size_t capacityPulseSerial;
-extern struct Devices device;
-extern const size_t capacityTempsSerial;
-
 #endif //_SERIALLOG_H
