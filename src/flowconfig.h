@@ -62,6 +62,7 @@ struct Flowmeter
 };
 
 namespace FlowmeterKeys {
+    constexpr auto appname = "Flowmeter Config";
     constexpr auto tapid = "tapid";
     constexpr auto label = "label";
     constexpr auto taplistioTap = "taplistioTap";

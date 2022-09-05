@@ -78,12 +78,12 @@ bool loadFlowConfig()
 
 bool saveFlowConfig()
 {
-    Log.verbose(F("Config Save: Saving configuration." CR));
+    Log.verbose(F("%s Save: Saving configuration." CR), FlowmeterKeys::appname);
     bool saveOK = false;
     // Make sure FILESTYSTEM exists
     if (!FILESYSTEM.begin())
     {
-        Log.error(F("Config Save: Unable to mount filesystem, partition may be corrupt." CR));
+        Log.error(F("%s Save: Unable to mount filesystem, partition may be corrupt." CR), FlowmeterKeys::appname);
         saveOK = false;
     }
     else
@@ -92,18 +92,18 @@ bool saveFlowConfig()
         File file = FILESYSTEM.open(FLOW_FILENAME, FILE_WRITE);
         if (!file)
         {
-            Log.error(F("Config Save: Unable to open or create file, partition may be corrupt." CR));
+            Log.error(F("%s Save: Unable to open or create file, partition may be corrupt." CR), FlowmeterKeys::appname);
             saveOK = false;
         }
         // Serialize JSON to file
         else if (!serializeFlowConfig(file))
         {
-            Log.error(F("Config Save: Failed to save configuration, data may be lost." CR));
+            Log.error(F("%s Save: Failed to save configuration, data may be lost." CR), FlowmeterKeys::appname);
             saveOK = false;
         }
         else
         {
-            Log.verbose(F("Config Save: Configuration saved." CR));
+            Log.verbose(F("%s Save: Configuration saved." CR), FlowmeterKeys::appname);
             saveOK = true;
         }
         file.close();
