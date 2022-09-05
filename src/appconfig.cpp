@@ -78,7 +78,7 @@ bool loadAppConfig()
 
 bool saveAppConfig()
 {
-    Log.verbose(F("%s Save: Saving configuration." CR)), AppKeys::appname;
+    Log.verbose(F("%s Save: Saving configuration." CR), AppKeys::appname);
     bool saveOK = false;
     // Make sure FILESTYSTEM exists
     if (!FILESYSTEM.begin())
