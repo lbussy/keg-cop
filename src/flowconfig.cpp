@@ -284,7 +284,7 @@ void Flowmeter::load(JsonObjectConst obj)
 void Flowmeter::save(JsonObject obj) const
 {
     // Save units here because it's easier in the web/JS
-    obj["imperial"] = imperial; // Units in Imperial
+    obj[AppKeys::imperial] = imperial; // Units in Imperial
 
     // Add "taps" array
     JsonArray _taps = obj.createNestedArray("taps");

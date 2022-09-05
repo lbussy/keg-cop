@@ -485,10 +485,10 @@ void setInfoPageHandlers()
         doc["branch"] = branch();
         doc["build"] = build();
 
-        doc["badfw"] = app.ota.badfw;
-        doc["badfwtime"] = app.ota.badfwtime;
-        doc["badfs"] = app.ota.badfs;
-        doc["badfstime"] = app.ota.badfstime;
+        doc[AppKeys::badfw] = app.ota.badfw;
+        doc[AppKeys::badfwtime] = app.ota.badfwtime;
+        doc[AppKeys::badfs] = app.ota.badfs;
+        doc[AppKeys::badfstime] = app.ota.badfstime;
 
         String json;
         serializeJson(doc, json);
@@ -556,14 +556,14 @@ void setInfoPageHandlers()
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         DynamicJsonDocument doc(capacityTempsSerial);
 
-        doc["imperial"] = app.copconfig.imperial;
-        doc["controlpoint"] = app.temps.controlpoint;
+        doc[AppKeys::imperial] = app.copconfig.imperial;
+        doc[AppKeys::controlpoint] = app.temps.controlpoint;
         doc["setting"] = app.temps.setpoint;
         doc["status"] = tstat[TS_TYPE_CHAMBER].state;
-        doc["controlenabled"] = app.temps.enabled[app.temps.controlpoint];
-        doc["coolonhigh"] = app.temps.coolonhigh;
-        doc["tfancontrolenabled"] = app.temps.tfancontrolenabled;
-        doc["tfansetpoint"] = app.temps.tfansetpoint;
+        doc[AppKeys::controlenabled] = app.temps.enabled[app.temps.controlpoint];
+        doc[AppKeys::coolonhigh] = app.temps.coolonhigh;
+        doc[AppKeys::tfancontrolenabled] = app.temps.tfancontrolenabled;
+        doc[AppKeys::tfansetpoint] = app.temps.tfansetpoint;
         doc["tfanstate"] = tstat[TS_TYPE_TOWER].state;
 
         int numEnabled = 0;
@@ -591,7 +591,7 @@ void setInfoPageHandlers()
 
         for (int i = 0; i < NUMSENSOR; i++)
         {
-            doc["sensors"][i]["name"] = (const char *)sensorName[i];
+            doc["sensors"][i][FlowmeterKeys::name] = (const char *)sensorName[i];
             doc["sensors"][i]["value"] = (const float)sensorAverage[i];
         }
 
@@ -608,7 +608,7 @@ void setInfoPageHandlers()
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         StaticJsonDocument<48> doc;
 
-        doc["secret"] = app.copconfig.guid;
+        doc[AppKeys::secret] = app.copconfig.guid;
 
         String json;
         serializeJson(doc, json);
@@ -619,7 +619,7 @@ void setInfoPageHandlers()
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         StaticJsonDocument<48> doc;
 
-        doc["theme"] = app.copconfig.theme;
+        doc[AppKeys::theme] = app.copconfig.theme;
 
         String json;
         serializeJson(doc, json);
@@ -879,7 +879,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
 
             // Controller settings
             //
-            if (strcmp(name, "hostname") == 0) // Set hostname
+            if (strcmp(name, AppKeys::hostname) == 0) // Set hostname
             {
                 if ((strlen(value) < 3) || (strlen(value) > 32))
                 {
@@ -897,7 +897,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     didChange = true;
                 }
             }
-            if (strcmp(name, "breweryname") == 0) // Set brewery name
+            if (strcmp(name, AppKeys::breweryname) == 0) // Set brewery name
             {
                 if ((strlen(value) < 1) || (strlen(value) > 64))
                 {
@@ -911,7 +911,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     strlcpy(app.copconfig.breweryname, value, sizeof(app.copconfig.breweryname));
                 }
             }
-            if (strcmp(name, "kegeratorname") == 0) // Set kegerator name
+            if (strcmp(name, AppKeys::kegeratorname) == 0) // Set kegerator name
             {
                 if ((strlen(value) < 1) || (strlen(value) > 64))
                 {
@@ -925,7 +925,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     strlcpy(app.copconfig.kegeratorname, value, sizeof(app.copconfig.kegeratorname));
                 }
             }
-            if (strcmp(name, "controlnum") == 0) // Set the controller number
+            if (strcmp(name, AppKeys::controlnum) == 0) // Set the controller number
             {
                 const uint8_t val = atof(value);
                 if ((val < 1) || (val > 9))
@@ -940,7 +940,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     app.copconfig.controlnum = val;
                 }
             }
-            if (strcmp(name, "imperial") == 0) // Set units
+            if (strcmp(name, AppKeys::imperial) == 0) // Set units
             {
                 if (strcmp(value, "true") == 0)
                 {
@@ -968,7 +968,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "serial") == 0) // Set serial
+            if (strcmp(name, AppKeys::serial) == 0) // Set serial
             {
                 if (strcmp(value, "true") == 0)
                 {
@@ -990,7 +990,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "tapsolenoid") == 0)
+            if (strcmp(name, AppKeys::tapsolenoid) == 0)
             {
                 if (app.temps.tfancontrolenabled) // Set active
                 {
@@ -1065,7 +1065,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
 
             // Sensor settings
             //
-            if (strcmp(name, "setpoint") == 0) // Set Kegerator setpoint
+            if (strcmp(name, AppKeys::setpoint) == 0) // Set Kegerator setpoint
             {
                 didChange = true;
                 double min, max;
@@ -1089,7 +1089,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     app.temps.setpoint = atof(value);
                 }
             }
-            if (strcmp(name, "controlpoint") == 0) // Set the controlling sensor
+            if (strcmp(name, AppKeys::controlpoint) == 0) // Set the controlling sensor
             {
                 const double val = atof(value);
                 if ((val < 0) || (val > 4))
@@ -1104,7 +1104,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     app.temps.controlpoint = val;
                 }
             }
-            if (strcmp(name, "controlenabled") == 0) // Enable control
+            if (strcmp(name, AppKeys::controlenabled) == 0) // Enable control
             {
                 if (strcmp(value, "true") == 0)
                 {
@@ -1124,7 +1124,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "coolonhigh") == 0) // Enable cooling on pin high (reverse)
+            if (strcmp(name, AppKeys::coolonhigh) == 0) // Enable cooling on pin high (reverse)
             {
                 if (strcmp(value, "true") == 0)
                 {
@@ -1144,7 +1144,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "tfancontrolenabled") == 0) // Enable tower fan control
+            if (strcmp(name, AppKeys::tfancontrolenabled) == 0) // Enable tower fan control
             {
                 if (strcmp(value, "true") == 0)
                 {
@@ -1164,7 +1164,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "tfansetpoint") == 0) // Set Tower fan setpoint
+            if (strcmp(name, AppKeys::tfansetpoint) == 0) // Set Tower fan setpoint
             {
                 didChange = true;
                 double min, max;
@@ -1462,7 +1462,7 @@ HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *request) // Handle URL 
 
             // KegScreen url settings
             //
-            if (strcmp(name, "kegscreen") == 0) // Change KegScreen hostname
+            if (strcmp(name, AppKeys::kegscreen) == 0) // Change KegScreen hostname
             {
                 if ((strlen(value) > 3) && (strlen(value) < 128))
                 {
@@ -1903,7 +1903,7 @@ HANDLER_STATE handleThemePost(AsyncWebServerRequest *request) // Handle URL targ
 
             // KegScreen url settings
             //
-            if (strcmp(name, "theme") == 0) // Change Theme name
+            if (strcmp(name, AppKeys::theme) == 0) // Change Theme name
             {
                 if ((strlen(value) > 3) && (strlen(value) < 32))
                 {
@@ -2278,7 +2278,7 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
 
             // Secret procesing
             //
-            if (strcmp(name, "secret") == 0) // Secret was passed
+            if (strcmp(name, AppKeys::secret) == 0) // Secret was passed
             {
                 didProcess = true;
                 if (strcmp(value, app.copconfig.guid) == 0)

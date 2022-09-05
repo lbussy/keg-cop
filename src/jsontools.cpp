@@ -51,14 +51,16 @@ void mergeJsonObject(JsonVariantConst src, JSON_TYPE type)
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
 
-    
+    // TODO:  Choose the correct object type here
     // Fill the object
     app.save(root);
 
     // Merge in the configuration
     merge(root, src);
     // Move new object to config
+    // TODO:  Choose the correct object type here
     app.load(root);
+    // TODO:  Choose the correct function here
     setDoSaveApp();
 }
 
@@ -108,6 +110,7 @@ bool printJsonConfig(JSON_TYPE type)
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
 
+    // TODO:  Choose the correct object type here
     // Fill the object
     flow.save(root);
 

@@ -58,7 +58,7 @@ void mDNSServiceAdvert()
 #ifdef _DEBUG_BUILD
     MDNS.addService("kc_telnet", "tcp",  TELNETPORT);
 #endif
-    MDNS.addService("kegscreen", "tcp", PORT);
+    MDNS.addService(AppKeys::kegscreen, "tcp", PORT);
     MDNS.addService("ks-tv", "tcp", PORT);
 
 // TXT records

@@ -77,7 +77,7 @@ void doWiFi(bool dontUseStoredCreds)
     // Allow non-default host name
     // AsyncWiFiManagerParameter custom_mqtt_server("server", "mqtt server", app.hostname, 40);
     // wm.addParameter(&custom_mqtt_server);
-    AsyncWiFiManagerParameter custom_hostname("name", "Host Name", app.copconfig.hostname, 32);
+    AsyncWiFiManagerParameter custom_hostname(FlowmeterKeys::name, "Host Name", app.copconfig.hostname, 32);
     wm.addParameter(&custom_hostname);
 
     if (dontUseStoredCreds)

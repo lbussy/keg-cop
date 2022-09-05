@@ -74,8 +74,8 @@ struct Temperatures
     bool enabled[NUMSENSOR];
     float calibration[NUMSENSOR];
     bool tfancontrolenabled;
-	float tfansetpoint;
-	bool tfanonhigh;
+    float tfansetpoint;
+    bool tfanonhigh;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -147,10 +147,10 @@ struct OTA
     bool dospiffs1;
     bool dospiffs2;
     bool didupdate;
-	bool badfw;
-	unsigned long badfwtime;
-	bool badfs;
-	unsigned long badfstime;
+    bool badfw;
+    unsigned long badfwtime;
+    bool badfs;
+    unsigned long badfstime;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -171,6 +171,93 @@ struct AppConfig
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
+};
+
+/**
+ * \brief Strings used for JSON keys
+ * \see ControlConstants
+ */
+namespace AppKeys
+{
+    constexpr auto appname = "App Config";
+    // App Config
+    constexpr auto apconfig = "apconfig";
+    constexpr auto copconfig = "copconfig";
+    constexpr auto ota = "ota";
+    constexpr auto temps = "temps";
+    constexpr auto kegscreen = "kegscreen";
+    constexpr auto taplistio = "taplistio";
+    constexpr auto urltarget = "urltarget";
+    constexpr auto rpintstarget = "rpintstarget";
+    constexpr auto cloud = "cloud";
+
+    // AP Config
+    constexpr auto ssid = "ssid";
+    constexpr auto passphrase = "passphrase";
+
+    // CopConfig
+    constexpr auto guid = "guid";
+    constexpr auto hostname = "hostname";
+    constexpr auto nodrd = "nodrd";
+    constexpr auto breweryname = "breweryname";
+    constexpr auto kegeratorname = "kegeratorname";
+    constexpr auto controlnum = "controlnum";
+    constexpr auto imperial = "imperial";
+    constexpr auto serial = "serial";
+    constexpr auto tapsolenoid = "tapsolenoid";
+    constexpr auto pouremulate = "pouremulate";
+    constexpr auto tempemulate = "tempemulate";
+    constexpr auto theme = "theme";
+
+    // Temperatures
+    constexpr auto setpoint = "setpoint";
+    constexpr auto controlpoint = "controlpoint";
+    constexpr auto controlenabled = "controlenabled";
+    constexpr auto coolonhigh = "coolonhigh";
+    constexpr auto enabled = "enabled";
+    constexpr auto calibration = "calibration";
+    constexpr auto tfancontrolenabled = "tfancontrolenabled";
+    constexpr auto tfansetpoint = "tfansetpoint";
+    constexpr auto tfanonhigh = "tfanonhigh";
+
+    // KegScreen
+    constexpr auto url = "url";
+    constexpr auto update = "update";
+
+    // TaplistIO
+    constexpr auto venue = "venue";
+    constexpr auto secret = "secret";
+    constexpr auto lastsent = "lastsent";
+    // constexpr auto update = "update";
+
+    // MQTT
+    constexpr auto host = "host";
+    constexpr auto port = "port";
+    constexpr auto username = "username";
+    constexpr auto password = "password";
+    constexpr auto topic = "topic";
+    // constexpr auto update = "update";
+
+    // URL Target
+    // constexpr auto url = "url";
+    constexpr auto freq = "freq";
+    // constexpr auto update = "update";
+
+    // Cloud Target
+    constexpr auto type = "type";
+    // constexpr auto url = "url";
+    constexpr auto key = "key";
+    // constexpr auto freq = "freq";
+    // constexpr auto update = "update";
+
+    // Stores OTA data
+    constexpr auto dospiffs1 = "dospiffs1";
+    constexpr auto dospiffs2 = "dospiffs2";
+    constexpr auto didupdate = "didupdate";
+    constexpr auto badfw = "badfw";
+    constexpr auto badfwtime = "badfwtime";
+    constexpr auto badfs = "badfs";
+    constexpr auto badfstime = "badfstime";
 };
 
 extern AppConfig app;

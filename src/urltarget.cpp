@@ -77,25 +77,25 @@ bool sendTargetReport()
         DynamicJsonDocument doc(3072);
 
         doc["api"] = urlreport.api;
-        doc["guid"] = urlreport.guid;
-        doc["hostname"] = urlreport.hostname;
-        doc["breweryname"] = urlreport.breweryname;
-        doc["kegeratorname"] = urlreport.kegeratorname;
+        doc[AppKeys::guid] = urlreport.guid;
+        doc[AppKeys::hostname] = urlreport.hostname;
+        doc[AppKeys::breweryname] = urlreport.breweryname;
+        doc[AppKeys::kegeratorname] = urlreport.kegeratorname;
         doc["reporttype"] = urlreport.reporttype;
-        doc["imperial"] = urlreport.imperial;
-        doc["controlpoint"] = (const int)urlreport.controlpoint;
+        doc[AppKeys::imperial] = urlreport.imperial;
+        doc[AppKeys::controlpoint] = (const int)urlreport.controlpoint;
         doc["setting"] = (const float)urlreport.setpoint;
         doc["status"] = (const int)urlreport.state;
-        doc["controlenabled"] = urlreport.controlenabled;
-        doc["tfansetpoint"] = (const float)urlreport.tfansetpoint;
+        doc[AppKeys::controlenabled] = urlreport.controlenabled;
+        doc[AppKeys::tfansetpoint] = (const float)urlreport.tfansetpoint;
         doc["tfanstate"] = (const int)urlreport.tfanstate;
-        doc["tfancontrolenabled"] = urlreport.tfancontrolenabled;
+        doc[AppKeys::tfancontrolenabled] = urlreport.tfancontrolenabled;
 
         for (int i = 0; i < NUMSENSOR; i++)
         {
-            doc["sensors"][i]["name"] = urlreport.sensor[i].name;
+            doc["sensors"][i][FlowmeterKeys::name] = urlreport.sensor[i].name;
             doc["sensors"][i]["value"] = (const float)urlreport.sensor[i].average;
-            doc["sensors"][i]["enabled"] = urlreport.sensor[i].enabled;
+            doc["sensors"][i][AppKeys::enabled] = urlreport.sensor[i].enabled;
         }
 
         for (int i = 0; i < NUMTAPS; i++)
@@ -130,7 +130,7 @@ bool sendTargetReport()
     }
     else
     {
-        Log.verbose(F("%s reporting not enabled, skipping." CR), reportname);
+        Log.verbose(F("%s: reporting not enabled, skipping." CR), reportname);
         retval = false;
     }
     return retval;

@@ -26,12 +26,12 @@ AppConfig app;
 
 bool loadAppConfig()
 {
-    Log.verbose(F("AppConfig Load: Loading configuration." CR));
+    Log.verbose(F("%s Load: Loading configuration." CR), AppKeys::appname);
     bool loadOK = false;
     // Make sure FILESTYSTEM exists
     if (!FILESYSTEM.begin())
     {
-        Log.error(F("AppConfig Load: Unable to mount filesystem, partition may be corrupt." CR));
+        Log.error(F("%s Load: Unable to mount filesystem, partition may be corrupt." CR), AppKeys::appname);
         loadOK = false;
     }
     else
@@ -40,12 +40,12 @@ bool loadAppConfig()
         File file = FILESYSTEM.open(APP_FILENAME, FILE_READ);
         if (!FILESYSTEM.exists(APP_FILENAME) || !file)
         {
-            Log.warning(F("AppConfig Load: Configuration does not exist, default values will be attempted." CR));
+            Log.warning(F("%s Load: Configuration does not exist, default values will be attempted." CR), AppKeys::appname);
             loadOK = false;
         }
         else if (!deserializeAppConfig(file))
         {
-            Log.warning(F("AppConfig Load: Failed to load configuration from filesystem, default values have been used." CR));
+            Log.warning(F("%s Load: Failed to load configuration from filesystem, default values have been used." CR), AppKeys::appname);
             loadOK = false;
         }
         else
@@ -59,12 +59,12 @@ bool loadAppConfig()
         {
             if (!saveAppConfig()) // Save a default config
             {
-                Log.error(F("AppConfig Load: Unable to generate default configuration." CR));
+                Log.error(F("%s Load: Unable to generate default configuration." CR), AppKeys::appname);
                 loadOK = false;
             }
             else if (!loadAppConfig()) // Try one more time to load the default config
             {
-                Log.error(F("AppConfig Load: Unable to read default configuration." CR));
+                Log.error(F("%s Load: Unable to read default configuration." CR), AppKeys::appname);
                 loadOK = false;
             }
             else
@@ -78,12 +78,12 @@ bool loadAppConfig()
 
 bool saveAppConfig()
 {
-    Log.verbose(F("AppConfig Save: Saving configuration." CR));
+    Log.verbose(F("%s Save: Saving configuration." CR)), AppKeys::appname;
     bool saveOK = false;
     // Make sure FILESTYSTEM exists
     if (!FILESYSTEM.begin())
     {
-        Log.error(F("AppConfig Save: Unable to mount filesystem, partition may be corrupt." CR));
+        Log.error(F("%s Save: Unable to mount filesystem, partition may be corrupt." CR), AppKeys::appname);
         saveOK = false;
     }
     else
@@ -92,18 +92,18 @@ bool saveAppConfig()
         File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
         if (!file)
         {
-            Log.error(F("AppConfig Save: Unable to open or create file, partition may be corrupt." CR));
+            Log.error(F("%s Save: Unable to open or create file, partition may be corrupt." CR), AppKeys::appname);
             saveOK = false;
         }
         // Serialize JSON to file
         else if (!serializeAppConfig(file))
         {
-            Log.error(F("AppConfig Save: Failed to save configuration, data may be lost." CR));
+            Log.error(F("%s Save: Failed to save configuration, data may be lost." CR), AppKeys::appname);
             saveOK = false;
         }
         else
         {
-            Log.verbose(F("AppConfig Save: Configuration saved." CR));
+            Log.verbose(F("%s Save: Configuration saved." CR), AppKeys::appname);
             saveOK = true;
         }
         file.close();
@@ -149,130 +149,130 @@ bool serializeAppConfig(Print &dst)
 
 void ApConfig::save(JsonObject obj) const
 {
-    obj["ssid"] = ssid;
-    obj["passphrase"] = passphrase;
+    obj[AppKeys::ssid] = ssid;
+    obj[AppKeys::passphrase] = passphrase;
 }
 
 void ApConfig::load(JsonObjectConst obj)
 {
     // Load Access Point configuration
     //
-    if (obj["ssid"].isNull())
+    if (obj[AppKeys::ssid].isNull())
     {
         strlcpy(ssid, APNAME, sizeof(ssid));
     }
     else
     {
-        const char *sd = obj["ssid"];
+        const char *sd = obj[AppKeys::ssid];
         strlcpy(ssid, sd, sizeof(ssid));
     }
 
-    if (obj["passphrase"].isNull())
+    if (obj[AppKeys::passphrase].isNull())
     {
         strlcpy(passphrase, AP_PASSWD, sizeof(passphrase));
     }
     else
     {
-        const char *ps = obj["passphrase"];
+        const char *ps = obj[AppKeys::passphrase];
         strlcpy(passphrase, ps, sizeof(passphrase));
     }
 }
 
 void OTA::save(JsonObject obj) const
 {
-    obj["dospiffs1"] = dospiffs1;
-    obj["dospiffs2"] = dospiffs2;
-    obj["didupdate"] = didupdate;
-    obj["badfw"] = badfw;
-    obj["badfwtime"] = badfwtime;
-    obj["badfs"] = badfs;
-    obj["badfstime"] = badfstime;
+    obj[AppKeys::dospiffs1] = dospiffs1;
+    obj[AppKeys::dospiffs2] = dospiffs2;
+    obj[AppKeys::didupdate] = didupdate;
+    obj[AppKeys::badfw] = badfw;
+    obj[AppKeys::badfwtime] = badfwtime;
+    obj[AppKeys::badfs] = badfs;
+    obj[AppKeys::badfstime] = badfstime;
 }
 
 void OTA::load(JsonObjectConst obj)
 {
     // Load OTA configuration
     //
-    if (obj["dospiffs1"].isNull())
+    if (obj[AppKeys::dospiffs1].isNull())
     {
         dospiffs1 = false;
     }
     else
     {
-        dospiffs1 = obj["dospiffs1"];
+        dospiffs1 = obj[AppKeys::dospiffs1];
     }
 
-    if (obj["dospiffs2"].isNull())
+    if (obj[AppKeys::dospiffs2].isNull())
     {
         dospiffs2 = false;
     }
     else
     {
-        dospiffs2 = obj["dospiffs2"];
+        dospiffs2 = obj[AppKeys::dospiffs2];
     }
 
-    if (obj["didupdate"].isNull())
+    if (obj[AppKeys::didupdate].isNull())
     {
         didupdate = false;
     }
     else
     {
-        didupdate = obj["didupdate"];
+        didupdate = obj[AppKeys::didupdate];
     }
 
-    if (obj["badfw"].isNull())
+    if (obj[AppKeys::badfw].isNull())
     {
         badfw = false;
     }
     else
     {
-        badfw = obj["badfw"];
+        badfw = obj[AppKeys::badfw];
     }
 
-    if (obj["badfwtime"].isNull())
+    if (obj[AppKeys::badfwtime].isNull())
     {
         badfwtime = getTime();
     }
     else
     {
-        unsigned long ls = obj["badfwtime"];
+        unsigned long ls = obj[AppKeys::badfwtime];
         badfwtime = ls;
     }
 
-    if (obj["badfs"].isNull())
+    if (obj[AppKeys::badfs].isNull())
     {
         badfs = false;
     }
     else
     {
-        badfs = obj["badfs"];
+        badfs = obj[AppKeys::badfs];
     }
 
-    if (obj["badfstime"].isNull())
+    if (obj[AppKeys::badfstime].isNull())
     {
         badfwtime = getTime();
     }
     else
     {
-        unsigned long ls = obj["badfstime"];
+        unsigned long ls = obj[AppKeys::badfstime];
         badfstime = ls;
     }
 }
 
 void CopConfig::save(JsonObject obj) const
 {
-    obj["guid"] = guid;
-    obj["hostname"] = hostname;
-    obj["nodrd"] = nodrd;
-    obj["breweryname"] = breweryname;
-    obj["kegeratorname"] = kegeratorname;
-    obj["controlnum"] = controlnum;
-    obj["serial"] = serial;
-    obj["imperial"] = imperial;
-    obj["tapsolenoid"] = tapsolenoid;
-    obj["pouremulate"] = pouremulate;
-    obj["tempemulate"] = tempemulate;
-    obj["theme"] = theme;
+    obj[AppKeys::guid] = guid;
+    obj[AppKeys::hostname] = hostname;
+    obj[AppKeys::nodrd] = nodrd;
+    obj[AppKeys::breweryname] = breweryname;
+    obj[AppKeys::kegeratorname] = kegeratorname;
+    obj[AppKeys::controlnum] = controlnum;
+    obj[AppKeys::serial] = serial;
+    obj[AppKeys::imperial] = imperial;
+    obj[AppKeys::tapsolenoid] = tapsolenoid;
+    obj[AppKeys::pouremulate] = pouremulate;
+    obj[AppKeys::tempemulate] = tempemulate;
+    obj[AppKeys::theme] = theme;
 }
 
 void CopConfig::load(JsonObjectConst obj)
@@ -281,86 +281,86 @@ void CopConfig::load(JsonObjectConst obj)
     //
     getGuid(guid); // Always get this
 
-    if (obj["hostname"].isNull())
+    if (obj[AppKeys::hostname].isNull())
     {
         strlcpy(hostname, APNAME, sizeof(hostname));
     }
     else
     {
-        const char *hn = obj["hostname"];
+        const char *hn = obj[AppKeys::hostname];
         strlcpy(hostname, hn, sizeof(hostname));
     }
 
-    if (obj["nodrd"].isNull())
+    if (obj[AppKeys::nodrd].isNull())
     {
         nodrd = false;
     }
     else
     {
-        nodrd = obj["nodrd"];
+        nodrd = obj[AppKeys::nodrd];
     }
 
-    if (obj["breweryname"].isNull())
+    if (obj[AppKeys::breweryname].isNull())
     {
         strlcpy(breweryname, BRWYNAME, sizeof(breweryname));
     }
     else
     {
-        const char *bn = obj["breweryname"];
+        const char *bn = obj[AppKeys::breweryname];
         strlcpy(breweryname, bn, sizeof(breweryname));
     }
 
-    if (obj["kegeratorname"].isNull())
+    if (obj[AppKeys::kegeratorname].isNull())
     {
         strlcpy(kegeratorname, KNAME, sizeof(kegeratorname));
     }
     else
     {
-        const char *kn = obj["kegeratorname"];
+        const char *kn = obj[AppKeys::kegeratorname];
         strlcpy(kegeratorname, kn, sizeof(kegeratorname));
     }
 
-    if (obj["controlnum"].isNull())
+    if (obj[AppKeys::controlnum].isNull())
     {
         controlnum = 1;
     }
     else
     {
-        uint8_t cn = obj["controlnum"];
+        uint8_t cn = obj[AppKeys::controlnum];
         controlnum = cn;
     }
 
-    if (obj["imperial"].isNull())
+    if (obj[AppKeys::imperial].isNull())
     {
         imperial = IMPERIAL;
     }
     else
     {
-        bool units = obj["imperial"];
+        bool units = obj[AppKeys::imperial];
         imperial = units;
     }
 
-    if (obj["serial"].isNull())
+    if (obj[AppKeys::serial].isNull())
     {
         serial = false;
     }
     else
     {
-        serial = obj["serial"];
+        serial = obj[AppKeys::serial];
     }
 
     // Need to instantiate solenoid here
     pinMode(SOLENOID, OUTPUT);
     digitalWrite(SOLENOID, HIGH);
 
-    if (obj["tapsolenoid"].isNull())
+    if (obj[AppKeys::tapsolenoid].isNull())
     {
         tapsolenoid = TSOL;
         digitalWrite(SOLENOID, HIGH);
     }
     else
     {
-        bool tsol = obj["tapsolenoid"];
+        bool tsol = obj[AppKeys::tapsolenoid];
         tapsolenoid = tsol;
         if (tapsolenoid)
         {
@@ -372,46 +372,46 @@ void CopConfig::load(JsonObjectConst obj)
         }
     }
 
-    if (obj["pouremulate"].isNull())
+    if (obj[AppKeys::pouremulate].isNull())
     {
         pouremulate = false;
     }
     else
     {
-        bool em = obj["pouremulate"];
+        bool em = obj[AppKeys::pouremulate];
         pouremulate = em;
     }
 
-    if (obj["tempemulate"].isNull())
+    if (obj[AppKeys::tempemulate].isNull())
     {
         tempemulate = false;
     }
     else
     {
-        bool te = obj["tempemulate"];
+        bool te = obj[AppKeys::tempemulate];
         tempemulate = te;
     }
 
-    if (obj["theme"].isNull())
+    if (obj[AppKeys::theme].isNull())
     {
         strlcpy(theme, THEME, sizeof(theme));
     }
     else
     {
-        const char *tm = obj["theme"];
+        const char *tm = obj[AppKeys::theme];
         strlcpy(theme, tm, sizeof(theme));
     }
 }
 
 void Temperatures::save(JsonObject obj) const
 {
-    obj["setpoint"] = setpoint;
-    obj["controlpoint"] = controlpoint;
-    obj["controlenabled"] = controlenabled;
-    obj["coolonhigh"] = coolonhigh;
-    obj["tfancontrolenabled"] = tfancontrolenabled;
-    obj["tfansetpoint"] = tfansetpoint;
-    obj["tfanonhigh"] = tfanonhigh;
+    obj[AppKeys::setpoint] = setpoint;
+    obj[AppKeys::controlpoint] = controlpoint;
+    obj[AppKeys::controlenabled] = controlenabled;
+    obj[AppKeys::coolonhigh] = coolonhigh;
+    obj[AppKeys::tfancontrolenabled] = tfancontrolenabled;
+    obj[AppKeys::tfansetpoint] = tfansetpoint;
+    obj[AppKeys::tfanonhigh] = tfanonhigh;
     obj["roomenabled"] = enabled[0];
     obj["roomcal"] = calibration[0];
     obj["towerenabled"] = enabled[1];
@@ -428,73 +428,73 @@ void Temperatures::load(JsonObjectConst obj)
 {
     // Load Temperature configuration
     //
-    if (obj["setpoint"].isNull())
+    if (obj[AppKeys::setpoint].isNull())
     {
         setpoint = DEFSET;
     }
     else
     {
-        float sp = obj["setpoint"];
+        float sp = obj[AppKeys::setpoint];
         setpoint = sp;
     }
 
-    if (obj["controlpoint"].isNull())
+    if (obj[AppKeys::controlpoint].isNull())
     {
         controlpoint = DEFCON;
     }
     else
     {
-        int cp = obj["controlpoint"];
+        int cp = obj[AppKeys::controlpoint];
         controlpoint = cp;
     }
 
-    if (obj["controlenabled"].isNull())
+    if (obj[AppKeys::controlenabled].isNull())
     {
         controlenabled = CTRLENABLE;
     }
     else
     {
-        bool ce = obj["controlenabled"];
+        bool ce = obj[AppKeys::controlenabled];
         controlenabled = ce;
     }
 
-    if (obj["coolonhigh"].isNull())
+    if (obj[AppKeys::coolonhigh].isNull())
     {
         coolonhigh = false;
     }
     else
     {
-        bool ch = obj["coolonhigh"];
+        bool ch = obj[AppKeys::coolonhigh];
         coolonhigh = ch;
     }
 
-    if (obj["tfancontrolenabled"].isNull())
+    if (obj[AppKeys::tfancontrolenabled].isNull())
     {
         tfancontrolenabled = false;
     }
     else
     {
-        bool te = obj["tfancontrolenabled"];
+        bool te = obj[AppKeys::tfancontrolenabled];
         tfancontrolenabled = te;
     }
 
-    if (obj["tfansetpoint"].isNull())
+    if (obj[AppKeys::tfansetpoint].isNull())
     {
         tfansetpoint = DEFSET;
     }
     else
     {
-        float ts = obj["tfansetpoint"];
+        float ts = obj[AppKeys::tfansetpoint];
         tfansetpoint = ts;
     }
 
-    if (obj["tfanonhigh"].isNull())
+    if (obj[AppKeys::tfanonhigh].isNull())
     {
         tfanonhigh = false;
     }
     else
     {
-        bool th = obj["tfanonhigh"];
+        bool th = obj[AppKeys::tfanonhigh];
         tfanonhigh = th;
     }
 
@@ -601,201 +601,201 @@ void Temperatures::load(JsonObjectConst obj)
 
 void KegScreen::save(JsonObject obj) const
 {
-    obj["url"] = url;
-    obj["update"] = update;
+    obj[AppKeys::url] = url;
+    obj[AppKeys::update] = update;
 }
 
 void KegScreen::load(JsonObjectConst obj)
 {
     // Load KegScreen configuration
     //
-    if (obj["url"].isNull())
+    if (obj[AppKeys::url].isNull())
     {
         strlcpy(url, "", sizeof(url));
     }
     else
     {
-        const char *ul = obj["url"];
+        const char *ul = obj[AppKeys::url];
         strlcpy(url, ul, sizeof(url));
     }
 
-    if (obj["update"].isNull())
+    if (obj[AppKeys::update].isNull())
     {
         update = false;
     }
     else
     {
-        bool up = obj["update"];
+        bool up = obj[AppKeys::update];
         update = up;
     }
 }
 
 void TaplistIO::save(JsonObject obj) const
 {
-    obj["venue"] = venue;
-    obj["secret"] = secret;
-    obj["lastsent"] = lastsent;
-    obj["update"] = update;
+    obj[AppKeys::venue] = venue;
+    obj[AppKeys::secret] = secret;
+    obj[AppKeys::lastsent] = lastsent;
+    obj[AppKeys::update] = update;
 }
 
 void TaplistIO::load(JsonObjectConst obj)
 {
     // Load TaplistIO configuration
     //
-    if (obj["venue"].isNull())
+    if (obj[AppKeys::venue].isNull())
     {
         strlcpy(venue, "", sizeof(venue));
     }
     else
     {
-        const char *vn = obj["venue"];
+        const char *vn = obj[AppKeys::venue];
         strlcpy(venue, vn, sizeof(venue));
     }
 
-    if (obj["secret"].isNull())
+    if (obj[AppKeys::secret].isNull())
     {
         strlcpy(secret, "", sizeof(secret));
     }
     else
     {
-        const char *sc = obj["secret"];
+        const char *sc = obj[AppKeys::secret];
         strlcpy(secret, sc, sizeof(secret));
     }
 
-    if (obj["lastsent"].isNull())
+    if (obj[AppKeys::lastsent].isNull())
     {
         lastsent = 0;
     }
     else
     {
-        long long ls = obj["lastsent"];
+        long long ls = obj[AppKeys::lastsent];
         lastsent = ls;
     }
 
-    if (obj["update"].isNull())
+    if (obj[AppKeys::update].isNull())
     {
         update = true;
     }
     else
     {
-        bool up = obj["update"];
+        bool up = obj[AppKeys::update];
         update = up;
     }
 }
 
 void URLTarget::save(JsonObject obj) const
 {
-    obj["url"] = url;
-    obj["freq"] = freq;
-    obj["update"] = update;
+    obj[AppKeys::url] = url;
+    obj[AppKeys::freq] = freq;
+    obj[AppKeys::update] = update;
 }
 
 void URLTarget::load(JsonObjectConst obj)
 {
     // Load URL Target configuration
     //
-    if (obj["url"].isNull())
+    if (obj[AppKeys::url].isNull())
     {
         strlcpy(url, "", sizeof(url));
     }
     else
     {
-        const char *tu = obj["url"];
+        const char *tu = obj[AppKeys::url];
         strlcpy(url, tu, sizeof(url));
     }
 
-    if (obj["freq"].isNull())
+    if (obj[AppKeys::freq].isNull() || obj[AppKeys::freq] < 5)
     {
         freq = 15;
     }
     else
     {
-        int f = obj["freq"];
+        int f = obj[AppKeys::freq];
         freq = f;
     }
 
-    if (obj["update"].isNull())
+    if (obj[AppKeys::update].isNull())
     {
         update = false;
     }
     else
     {
-        bool u = obj["update"];
+        bool u = obj[AppKeys::update];
         update = u;
     }
 }
 
 void MQTTTarget::save(JsonObject obj) const
 {
-    obj["host"] = host;
-    obj["port"] = port;
-    obj["username"] = username;
-    obj["password"] = password;
-    obj["topic"] = topic;
-    obj["update"] = update;
+    obj[AppKeys::host] = host;
+    obj[AppKeys::port] = port;
+    obj[AppKeys::username] = username;
+    obj[AppKeys::password] = password;
+    obj[AppKeys::topic] = topic;
+    obj[AppKeys::update] = update;
 }
 
 void MQTTTarget::load(JsonObjectConst obj)
 {
     // Load MQTT Target configuration
     //
-    if (obj["host"].isNull())
+    if (obj[AppKeys::host].isNull())
     {
         strlcpy(host, "", sizeof(host));
     }
     else
     {
-        const char *ht = obj["host"];
+        const char *ht = obj[AppKeys::host];
         strlcpy(host, ht, sizeof(host));
     }
 
-    if (obj["port"].isNull())
+    if (obj[AppKeys::port].isNull())
     {
         port = 1883;
     }
     else
     {
-        const int pt = obj["port"];
+        const int pt = obj[AppKeys::port];
         port = pt;
     }
 
-    if (obj["username"].isNull())
+    if (obj[AppKeys::username].isNull())
     {
         strlcpy(username, "", sizeof(username));
     }
     else
     {
-        const char *un = obj["username"];
+        const char *un = obj[AppKeys::username];
         strlcpy(username, un, sizeof(username));
     }
 
-    if (obj["password"].isNull())
+    if (obj[AppKeys::password].isNull())
     {
         strlcpy(password, "", sizeof(password));
     }
     else
     {
-        const char *pw = obj["password"];
+        const char *pw = obj[AppKeys::password];
         strlcpy(password, pw, sizeof(password));
     }
 
-    if (obj["topic"].isNull())
+    if (obj[AppKeys::topic].isNull())
     {
         strlcpy(topic, "kegcop", sizeof(topic));
     }
     else
     {
-        const char *to = obj["topic"];
+        const char *to = obj[AppKeys::topic];
         strlcpy(topic, to, sizeof(topic));
     }
 
-    if (obj["update"].isNull())
+    if (obj[AppKeys::update].isNull())
     {
         update = false;
     }
     else
     {
-        const bool up = obj["update"];
+        const bool up = obj[AppKeys::update];
         update = up;
     }
 }
@@ -803,33 +803,33 @@ void MQTTTarget::load(JsonObjectConst obj)
 void AppConfig::save(JsonObject obj) const
 {
     // Add Access Point object
-    apconfig.save(obj.createNestedObject("apconfig"));
+    apconfig.save(obj.createNestedObject(AppKeys::apconfig));
     // Add Keg Cop object
-    copconfig.save(obj.createNestedObject("copconfig"));
+    copconfig.save(obj.createNestedObject(AppKeys::copconfig));
     // Add OTA object
-    ota.save(obj.createNestedObject("ota"));
+    ota.save(obj.createNestedObject(AppKeys::ota));
     // Add Calibration object
-    temps.save(obj.createNestedObject("temps"));
+    temps.save(obj.createNestedObject(AppKeys::temps));
     // Add KegScreen object
-    kegscreen.save(obj.createNestedObject("kegscreen"));
+    kegscreen.save(obj.createNestedObject(AppKeys::kegscreen));
     // Add TaplistIO object
-    taplistio.save(obj.createNestedObject("taplistio"));
+    taplistio.save(obj.createNestedObject(AppKeys::taplistio));
     // Add MQTT object
-    rpintstarget.save(obj.createNestedObject("rpintstarget"));
+    rpintstarget.save(obj.createNestedObject(AppKeys::rpintstarget));
     // Add Target object
-    urltarget.save(obj.createNestedObject("urltarget"));
+    urltarget.save(obj.createNestedObject(AppKeys::urltarget));
 }
 
 void AppConfig::load(JsonObjectConst obj)
 {
     // Load all config objects
     //
-    apconfig.load(obj["apconfig"]);
-    copconfig.load(obj["copconfig"]);
-    ota.load(obj["ota"]);
-    temps.load(obj["temps"]);
-    kegscreen.load(obj["kegscreen"]);
-    taplistio.load(obj["taplistio"]);
-    urltarget.load(obj["urltarget"]);
-    rpintstarget.load(obj["rpintstarget"]);
+    apconfig.load(obj[AppKeys::apconfig]);
+    copconfig.load(obj[AppKeys::copconfig]);
+    ota.load(obj[AppKeys::ota]);
+    temps.load(obj[AppKeys::temps]);
+    kegscreen.load(obj[AppKeys::kegscreen]);
+    taplistio.load(obj[AppKeys::taplistio]);
+    urltarget.load(obj[AppKeys::urltarget]);
+    rpintstarget.load(obj[AppKeys::rpintstarget]);
 }
