@@ -498,7 +498,7 @@ void setInfoPageHandlers()
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         const size_t capacity = JSON_OBJECT_SIZE(2);
-        DynamicJsonDocument doc(capacity);
+        StaticJsonDocument<96> doc;
 
         const char *fw_version = thatVersion.fw_version;
         const char *fs_version = thatVersion.fs_version;
@@ -702,7 +702,7 @@ void setConfigurationPageHandlers()
     server.on("/api/v1/config/taps/", HTTP_GET, [](AsyncWebServerRequest *request)
               {
         // Serialize configuration
-        DynamicJsonDocument doc(CAPACITY_FLOW_SERIAL); // Create doc
+        StaticJsonDocument<CAPACITY_FLOW_SERIAL> doc; // Create doc
         JsonObject root = doc.to<JsonObject>();      // Create JSON object
         flow.save(root);                             // Fill the object with current kegs
 

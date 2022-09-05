@@ -87,7 +87,7 @@ Parsing/Deserializing:
 ```
 // Stream& input;
 
-DynamicJsonDocument doc(3072);
+StaticJsonDocument<3072> doc;
 
 DeserializationError error = deserializeJson(doc, input);
 

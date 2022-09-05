@@ -140,7 +140,7 @@ Deserializing / Parsing / Loading:
 ```
 // Stream& input;
 
-DynamicJsonDocument doc(3072);
+StaticJsonDocument<3072> doc;
 
 DeserializationError error = deserializeJson(doc, input);
 
@@ -189,7 +189,7 @@ Serializing / Saving:
 ---------------------
 
 ```
-DynamicJsonDocument doc(3072);
+StaticJsonDocument<3072> doc;
 
 doc["api"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["guid"] = "xxxxxxxx";

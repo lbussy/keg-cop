@@ -53,8 +53,7 @@ void requestHandler(void *optParm, asyncHTTPrequest *request, int readyState)
 bool serializeVersion(const ThatVersion &thatVersion, Print &dst)
 {
     // Serialize version
-    const size_t capacity = JSON_OBJECT_SIZE(2);
-    DynamicJsonDocument doc(capacity);
+    StaticJsonDocument<96> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -69,8 +68,7 @@ bool serializeVersion(const ThatVersion &thatVersion, Print &dst)
 bool deserializeVersion(const char *&src, ThatVersion &thatVersion)
 {
     // Deserialize version
-    const size_t capacity = JSON_OBJECT_SIZE(2) + 50;
-    DynamicJsonDocument doc(capacity);
+    StaticJsonDocument<96> doc;
 
     // Parse the JSON object in the file
     DeserializationError err = deserializeJson(doc, src);

@@ -493,8 +493,7 @@ void toggleSerialCompat(bool enable)
 
 void nullDoc(const char *wrapper)
 {
-    const size_t capacity = JSON_OBJECT_SIZE(1);
-    DynamicJsonDocument doc(capacity);
+    StaticJsonDocument<16> doc;
     doc[wrapper] = nullptr;
     serializeJson(doc, SERIAL);
     printCR();

@@ -74,7 +74,7 @@ bool sendTargetReport()
             urlreport.tap[i].active = flow.taps[i].active;
         }
 
-        DynamicJsonDocument doc(3072);
+        StaticJsonDocument<3073> doc;
 
         doc["api"] = urlreport.api;
         doc[AppKeys::guid] = urlreport.guid;

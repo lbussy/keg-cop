@@ -124,7 +124,7 @@ bool deleteFlowConfigFile()
 bool deserializeFlowConfig(Stream &src)
 {
     // Deserialize configuration
-    DynamicJsonDocument doc(CAPACITY_FLOW_DESERIAL);
+    StaticJsonDocument<CAPACITY_FLOW_DESERIAL> doc;
 
     // Parse the JSON object in the file
     DeserializationError err = deserializeJson(doc, src);
@@ -143,7 +143,7 @@ bool deserializeFlowConfig(Stream &src)
 bool serializeFlowConfig(Print &dst)
 {
     // Serialize configuration
-    DynamicJsonDocument doc(CAPACITY_FLOW_SERIAL);
+    StaticJsonDocument<CAPACITY_FLOW_SERIAL> doc;
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
