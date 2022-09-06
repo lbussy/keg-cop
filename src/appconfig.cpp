@@ -115,7 +115,7 @@ bool saveAppConfig()
 bool deserializeAppConfig(Stream &src)
 {
     // Deserialize configuration
-    StaticJsonDocument<CAPACITY_APP_DESERIAL> doc;
+    DynamicJsonDocument doc(CAPACITY_APP_DESERIAL);
 
     // Parse the JSON object in the file
     DeserializationError err = deserializeJson(doc, src);
@@ -135,7 +135,7 @@ bool deserializeAppConfig(Stream &src)
 bool serializeAppConfig(Print &dst)
 {
     // Serialize configuration
-    StaticJsonDocument<CAPACITY_APP_SERIAL> doc;
+    DynamicJsonDocument doc(CAPACITY_APP_SERIAL);
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
