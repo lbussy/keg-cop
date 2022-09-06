@@ -27,7 +27,7 @@ SOFTWARE. */
 
 bool mergeJsonString(String newJson, JSON_TYPE type)
 {
-    StaticJsonDocument<CAPACITY> doc;
+    DynamicJsonDocument doc(CAPACITY);
     // Serialize the string that was passed
     DeserializationError err = deserializeJson(doc, newJson);
     if (err)
@@ -46,7 +46,7 @@ bool mergeJsonString(String newJson, JSON_TYPE type)
 void mergeJsonObject(JsonVariantConst src, JSON_TYPE type)
 {
     // Serialize configuration
-    StaticJsonDocument<CAPACITY> doc;
+    DynamicJsonDocument doc(CAPACITY);
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
@@ -105,7 +105,7 @@ bool printJsonile(JSON_TYPE type)
 bool printJsonConfig(JSON_TYPE type)
 {
     // Serialize configuration
-    StaticJsonDocument<CAPACITY> doc;
+    DynamicJsonDocument doc(CAPACITY);
 
     // Create an object at the root
     JsonObject root = doc.to<JsonObject>();
