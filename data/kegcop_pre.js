@@ -47,7 +47,7 @@ window.addEventListener("beforeunload", function (event) {
 window.onclick = function (event) {
     var type = event.target.type;
     // Skip random clicks, form items and context help
-    if (typeof type === 'undefined' || type == "submit" || type == "reset" || type == "number" || type == "text" || type == "radio" || event.target.id == "noChange") {
+    if (typeof type === 'undefined' || type == "file" || type == "submit" || type == "reset" || type == "number" || type == "text" || type == "radio" || type == "textarea" || event.target.id == "noChange") {
         return;
     }
     event.preventDefault();
@@ -92,6 +92,7 @@ function toggleLoader(status) {
     var tempsApp = document.getElementById("tempsApp");
     var settingsApp = document.getElementById("settingsApp");
     var indexApp = document.getElementById("indexApp");
+    var bulkApp = document.getElementById("bulkApp");
     if (status === "on") {
         if (loader) {
             loader.style.display = "block";
@@ -105,6 +106,9 @@ function toggleLoader(status) {
         if (indexApp) {
             indexApp.style.visibility = "hidden";
         }
+        if (bulkApp) {
+            bulkApp.style.visibility = "hidden";
+        }
     } else {
         if (loader) {
             loader.style.display = "none";
@@ -117,6 +121,9 @@ function toggleLoader(status) {
         }
         if (indexApp) {
             indexApp.style.visibility = "visible";
+        }
+        if (bulkApp) {
+            bulkApp.style.visibility = "visible";
         }
     }
 }
@@ -434,6 +441,8 @@ function getEventTarget(event) {
 }
 
 function cleanURL(tempURL = "", newHost = "") {
+    // TODO: Return a pointer to the controller json if attempting to download confog
+
     // This is to re-write URLs when using a dev server
     if (is404) {
         return tempURL;
@@ -516,5 +525,16 @@ function getQueryVariable(variable) {
         if (decodeURIComponent(pair[0]) == variable) {
             return decodeURIComponent(pair[1]);
         }
+    }
+}
+
+function buttonClearDelay() { // Poll to see if entire page is loaded
+    if (posted) {
+        $("button[id='submitSettings']").prop('disabled', false);
+        $("button[id='submitSettings']").html('Update');
+        if (window.location.href.includes("settings")) toggleTIO();
+        posted = false;
+    } else {
+        setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
     }
 }

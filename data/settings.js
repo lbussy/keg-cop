@@ -852,17 +852,6 @@ function putData(url, data, newpage = false, newdata = false, callback = null) {
         });
 }
 
-function buttonClearDelay() { // Poll to see if entire page is loaded
-    if (posted) {
-        $("button[id='submitSettings']").prop('disabled', false);
-        $("button[id='submitSettings']").html('Update');
-        toggleTIO();
-        posted = false;
-    } else {
-        setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
-    }
-}
-
 function updateHelp(hashLoc) {
     var url = "https://docs.kegcop.com"
 
