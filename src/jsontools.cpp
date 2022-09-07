@@ -25,6 +25,7 @@ SOFTWARE. */
 #define MAX(x,y) ((x>y)?x:y)
 #define CAPACITY MAX(CAPACITY_APP_SERIAL, CAPACITY_FLOW_SERIAL)
 
+#ifdef JSONLOADER
 bool mergeJsonString(String newJson, JSON_TYPE type)
 {
     DynamicJsonDocument doc(CAPACITY);
@@ -134,6 +135,7 @@ bool deleteJsonFile(JSON_TYPE type)
     }
     return FILESYSTEM.remove(filename);
 }
+#endif
 
 void convertConfigtoImperial()
 {

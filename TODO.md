@@ -4,8 +4,10 @@
 - [ ] Add some form of bulk load:
     - [ ] `/api/v1/config/settings/`
     - [ ] `/api/v1/config/taps/`
+    - [ ] Allow downloading config
     - [ ] Add to documentation
 - [ ] Add new API items to API list
 - [ ] Add new API items to Docs
 - [ ] Review docs for Config to AppConfig change
 - [ ] Add a semaphore to AJAX calls to prevent a storm of GETs
+- [ ] Change secret to a header

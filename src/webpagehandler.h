@@ -54,7 +54,6 @@ void setActionPageHandlers();
 void setInfoPageHandlers();
 void setConfigurationPageHandlers();
 void setEditor();
-void setBulkLoader();
 void stopWebServer();
 
 enum HANDLER_STATE
@@ -77,6 +76,9 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *);
 HANDLER_STATE handleSecret(AsyncWebServerRequest *);
 HANDLER_STATE handleThemePost(AsyncWebServerRequest *);
+#ifdef JSONLOADER
+HANDLER_STATE handleJson(AsyncWebServerRequest *);
+#endif
 
 void send_not_allowed(AsyncWebServerRequest *request);
 void send_failed(AsyncWebServerRequest *request);

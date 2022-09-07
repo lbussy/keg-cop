@@ -76,9 +76,9 @@
 
         <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
 
-        <div class="container" id="settingsapp"> <!-- Container -->
+        <div class="container" id="bulkApp"> <!-- Container -->
 
-            <div class="card border-dark mb-3"> <!-- Keg cop Bulk Loader -->
+            <div class="card border-dark mb-3"> <!-- Keg Cop Bulk Loader -->
                 
                 <div class="card-header d-flex">
                     <ul class="navbar me-auto">
@@ -88,7 +88,93 @@
                     </ul>
                 </div>
                 <div class="card-body">
-                    <p>Foo</p>
+                    <p>This page will allow you to download, view, load, and edit your JSON configuration files. There are certain caveats to changing data here:</p>
+                    <ul>
+                        <li>Host name changes will not take effect until after a controller reset.</li>
+                        <li>GUID changes are possible, but the impact on other systems has not been tested.</li>
+                        <li>No "sanity checks" are done on this data. It is possible to render the controller inoperative and require re-flashing the firmware, losing your configuration.</li>
+                        <li>The intent of this page is to allow you to merge incomplete configuration.  For example you can load only the following single setting:<br /><pre>{"copconfig":{"kegeratorname": "Keezer"}}</pre>and no other elements.</li>
+                    </ul>
+
+                    <hr />
+
+                    <p>You may download either config file to serve as a backup:</p>
+                    <div class="d-flex justify-content-center">
+                        <a href="/appconfig.json" class="btn btn-secondary text-nowrap col-2" download>Application</a>
+                        &nbsp;
+                        <a href="/flowconfig.json" class="btn btn-secondary text-nowrap col-2" download>Flowmeter</a>
+                    </div>
+
+                    <hr />
+
+                    <p>If you are absolutely sure you understand the implications, you may use either of the bulk loaders below.</p>
+
+                    <div>
+                        <form id="appConfig" action="/api/v1/config/bulkload/" method="PUT" onsubmit="return processPost(this);">
+                            <label for="appConfigBulkText" class="col-sm-4 col-form-label"
+                                data-toggle="tooltip"
+                                title="Edit or load application configuration items in JSON.">
+                                <strong>Application Configuration JSON:</strong>
+                            </label>
+                            <textarea class="form-control" id="appConfigBulkText" rows="10">{}</textarea>
+
+                            <p></p>
+
+                            <label for="appJsonPicker">Choose file to upload:</label>
+                            <input type="file" id="appJsonPicker" accept=".txt,.json" onchange="readFile(this)"/>
+
+                            <p></p>
+
+                            <div class="d-flex justify-content-center">
+                                <button id="clear" class="btn btn-secondary text-nowrap col-2"
+                                    onclick="clearFile(this);">Clear
+                                </button>
+                                &nbsp;
+                                <button id="prettyPrint" class="btn btn-primary text-nowrap col-2"
+                                    onclick="if(!this.form.checkValidity(this)){return (false);}">Format/Check
+                                </button>
+                                &nbsp;
+                                <button id="submitSettings" class="btn btn-warning text-nowrap col-2"
+                                    onclick="if(!this.form.checkValidity(this)){return (false);}">Apply
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr />
+
+                    <div>
+                        <form id="flowConfig" action="/api/v1/config/bulkload/" method="PUT" onsubmit="return processPost(this);">
+                            <label for="flowConfigBulkText" class="col-sm-4 col-form-label"
+                                data-toggle="tooltip"
+                                title="Edit or load flowmeter configuration items in JSON.">
+                                <strong>Flow Meter Configuration JSON:</strong>
+                            </label>
+                            <textarea class="form-control" id="flowConfigBulkText" rows="10">{}</textarea>
+
+                            <p></p>
+
+                            <label for="flowJsonPicker">Choose file to upload:</label>
+                            <input type="file" id="flowJsonPicker" accept=".txt,.json" onchange="readFile(this)"/>
+
+                            <p></p>
+
+                            <div class="d-flex justify-content-center">
+                                <button id="clear" class="btn btn-secondary text-nowrap col-2"
+                                    onclick="clearFile(this);">Clear
+                                </button>
+                                &nbsp;
+                                <button id="prettyPrint" class="btn btn-primary text-nowrap col-2"
+                                    onclick="if(!this.form.checkValidity(this)){return (false);}">Format/Check
+                                </button>
+                                &nbsp;
+                                <button id="submitSettings" class="btn btn-warning text-nowrap col-2"
+                                    onclick="if(!this.form.checkValidity(this)){return (false);}">Apply
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
             </div> <!-- Keg cop Bulk Loader -->
 

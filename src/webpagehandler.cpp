@@ -78,7 +78,6 @@ void initWebServer()
     setInfoPageHandlers();
     setConfigurationPageHandlers();
     setEditor();
-    setBulkLoader();
 
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request)
@@ -671,6 +670,48 @@ void setConfigurationPageHandlers()
         // Required for CORS preflight on some PUT/POST
         send_ok(request); });
 
+#ifdef JSONLOADER
+    server.on("/api/v1/config/bulkload/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
+        // Process settings update
+        Log.verbose(F("Processing put to %s." CR), request->url().c_str());
+
+        switch (handleSecret(request))
+        {
+            case PROCESSED:
+                {
+                    HANDLER_STATE thisState = handleJson(request);
+                    if (thisState == PROCESSED)
+                    {
+                        send_ok(request);
+                    }
+                    else if (thisState == FAIL_PROCESS)
+                    {
+                        send_failed(request);
+                    } else if (thisState == NOT_PROCCESSED)
+                    {
+                        send_ok(request);
+                    }
+                    break;
+                }
+            case FAIL_PROCESS:
+                send_failed(request);
+                break;
+            case NOT_PROCCESSED:
+                send_not_allowed(request);
+                break;
+        } });
+
+    server.on("/api/v1/config/bulkload/", HTTP_GET, [](AsyncWebServerRequest *request)
+              {
+        send_not_allowed(request); });
+
+    server.on("/api/v1/config/bulkload/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_ok(request); });
+#endif
+
     // Settings Handlers^
     // Tap Handlers:
 
@@ -726,129 +767,6 @@ void setEditor()
     server.on("/edit/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               { request->redirect("/edit"); });
 #endif
-}
-
-void setBulkLoader()
-{
-    AsyncCallbackJsonWebHandler *jsonHandler = new AsyncCallbackJsonWebHandler("/api/v1/config/bulkload/", [](AsyncWebServerRequest *request, JsonVariant &json)
-                                                                               {
-                if (request->method() == KC_HTTP_PUT)
-                {
-                    Log.verbose(F("Processing %s." CR), request->url().c_str());
-                    switch (handleSecret(request))
-                    {
-                        case PROCESSED:
-                            {
-                                if (request->hasHeader("X-BulkLoad-Type")) {
-                                    AsyncWebHeader* bulkLoadHeader = request->getHeader("X-BulkLoad-Type");
-                                    if (bulkLoadHeader->value().c_str() == "AppConfig")
-                                    {
-                                        bool oldImperial = app.copconfig.imperial;
-                                        const char * oldHostName = app.copconfig.hostname;
-                                        JsonObject jsonObj = json.as<JsonObject>();
-                                        mergeJsonObject(jsonObj, JSON_APP);
-                                        // Did we change copconfig.imperial?
-                                        if (app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
-                                        {
-                                            // We have to convert config manually since it's already changed in app.json
-                                            app.temps.setpoint = convertCtoF(app.temps.setpoint);
-                                            for (int i = 0; i < NUMSENSOR; i++)
-                                            {
-                                                if (!app.temps.calibration[i] == 0)
-                                                    app.temps.calibration[i] = convertOneCtoF(app.temps.calibration[i]);
-                                            }
-                                            convertFlowtoImperial();
-                                        }
-                                        else if (!app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
-                                        {
-                                            // We have to convert config manually since it's already changed in app.json
-                                            app.temps.setpoint = convertFtoC(app.temps.setpoint);
-                                            for (int i = 0; i < NUMSENSOR; i++)
-                                            {
-                                                if (!app.temps.calibration[i] == 0)
-                                                    app.temps.calibration[i] = convertOneFtoC(app.temps.calibration[i]);
-                                            }
-                                            convertFlowtoMetric();
-                                        }
-                                        // Did we change copconfig.hostname?
-                                        if (!strcmp(oldHostName, app.copconfig.hostname) == 0)
-                                        {
-                                            // TODO:  Do change hostname processing??
-                                        }
-                                        setDoSaveApp();
-                                        send_ok(request);
-                                        break;
-                                    }
-                                    else if (bulkLoadHeader->value().c_str() == "FlowConfig")
-                                    {
-                                        bool oldImperial = flow.imperial;
-                                        JsonObject jsonObj = json.as<JsonObject>();
-                                        mergeJsonObject(jsonObj, JSON_FLOW);
-                                        // Did we change imperial?
-                                        if (flow.imperial && (!oldImperial == flow.imperial))
-                                        {
-                                            convertConfigtoImperial();
-                                            // We have to convert flow manually since it's already changed in flow.json
-                                            for (int i = 0; i < NUMTAPS; i++)
-                                            {
-                                                for (int i = 0; i < NUMTAPS; i++)
-                                                {
-                                                    flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu); // Reverse for pulses
-                                                    flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
-                                                    flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
-                                                }
-                                            }
-                                        }
-                                        else if (!flow.imperial && (!oldImperial == flow.imperial))
-                                        {
-                                            convertConfigtoMetric();
-                                            // We have to convert flow manually since it's already changed in flow.json
-                                            for (int i = 0; i < NUMTAPS; i++)
-                                            {
-                                                flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu); // Reverse for pulses
-                                                flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
-                                                flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
-                                            }
-                                        }
-                                        setDoSaveFlow();
-                                        send_ok(request);
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        // No valid bulk load type passed
-                                        send_not_allowed(request);
-                                        break;
-                                    }
-                                    break;
-                                }
-                                // No valid header
-                                send_not_allowed(request);
-                                break;
-                            }
-                        case FAIL_PROCESS:
-                            // Secret check failed
-                            send_failed(request);
-                            break;
-                        case NOT_PROCCESSED:
-                            // No secret passed
-                            send_not_allowed(request);
-                            break;
-                    }
-                    return;
-                }
-                else if (request->method() == KC_HTTP_OPTIONS)
-                {
-                    send_ok(request);
-                    return;
-                }
-                else if (request->method() == KC_HTTP_ANY)
-                {
-                    send_not_allowed(request);
-                    return;
-                } });
-
-    server.addHandler(jsonHandler);
 }
 
 void stopWebServer()
@@ -2274,7 +2192,7 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
             // Process any p->name().c_str() / p->value().c_str() pairs
             const char *name = p->name().c_str();
             const char *value = p->value().c_str();
-            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+            Log.verbose(F("[DEBUG] handleSecret() Processing [%s]:(%s) pair." CR), name, value);
 
             // Secret procesing
             //
@@ -2284,7 +2202,7 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
                 if (strcmp(value, app.copconfig.guid) == 0)
                 {
                     didPass = true;
-                    Log.notice(F("Secret Check: [%s]:(%s) received." CR), name, value);
+                    Log.notice(F("Secret Check: [%s]:(%s) is valid." CR), name, value);
                 }
                 else
                 {
@@ -2311,6 +2229,182 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
 }
 
 // Secret Handler^
+
+// JSON Handler:
+
+#ifdef JSONLOADER
+HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
+{
+    bool didPass = false;
+    bool didProcess = false;
+
+    if (request->hasHeader("X-BulkLoad-Type")) {
+        AsyncWebHeader* bulkLoadHeader = request->getHeader("X-BulkLoad-Type");
+        const char * headerVal = bulkLoadHeader->value().c_str();
+        if (!strcmp(headerVal, "AppConfig") == 0)
+        {
+            Log.verbose(F("[DEBUG] handleJson() with %s" CR), bulkLoadHeader->value().c_str());
+            didPass = true;
+            bool oldImperial = app.copconfig.imperial;
+            const char * oldHostName = app.copconfig.hostname;
+
+            // Loop through all parameters
+            int params = request->params();
+            for (int i = 0; i < params; i++)
+            {
+                AsyncWebParameter *p = request->getParam(i);
+                if (p->isPost())
+                {
+                    // Process any p->name().c_str() / p->value().c_str() pairs
+                    const char *name = p->name().c_str();
+                    const char *value = p->value().c_str();
+                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value); // DEBUG
+
+                    // Bulk Load mode Set
+                    //
+                    if (strcmp(name, "data") == 0)
+                    {
+                        //if (!mergeJsonString(value, JSON_FLOW))
+                        if (!1)
+                        {
+                            Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                        }
+                        else
+                        {
+                            didProcess = true;
+                            Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        }
+                    }
+                }
+            }
+    //         // Did we change copconfig.imperial?
+    //         if (app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
+    //         {
+    //             // We have to convert config manually since it's already changed in app.json
+    //             app.temps.setpoint = convertCtoF(app.temps.setpoint);
+    //             for (int i = 0; i < NUMSENSOR; i++)
+    //             {
+    //                 if (!app.temps.calibration[i] == 0)
+    //                     app.temps.calibration[i] = convertOneCtoF(app.temps.calibration[i]);
+    //             }
+    //             convertFlowtoImperial();
+    //         }
+    //         else if (!app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
+    //         {
+    //             // We have to convert config manually since it's already changed in app.json
+    //             app.temps.setpoint = convertFtoC(app.temps.setpoint);
+    //             for (int i = 0; i < NUMSENSOR; i++)
+    //             {
+    //                 if (!app.temps.calibration[i] == 0)
+    //                     app.temps.calibration[i] = convertOneFtoC(app.temps.calibration[i]);
+    //             }
+    //             convertFlowtoMetric();
+    //         }
+    //         // Did we change copconfig.hostname?
+    //         if (!strcmp(oldHostName, app.copconfig.hostname) == 0)
+    //         {
+    //             // TODO:  Do change hostname processing??
+    //         }
+    //         setDoSaveApp();
+    //         send_ok(request);
+    //         break;
+        }
+        else if (!strcmp(headerVal, "FlowConfig") == 0)
+        {
+            Log.verbose(F("[DEBUG] handleJson()) with %s" CR), bulkLoadHeader->value().c_str());
+            didPass = true;
+            bool oldImperial = flow.imperial;
+
+            // Loop through all parameters
+            int params = request->params();
+            for (int i = 0; i < params; i++)
+            {
+                AsyncWebParameter *p = request->getParam(i);
+                if (p->isPost())
+                {
+                    // Process any p->name().c_str() / p->value().c_str() pairs
+                    const char *name = p->name().c_str();
+                    const char *value = p->value().c_str();
+                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value); // DEBUG
+
+                    // Bulk Load mode Set
+                    //
+                    if (strcmp(name, "data") == 0)
+                    {
+                        //if (!mergeJsonString(value, JSON_FLOW))
+                        if (!1)
+                        {
+                            Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                        }
+                        else
+                        {
+                            didProcess = true;
+                            Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        }
+                    }
+                }
+            }
+
+    //         // Did we change imperial?
+    //         if (flow.imperial && (!oldImperial == flow.imperial))
+    //         {
+    //             convertConfigtoImperial();
+    //             // We have to convert flow manually since it's already changed in flow.json
+    //             for (int i = 0; i < NUMTAPS; i++)
+    //             {
+    //                 for (int i = 0; i < NUMTAPS; i++)
+    //                 {
+    //                     flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu); // Reverse for pulses
+    //                     flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
+    //                     flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
+    //                 }
+    //             }
+    //         }
+    //         else if (!flow.imperial && (!oldImperial == flow.imperial))
+    //         {
+    //             convertConfigtoMetric();
+    //             // We have to convert flow manually since it's already changed in flow.json
+    //             for (int i = 0; i < NUMTAPS; i++)
+    //             {
+    //                 flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu); // Reverse for pulses
+    //                 flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
+    //                 flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
+    //             }
+    //         }
+    //         setDoSaveFlow();
+    //         send_ok(request);
+    //         break;
+    //     }
+        }
+        else
+        {
+            // No valid bulk load type passed
+            Log.verbose(F("[DEBUG] handleJson() No valid X-BulkLoad-Type bulk load header passed: %s" CR), bulkLoadHeader->value().c_str());
+            send_not_allowed(request);
+        }
+    }
+    else {
+        Log.verbose(F("[DEBUG] handleJson() No X-BulkLoad-Type header passed." CR));
+    }
+
+    if (!didProcess)
+    {
+        Log.warning(F("Bulk Loader: JSON not processed." CR));
+        return NOT_PROCCESSED;
+    }
+    // Return values
+    if (didProcess && didPass)
+    {
+        return PROCESSED;
+    }
+    else
+    {
+        return FAIL_PROCESS;
+    }
+}
+#endif
+
+// JSON Handler^
 
 void send_not_allowed(AsyncWebServerRequest *request)
 {
