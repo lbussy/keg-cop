@@ -88,11 +88,11 @@ struct API
     void save(JsonObject) const;
 };
 
-bool serializeActionAPI(Print &dst);
-bool serializeInfoAPI(Print &dst);
-bool serializeConfigAPI(Print &dst);
-bool serializeAPI(Print &dst);
-bool printAPI();
+// bool serializeActionAPI(Print &dst);
+// bool serializeInfoAPI(Print &dst);
+// bool serializeConfigAPI(Print &dst);
+// bool serializeAPI(Print &dst);
+// bool printAPI();
 
 extern API api;
 
