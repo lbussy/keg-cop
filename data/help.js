@@ -1,6 +1,8 @@
 // Supports Help page
 
 toggleLoader("off");
+
+// Pre Loader Variables
 var numReq = 0 + numReqPre;
 var loaded = 0;
 

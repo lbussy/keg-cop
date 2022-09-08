@@ -1,9 +1,17 @@
 // Supports About Page
 
 toggleLoader("off");
+
+// Pre Loader Variables
 var numReq = 4 + numReqPre;
 var loaded = 0;
+// Page Variables
 var aboutReloadTimer = 60000;
+// Semaphores
+var thisVersionRunning = false;
+var loadUptimeRunning = false;
+var loadHeapRunning = false;
+var loadResetReasonRunning = false;
 
 function finishLoad() {
     // Catch page finished event from kegcop_pre.js
@@ -45,6 +53,8 @@ function loadThisVersion() { // Get current parameters
     }
     url += "/api/v1/info/thisVersion/";
 
+    if (thisVersionRunning) return;
+    thisVersionRunning = true;
     var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
@@ -71,6 +81,7 @@ function loadThisVersion() { // Get current parameters
         })
         .always(function () {
             // Can post-process here
+            thisVersionRunning = false;
         });
 }
 
@@ -86,6 +97,8 @@ function loadUptime(callback = null) { // Get uptime information
     }
     url += "/api/v1/info/uptime/";
 
+    if (loadUptimeRunning) return;
+    loadUptimeRunning = true;
     var uptime = $.getJSON(url, function () {
     })
         .done(function (uptime) {
@@ -111,6 +124,7 @@ function loadUptime(callback = null) { // Get uptime information
             setTimeout(loadUptime, 10000);
         })
         .always(function () {
+            loadUptimerunning = false;
             if (typeof callback == "function") {
                 callback();
             }
@@ -129,6 +143,8 @@ function loadHeap(callback = null) { // Get heap information
     }
     url += "/api/v1/info/heap/";
 
+    if (loadHeapRunning) return;
+    loadHeapRunning = true;
     var heap = $.getJSON(url, function () {
     })
         .done(function (heap) {
@@ -153,6 +169,7 @@ function loadHeap(callback = null) { // Get heap information
             setTimeout(loadHeap, 10000);
         })
         .always(function () {
+            loadHeapRunning = false;
             if (typeof callback == "function") {
                 callback();
             }
@@ -171,6 +188,8 @@ function loadResetReason(callback = null) { // Get last reset reason
     }
     url += "/api/v1/info/resetreason/";
 
+    if (loadResetReasonRunning) return;
+    loadResetReasonRunning = true;
     var reset = $.getJSON(url, function () {
     })
         .done(function (reset) {
@@ -194,6 +213,7 @@ function loadResetReason(callback = null) { // Get last reset reason
             setTimeout(loadResetReason, 10000);
         })
         .always(function () {
+            loadResetReasonRunning = false
             if (typeof callback == "function") {
                 callback();
             }

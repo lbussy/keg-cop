@@ -2,8 +2,11 @@
 
 //toggleLoader("off");
 toggleLoader("on");
+
+// Pre Loader Variables
 var numReq = 1 + numReqPre;
 var loaded = 0;
+// Page Variables
 var posted = false;
 
 function finishLoad() { // Get page data

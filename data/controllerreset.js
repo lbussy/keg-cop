@@ -1,6 +1,8 @@
 // Supports Controller Reset page
 
 toggleLoader("off");
+
+// Pre Loader Variables
 var loaded = 0;
 var numReq = 0 + numReqPre; // Just a placeholder here
 
@@ -40,6 +42,9 @@ function doResetSignal() {
             $("#subtitle").replaceWith("<h4 class='card-header' class='card-title'>Controller Reset Failed; Redirect Pending</h4>");
             $("#message").replaceWith("<p class='card-body'>The controller reset failed. You will be redirected momentarily.</p>");
             setTimeout(function () { window.location.href = cleanURL("/index/"); }, 5000);
+        })
+        .always(function () {
+            //
         });
 }
 
@@ -55,6 +60,7 @@ function watchReset() {
         setTimeout(watchReset, 10);
         return;
     }
+
     var intervalID = window.setInterval(function () { // Poll every 5 seconds
         checkSemaphore(function (semaphore) {
             didreset = semaphore;

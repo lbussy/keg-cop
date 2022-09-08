@@ -1,5 +1,6 @@
 // Common file/functions for all Keg Cop pages
 
+// Application variables
 var dataHost = "";
 var dataHostCheckDone = false;
 var useTemps = false;
@@ -7,6 +8,13 @@ var secret = "";        // Hold the secret to help avoid spurious changes to app
 var numReqPre = 3;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
 var isKSTV = false;     // Semaphore for KegScreen-TV
 var is404 = false;      // Semaphore for 404 page
+// Semaphores
+var getThemeRunning = false
+var chooseTempMenuRunning = false;
+var checkSemaphoreRunning = false;
+var pingRunning = false;
+var checkDataHostRunning = false;
+var getSecretRunning = false;
 
 const UA = navigator.userAgent;
 
@@ -182,6 +190,8 @@ function getTheme(callback = null) { // Get theme settings
         url = url.slice(0, -1)
     }
 
+    if (getThemeRunning) return;
+    getThemeRunning = true;
     url += "/api/v1/config/theme/";
     var theme = $.getJSON(url, function () {})
         .done(function (theme) {
@@ -205,6 +215,7 @@ function getTheme(callback = null) { // Get theme settings
             setTimeout(getTheme, 10000);
         })
         .always(function () {
+            getThemeRunning = false
             // Can post-process here
             if (typeof callback == "function") {
                 callback();
@@ -237,6 +248,8 @@ async function chooseTempMenu(callback = null) {
     }
     url += "/api/v1/info/tempcontrol/";
 
+    if (chooseTempMenuRunning) return;
+    chooseTempMenuRunning = true;
     try {
         const response = await fetch(url);
         // response.status holds http code
@@ -260,6 +273,7 @@ async function chooseTempMenu(callback = null) {
         setTimeout(chooseTempMenu, 10000);
     }
     if (typeof callback == "function") {
+        chooseTempMenuRunning = false;
         callback();
     }
 }
@@ -276,11 +290,14 @@ function checkSemaphore(callback) { // Check to see if the update is complete
     }
     url += "/api/v1/action/ping/";
 
+    if (checkSemaphoreRunning) return;
+    checkSemaphoreRunning = true;
     var jqxhr = $.get(url)
         .done(function (data) {
             callback(true);
         })
         .fail(function () {
+            checkSemaphoreRunning = false;
             // This will fail while controller resets
             callback(false);
         });
@@ -325,9 +342,12 @@ function checkDataHost() {
         const ping = new XMLHttpRequest();
         ping.open('GET', '/api/v1/action/ping/');
 
+        if (checkDataHostRunning) setTimeout(checkDataHost, 10000);
+        checkDataHostRunning = true;
         try {
             ping.send();
             ping.onload = function () {
+                checkDataHostRunning = false;
                 if (ping.status != 200) {
                     // To set data server, use the following syntax in console:
                     //
@@ -384,6 +404,8 @@ function getSecret(callback = null) { // Get secret for PUTs
 
     url += "/api/v1/info/secret/";
 
+    if (getSecretRunning) return;
+    getSecretRunning = true;
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -408,6 +430,7 @@ function getSecret(callback = null) { // Get secret for PUTs
             setTimeout(getSecret, 10000);
         })
         .always(function () {
+            getSecretRunning = false;
             // Can post-process here
             if (typeof callback == "function") {
                 callback();

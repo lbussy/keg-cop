@@ -1,16 +1,19 @@
 // Support OTA2 page
 
-// These are only used for kegcop_pre.js
+toggleLoader("off");
+
+// Pre Loader Variables
 var loaded = 0;
 var numReq = 1;
+// Page Variables
 var didClear = false; // Hold value to see if we cleared updates in doUpdates()
 var didStart = false; // Hold value to see if we cleared updates in doUpdates()
 var didUpdate = false;
-
-toggleLoader("off");
+// Semaphores
+var clearUpdateRunning = false;
 
 function finishLoad() {
-    // populateTemps(); // We don't need this but it's here so I rememnber not to add it again
+    // chooseTempMenu();// We don't need this but it's here so I rememnber not to add it again
     doUpdates();
 }
 
@@ -70,6 +73,8 @@ function clearUpdate(callback = null) {
     }
     url += '/api/v1/action/clearupdate/';
 
+    if (clearUpdateRunning) return;
+    clearUpdateRunning = true;
     $.ajax({
         method: "PUT",
         url: url
@@ -80,6 +85,9 @@ function clearUpdate(callback = null) {
         .fail(function () {
             // This will fail while controller resets
             callback(false);
+        })
+        .fail(function (data) {
+            clearUpdateRunning = false;
         });
 }
 
