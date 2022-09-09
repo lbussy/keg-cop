@@ -260,6 +260,7 @@ async function chooseTempMenu(callback = null) {
                 $('#displaytemplink').toggle();
             }
         } else {
+            console.info("A 405 here for 'tempcontrol' is because the feature is turned off.");
             sessionStorage.setItem("useTemps", false);
             if ($('#displaytemplink').is(':visible')) {
                 $('#displaytemplink').toggle();
