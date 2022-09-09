@@ -105,12 +105,14 @@ const char* a_delim = "/";
 //     return retval;
 // }
 
-void gen_base(char *_base) {
+void gen_base(char *_base, const char *_key_base) {
     strcpy(_base, a_urlstart);
     strcat(_base, app.copconfig.hostname);
     strcat(_base, a_tld);
     strcat(_base, a_delim);
     strcat(_base, api.base);
+    strcat(_base, a_delim);
+    strcat(_base, _key_base);
     strcat(_base, a_delim);
 }
 
@@ -119,11 +121,7 @@ void ActionAPI::save(JsonObject obj) const
     // Concatenate the base URL:
     // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/vX/xxxxxxxxxxxxx/
     char _base[68];
-    gen_base(_base);
-
-    // Base URL for Actions
-    strcat(_base, a_delim);
-    // obj["actions"] = _base;
+    gen_base(_base, base); // gen_base
 
     // Re-use char array:
     char _url[83];
@@ -176,11 +174,7 @@ void InfoAPI::save(JsonObject obj) const
     // Concatenate the base URL:
     // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/vX/xxxxxxxxxxxxx/
     char _base[68];
-    gen_base(_base);
-
-    // Base URL for Info
-    strcat(_base, a_delim);
-    // obj["information"] = _base;
+    gen_base(_base, base);
 
     // Re-use char array:
     char _url[81];
@@ -207,6 +201,12 @@ void InfoAPI::save(JsonObject obj) const
     strcpy(_url, _base);
     strcat(_url, thatVersion);
     strcat(_url, a_delim);
+    obj["thisVersion"] = _url;
+
+    // This Version
+    strcpy(_url, _base);
+    strcat(_url, thisVersion);
+    strcat(_url, a_delim);
     obj["thatVersion"] = _url;
 
     // Pulses
@@ -227,11 +227,7 @@ void ConfigAPI::save(JsonObject obj) const
     // Concatenate the base URL:
     // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/vX/xxxxxxxxxxxxx/
     char _base[68];
-    gen_base(_base);
-
-    // Base URL for Configuration
-    strcat(_base, a_delim);
-    // obj["configuration"] = _base;
+    gen_base(_base, base);
 
     // Re-use char array:
     char _url[83];
@@ -247,6 +243,12 @@ void ConfigAPI::save(JsonObject obj) const
     strcat(_url, taps);
     strcat(_url, a_delim);
     obj["taps"] = _url;
+
+    // Theme
+    strcpy(_url, _base);
+    strcat(_url, theme);
+    strcat(_url, a_delim);
+    obj["theme"] = _url;
 }
 
 void API::save(JsonObject obj) const

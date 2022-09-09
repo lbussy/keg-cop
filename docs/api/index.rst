@@ -334,6 +334,7 @@ The configuration page API tree allows retrieval of current states or setting co
 
 - `Settings`_
 - `Taps`_
+- `Theme`_
 
 Settings
 ------------------
@@ -660,6 +661,45 @@ The tap array follows the following format for each of the nine available taps:
 - ``cap`` = The capacity, in floating-point current units, of the attached keg.
 - ``remain`` = The amount remaining, in floating-point current units, of the attached keg.
 - ``active`` = Denotes whether the tap is active (displayed) or not.
+
+Theme
+--------------
+
+Both ``GET`` and ``PUT`` are valid methods for this endpoint.
+
+GET
+^^^^^^^^
+
+- **Address:** :file:`/api/v1/config/theme/`
+- **Valid Methods:** :file:`GET`
+- **Data:** Ignored
+- **Description:** The :file:`GET` method for this endpoint will return the current theme configuration.
+- **Error Message:** Any method other than ``PUT`` or ``GET`` will result in a ``405 Method Not Allowed`` error.
+- **Response:** 
+
+.. code-block:: json
+
+    {
+    "theme": "cerulean"
+    }
+
+Where:
+
+- ``theme`` = Any pre-configured Bootstrap-compliant theme
+
+PUT
+^^^^^^^
+
+- **Address:** :file:`/api/v1/config/theme/`
+- **Valid Methods:** :file:`PUT`
+- **Response:**  ``200 Ok`` on success, ``500 Unable to process data`` on failure.
+- **Description:** The :file:`PUT` method for this endpoint will allow endpoint configuration.
+- **Error Message:** Any method other than :file:`PUT` or :file:`GET` will result in a `405 Method Not Allowed` error.
+- **Data:** 
+
+The PUT should follow standard form submission data format, with the following item available.
+
+- ``theme`` = Any pre-configured Bootstrap-compliant theme
 
 Controller-Initiated Communication
 ***************************************
