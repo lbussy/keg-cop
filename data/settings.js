@@ -2,14 +2,22 @@
 
 toggleLoader("on");
 
+// Pre Loader Variables
 var loaded = 0; // Hold data load status
 var numReq = 4 + numReqPre; // Number of JSON required
+// Page variables
 var hostname = window.location.hostname;
 var originalHostnameConfig;
 var imperial;
 var hashLoc;
 var posted = false;
 var numTaps = 0;
+// Semaphores
+var populateFlowRunning = false;
+var populateConfigRunning = false;
+var loadThisVersionRunning = false;
+var loadThatVersionRunning = false;
+var pulseReloadRunning = false;
 
 // Supports flowmeter calibration sub-page
 //
@@ -148,6 +156,8 @@ function populateFlow(callback = null) { // Get flowmeter settings
 
     url += "/api/v1/config/taps/";
 
+    if (populateFlowRunning) return;
+    populateFlowRunning = true;
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -186,6 +196,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
             setTimeout(populateFlow, 10000);
         })
         .always(function () {
+            populateFlowRunning = false;
             // Can post-process here
             if (typeof callback == "function") {
                 callback();
@@ -194,7 +205,7 @@ function populateFlow(callback = null) { // Get flowmeter settings
 }
 
 function populateConfig(callback = null) { // Get configuration settings
-    // Redet calibration buttons
+    // Reset calibration buttons
     $('input[id="calbyvolume"]').prop('checked', false);
     $('input[id="calbyvolume"]').attr("disabled", false);
     $('input[id="calbyweight"]').prop('checked', false);
@@ -210,6 +221,8 @@ function populateConfig(callback = null) { // Get configuration settings
         url = url.slice(0, -1)
     }
 
+    if (populateConfigRunning) return;
+    populateConfigRunning = true;
     url += "/api/v1/config/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning()
@@ -356,6 +369,7 @@ function populateConfig(callback = null) { // Get configuration settings
             setTimeout(populateConfig, 10000);
         })
         .always(function () {
+            populateConfigRunning = false;
             // Can post-process here
             if (typeof callback == "function") {
                 callback();
@@ -375,6 +389,8 @@ function loadThisVersion() { // Get current parameters
     }
     url += "/api/v1/info/thisVersion/";
 
+    if (loadThisVersionRunning) return;
+    loadThisVersionRunning = true;
     var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
@@ -422,6 +438,7 @@ function loadThisVersion() { // Get current parameters
             $('#thisFSVersion').text("Error loading.");
         })
         .always(function () {
+            loadThisVersionRunning = false;
             // Can post-process here
         });
 }
@@ -438,6 +455,8 @@ function loadThatVersion() { // Get current parameters
     }
     url += "/api/v1/info/thatVersion/";
 
+    if (loadThatVersionRunning) return;
+    loadThatVersionRunning = true;
     var thatVersion = $.getJSON(url, function () {
     })
         .done(function (thatVersion) {
@@ -459,6 +478,7 @@ function loadThatVersion() { // Get current parameters
             $('#thatFSVersion').text("Error loading.");
         })
         .always(function () {
+            loadThatVersionRunning = false;
             // Can post-process here
         });
 }
@@ -852,17 +872,6 @@ function putData(url, data, newpage = false, newdata = false, callback = null) {
         });
 }
 
-function buttonClearDelay() { // Poll to see if entire page is loaded
-    if (posted) {
-        $("button[id='submitSettings']").prop('disabled', false);
-        $("button[id='submitSettings']").html('Update');
-        toggleTIO();
-        posted = false;
-    } else {
-        setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
-    }
-}
-
 function updateHelp(hashLoc) {
     var url = "https://docs.kegcop.com"
 
@@ -1076,6 +1085,8 @@ function pulseReload(callback = null) { // Get pulses
     }
     url += "/api/v1/info/pulses/";
 
+    if (pulseReloadRunning) return;
+    pulseReloadRunning = true;
     var pulses = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -1139,6 +1150,7 @@ function pulseReload(callback = null) { // Get pulses
             }
         })
         .always(function () {
+            pulseReloadRunning = false;
             // Can post-process here
         }
         );

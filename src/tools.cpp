@@ -23,11 +23,31 @@ SOFTWARE. */
 #include "tools.h"
 #include "taplistio.h"
 
-float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
-unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pours
-bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
-bool __attribute__((unused)) queueStateChange;                  // Store pending tstat state changes
-bool __attribute__((unused)) queueFanStateChange;               // Store pending tstat state changes
+float queuePourReport[NUMTAPS];         // Store pending pours
+unsigned int queuePulseReport[NUMTAPS]; // Store pending pulses
+bool queueKickReport[NUMTAPS];          // Store pending kicks
+
+bool doReset = false;             // Semaphore for reset
+bool doWiFiReset = false;         // Semaphore for wifi reset
+bool doKSTempReport = false;      // Semaphore for KegScreen Temps Report
+bool doTargetReport = false;      // Semaphore for URL Target Report
+bool doRPintsConnect = false;     // Semaphore for MQTT (re)connect
+bool doTaplistIOConnect = false;  // Semaphore for Taplist.IO Report
+bool doSetSaveUptime = false;     // Semaphore required to save reboot time
+bool doSetSaveApp = false;        // Semaphore required to save config
+bool doSetSaveFlowConfig = false; // Semaphore required to save flowconfig
+bool doTapInfoReport[NUMTAPS] = {
+    false, false, false, false, false, false, false, false}; // Semaphore for reset
+
+void initPourPulseKick()
+{
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        queuePourReport[i] = 0.0;
+        queuePulseReport[i] = 0;
+        queueKickReport[i] = false;
+    }
+}
 
 void _delay(unsigned long ulDelay)
 {
@@ -39,7 +59,7 @@ void resetController()
 {
     Log.notice(F("Reboot request - rebooting system." CR));
     killDRD();
-    saveConfig();
+    saveAppConfig();
     saveFlowConfig();
     ESP.restart();
 }
@@ -79,14 +99,29 @@ void setDoSaveUptime()
     doSetSaveUptime = true; // Semaphore required to save reboot time
 }
 
-void setDoSaveConfig()
+void setDoSaveApp()
 {
-    doSetSaveConfig = true; // Semaphore required to save config
+    doSetSaveApp = true; // Semaphore required to save config
 }
 
-void setDoSaveFlowConfig()
+void setDoSaveFlow()
 {
     doSetSaveFlowConfig = true; // Semaphore required to save flowconfig
+}
+
+void setQueuePourReport(int tapNum, float pour)
+{
+    queuePourReport[tapNum] = pour;
+}
+
+void setQueuePulseReport(int tapNum, int pulses)
+{
+    queuePulseReport[tapNum] = pulses;
+}
+
+void setQueueKickReport(int tapNum)
+{
+    queueKickReport[tapNum] = true;
 }
 
 void tickerLoop()
@@ -111,10 +146,10 @@ void tickerLoop()
         doUptime();
     }
 
-    if (doSetSaveConfig)
-    { // Save Config
-        doSetSaveConfig = false;
-        saveConfig();
+    if (doSetSaveApp)
+    { // Save AppConfig
+        doSetSaveApp = false;
+        saveAppConfig();
     }
 
     if (doSetSaveFlowConfig)
@@ -178,7 +213,7 @@ void tickerLoop()
             struct tm timeinfo;
             getLocalTime(&timeinfo);
             time(&now);
-            if ((now - config.taplistio.lastsent > TIOLOOP) && config.taplistio.update && config.taplistio.update && (strlen(config.taplistio.secret) >= 7) && (strlen(config.taplistio.venue) >= 3))
+            if ((now - app.taplistio.lastsent > TIOLOOP) && app.taplistio.update && app.taplistio.update && (strlen(app.taplistio.secret) >= 7) && (strlen(app.taplistio.venue) >= 3))
             {
                 doTaplistIOConnect = false; // Semaphore required for Taplist.io report
                 sendTIOTaps();
@@ -316,13 +351,13 @@ void getGuid(char *str)
 
 void killDRD()
 {
-    config.copconfig.nodrd = true;
-    const char *filename = "/drd.dat";
+    app.copconfig.nodrd = true;
+    const char *drdfile = "/drd.dat";
     if (FILESYSTEM.begin())
     {
-        if (SPIFFS.exists(filename))
+        if (SPIFFS.exists(drdfile))
         {
-            FILESYSTEM.remove(filename);
+            FILESYSTEM.remove(drdfile);
         }
     }
 }

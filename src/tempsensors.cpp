@@ -22,9 +22,6 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
-extern const size_t capacityTempsSerial = 768;
-extern const size_t capacityTempsDeserial = 1024;
-
 Devices device;
 
 void sensorInit()
@@ -36,7 +33,7 @@ void sensorInit()
         device.sensor[i].pin = sensorPin[i];
         device.sensor[i].value = DEVICE_DISCONNECTED_C;
         device.sensor[i].average = DEVICE_DISCONNECTED_C;
-        device.sensor[i].calibration = config.temps.calibration[i];
+        device.sensor[i].calibration = app.temps.calibration[i];
         device.sensor[i].buffer.clear();
     }
     pollTemps();
@@ -50,14 +47,14 @@ void sensorReInit()
         device.sensor[i].buffer.clear();
         device.sensor[i].value = DEVICE_DISCONNECTED_C;
         device.sensor[i].average = DEVICE_DISCONNECTED_C;
-        device.sensor[i].calibration = config.temps.calibration[i];
+        device.sensor[i].calibration = app.temps.calibration[i];
     }
     pollTemps();
 }
 
 void pollTemps()
 {
-    if (config.copconfig.tempemulate == true)
+    if (app.copconfig.tempemulate == true)
     {
         // Skip polling if we are emulating temps
         return;
@@ -119,7 +116,7 @@ double getTempC(uint8_t pin)
 
 void logTempEmulation(int sensor, double temp)
 {
-    if (config.copconfig.imperial)
+    if (app.copconfig.imperial)
     { // We store values in C
         temp = convertFtoC(temp);
     }

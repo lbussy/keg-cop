@@ -2,8 +2,10 @@
 
 toggleLoader("on");
 
+// Pre Loader Variables
 var numReq = 4 + numReqPre;
 var loaded = 0;
+// Page Variables
 var imperial;
 var labels = [];
 var percent = [];
@@ -15,6 +17,10 @@ var tempReloadTimer = 10000;
 // Calibration mode variables
 calValue = 0;
 calLineType = '';
+// Semaphores
+var populateFlowRunning = false;
+var populateConfigRunning = false;
+var populateTempsRunning = false;
 
 function finishLoad() {
     // Catch event from kegcop_pre.js
@@ -37,6 +43,8 @@ function populateFlow(callback = null) { // Get flowmeter data
     }
     url += "/api/v1/config/taps/";
 
+    if (populateFlowRunning) return;
+    populateFlowRunning = true;
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -91,6 +99,7 @@ function populateFlow(callback = null) { // Get flowmeter data
             setTimeout(populateFlow, 10000);
         })
         .always(function () {
+            populateFlowRunning = false;
             // Can post-process here
         });
 }
@@ -107,6 +116,8 @@ function populateConfig() { // Get configuration settings
     }
     url += "/api/v1/config/settings/";
 
+    if (populateConfigRunning) return;
+    populateConfigRunning = true;
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -136,6 +147,7 @@ function populateConfig() { // Get configuration settings
 
         })
         .always(function () {
+            populateConfigRunning = false;
             // Can post-process here
         });
 }
@@ -152,6 +164,8 @@ function populateTemps(callback = null) { // Get current temperature and state
     }
     url += "/api/v1/info/sensors/";
 
+    if (populateTempsRunning) return;
+    populateTempsRunning = true;
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
@@ -192,6 +206,7 @@ function populateTemps(callback = null) { // Get current temperature and state
             setTimeout(populateTemps, 10000);
         })
         .always(function () {
+            populateTempsRunning = false;
             // Can post-process here
         });
 }

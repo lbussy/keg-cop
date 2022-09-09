@@ -23,7 +23,7 @@ SOFTWARE. */
 #ifndef _MDNSHANDLER_H
 #define _MDNSHANDLER_H
 
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "config.h"
 #include <ArduinoLog.h>
 #include <ESPmDNS.h>

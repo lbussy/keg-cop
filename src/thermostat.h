@@ -25,7 +25,7 @@ SOFTWARE. */
 
 #include "config.h"
 #include "tempsensors.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "thermostat.h"
 
 enum ThermostatState
@@ -72,9 +72,7 @@ void startTstat(int ts);
 void loopTstat(int ts);
 void newStatReport(int ts);
 
-extern struct Devices device;
-
-extern Thermostat tstat[TS_COUNT];
-extern ControlPoint cp[TS_COUNT];
+extern Thermostat tstat[];
+extern ControlPoint cp[];
 
 #endif // _THERMOSTAT_H

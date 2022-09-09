@@ -38,7 +38,7 @@ Size:
 
 ```
 Deserial:	2048
-Serial:		2048
+Serial:		384
 ```
 
 Parsing/Deserializing:
@@ -52,8 +52,8 @@ StaticJsonDocument<2048> doc;
 DeserializationError error = deserializeJson(doc, input);
 
 if (error) {
-  Serial.print(F("deserializeJson() failed: "));
-  Serial.println(error.f_str());
+  Serial.print("deserializeJson() failed: ");
+  Serial.println(error.c_str());
   return;
 }
 
@@ -80,14 +80,13 @@ JsonObject configAPI = doc["configAPI"];
 const char* configAPI_configuration = configAPI["configuration"];
 const char* configAPI_settings = configAPI["settings"];
 const char* configAPI_taps = configAPI["taps"];
-
 ```
 
 Serializing:
 ------------
 
 ```
-StaticJsonDocument<2048> doc;
+StaticJsonDocument<384> doc;
 
 JsonObject actionAPI = doc.createNestedObject("actionAPI");
 actionAPI["actions"] = "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/";

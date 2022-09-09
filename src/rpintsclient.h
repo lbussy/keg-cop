@@ -23,7 +23,7 @@ SOFTWARE. */
 #ifndef _RPINTSCLIENT_H
 #define _RPINTSCLIENT_H
 
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "tools.h"
 
 #include <AsyncMqttClient.h>

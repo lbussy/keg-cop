@@ -38,7 +38,7 @@ void mDNSSetup()
 void mDNSReset()
 {
     MDNS.end();
-    if (!MDNS.begin(config.copconfig.hostname))
+    if (!MDNS.begin(app.copconfig.hostname))
     {
         Log.error(F("Error resetting MDNS responder."));
     }
@@ -58,7 +58,7 @@ void mDNSServiceAdvert()
 #ifdef _DEBUG_BUILD
     MDNS.addService("kc_telnet", "tcp",  TELNETPORT);
 #endif
-    MDNS.addService("kegscreen", "tcp", PORT);
+    MDNS.addService(AppKeys::kegscreen, "tcp", PORT);
     MDNS.addService("ks-tv", "tcp", PORT);
 
 // TXT records

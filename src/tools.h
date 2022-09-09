@@ -39,6 +39,7 @@ SOFTWARE. */
 #include <ArduinoLog.h>
 #include <Arduino.h>
 
+void initPourPulseKick();
 void _delay(unsigned long);
 void resetController();
 void setDoWiFiReset();
@@ -47,6 +48,12 @@ void setDoKSTempReport();
 void setDoTapInfoReport(int);
 void setDoTargetReport();
 void setDoRPintsConnect();
+void setQueuePourReport(int tapNum, float pour);
+void setQueuePulseReport(int tapNum, int pulses);
+void setQueueKickReport(int tapNum);
+void setDoSaveUptime();
+void setDoSaveApp();
+void setDoSaveFlow();
 void tickerLoop();
 void maintenanceLoop();
 void printDebug();
@@ -59,22 +66,7 @@ double convertGtoL(double);
 double convertLtoG(double);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
 void getGuid(char *str); // 17 chars including null terminator
-void setDoSaveUptime();
-void setDoSaveConfig();
-void setDoSaveFlowConfig();
 void killDRD();
 unsigned long getTime();
-
-static bool __attribute__((unused)) doReset = false;            // Semaphore for reset
-static bool __attribute__((unused)) doWiFiReset = false;        // Semaphore for wifi reset
-static bool __attribute__((unused)) doKSTempReport = false;     // Semaphore for KegScreen Temps Report
-static bool __attribute__((unused)) doTargetReport = false;     // Semaphore for URL Target Report
-static bool __attribute__((unused)) doRPintsConnect = false;    // Semaphore for MQTT (re)connect
-static bool __attribute__((unused)) doTaplistIOConnect = false; // Semaphore for Taplist.IO Report
-static bool __attribute__((unused)) doTapInfoReport[NUMTAPS] = {
-    false, false, false, false, false, false, false, false};     // Semaphore for reset
-static bool __attribute__((unused)) doSetSaveUptime = false;     // Semaphore required to save reboot time
-static bool __attribute__((unused)) doSetSaveConfig = false;     // Semaphore required to save config
-static bool __attribute__((unused)) doSetSaveFlowConfig = false; // Semaphore required to save flowconfig
 
 #endif

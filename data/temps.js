@@ -2,15 +2,20 @@
 
 toggleLoader("on");
 
-var imperial;
+// Pre Loader Variables
 var loaded = 0;
 var numReq = 3 + numReqPre;
+// Page Variables
+var imperial;
 var labels = [];
 var temperatures = [];
 var scaleTemps = [];
 var setpoint = 0;
 var tempChart;
 var chartReloadTimer = 10000; // Reload every 10 seconds
+// Semaphores
+var populateTempsRunning = false;
+var populateConfigRunning = false;
 
 function finishLoad() { // Get page data
     chooseTempMenu();
@@ -31,6 +36,8 @@ function populateTemps(callback = null) { // Get configuration settings
     }
     url += "/api/v1/info/sensors/";
 
+    if (populateTempsRunning) return;
+    populateTempsRunning = true;
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -97,6 +104,7 @@ function populateTemps(callback = null) { // Get configuration settings
             setTimeout(populateTemps, 10000);
         })
         .always(function () {
+            populateTempsRunning = false;
             // Can post-process here
         });
 }
@@ -113,6 +121,8 @@ function populateConfig() { // Get configuration settings
     }
     url += "/api/v1/config/settings/";
 
+    if (populateConfigRunning) return;
+    populateConfigRunning = true;
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -141,6 +151,7 @@ function populateConfig() { // Get configuration settings
             setTimeout(populateConfig, 10000);
         })
         .always(function () {
+            populateConfigRunning = false;
             // Can post-process here
         });
 }

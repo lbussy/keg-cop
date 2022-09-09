@@ -24,7 +24,7 @@ SOFTWARE. */
 #define _URLTARGET_H
 
 #include "config.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "flowmeter.h"
 #include "tempsensors.h"
 #include "thermostat.h"
@@ -76,8 +76,5 @@ struct UrlReport
 bool sendTargetReport();                                   // Push complete report
 bool sendTReport(const String &);                          // Handle the business of sending report
 void targetResultHandler(void *, asyncHTTPrequest *, int); // Callback method for asynch
-
-extern struct Flowmeter flow;
-extern struct Devices device;
 
 #endif // _URLTARGET_H

@@ -1,6 +1,8 @@
 // Supports Controller Reset page
 
-toggleLoader("off");``
+toggleLoader("off");
+
+// Pre Loader Variables
 var loaded = 0;
 var numReq = 0 + numReqPre; // Just a placeholder here
 

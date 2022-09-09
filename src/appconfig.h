@@ -30,8 +30,9 @@ SOFTWARE. */
 #include <SPIFFS.h>
 #include <FS.h>
 
-#define CAP_SER_CONF 2048
-#define CAP_DESER_CONF 3072
+#define APP_FILENAME "/appconfig.json"
+#define CAPACITY_APP_SERIAL 2048
+#define CAPACITY_APP_DESERIAL 3072
 
 struct ApConfig
 {
@@ -73,8 +74,8 @@ struct Temperatures
     bool enabled[NUMSENSOR];
     float calibration[NUMSENSOR];
     bool tfancontrolenabled;
-	float tfansetpoint;
-	bool tfanonhigh;
+    float tfansetpoint;
+    bool tfanonhigh;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -146,16 +147,16 @@ struct OTA
     bool dospiffs1;
     bool dospiffs2;
     bool didupdate;
-	bool badfw;
-	unsigned long badfwtime;
-	bool badfs;
-	unsigned long badfstime;
+    bool badfw;
+    unsigned long badfwtime;
+    bool badfs;
+    unsigned long badfstime;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
 };
 
-struct Config
+struct AppConfig
 {
     // Stores the complete configuration
     ApConfig apconfig;
@@ -172,22 +173,98 @@ struct Config
     void save(JsonObject) const;
 };
 
-extern Config config;
+/**
+ * \brief Strings used for JSON keys
+ * \see ControlConstants
+ */
+namespace AppKeys
+{
+    constexpr auto appname = "App Config";
+    // App Config
+    constexpr auto apconfig = "apconfig";
+    constexpr auto copconfig = "copconfig";
+    constexpr auto ota = "ota";
+    constexpr auto temps = "temps";
+    constexpr auto kegscreen = "kegscreen";
+    constexpr auto taplistio = "taplistio";
+    constexpr auto urltarget = "urltarget";
+    constexpr auto rpintstarget = "rpintstarget";
+    constexpr auto cloud = "cloud";
 
-bool deleteConfigFile();
-bool loadConfig();
-bool saveConfig();
-bool printConfig();
-bool printConfigFile();
-bool serializeConfig(Print &);
-bool deserializeConfig(Stream &);
-// bool merge(JsonVariant, JsonVariantConst);
-// bool mergeJsonObject(JsonVariantConst);
-// bool mergeJsonString(String);
-// Conversions
-void convertConfigtoImperial();
-void convertConfigtoMetric();
+    // AP Config
+    constexpr auto ssid = "ssid";
+    constexpr auto passphrase = "passphrase";
 
-extern const char *apiKey;
+    // CopConfig
+    constexpr auto guid = "guid";
+    constexpr auto hostname = "hostname";
+    constexpr auto nodrd = "nodrd";
+    constexpr auto breweryname = "breweryname";
+    constexpr auto kegeratorname = "kegeratorname";
+    constexpr auto controlnum = "controlnum";
+    constexpr auto imperial = "imperial";
+    constexpr auto serial = "serial";
+    constexpr auto tapsolenoid = "tapsolenoid";
+    constexpr auto pouremulate = "pouremulate";
+    constexpr auto tempemulate = "tempemulate";
+    constexpr auto theme = "theme";
+
+    // Temperatures
+    constexpr auto setpoint = "setpoint";
+    constexpr auto controlpoint = "controlpoint";
+    constexpr auto controlenabled = "controlenabled";
+    constexpr auto coolonhigh = "coolonhigh";
+    constexpr auto enabled = "enabled";
+    constexpr auto calibration = "calibration";
+    constexpr auto tfancontrolenabled = "tfancontrolenabled";
+    constexpr auto tfansetpoint = "tfansetpoint";
+    constexpr auto tfanonhigh = "tfanonhigh";
+
+    // KegScreen
+    constexpr auto url = "url";
+    constexpr auto update = "update";
+
+    // TaplistIO
+    constexpr auto venue = "venue";
+    constexpr auto secret = "secret";
+    constexpr auto lastsent = "lastsent";
+    // constexpr auto update = "update";
+
+    // MQTT
+    constexpr auto host = "host";
+    constexpr auto port = "port";
+    constexpr auto username = "username";
+    constexpr auto password = "password";
+    constexpr auto topic = "topic";
+    // constexpr auto update = "update";
+
+    // URL Target
+    // constexpr auto url = "url";
+    constexpr auto freq = "freq";
+    // constexpr auto update = "update";
+
+    // Cloud Target
+    constexpr auto type = "type";
+    // constexpr auto url = "url";
+    constexpr auto key = "key";
+    // constexpr auto freq = "freq";
+    // constexpr auto update = "update";
+
+    // Stores OTA data
+    constexpr auto dospiffs1 = "dospiffs1";
+    constexpr auto dospiffs2 = "dospiffs2";
+    constexpr auto didupdate = "didupdate";
+    constexpr auto badfw = "badfw";
+    constexpr auto badfwtime = "badfwtime";
+    constexpr auto badfs = "badfs";
+    constexpr auto badfstime = "badfstime";
+};
+
+extern AppConfig app;
+
+bool loadAppConfig();
+bool saveAppConfig();
+bool serializeAppConfig(Print &);
+bool deserializeAppConfig(Stream &);
 
 #endif // _JSONCONFIG_H

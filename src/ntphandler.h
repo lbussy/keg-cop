@@ -26,7 +26,7 @@ SOFTWARE. */
 #include <WiFi.h>
 
 #include "serialhandler.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "tools.h"
 #include "config.h"
 #include <Ticker.h>

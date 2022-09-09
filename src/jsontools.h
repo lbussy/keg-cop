@@ -20,38 +20,35 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _WIFI_H
-#define _WIFI_H
+#ifndef _JSONTOOLS_H
+#define _JSONTOOLS_H
 
-#include "config.h"
+#include <ArduinoJson.h>
+#include <Arduino.h>
+
 #include "appconfig.h"
-#include "tools.h"
-#include "rpintsclient.h"
+#include "flowconfig.h"
 
-#include <WiFi.h>
-#include <AsyncWiFiManager.h>
-#include <Ticker.h>
-#include <ArduinoLog.h>
+enum JSON_TYPE
+{
+    JSON_APP,
+    JSON_FLOW,
+    JSON_MAX
+};
 
-void wifiBlinker();
-void doWiFi();
-void doWiFi(bool dontUseStoredCreds);
-void resetWifi();
+#ifdef JSONLOADER
+void merge(JsonVariant, JsonVariantConst);
+void mergeJsonObject(JsonVariantConst, JSON_TYPE);
+bool mergeJsonString(String, JSON_TYPE);
+bool printJsonFile(JSON_TYPE);
+bool printJsonConfig(JSON_TYPE);
+#endif
+bool deleteJsonFile(JSON_TYPE);
+// App Config Conversions
+void convertConfigtoImperial();
+void convertConfigtoMetric();
+// Flow Conversions
+void convertFlowtoImperial();
+void convertFlowtoMetric();
 
-// AsyncWiFiManager Callbacks
-void apCallback(AsyncWiFiManager *wiFiManager);
-void configResetCallback();
-void preSaveConfigCallback();
-void saveConfigCallback();
-void saveParamsCallback();
-void webServerCallback();
-void WiFiEvent(WiFiEvent_t event);
-
-struct tcp_pcb;
-extern struct tcp_pcb *tcp_tw_pcbs;
-extern "C" void tcp_abort(struct tcp_pcb *pcb);
-void tcpCleanup(void);
-
-extern bool wifiPause;
-
-#endif // _WIFI_H
+#endif // _JSONTOOLS_H

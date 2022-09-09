@@ -23,19 +23,16 @@ SOFTWARE. */
 #ifndef _API_H
 #define _API_H
 
-#include "jsonconfig.h"
+#include "appconfig.h"
+#include "flowconfig.h"
 #include "serialhandler.h"
 
 #include <ArduinoJson.h>
 
-#define CAP_ACTION_API 768
-#define CAP_INFO_API 768
-#define CAP_CONFIG_API 192
-#define CAP_API 256
-
-#define URLSTART "http://"
-#define TLD ".local"
-#define DELIM "/"
+#define CAPACITY_ACTION_API 768
+#define CAPACITY_INFO_API 768
+#define CAPACITY_CONFIG_API 192
+#define CAPACITY_API 256
 
 struct ActionAPI
 {
@@ -91,10 +88,12 @@ struct API
     void save(JsonObject) const;
 };
 
-bool serializeActionAPI(Print &dst);
-bool serializeInfoAPI(Print &dst);
-bool serializeConfigAPI(Print &dst);
-bool serializeAPI(Print &dst);
-bool printAPI();
+// bool serializeActionAPI(Print &dst);
+// bool serializeInfoAPI(Print &dst);
+// bool serializeConfigAPI(Print &dst);
+// bool serializeAPI(Print &dst);
+// bool printAPI();
+
+extern API api;
 
 #endif // _API_H

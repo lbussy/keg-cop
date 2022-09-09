@@ -58,35 +58,35 @@ const char *reportname[5] = {
  */
 namespace KegscreenKeys {
     constexpr auto api = "api";
-    constexpr auto guid = "guid";
-    constexpr auto hostname = "hostname";
-    constexpr auto breweryname = "breweryname";
-    constexpr auto kegeratorname = "kegeratorname";
+    // constexpr auto guid = AppKeys::guid;
+    // constexpr auto hostname = AppKeys::hostname;
+    // constexpr auto breweryname = AppKeys::breweryname;
+    // constexpr auto kegeratorname = AppKeys::kegeratorname;
     constexpr auto reporttype = "reporttype";
-    constexpr auto imperial = "imperial";
-    constexpr auto tapid = "tapid";
-    constexpr auto name = "name";
-    constexpr auto ppu = "ppu";
-    constexpr auto remaining = "remaining";
-    constexpr auto capacity = "capacity";
-    constexpr auto active = "active";
-    constexpr auto calibrating = "calibrating";
+    // constexpr auto imperial = AppKeys::imperial;
+    // constexpr auto tapid = FlowmeterKeys::tapid;
+    // constexpr auto name = FlowmeterKeys::name;
+    // constexpr auto ppu = FlowmeterKeys::ppu;
+    // constexpr auto remaining = FlowmeterKeys::remaining;
+    // constexpr auto capacity = FlowmeterKeys::capacity;
+    // constexpr auto active = FlowmeterKeys::active;
+    // constexpr auto calibrating = FlowmeterKeys::calibrating;
     constexpr auto dispensed = "dispensed";
     constexpr auto coolstate = "coolstate";
-    constexpr auto controlpoint = "controlpoint";
+    // constexpr auto controlpoint = AppKeys::controlpoint;
 
     constexpr auto setting = "setting";
     constexpr auto status = "status";
-    constexpr auto controlenabled = "controlenabled";
-    constexpr auto coolonhigh = "coolonhigh";
+    // constexpr auto controlenabled = AppKeys::controlenabled;
+    // constexpr auto coolonhigh = AppKeys::coolonhigh;
 
-    constexpr auto tfancontrolenabled = "tfancontrolenabled";
-    constexpr auto tfansetpoint = "tfansetpoint";
+    // constexpr auto tfancontrolenabled = AppKeys::tfancontrolenabled;
+    // constexpr auto tfansetpoint = AppKeys::tfansetpoint;
     constexpr auto tfanstatus = "tfanstatus";
 
     constexpr auto sensors = "sensors";
     constexpr auto value = "value";
-    constexpr auto enabled = "enabled";
+    // constexpr auto enabled = AppKeys::enabled;
 };
 
 bool reported[5];
@@ -94,14 +94,14 @@ bool reported[5];
 static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
     reportCBTapInfo, reportCBPourReport, reportCBKickReport, reportCBCoolState, reportCBTempReport};
 
-#define kegscreenIsEnabled (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0')
+#define kegscreenIsEnabled (app.kegscreen.url != NULL && app.kegscreen.url[0] != '\0')
 
 void CommonReportFields(JsonDocument &doc, ReportKey reportkey) {
-    doc[KegscreenKeys::api] = apiKey;
-    doc[KegscreenKeys::guid] = config.copconfig.guid;
-    doc[KegscreenKeys::hostname] = config.copconfig.hostname;
-    doc[KegscreenKeys::breweryname] = config.copconfig.breweryname;
-    doc[KegscreenKeys::kegeratorname] = config.copconfig.kegeratorname;
+    doc[KegscreenKeys::api] = API_KEY;
+    doc[AppKeys::guid] = app.copconfig.guid;
+    doc[AppKeys::hostname] = app.copconfig.hostname;
+    doc[AppKeys::breweryname] = app.copconfig.breweryname;
+    doc[AppKeys::kegeratorname] = app.copconfig.kegeratorname;
     doc[KegscreenKeys::reporttype] = reporttype[reportkey];
 }
 
@@ -113,19 +113,18 @@ bool sendTapInfoReport(int tapid)
     {
         if (kegscreenIsEnabled) // If KegScreen is enabled
         {
-
             StaticJsonDocument<512> doc;
 
             CommonReportFields(doc, reportkey);
 
-            doc[KegscreenKeys::imperial] = config.copconfig.imperial;
-            doc[KegscreenKeys::tapid] = tapid;
-            doc[KegscreenKeys::name] = flow.taps[tapid].name;
-            doc[KegscreenKeys::ppu] = flow.taps[tapid].ppu;
-            doc[KegscreenKeys::remaining] = flow.taps[tapid].remaining;
-            doc[KegscreenKeys::capacity] = flow.taps[tapid].capacity;
-            doc[KegscreenKeys::active] = flow.taps[tapid].active;
-            doc[KegscreenKeys::calibrating] = flow.taps[tapid].calibrating;
+            doc[AppKeys::imperial] = app.copconfig.imperial;
+            doc[FlowmeterKeys::tapid] = tapid;
+            doc[FlowmeterKeys::name] = flow.taps[tapid].name;
+            doc[FlowmeterKeys::ppu] = flow.taps[tapid].ppu;
+            doc[FlowmeterKeys::remaining] = flow.taps[tapid].remaining;
+            doc[FlowmeterKeys::capacity] = flow.taps[tapid].capacity;
+            doc[FlowmeterKeys::active] = flow.taps[tapid].active;
+            doc[FlowmeterKeys::calibrating] = flow.taps[tapid].calibrating;
 
             return sendReport(reportkey, doc);
         }
@@ -155,10 +154,10 @@ bool sendPourReport(int tapid, float dispensed)
 
             CommonReportFields(doc, reportkey);
 
-            doc[KegscreenKeys::tapid] = tapid;
-            doc[KegscreenKeys::imperial] = config.copconfig.imperial;
+            doc[FlowmeterKeys::tapid] = tapid;
+            doc[AppKeys::imperial] = app.copconfig.imperial;
             doc[KegscreenKeys::dispensed] = dispensed;
-            doc[KegscreenKeys::remaining] = flow.taps[tapid].remaining;
+            doc[FlowmeterKeys::remaining] = flow.taps[tapid].remaining;
 
             return sendReport(reportkey, doc);
         }
@@ -186,7 +185,7 @@ bool sendKickReport(int tapid)
             StaticJsonDocument<384> doc;
 
             CommonReportFields(doc, reportkey);
-            doc[KegscreenKeys::tapid] = tapid;
+            doc[FlowmeterKeys::tapid] = tapid;
 
             return sendReport(reportkey, doc);
         }
@@ -238,21 +237,21 @@ bool sendTempReport()
 
     CommonReportFields(doc, reportkey);
 
-    doc[KegscreenKeys::imperial] = config.copconfig.imperial;
-    doc[KegscreenKeys::controlpoint] = config.temps.controlpoint;
-    doc[KegscreenKeys::setting] = config.temps.setpoint;
+    doc[AppKeys::imperial] = app.copconfig.imperial;
+    doc[AppKeys::controlpoint] = app.temps.controlpoint;
+    doc[KegscreenKeys::setting] = app.temps.setpoint;
     doc[KegscreenKeys::status] = tstat[TS_TYPE_CHAMBER].state;
-    doc[KegscreenKeys::controlenabled] = config.temps.controlenabled;
-    doc[KegscreenKeys::coolonhigh] = config.temps.coolonhigh;
-    doc[KegscreenKeys::tfancontrolenabled] = config.temps.tfancontrolenabled;
-    doc[KegscreenKeys::tfansetpoint] = config.temps.tfansetpoint;
+    doc[AppKeys::controlenabled] = app.temps.controlenabled;
+    doc[AppKeys::coolonhigh] = app.temps.coolonhigh;
+    doc[AppKeys::tfancontrolenabled] = app.temps.tfancontrolenabled;
+    doc[AppKeys::tfansetpoint] = app.temps.tfansetpoint;
     doc[KegscreenKeys::tfanstatus] = tstat[TS_TYPE_CHAMBER].state;
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
-        doc[KegscreenKeys::sensors][i][KegscreenKeys::name] = device.sensor[i].name;
+        doc[KegscreenKeys::sensors][i][FlowmeterKeys::name] = device.sensor[i].name;
         doc[KegscreenKeys::sensors][i][KegscreenKeys::value] = device.sensor[i].average;  // Always send in C
-        doc[KegscreenKeys::sensors][i][KegscreenKeys::enabled] = config.temps.enabled[i];
+        doc[KegscreenKeys::sensors][i][AppKeys::enabled] = app.temps.enabled[i];
     }
 
     return sendReport(reportkey, doc);
@@ -269,7 +268,7 @@ bool sendReport(ReportKey thisKey, const char * json) {
     {
         reported[thisKey] = false;
         LCBUrl url;
-        url.setUrl(config.kegscreen.url);
+        url.setUrl(app.kegscreen.url);
 
         IPAddress connectionIP = url.getIP(url.getHost().c_str());
         if (connectionIP == (IPAddress)INADDR_NONE)

@@ -1,12 +1,20 @@
 // Common file/functions for all Keg Cop pages
 
+// Application variables
 var dataHost = "";
 var dataHostCheckDone = false;
 var useTemps = false;
 var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
-var numReqPre = 2;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+var numReqPre = 3;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
 var isKSTV = false;     // Semaphore for KegScreen-TV
 var is404 = false;      // Semaphore for 404 page
+// Semaphores
+var getThemeRunning = false
+var chooseTempMenuRunning = false;
+var checkSemaphoreRunning = false;
+var pingRunning = false;
+var checkDataHostRunning = false;
+var getSecretRunning = false;
 
 const UA = navigator.userAgent;
 
@@ -47,7 +55,7 @@ window.addEventListener("beforeunload", function (event) {
 window.onclick = function (event) {
     var type = event.target.type;
     // Skip random clicks, form items and context help
-    if (typeof type === 'undefined' || type == "submit" || type == "reset" || type == "number" || type == "text" || type == "radio" || event.target.id == "noChange") {
+    if (typeof type === 'undefined' || type == "file" || type == "submit" || type == "reset" || type == "number" || type == "text" || type == "radio" || type == "textarea" || event.target.id == "noChange") {
         return;
     }
     event.preventDefault();
@@ -67,6 +75,72 @@ function preLoad() {
         document.onreadystatechange = function () {
             startLoad();
         };
+    }
+}
+
+function startLoad() {
+    fastTempsMenu();
+    getTheme();
+    $(document).tooltip({ // Enable tooltips
+        'selector': '[data-toggle=tooltip]',
+        //'placement': 'left',
+        'toggleEnabled': true
+    });
+    // Call finishLoad() if it exists (page handler)
+    if (typeof finishLoad === "function") {
+        checkDataHost();    // Check if we are using a dataHost
+        getSecret();        // Get controller secret
+        finishLoad();
+    };
+}
+
+function toggleLoader(status) {
+    // Supports page load spinner
+    var loader = document.getElementById("loader");
+    var tempsApp = document.getElementById("tempsApp");
+    var settingsApp = document.getElementById("settingsApp");
+    var indexApp = document.getElementById("indexApp");
+    var bulkApp = document.getElementById("bulkApp");
+    if (status === "on") {
+        if (loader) {
+            loader.style.display = "block";
+        }
+        if (tempsApp) {
+            tempsApp.style.visibility = "hidden";
+        }
+        if (settingsApp) {
+            settingsApp.style.visibility = "hidden";
+        }
+        if (indexApp) {
+            indexApp.style.visibility = "hidden";
+        }
+        if (bulkApp) {
+            bulkApp.style.visibility = "hidden";
+        }
+    } else {
+        if (loader) {
+            loader.style.display = "none";
+        }
+        if (tempsApp) {
+            tempsApp.style.visibility = "visible";
+        }
+        if (settingsApp) {
+            settingsApp.style.visibility = "visible";
+        }
+        if (indexApp) {
+            indexApp.style.visibility = "visible";
+        }
+        if (bulkApp) {
+            bulkApp.style.visibility = "visible";
+        }
+    }
+}
+
+function pollComplete() {
+    if (loaded == numReq) {
+        finishPage();
+    } else {
+        setTimeout(pollComplete, 300); // try again in 300 milliseconds
     }
 }
 
@@ -103,65 +177,50 @@ function setTheme(selection, reload = false) {
     if (reload) {
         location.reload()
     }
-};
-
-function startLoad() {
-    fastTempsMenu();
-    setTheme();
-    $(document).tooltip({ // Enable tooltips
-        'selector': '[data-toggle=tooltip]',
-        //'placement': 'left',
-        'toggleEnabled': true
-    });
-    // Call finishLoad() if it exists (page handler)
-    if (typeof finishLoad === "function") {
-        checkDataHost();    // Check if we are using a dataHost
-        getSecret();        // Get controller secret
-        finishLoad();
-    };
 }
 
-function toggleLoader(status) {
-    // Supports page load spinner
-    var loader = document.getElementById("loader");
-    var tempsApp = document.getElementById("tempsApp");
-    var settingsApp = document.getElementById("settingsApp");
-    var indexApp = document.getElementById("indexApp");
-    if (status === "on") {
-        if (loader) {
-            loader.style.display = "block";
-        }
-        if (tempsApp) {
-            tempsApp.style.visibility = "hidden";
-        }
-        if (settingsApp) {
-            settingsApp.style.visibility = "hidden";
-        }
-        if (indexApp) {
-            indexApp.style.visibility = "hidden";
-        }
-    } else {
-        if (loader) {
-            loader.style.display = "none";
-        }
-        if (tempsApp) {
-            tempsApp.style.visibility = "visible";
-        }
-        if (settingsApp) {
-            settingsApp.style.visibility = "visible";
-        }
-        if (indexApp) {
-            indexApp.style.visibility = "visible";
-        }
+function getTheme(callback = null) { // Get theme settings
+    if (!dataHostCheckDone) {
+        setTimeout(getTheme, 10);
+        return;
     }
-}
 
-function pollComplete() {
-    if (loaded == numReq) {
-        finishPage();
-    } else {
-        setTimeout(pollComplete, 300); // try again in 300 milliseconds
+    var url = dataHost;
+    if (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
     }
+
+    if (getThemeRunning) return;
+    getThemeRunning = true;
+    url += "/api/v1/config/theme/";
+    var theme = $.getJSON(url, function () {})
+        .done(function (theme) {
+            try {
+                setTheme(theme.theme.toLowerCase());
+                if (loaded < numReq) {
+                    loaded++;
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    //
+                }
+                setTimeout(getTheme, 10000);
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                //
+            }
+            setTimeout(getTheme, 10000);
+        })
+        .always(function () {
+            getThemeRunning = false
+            // Can post-process here
+            if (typeof callback == "function") {
+                callback();
+            }
+        });
 }
 
 function fastTempsMenu() {
@@ -189,6 +248,8 @@ async function chooseTempMenu(callback = null) {
     }
     url += "/api/v1/info/tempcontrol/";
 
+    if (chooseTempMenuRunning) return;
+    chooseTempMenuRunning = true;
     try {
         const response = await fetch(url);
         // response.status holds http code
@@ -212,6 +273,7 @@ async function chooseTempMenu(callback = null) {
         setTimeout(chooseTempMenu, 10000);
     }
     if (typeof callback == "function") {
+        chooseTempMenuRunning = false;
         callback();
     }
 }
@@ -228,11 +290,14 @@ function checkSemaphore(callback) { // Check to see if the update is complete
     }
     url += "/api/v1/action/ping/";
 
+    if (checkSemaphoreRunning) return;
+    checkSemaphoreRunning = true;
     var jqxhr = $.get(url)
         .done(function (data) {
             callback(true);
         })
         .fail(function () {
+            checkSemaphoreRunning = false;
             // This will fail while controller resets
             callback(false);
         });
@@ -277,9 +342,12 @@ function checkDataHost() {
         const ping = new XMLHttpRequest();
         ping.open('GET', '/api/v1/action/ping/');
 
+        if (checkDataHostRunning) setTimeout(checkDataHost, 10000);
+        checkDataHostRunning = true;
         try {
             ping.send();
             ping.onload = function () {
+                checkDataHostRunning = false;
                 if (ping.status != 200) {
                     // To set data server, use the following syntax in console:
                     //
@@ -336,6 +404,8 @@ function getSecret(callback = null) { // Get secret for PUTs
 
     url += "/api/v1/info/secret/";
 
+    if (getSecretRunning) return;
+    getSecretRunning = true;
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -360,6 +430,7 @@ function getSecret(callback = null) { // Get secret for PUTs
             setTimeout(getSecret, 10000);
         })
         .always(function () {
+            getSecretRunning = false;
             // Can post-process here
             if (typeof callback == "function") {
                 callback();
@@ -475,5 +546,16 @@ function getQueryVariable(variable) {
         if (decodeURIComponent(pair[0]) == variable) {
             return decodeURIComponent(pair[1]);
         }
+    }
+}
+
+function buttonClearDelay() { // Poll to see if entire page is loaded
+    if (posted) {
+        $("button[id='submitSettings']").prop('disabled', false);
+        $("button[id='submitSettings']").html('Update');
+        if (window.location.href.includes("settings")) toggleTIO();
+        posted = false;
+    } else {
+        setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
     }
 }
