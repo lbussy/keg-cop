@@ -464,8 +464,6 @@ function getEventTarget(event) {
 }
 
 function cleanURL(tempURL = "", newHost = "") {
-    // TODO: Return a pointer to the controller json if attempting to download confog
-
     // This is to re-write URLs when using a dev server
     if (is404) {
         return tempURL;

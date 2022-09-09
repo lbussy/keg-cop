@@ -762,10 +762,7 @@ void setConfigurationPageHandlers()
 void setEditor()
 {
 #ifdef SPIFFSEDIT
-    // Setup FILESYSTEM editor
-    server.addHandler(new SPIFFSEditor(FILESYSTEM, SPIFFSEDITUSER, SPIFFSEDITPW));
-    server.on("/edit/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
-              { request->redirect("/edit"); });
+    configureEditPages(server, SPIFFSEDITUSER, SPIFFSEDITPW, "edit");
 #endif
 }
 

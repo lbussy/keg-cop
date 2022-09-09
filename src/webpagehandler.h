@@ -38,12 +38,12 @@ SOFTWARE. */
 #include "resetreasons.h"
 #include "api.h"
 
+#include <editserver.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
-#include <SPIFFSEditor.h>
 #include <ESPAsyncWebServer.h>
 #include <Arduino.h>
 
