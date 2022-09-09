@@ -100,7 +100,7 @@ function startUpdate(callback = null) {
 
     $.ajax({
         method: "PUT",
-        data: { secret: secret },
+        headers: {"X-KegCop-Secret": secret },
         url: url
     })
         .done(function (data) {

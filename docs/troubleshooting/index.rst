@@ -17,6 +17,10 @@ A vestigial UI has been created if you desire to back up or restore your configu
     :align: center
     :alt: Filesystem Editor
 
+.. note::
+   The username is ``admin`` and the password is ``p@ssword``.
+   
+
 Here you can:
 
 - `List Files` on the controller filesystem, or;

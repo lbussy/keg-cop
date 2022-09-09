@@ -30,7 +30,7 @@ function doResetSignal() {
 
     $.ajax({
         url: url,
-        data: { secret: secret },
+        headers: {"X-KegCop-Secret": secret },
         type: 'PUT'
     })
         .done(function () {

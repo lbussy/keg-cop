@@ -220,6 +220,12 @@ void InfoAPI::save(JsonObject obj) const
     strcat(_url, sensors);
     strcat(_url, a_delim);
     obj["sensors"] = _url;
+
+    // Secret
+    strcpy(_url, _base);
+    strcat(_url, secret);
+    strcat(_url, a_delim);
+    obj["secret"] = _url;
 }
 
 void ConfigAPI::save(JsonObject obj) const
