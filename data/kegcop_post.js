@@ -13,8 +13,8 @@ tempAlert.warning = function (message) {
     _div = "";
     if (message) {
         _div = '<div class="alert alert-dismissible alert-warning" id="warnTempError">'
-        _div += '<button type="button" class="close" data-dismiss="alert">&times;</button><p class="mb-0">'
-        _div += '<strong>Temps Warning: </strong><span>' + message + '</span></p></div>'
+        _div += '<button type="button" class="btn-close" data-dismiss="alert"></button>'
+        _div += '<p class="mb-0"><strong>Temps Warning: </strong><span>' + message + '</span></p></div>'
     }
     $('#flowAlert_placeholder').html(_div);
 }
@@ -24,8 +24,8 @@ configAlert.warning = function (message) {
     _div = "";
     if (message) {
         _div = '<div class="alert alert-dismissible alert-warning" id="warnConfigError">'
-        _div += '<button type="button" class="close" data-dismiss="alert">&times;</button><p class="mb-0">'
-        _div += '<strong>Config Warning: </strong><span>' + message + '</span></p></div>'
+        _div += '<button type="button" class="btn-close" data-dismiss="alert"></button>'
+        _div += '<p class="mb-0"><strong>Config Warning: </strong><span>' + message + '</span></p></div>'
     }
     $('#flowAlert_placeholder').html(_div);
 }
@@ -35,8 +35,8 @@ flowAlert.warning = function (message) {
     _div = "";
     if (message) {
         _div = '<div class="alert alert-dismissible alert-warning" id="warnFlowError">'
-        _div += '<button type="button" class="close" data-dismiss="alert">&times;</button><p class="mb-0">'
-        _div += '<strong>Flow Warning: </strong><span>' + message + '</span></p></div>'
+        _div += '<button type="button" class="btn-close" data-dismiss="alert"></button>'
+        _div += '<p class="mb-0"><strong>Flow Warning: </strong><span>' + message + '</span></p></div>'
     }
     $('#flowAlert_placeholder').html(_div);
 }
@@ -46,8 +46,8 @@ settingsAlert.error = function (message) {
     _div = "";
     if (message) {
         _div = '<div class="alert alert-dismissible alert-danger" id="warnSettingsError">'
-        _div += '<button type="button" class="close" data-dismiss="alert">&times;</button><p class="mb-0">'
-        _div += '<strong>Settings Error: </strong><span>' + message + '</span></p></div>'
+        _div += '<button type="button" class="btn-close" data-dismiss="alert"></button>'
+        _div += '<p class="mb-0"><strong>Settings Error: </strong><span>' + message + '</span></p></div>'
     }
     $('#settingsAlert_placeholder').html(_div);
 }

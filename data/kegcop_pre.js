@@ -55,7 +55,7 @@ window.addEventListener("beforeunload", function (event) {
 window.onclick = function (event) {
     var type = event.target.type;
     // Skip random clicks, form items and context help
-    if (typeof type === 'undefined' || type == "file" || type == "submit" || type == "reset" || type == "number" || type == "text" || type == "radio" || type == "textarea" || event.target.id == "noChange") {
+    if (typeof type === 'undefined' || type == "file" || type == "submit" || type == "reset" || type == "number" || type == "text" || type == "radio" || type == "textarea" || event.target.id == "noChange" || event.target.classList.contains('btn-close')) {
         return;
     }
     event.preventDefault();

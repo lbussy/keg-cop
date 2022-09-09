@@ -8,10 +8,10 @@ var loaded = 0;
 // Page Variables
 var aboutReloadTimer = 60000;
 // Semaphores
-var thisVersionRunning = false;
 var loadUptimeRunning = false;
 var loadHeapRunning = false;
 var loadResetReasonRunning = false;
+var loadThisVersionRunning = false;
 
 function finishLoad() {
     // Catch page finished event from kegcop_pre.js
@@ -53,8 +53,8 @@ function loadThisVersion() { // Get current parameters
     }
     url += "/api/v1/info/thisVersion/";
 
-    if (thisVersionRunning) return;
-    thisVersionRunning = true;
+    if (loadThisVersionRunning) return;
+    loadThisVersionRunning = true;
     var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
@@ -81,7 +81,7 @@ function loadThisVersion() { // Get current parameters
         })
         .always(function () {
             // Can post-process here
-            thisVersionRunning = false;
+            loadThisVersionRunning = false;
         });
 }
 
