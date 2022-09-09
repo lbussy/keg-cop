@@ -31,8 +31,8 @@ SOFTWARE. */
 
 #define CAPACITY_ACTION_API 768
 #define CAPACITY_INFO_API 768
-#define CAPACITY_CONFIG_API 192
-#define CAPACITY_API 256
+#define CAPACITY_CONFIG_API 384
+#define CAPACITY_API 512
 
 struct ActionAPI
 {
@@ -61,6 +61,8 @@ struct InfoAPI
     const char thatVersion[12] = "thatVersion";
     const char pulses[7] = "pulses";
     const char sensors[8] = "sensors";
+    const char tempcontrol[12] = "tempcontrol";
+    const char secret[7] = "secret";
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -71,6 +73,7 @@ struct ConfigAPI
     // Stores configuration API information
     const char base[7] = "config";
     const char settings[9] = "settings";
+    const char theme[6] = "theme";
     const char taps[5] = "taps";
 
     void load(JsonObjectConst);

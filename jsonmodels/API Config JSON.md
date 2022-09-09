@@ -7,28 +7,27 @@ JSON Definition:
 ```
 {
     "actionAPI": {
-        "actions": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/",
-        "ping": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/ping/",
-        "wifireset": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/wifireset/",
-        "reset": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/reset/",
-        "updatestart": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/updatestart/",
-        "clearupdate": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/clearupdate/",
-        "clearcalmode": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/clearcalmode/",
-        "setcalmode": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/setcalmode/"
+        "ping": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/ping/",
+        "wifireset": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/wifireset/",
+        "reset": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/reset/",
+        "updatestart": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/updatestart/",
+        "clearupdate": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/clearupdate/",
+        "clearcalmode": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/clearcalmode/",
+        "setcalmode": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/setcalmode/"
     },
     "infoAPI": {
-        "information": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/",
-        "resetreason": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/resetreason/",
-        "heap": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/heap/",
-        "uptime": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/uptime/",
-        "thatVersion": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/thatVersion/",
-        "pulses": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/pulses/",
-        "sensors": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/sensors/"
+        "resetreason": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//resetreason/",
+        "heap": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//heap/",
+        "uptime": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//uptime/",
+        "thatVersion": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//thatVersion/",
+        "thisVersion": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//thatVersion/",
+        "pulses": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//pulses/",
+        "sensors": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//sensors/"
     },
     "configAPI": {
-        "configuration": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/config/",
-        "settings": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/config/settings/",
-        "taps": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/config/taps/"
+        "settings": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/config/settings/",
+        "taps": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/config/taps/",
+        "theme": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/config/theme/"
     }
 }
 ```
