@@ -88,16 +88,18 @@
                     </ul>
                 </div>
                 <div class="card-body">
-                    <p>This page will allow you to download, view, load, and edit your JSON configuration files. There are certain caveats to changing data here:</p>
+                    <p>This page will allow you to download your JSON configuration files. You may also upload a replacement file.  With great power comes great responsibiility, so please be aware of the following::</p>
                     <ul>
-                        <li>Host name changes will not take effect until after a controller reset.</li>
+                        <li>If you upload a JSON file replacing either appconfig.json or flowconfig.json, you must immediately reset the controller with the button, <i>not the function from the settings page!!</i>  If you wait, or use the reset in the application UI, your changes will be overwritten.</i>.</li>
                         <li>GUID changes are possible, but the impact on other systems has not been tested.</li>
                         <li>No "sanity checks" are done on this data. It is possible to render the controller inoperative and require re-flashing the firmware, losing your configuration.</li>
-                        <li>The intent of this page is to allow you to merge incomplete configuration.  For example you can load only the following single setting:<br /><pre>{"copconfig":{"kegeratorname": "Keezer"}}</pre>and no other elements.</li>
+                        <li>The intent of this page is to allow you to download a backup copy of the JSON, or upload a complete replacement.  This was not created for casual use, and this should not be necessary in your normal work with the application.</li>
+                        <li>Any settings added to the JSON which are not used will be removed.  Any settings not provided will have default values applied.</li>
                     </ul>
 
                     <hr />
-
+                    <!-- Can't use this right now, merging JSON is too hard on memory space -->
+                    <!--
                     <p>You may download either config file to serve as a backup:</p>
                     <div class="d-flex justify-content-center">
                         <a href="/appconfig.json" class="btn btn-secondary text-nowrap col-2" download>Application</a>
@@ -173,6 +175,11 @@
                                 </button>
                             </div>
                         </form>
+                    </div>
+                    -->
+ 
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <iframe id="editbox" class="embed-responsive-item" src=""></iframe>
                     </div>
 
                 </div>
