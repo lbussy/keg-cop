@@ -4,7 +4,8 @@ toggleLoader("on");
 
 // Pre Loader Variables
 var loaded = 0; // Hold data load status
-var numReq = 4 + numReqPre; // Number of JSON required
+var thisReq = 4;
+var numReq = thisReq + numReqPre; // Number of JSON required
 // Page variables
 var hostname = window.location.hostname;
 var originalHostnameConfig;
@@ -124,7 +125,7 @@ function repopulatePage(doSpinner = false) { // Reload data if we need it
     if (doSpinner) {
         toggleLoader("on");
     }
-    loaded = 0;
+    loaded -= 2;
     chooseTempMenu();
     populateConfig();
     populateFlow();
@@ -514,6 +515,7 @@ function finishPage() { // Display page
     toggleCalMode(false);
     posted = true;
     toggleTIO();
+    fastTempsMenu();
     toggleLoader("off");
 }
 
@@ -756,6 +758,21 @@ function processSensorControlPost(url, obj) {
     enablelower = $form.find("input[name='enablelower']:checked").val();
     kegcal = $form.find("input[name='kegcal']").val();
     enablekeg = $form.find("input[name='enablekeg']:checked").val();
+
+    if (JSON.parse(enableroom) || JSON.parse(enabletower) || JSON.parse(enableupper) || JSON.parse(enablelower) || JSON.parse(enablekeg))  {
+        sessionStorage.setItem("useTemps", true);
+    } else {
+        sessionStorage.setItem("useTemps", false);
+    }
+    if (JSON.parse(sessionStorage.getItem("useTemps")) === true) {
+        if (!$('#displaytemplink').is(':visible')) {
+            $('#displaytemplink').toggle();
+        }
+    } else {
+        if ($('#displaytemplink').is(':visible')) {
+            $('#displaytemplink').toggle();
+        }
+    }
 
     // Process put
     data = {
