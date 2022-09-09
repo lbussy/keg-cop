@@ -16,13 +16,14 @@ JSON Definition:
         "setcalmode": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/setcalmode/"
     },
     "infoAPI": {
-        "resetreason": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//resetreason/",
-        "heap": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//heap/",
-        "uptime": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//uptime/",
-        "thatVersion": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//thatVersion/",
-        "thisVersion": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//thatVersion/",
-        "pulses": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//pulses/",
-        "sensors": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1//sensors/"
+        "resetreason": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/resetreason/",
+        "heap": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/heap/",
+        "uptime": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/uptime/",
+        "thatVersion": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/thatVersion/",
+        "thisVersion": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/thatVersion/",
+        "pulses": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/pulses/",
+        "sensors": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/sensors/"
+        "secret": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/secret/"
     },
     "configAPI": {
         "settings": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/config/settings/",

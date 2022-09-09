@@ -2179,36 +2179,30 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
 {
     bool didPass = false;
     bool didProcess = false;
-    // Loop through all parameters
-    int params = request->params();
-    for (int i = 0; i < params; i++)
-    {
-        AsyncWebParameter *p = request->getParam(i);
-        if (p->isPost())
-        {
-            // Process any p->name().c_str() / p->value().c_str() pairs
-            const char *name = p->name().c_str();
-            const char *value = p->value().c_str();
-            Log.verbose(F("[DEBUG] handleSecret() Processing [%s]:(%s) pair." CR), name, value);
 
-            // Secret procesing
-            //
-            if (strcmp(name, AppKeys::secret) == 0) // Secret was passed
-            {
-                didProcess = true;
-                if (strcmp(value, app.copconfig.guid) == 0)
-                {
-                    didPass = true;
-                    Log.notice(F("Secret Check: [%s]:(%s) is valid." CR), name, value);
-                }
-                else
-                {
-                    didPass = false;
-                    Log.warning(F("Secret Check: [%s]:(%s) not valid." CR), name, value);
-                }
-            }
+    Log.verbose(F("Processing secret header." CR));
+
+    // Secret processing
+    //
+    const char * needHeader = "X-KegCop-Secret";
+    if (request->hasHeader(needHeader))
+    {
+        didProcess = true;
+        AsyncWebHeader* bulkLoadHeader = request->getHeader(needHeader);
+        const char * headerVal = bulkLoadHeader->value().c_str();
+        Log.notice(F("[DEBUG] Secret Check: Testing[%s]:[%s]." CR), app.copconfig.guid, headerVal);
+        if (strcmp(headerVal, app.copconfig.guid) == 0)
+        {
+            didPass = true;
+            Log.notice(F("Secret Check: [%s]:(%s) is valid." CR), needHeader, headerVal);
+        }
+        else
+        {
+            didPass = false;
+            Log.notice(F("Secret Check: [%s]:(%s) is not valid." CR), needHeader, headerVal);
         }
     }
+
     if (!didProcess)
     {
         Log.warning(F("Secret Check: Secret not received." CR));
@@ -2235,8 +2229,8 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
     bool didPass = false;
     bool didProcess = false;
 
-    if (request->hasHeader("X-BulkLoad-Type")) {
-        AsyncWebHeader* bulkLoadHeader = request->getHeader("X-BulkLoad-Type");
+    if (request->hasHeader("X-KegCop-BulkLoad-Type")) {
+        AsyncWebHeader* bulkLoadHeader = request->getHeader("X-KegCop-BulkLoad-Type");
         const char * headerVal = bulkLoadHeader->value().c_str();
         if (!strcmp(headerVal, "AppConfig") == 0)
         {
@@ -2376,12 +2370,12 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
         else
         {
             // No valid bulk load type passed
-            Log.verbose(F("[DEBUG] handleJson() No valid X-BulkLoad-Type bulk load header passed: %s" CR), bulkLoadHeader->value().c_str());
+            Log.verbose(F("[DEBUG] handleJson() No valid X-KegCop-BulkLoad-Type bulk load header passed: %s" CR), bulkLoadHeader->value().c_str());
             send_not_allowed(request);
         }
     }
     else {
-        Log.verbose(F("[DEBUG] handleJson() No X-BulkLoad-Type header passed." CR));
+        Log.verbose(F("[DEBUG] handleJson() No X-KegCop-BulkLoad-Type header passed." CR));
     }
 
     if (!didProcess)

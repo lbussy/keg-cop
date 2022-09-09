@@ -131,7 +131,7 @@ function finishPage() { // Display page
 //     $.ajax({
 //         url: url,
 //         headers: {
-//             "X-BulkLoad-Type"   : header,
+//             "X-KegCop-BulkLoad-Type"   : header,
 //             "X-Secret"          : secret
 //         },
 //         data: data,

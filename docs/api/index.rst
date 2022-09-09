@@ -3,6 +3,13 @@
 Keg Cop API
 ################
 
+.. note::
+   As of version 1.2.0, all PUT and action API usage must include an ``X-KegCop-Secret`` header with a value identical to the controller GUID.
+
+   The secret may be obtained by querying the ``/api/v1/info/secret`` endpoint.
+
+   This is obviously not intended to replace good security practices, and in no way would I ever recommend that you EVER expose this to the Internet or an unprotected network.
+
 Keg Cop uses a combination of API types:
 
 - `Client-Initiated Communication`_
@@ -119,6 +126,7 @@ These information provider pages exist within the Info API tree:
 - `That Version`_
 - `Pulses`_
 - `Sensors`_
+- `Secret`_
 
 Reset Reason
 --------------
@@ -326,6 +334,26 @@ Where:
 - ``tfancontrolenabled`` = Boolean for enabling tower temperature control.
 - ``sensors`` = An array of temperature sensors denoting the ``name``, ``enable`` status, and current ``value`` of each.
 - ``displayenabled`` = Boolean to display temperatures on the web UI or not.
+
+Sensors
+--------------
+
+- **Address:** :file:`/api/v1/info/secret/`
+- **Valid Methods:** :file:`ANY`
+- **Data:** Ignored
+- **Description:** Secret used for PUT operations.
+- **Error Message:** None.
+- **Response:**
+
+.. code-block:: json
+
+    {
+        "secret": "5C95AB340000D8A7"
+    }
+
+Where:
+
+- ``secret`` = Hexidecimal string for representing controller GUID.
 
 Configuration Page Handlers
 =================================

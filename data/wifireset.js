@@ -30,7 +30,6 @@ function doResetSignal() {
 
     $.ajax({
         url: url,
-        data: { secret: secret },
         type: 'PUT'
     })
         .done(function () {

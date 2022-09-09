@@ -850,6 +850,7 @@ function putData(url, data, newpage = false, newdata = false, callback = null) {
 
     $.ajax({
         url: url,
+        headers: {"X-KegCop-Secret": secret },
         data: data,
         type: 'PUT'
     })
@@ -1012,19 +1013,18 @@ function toggleCalMode(inCal = false, meter, callback = null) {
         setTimeout(toggleCalMode, 10);
         return;
     }
-    var data = { secret: secret };
 
     var url = dataHost;
     while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
+    data = {};
     if (inCal) {
         url += "/api/v1/action/setcalmode/";
         // Get form data
         tapnum = $('#flowmeter').val();
         data = {
-            tapnum: tapnum,
-            secret: secret
+            tapnum: tapnum
         }
     } else {
         url += "/api/v1/action/clearcalmode/";
