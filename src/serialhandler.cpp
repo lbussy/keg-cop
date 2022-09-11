@@ -294,7 +294,7 @@ void serialLoop()
                 toggleTempEmulation(!app.copconfig.tempemulate);
                 break;
             case '?': // Help
-                SERIAL.print(API_KEY);
+                SERIAL.print(AppKeys::appname);
                 SERIAL.println(F(" - Available serial commands:"));
                 SERIAL.println(F("\th:\tDisplay heap information"));
                 SERIAL.println(F("\tp:\t'Ping, e.g. {}' (null json)"));

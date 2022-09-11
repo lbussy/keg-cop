@@ -33,7 +33,7 @@ bool sendTargetReport()
     {
         Log.verbose(F("Building URL Target report." CR));
         UrlReport urlreport;
-        strlcpy(urlreport.api, API_KEY, sizeof(urlreport.api));
+        strlcpy(urlreport.api, AppKeys::apikey, sizeof(urlreport.api));
         strlcpy(urlreport.guid, app.copconfig.guid, sizeof(urlreport.guid));
         strlcpy(urlreport.hostname, app.copconfig.hostname, sizeof(urlreport.hostname));
         strlcpy(urlreport.breweryname, app.copconfig.breweryname, sizeof(urlreport.breweryname));
