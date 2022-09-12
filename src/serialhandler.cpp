@@ -23,22 +23,16 @@ SOFTWARE. */
 #include "serialhandler.h"
 
 #undef SERIAL
-#if DOTELNET == true
 ESPTelnet SerialAndTelnet;
 #define SERIAL SerialAndTelnet // Use Telnet
-#else
-#define SERIAL Serial // Use hardware serial
-#endif
 
 void serial()
 {
-#if DOTELNET == true
     char buffer[32];
     strcpy(buffer, (const char *)"Connected to ");
-    strcat(buffer, (const char *)API_KEY);
+    strcat(buffer, (AppKeys::appname;
     strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
-#endif
     // _delay(3000); // Delay to allow a monitor to start
     SERIAL.begin(BAUD);
     printCR(true);
@@ -134,14 +128,9 @@ void flush(bool safe)
 
 void serialLoop()
 {
-#if DOTELNET == true
     SerialAndTelnet.handle();
     if (SerialAndTelnet.available() > 0)
     {
-#else
-    if (Serial.available() > 0)
-    {
-#endif
         if (!app.copconfig.serial)
         { // Turn on/off Serial Mode
             switch (SERIAL.read())

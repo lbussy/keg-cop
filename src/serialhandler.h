@@ -37,9 +37,7 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
-#if DOTELNET == true
 #include <esptelnet.h>
-#endif
 
 // Basic Serial handlers
 void serial();
