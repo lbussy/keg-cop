@@ -2,5 +2,6 @@
     "name":"Keg Cop",
     "deviceType":"kegcop",
     "appendID":false,
-    "path":"/"
+    "path":"/ks-tv/",
+    "deviceID":"ABC123"
  }

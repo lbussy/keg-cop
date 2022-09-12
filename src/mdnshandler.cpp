@@ -51,6 +51,11 @@ void mDNSReset()
 
 void mDNSServiceAdvert()
 {
+    // There is almost certainly a better way to do this
+    char guid[20];
+    getGuid(guid);
+    String guid_str = guid;
+
     // Services
     MDNS.addService("http", "tcp", PORT);
     MDNS.addService("kc_http", "tcp", PORT);
@@ -62,8 +67,8 @@ void mDNSServiceAdvert()
     MDNS.addService("ks-tv", "tcp", PORT);
 
 // TXT records
-    MDNS.addServiceTxt("ks-tv", "tcp", "device", "kegcop");
-    MDNS.addServiceTxt("ks-tv", "tcp", "method", "http");
-    MDNS.addServiceTxt("ks-tv", "tcp", "displayPath", "/ks-tv/");
+    MDNS.addServiceTxt("ks-tv", "tcp", "deviceType", "kegcop");
+    MDNS.addServiceTxt("ks-tv", "tcp", "path", "/ks-tv/");
     MDNS.addServiceTxt("ks-tv", "tcp", "appendID", "no");
+    MDNS.addServiceTxt("ks-tv", "tcp", "deviceID", guid_str);
 }
