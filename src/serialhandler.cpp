@@ -30,7 +30,7 @@ void serial()
 {
     char buffer[32];
     strcpy(buffer, (const char *)"Connected to ");
-    strcat(buffer, (AppKeys::appname;
+    strcat(buffer, AppKeys::appname);
     strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
     // _delay(3000); // Delay to allow a monitor to start
@@ -294,7 +294,7 @@ void serialLoop()
                 toggleTempEmulation(!app.copconfig.tempemulate);
                 break;
             case '?': // Help
-                SERIAL.print(API_KEY);
+                SERIAL.print(AppKeys::appname);
                 SERIAL.println(F(" - Available serial commands:"));
                 SERIAL.println(F("\th:\tDisplay heap information"));
                 SERIAL.println(F("\tp:\t'Ping, e.g. {}' (null json)"));

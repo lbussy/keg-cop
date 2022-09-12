@@ -122,6 +122,7 @@ void setup()
     startTstat(TS_TYPE_TOWER);   // Initialize fan control
     doVersionPoll();             // Get server version at startup
     setupRPints();               // Set up MQTT
+    doKSJSON();                  // Add KegScreen TV configuration
 #ifdef _DEBUG_BUILD
     doUptime(true); // Uptime log start
 #endif
@@ -143,7 +144,7 @@ void setup()
     if (app.copconfig.serial)
         nullDoc("d");
     else
-        Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), API_KEY, fw_version(), fs_version(), branch(), build());
+        Log.notice(F("Started %s version %s/%s (%s) [%s]." CR), AppKeys::appname, fw_version(), fs_version(), branch(), build());
 #else
     nullDoc("d");
 #endif

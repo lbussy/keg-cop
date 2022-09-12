@@ -179,7 +179,8 @@ struct AppConfig
  */
 namespace AppKeys
 {
-    constexpr auto appname = "App Config";
+    constexpr auto apikey = API_KEY;
+    constexpr auto appname = APP_NAME;
     // App Config
     constexpr auto apconfig = "apconfig";
     constexpr auto copconfig = "copconfig";
@@ -258,6 +259,9 @@ namespace AppKeys
     constexpr auto badfwtime = "badfwtime";
     constexpr auto badfs = "badfs";
     constexpr auto badfstime = "badfstime";
+
+    // Gen BS
+    constexpr auto tcp = "tcp";
 };
 
 extern AppConfig app;

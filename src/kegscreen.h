@@ -36,6 +36,52 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
+/**
+ * \brief Strings used for JSON keys
+ * \see ControlConstants
+ */
+namespace KegScreenKeys {
+    constexpr auto api = "api";
+    // constexpr auto guid = AppKeys::guid;
+    // constexpr auto hostname = AppKeys::hostname;
+    // constexpr auto breweryname = AppKeys::breweryname;
+    // constexpr auto kegeratorname = AppKeys::kegeratorname;
+    constexpr auto reporttype = "reporttype";
+    // constexpr auto imperial = AppKeys::imperial;
+    // constexpr auto tapid = FlowmeterKeys::tapid;
+    // constexpr auto name = FlowmeterKeys::name;
+    // constexpr auto ppu = FlowmeterKeys::ppu;
+    // constexpr auto remaining = FlowmeterKeys::remaining;
+    // constexpr auto capacity = FlowmeterKeys::capacity;
+    // constexpr auto active = FlowmeterKeys::active;
+    // constexpr auto calibrating = FlowmeterKeys::calibrating;
+    constexpr auto dispensed = "dispensed";
+    constexpr auto coolstate = "coolstate";
+    // constexpr auto controlpoint = AppKeys::controlpoint;
+
+    constexpr auto setting = "setting";
+    constexpr auto status = "status";
+    // constexpr auto controlenabled = AppKeys::controlenabled;
+    // constexpr auto coolonhigh = AppKeys::coolonhigh;
+
+    // constexpr auto tfancontrolenabled = AppKeys::tfancontrolenabled;
+    // constexpr auto tfansetpoint = AppKeys::tfansetpoint;
+    constexpr auto tfanstatus = "tfanstatus";
+
+    constexpr auto sensors = "sensors";
+    constexpr auto value = "value";
+    // constexpr auto enabled = AppKeys::enabled;
+
+    // KegScreen TV Support
+    constexpr auto kstv = "ks-tv";
+    constexpr auto kstv_path = "/ks-tv/";
+    // JSON/MDNS Keys
+    constexpr auto name ="name";
+    constexpr auto devicetype ="deviceType";
+    constexpr auto appendID = "appenddID";
+    constexpr auto deviceid = "deviceID";
+};
+
 enum ReportKey
 {
     KS_TAPINFO,
@@ -53,6 +99,9 @@ bool sendTempReport();                      // Send a temp report on timer
 // bool sendReport(ReportKey, const String &); // Handle the business of sending report
 bool sendReport(ReportKey thisKey, JsonDocument &doc);
 bool sendReport(ReportKey thisKey, const char * json);
+// KegScreen TV Support
+void doKSMDNS();
+void doKSJSON();
 
 // Callbacks for Async
 void reportCBTapInfo(void *, asyncHTTPrequest *, int);

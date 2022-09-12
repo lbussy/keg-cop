@@ -57,18 +57,8 @@ void mDNSServiceAdvert()
     String guid_str = guid;
 
     // Services
-    MDNS.addService("http", "tcp", PORT);
-    MDNS.addService("kc_http", "tcp", PORT);
-    MDNS.addService("keg_cop", "tcp", PORT);
-#ifdef _DEBUG_BUILD
-    MDNS.addService("kc_telnet", "tcp",  TELNETPORT);
-#endif
-    MDNS.addService(AppKeys::kegscreen, "tcp", PORT);
-    MDNS.addService("ks-tv", "tcp", PORT);
+    MDNS.addService(AppKeys::apikey, AppKeys::tcp, PORT);
 
-// TXT records
-    MDNS.addServiceTxt("ks-tv", "tcp", "deviceType", "kegcop");
-    MDNS.addServiceTxt("ks-tv", "tcp", "path", "/ks-tv/");
-    MDNS.addServiceTxt("ks-tv", "tcp", "appendID", "no");
-    MDNS.addServiceTxt("ks-tv", "tcp", "deviceID", guid_str);
+    // Handle KegScreen TV Adverts
+    doKSMDNS();
 }
