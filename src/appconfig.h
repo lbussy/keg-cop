@@ -181,7 +181,6 @@ namespace AppKeys
 {
     constexpr auto apikey = API_KEY;
     constexpr auto appname = APP_NAME;
-    constexpr auto appname = "App Config";
     // App Config
     constexpr auto apconfig = "apconfig";
     constexpr auto copconfig = "copconfig";
@@ -262,7 +261,7 @@ namespace AppKeys
     constexpr auto badfstime = "badfstime";
 
     // Gen BS
-    constexpr auto tcp = AppKeys::tcp;
+    constexpr auto tcp = "tcp";
 };
 
 extern AppConfig app;
