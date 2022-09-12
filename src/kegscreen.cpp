@@ -52,43 +52,6 @@ const char *reportname[5] = {
     "Cool",
     "Temps"};
 
-/**
- * \brief Strings used for JSON keys
- * \see ControlConstants
- */
-namespace KegscreenKeys {
-    constexpr auto api = "api";
-    // constexpr auto guid = AppKeys::guid;
-    // constexpr auto hostname = AppKeys::hostname;
-    // constexpr auto breweryname = AppKeys::breweryname;
-    // constexpr auto kegeratorname = AppKeys::kegeratorname;
-    constexpr auto reporttype = "reporttype";
-    // constexpr auto imperial = AppKeys::imperial;
-    // constexpr auto tapid = FlowmeterKeys::tapid;
-    // constexpr auto name = FlowmeterKeys::name;
-    // constexpr auto ppu = FlowmeterKeys::ppu;
-    // constexpr auto remaining = FlowmeterKeys::remaining;
-    // constexpr auto capacity = FlowmeterKeys::capacity;
-    // constexpr auto active = FlowmeterKeys::active;
-    // constexpr auto calibrating = FlowmeterKeys::calibrating;
-    constexpr auto dispensed = "dispensed";
-    constexpr auto coolstate = "coolstate";
-    // constexpr auto controlpoint = AppKeys::controlpoint;
-
-    constexpr auto setting = "setting";
-    constexpr auto status = "status";
-    // constexpr auto controlenabled = AppKeys::controlenabled;
-    // constexpr auto coolonhigh = AppKeys::coolonhigh;
-
-    // constexpr auto tfancontrolenabled = AppKeys::tfancontrolenabled;
-    // constexpr auto tfansetpoint = AppKeys::tfansetpoint;
-    constexpr auto tfanstatus = "tfanstatus";
-
-    constexpr auto sensors = "sensors";
-    constexpr auto value = "value";
-    // constexpr auto enabled = AppKeys::enabled;
-};
-
 bool reported[5];
 
 static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
@@ -97,12 +60,12 @@ static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
 #define kegscreenIsEnabled (app.kegscreen.url != NULL && app.kegscreen.url[0] != '\0')
 
 void CommonReportFields(JsonDocument &doc, ReportKey reportkey) {
-    doc[KegscreenKeys::api] = API_KEY;
+    doc[KegScreenKeys::api] = AppKeys::apikey;
     doc[AppKeys::guid] = app.copconfig.guid;
     doc[AppKeys::hostname] = app.copconfig.hostname;
     doc[AppKeys::breweryname] = app.copconfig.breweryname;
     doc[AppKeys::kegeratorname] = app.copconfig.kegeratorname;
-    doc[KegscreenKeys::reporttype] = reporttype[reportkey];
+    doc[KegScreenKeys::reporttype] = reporttype[reportkey];
 }
 
 bool sendTapInfoReport(int tapid)
@@ -156,7 +119,7 @@ bool sendPourReport(int tapid, float dispensed)
 
             doc[FlowmeterKeys::tapid] = tapid;
             doc[AppKeys::imperial] = app.copconfig.imperial;
-            doc[KegscreenKeys::dispensed] = dispensed;
+            doc[KegScreenKeys::dispensed] = dispensed;
             doc[FlowmeterKeys::remaining] = flow.taps[tapid].remaining;
 
             return sendReport(reportkey, doc);
@@ -216,8 +179,8 @@ bool sendCoolStateReport()
     }
 
     CommonReportFields(doc, reportkey);
-    doc[KegscreenKeys::coolstate] = tstat[TS_TYPE_CHAMBER].state;
-    doc[KegscreenKeys::tfanstatus] = tstat[TS_TYPE_TOWER].state;
+    doc[KegScreenKeys::coolstate] = tstat[TS_TYPE_CHAMBER].state;
+    doc[KegScreenKeys::tfanstatus] = tstat[TS_TYPE_TOWER].state;
 
     return sendReport(reportkey, doc);
 }
@@ -239,19 +202,19 @@ bool sendTempReport()
 
     doc[AppKeys::imperial] = app.copconfig.imperial;
     doc[AppKeys::controlpoint] = app.temps.controlpoint;
-    doc[KegscreenKeys::setting] = app.temps.setpoint;
-    doc[KegscreenKeys::status] = tstat[TS_TYPE_CHAMBER].state;
+    doc[KegScreenKeys::setting] = app.temps.setpoint;
+    doc[KegScreenKeys::status] = tstat[TS_TYPE_CHAMBER].state;
     doc[AppKeys::controlenabled] = app.temps.controlenabled;
     doc[AppKeys::coolonhigh] = app.temps.coolonhigh;
     doc[AppKeys::tfancontrolenabled] = app.temps.tfancontrolenabled;
     doc[AppKeys::tfansetpoint] = app.temps.tfansetpoint;
-    doc[KegscreenKeys::tfanstatus] = tstat[TS_TYPE_CHAMBER].state;
+    doc[KegScreenKeys::tfanstatus] = tstat[TS_TYPE_CHAMBER].state;
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
-        doc[KegscreenKeys::sensors][i][FlowmeterKeys::name] = device.sensor[i].name;
-        doc[KegscreenKeys::sensors][i][KegscreenKeys::value] = device.sensor[i].average;  // Always send in C
-        doc[KegscreenKeys::sensors][i][AppKeys::enabled] = app.temps.enabled[i];
+        doc[KegScreenKeys::sensors][i][FlowmeterKeys::name] = device.sensor[i].name;
+        doc[KegScreenKeys::sensors][i][KegScreenKeys::value] = device.sensor[i].average;  // Always send in C
+        doc[KegScreenKeys::sensors][i][AppKeys::enabled] = app.temps.enabled[i];
     }
 
     return sendReport(reportkey, doc);
@@ -332,6 +295,56 @@ bool sendReport(ReportKey thisKey, const char * json) {
         return false;
     }
     return true;
+}
+
+void doKSMDNS()
+{
+    MDNS.addService(AppKeys::kegscreen, AppKeys::tcp, PORT);
+    MDNS.addService(KegScreenKeys::kstv, AppKeys::tcp, PORT);
+
+// TXT records
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::devicetype, AppKeys::apikey);
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::path, KegScreenKeys::kstv_path);
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::appendID, "no");
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::deviceid, String(app.copconfig.guid));
+}
+
+void doKSJSON()
+{
+    const char * featureName = "KegScreen TV";
+    StaticJsonDocument<192> doc;
+
+    doc["name"] = AppKeys::appname;
+    doc["deviceType"] = AppKeys::apikey;
+    doc["appendID"] = false;
+    doc["path"] = KegScreenKeys::kstv_path;
+    doc["deviceID"] = app.copconfig.guid;
+
+    // Make sure FILESTYSTEM exists
+    if (!FILESYSTEM.begin())
+    {
+        Log.error(F("%s: Failed to connect to filesystem." CR), featureName);
+    }
+    else
+    {
+        File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
+        if (!file)
+        {
+            Log.error(F("%s: Failed to open JSON file." CR), featureName);
+        }
+        else
+        {
+            // Serialize JSON to file
+            if (serializeJson(doc, file) == 0) {
+                Log.error(F("%s: Failed to write JSON file." CR), featureName);
+            }
+            else
+            {
+                Log.verbose(F("%s: JSON file written." CR), featureName);
+            }
+            file.close();
+        }
+    }
 }
 
 void reportCBTapInfo(void *optParm, asyncHTTPrequest *report, int readyState)
