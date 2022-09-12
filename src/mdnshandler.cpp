@@ -51,8 +51,14 @@ void mDNSReset()
 
 void mDNSServiceAdvert()
 {
+    // There is almost certainly a better way to do this
+    char guid[20];
+    getGuid(guid);
+    String guid_str = guid;
+
     // Services
     MDNS.addService(AppKeys::apikey, AppKeys::tcp, PORT);
 
+    // Handle KegScreen TV Adverts
     doKSMDNS();
 }
