@@ -761,9 +761,7 @@ void setConfigurationPageHandlers()
 
 void setEditor()
 {
-#ifdef SPIFFSEDIT
     configureEditPages(server, SPIFFSEDITUSER, SPIFFSEDITPW, "edit");
-#endif
 }
 
 void stopWebServer()
