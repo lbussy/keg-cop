@@ -2188,7 +2188,7 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
         didProcess = true;
         AsyncWebHeader* bulkLoadHeader = request->getHeader(needHeader);
         const char * headerVal = bulkLoadHeader->value().c_str();
-        Log.notice(F("[DEBUG] Secret Check: Testing[%s]:[%s]." CR), app.copconfig.guid, headerVal);
+        //Log.notice(F("[DEBUG] Secret Check: Testing[%s]:[%s]." CR), app.copconfig.guid, headerVal);
         if (strcmp(headerVal, app.copconfig.guid) == 0)
         {
             didPass = true;

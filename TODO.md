@@ -1,6 +1,5 @@
 # TODO
 
 - [ ] Move card down on page
-- [ ] Increase size of text
-- [ ] Figure out why some config is wiped on crash
-- [ ] Hide page when selecting different theme
+- [ ] Increase size of text on KegScreen TV index
+- [ ] Figure out why sometimes config is wiped on crash
