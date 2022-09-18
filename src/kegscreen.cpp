@@ -342,8 +342,8 @@ void doKSJSON()
             {
                 Log.verbose(F("%s: JSON file written." CR), featureName);
             }
-            file.close();
         }
+        file.close();
     }
 }
 

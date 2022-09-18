@@ -107,18 +107,18 @@ bool saveFlowConfig()
             saveOK = true;
         }
         file.close();
-        return true;
     }
     return saveOK;
 }
 
 bool deleteFlowConfigFile()
 {
-    if (!FILESYSTEM.begin())
+    bool delOK = false;
+    if (FILESYSTEM.begin())
     {
-        return false;
+        delOK = FILESYSTEM.remove(FLOW_FILENAME);
     }
-    return FILESYSTEM.remove(FLOW_FILENAME);
+    return delOK;
 }
 
 bool deserializeFlowConfig(Stream &src)
