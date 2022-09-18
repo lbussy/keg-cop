@@ -734,12 +734,13 @@ function processThemePost(url, obj) {
     theme = $form.find("input[name='theme']:checked").val();
 
     // Set theme live
+    toggleLoader("on");
     setTheme(theme);
     // Process put
     data = {
         theme: theme
     };
-    putData(url, data, false, false, null);
+    putData(url, data, true, true, null);
 }
 
 function processSensorControlPost(url, obj) {
