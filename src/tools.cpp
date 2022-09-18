@@ -28,7 +28,7 @@ unsigned int queuePulseReport[NUMTAPS]; // Store pending pulses
 bool queueKickReport[NUMTAPS];          // Store pending kicks
 
 bool doReset = false;             // Semaphore for reset
-bool doWiFiReset = false;         // Semaphore for wifi reset
+bool doWiFiReset = false;         // Semaphore for WiFi reset
 bool doKSTempReport = false;      // Semaphore for KegScreen Temps Report
 bool doTargetReport = false;      // Semaphore for URL Target Report
 bool doRPintsConnect = false;     // Semaphore for MQTT (re)connect
@@ -38,6 +38,7 @@ bool doSetSaveApp = false;        // Semaphore required to save config
 bool doSetSaveFlowConfig = false; // Semaphore required to save flowconfig
 bool doTapInfoReport[NUMTAPS] = {
     false, false, false, false, false, false, false, false}; // Semaphore for reset
+bool doWiFiReconnect = false;                         // Semaphore to reconnect WiFi
 
 void initPourPulseKick()
 {
@@ -138,6 +139,11 @@ void tickerLoop()
         doWiFiReset = false;
         sleep(3);
         resetWifi();
+    }
+    if (doWiFiReconnect)
+    { // WiFi event is a callback - prevent WDT
+        doWiFiReconnect = false;
+        reconnectWiFi();
     }
 
     if (doSetSaveUptime)

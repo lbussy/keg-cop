@@ -69,4 +69,6 @@ void getGuid(char *str); // 17 chars including null terminator
 void killDRD();
 unsigned long getTime();
 
+extern bool doWiFiReconnect;
+
 #endif
