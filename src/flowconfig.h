@@ -79,6 +79,7 @@ namespace FlowmeterKeys {
 bool loadFlowConfig();
 bool loadFlowFile();
 bool saveFlowConfig();
+bool deleteFlowConfigFile();
 bool deserializeFlowConfig(Stream &);
 bool serializeFlowConfig(Print &);
 

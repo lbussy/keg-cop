@@ -108,11 +108,13 @@ void doUptime(bool reboot)
 
 bool deleteUptimeFile()
 {
+    bool retVal =false;
     if (!FILESYSTEM.begin())
     {
-        return false;
+        retVal = false;
     }
-    return FILESYSTEM.remove(uptimefile);
+    retVal = FILESYSTEM.remove(uptimefile);
+    return retVal;
 }
 
 bool loadUptime()
@@ -131,31 +133,35 @@ bool loadUptime()
 
 bool loadUptimeFile()
 {
+    bool retVal;
     if (!FILESYSTEM.begin())
     {
-        return false;
-    }
-    // Loads uptime information from a file on FILESYSTEM
-    File file = FILESYSTEM.open(uptimefile,FILE_READ);
-    if (!FILESYSTEM.exists(uptimefile) || !file)
-    {
-        // File does not exist or unable to read file
+        retVal = false;
     }
     else
     {
-        // Existing uptime info present
+        // Loads uptime information from a file on FILESYSTEM
+        File file = FILESYSTEM.open(uptimefile,FILE_READ);
+        if (!FILESYSTEM.exists(uptimefile) || !file)
+        {
+            // File does not exist or unable to read file
+        }
+        else
+        {
+            // Existing uptime info present
+            if (!deserializeUptime(file))
+            {
+                retVal = false;
+            }
+            else
+            {
+                retVal = true;
+            }
+        }
+        file.close();
     }
+    return retVal;
 
-    if (!deserializeUptime(file))
-    {
-        file.close();
-        return false;
-    }
-    else
-    {
-        file.close();
-        return true;
-    }
 }
 
 bool saveUptime()
@@ -165,22 +171,23 @@ bool saveUptime()
 
 bool saveUptimeFile()
 {
+    bool retVal;
     // Saves the uptime information to a file on FILESYSTEM
     File file = FILESYSTEM.open(uptimefile,FILE_WRITE);
     if (!file)
     {
-        file.close();
-        return false;
+        retVal = false;
     }
-
-    // Serialize JSON to file
-    if (!serializeUptime(file))
+    else
     {
-        file.close();
-        return false;
+        // Serialize JSON to file
+        if (!serializeUptime(file))
+        {
+            retVal = false;
+        }
     }
     file.close();
-    return true;
+    return retVal;
 }
 
 bool deserializeUptime(Stream &src)
@@ -220,17 +227,18 @@ bool serializeUptime(Print &dst)
 
 bool printUptimeFile()
 {
+    bool retVal = true;
     // Prints the content of a file to the Serial
     File file = FILESYSTEM.open(uptimefile,FILE_READ);
     if (!file)
-        return false;
+        retVal = false;
 
     while (file.available())
         printChar(true, (const char *)file.read());
 
     printCR(true);
     file.close();
-    return true;
+    return retVal;
 }
 
 bool printUptime()
@@ -282,20 +290,21 @@ void Uptime::load(JsonObjectConst obj)
 
 bool writeLog(char *logLine)
 {
+    bool retVal = true;
     // Appends to the uptime log on FILESYSTEM
     File file = FILESYSTEM.open(uptimelog, FILE_APPEND);
     if (!file)
     {
         file.close();
-        return false;
+        retVal = false;
     }
 
     // Log CSV to file
     if (!file.println(logLine))
     {
         file.close();
-        return false;
+        retVal = false;
     }
     file.close();
-    return true;
+    return retVal;
 }

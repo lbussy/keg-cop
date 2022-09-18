@@ -46,6 +46,7 @@ void saveConfigCallback();
 void saveParamsCallback();
 void webServerCallback();
 void WiFiEvent(WiFiEvent_t event);
+void reconnectWiFi();
 
 struct tcp_pcb;
 extern struct tcp_pcb *tcp_tw_pcbs;

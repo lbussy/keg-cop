@@ -61,6 +61,7 @@ void fsver()
                 }
             }
         }
+        file.close();
     }
     return;
 }

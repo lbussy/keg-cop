@@ -206,29 +206,34 @@ void WiFiEvent(WiFiEvent_t event)
     Serial.printf("[WiFi-event] event: %d\n", event);
     if (!WiFi.isConnected())
     {
-        wifiPause = true;
-        Log.warning(F("WiFi lost connection, reconnecting .."));
-        disconnectRPints();
-        WiFi.reconnect();
-
-        int WLcount = 0;
-        while (!WiFi.isConnected() && WLcount < 190)
-        {
-            delay(100);
-            printDot(true);
-            ++WLcount;
-        }
-        printCR(true);
-
-        if (!WiFi.isConnected())
-        {
-            // We failed to reconnect.
-            Log.error(F("Unable to reconnect WiFI, restarting." CR));
-            delay(1000);
-            killDRD();
-            ESP.restart();
-        }
-        setDoRPintsConnect();
-        wifiPause = false;
+        doWiFiReconnect = true;
     }
+}
+
+void reconnectWiFi()
+{
+    wifiPause = true;
+    Log.warning(F("WiFi lost connection, reconnecting .."));
+    disconnectRPints();
+    WiFi.reconnect();
+
+    int WLcount = 0;
+    while (!WiFi.isConnected() && WLcount < 200)
+    {
+        _delay(100);
+        printDot(true);
+        ++WLcount;
+    }
+    printCR(true);
+
+    if (!WiFi.isConnected())
+    {
+        // We failed to reconnect.
+        Log.error(F("Unable to reconnect WiFI, restarting." CR));
+        _delay(1000);
+        killDRD();
+        resetController();
+    }
+    setDoRPintsConnect();
+    wifiPause = false;
 }

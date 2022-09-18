@@ -29,6 +29,8 @@ function populateTemps(callback = null) { // Get configuration settings
         setTimeout(populateTemps, 10);
         return;
     }
+    if (populateTempsRunning) return;
+    populateTempsRunning = true;
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
@@ -36,8 +38,6 @@ function populateTemps(callback = null) { // Get configuration settings
     }
     url += "/api/v1/info/sensors/";
 
-    if (populateTempsRunning) return;
-    populateTempsRunning = true;
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -114,6 +114,8 @@ function populateConfig() { // Get configuration settings
         setTimeout(populateConfig, 10);
         return;
     }
+    if (populateConfigRunning) return;
+    populateConfigRunning = true;
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
@@ -121,8 +123,6 @@ function populateConfig() { // Get configuration settings
     }
     url += "/api/v1/config/settings/";
 
-    if (populateConfigRunning) return;
-    populateConfigRunning = true;
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })

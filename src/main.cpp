@@ -49,6 +49,7 @@ void setup()
     }
 
     serial();
+    FILESYSTEM.begin(false, "/spiffs", 32);
 
     // Set wifi reset pin
     pinMode(RESETWIFI, INPUT_PULLUP);

@@ -46,6 +46,8 @@ function loadThisVersion() { // Get current parameters
         setTimeout(loadThisVersion, 10);
         return;
     }
+    if (loadThisVersionRunning) return;
+    loadThisVersionRunning = true;
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
@@ -53,8 +55,6 @@ function loadThisVersion() { // Get current parameters
     }
     url += "/api/v1/info/thisVersion/";
 
-    if (loadThisVersionRunning) return;
-    loadThisVersionRunning = true;
     var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
@@ -90,6 +90,8 @@ function loadUptime(callback = null) { // Get uptime information
         setTimeout(loadUptime, 10);
         return;
     }
+    if (loadUptimeRunning) return;
+    loadUptimeRunning = true;
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
@@ -97,8 +99,6 @@ function loadUptime(callback = null) { // Get uptime information
     }
     url += "/api/v1/info/uptime/";
 
-    if (loadUptimeRunning) return;
-    loadUptimeRunning = true;
     var uptime = $.getJSON(url, function () {
     })
         .done(function (uptime) {
@@ -136,6 +136,8 @@ function loadHeap(callback = null) { // Get heap information
         setTimeout(loadHeap, 10);
         return;
     }
+    if (loadHeapRunning) return;
+    loadHeapRunning = true;
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
@@ -143,8 +145,6 @@ function loadHeap(callback = null) { // Get heap information
     }
     url += "/api/v1/info/heap/";
 
-    if (loadHeapRunning) return;
-    loadHeapRunning = true;
     var heap = $.getJSON(url, function () {
     })
         .done(function (heap) {
@@ -181,6 +181,8 @@ function loadResetReason(callback = null) { // Get last reset reason
         setTimeout(loadResetReason, 10);
         return;
     }
+    if (loadResetReasonRunning) return;
+    loadResetReasonRunning = true;
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
@@ -188,8 +190,6 @@ function loadResetReason(callback = null) { // Get last reset reason
     }
     url += "/api/v1/info/resetreason/";
 
-    if (loadResetReasonRunning) return;
-    loadResetReasonRunning = true;
     var reset = $.getJSON(url, function () {
     })
         .done(function (reset) {

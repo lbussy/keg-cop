@@ -87,20 +87,21 @@ bool printJsonile(JSON_TYPE type)
 {
     // Prints the content of a file to the Serial
     String filename;
+    bool retVal = true;
     if (type == JSON_APP)
         filename = APP_FILENAME;
     else if (type == JSON_FLOW)
         filename = FLOW_FILENAME;
     File file = FILESYSTEM.open(filename, FILE_READ);
     if (!file)
-        return false;
+        retVal = false;
 
     while (file.available())
         printChar(true, (const char *)file.read());
 
     printCR(true);
     file.close();
-    return true;
+    return retVal;
 }
 
 bool printJsonConfig(JSON_TYPE type)
@@ -125,15 +126,17 @@ bool printJsonConfig(JSON_TYPE type)
 bool deleteJsonFile(JSON_TYPE type)
 {
     String filename;
+    bool retVal = true;
     if (type == JSON_APP)
         filename = APP_FILENAME;
     else if (type == JSON_FLOW)
         filename = FLOW_FILENAME;
     if (!FILESYSTEM.begin())
     {
-        return false;
+        retVal = false;
     }
-    return FILESYSTEM.remove(filename);
+    retVal = FILESYSTEM.remove(filename);
+    return retVal;
 }
 #endif
 
