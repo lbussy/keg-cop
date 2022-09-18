@@ -36,6 +36,8 @@ function populateFlow(callback = null) { // Get flowmeter data
         setTimeout(populateFlow, 10);
         return;
     }
+    if (populateFlowRunning) return;
+    populateFlowRunning = true;
 
     var url = dataHost;
     while (url && url.endsWith("/")) {
@@ -43,8 +45,6 @@ function populateFlow(callback = null) { // Get flowmeter data
     }
     url += "/api/v1/config/taps/";
 
-    if (populateFlowRunning) return;
-    populateFlowRunning = true;
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -109,6 +109,8 @@ function populateConfig() { // Get configuration settings
         setTimeout(populateConfig, 10);
         return;
     }
+    if (populateConfigRunning) return;
+    populateConfigRunning = true;
 
     var url = dataHost;
     while (url && url.endsWith("/")) {
@@ -116,8 +118,6 @@ function populateConfig() { // Get configuration settings
     }
     url += "/api/v1/config/settings/";
 
-    if (populateConfigRunning) return;
-    populateConfigRunning = true;
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -157,6 +157,8 @@ function populateTemps(callback = null) { // Get current temperature and state
         setTimeout(populateTemps, 10);
         return;
     }
+    if (populateTempsRunning) return;
+    populateTempsRunning = true;
 
     var url = dataHost;
     while (url && url.endsWith("/")) {
@@ -164,8 +166,6 @@ function populateTemps(callback = null) { // Get current temperature and state
     }
     url += "/api/v1/info/sensors/";
 
-    if (populateTempsRunning) return;
-    populateTempsRunning = true;
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
@@ -418,8 +418,8 @@ function finishPage() { // Display page
     setTimeout(flowReload, flowReloadTimer);
 }
 
-function show_ksTV() {
-    if (isKSTV) {
+function show_ksTV(force = false) {
+    if (isKSTV || force) {
         // Get references ONCE for performance reasons
         var app = document.getElementById('indexApp');
         var card = document.getElementById('indexCard');

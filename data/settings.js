@@ -149,6 +149,8 @@ function populateFlow(callback = null) { // Get flowmeter settings
         setTimeout(populateFlow, 10);
         return;
     }
+    if (populateFlowRunning) return;
+    populateFlowRunning = true;
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
@@ -157,8 +159,6 @@ function populateFlow(callback = null) { // Get flowmeter settings
 
     url += "/api/v1/config/taps/";
 
-    if (populateFlowRunning) return;
-    populateFlowRunning = true;
     var flow = $.getJSON(url, function () {
         flowAlert.warning();
     })
@@ -216,14 +216,14 @@ function populateConfig(callback = null) { // Get configuration settings
         setTimeout(populateConfig, 10);
         return;
     }
+    if (populateConfigRunning) return;
+    populateConfigRunning = true;
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
 
-    if (populateConfigRunning) return;
-    populateConfigRunning = true;
     url += "/api/v1/config/settings/";
     var config = $.getJSON(url, function () {
         configAlert.warning()
@@ -383,6 +383,8 @@ function loadThisVersion() { // Get current parameters
         setTimeout(loadThisVersion, 10);
         return;
     }
+    if (loadThisVersionRunning) return;
+    loadThisVersionRunning = true;
 
     var url = dataHost;
     while (url && url.endsWith("/")) {
@@ -390,8 +392,6 @@ function loadThisVersion() { // Get current parameters
     }
     url += "/api/v1/info/thisVersion/";
 
-    if (loadThisVersionRunning) return;
-    loadThisVersionRunning = true;
     var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
@@ -449,6 +449,8 @@ function loadThatVersion() { // Get current parameters
         setTimeout(loadThatVersion, 10);
         return;
     }
+    if (loadThatVersionRunning) return;
+    loadThatVersionRunning = true;
 
     var url = dataHost;
     while (url && url.endsWith("/")) {
@@ -456,8 +458,6 @@ function loadThatVersion() { // Get current parameters
     }
     url += "/api/v1/info/thatVersion/";
 
-    if (loadThatVersionRunning) return;
-    loadThatVersionRunning = true;
     var thatVersion = $.getJSON(url, function () {
     })
         .done(function (thatVersion) {
