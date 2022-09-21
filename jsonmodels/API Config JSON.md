@@ -7,29 +7,28 @@ JSON Definition:
 ```
 {
     "actionAPI": {
-        "actions": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/",
-        "ping": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/ping/",
-        "wifireset": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/wifireset/",
-        "reset": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/reset/",
-        "updatestart": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/updatestart/",
-        "clearupdate": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/clearupdate/",
-        "clearcalmode": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/clearcalmode/",
-        "setcalmode": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/setcalmode/",
-        "setdevhost": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/setdevhost/"
+        "ping": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/ping/",
+        "wifireset": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/wifireset/",
+        "reset": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/reset/",
+        "updatestart": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/updatestart/",
+        "clearupdate": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/clearupdate/",
+        "clearcalmode": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/clearcalmode/",
+        "setcalmode": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/setcalmode/"
     },
     "infoAPI": {
-        "information": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/",
-        "resetreason": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/resetreason/",
-        "heap": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/heap/",
-        "uptime": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/uptime/",
-        "thatVersion": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/thatVersion/",
-        "pulses": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/pulses/",
-        "sensors": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/info/sensors/"
+        "resetreason": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/resetreason/",
+        "heap": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/heap/",
+        "uptime": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/uptime/",
+        "thatVersion": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/thatVersion/",
+        "thisVersion": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/thatVersion/",
+        "pulses": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/pulses/",
+        "sensors": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/sensors/"
+        "secret": "http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/secret/"
     },
     "configAPI": {
-        "configuration": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/config/",
-        "settings": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/config/settings/",
-        "taps": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/config/taps/"
+        "settings": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/config/settings/",
+        "taps": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/config/taps/",
+        "theme": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/config/theme/"
     }
 }
 ```
@@ -39,7 +38,7 @@ Size:
 
 ```
 Deserial:	2048
-Serial:		2048
+Serial:		384
 ```
 
 Parsing/Deserializing:
@@ -53,8 +52,8 @@ StaticJsonDocument<2048> doc;
 DeserializationError error = deserializeJson(doc, input);
 
 if (error) {
-  Serial.print(F("deserializeJson() failed: "));
-  Serial.println(error.f_str());
+  Serial.print("deserializeJson() failed: ");
+  Serial.println(error.c_str());
   return;
 }
 
@@ -81,14 +80,13 @@ JsonObject configAPI = doc["configAPI"];
 const char* configAPI_configuration = configAPI["configuration"];
 const char* configAPI_settings = configAPI["settings"];
 const char* configAPI_taps = configAPI["taps"];
-
 ```
 
 Serializing:
 ------------
 
 ```
-StaticJsonDocument<2048> doc;
+StaticJsonDocument<384> doc;
 
 JsonObject actionAPI = doc.createNestedObject("actionAPI");
 actionAPI["actions"] = "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/action/";

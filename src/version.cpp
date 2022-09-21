@@ -22,7 +22,7 @@ SOFTWARE. */
 
 #include "version.h"
 
-static const char *filename = VERSIONJSON;
+static const char *versionfile = VERSIONJSON;
 static char fs_ver[32];
 
 const char *project() { return stringify(PIO_SRC_NAM); }
@@ -39,8 +39,8 @@ void fsver()
     if (FILESYSTEM.begin())
     {
         // Loads the configuration from a file on FILESYSTEM
-        File file = FILESYSTEM.open(filename,FILE_READ);
-        if (FILESYSTEM.exists(filename) || !file)
+        File file = FILESYSTEM.open(versionfile,FILE_READ);
+        if (FILESYSTEM.exists(versionfile) || !file)
         {
             // Deserialize version
             StaticJsonDocument<96> doc;
@@ -61,6 +61,7 @@ void fsver()
                 }
             }
         }
+        file.close();
     }
     return;
 }

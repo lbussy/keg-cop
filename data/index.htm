@@ -19,11 +19,12 @@
     <link rel="manifest" href="site.webmanifest">
     <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <meta id="theme_color" name="theme-color" content="#ffffff">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link id="theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css">
+    <link id="theme_aux" rel="stylesheet" href="cerulean_aux.css">
     <link rel="stylesheet" href="kegcop.css">
+    <script src="https://kit.fontawesome.com/e51821420e.js" crossorigin="anonymous"></script>
     <script src="kegcop_pre.js"></script>
 </head>
 
@@ -40,9 +41,9 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/index/">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link active" href="/index/">Home <span class="visually-hidden">(current)</span></a>
                     </li>
                     <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
                         <a class="nav-link" href="/temps/">Temperatures</a>
@@ -57,7 +58,7 @@
                         <a class="nav-link" href="/about/">About</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/home/index.html">?</a>
                     </li>
@@ -73,30 +74,32 @@
         <div id="tempAlert_placeholder"></div>
         <div id="configAlert_placeholder"></div>
 
-        <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
+            <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
 
         <div class="container" id="indexApp"> <!-- Container -->
 
-            <div class="card border-dark mb-3"> <!-- Taps Information -->
+            <div class="card border-dark mb-3" id="indexCard"> <!-- Taps Information -->
 
-                <div class="card-header"> <!-- Double Header -->
-                    <div class="float-left">
+                <div class="card-header d-flex"> <!-- Double Header -->
+                    <ul class="navbar me-auto">
                         <h4><span id="taplistName"></span></h4>
-                    </div>
-                    <div class="float-right">
-                        <h5 id="coolstate" class="text-right alert">
+                    </ul>
+                    <ul class="navbar ms-auto">
+                        <h5 id="coolstate" class="alert">
                             <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="/temps/">
                                 <span id="controlPoint"></span>
                                 <span id="controlTemp"></span>
                                 <span id="tempFormat"></span>
                             </a>
+                            <a style="display:none;" id="fanstatetooltip" data-toggle="tooltip" data-placement="right" class="no-underline" href="/settings/#tempcontrol">
+                                <span class="fa-stack" id="towerFan"></span>
+                            </a>
                         </h5>
-                    </div>
+                    </ul>
                     <div class="clearfix"></div>
                 </div> <!-- Double Header -->
-
                 <div class="card-body"> <!-- Chart Container -->
-                    <canvas id="tapChart"></canvas>
+                    <canvas class="chart" id="tapChart"></canvas>
                 </div> <!-- Chart Container -->
 
             </div> <!-- Taps Information -->

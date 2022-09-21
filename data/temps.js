@@ -1,15 +1,21 @@
 // Supports Temps page
 
 toggleLoader("on");
-var imperial;
+
+// Pre Loader Variables
 var loaded = 0;
-var numReq = 4;
+var numReq = 3 + numReqPre;
+// Page Variables
+var imperial;
 var labels = [];
 var temperatures = [];
 var scaleTemps = [];
 var setpoint = 0;
 var tempChart;
 var chartReloadTimer = 10000; // Reload every 10 seconds
+// Semaphores
+var populateTempsRunning = false;
+var populateConfigRunning = false;
 
 function finishLoad() { // Get page data
     chooseTempMenu();
@@ -23,11 +29,15 @@ function populateTemps(callback = null) { // Get configuration settings
         setTimeout(populateTemps, 10);
         return;
     }
+    if (populateTempsRunning) return;
+    populateTempsRunning = true;
+
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/sensors/";
+
     var okToClear = false;
     if (labels.length) { // Clear arrays if we are re-running
         okToClear = true;
@@ -71,54 +81,7 @@ function populateTemps(callback = null) { // Get configuration settings
                 scaleTemps = temperatures;
                 scaleTemps.push(parseFloat(setpoint));
 
-                // Set indicator button
-                switch (temps.status) {
-                    case 0: // TSTAT_INACTIVE
-                        clearState();
-                        $("#coolstate").addClass("alert-secondary");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is disabled");
-                        break;
-                    case 1: // TSTAT_COOL_BEGIN
-                        clearState();
-                        $("#coolstate").addClass("alert-info");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is starting to cool");
-                        break;
-                    case 2: // TSTAT_COOL_MINOFF
-                        clearState();
-                        $("#coolstate").addClass("alert-danger");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is calling for cooling but in minimum off time");
-                        break;
-                    case 3: // TSTAT_COOL_ACTIVE
-                        clearState();
-                        $("#coolstate").addClass("alert-primary");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is actively cooling");
-                        break;
-                    case 4: // TSTAT_IDLE_END
-                        clearState();
-                        $("#coolstate").addClass("alert-warning");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, minimum off time ending");
-                        break;
-                    case 5: // TSTAT_IDLE_MINON
-                        clearState();
-                        $("#coolstate").addClass("alert-success");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling but in minimum on time");
-                        break;
-                    case 6: // TSTAT_IDLE_INACTIVE
-                        clearState();
-                        $("#coolstate").addClass("alert-light");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, in idle mode");
-                        break;
-                    case 7: // TSTAT_UNKNOWN
-                        clearState();
-                        $("#coolstate").addClass("alert-light");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
-                        break;
-                    default: // TSTAT_UNKNOWN
-                        clearState();
-                        $("#coolstate").addClass("alert-light");
-                        $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
-                        break;
-                }
+                tempStatus(temps); // Populate temperature and fan control display
 
                 if (loaded < numReq) {
                     loaded++;
@@ -141,6 +104,7 @@ function populateTemps(callback = null) { // Get configuration settings
             setTimeout(populateTemps, 10000);
         })
         .always(function () {
+            populateTempsRunning = false;
             // Can post-process here
         });
 }
@@ -150,11 +114,15 @@ function populateConfig() { // Get configuration settings
         setTimeout(populateConfig, 10);
         return;
     }
+    if (populateConfigRunning) return;
+    populateConfigRunning = true;
+
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/settings/";
+
     var config = $.getJSON(url, function () {
         configAlert.warning();
     })
@@ -183,6 +151,7 @@ function populateConfig() { // Get configuration settings
             setTimeout(populateConfig, 10000);
         })
         .always(function () {
+            populateConfigRunning = false;
             // Can post-process here
         });
 }
@@ -206,6 +175,11 @@ function updateScales(chart) {
 }
 
 function doChart() { // Draw chart.js chart
+    // Get font color from CSS
+    const element = document.querySelector('.chart');
+    const style = getComputedStyle(element);
+    var fontColor = style.color;
+
     if (tempChart) {
         tempChart.data.datasets.forEach((dataset) => {
             // Update data
@@ -253,9 +227,15 @@ function doChart() { // Draw chart.js chart
                 },
 
                 scales: {
+                    xAxes: [{
+                        ticks: {
+                            fontColor: fontColor
+                        },
+                    }],
                     yAxes: [{
                         display: true,
                         ticks: {
+                            fontColor: fontColor,
                             min: Math.floor(Math.min.apply(this, scaleTemps) - 2),
                             max: Math.ceil(Math.max.apply(this, scaleTemps) + 1),
                             callback: function (value, index, values) {

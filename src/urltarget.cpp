@@ -29,27 +29,30 @@ static const char *reportname = "Target URL Report";
 bool sendTargetReport()
 { // Send a temp report on timer or demand
     bool retval = true;
-    if (config.urltarget.url != NULL && config.urltarget.url[0] != '\0') // If URL Target
+    if (app.urltarget.url != NULL && app.urltarget.url[0] != '\0') // If URL Target
     {
         Log.verbose(F("Building URL Target report." CR));
         UrlReport urlreport;
-        strlcpy(urlreport.api, apiKey, sizeof(urlreport.api));
-        strlcpy(urlreport.guid, config.copconfig.guid, sizeof(urlreport.guid));
-        strlcpy(urlreport.hostname, config.copconfig.hostname, sizeof(urlreport.hostname));
-        strlcpy(urlreport.breweryname, config.copconfig.breweryname, sizeof(urlreport.breweryname));
-        strlcpy(urlreport.kegeratorname, config.copconfig.kegeratorname, sizeof(urlreport.kegeratorname));
+        strlcpy(urlreport.api, AppKeys::apikey, sizeof(urlreport.api));
+        strlcpy(urlreport.guid, app.copconfig.guid, sizeof(urlreport.guid));
+        strlcpy(urlreport.hostname, app.copconfig.hostname, sizeof(urlreport.hostname));
+        strlcpy(urlreport.breweryname, app.copconfig.breweryname, sizeof(urlreport.breweryname));
+        strlcpy(urlreport.kegeratorname, app.copconfig.kegeratorname, sizeof(urlreport.kegeratorname));
         strlcpy(urlreport.reporttype, reportkey, sizeof(urlreport.reporttype));
-        urlreport.imperial = config.copconfig.imperial;
-        urlreport.controlpoint = config.temps.controlpoint;
-        urlreport.setpoint = config.temps.setpoint;
-        urlreport.state = tstat.state;
-        urlreport.controlenabled = config.temps.controlenabled;
+        urlreport.imperial = app.copconfig.imperial;
+        urlreport.controlpoint = app.temps.controlpoint;
+        urlreport.setpoint = app.temps.setpoint;
+        urlreport.state = tstat[TS_TYPE_CHAMBER].state;
+        urlreport.controlenabled = app.temps.controlenabled;
+        urlreport.tfansetpoint = app.temps.tfansetpoint;
+        urlreport.tfanstate = tstat[TS_TYPE_TOWER].state;
+        urlreport.tfancontrolenabled = app.temps.tfancontrolenabled;
 
         for (int i = 0; i < NUMSENSOR; i++)
         {
             strlcpy(urlreport.sensor[i].name, device.sensor[i].name, sizeof(urlreport.sensor[i].name));
 
-            if (config.copconfig.imperial)
+            if (app.copconfig.imperial)
             {
                 urlreport.sensor[i].average = convertCtoF(device.sensor[i].average);
             }
@@ -58,7 +61,7 @@ bool sendTargetReport()
                 urlreport.sensor[i].average = device.sensor[i].average;
             }
 
-            urlreport.sensor[i].enabled = config.temps.enabled[i];
+            urlreport.sensor[i].enabled = app.temps.enabled[i];
         }
 
         for (int i = 0; i < NUMTAPS; i++)
@@ -71,26 +74,28 @@ bool sendTargetReport()
             urlreport.tap[i].active = flow.taps[i].active;
         }
 
-        const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_ARRAY_SIZE(9) + 5 * JSON_OBJECT_SIZE(3) + 9 * JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(13);
-        DynamicJsonDocument doc(capacity);
+        StaticJsonDocument<3073> doc;
 
         doc["api"] = urlreport.api;
-        doc["guid"] = urlreport.guid;
-        doc["hostname"] = urlreport.hostname;
-        doc["breweryname"] = urlreport.breweryname;
-        doc["kegeratorname"] = urlreport.kegeratorname;
+        doc[AppKeys::guid] = urlreport.guid;
+        doc[AppKeys::hostname] = urlreport.hostname;
+        doc[AppKeys::breweryname] = urlreport.breweryname;
+        doc[AppKeys::kegeratorname] = urlreport.kegeratorname;
         doc["reporttype"] = urlreport.reporttype;
-        doc["imperial"] = urlreport.imperial;
-        doc["controlpoint"] = (const int)urlreport.controlpoint;
+        doc[AppKeys::imperial] = urlreport.imperial;
+        doc[AppKeys::controlpoint] = (const int)urlreport.controlpoint;
         doc["setting"] = (const float)urlreport.setpoint;
         doc["status"] = (const int)urlreport.state;
-        doc["controlenabled"] = urlreport.controlenabled;
+        doc[AppKeys::controlenabled] = urlreport.controlenabled;
+        doc[AppKeys::tfansetpoint] = (const float)urlreport.tfansetpoint;
+        doc["tfanstate"] = (const int)urlreport.tfanstate;
+        doc[AppKeys::tfancontrolenabled] = urlreport.tfancontrolenabled;
 
         for (int i = 0; i < NUMSENSOR; i++)
         {
-            doc["sensors"][i]["name"] = urlreport.sensor[i].name;
+            doc["sensors"][i][FlowmeterKeys::name] = urlreport.sensor[i].name;
             doc["sensors"][i]["value"] = (const float)urlreport.sensor[i].average;
-            doc["sensors"][i]["enabled"] = urlreport.sensor[i].enabled;
+            doc["sensors"][i][AppKeys::enabled] = urlreport.sensor[i].enabled;
         }
 
         for (int i = 0; i < NUMTAPS; i++)
@@ -106,7 +111,7 @@ bool sendTargetReport()
         String json;
         serializeJson(doc, json);
 
-        if (config.urltarget.url != NULL && config.urltarget.url[0] != '\0')
+        if (app.urltarget.url != NULL && app.urltarget.url[0] != '\0')
         {
             if (sendTReport(json.c_str()))
             {
@@ -125,7 +130,7 @@ bool sendTargetReport()
     }
     else
     {
-        Log.verbose(F("%s reporting not enabled, skipping." CR), reportname);
+        Log.verbose(F("%s: reporting not enabled, skipping." CR), reportname);
         retval = false;
     }
     return retval;
@@ -136,7 +141,7 @@ bool sendTReport(const String &json)
     if (urltarget.readyState() == 0 || urltarget.readyState() == 4)
     {
         LCBUrl url;
-        url.setUrl(config.urltarget.url);
+        url.setUrl(app.urltarget.url);
 
         IPAddress connectionIP = url.getIP(url.getHost().c_str());
         if (connectionIP == (IPAddress)INADDR_NONE)

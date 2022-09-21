@@ -19,11 +19,12 @@
     <link rel="manifest" href="site.webmanifest">
     <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <meta id="theme_color" name="theme-color" content="#ffffff">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link id="theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css">
+    <link id="theme_aux" rel="stylesheet" href="cerulean_aux.css">
     <link rel="stylesheet" href="kegcop.css">
+    <script src="https://kit.fontawesome.com/e51821420e.js" crossorigin="anonymous"></script>
     <script src="kegcop_pre.js"></script>
 </head>
 
@@ -40,7 +41,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" id="home" href="/index/">Home</a>
                     </li>
@@ -54,10 +55,10 @@
                         <a class="nav-link" href="/help/">Help</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/about/">About <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/about/">About <span class="visually-hidden">(current)</span></a>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/about/index.html">?</a>
                     </li>
@@ -79,13 +80,15 @@
 
             <div class="card border-dark mb-3">
                 <!-- About Keg Cop Information -->
-                <div class="card-header">
-                    <h4 class="card-title">
-                        About Keg Cop:
-                        <span id="thisVersion">(version loading...)</span>
-                        [<span class="text-warning" id="thisBranch"></span>]
-                        (<span class="text-danger" id="thisBuild"></span>)
-                    </h4>
+                <div class="card-header d-flex">
+                    <ul class="navbar me-auto">
+                        <h4 >
+                            About Keg Cop:
+                            <span id="thisVersion">(version loading...)</span>
+                            [<span class="text-warning" id="thisBranch"></span>]
+                            (<span class="text-danger" id="thisBuild"></span>)
+                        </h4>
+                    </ul>
                 </div>
                 <div class="card-body">
                     <p><a id="noChange" href="https://www.kegcop.com">Keg Cop</a> is a project developed
@@ -96,20 +99,34 @@
                             <a id="noChange" href="https://www.homebrewtalk.com">
                             HomeBrewTalk Forums</a> (free registration required).
                     </p>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong>Uptime: </strong>
-                            <span id="uptime" data-html="true" data-toggle="tooltip">...loading</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong>Reset Reason: </strong>
-                            <span id="resetreason" data-html="true" data-toggle="tooltip">...loading</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong>Heap Information: </strong>
-                            <span id="heap" data-html="true" data-toggle="tooltip">...loading</span>
-                        </li>
-                    </ul>
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr class="table-firmware table-success">
+                                <th scope="row">Uptime:</th>
+                                <td>
+                                    <div id="uptime" data-html="true" data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-info">
+                                <th scope="row">Reset Reason:</th>
+                                <td>
+                                    <div id="resetreason" data-html="true" data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-success">
+                                <th scope="row">Heap Information:</th>
+                                <td>
+                                    <div id="heap" data-html="true" data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-info">
+                                <th scope="row">User Agent:</th>
+                                <td>
+                                    <div id="useragent" data-html="true" data-original-title="Information about your current browser." data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div> <!-- About Keg Cop Information -->
 

@@ -26,7 +26,7 @@ SOFTWARE. */
 #include <WiFi.h>
 
 #include "serialhandler.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "tools.h"
 #include "config.h"
 #include <Ticker.h>
@@ -83,7 +83,5 @@ static const char __attribute__((unused)) * DAYS_OF_WEEK[] = {"Sunday", "Monday"
 static const char __attribute__((unused)) * DAYS_OF_WEEK_3[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
 static uint32_t __attribute__((unused)) lastNTPUpdate = 0;
-
-extern struct Config config;
 
 #endif // _NTP_H

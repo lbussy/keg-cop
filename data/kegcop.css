@@ -8,9 +8,11 @@ main>.container {
     padding: 20px 15px 0;
 }
 
-.footer {
-    background-color: #f5f5f5;
-    text-align: center;
+.ks-tv {
+    width: auto;
+    height: auto;
+    max-width: 90%;
+    max-height: 90%;
 }
 
 .footer>.container {
@@ -19,12 +21,12 @@ main>.container {
 }
 
 .no-underline {
-    text-decoration: none !important
+    text-decoration: none !important;
 }
 
 .plain-link {
-    text-decoration: none !important;
-    color: #000000;
+    text-decoration: none;
+    color: var(--bs-nav-link-color);
 }
 
 /*

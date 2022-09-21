@@ -1,8 +1,11 @@
 // Supports Index page
 
 toggleLoader("on");
-var numReq = 5;
+
+// Pre Loader Variables
+var numReq = 4 + numReqPre;
 var loaded = 0;
+// Page Variables
 var imperial;
 var labels = [];
 var percent = [];
@@ -14,13 +17,17 @@ var tempReloadTimer = 10000;
 // Calibration mode variables
 calValue = 0;
 calLineType = '';
+// Semaphores
+var populateFlowRunning = false;
+var populateConfigRunning = false;
+var populateTempsRunning = false;
 
 function finishLoad() {
     // Catch event from kegcop_pre.js
     chooseTempMenu();
     populateFlow();
     populateConfig();
-    populateTemp();
+    populateTemps();
     pollComplete();
 }
 
@@ -29,8 +36,11 @@ function populateFlow(callback = null) { // Get flowmeter data
         setTimeout(populateFlow, 10);
         return;
     }
+    if (populateFlowRunning) return;
+    populateFlowRunning = true;
+
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/taps/";
@@ -75,8 +85,7 @@ function populateFlow(callback = null) { // Get flowmeter data
                 if (typeof callback == "function") {
                     callback();
                 }
-            }
-            catch {
+            } catch {
                 if (!unloadingState) {
                     flowAlert.warning("Unable to parse flowmeter data.");
                 }
@@ -90,6 +99,7 @@ function populateFlow(callback = null) { // Get flowmeter data
             setTimeout(populateFlow, 10000);
         })
         .always(function () {
+            populateFlowRunning = false;
             // Can post-process here
         });
 }
@@ -99,8 +109,11 @@ function populateConfig() { // Get configuration settings
         setTimeout(populateConfig, 10);
         return;
     }
+    if (populateConfigRunning) return;
+    populateConfigRunning = true;
+
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/config/settings/";
@@ -119,8 +132,7 @@ function populateConfig() { // Get configuration settings
                 if (loaded < numReq) {
                     loaded++;
                 }
-            }
-            catch {
+            } catch {
                 if (!unloadingState) {
                     configAlert.warning("Unable to parse configuration data.");
                 }
@@ -135,20 +147,25 @@ function populateConfig() { // Get configuration settings
 
         })
         .always(function () {
+            populateConfigRunning = false;
             // Can post-process here
         });
 }
 
-function populateTemp(callback = null) { // Get current temperature and state
+function populateTemps(callback = null) { // Get current temperature and state
     if (!dataHostCheckDone) {
-        setTimeout(populateTemp, 10);
+        setTimeout(populateTemps, 10);
         return;
     }
+    if (populateTempsRunning) return;
+    populateTempsRunning = true;
+
     var url = dataHost;
-    while (url.endsWith("/")) {
+    while (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/sensors/";
+
     var config = $.getJSON(url, function () {
         tempAlert.warning();
     })
@@ -166,54 +183,7 @@ function populateTemp(callback = null) { // Get current temperature and state
                         $('#tempFormat').html("&#x2103;");
                     }
 
-                    // Set indicator button
-                    switch (temps.status) {
-                        case 0: // TSTAT_INACTIVE
-                            clearState();
-                            $("#coolstate").addClass("alert-secondary");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is disabled");
-                            break;
-                        case 1: // TSTAT_COOL_BEGIN
-                            clearState();
-                            $("#coolstate").addClass("alert-info");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is starting to cool");
-                            break;
-                        case 2: // TSTAT_COOL_MINOFF
-                            clearState();
-                            $("#coolstate").addClass("alert-danger");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is calling for cooling but in minimum off time");
-                            break;
-                        case 3: // TSTAT_COOL_ACTIVE
-                            clearState();
-                            $("#coolstate").addClass("alert-primary");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is actively cooling");
-                            break;
-                        case 4: // TSTAT_IDLE_END
-                            clearState();
-                            $("#coolstate").addClass("alert-warning");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, minimum off time ending");
-                            break;
-                        case 5: // TSTAT_IDLE_MINON
-                            clearState();
-                            $("#coolstate").addClass("alert-success");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling but in minimum on time");
-                            break;
-                        case 6: // TSTAT_IDLE_INACTIVE
-                            clearState();
-                            $("#coolstate").addClass("alert-light");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is not calling for cooling, in idle mode");
-                            break;
-                        case 7: // TSTAT_UNKNOWN
-                            clearState();
-                            $("#coolstate").addClass("alert-light");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
-                            break;
-                        default: // TSTAT_UNKNOWN
-                            clearState();
-                            $("#coolstate").addClass("alert-light");
-                            $("#coolstatetooltip").attr("data-original-title", "Thermostat is in an unknown state");
-                            break;
-                    }
+                    tempStatus(temps); // Populate temperature and fan control display
                 }
 
                 if (loaded < numReq) {
@@ -222,21 +192,21 @@ function populateTemp(callback = null) { // Get current temperature and state
                 if (typeof callback == "function") {
                     callback();
                 }
-            }
-            catch {
+            } catch {
                 if (!unloadingState) {
                     tempAlert.warning("Unable to parse temperature data.");
                 }
-                setTimeout(populateTemp, 10000);
+                setTimeout(populateTemps, 10000);
             }
         })
         .fail(function () {
             if (!unloadingState) {
                 tempAlert.warning("Unable to retrieve temperature data.");
             }
-            setTimeout(populateTemp, 10000);
+            setTimeout(populateTemps, 10000);
         })
         .always(function () {
+            populateTempsRunning = false;
             // Can post-process here
         });
 }
@@ -268,6 +238,11 @@ function removeData(chart) {
 }
 
 function doChart() { // Draw chart.js chart
+    // Get font color from CSS
+    const element = document.querySelector('.chart');
+    const style = getComputedStyle(element);
+    var fontColor = style.color;
+
     if (tapChart) {
         tapChart.data.datasets.forEach((dataset) => {
             // Update data
@@ -317,10 +292,16 @@ function doChart() { // Draw chart.js chart
                         ticks: {
                             min: 0,
                             max: 100,
+                            fontColor: fontColor,
                             callback: function (value, index, values) {
                                 return value + "%";
                             }
                         }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            fontColor: fontColor
+                        },
                     }]
                 },
 
@@ -380,12 +361,40 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 
 function barClick(event, array) { // Bar click handler
     var tapNum = array[0]._index;
-    var url = dataHost;
-    while (url.endsWith("/")) {
-        url = url.slice(0, -1)
+    var newURL;
+    var newPath = "settings/";
+    var newSearch = "";
+    var newHash = "#tap" + tapNum;
+    try {
+        const url = new URL(window.location.href);
+        if (dataHost) {
+            // This all exists because we need to re-write URLs when
+            // using a dev server
+            newURL = url.protocol
+            newURL += "//";
+            newURL += url.host;
+            if (url.pathname.includes("data")) {
+                newPath = "/data/" + newPath;
+            }
+            newURL += newPath;
+            if (newURL.endsWith("/")) {
+                newURL = newURL.substring(0, newURL.length - 1);
+            }
+            if (!newURL.endsWith(".htm")) {
+                newURL += ".htm";
+            }
+            newURL += newSearch;
+            newURL += newHash;
+        } else {
+            newURL = newPath + newHash;
+        }
+        // Open the rewritten URL and return false to prevent default
+        window.open(newURL,"_self")
+        return false;
+    } catch (error) {
+        console.error("Badly formatted URL passed to function.");
+        return false;
     }
-    url += "/settings/#tap" + tapNum;
-    window.open(url, "_self")
 }
 
 function flowReload() {
@@ -396,14 +405,37 @@ function flowReload() {
 }
 
 function tempReload() {
-    populateTemp(function callFunction() {
+    populateTemps(function callFunction() {
         setTimeout(tempReload, tempReloadTimer);
     });
 }
 
 function finishPage() { // Display page
+    show_ksTV();
     toggleLoader("off");
     doChart();
     setTimeout(tempReload, tempReloadTimer);
     setTimeout(flowReload, flowReloadTimer);
+}
+
+function show_ksTV(force = false) {
+    if (isKSTV || force) {
+        // Get references ONCE for performance reasons
+        var app = document.getElementById('indexApp');
+        var card = document.getElementById('indexCard');
+        var header = document.getElementsByTagName('header')[0];
+        var footer = document.getElementsByTagName('footer')[0];
+
+        // Clear header and footer
+        header.innerHTML = "";
+        footer.className = "";
+        footer.innerHTML = "";
+
+        app.removeAttribute("style");
+        app.classList.remove("container");
+        app.classList.add("ks-tv");
+        app.classList.add("mx-auto");
+        app.classList.add("align-middle");
+        card.classList.add("m-5");
+    }
 }

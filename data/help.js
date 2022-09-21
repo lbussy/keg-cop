@@ -1,7 +1,9 @@
-// Supports Index page
+// Supports Help page
 
 toggleLoader("off");
-var numReq = 2;
+
+// Pre Loader Variables
+var numReq = 0 + numReqPre;
 var loaded = 0;
 
 function finishLoad() {

@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "kegscreen.h"
 
+int tempReportIteration = 0;
+
 asyncHTTPrequest
     tapinfo,
     pourreport,
@@ -55,16 +57,15 @@ bool reported[5];
 static void (*pf[])(void *optParm, asyncHTTPrequest *report, int readyState) = {
     reportCBTapInfo, reportCBPourReport, reportCBKickReport, reportCBCoolState, reportCBTempReport};
 
-#define kegscreenIsEnabled (config.kegscreen.url != NULL && config.kegscreen.url[0] != '\0')
-
+#define kegscreenIsEnabled (app.kegscreen.url != NULL && app.kegscreen.url[0] != '\0')
 
 void CommonReportFields(JsonDocument &doc, ReportKey reportkey) {
-    doc[KegscreenKeys::api] = apiKey;
-    doc[KegscreenKeys::guid] = config.copconfig.guid;
-    doc[KegscreenKeys::hostname] = config.copconfig.hostname;
-    doc[KegscreenKeys::breweryname] = config.copconfig.breweryname;
-    doc[KegscreenKeys::kegeratorname] = config.copconfig.kegeratorname;
-    doc[KegscreenKeys::reporttype] = reporttype[reportkey];
+    doc[KegScreenKeys::api] = AppKeys::apikey;
+    doc[AppKeys::guid] = app.copconfig.guid;
+    doc[AppKeys::hostname] = app.copconfig.hostname;
+    doc[AppKeys::breweryname] = app.copconfig.breweryname;
+    doc[AppKeys::kegeratorname] = app.copconfig.kegeratorname;
+    doc[KegScreenKeys::reporttype] = reporttype[reportkey];
 }
 
 bool sendTapInfoReport(int tapid)
@@ -75,28 +76,24 @@ bool sendTapInfoReport(int tapid)
     {
         if (kegscreenIsEnabled) // If KegScreen is enabled
         {
-
             StaticJsonDocument<512> doc;
 
             CommonReportFields(doc, reportkey);
 
-            doc[KegscreenKeys::imperial] = config.copconfig.imperial;
-            doc[KegscreenKeys::tapid] = tapid;
-            doc[KegscreenKeys::name] = flow.taps[tapid].name;
-            doc[KegscreenKeys::ppu] = flow.taps[tapid].ppu;
-            doc[KegscreenKeys::remaining] = flow.taps[tapid].remaining;
-            doc[KegscreenKeys::capacity] = flow.taps[tapid].capacity;
-            doc[KegscreenKeys::active] = flow.taps[tapid].active;
-            doc[KegscreenKeys::calibrating] = flow.taps[tapid].calibrating;
-
-            // String json;
-            // serializeJson(doc, json);
+            doc[AppKeys::imperial] = app.copconfig.imperial;
+            doc[FlowmeterKeys::tapid] = tapid;
+            doc[FlowmeterKeys::name] = flow.taps[tapid].name;
+            doc[FlowmeterKeys::ppu] = flow.taps[tapid].ppu;
+            doc[FlowmeterKeys::remaining] = flow.taps[tapid].remaining;
+            doc[FlowmeterKeys::capacity] = flow.taps[tapid].capacity;
+            doc[FlowmeterKeys::active] = flow.taps[tapid].active;
+            doc[FlowmeterKeys::calibrating] = flow.taps[tapid].calibrating;
 
             return sendReport(reportkey, doc);
         }
         else
         {
-            Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
+            Log.verbose(F("KegScreen reporting not enabled, skipping (Tap Info)." CR));
             return false;
         }
     }
@@ -120,19 +117,16 @@ bool sendPourReport(int tapid, float dispensed)
 
             CommonReportFields(doc, reportkey);
 
-            doc[KegscreenKeys::tapid] = tapid;
-            doc[KegscreenKeys::imperial] = config.copconfig.imperial;
-            doc[KegscreenKeys::dispensed] = dispensed;
-            doc[KegscreenKeys::remaining] = flow.taps[tapid].remaining;
-
-            // String json;
-            // serializeJson(doc, json);
+            doc[FlowmeterKeys::tapid] = tapid;
+            doc[AppKeys::imperial] = app.copconfig.imperial;
+            doc[KegScreenKeys::dispensed] = dispensed;
+            doc[FlowmeterKeys::remaining] = flow.taps[tapid].remaining;
 
             return sendReport(reportkey, doc);
         }
         else
         {
-            Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
+            Log.verbose(F("KegScreen reporting not enabled, skipping (Pour Report)." CR));
             retval = false;
         }
     }
@@ -154,16 +148,13 @@ bool sendKickReport(int tapid)
             StaticJsonDocument<384> doc;
 
             CommonReportFields(doc, reportkey);
-            doc[KegscreenKeys::tapid] = tapid;
-
-            // String json;
-            // serializeJson(doc, json);
+            doc[FlowmeterKeys::tapid] = tapid;
 
             return sendReport(reportkey, doc);
         }
         else
         {
-            Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
+            Log.verbose(F("KegScreen reporting not enabled, skipping (Kick Report)." CR));
             return false;
         }
     }
@@ -179,50 +170,52 @@ bool sendCoolStateReport()
     bool retval = true;
     char guid[17];
     const ReportKey reportkey = KS_COOLSTATE;
+
     StaticJsonDocument<384> doc;
 
     if (!kegscreenIsEnabled) {
-        Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
+        Log.verbose(F("KegScreen reporting not enabled, skipping (Cool State)." CR));
         return false;
     }
 
     CommonReportFields(doc, reportkey);
-    doc[KegscreenKeys::coolstate] = tstat.state;
+    doc[KegScreenKeys::coolstate] = tstat[TS_TYPE_CHAMBER].state;
+    doc[KegScreenKeys::tfanstatus] = tstat[TS_TYPE_TOWER].state;
 
-    String json;
-    serializeJson(doc, json);
-
-
-    return sendReport(reportkey, json.c_str());
+    return sendReport(reportkey, doc);
 }
 
 bool sendTempReport()
 { // Send a temp report on timer
     const ReportKey reportkey = KS_TEMPREPORT;
-    if (!kegscreenIsEnabled) // If KegScreen is enabled
+    if (!kegscreenIsEnabled && tempReportIteration < 10) // If KegScreen is enabled
     {
-        Log.verbose(F("KegScreen reporting not enabled, skipping." CR));
+        Log.verbose(F("KegScreen reporting not enabled, skipping (Temp Report)." CR));
+        tempReportIteration = 0;
         return false;
     }
+    tempReportIteration++;
 
     StaticJsonDocument<1024> doc;
 
     CommonReportFields(doc, reportkey);
 
-    doc[KegscreenKeys::imperial] = config.copconfig.imperial;
-    doc[KegscreenKeys::controlpoint] = config.temps.controlpoint;
-    doc[KegscreenKeys::setting] = config.temps.setpoint;
-    doc[KegscreenKeys::status] = tstat.state;
-    doc[KegscreenKeys::controlenabled] = config.temps.controlenabled;
+    doc[AppKeys::imperial] = app.copconfig.imperial;
+    doc[AppKeys::controlpoint] = app.temps.controlpoint;
+    doc[KegScreenKeys::setting] = app.temps.setpoint;
+    doc[KegScreenKeys::status] = tstat[TS_TYPE_CHAMBER].state;
+    doc[AppKeys::controlenabled] = app.temps.controlenabled;
+    doc[AppKeys::coolonhigh] = app.temps.coolonhigh;
+    doc[AppKeys::tfancontrolenabled] = app.temps.tfancontrolenabled;
+    doc[AppKeys::tfansetpoint] = app.temps.tfansetpoint;
+    doc[KegScreenKeys::tfanstatus] = tstat[TS_TYPE_CHAMBER].state;
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
-        doc[KegscreenKeys::sensors][i][KegscreenKeys::name] = device.sensor[i].name;
-        doc[KegscreenKeys::sensors][i][KegscreenKeys::value] = device.sensor[i].average;  // Always send in C
-        doc[KegscreenKeys::sensors][i][KegscreenKeys::enabled] = config.temps.enabled[i];
+        doc[KegScreenKeys::sensors][i][FlowmeterKeys::name] = device.sensor[i].name;
+        doc[KegScreenKeys::sensors][i][KegScreenKeys::value] = device.sensor[i].average;  // Always send in C
+        doc[KegScreenKeys::sensors][i][AppKeys::enabled] = app.temps.enabled[i];
     }
-    // String json;
-    // serializeJson(doc, json);
 
     return sendReport(reportkey, doc);
 }
@@ -233,13 +226,12 @@ bool sendReport(ReportKey thisKey, JsonDocument &doc) {
     return sendReport(thisKey, json);
 }
 
-
 bool sendReport(ReportKey thisKey, const char * json) {
     if (reports[thisKey].readyState() == 0 || reports[thisKey].readyState() == 4)
     {
         reported[thisKey] = false;
         LCBUrl url;
-        url.setUrl(config.kegscreen.url);
+        url.setUrl(app.kegscreen.url);
 
         IPAddress connectionIP = url.getIP(url.getHost().c_str());
         if (connectionIP == (IPAddress)INADDR_NONE)
@@ -261,7 +253,6 @@ bool sendReport(ReportKey thisKey, const char * json) {
         }
         if (connection.length() > 0)
         {
-            // reports[thisKey].setDebug(true);
             reports[thisKey].onData(pf[thisKey]);
             if (reports[thisKey].open("POST", connection.c_str()))
             {
@@ -304,6 +295,56 @@ bool sendReport(ReportKey thisKey, const char * json) {
         return false;
     }
     return true;
+}
+
+void doKSMDNS()
+{
+    MDNS.addService(AppKeys::kegscreen, AppKeys::tcp, PORT);
+    MDNS.addService(KegScreenKeys::kstv, AppKeys::tcp, PORT);
+
+// TXT records
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::devicetype, AppKeys::apikey);
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, F("path"), KegScreenKeys::kstv_path);
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::appendID, "no");
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::deviceid, app.copconfig.guid);
+}
+
+void doKSJSON()
+{
+    const char * featureName = "KegScreen TV";
+    StaticJsonDocument<192> doc;
+
+    doc["name"] = AppKeys::appname;
+    doc["deviceType"] = AppKeys::apikey;
+    doc["appendID"] = false;
+    doc["path"] = KegScreenKeys::kstv_path;
+    doc["deviceID"] = app.copconfig.guid;
+
+    // Make sure FILESTYSTEM exists
+    if (!FILESYSTEM.begin())
+    {
+        Log.error(F("%s: Failed to connect to filesystem." CR), featureName);
+    }
+    else
+    {
+        File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
+        if (!file)
+        {
+            Log.error(F("%s: Failed to open JSON file." CR), featureName);
+        }
+        else
+        {
+            // Serialize JSON to file
+            if (serializeJson(doc, file) == 0) {
+                Log.error(F("%s: Failed to write JSON file." CR), featureName);
+            }
+            else
+            {
+                Log.verbose(F("%s: JSON file written." CR), featureName);
+            }
+        }
+        file.close();
+    }
 }
 
 void reportCBTapInfo(void *optParm, asyncHTTPrequest *report, int readyState)

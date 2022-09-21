@@ -47,4 +47,6 @@ void requestHandler(void *, asyncHTTPrequest *, int);
 bool serializeVersion(const ThatVersion &, Print &);
 bool deserializeVersion(const char *&, ThatVersion &);
 
+extern ThatVersion thatVersion;
+
 #endif // _THATVERSION_H

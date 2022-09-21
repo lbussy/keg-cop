@@ -26,9 +26,9 @@ SOFTWARE. */
 #include <Update.h>
 #include <HTTPClient.h>
 
-#include "jsonconfig.h"
+#include "appconfig.h"
+#include "flowconfig.h"
 #include "webpagehandler.h"
-#include "flowmeter.h"
 #include <LCBUrl.h>
 
 #include <ArduinoLog.h>
@@ -39,6 +39,8 @@ void execspiffs();
 
 void setDoOTA();
 void doOTALoop();
+void logBadFWUpdate(bool clear = false);
+void logBadFSUpdate(bool clear = false);
 
 #ifdef ESP32
 enum HTTPUpdateResult
@@ -54,9 +56,6 @@ HTTPUpdateResult execSPIFFSOTA(char *host, int port, char *path);
 
 HTTPUpdateResult execOTA(char *host, int port, char *path, int type);
 String getHeaderValue(String header, String headerName); // Return header value
-
-extern bool saveConfig();
-extern struct Config config;
 
 static bool __attribute__((unused)) doOTA = false; // Semaphore for OTA
 

@@ -1,9 +1,17 @@
 // Supports About Page
 
 toggleLoader("off");
-var numReq = 5;
+
+// Pre Loader Variables
+var numReq = 4 + numReqPre;
 var loaded = 0;
+// Page Variables
 var aboutReloadTimer = 60000;
+// Semaphores
+var loadUptimeRunning = false;
+var loadHeapRunning = false;
+var loadResetReasonRunning = false;
+var loadThisVersionRunning = false;
 
 function finishLoad() {
     // Catch page finished event from kegcop_pre.js
@@ -17,6 +25,7 @@ function populatePage() { // Get page data
     loadUptime();       // Load uptime information
     loadHeap();         // Load heap information
     loadResetReason();  // Load last reset reason
+    $("#useragent").text(UA);
     pollComplete();
 }
 
@@ -37,11 +46,15 @@ function loadThisVersion() { // Get current parameters
         setTimeout(loadThisVersion, 10);
         return;
     }
+    if (loadThisVersionRunning) return;
+    loadThisVersionRunning = true;
+
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/thisVersion/";
+
     var thisVersion = $.getJSON(url, function () {
     })
         .done(function (thisVersion) {
@@ -68,6 +81,7 @@ function loadThisVersion() { // Get current parameters
         })
         .always(function () {
             // Can post-process here
+            loadThisVersionRunning = false;
         });
 }
 
@@ -76,11 +90,15 @@ function loadUptime(callback = null) { // Get uptime information
         setTimeout(loadUptime, 10);
         return;
     }
+    if (loadUptimeRunning) return;
+    loadUptimeRunning = true;
+
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/uptime/";
+
     var uptime = $.getJSON(url, function () {
     })
         .done(function (uptime) {
@@ -106,6 +124,7 @@ function loadUptime(callback = null) { // Get uptime information
             setTimeout(loadUptime, 10000);
         })
         .always(function () {
+            loadUptimerunning = false;
             if (typeof callback == "function") {
                 callback();
             }
@@ -117,11 +136,15 @@ function loadHeap(callback = null) { // Get heap information
         setTimeout(loadHeap, 10);
         return;
     }
+    if (loadHeapRunning) return;
+    loadHeapRunning = true;
+
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/heap/";
+
     var heap = $.getJSON(url, function () {
     })
         .done(function (heap) {
@@ -146,6 +169,7 @@ function loadHeap(callback = null) { // Get heap information
             setTimeout(loadHeap, 10000);
         })
         .always(function () {
+            loadHeapRunning = false;
             if (typeof callback == "function") {
                 callback();
             }
@@ -157,11 +181,15 @@ function loadResetReason(callback = null) { // Get last reset reason
         setTimeout(loadResetReason, 10);
         return;
     }
+    if (loadResetReasonRunning) return;
+    loadResetReasonRunning = true;
+
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/resetreason/";
+
     var reset = $.getJSON(url, function () {
     })
         .done(function (reset) {
@@ -185,6 +213,7 @@ function loadResetReason(callback = null) { // Get last reset reason
             setTimeout(loadResetReason, 10000);
         })
         .always(function () {
+            loadResetReasonRunning = false
             if (typeof callback == "function") {
                 callback();
             }

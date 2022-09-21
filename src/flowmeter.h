@@ -25,39 +25,14 @@ SOFTWARE. */
 
 #include "serialhandler.h"
 #include "config.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "kegscreen.h"
+#include "flowconfig.h"
 
 #include <SPIFFS.h>
 #include <ArduinoJson.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>
-
-struct Taps
-{
-    int tapid;                // Tap ID (internal)
-    int label;                // Tap ID (external, user configurable)
-    int taplistioTap;         // Tap number at Taplist.io
-    int pin;                  // μC Pin
-    long ppu;                 // Pulses per Gallon
-    char name[65];            // Beverage Name
-    double capacity;          // Tap Capacity
-    double remaining;         // Tap remaining
-    bool active = false;      // Is tap active
-    bool calibrating = false; // In calibration mode
-
-    void load(JsonObjectConst, int);
-    void save(JsonObject) const;
-};
-
-struct Flowmeter
-{
-    bool imperial;
-    Taps taps[NUMTAPS];
-
-    void load(JsonObjectConst);
-    void save(JsonObject) const;
-};
 
 // Flow methods
 void handleInterrupts(int);
@@ -68,39 +43,7 @@ bool isSmallPour(unsigned int count, int tap);
 bool isKicked(int);
 // Control
 bool initFlow();
-// JSON Methods
-bool deleteFlowConfigFile();
-bool loadFlowConfig();
-bool loadFlowFile();
-bool saveFlowConfig();
-bool deserializeFlowConfig(Stream &);
-bool serializeFlowConfig(Print &);
-bool printFlowFile();
-bool printFlowConfig();
-// bool mergeFlowJsonString(String);
-// bool mergeFlowJsonObject(JsonVariantConst);
-// bool mergeFlow(JsonVariant, JsonVariantConst);
-// Conversions
-void convertFlowtoImperial();
-void convertFlowtoMetric();
 
-extern struct Config config;
-extern float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
-extern unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pulses
-extern bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
-
-
-namespace FlowmeterKeys {
-    constexpr auto tapid = "tapid";
-    constexpr auto label = "label";
-    constexpr auto taplistioTap = "taplistioTap";
-    constexpr auto pin = "pin";
-    constexpr auto ppu = "ppu";
-    constexpr auto name = "name";
-    constexpr auto capacity = "capacity";
-    constexpr auto remaining = "remaining";
-    constexpr auto active = "active";
-    constexpr auto calibrating = "calibrating";
-};
+extern int flowPins[];
 
 #endif // _FLOWMETER_H
