@@ -23,10 +23,32 @@ SOFTWARE. */
 #include "tools.h"
 #include "taplistio.h"
 
-float __attribute__((unused)) queuePourReport[NUMTAPS];         // Store pending pours
-unsigned int __attribute__((unused)) queuePulseReport[NUMTAPS]; // Store pending pours
-bool __attribute__((unused)) queueKickReport[NUMTAPS];          // Store pending kicks
-bool __attribute__((unused)) queueStateChange;                  // Store pending tstat state changes
+float queuePourReport[NUMTAPS];         // Store pending pours
+unsigned int queuePulseReport[NUMTAPS]; // Store pending pulses
+bool queueKickReport[NUMTAPS];          // Store pending kicks
+
+bool doReset = false;             // Semaphore for reset
+bool doWiFiReset = false;         // Semaphore for WiFi reset
+bool doKSTempReport = false;      // Semaphore for KegScreen Temps Report
+bool doTargetReport = false;      // Semaphore for URL Target Report
+bool doRPintsConnect = false;     // Semaphore for MQTT (re)connect
+bool doTaplistIOConnect = false;  // Semaphore for Taplist.IO Report
+bool doSetSaveUptime = false;     // Semaphore required to save reboot time
+bool doSetSaveApp = false;        // Semaphore required to save config
+bool doSetSaveFlowConfig = false; // Semaphore required to save flowconfig
+bool doTapInfoReport[NUMTAPS] = {
+    false, false, false, false, false, false, false, false}; // Semaphore for reset
+bool doWiFiReconnect = false;                         // Semaphore to reconnect WiFi
+
+void initPourPulseKick()
+{
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        queuePourReport[i] = 0.0;
+        queuePulseReport[i] = 0;
+        queueKickReport[i] = false;
+    }
+}
 
 void _delay(unsigned long ulDelay)
 {
@@ -37,8 +59,9 @@ void _delay(unsigned long ulDelay)
 void resetController()
 {
     Log.notice(F("Reboot request - rebooting system." CR));
-    config.copconfig.nodrd = true;
-    saveConfig();
+    killDRD();
+    saveAppConfig();
+    saveFlowConfig();
     ESP.restart();
 }
 
@@ -77,14 +100,29 @@ void setDoSaveUptime()
     doSetSaveUptime = true; // Semaphore required to save reboot time
 }
 
-void setDoSaveConfig()
+void setDoSaveApp()
 {
-    doSetSaveConfig = true; // Semaphore required to save config
+    doSetSaveApp = true; // Semaphore required to save config
 }
 
-void setDoSaveFlowConfig()
+void setDoSaveFlow()
 {
     doSetSaveFlowConfig = true; // Semaphore required to save flowconfig
+}
+
+void setQueuePourReport(int tapNum, float pour)
+{
+    queuePourReport[tapNum] = pour;
+}
+
+void setQueuePulseReport(int tapNum, int pulses)
+{
+    queuePulseReport[tapNum] = pulses;
+}
+
+void setQueueKickReport(int tapNum)
+{
+    queueKickReport[tapNum] = true;
 }
 
 void tickerLoop()
@@ -99,7 +137,13 @@ void tickerLoop()
     if (doWiFiReset)
     { // Need to do this to prevent WDT
         doWiFiReset = false;
+        sleep(3);
         resetWifi();
+    }
+    if (doWiFiReconnect)
+    { // WiFi event is a callback - prevent WDT
+        doWiFiReconnect = false;
+        reconnectWiFi();
     }
 
     if (doSetSaveUptime)
@@ -108,10 +152,10 @@ void tickerLoop()
         doUptime();
     }
 
-    if (doSetSaveConfig)
-    { // Save Config
-        doSetSaveConfig = false;
-        saveConfig();
+    if (doSetSaveApp)
+    { // Save AppConfig
+        doSetSaveApp = false;
+        saveAppConfig();
     }
 
     if (doSetSaveFlowConfig)
@@ -120,61 +164,66 @@ void tickerLoop()
         saveFlowConfig();
     }
 
-    // // External Event Reports
-    for (int i = 0; i < NUMTAPS; i++)
+    // External Event Reports
+    // Requires WiFi, so skip if we are reconnecting
+    if (!wifiPause)
     {
-        // Send report from pour queue
-        if (queuePourReport[i] > 0)
+        for (int i = 0; i < NUMTAPS; i++)
         {
-            sendPulsesRPints(i, queuePulseReport[i]);
-            sendPourReport(i, queuePourReport[i]);
-            queuePourReport[i] = 0;
-            queuePulseReport[i] = 0;
+            // Send report from pour queue
+            if (queuePourReport[i] > 0)
+            {
+                sendPulsesRPints(i, queuePulseReport[i]);
+                sendPourReport(i, queuePourReport[i]);
+                queuePourReport[i] = 0;
+                queuePulseReport[i] = 0;
+            }
+            // Send kick report
+            if (queueKickReport[i] == true)
+            {
+                queueKickReport[i] = false;
+                sendKickReport(i);
+            }
+            // Send temp control state change
+            if (tstat[TS_TYPE_CHAMBER].queueStateChange == true || tstat[TS_TYPE_TOWER].queueStateChange == true)
+            {
+                tstat[TS_TYPE_CHAMBER].queueStateChange = false;
+                tstat[TS_TYPE_TOWER].queueStateChange = false;
+                sendCoolStateReport();
+            }
+            // Send Tap Info Report
+            if (doTapInfoReport[i] == true)
+            {
+                doTapInfoReport[i] = false;
+                sendTapInfoReport(i);
+            }
         }
-        // Send kick report
-        if (queueKickReport[i] == true)
+        if (doKSTempReport)
         {
-            queueKickReport[i] = false;
-            sendKickReport(i);
+            doKSTempReport = false;
+            sendTempReport();
         }
-        // Send temp control state change
-        if (queueStateChange == true)
+        if (doTargetReport)
         {
-            queueStateChange = false;
-            sendCoolStateReport();
+            doTargetReport = false;
+            sendTargetReport();
         }
-        // Send Tap Info Report
-        if (doTapInfoReport[i] == true)
+        if (doRPintsConnect)
         {
-            doTapInfoReport[i] = false;
-            sendTapInfoReport(i);
+            doRPintsConnect = false;
+            connectRPints();
         }
-    }
-    if (doKSTempReport)
-    {
-        doKSTempReport = false;
-        sendTempReport();
-    }
-    if (doTargetReport)
-    {
-        doTargetReport = false;
-        sendTargetReport();
-    }
-    if (doRPintsConnect)
-    {
-        doRPintsConnect = false;
-        connectRPints();
-    }
-    if (doTaplistIOConnect && !tioReporting)
-    {
-        time_t now;
-        struct tm timeinfo;
-        getLocalTime(&timeinfo);
-        time(&now);
-        if ((now - config.taplistio.lastsent > TIOLOOP) && config.taplistio.update && config.taplistio.update && (strlen(config.taplistio.secret) >= 7) && (strlen(config.taplistio.venue) >= 3))
+        if (doTaplistIOConnect && !tioReporting)
         {
-            doTaplistIOConnect = false; // Semaphore required for Taplist.io report
-            sendTIOTaps();
+            time_t now;
+            struct tm timeinfo;
+            getLocalTime(&timeinfo);
+            time(&now);
+            if ((now - app.taplistio.lastsent > TIOLOOP) && app.taplistio.update && app.taplistio.update && (strlen(app.taplistio.secret) >= 7) && (strlen(app.taplistio.venue) >= 3))
+            {
+                doTaplistIOConnect = false; // Semaphore required for Taplist.io report
+                sendTIOTaps();
+            }
         }
     }
 }
@@ -304,4 +353,30 @@ void getGuid(char *str)
 
     strcpy(str, first);
     strcat(str, secon);
+}
+
+void killDRD()
+{
+    app.copconfig.nodrd = true;
+    const char *drdfile = "/drd.dat";
+    if (FILESYSTEM.begin())
+    {
+        if (SPIFFS.exists(drdfile))
+        {
+            FILESYSTEM.remove(drdfile);
+        }
+    }
+}
+
+unsigned long getTime()
+{
+    time_t now;
+    struct tm timeinfo;
+    if (!getLocalTime(&timeinfo))
+    {
+        // Serial.println("Failed to obtain time");
+        return (0);
+    }
+    time(&now);
+    return now;
 }

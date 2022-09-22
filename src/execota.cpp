@@ -25,16 +25,19 @@ SOFTWARE. */
 void execfw()
 {
     Log.notice(F("Starting the Firmware OTA pull, will reboot without notice." CR));
+    // Clear fail flags
+    logBadFWUpdate(true);
+    logBadFSUpdate(true);
 
     // Stop web server before OTA update - will restart on reset
     stopWebServer();
 
     // Have to set this here because we have no chance after update
-    config.ota.dospiffs1 = true;
-    config.ota.dospiffs2 = false;
-    config.ota.didupdate = false;
-    config.copconfig.nodrd = true;
-    saveConfig();
+    app.ota.dospiffs1 = true;
+    app.ota.dospiffs2 = false;
+    app.ota.didupdate = false;
+    killDRD();
+    saveAppConfig();
     saveFlowConfig();
 
     String fw_url = UPGRADEURL;
@@ -53,11 +56,12 @@ void execfw()
     case HTTP_UPDATE_FAILED:
         Log.error(F("HTTP Firmware OTA Update failed," CR));
         // Don't allow anything to proceed
-        config.ota.dospiffs1 = false;
-        config.ota.dospiffs2 = false;
-        config.ota.didupdate = false;
-        config.copconfig.nodrd = true;
-        saveConfig();
+        app.ota.dospiffs1 = false;
+        app.ota.dospiffs2 = false;
+        app.ota.didupdate = false;
+        logBadFWUpdate();
+        killDRD();
+        saveAppConfig();
         saveFlowConfig();
         ESP.restart();
         break;
@@ -65,19 +69,19 @@ void execfw()
     case HTTP_UPDATE_NO_UPDATES:
         Log.notice(F("HTTP Firmware OTA Update: No updates." CR));
         // Don't allow anything to proceed
-        config.ota.dospiffs1 = false;
-        config.ota.dospiffs2 = false;
-        config.ota.didupdate = false;
-        config.copconfig.nodrd = true;
-        saveConfig();
+        app.ota.dospiffs1 = false;
+        app.ota.dospiffs2 = false;
+        app.ota.didupdate = false;
+        killDRD();
+        saveAppConfig();
         saveFlowConfig();
         ESP.restart();
         break;
 
     case HTTP_UPDATE_OK:
         Log.notice(F("HTTP Firmware OTA Update complete, restarting." CR));
-        config.copconfig.nodrd = true;
-        saveConfig();
+        killDRD();
+        saveAppConfig();
         ESP.restart();
         break;
     }
@@ -85,23 +89,32 @@ void execfw()
 
 void execspiffs()
 {
-    if (config.ota.dospiffs1)
+    if (app.ota.badfw)
+    {
+        app.ota.dospiffs1 = false;
+        app.ota.dospiffs2 = false;
+        app.ota.didupdate = false;
+        killDRD();
+        saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
+        saveFlowConfig(); // Save previous flowmeter data
+        Log.notice(F("HTTP FILESYSTEM OTA not attempted due to bad firmware update." CR));
+        return;
+    }
+    if (app.ota.dospiffs1)
     {
         Log.notice(F("Rebooting a second time before FILESYSTEM OTA pull." CR));
-        config.ota.dospiffs1 = false;
-        config.ota.dospiffs2 = true;
-        config.ota.didupdate = false;
-        config.copconfig.nodrd = true;
-        saveConfig();
+        app.ota.dospiffs1 = false;
+        app.ota.dospiffs2 = true;
+        app.ota.didupdate = false;
+        killDRD();
+        saveAppConfig();
         saveFlowConfig();
-
-        if (FILESYSTEM.begin())
-            FILESYSTEM.remove("/drd.dat");
-        config.copconfig.nodrd = true;
-        saveConfig();
+        saveAppConfig();
         ESP.restart();
+        delay(1000);
+        return;
     }
-    else if (config.ota.dospiffs2)
+    else if (app.ota.dospiffs2)
     {
         Log.notice(F("Starting the FILESYSTEM OTA pull." CR));
 
@@ -123,6 +136,15 @@ void execspiffs()
         {
         case HTTP_UPDATE_FAILED:
             Log.error(F("HTTP FILESYSTEM OTA Update failed." CR));
+            app.ota.dospiffs1 = false;
+            app.ota.dospiffs2 = false;
+            app.ota.didupdate = false;
+            logBadFSUpdate();
+            killDRD();
+            saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
+            saveFlowConfig(); // Save previous flowmeter data
+            Log.notice(F("HTTP FILESYSTEM OTA Update complete, restarting." CR));
+            ESP.restart();
             break;
 
         case HTTP_UPDATE_NO_UPDATES:
@@ -131,11 +153,11 @@ void execspiffs()
 
         case HTTP_UPDATE_OK:
             // Reset FILESYSTEM update flag
-            config.ota.dospiffs1 = false;
-            config.ota.dospiffs2 = false;
-            config.ota.didupdate = true;
-            config.copconfig.nodrd = true;
-            saveConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
+            app.ota.dospiffs1 = false;
+            app.ota.dospiffs2 = false;
+            app.ota.didupdate = true;
+            killDRD();
+            saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
             saveFlowConfig(); // Save previous flowmeter data
             Log.notice(F("HTTP FILESYSTEM OTA Update complete, restarting." CR));
             ESP.restart();
@@ -336,5 +358,31 @@ void doOTALoop()
     {
         doOTA = false;
         execfw();
+    }
+}
+
+void logBadFWUpdate(bool clear)
+{
+    if (clear)
+    {
+        app.ota.badfw = false;
+    }
+    else
+    {
+        app.ota.badfw = true;
+        app.ota.badfwtime = getTime();
+    }
+}
+
+void logBadFSUpdate(bool clear)
+{
+    if (clear)
+    {
+        app.ota.badfs = false;
+    }
+    else
+    {
+        app.ota.badfs = true;
+        app.ota.badfstime = getTime();
     }
 }

@@ -19,11 +19,12 @@
     <link rel="manifest" href="site.webmanifest">
     <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <meta id="theme_color" name="theme-color" content="#ffffff">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link id="theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css">
+    <link id="theme_aux" rel="stylesheet" href="cerulean_aux.css">
     <link rel="stylesheet" href="kegcop.css">
+    <script src="https://kit.fontawesome.com/e51821420e.js" crossorigin="anonymous"></script>
     <script src="kegcop_pre.js"></script>
 </head>
 
@@ -42,7 +43,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" id="home" href="/index/">Home</a>
                     </li>
@@ -50,7 +51,7 @@
                         <a class="nav-link" href="/temps/">Temperatures</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/settings/">Settings <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/settings/">Settings <span class="visually-hidden">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/help/">Help</a>
@@ -59,7 +60,7 @@
                         <a class="nav-link" href="/about/">About</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a id="noChange" id="contexthelp" name="contexthelp" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/index.html">?</a>
                     </li>
@@ -96,8 +97,12 @@
                         </div>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link plain-link" data-toggle="tab" href="#controller">Controller</a>
+                    <li class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Application</span>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#controller">Controller Behavior</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#themeselect">Theme</a>
+                        </div>
                     </li>
 
                     <li class="nav-item dropdown">
@@ -123,7 +128,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#flowcal">Calibrate Flowmeters</a>
                             <a class="dropdown-item" data-toggle="tab" href="#reset">Reset Controller</a>
-                            <a class="dropdown-item" href="/ota1/">Update Application</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#update">Update Application</a>
                             <a class="dropdown-item" data-toggle="tab" href="#wifi">Reset WiFi</a>
                         </div>
                     </li>
@@ -133,8 +138,10 @@
                 <div id="myTabContent" class="tab-content"> <!-- Navigation Tab contents -->
 
                     <div class="tab-pane fade active show" id="advanced"> <!-- Initial Page Tab -->
-                        <div class="card-header">
-                            <h4 class="card-title">Settings for Keg Cop</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Settings for Keg Cop</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
                             <p>
@@ -146,8 +153,10 @@
 
                     <div class="tab-pane fade" id="tap0"> <!-- Tap 0 Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 1 Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 1 Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -166,6 +175,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div id="taplist.io_0" style="display: none;">
                                     <div class="form-group row">
                                         <label for="tap0taplistioTap" class="col-sm-3 col-form-label"
@@ -180,6 +191,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap0ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
@@ -190,6 +203,8 @@
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap0bevname" class="col-sm-3 col-form-label"
@@ -204,6 +219,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap0cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
@@ -214,6 +231,8 @@
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap0remain" class="col-sm-3 col-form-label"
@@ -226,6 +245,8 @@
                                             id="tap0remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -254,9 +275,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitSettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -267,8 +291,10 @@
 
                     <div class="tab-pane fade" id="tap1"> <!-- Tap 1 Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 2 Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 2 Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -287,6 +313,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div id="taplist.io_1" style="display: none;">
                                     <div class="form-group row">
                                         <label for="tap1taplistioTap" class="col-sm-3 col-form-label"
@@ -301,6 +329,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap1ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
@@ -311,6 +341,8 @@
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap1bevname" class="col-sm-3 col-form-label"
@@ -325,6 +357,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap1cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
@@ -335,6 +369,8 @@
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap1remain" class="col-sm-3 col-form-label"
@@ -347,6 +383,8 @@
                                             id="tap1remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -375,9 +413,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -388,8 +429,10 @@
 
                     <div class="tab-pane fade" id="tap2"> <!-- Tap 2 Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 3 Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 3 Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -408,6 +451,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div id="taplist.io_2" style="display: none;">
                                     <div class="form-group row">
                                         <label for="tap2taplistioTap" class="col-sm-3 col-form-label"
@@ -422,6 +467,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap2ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
@@ -432,6 +479,8 @@
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap2bevname" class="col-sm-3 col-form-label"
@@ -446,6 +495,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap2cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
@@ -456,6 +507,8 @@
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap2remain" class="col-sm-3 col-form-label"
@@ -468,6 +521,8 @@
                                             id="tap2remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -496,9 +551,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -509,8 +567,10 @@
 
                     <div class="tab-pane fade" id="tap3"> <!-- Tap 3 Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 4 Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 4 Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -529,6 +589,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div id="taplist.io_3" style="display: none;">
                                     <div class="form-group row">
                                         <label for="tap3taplistioTap" class="col-sm-3 col-form-label"
@@ -543,6 +605,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap3ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
@@ -553,6 +617,8 @@
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap3bevname" class="col-sm-3 col-form-label"
@@ -567,6 +633,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap3cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
@@ -577,6 +645,8 @@
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap3remain" class="col-sm-3 col-form-label"
@@ -589,6 +659,8 @@
                                             id="tap3remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -617,9 +689,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -630,8 +705,10 @@
 
                     <div class="tab-pane fade" id="tap4"> <!-- Tap 4 Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 5 Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 5 Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -650,6 +727,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div id="taplist.io_4" style="display: none;">
                                     <div class="form-group row">
                                         <label for="tap4taplistioTap" class="col-sm-3 col-form-label"
@@ -664,6 +743,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap4ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
@@ -674,6 +755,8 @@
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap4bevname" class="col-sm-3 col-form-label"
@@ -688,6 +771,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap4cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
@@ -698,6 +783,8 @@
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap4remain" class="col-sm-3 col-form-label"
@@ -710,6 +797,8 @@
                                             id="tap4remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -738,9 +827,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -751,8 +843,10 @@
 
                     <div class="tab-pane fade" id="tap5"> <!-- Tap 5 Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 6 Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 6 Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -771,6 +865,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div id="taplist.io_5" style="display: none;">
                                     <div class="form-group row">
                                         <label for="tap5taplistioTap" class="col-sm-3 col-form-label"
@@ -785,6 +881,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap5ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
@@ -795,6 +893,8 @@
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap5bevname" class="col-sm-3 col-form-label"
@@ -809,6 +909,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap5cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
@@ -819,6 +921,8 @@
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap5remain" class="col-sm-3 col-form-label"
@@ -831,6 +935,8 @@
                                             id="tap5remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -859,9 +965,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -872,8 +981,10 @@
 
                     <div class="tab-pane fade" id="tap6"> <!-- Tap 6 Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 7 Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 7 Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -892,6 +1003,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div id="taplist.io_6" style="display: none;">
                                     <div class="form-group row">
                                         <label for="tap6taplistioTap" class="col-sm-3 col-form-label"
@@ -906,6 +1019,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap6ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
@@ -916,6 +1031,8 @@
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap6bevname" class="col-sm-3 col-form-label"
@@ -930,6 +1047,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap6cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
@@ -940,6 +1059,8 @@
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap6remain" class="col-sm-3 col-form-label"
@@ -952,6 +1073,8 @@
                                             id="tap6remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -980,9 +1103,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -993,8 +1119,10 @@
 
                     <div class="tab-pane fade" id="tap7"> <!-- Tap 7 Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 8 Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 8 Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -1013,6 +1141,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div id="taplist.io_7" style="display: none;">
                                     <div class="form-group row">
                                         <label for="tap7taplistioTap" class="col-sm-3 col-form-label"
@@ -1027,6 +1157,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap7ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
@@ -1037,6 +1169,8 @@
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap7bevname" class="col-sm-3 col-form-label"
@@ -1051,6 +1185,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap7cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
@@ -1061,6 +1197,8 @@
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap7remain" class="col-sm-3 col-form-label"
@@ -1073,6 +1211,8 @@
                                             id="tap7remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -1101,9 +1241,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -1114,8 +1257,10 @@
 
                     <div class="tab-pane fade" id="tap8"> <!-- Tap 8 Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Tap 9 Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 9 Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -1134,6 +1279,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div id="taplist.io_8" style="display: none;">
                                     <div class="form-group row">
                                         <label for="tap8taplistioTap" class="col-sm-3 col-form-label"
@@ -1148,6 +1295,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap8ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
@@ -1158,6 +1307,8 @@
                                             min="10" max="99999" step="1" placeholder="21120" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap8bevname" class="col-sm-3 col-form-label"
@@ -1172,6 +1323,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="tap8cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
                                         title="Capacity of this tap in gallons or liters depending on system configuration">
@@ -1182,6 +1335,8 @@
                                             min=".0001" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="tap8remain" class="col-sm-3 col-form-label"
@@ -1194,6 +1349,8 @@
                                             id="tap8remain" min=".000" max="999" step=".0001" placeholder="5" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -1222,9 +1379,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -1235,8 +1395,10 @@
 
                     <div class="tab-pane fade" id="controller"> <!-- Controller Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Controller Settings</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Controller Settings</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -1255,6 +1417,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="breweryname" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
@@ -1268,6 +1432,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="kegeratorname" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
@@ -1280,6 +1446,8 @@
                                             placeholder="My Kegerator" required>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="controlnum" class="col-sm-2 col-form-label"
@@ -1301,6 +1469,8 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -1326,6 +1496,8 @@
                                     </div>
                                 </fieldset>
 
+                                <p></p>
+
                                 <!--
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -1350,7 +1522,7 @@
                                         </div>
                                     </div>
                                 </fieldset>
-                            -->
+                                -->
 
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
@@ -1376,9 +1548,12 @@
                                     </div>
                                 </fieldset>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -1387,9 +1562,58 @@
 
                     </div> <!-- Controller Tab -->
 
+                    <div class="tab-pane fade" id="themeselect"> <!-- Themes Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>UI Theme</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form name="themeselect" id="themeselect" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Change active UI theme">Apply Theme:</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change to a light theme" data-placement="right">
+                                                    <input type="radio" class="form-check-input" name="theme" id="theme" value="cerulean">
+                                                    Cerulean (light)
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change to a dark theme" data-placement="right">
+                                                    <input type="radio" class="form-check-input" name="theme" id="theme" value="superhero">
+                                                    Superhero (dark)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Themes Tab -->
+
 					<div class="tab-pane fade" id="tempcontrol"> <!-- Temp Control Tab -->
-                        <div class="card-header">
-                            <h4 class="card-title">Temperature Control</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Temperature Control</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -1411,7 +1635,7 @@
                                             </label>
                                         </div>
                                         <div class="row form-group">
-                                            <label for="controlenabled" class="col-form-label" data-toggle="tooltip"
+                                            <label for="coolonhigh" class="col-form-label" data-toggle="tooltip"
                                                 title="Invert cooling control pin (logical pin high == cooling on)">
                                                 Invert Cooling Control
                                             </label>
@@ -1484,9 +1708,80 @@
 
                                 </div>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <div class="row col-12"> <!-- Tower Fan Control -->
+                                    <div class="col-3">
+                                        <div class="row form-group">
+                                            <label for="tfansetpoint" class="col-form-label" data-toggle="tooltip"
+                                                title="Enter the temperature setpoint in your selected units (&#x2109; or &#x2103;)">
+                                                <span class="settfarcel">Tower Fan Set Point</span>
+                                            </label>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label for="tcoolonhigh" class="col-form-label" data-toggle="tooltip"
+                                                title="Invert tower fan control pin (logical pin high == cooling on)">
+                                                Invert Tower Fan Control
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-5">
+                                        <div class="row form-group">
+                                            <input type="number" class="form-control" name="tfansetpoint" id="tfansetpoint" min="0" max="80"
+                                                step=".1" placeholder="40">
+                                        </div>
+                                        <div class="row form-group">
+                                            <fieldset class="form-group">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-sm-3">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Fan pin normal (flow on pin low)">
+                                                                <input type="radio" class="form-check-input" name="tfanonhigh" id="tfanonhigh"
+                                                                value="false">
+                                                                Normal
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Invert fan control pin (flow on pin high)">
+                                                                <input type="radio" class="form-check-input" name="tfanonhigh" id="tfanonhigh"
+                                                                value="true">
+                                                                Inverted
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Tower fan control control enabled">
+                                                            <input type="radio" class="form-check-input" name="tfancontrolenabled" id="tfancontrolenabled"
+                                                            value="true">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Tower fan control disabled">
+                                                            <input type="radio" class="form-check-input" name="tfancontrolenabled" id="tfancontrolenabled"
+                                                            value="false">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div> <!-- Tower Fan Control -->
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -1496,8 +1791,10 @@
                     </div> <!-- Temp Control Tab -->
 
                     <div class="tab-pane fade" id="sensorcontrol"> <!-- Sensor Control Tab -->
-                        <div class="card-header">
-                            <h4 class="card-title">Temperature Sensor Control</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Temperature Sensor Control</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -1546,7 +1843,7 @@
                                 </div>
                                 <!-- Room Sensor Control -->
 
-                                <hr/>
+                                <p></p>
 
                                 <!-- Tower Sensor Control -->
                                 <div class="row col-sm-12 justify-content-center">
@@ -1590,7 +1887,7 @@
                                 </div>
                                 <!-- Tower Sensor Control -->
 
-                                <hr/>
+                                <p></p>
 
                                 <!-- Upper Chamber Sensor Control -->
                                 <div class="row col-sm-12 justify-content-center">
@@ -1634,7 +1931,7 @@
                                 </div>
                                 <!-- Upper Chamber Sensor Control -->
 
-                                <hr/>
+                                <p></p>
 
                                 <!-- Lower Chamber Sensor Control -->
                                 <div class="row col-sm-12 justify-content-center">
@@ -1678,7 +1975,7 @@
                                 </div>
                                 <!-- Lower Chamber Sensor Control -->
 
-                                <hr/>
+                                <p></p>
 
                                 <!-- Keg Temperature Sensor Control -->
                                 <div class="row col-sm-12 justify-content-center">
@@ -1718,12 +2015,16 @@
                                             </div>
                                         </fieldset>
                                     </div>
+
                                 </div>
                                 <!-- Keg Temperature Sensor Control -->
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form> <!-- Sensor Control Form-->
@@ -1734,8 +2035,10 @@
 
                     <div class="tab-pane fade" id="kegscreen"> <!-- KegScreen Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">KegScreen Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>KegScreen Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -1754,9 +2057,12 @@
                                     </div>
                                 </div>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -1767,8 +2073,10 @@
 
                     <div class="tab-pane fade" id="taplistio"> <!-- Taplist.io Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Taplist.io Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Taplist.io Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -1787,6 +2095,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="taplistio_secret" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
@@ -1799,10 +2109,13 @@
                                             placeholder="secret-xxxxx">
                                     </div>
                                 </div>
+
+                                <p></p>
                                 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -1814,8 +2127,10 @@
 
                     <div class="tab-pane fade" id="targeturl"> <!-- URL Target Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">URL Target Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>URL Target Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -1834,6 +2149,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="targetfreq" class="col-sm-2 col-form-label" data-toggle="tooltip"
                                         title="Frequency in minutes at which to update the target (5 to 120 minutes)">Post Frequency</label>
@@ -1843,9 +2160,12 @@
                                     </div>
                                 </div>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -1856,8 +2176,10 @@
 
                     <div class="tab-pane fade" id="rpints"> <!-- Raspberry Pints Tab -->
 
-                        <div class="card-header">
-                            <h4 class="card-title">Raspberry Pints Configuration</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Raspberry Pints Configuration</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
 
@@ -1881,6 +2203,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="rpintsport" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
@@ -1892,6 +2216,8 @@
                                             min="1" max="65535" step="1" placeholder="1883">
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="rpintsusername" class="col-sm-2 col-form-label"
@@ -1906,6 +2232,8 @@
                                     </div>
                                 </div>
 
+                                <p></p>
+
                                 <div class="form-group row">
                                     <label for="rpintspassword" class="col-sm-2 col-form-label"
                                         data-toggle="tooltip"
@@ -1918,6 +2246,8 @@
                                             placeholder="">
                                     </div>
                                 </div>
+
+                                <p></p>
 
                                 <div class="form-group row">
                                     <label for="rpintstopic" class="col-sm-2 col-form-label"
@@ -1932,9 +2262,12 @@
                                     </div>
                                 </div>
 
-                                <div class="row col-sm-12 justify-content-center">
-                                    <button class="btn btn-primary" id="submitSettings"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update</button>
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
                                 </div>
 
                             </form>
@@ -1944,8 +2277,10 @@
                     </div> <!-- URL Target Tab -->
 
                     <div class="tab-pane fade" id="flowcal"> <!-- Calibrate Flowmeters Tab -->
-                        <div class="card-header">
-                            <h4 class="card-title">Calibrate Flowmeters</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Calibrate Flowmeters</h4>
+                            </ul>
                         </div>
 
                         <div class="card-body">
@@ -1984,7 +2319,7 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" data-toggle="tooltip" title="Calibrate by weight">
-                                                            <input type="radio" class="form-check-input" name="calbyweight" id="calbyweight"
+                                                            <input type="radio" class="form-check-input" name="calbyvolume" id="calbyweight"
                                                                 value="false">
                                                             Weight
                                                         </label>
@@ -2106,13 +2441,19 @@
                                         </div>
                                     </div><!-- Calibration Row -->
 
-                                    <div class="row col-sm-12 justify-content-center"> <!-- Button Bar -->
-                                        <div class="row col-sm-12 justify-content-center">&nbsp;</div>
-                                        <button disabled class="setppu btn btn-primary" id="submitSettings"
-                                            onclick="if(!this.form.checkValidity(this)){return (false);}">Set PPU</button>
-                                        &nbsp;
-                                        <input type="reset" class="btn btn-outline-primary" value="Reset">
-                                    </div> <!-- Button Bar -->
+                                    <p></p>
+
+                                    <div class="d-grid gap-2 col-3 mx-auto">
+                                        <button disabled id="submitsettings" class="btn btn-primary"
+                                            onclick="if(!this.form.checkValidity(this)){return (false);}">Set PPU
+                                        </button>
+                                    </div>
+
+                                    <p></p>
+
+                                    <div class="d-grid gap-2 col-3 mx-auto">
+                                        <input type="reset" class="btn btn-primary" value="Reset">
+                                    </div>
 
                                 </form>
 
@@ -2123,8 +2464,10 @@
                     </div> <!-- Calibrate Flowmeters Tab -->
 
                     <div class="tab-pane fade" id="reset"> <!-- Reset Controller Tab -->
-                        <div class="card-header">
-                            <h4 class="card-title">Reset Controller</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Reset Controller</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
                             <p class="card-text">
@@ -2132,17 +2475,99 @@
                                 has the same effect as pressing the reset button on the controller, and will not
                                 harm your settings.
                             </p>
-                            <div class="row col-sm-12 justify-content-center">
-                                <p class="card-text">
-                                    <a href="/controllerreset/" class="btn btn-warning">Reset Controller</a>
-                                </p>
+                            <div class="d-grid gap-2 col-3 mx-auto">
+                                    <a href="/controllerreset/" class="btn btn-warning" type="button">Reset Controller</a>
                             </div>
                         </div>
                     </div> <!-- Reset Controller Tab -->
 
+                    <div class="tab-pane fade" id="update"> <!-- Update Controller Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Update Controller</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                Below are the current and available versions for your controller.
+                            </p>
+                            <p>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Current</th>
+                                            <th scope="col">Available</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="table-firmware table-success">
+                                            <th scope="row">Firmware</th>
+                                            <td>
+                                                <div id="thisFWVersion">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="thatFWVersion">... loading</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="table-firmware table-info">
+                                            <th scope="row">Filesystem</th>
+                                            <td>
+                                                <div id="thisFSVersion">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="thatFSVersion">... loading</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </p>
+                            <div class="alert alert-danger" id="badota" style="display:none;">
+                                <p>Warning: Keg Cop has recorded a failed OTA attempt:</p>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Failed</th>
+                                            <th scope="col">Date/Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Firmware</th>
+                                            <td>
+                                                <div id="badfw">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="badfwtime">... loading</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Filesystem</th>
+                                            <td>
+                                                <div id="badfs">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="badfstime">... loading</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p>
+                                If you would like to update your firmware and filesystem, click the button below.
+                            </p>
+                            <div class="d-grid gap-2 col-3 mx-auto">
+                                <a href="/ota/" id="proceed" class="btn btn-danger" type="button">Update Application</a>
+                            </div>
+                        </div>
+                    </div> <!-- Update Controller Tab -->
+
                     <div class="tab-pane fade" id="wifi"> <!-- Reset WiFi Tab -->
-                        <div class="card-header">
-                            <h4 class="card-title">Reset WiFi</h4>
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Reset WiFi</h4>
+                            </ul>
                         </div>
                         <div class="card-body">
                             <p class="card-text">
@@ -2154,10 +2579,8 @@
                                 click the red "Reset WiFi" button below. You will have to re-configure via the
                                 Access Point to join this device back to your local WiFi network.
                             </p>
-                            <div class="row col-sm-12 justify-content-center">
-                                <p class="card-text">
-                                    <a href="/wifireset/" class="btn btn-danger">Reset WiFi</a>
-                                </p>
+                            <div class="d-grid gap-2 col-3 mx-auto">
+                                <a href="/wifireset/" class="btn btn-danger" type="button">Reset WiFi</a>
                             </div>
                         </div>
                     </div> <!-- Reset WiFi Tab -->

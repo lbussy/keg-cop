@@ -1,0 +1,12 @@
+/*
+    Bootswatch Cerulean theme override style elements
+*/
+
+.chart {
+    color: black;
+}
+
+.footer {
+    background-color: #f5f5f5;
+    text-align: center;
+}

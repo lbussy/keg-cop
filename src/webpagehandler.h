@@ -25,7 +25,8 @@ SOFTWARE. */
 
 #include "uptime.h"
 #include "wifihandler.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
+#include "jsontools.h"
 #include "version.h"
 #include "config.h"
 #include "thatVersion.h"
@@ -37,21 +38,14 @@ SOFTWARE. */
 #include "resetreasons.h"
 #include "api.h"
 
+#include <editserver.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
-#include <SPIFFSEditor.h>
 #include <ESPAsyncWebServer.h>
 #include <Arduino.h>
-
-enum HANDLER_STATE
-{
-    NOT_PROCCESSED = -1,
-    FAIL_PROCESS,
-    PROCESSED
-};
 
 void initWebServer();
 void setRegPageHandlers();
@@ -61,6 +55,13 @@ void setInfoPageHandlers();
 void setConfigurationPageHandlers();
 void setEditor();
 void stopWebServer();
+
+enum HANDLER_STATE
+{
+    NOT_PROCCESSED = -1,
+    FAIL_PROCESS,
+    PROCESSED
+};
 
 HANDLER_STATE handleTapPost(AsyncWebServerRequest *);
 HANDLER_STATE handleTapCal(AsyncWebServerRequest *);
@@ -73,23 +74,15 @@ HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *);
+HANDLER_STATE handleSecret(AsyncWebServerRequest *);
+HANDLER_STATE handleThemePost(AsyncWebServerRequest *);
+#ifdef JSONLOADER
+HANDLER_STATE handleJson(AsyncWebServerRequest *);
+#endif
 
 void send_not_allowed(AsyncWebServerRequest *request);
 void send_failed(AsyncWebServerRequest *request);
 void send_json(AsyncWebServerRequest *request, String &json);
 void send_ok(AsyncWebServerRequest *request);
-
-extern struct ThatVersion thatVersion;
-extern struct Config config;
-extern struct Flowmeter flow;
-extern const size_t capacityFlowDeserial;
-extern const size_t capacityFlowSerial;
-extern const size_t capacityPulseDeserial;
-extern const size_t capacityPulseSerial;
-extern struct Devices device;
-extern const size_t capacityTempsDeserial;
-extern const size_t capacityTempsSerial;
-extern struct Thermostat tstat;
-extern struct API api;
 
 #endif // _WEBPAGEHANDLER_H

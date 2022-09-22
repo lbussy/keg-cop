@@ -24,7 +24,7 @@ SOFTWARE. */
 #define _TEMPSENSORS_H
 
 #include "config.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include <CircularBuffer.h>
 #include <OneWire.h>
 #include <DS18B20.h>
@@ -39,6 +39,18 @@ SOFTWARE. */
 #define DEVICE_DISCONNECTED_C -127
 // #define DEVICE_DISCONNECTED_F -196.6
 // #define DEVICE_DISCONNECTED_RAW -7040
+
+// Temperature sensor definitions
+enum SensorList
+{
+    ROOM,
+    TOWER,
+    UPPER,
+    LOWER,
+    KEG
+};
+static const char *sensorName[NUMSENSOR] = {ROOMTEMP, TOWERTEMP, UPPERTEMP, LOWERTEMP, KEGTEMP};
+static int sensorPin[NUMSENSOR] = {ROOMSENSE, TOWERSENSE, UCHAMBSENSE, LCHAMBSENSE, KEGSENSE};
 
 struct Sensor
 {
@@ -59,9 +71,8 @@ void sensorInit();
 void sensorReInit();
 void pollTemps();
 double getTempC(uint8_t);
+void logTempEmulation(int sensor, double temp);
 
-extern const char *sensorName[NUMSENSOR];
-
-extern struct Config config;
+extern Devices device;
 
 #endif // _TEMPSENSORS_H

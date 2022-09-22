@@ -22,6 +22,7 @@ SOFTWARE. */
 
 #include "wifihandler.h"
 
+bool wifiPause = false;
 bool shouldSaveConfig = false;
 Ticker blinker;
 
@@ -74,9 +75,9 @@ void doWiFi(bool dontUseStoredCreds)
     wm.setShowDnsFields(true);    // Force show dns field always
 
     // Allow non-default host name
-    // AsyncWiFiManagerParameter custom_mqtt_server("server", "mqtt server", config.hostname, 40);
+    // AsyncWiFiManagerParameter custom_mqtt_server("server", "mqtt server", app.hostname, 40);
     // wm.addParameter(&custom_mqtt_server);
-    AsyncWiFiManagerParameter custom_hostname("name", "Host Name", config.copconfig.hostname, 32);
+    AsyncWiFiManagerParameter custom_hostname(FlowmeterKeys::name, "Host Name", app.copconfig.hostname, 32);
     wm.addParameter(&custom_hostname);
 
     if (dontUseStoredCreds)
@@ -85,7 +86,7 @@ void doWiFi(bool dontUseStoredCreds)
         blinker.attach_ms(APBLINK, wifiBlinker);
         wm.setConfigPortalTimeout(120);
 
-        if (wm.startConfigPortal(config.apconfig.ssid, config.apconfig.passphrase))
+        if (wm.startConfigPortal(app.apconfig.ssid, app.apconfig.passphrase))
         {
             // We finished with portal, do we need this?
         }
@@ -106,9 +107,10 @@ void doWiFi(bool dontUseStoredCreds)
         blinker.attach_ms(STABLINK, wifiBlinker);
         wm.setConnectTimeout(30);
         wm.setConfigPortalTimeout(120);
-        if (!wm.autoConnect(config.apconfig.ssid, config.apconfig.passphrase))
+        if (!wm.autoConnect(app.apconfig.ssid, app.apconfig.passphrase))
         {
             Log.warning(F("Failed to connect and/or hit timeout." CR));
+            killDRD();
             blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
             _delay(3000);
@@ -122,20 +124,20 @@ void doWiFi(bool dontUseStoredCreds)
             // We finished with portal (We were configured)
             blinker.detach();        // Turn off blinker
             digitalWrite(LED, HIGH); // Turn off LED
-            WiFi.setHostname(config.copconfig.hostname);
+            WiFi.setHostname(app.copconfig.hostname);
         }
     }
 
-    if (shouldSaveConfig) { // Save configuration
-        if (custom_hostname.getValue() != config.copconfig.hostname)
+    if (shouldSaveConfig)
+    { // Save configuration
+        if (custom_hostname.getValue() != app.copconfig.hostname)
         {
             Log.notice(F("Saving custom hostname configuration: %s." CR), custom_hostname.getValue());
-            strlcpy(config.copconfig.hostname, custom_hostname.getValue(), sizeof(config.copconfig.hostname));
-            WiFi.setHostname(config.copconfig.hostname);
-            config.copconfig.nodrd = true;
-            saveConfig();
+            strlcpy(app.copconfig.hostname, custom_hostname.getValue(), sizeof(app.copconfig.hostname));
+            WiFi.setHostname(app.copconfig.hostname);
+            killDRD();
             Log.notice(F("Restarting to pick up custom hostname." CR));
-            ESP.restart();
+            resetController();
         }
     }
 
@@ -143,6 +145,7 @@ void doWiFi(bool dontUseStoredCreds)
     blinker.detach();        // Turn off blinker
     digitalWrite(LED, HIGH); // Turn off LED
 
+    WiFi.setSleep(false); // Required to make mDNS service discovery reliable until https://github.com/espressif/arduino-esp32/issues/7156 is resolved
     WiFi.onEvent(WiFiEvent);
 }
 
@@ -152,9 +155,7 @@ void resetWifi()
     blinker.detach();       // Turn off blinker
     digitalWrite(LED, LOW); // Turn on LED
     Log.notice(F("Restarting after clearing wifi settings." CR));
-    config.copconfig.nodrd = true;
-    saveConfig();
-    ESP.restart();
+    resetController();
 }
 
 void wifiBlinker()
@@ -168,7 +169,7 @@ void apCallback(AsyncWiFiManager *wiFiManager)
 { // Entered Access Point mode
     Log.verbose(F("[CALLBACK]: setAPCallback fired." CR));
 #ifdef ESP32
-    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20);  // Set the bandwidth of ESP32 interface
+    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // Set the bandwidth of ESP32 interface
 #endif
     blinker.detach(); // Turn off blinker
     blinker.attach_ms(APBLINK, wifiBlinker);
@@ -185,12 +186,14 @@ void apCallback(AsyncWiFiManager *wiFiManager)
 //     Log.verbose(F("[CALLBACK]: preSaveConfigCallback fired." CR));
 // }
 
-void saveConfigCallback() {
+void saveConfigCallback()
+{
     Log.verbose(F("[CALLBACK]: setSaveConfigCallback fired." CR));
     shouldSaveConfig = true;
 }
 
-void saveParamsCallback() {
+void saveParamsCallback()
+{
     Log.verbose(F("[CALLBACK]: setSaveParamsCallback fired." CR));
 }
 
@@ -201,26 +204,36 @@ void saveParamsCallback() {
 void WiFiEvent(WiFiEvent_t event)
 {
     Serial.printf("[WiFi-event] event: %d\n", event);
-    if (! WiFi.isConnected())
+    if (!WiFi.isConnected())
     {
-        Log.warning(F("WiFi lost connection, reconnecting .."));
-        disconnectRPints();
-        WiFi.reconnect();
-
-        int WLcount = 0;
-        while (! WiFi.isConnected() && WLcount < 190) {
-            delay(100);
-            printDot(true);
-            ++WLcount;
-        }
-        printCR(true);
-
-        if (! WiFi.isConnected()) {
-            // We failed to reconnect.
-            Log.error(F("Unable to reconnect WiFI, restarting." CR));
-            delay(1000);
-            ESP.restart();
-        }
-        setDoRPintsConnect();
+        doWiFiReconnect = true;
     }
+}
+
+void reconnectWiFi()
+{
+    wifiPause = true;
+    Log.warning(F("WiFi lost connection, reconnecting .."));
+    disconnectRPints();
+    WiFi.reconnect();
+
+    int WLcount = 0;
+    while (!WiFi.isConnected() && WLcount < 200)
+    {
+        _delay(100);
+        printDot(true);
+        ++WLcount;
+    }
+    printCR(true);
+
+    if (!WiFi.isConnected())
+    {
+        // We failed to reconnect.
+        Log.error(F("Unable to reconnect WiFI, restarting." CR));
+        _delay(1000);
+        killDRD();
+        resetController();
+    }
+    setDoRPintsConnect();
+    wifiPause = false;
 }

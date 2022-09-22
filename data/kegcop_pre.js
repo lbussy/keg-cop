@@ -1,9 +1,43 @@
 // Common file/functions for all Keg Cop pages
 
+// Application variables
 var dataHost = "";
-var usingDataHost = false;
 var dataHostCheckDone = false;
 var useTemps = false;
+var secret = "";        // Hold the secret to help avoid spurious changes to app (like from over-zealous network scanning)
+var numReqPre = 3;      // How many common AJAX calls exist here - to be added to the page specific numbers (checkDataHost and getSecret currently)
+var isKSTV = false;     // Semaphore for KegScreen-TV
+var is404 = false;      // Semaphore for 404 page
+// Semaphores
+var getThemeRunning = false
+var chooseTempMenuRunning = false;
+var checkSemaphoreRunning = false;
+var pingRunning = false;
+var checkDataHostRunning = false;
+var getSecretRunning = false;
+
+const UA = navigator.userAgent;
+
+// Use last known theme:
+var theme = localStorage.getItem('theme');
+if (theme) {
+    document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
+    if (is404) {
+        document.getElementById('theme_aux').href = theme.css || "/cerulean_aux.css";
+    } else {
+        document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
+    }
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
+}
+
+var thisURL = new URL(window.location.href);
+if (thisURL.pathname.includes("/ks-tv") || getQueryVariable('feature')) {
+    isKSTV = true;
+}
+
+// Use this here to enforce running first
+dataHost = localStorage.getItem("dataHost") || "";
+if (dataHost && !dataHost.endsWith("/")) dataHost += "/";
 
 getUseTemps();
 
@@ -19,10 +53,13 @@ window.addEventListener("beforeunload", function (event) {
 });
 
 window.onclick = function (event) {
-    if (event.target.id == "noChange")
-        return; // Skip rewriting context help
-    // Open a rewritten URL and return false to prevent default
-    const newURL = cleanURL(event);
+    var type = event.target.type;
+    // Skip random clicks, form items and context help
+    if (typeof type === 'undefined' || type == "file" || type == "submit" || type == "reset" || type == "number" || type == "text" || type == "radio" || type == "textarea" || event.target.id == "noChange" || event.target.classList.contains('btn-close')) {
+        return;
+    }
+    event.preventDefault();
+    const newURL = cleanURL(getEventTarget(event));
     if (newURL) {
         window.open(newURL, "_self");
         return false;
@@ -43,6 +80,7 @@ function preLoad() {
 
 function startLoad() {
     fastTempsMenu();
+    getTheme();
     $(document).tooltip({ // Enable tooltips
         'selector': '[data-toggle=tooltip]',
         //'placement': 'left',
@@ -51,6 +89,7 @@ function startLoad() {
     // Call finishLoad() if it exists (page handler)
     if (typeof finishLoad === "function") {
         checkDataHost();    // Check if we are using a dataHost
+        getSecret();        // Get controller secret
         finishLoad();
     };
 }
@@ -61,6 +100,7 @@ function toggleLoader(status) {
     var tempsApp = document.getElementById("tempsApp");
     var settingsApp = document.getElementById("settingsApp");
     var indexApp = document.getElementById("indexApp");
+    var bulkApp = document.getElementById("bulkApp");
     if (status === "on") {
         if (loader) {
             loader.style.display = "block";
@@ -73,6 +113,9 @@ function toggleLoader(status) {
         }
         if (indexApp) {
             indexApp.style.visibility = "hidden";
+        }
+        if (bulkApp) {
+            bulkApp.style.visibility = "hidden";
         }
     } else {
         if (loader) {
@@ -87,6 +130,9 @@ function toggleLoader(status) {
         if (indexApp) {
             indexApp.style.visibility = "visible";
         }
+        if (bulkApp) {
+            bulkApp.style.visibility = "visible";
+        }
     }
 }
 
@@ -96,6 +142,85 @@ function pollComplete() {
     } else {
         setTimeout(pollComplete, 300); // try again in 300 milliseconds
     }
+}
+
+function setTheme(selection, reload = false) {
+    if (reload) {
+        toggleLoader("on");
+    }
+
+    var theme = {};
+    var themes = [
+        {name:"cerulean", displayname: "Cerulean (light)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", css: "cerulean_aux.css", color: "#FFFFFF"},
+        {name:"superhero", displayname: "Superhero (dark)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", css: "superhero_aux.css",  color: "#000000"},
+    ];
+
+    try {
+        if (selection) {
+            theme = themes.find(theme => theme.name === selection.toLowerCase());
+        } else {
+            if (!localStorage.getItem('theme')) {
+                console.warn("setTheme(): Unknown theme, default theme selected.");
+                theme = themes.find(theme => theme.name === "cerulean");
+            } else {
+                theme = JSON.parse(localStorage.getItem('theme'));
+            }
+        }
+    } catch {
+        theme = themes.find(theme => theme.name === "cerulean");
+    }
+    localStorage.setItem('theme', JSON.stringify(theme));
+    document.getElementById('theme').href = theme.url;
+    document.getElementById('theme_aux').href = theme.css;
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color);
+
+    if (reload) {
+        location.reload()
+    }
+}
+
+function getTheme(callback = null) { // Get theme settings
+    if (!dataHostCheckDone) {
+        setTimeout(getTheme, 10);
+        return;
+    }
+
+    var url = dataHost;
+    if (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+
+    if (getThemeRunning) return;
+    getThemeRunning = true;
+    url += "/api/v1/config/theme/";
+    var theme = $.getJSON(url, function () {})
+        .done(function (theme) {
+            try {
+                setTheme(theme.theme.toLowerCase());
+                if (loaded < numReq) {
+                    loaded++;
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    //
+                }
+                setTimeout(getTheme, 10000);
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                //
+            }
+            setTimeout(getTheme, 10000);
+        })
+        .always(function () {
+            getThemeRunning = false
+            // Can post-process here
+            if (typeof callback == "function") {
+                callback();
+            }
+        });
 }
 
 function fastTempsMenu() {
@@ -116,11 +241,15 @@ async function chooseTempMenu(callback = null) {
         setTimeout(chooseTempMenu, 10);
         return;
     }
+
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/info/tempcontrol/";
+
+    if (chooseTempMenuRunning) return;
+    chooseTempMenuRunning = true;
     try {
         const response = await fetch(url);
         // response.status holds http code
@@ -131,6 +260,7 @@ async function chooseTempMenu(callback = null) {
                 $('#displaytemplink').toggle();
             }
         } else {
+            console.info("A 405 here for 'tempcontrol' is because the feature is turned off.");
             sessionStorage.setItem("useTemps", false);
             if ($('#displaytemplink').is(':visible')) {
                 $('#displaytemplink').toggle();
@@ -144,21 +274,31 @@ async function chooseTempMenu(callback = null) {
         setTimeout(chooseTempMenu, 10000);
     }
     if (typeof callback == "function") {
+        chooseTempMenuRunning = false;
         callback();
     }
 }
 
 function checkSemaphore(callback) { // Check to see if the update is complete
+    if (!dataHostCheckDone) {
+        setTimeout(checkSemaphore, 10);
+        return;
+    }
+
     var url = dataHost;
-    if (url.endsWith("/")) {
+    if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
     url += "/api/v1/action/ping/";
+
+    if (checkSemaphoreRunning) return;
+    checkSemaphoreRunning = true;
     var jqxhr = $.get(url)
         .done(function (data) {
             callback(true);
         })
         .fail(function () {
+            checkSemaphoreRunning = false;
             // This will fail while controller resets
             callback(false);
         });
@@ -203,9 +343,12 @@ function checkDataHost() {
         const ping = new XMLHttpRequest();
         ping.open('GET', '/api/v1/action/ping/');
 
+        if (checkDataHostRunning) setTimeout(checkDataHost, 10000);
+        checkDataHostRunning = true;
         try {
             ping.send();
-            ping.onload = function() {
+            ping.onload = function () {
+                checkDataHostRunning = false;
                 if (ping.status != 200) {
                     // To set data server, use the following syntax in console:
                     //
@@ -219,7 +362,8 @@ function checkDataHost() {
                     // (i.e. we are connected to the controller and not a dev server) 
                     // then it will ignore devServer.
                     //
-                    dataHost = localStorage.getItem("dataHost") || "";
+                    dataHost = localStorage.getItem("dataHost");
+                    if (dataHost && !dataHost.endsWith("/")) dataHost += "/";
                     if (dataHost) console.info("NOTICE: Using 'dataHost' (a single 404 for /api/v1/action/ping/ is normal.)");
                     //
                     // Also remember that this must be cleared for things to work
@@ -228,6 +372,7 @@ function checkDataHost() {
                     // >>   localStorage.setItem("dataHost", "");
                     //
                 } else {
+                    dataHost = "";
                     console.info("NOTICE: Not using 'dataHost'.");
                 }
                 dataHostCheckDone = true;
@@ -247,23 +392,113 @@ function checkDataHost() {
     }
 }
 
-function cleanURL(event) {
+function getSecret(callback = null) { // Get secret for PUTs
     if (!dataHostCheckDone) {
-        setTimeout(chooseTempMenu, 10);
+        setTimeout(getSecret, 10);
         return;
     }
-    // This all exists because we need to re-write URLs when
-    // using a dev server
-    try {
-        const currentURL = new URL(window.location.href);
-        const targetURL = new URL(event.target.href);
-        var newURL;
-        newURL = targetURL.protocol
-        newURL += "//";
-        newURL += targetURL.host;
-        newURL += "/";
-        var newPath = targetURL.pathname;
 
+    var url = dataHost;
+    if (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+
+    url += "/api/v1/info/secret/";
+
+    if (getSecretRunning) return;
+    getSecretRunning = true;
+    var flow = $.getJSON(url, function () {
+        flowAlert.warning();
+    })
+        .done(function (secretJson) {
+            try {
+                secret = secretJson["secret"];
+                if (loaded < numReq) {
+                    loaded++;
+                }
+            }
+            catch {
+                if (!unloadingState) {
+                    console.warn("Unable to parse secret.");
+                }
+                setTimeout(getSecret, 10000);
+            }
+        })
+        .fail(function () {
+            if (!unloadingState) {
+                console.warn("Unable to retrieve secret.");
+            }
+            setTimeout(getSecret, 10000);
+        })
+        .always(function () {
+            getSecretRunning = false;
+            // Can post-process here
+            if (typeof callback == "function") {
+                callback();
+            }
+        });
+}
+
+function getEventTarget(event) {
+    var targetURL = "";
+    // The following is needed because of clickable spans inside an anchor element
+    if (!event.target.href) {
+        var tempElement = event.target.parentNode;
+        while (!tempElement.href && tempElement.parentNode) {
+            // Dig for the parent element URL
+            tempElement = tempElement.parentNode;
+            var type = event.target.type;
+        }
+        try {
+            targetURL = new URL(tempElement.href);
+        } catch {
+            ;
+        }
+
+    } else {
+        try {
+            targetURL = new URL(event.target.href);
+        } catch {
+        }
+    }
+    return targetURL;
+}
+
+function cleanURL(tempURL = "", newHost = "") {
+    // This is to re-write URLs when using a dev server
+    if (is404) {
+        return tempURL;
+    }
+    const currentURL = new URL(window.location.href);
+
+    if (!dataHostCheckDone) {
+        setTimeout(cleanURL, 10);
+        return;
+    }
+
+    // Allow re-writing a cleaned current URL with a new hostname
+    if (!tempURL) {
+        tempURL = new URL(window.location.href);
+    }
+    targetURL = tempURL; // Yes we're actually going to use both of these
+
+    try {
+        try {
+            targetURL = new URL(targetURL);
+        } catch {
+            targetURL = new URL(currentURL.protocol + "//" + currentURL.host + "/" + targetURL);
+        }
+        var newURL;
+        newURL = targetURL.protocol;
+        newURL += "//";
+        if (newHost && !is404) { // Change hostname if we are resetting controller name (and not 404)
+            newURL += newHost;
+        } else {
+            newURL += targetURL.host;
+        }
+        newURL += "/";
+
+        var newPath = targetURL.pathname;
         while (newPath.startsWith("/")) {
             newPath = newPath.substring(1, newPath.length);
         }
@@ -287,63 +522,41 @@ function cleanURL(event) {
                 newPath += ".htm";
             }
             newPath = oldPath + "/" + newPath;
+        } else {
+            newPath += "/";
         }
         newURL += newPath;
         newURL += targetURL.search;
         newURL += targetURL.hash;
         return newURL;
     } catch {
-        return false;
+        if (newHost) { // Change hostname if we are resetting controller name
+            console.warn("WARNING: Unable to clean URL: " + tempURL);
+        } else {
+            console.warn("WARNING: Unable to rewrite new URL for '" + newHost + "'.");
+        }
+        return;
     }
 }
 
-function rewriteURL(newTarget) {
-    if (!dataHostCheckDone) {
-        setTimeout(rewriteURL, 10);
-        return;
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
     }
-    // This all exists because we need to re-write URLs when
-    // using a dev server
-    try {
-        // Concatenate authority segment
-        const currentURL = new URL(window.location.href);
-        var currentAuthority;
-        currentAuthority = currentURL.protocol
-        currentAuthority += "//";
-        currentAuthority += currentURL.host;
-        currentAuthority += "/";
+}
 
-        var currentPath = currentURL.pathname;
-        while (currentPath.startsWith("/")) {
-            currentPath = currentPath.substring(1, currentPath.length);
-        }
-        while (currentPath.endsWith("/")) {
-            currentPath = currentPath.substring(0, currentPath.length - 1);
-        }
-        if (currentPath.includes("/"))
-            currentPath = currentPath.split('/')[0];
-        else
-            currentPath = "";
-        if (currentPath)
-            currentPath += "/";
-
-        while (newTarget.startsWith("/")) {
-            newTarget = newTarget.substring(1, newTarget.length);
-        }
-        while (newTarget.endsWith("/")) {
-            newTarget = newTarget.substring(0, newTarget.length - 1);
-        }
-        if (newTarget) {
-            if (dataHost)
-                newTarget += ".htm";
-            else
-                newTarget += "/";
-        }
-
-        var newURL = currentAuthority + currentPath + newTarget;
-
-        return newURL;
-    } catch {
-        return false;
+function buttonClearDelay() { // Poll to see if entire page is loaded
+    if (posted) {
+        $("button[id='submitSettings']").prop('disabled', false);
+        $("button[id='submitSettings']").html('Update');
+        if (window.location.href.includes("settings")) toggleTIO();
+        posted = false;
+    } else {
+        setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
     }
 }

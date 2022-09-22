@@ -24,7 +24,7 @@ SOFTWARE. */
 #define _WIFI_H
 
 #include "config.h"
-#include "jsonconfig.h"
+#include "appconfig.h"
 #include "tools.h"
 #include "rpintsclient.h"
 
@@ -46,12 +46,13 @@ void saveConfigCallback();
 void saveParamsCallback();
 void webServerCallback();
 void WiFiEvent(WiFiEvent_t event);
-
-extern struct Config config;
+void reconnectWiFi();
 
 struct tcp_pcb;
 extern struct tcp_pcb *tcp_tw_pcbs;
 extern "C" void tcp_abort(struct tcp_pcb *pcb);
 void tcpCleanup(void);
+
+extern bool wifiPause;
 
 #endif // _WIFI_H

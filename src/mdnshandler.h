@@ -23,13 +23,13 @@ SOFTWARE. */
 #ifndef _MDNSHANDLER_H
 #define _MDNSHANDLER_H
 
-#include "jsonconfig.h"
+#include "appconfig.h"
+#include "config.h"
 #include <ArduinoLog.h>
 #include <ESPmDNS.h>
 
-void mdnssetup();
-void mdnsreset();
-
-extern struct Config config;
+void mDNSSetup();
+void mDNSReset();
+void mDNSServiceAdvert();
 
 #endif // _MDNSHANDLER_H

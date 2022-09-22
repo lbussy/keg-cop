@@ -22,7 +22,7 @@ SOFTWARE. */
 
 #include "mdnshandler.h"
 
-void mdnssetup()
+void mDNSSetup()
 {
     if (!MDNS.begin(WiFi.getHostname()))
     { // Start the mDNS responder
@@ -31,29 +31,34 @@ void mdnssetup()
     else
     {
         Log.notice(F("mDNS responder started for %s.local." CR), WiFi.getHostname());
-        MDNS.addService("http", "tcp", PORT);
-        MDNS.addService("kegcop", "tcp", PORT);
-#if DOTELNET == true
-        MDNS.addService("telnet", "tcp", TELNETPORT);
-#endif
-        Log.notice(F("HTTP registered via mDNS on port %i." CR), PORT);
+        mDNSServiceAdvert();
     }
 }
 
-void mdnsreset()
+void mDNSReset()
 {
     MDNS.end();
-    if (!MDNS.begin(config.copconfig.hostname))
+    if (!MDNS.begin(app.copconfig.hostname))
     {
         Log.error(F("Error resetting MDNS responder."));
     }
     else
     {
         Log.notice(F("mDNS responder restarted for %s.local." CR), WiFi.getHostname());
-        MDNS.addService("http", "tcp", PORT);
-        MDNS.addService("kegcop", "tcp", PORT);
-#if DOTELNET == true
-        MDNS.addService("telnet", "tcp", TELNETPORT);
-#endif
+        mDNSServiceAdvert();
     }
+}
+
+void mDNSServiceAdvert()
+{
+    // There is almost certainly a better way to do this
+    char guid[20];
+    getGuid(guid);
+    String guid_str = guid;
+
+    // Services
+    MDNS.addService(AppKeys::apikey, AppKeys::tcp, PORT);
+
+    // Handle KegScreen TV Adverts
+    doKSMDNS();
 }

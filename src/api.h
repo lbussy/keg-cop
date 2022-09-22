@@ -23,19 +23,16 @@ SOFTWARE. */
 #ifndef _API_H
 #define _API_H
 
-#include "jsonconfig.h"
+#include "appconfig.h"
+#include "flowconfig.h"
 #include "serialhandler.h"
 
 #include <ArduinoJson.h>
 
-#define CAP_ACTION_API 768
-#define CAP_INFO_API 768
-#define CAP_CONFIG_API 192
-#define CAP_API 256
-
-#define URLSTART "http://"
-#define TLD ".local"
-#define DELIM "/"
+#define CAPACITY_ACTION_API 768
+#define CAPACITY_INFO_API 768
+#define CAPACITY_CONFIG_API 384
+#define CAPACITY_API 512
 
 struct ActionAPI
 {
@@ -64,6 +61,8 @@ struct InfoAPI
     const char thatVersion[12] = "thatVersion";
     const char pulses[7] = "pulses";
     const char sensors[8] = "sensors";
+    const char tempcontrol[12] = "tempcontrol";
+    const char secret[7] = "secret";
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -74,6 +73,7 @@ struct ConfigAPI
     // Stores configuration API information
     const char base[7] = "config";
     const char settings[9] = "settings";
+    const char theme[6] = "theme";
     const char taps[5] = "taps";
 
     void load(JsonObjectConst);
@@ -91,10 +91,12 @@ struct API
     void save(JsonObject) const;
 };
 
-bool serializeActionAPI(Print &dst);
-bool serializeInfoAPI(Print &dst);
-bool serializeConfigAPI(Print &dst);
-bool serializeAPI(Print &dst);
-bool printAPI();
+// bool serializeActionAPI(Print &dst);
+// bool serializeInfoAPI(Print &dst);
+// bool serializeConfigAPI(Print &dst);
+// bool serializeAPI(Print &dst);
+// bool printAPI();
+
+extern API api;
 
 #endif // _API_H

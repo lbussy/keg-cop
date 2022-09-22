@@ -1,0 +1,7 @@
+{
+    "name":"Keg Cop",
+    "deviceType":"kegcop",
+    "appendID":false,
+    "path":"/ks-tv/",
+    "deviceID":"ABC123"
+}

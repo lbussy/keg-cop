@@ -60,13 +60,26 @@ get_git() {
     fi
     echo -e "\nDetermining git root."
     if [[ ! $(git status 2>/dev/null) ]]; then
-        echo -e "\nERROR: Git repository not found."
-        exit
+        # Not a git repo
+        SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+        if [[ -f "$SCRIPT_DIR/platformio.ini" ]]; then
+            # Platformio.ini is in the current directory
+            GITROOT="$SCRIPT_DIR"
+        elif [[ -f "$SCRIPT_DIR/../platformio.ini" ]]; then
+            # Platformio.ini is in the parent directory
+            GITROOT=`readlink -f "$SCRIPT_DIR/.."`
+        else
+            echo -e "\nERROR: Git repository nor platformio.ini found."
+            exit
+        fi
+        GITNAME="${SCRIPT_DIR##*/}"
+        GITTAG="0.0.0"
+    else
+        GITROOT=$(git rev-parse --show-toplevel)
+        GITNAME=$(git rev-parse --show-toplevel)
+        GITNAME=${GITROOT##*/}
+        GITTAG=$(git describe --tags --abbrev=0)
     fi
-    GITROOT=$(git rev-parse --show-toplevel)
-    GITNAME=$(git rev-parse --show-toplevel)
-    GITNAME=${GITROOT##*/}
-    GITTAG=$(git describe --tags --abbrev=0)
 }
 
 check_root() {

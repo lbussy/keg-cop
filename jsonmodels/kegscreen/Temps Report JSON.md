@@ -13,10 +13,16 @@ JSON Definition:
     "kegeratorname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "reporttype":"xxxxxxxxxxxxxxxx",
     "imperial": false,
+    "coolonhigh": true,
     "controlpoint": 99,
     "setting": 999.999,
     "status": 99,
     "controlenabled": false,
+    "tfancontrolenabled": false,
+    "tfansetpoint": 100,
+    "tfanstate": 99,
+    "tfanonhigh": true,
+
     "sensors": [
         {
             "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -51,23 +57,23 @@ Size:
 -----
 
 ```
-512 or 1024
+Serialize:  1024
+Deserialize:  1536
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-// char* input;
-// size_t inputLength; (optional)
+// Stream& input;
 
-StaticJsonDocument<512> doc;
+StaticJsonDocument<1536> doc;
 
-DeserializationError error = deserializeJson(doc, input, inputLength);
+DeserializationError error = deserializeJson(doc, input);
 
 if (error) {
-  Serial.print(F("deserializeJson() failed: "));
-  Serial.println(error.f_str());
+  Serial.print("deserializeJson() failed: ");
+  Serial.println(error.c_str());
   return;
 }
 
@@ -78,16 +84,19 @@ const char* breweryname = doc["breweryname"];
 const char* kegeratorname = doc["kegeratorname"];
 const char* reporttype = doc["reporttype"]; // "xxxxxxxxxxxxxxxx"
 bool imperial = doc["imperial"]; // false
+bool coolonhigh = doc["coolonhigh"]; // true
 int controlpoint = doc["controlpoint"]; // 99
 float setting = doc["setting"]; // 999.999
 int status = doc["status"]; // 99
 bool controlenabled = doc["controlenabled"]; // false
+bool tfancontrolenabled = doc["tfancontrolenabled"]; // false
+int tfansetpoint = doc["tfansetpoint"]; // 100
 
-for (JsonObject elem : doc["sensors"].as<JsonArray>()) {
+for (JsonObject sensor : doc["sensors"].as<JsonArray>()) {
 
-  const char* name = elem["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", ...
-  bool enable = elem["enable"]; // false, false, false, false, false
-  float value = elem["value"]; // 999.999, 999.999, 999.999, 999.999, 999.999
+  const char* sensor_name = sensor["name"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", ...
+  bool sensor_enable = sensor["enable"]; // false, false, false, false, false
+  float sensor_value = sensor["value"]; // 999.999, 999.999, 999.999, 999.999, 999.999
 
 }
 ```
@@ -105,10 +114,13 @@ doc["breweryname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 doc["kegeratorname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["reporttype"] = "xxxxxxxxxxxxxxxx";
 doc["imperial"] = false;
+doc["coolonhigh"] = true;
 doc["controlpoint"] = 99;
 doc["setting"] = 999.999;
 doc["status"] = 99;
 doc["controlenabled"] = false;
+doc["tfancontrolenabled"] = false;
+doc["tfansetpoint"] = 100;
 
 JsonArray sensors = doc.createNestedArray("sensors");
 

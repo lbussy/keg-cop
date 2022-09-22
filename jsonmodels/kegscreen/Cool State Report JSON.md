@@ -12,7 +12,8 @@ JSON Definition:
     "breweryname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "kegeratorname":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "reporttype":"xxxxxxxxxxxxxxxx",
-    "coolstate":99
+    "coolstate":99,
+    "tfanstatus":99
 }
 ```
 
@@ -20,23 +21,23 @@ Size:
 -----
 
 ```
-128 or 384
+Serialize:  384
+Deserialize:  512
 ```
 
 Deserializing / Parsing / Loading:
 ----------------------------------
 
 ```
-// char* input;
-// size_t inputLength; (optional)
+// Stream& input;
 
-StaticJsonDocument<128> doc;
+StaticJsonDocument<512> doc;
 
-DeserializationError error = deserializeJson(doc, input, inputLength);
+DeserializationError error = deserializeJson(doc, input);
 
 if (error) {
-  Serial.print(F("deserializeJson() failed: "));
-  Serial.println(error.f_str());
+  Serial.print("deserializeJson() failed: ");
+  Serial.println(error.c_str());
   return;
 }
 
@@ -47,6 +48,7 @@ const char* breweryname = doc["breweryname"];
 const char* kegeratorname = doc["kegeratorname"];
 const char* reporttype = doc["reporttype"]; // "xxxxxxxxxxxxxxxx"
 int coolstate = doc["coolstate"]; // 99
+bool fanon = doc["fanon"]; // false
 ```
 
 Serializing / Saving:
@@ -62,6 +64,7 @@ doc["breweryname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 doc["kegeratorname"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 doc["reporttype"] = "xxxxxxxxxxxxxxxx";
 doc["coolstate"] = 99;
+doc["fanon"] = false;
 
 serializeJson(doc, output);
 ```

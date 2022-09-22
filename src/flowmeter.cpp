@@ -22,17 +22,11 @@ SOFTWARE. */
 
 #include "flowmeter.h"
 
-Flowmeter flow;
-const char *flowfilename = FLOWFILENAME;
 int flowPins[NUMTAPS] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7, FLOW8};
 volatile static unsigned long pulse[NUMTAPS];         // Unregistered pulse counter
 volatile static unsigned long lastPulse[NUMTAPS];     // Pulses pending at last poll
 volatile static unsigned long lastPulseTime[NUMTAPS]; // Monitor ongoing active pours
 volatile static unsigned long lastLoopTime[NUMTAPS];  // Monitor ongoing active pours
-extern const size_t capacityFlowSerial = 3072;
-extern const size_t capacityFlowDeserial = 3072;
-extern const size_t capacityPulseSerial = JSON_ARRAY_SIZE(9) + JSON_OBJECT_SIZE(1);
-extern const size_t capacityPulseDeserial = capacityPulseSerial + 10;
 
 static IRAM_ATTR void HandleIntISR0(void)
 {
@@ -113,9 +107,7 @@ bool initFlow()
         lastPulse[i] = 0;            // For kick detector
         lastLoopTime[i] = millis();  // Compare for kickdetect
         lastPulseTime[i] = millis(); // For pour detector
-        queuePourReport[i] = 0;      // Pour queue
-        queuePulseReport[i] = 0;     // Pulse queue
-        queueKickReport[i] = false;  // Kick queue
+        initPourPulseKick();
     }
     return loadFlowConfig();
 }
@@ -131,7 +123,7 @@ void logFlow()
             {                            // If the keg is blowing foam and active
                 pulse[i] = lastPulse[i]; // Discard the foam pulses
                 flow.taps[i].active = false;
-                queueKickReport[i] = true;
+                setQueueKickReport(i);
                 saveFlowConfig();
             }
             else if ((millis() - lastPulseTime[i] > POURDELAY) && (pulse[i] > 0))
@@ -151,11 +143,11 @@ void logFlow()
                 { // Log a pour
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
-                    saveFlowConfig();
-                    queuePourReport[i] = pour;        // Queue upstream pour report
-                    queuePulseReport[i] = pulseCount; // Queue upstream pulse report
-                    config.taplistio.update = true;   // Queue TIO report
-                    saveConfig();
+                    setDoSaveFlow();
+                    setQueuePourReport(i, pour);        // Queue upstream pour report
+                    setQueuePulseReport(i, pulseCount); // Queue upstream pulse report
+                    app.taplistio.update = true;   // Queue TIO report
+                    setDoSaveFlow();
                     Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                 }
             }
@@ -183,7 +175,7 @@ bool isSmallPour(unsigned int count, int tap)
     // with the PPU value.  If pour < SMALLPOUR then it will be ignored.
 
     // Choose ounces per gallon or ounces per liter
-    double divisor = (config.copconfig.imperial) ? 128 : 33.8;
+    double divisor = (app.copconfig.imperial) ? 128 : 33.8;
     // Calculate pulses (smallpour) < which = small pour (not logged)
     const double smallpour = ((double)flow.taps[tap].ppu / divisor) * SMALLPOUR;
 
@@ -210,7 +202,7 @@ bool isKicked(int meter)
     const double pps = (double)pulses / secs;
 
     // Choose ounces per gallon or ounces per liter
-    double divisor = (config.copconfig.imperial) ? 128 : 33.8;
+    double divisor = (app.copconfig.imperial) ? 128 : 33.8;
     // Calculate pulses (kickspeed) > which = kicked keg
     const double kickSpeed = ((double)flow.taps[meter].ppu / divisor) * KICKSPEED;
 
@@ -226,374 +218,4 @@ bool isKicked(int meter)
     {
         return false;
     }
-}
-
-bool loadFlowConfig()
-{ // Manage loading the configuration
-    if (!loadFlowFile())
-    {
-        Log.warning(F("Warning: Unable to load flowmeter configuration." CR));
-        saveFlowConfig();    // Save a blank config
-        if (!loadFlowFile()) // Try one more time to load the default config
-        {
-            Log.error(F("Error: Unable to generate default flowmeter configuration." CR));
-            return false;
-        }
-    }
-    return saveFlowConfig();
-}
-
-bool deleteFlowConfigFile()
-{
-    if (!FILESYSTEM.begin())
-    {
-        return false;
-    }
-    return FILESYSTEM.remove(flowfilename);
-}
-
-bool loadFlowFile()
-{
-    if (!FILESYSTEM.begin())
-    {
-        Log.error(F("Error: Unable to start FILESYSTEM." CR));
-        return false;
-    }
-    // Loads the configuration from a file on FILESYSTEM
-    File file = FILESYSTEM.open(flowfilename, FILE_READ);
-    if (!FILESYSTEM.exists(flowfilename) || !file)
-    {
-        Log.warning(F("Warning: Flow json does not exist, generating new %s." CR), flowfilename);
-    }
-    else
-    {
-        // Existing configuration present
-    }
-
-    if (!deserializeFlowConfig(file))
-    {
-        Log.error(F("Error: Unable to deserialize flow config." CR));
-        file.close();
-        return false;
-    }
-    else
-    {
-        file.close();
-        return true;
-    }
-}
-
-bool saveFlowConfig()
-{
-    // Saves the configuration to a file on FILESYSTEM
-    File file = FILESYSTEM.open(flowfilename, FILE_WRITE);
-    if (!file)
-    {
-        file.close();
-        return false;
-    }
-
-    // Serialize JSON to file
-    if (!serializeFlowConfig(file))
-    {
-        file.close();
-        return false;
-    }
-    file.close();
-    return true;
-}
-
-bool deserializeFlowConfig(Stream &src)
-{
-    // Deserialize configuration
-    DynamicJsonDocument doc(capacityFlowDeserial);
-
-    // Parse the JSON object in the file
-    DeserializationError err = deserializeJson(doc, src);
-
-    if (err)
-    {
-        return false;
-    }
-    else
-    {
-        flow.load(doc.as<JsonObject>());
-        return true;
-    }
-}
-
-bool serializeFlowConfig(Print &dst)
-{
-    // Serialize configuration
-    DynamicJsonDocument doc(capacityFlowSerial);
-
-    // Create an object at the root
-    JsonObject root = doc.to<JsonObject>();
-
-    // Fill the object
-    flow.save(root);
-
-    // Serialize JSON to file
-    return serializeJsonPretty(doc, dst) > 0;
-}
-
-bool printFlowFile()
-{
-    // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(flowfilename, FILE_READ);
-    if (!file)
-        return false;
-
-    while (file.available())
-        printChar(true, (const char *)file.read());
-
-    printCR(true);
-    file.close();
-    return true;
-}
-
-bool printFlowConfig()
-{
-    // Serialize configuration
-    DynamicJsonDocument doc(capacityFlowSerial);
-
-    // Create an object at the root
-    JsonObject root = doc.to<JsonObject>();
-
-    // Fill the object
-    flow.save(root);
-
-    bool retval = true;
-    // Serialize JSON to file
-    retval = serializeJson(doc, Serial) > 0;
-    printCR(true);
-    return retval;
-}
-
-// bool mergeFlowJsonString(String newJson)
-// {
-//     // Serialize configuration
-//     DynamicJsonDocument doc(capacityFlowDeserial);
-
-//     // Parse directly from file
-//     DeserializationError err = deserializeJson(doc, newJson);
-//     if (err)
-//     {
-//         printChar(true, err.c_str());
-//         printCR(true);
-//     }
-//     return mergeJsonObject(doc);
-// }
-
-// bool mergeFlowJsonObject(JsonVariantConst src)
-// {
-//     // Serialize configuration
-//     DynamicJsonDocument doc(capacityFlowDeserial);
-
-//     // Create an object at the root
-//     JsonObject root = doc.to<JsonObject>();
-
-//     // Fill the object
-//     flow.save(root);
-
-//     // Merge in the configuration
-//     if (merge(root, src))
-//     {
-//         // Move new object to config
-//         flow.load(root);
-//         saveFile();
-//         return true;
-//     }
-
-//     return false;
-// }
-
-// bool mergeFlow(JsonVariant dst, JsonVariantConst src)
-// {
-//     if (src.is<JsonObject>())
-//     {
-//         for (auto kvp : src.as<JsonObject>())
-//         {
-//             merge(dst.getOrAddMember(kvp.key()), kvp.value());
-//         }
-//     }
-//     else
-//     {
-//         dst.set(src);
-//     }
-//     return true;
-// }
-
-void convertFlowtoImperial()
-{
-    if (!flow.imperial)
-    {
-        Log.verbose(F("Converting metric flow data to imperial." CR));
-        flow.imperial = true;
-        for (int i = 0; i < NUMTAPS; i++)
-        {
-            // flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu);
-            flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu); // Reverse for pulses
-            flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
-            flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
-        }
-        saveFlowConfig();
-    }
-}
-
-void convertFlowtoMetric()
-{
-    // Loop through all flow numbers and convert to Metric
-    if (flow.imperial)
-    {
-        Log.verbose(F("Converting imperial flow data to metric." CR));
-        flow.imperial = false;
-        for (int i = 0; i < NUMTAPS; i++)
-        {
-            // flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu);
-            flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu); // Reverse for pulses
-            flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
-            flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
-        }
-        saveFlowConfig();
-    }
-}
-
-void Taps::save(JsonObject obj) const
-{
-    obj[FlowmeterKeys::tapid] = tapid;               // Tap ID
-    obj[FlowmeterKeys::label] = label;               // Tap display label
-    obj[FlowmeterKeys::taplistioTap] = taplistioTap; // Taplist.io display label
-    obj[FlowmeterKeys::pin] = pin;                   // μC Pin
-    obj[FlowmeterKeys::ppu] = ppu;                   // Pulses per Gallon
-    obj[FlowmeterKeys::name] = name;                 // Beverage Name
-    obj[FlowmeterKeys::capacity] = capacity;         // Tap Capacity
-    obj[FlowmeterKeys::remaining] = remaining;       // Tap remaining
-    obj[FlowmeterKeys::active] = active;             // Tap active
-    obj[FlowmeterKeys::calibrating] = calibrating;   // Tap calibrating
-}
-
-void Taps::load(JsonObjectConst obj, int numTap)
-{
-    // Load Tap[numtap] configuration
-    //
-    tapid = numTap;
-    pin = flowPins[numTap];
-
-    if (obj[FlowmeterKeys::label].isNull() || obj[FlowmeterKeys::label] == 0)
-    {
-        label = tapid + 1; // Default to sequential 1-based label
-    }
-    else
-    {
-        int tl = obj[FlowmeterKeys::label];
-        label = tl;
-    }
-
-    if (obj[FlowmeterKeys::taplistioTap].isNull() || obj[FlowmeterKeys::taplistioTap] == 0)
-    {
-        taplistioTap = 0; // Default to sequential 1-based label
-    }
-    else
-    {
-        int tl = obj[FlowmeterKeys::taplistioTap];
-        taplistioTap = tl;
-    }
-
-    if (obj[FlowmeterKeys::ppu].isNull() || obj[FlowmeterKeys::ppu] == 0)
-    {
-        ppu = PPU;
-    }
-    else
-    {
-        long pg = obj[FlowmeterKeys::ppu];
-        ppu = pg;
-    }
-
-    if (obj[FlowmeterKeys::name].isNull() || strlen(obj[FlowmeterKeys::name]) == 0)
-    {
-        strlcpy(name, DEFAULTBEV, sizeof(name));
-    }
-    else
-    {
-        const char *nm = obj[FlowmeterKeys::name];
-        strlcpy(name, nm, sizeof(name));
-    }
-
-    if (obj[FlowmeterKeys::capacity].isNull() || obj[FlowmeterKeys::capacity] == 0)
-    {
-        capacity = KEGSIZE;
-    }
-    else
-    {
-        double cp = obj[FlowmeterKeys::capacity];
-        capacity = cp;
-    }
-
-    if (obj[FlowmeterKeys::remaining].isNull())
-    {
-        remaining = 0;
-    }
-    else
-    {
-        double rm = obj[FlowmeterKeys::remaining];
-        remaining = rm;
-    }
-
-    if (obj[FlowmeterKeys::active].isNull())
-    {
-        active = false;
-    }
-    else
-    {
-        bool a = obj[FlowmeterKeys::active];
-        active = a;
-    }
-
-    if (obj[FlowmeterKeys::calibrating].isNull())
-    {
-        calibrating = false;
-    }
-    else
-    {
-        bool c = obj[FlowmeterKeys::calibrating];
-        calibrating = c;
-    }
-}
-
-void Flowmeter::load(JsonObjectConst obj)
-{
-    // Save units here because it's easier in the web/JS
-    imperial = config.copconfig.imperial;
-
-    // Get a reference to the taps array
-    JsonArrayConst _taps = obj["taps"];
-
-    // Extract each tap point
-    int i = 0;
-    for (JsonObjectConst tap : _taps)
-    {
-        // Load the tap
-        taps[i].load(tap, i);
-
-        // Increment tap count
-        i++;
-
-        // Max reached?
-        if (i >= NUMTAPS)
-            break;
-    }
-}
-
-void Flowmeter::save(JsonObject obj) const
-{
-    // Save units here because it's easier in the web/JS
-    obj["imperial"] = imperial; // Units in Imperial
-
-    // Add "taps" array
-    JsonArray _taps = obj.createNestedArray("taps");
-
-    // Add each tap in the array
-    for (int i = 0; i < NUMTAPS; i++)
-        taps[i].save(_taps.createNestedObject());
 }

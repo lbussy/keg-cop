@@ -3,6 +3,13 @@
 Keg Cop API
 ################
 
+.. note::
+   As of version 1.2.0, all PUT and action API usage must include an ``X-KegCop-Secret`` header with a value identical to the controller GUID.
+
+   The secret may be obtained by querying the ``/api/v1/info/secret`` endpoint.
+
+   This is obviously not intended to replace good security practices, and in no way would I ever recommend that you EVER expose this to the Internet or an unprotected network.
+
 Keg Cop uses a combination of API types:
 
 - `Client-Initiated Communication`_
@@ -119,6 +126,7 @@ These information provider pages exist within the Info API tree:
 - `That Version`_
 - `Pulses`_
 - `Sensors`_
+- `Secret`_
 
 Reset Reason
 --------------
@@ -321,8 +329,31 @@ Where:
 - ``setting`` = Temperature setting in current units.
 - ``status`` = Zero based index representing the current temperature control state_.
 - ``controlenabled`` = Boolean for enabling temperature control.
+- ``tfansetpoint`` = Temperature setting for tower fan in current units.
+- ``tfanstate`` = Zero based index representing the current tower temperature control state_.
+- ``tfancontrolenabled`` = Boolean for enabling tower temperature control.
 - ``sensors`` = An array of temperature sensors denoting the ``name``, ``enable`` status, and current ``value`` of each.
 - ``displayenabled`` = Boolean to display temperatures on the web UI or not.
+
+Sensors
+--------------
+
+- **Address:** :file:`/api/v1/info/secret/`
+- **Valid Methods:** :file:`ANY`
+- **Data:** Ignored
+- **Description:** Secret used for PUT operations.
+- **Error Message:** None.
+- **Response:**
+
+.. code-block:: json
+
+    {
+        "secret": "5C95AB340000D8A7"
+    }
+
+Where:
+
+- ``secret`` = Hexidecimal string for representing controller GUID.
 
 Configuration Page Handlers
 =================================
@@ -331,6 +362,7 @@ The configuration page API tree allows retrieval of current states or setting co
 
 - `Settings`_
 - `Taps`_
+- `Theme`_
 
 Settings
 ------------------
@@ -374,6 +406,9 @@ GET
             "setpoint": 35,
             "controlpoint": 4,
             "controlenabled": true,
+            "tfancontrolenabled": true,
+            "tfansetpoint": 38.5,
+            "tfanonhigh": false,
             "roomenabled": true,
             "roomcal": 1,
             "towerenabled": true,
@@ -439,6 +474,9 @@ temps
 - ``setpoint`` - The temperature setpoint in the configured units to which the system will cool the cabinet.  This is a floating-point number.
 - ``controlpoint`` - A zero-based index indicating the sensor_ by which the system will be cooled.
 - ``controlenabled`` - A boolean turning temperature control on and off.
+- ``tfansetpoint`` = The temperature setpoint for cooling in the configured units to which the system will cool the tower.  This is a floating-point number.
+- ``tfanstate`` = Zero based index representing the current tower temperature control state_.
+- ``tfancontrolenabled`` = Boolean for enabling tower temperature control.
 - ``enableroom`` - Enable the room sensor to be displayed.
 - ``roomcal`` - A signed floating-point number by which the room sensor will be calibrated.
 - ``enabletower`` - Enable the tower sensor to be displayed.
@@ -652,6 +690,45 @@ The tap array follows the following format for each of the nine available taps:
 - ``remain`` = The amount remaining, in floating-point current units, of the attached keg.
 - ``active`` = Denotes whether the tap is active (displayed) or not.
 
+Theme
+--------------
+
+Both ``GET`` and ``PUT`` are valid methods for this endpoint.
+
+GET
+^^^^^^^^
+
+- **Address:** :file:`/api/v1/config/theme/`
+- **Valid Methods:** :file:`GET`
+- **Data:** Ignored
+- **Description:** The :file:`GET` method for this endpoint will return the current theme configuration.
+- **Error Message:** Any method other than ``PUT`` or ``GET`` will result in a ``405 Method Not Allowed`` error.
+- **Response:** 
+
+.. code-block:: json
+
+    {
+    "theme": "cerulean"
+    }
+
+Where:
+
+- ``theme`` = Any pre-configured Bootstrap-compliant theme
+
+PUT
+^^^^^^^
+
+- **Address:** :file:`/api/v1/config/theme/`
+- **Valid Methods:** :file:`PUT`
+- **Response:**  ``200 Ok`` on success, ``500 Unable to process data`` on failure.
+- **Description:** The :file:`PUT` method for this endpoint will allow endpoint configuration.
+- **Error Message:** Any method other than :file:`PUT` or :file:`GET` will result in a `405 Method Not Allowed` error.
+- **Data:** 
+
+The PUT should follow standard form submission data format, with the following item available.
+
+- ``theme`` = Any pre-configured Bootstrap-compliant theme
+
 Controller-Initiated Communication
 ***************************************
 
@@ -747,7 +824,10 @@ Whenever the cooling state changes, a state report is triggered for the KegScree
         "breweryname":"Silver Fox Brewery",
         "kegeratorname":"Keezer",
         "reporttype":"coolstate",
-        "state":3
+        "state":3,
+        "tfancontrolenabled": true,
+        "tfansetpoint": 38.5,
+        "tfanonhigh": false
     }
 
 Where:
@@ -757,7 +837,10 @@ Where:
 - ``hostname`` = Current mDNS hostname.
 - ``brewername`` = A name used to group several Keg Cops logically.
 - ``reporttype`` = The type of information to be found in this report.
-- ``state`` = A zero-based index representing the current temperature control state_ 
+- ``state`` = A zero-based index representing the current temperature control state_
+- ``tfansetpoint`` = Temperature setting for tower fan in current units.
+- ``tfanstate`` = Zero based index representing the current tower temperature control state_.
+- ``tfancontrolenabled`` = Boolean for enabling tower temperature control.
 
 Send Temperature Report
 ------------------------------
@@ -778,6 +861,9 @@ A report containing all temperature points is sent to the KegScreen system every
         "setting":35,
         "status":3,
         "controlenabled":true,
+        "tfancontrolenabled": true,
+        "tfansetpoint": 38.5,
+        "tfanonhigh": false,
         "sensors":[
             {
                 "name":"Room",
@@ -826,6 +912,9 @@ The Target URL Report provides a holistic picture of the system to a custom/thir
         "setting":35,
         "status":2,
         "controlenabled":true,
+        "tfancontrolenabled": true,
+        "tfansetpoint": 38.5,
+        "tfanonhigh": false,
         "sensors":[
             {
                 "name":"Room",
