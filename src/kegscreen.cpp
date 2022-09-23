@@ -299,7 +299,6 @@ bool sendReport(ReportKey thisKey, const char * json) {
 
 void doKSMDNS()
 {
-    MDNS.addService(AppKeys::kegscreen, AppKeys::tcp, PORT);
     MDNS.addService(KegScreenKeys::kstv, AppKeys::tcp, PORT);
 
 // TXT records
