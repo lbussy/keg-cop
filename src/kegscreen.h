@@ -78,7 +78,8 @@ namespace KegScreenKeys {
     // JSON/MDNS Keys
     constexpr auto name ="name";
     constexpr auto devicetype ="deviceType";
-    constexpr auto appendID = "appenddID";
+    constexpr auto path="path";
+    constexpr auto appendID = "appendID";
     constexpr auto deviceid = "deviceID";
 };
 

@@ -299,12 +299,11 @@ bool sendReport(ReportKey thisKey, const char * json) {
 
 void doKSMDNS()
 {
-    MDNS.addService(AppKeys::kegscreen, AppKeys::tcp, PORT);
     MDNS.addService(KegScreenKeys::kstv, AppKeys::tcp, PORT);
 
 // TXT records
     MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::devicetype, AppKeys::apikey);
-    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, F("path"), KegScreenKeys::kstv_path);
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::path, KegScreenKeys::kstv_path);
     MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::appendID, "no");
     MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::deviceid, app.copconfig.guid);
 }
