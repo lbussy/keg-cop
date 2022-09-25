@@ -284,7 +284,7 @@ function toolTip(tooltipItem, data) { // Callback for tool tips
 
 function barClick(event, array) { // Bar click handler
     var newURL;
-    var newPath = "settings/";
+    var newPath = "/settings/";
     var newSearch = "";
     var newHash = "#sensorcontrol";
     try {
