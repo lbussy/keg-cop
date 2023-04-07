@@ -141,7 +141,7 @@ void doWiFi(bool dontUseStoredCreds)
         }
     }
 
-    Log.notice(F("Connected. IP address: %s." CR), WiFi.localIP().toString().c_str());
+    Log.notice(F("Connected. IP address: %s, RSSI: %l." CR), WiFi.localIP().toString().c_str(), WiFi.RSSI());
     blinker.detach();        // Turn off blinker
     digitalWrite(LED, HIGH); // Turn off LED
 
@@ -215,6 +215,7 @@ void reconnectWiFi()
     wifiPause = true;
     Log.warning(F("WiFi lost connection, reconnecting .."));
     disconnectRPints();
+    WiFi.scanNetworks();
     WiFi.reconnect();
 
     int WLcount = 0;
