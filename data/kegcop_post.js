@@ -27,7 +27,7 @@ configAlert.warning = function (message) {
         _div += '<button type="button" class="btn-close" data-dismiss="alert"></button>'
         _div += '<p class="mb-0"><strong>Config Warning: </strong><span>' + message + '</span></p></div>'
     }
-    $('#flowAlert_placeholder').html(_div);
+    $('#configAlert_placeholder').html(_div);
 }
 
 flowAlert = function () { }
