@@ -117,7 +117,7 @@ create_version() {
     if [ ! -d "$GITROOT"/"$BINLOC"/ ]; then
         mkdir "$GITROOT"/"$BINLOC"
     fi
-    cat << EOF | tee "$GITROOT/data/version.json" "$GITROOT/$BINLOC/version.json" > /dev/null || exit
+    cat << EOF | tee "$GITROOT/data_source/version.json" "$GITROOT/$BINLOC/version.json" > /dev/null || exit
 {
     "fw_version": "$GITTAG",
     "fs_version": "$GITTAG"
