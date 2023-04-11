@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
 
