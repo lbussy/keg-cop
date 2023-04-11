@@ -6,7 +6,7 @@ toggleLoader("off");
 var numReq = 4 + numReqPre;
 var loaded = 0;
 // Page Variables
-var aboutReloadTimer = 60000;
+var aboutReloadTimer = 10000;
 // Semaphores
 var loadUptimeRunning = false;
 var loadHeapRunning = false;
@@ -124,7 +124,7 @@ function loadUptime(callback = null) { // Get uptime information
             setTimeout(loadUptime, 10000);
         })
         .always(function () {
-            loadUptimerunning = false;
+            loadUptimeRunning = false;
             if (typeof callback == "function") {
                 callback();
             }
@@ -222,24 +222,28 @@ function loadResetReason(callback = null) { // Get last reset reason
 
 function uptimeReload() {
     loadUptime(function callFunction() {
-        setTimeout(uptimeReload, aboutReloadTimer);
+        setTimeout(uptimeReload, aboutReloadTimer + getRandomInt(3));
     });
 }
 
 function heapReload() {
     loadHeap(function callFunction() {
-        setTimeout(heapReload, aboutReloadTimer);
+        setTimeout(heapReload, aboutReloadTimer + getRandomInt(3));
     });
 }
 
 function reasonReload() {
     loadResetReason(function callFunction() {
-        setTimeout(reasonReload, aboutReloadTimer);
+        setTimeout(reasonReload, aboutReloadTimer + getRandomInt(3));
     });
 }
 
 function finishPage() { // Display page
-    setTimeout(heapReload, aboutReloadTimer);
-    setTimeout(uptimeReload, aboutReloadTimer);
-    setTimeout(reasonReload, aboutReloadTimer);
+    setTimeout(heapReload, aboutReloadTimer + getRandomInt(3));
+    setTimeout(uptimeReload, aboutReloadTimer + getRandomInt(3));
+    setTimeout(reasonReload, aboutReloadTimer + getRandomInt(3));
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
