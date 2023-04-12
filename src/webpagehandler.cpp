@@ -88,21 +88,10 @@ void initWebServer()
         }
         else
         {
-            if (SPIFFS.exists(request->url() + ".gz"))
-            {
-                // Try to send gzip version of file
-                AsyncWebServerResponse *response = request->beginResponse(SPIFFS, request->url() + ".gz", "text/html");
-                response->setCode(200);
-                response->addHeader("Content-Encoding", "gzip");
-                request->send(response);
-            }
-            else
-            {
-                Log.verbose(F("Processing 404 for %s." CR), request->url().c_str());
-                AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
-                response->setCode(404);
-                request->send(response);
-            }
+            Log.verbose(F("Processing 404 for %s." CR), request->url().c_str());
+            AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
+            response->setCode(404);
+            request->send(response);
         } });
 
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
