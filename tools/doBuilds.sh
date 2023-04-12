@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+# Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 # This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -117,7 +117,7 @@ create_version() {
     if [ ! -d "$GITROOT"/"$BINLOC"/ ]; then
         mkdir "$GITROOT"/"$BINLOC"
     fi
-    cat << EOF | tee "$GITROOT/data/version.json" "$GITROOT/$BINLOC/version.json" > /dev/null || exit
+    cat << EOF | tee "$GITROOT/data_source/version.json" "$GITROOT/$BINLOC/version.json" > /dev/null || exit
 {
     "fw_version": "$GITTAG",
     "fs_version": "$GITTAG"

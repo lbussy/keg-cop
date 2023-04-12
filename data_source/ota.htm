@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-100" lang="en">
+<html lang="en" class="h-100">
 
 <head>
     <meta charset="utf-8">
@@ -43,13 +43,16 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/index/">Home <span class="visually-hidden">(current)</span></a>
+                        <a class="nav-link" id="home" href="/index/">Home</a>
                     </li>
                     <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
                         <a class="nav-link" href="/temps/">Temperatures</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/settings/">Settings</a>
+                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
+                        <a class="nav-link" href="/temps/">Temperatures</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/settings/">Settings <span class="visually-hidden">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/help/">Help</a>
@@ -60,7 +63,7 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/home/index.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/advanced/update/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -74,35 +77,22 @@
         <div id="tempAlert_placeholder"></div>
         <div id="configAlert_placeholder"></div>
 
-            <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
+        <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
 
-        <div class="container" id="indexApp"> <!-- Container -->
+        <div class="container" id="settingsapp"> <!-- Container -->
 
-            <div class="card border-dark mb-3" id="indexCard"> <!-- Taps Information -->
+            <div class="card border-dark mb-3">
 
-                <div class="card-header d-flex"> <!-- Double Header -->
-                    <ul class="navbar me-auto">
-                        <h4><span id="taplistName"></span></h4>
-                    </ul>
-                    <ul class="navbar ms-auto">
-                        <h5 id="coolstate" class="alert">
-                            <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="/temps/">
-                                <span id="controlPoint"></span>
-                                <span id="controlTemp"></span>
-                                <span id="tempFormat"></span>
-                            </a>
-                            <a style="display:none;" id="fanstatetooltip" data-toggle="tooltip" data-placement="right" class="no-underline" href="/settings/#tempcontrol">
-                                <span class="fa-stack" id="towerFan"></span>
-                            </a>
-                        </h5>
-                    </ul>
-                    <div class="clearfix"></div>
-                </div> <!-- Double Header -->
-                <div class="card-body"> <!-- Chart Container -->
-                    <canvas class="chart" id="tapChart"></canvas>
-                </div> <!-- Chart Container -->
-
-            </div> <!-- Taps Information -->
+                <!-- OTA In Progress Information -->
+                <div id="subtitle" class="card-header">
+                    <h4 >Application Update Queued</h4>
+                </div>
+                <div id="message" class="card-body">
+                    <p>
+                        Your request is being processed, please wait.
+                    </p>
+                </div>
+            </div> <!-- OTA In Progress Information -->
 
         </div> <!-- Container -->
 
@@ -110,7 +100,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Copyright © 2019-2022, Lee C. Bussy</span>
+            <span class="text-muted">Copyright &copy; 2019-2023, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -124,16 +114,8 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
         </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
-        integrity="sha384-i+dHPTzZw7YVZOx9lbH5l6lP74sLRtMtwN2XjVqjf3uAGAREAF4LMIUDTWEVs4LI" crossorigin="anonymous">
-        </script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"
-        integrity="sha384-fIE8wIddxI8s1yO253uBKjQyxNZ5UuilW9rx7H4ePN7XS7Z9ukIeK+ECX5B8jDAj" crossorigin="anonymous">
-        </script>
-
     <script src="kegcop_post.js"></script>
-    <script src="index.js"></script>
+    <script src="ota2.js"></script>
 
 </body>
 

@@ -13,19 +13,20 @@
 
     <link rel="canonical" href="https://www.kegcop.com">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+    <!-- All links here need to be forced to root since this is a 404 -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta id="theme_color" name="theme-color" content="#ffffff">
 
     <link id="theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css">
-    <link id="theme_aux" rel="stylesheet" href="cerulean_aux.css">
-    <link rel="stylesheet" href="kegcop.css">
+    <link id="theme_aux" rel="stylesheet" href="/cerulean_aux.css">
+    <link rel="stylesheet" href="/kegcop.css">
     <script src="https://kit.fontawesome.com/e51821420e.js" crossorigin="anonymous"></script>
-    <script src="kegcop_pre.js"></script>
+    <script src="/kegcop_pre.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -33,7 +34,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <a class="navbar-brand" href="/index/">
-                <img src="mstile-150x150.png" style="width:25px;height:25px;">
+                <img src="/mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
@@ -43,10 +44,13 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" id="home" href="/index/">Home</a>
+                        <a class="nav-link active" href="/index/">Home  <span class="visually-hidden">(current)</span></a>
                     </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/settings/">Settings <span class="visually-hidden">(current)</span></a>
+                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
+                        <a class="nav-link" href="/temps/">Temperatures</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings/">Settings</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/help/">Help</a>
@@ -57,7 +61,7 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/advanced/wifi/index.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/home/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -66,27 +70,22 @@
 
     <main role="main" class="flex-shrink-0">
 
-        <div id="settingsAlert_placeholder"></div>
-        <div id="flowAlert_placeholder"></div>
-        <div id="tempAlert_placeholder"></div>
-        <div id="configAlert_placeholder"></div>
-
         <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
 
         <div class="container" id="settingsapp"> <!-- Container -->
 
             <div class="card border-dark mb-3">
 
-                <!-- Controller Reset Information -->
-                <div class="card-header" id="subtitle">
-                    <h4 >WiFi Reset In Progress</h4>
+                <div class="card-header d-flex"> <!-- About Keg Cop Information -->
+                    <ul class="navbar me-auto">
+                        <h4 >404 - Page Not Found</h4>
+                    </ul>
                 </div>
-                <div class="card-body" id="message">
-                    <p class="card-text">
-                        Please hold.
-                    </p>
+                <div class="card-body">
+                    <p>Well, that's embarassing.</p>
+                    <p>Please use the navigation menu above to resume your work.</p>
                 </div>
-            </div> <!-- Controller Reset Information -->
+            </div> <!-- 404 Information -->
 
         </div> <!-- Container -->
 
@@ -94,22 +93,25 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Copyright &copy; 2019-2022, Lee C. Bussy</span>
+            <span class="text-muted">Copyright &copy; 2019-2023, Lee C. Bussy</span>
         </div>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-        </script>
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-        </script>
+    </script>
 
-    <script src="kegcop_post.js"></script>
-    <script src="wifireset.js"></script>
+    <script src="/kegcop_post.js"></script>
+    <script>
+        is404 = true;
+        toggleLoader("off");
+    </script>
 
 </body>
 

@@ -13,20 +13,19 @@
 
     <link rel="canonical" href="https://www.kegcop.com">
 
-    <!-- All links here need to be forced to root since this is a 404 -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta id="theme_color" name="theme-color" content="#ffffff">
 
     <link id="theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css">
-    <link id="theme_aux" rel="stylesheet" href="/cerulean_aux.css">
-    <link rel="stylesheet" href="/kegcop.css">
+    <link id="theme_aux" rel="stylesheet" href="cerulean_aux.css">
+    <link rel="stylesheet" href="kegcop.css">
     <script src="https://kit.fontawesome.com/e51821420e.js" crossorigin="anonymous"></script>
-    <script src="/kegcop_pre.js"></script>
+    <script src="kegcop_pre.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -34,7 +33,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <a class="navbar-brand" href="/index/">
-                <img src="/mstile-150x150.png" style="width:25px;height:25px;">
+                <img src="mstile-150x150.png" style="width:25px;height:25px;">
                 &nbsp;Keg Cop
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
@@ -44,7 +43,7 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/index/">Home  <span class="visually-hidden">(current)</span></a>
+                        <a class="nav-link" id="home" href="/index/">Home</a>
                     </li>
                     <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
                         <a class="nav-link" href="/temps/">Temperatures</a>
@@ -52,8 +51,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/settings/">Settings</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/help/">Help</a>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/help/">Help  <span class="visually-hidden">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about/">About</a>
@@ -61,7 +60,7 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/home/index.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/help/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -69,6 +68,11 @@
     </header>
 
     <main role="main" class="flex-shrink-0">
+
+        <div id="settingsAlert_placeholder"></div>
+        <div id="flowAlert_placeholder"></div>
+        <div id="tempAlert_placeholder"></div>
+        <div id="configAlert_placeholder"></div>
 
         <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
 
@@ -78,14 +82,28 @@
 
                 <div class="card-header d-flex"> <!-- About Keg Cop Information -->
                     <ul class="navbar me-auto">
-                        <h4 >404 - Page Not Found</h4>
+                        <h4 >Keg Cop Support</h4>
                     </ul>
                 </div>
                 <div class="card-body">
-                    <p>Well, that's embarassing.</p>
-                    <p>Please use the navigation menu above to resume your work.</p>
+                    <p>Keg Cop documentation, issue reporting and support can be found at
+                        the following links:<br>
+                        <ul class="fa-ul">
+                            <li><span class="fa-li"><i class="fa fa-fw fa-home"></i></span>Visit the
+                                <a id="noChange" href="https://www.kegcop.com">Homepage</a></li>
+                            <li><span class="fa-li"><i class="fab fa-github"></i></span>Visit project on
+                                <a id="noChange" href="https://github.com/lbussy/keg-cop">GitHub</a></li>
+                            <li><span class="fa-li"><i class="fa fa-fw fa-book"></i></span>Read the 
+                                <a id="noChange" href="http://docs.kegcop.com">Documentation</a></li>
+                            <li><span class="fa-li"><i class="fa fa-fw fa-bug"></i></span>Report an
+                                <a id="noChange" href="https://github.com/lbussy/keg-cop/issues">issue or bug</a></li>
+                            <li><span class="fa-li"><i class="fa fa-fw fa-hands-helping"></i></span>Get support or chat with other users on the
+                                <a id="noChange" href="http://support.kegcop.com">HomebrewTalk Thread</a>
+                            </li>
+                        </ul>
+                    </p>
                 </div>
-            </div> <!-- 404 Information -->
+            </div> <!-- About Keg Cop Information -->
 
         </div> <!-- Container -->
 
@@ -93,7 +111,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Copyright &copy; 2019-2022, Lee C. Bussy</span>
+            <span class="text-muted">Copyright &copy; 2019-2023, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -107,11 +125,8 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
 
-    <script src="/kegcop_post.js"></script>
-    <script>
-        is404 = true;
-        toggleLoader("off");
-    </script>
+    <script src="kegcop_post.js"></script>
+    <script src="help.js"></script>
 
 </body>
 
