@@ -552,11 +552,13 @@ function getQueryVariable(variable) {
 
 function buttonClearDelay() { // Poll to see if entire page is loaded
     if (posted) {
-        $("button[id='submitSettings']").prop('disabled', false);
-        $("button[id='submitSettings']").html('Update');
         if (window.location.href.includes("settings")) toggleTIO();
         posted = false;
+        setTimeout(function(){
+            $(':submit').prop('disabled', false);
+            $(':submit').html('Update');
+        }, 1000);
     } else {
-        setTimeout(buttonClearDelay, 500); // try again in 300 milliseconds
+        setTimeout(buttonClearDelay, 500); // Try again in 500 milliseconds
     }
 }

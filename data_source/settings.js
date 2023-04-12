@@ -522,7 +522,11 @@ function finishPage() { // Display page
 // PUT Handlers:
 
 function processPost(obj) {
+    console.log("DEBUG: Should be updating button.");
     posted = false;
+    $(':submit').prop('disabled', true);
+    $(':submit').html('<i class="fa fa-spinner fa-spin"></i> Updating');
+
     hashLoc = window.location.hash;
     var $form = $(obj);
     var actionURL = $form.attr("action");
@@ -532,9 +536,6 @@ function processPost(obj) {
         url = url.slice(0, -1)
     }
     url += actionURL;
-
-    $("button[id='submitSettings']").prop('disabled', true);
-    $("button[id='submitSettings']").html('<i class="fa fa-spinner fa-spin"></i> Updating');
 
     // Switch here for hashLoc
     switch (hashLoc) {
