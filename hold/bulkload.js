@@ -54,8 +54,8 @@ function processPost(obj) {
     }
     url += actionURL;
 
-    $("button[id='submitSettings']").prop('disabled', true);
-    $("button[id='submitSettings']").html('<i class="fa fa-spinner fa-spin"></i> Updating');
+    $(':submit').prop('disabled', true);
+    $(':submit').html('<i class="fa fa-spinner fa-spin"></i> Updating');
 
     var header;
     if (String(textAreaID) == "appConfigBulkText") {
