@@ -42,7 +42,7 @@ void loopTstat(int ts)
     int controlPoint = cp[ts];
 
     bool sensorEnabled;
-    bool *controlEnabled;
+    bool controlEnabled;
     double tempNow;
     double setPoint;
     int minOn;
@@ -52,7 +52,7 @@ void loopTstat(int ts)
         case TS_TYPE_CHAMBER:
             tempNow = device.sensor[app.temps.controlpoint].average;
             sensorEnabled = app.temps.enabled[app.temps.controlpoint];
-            controlEnabled = &app.temps.controlenabled;
+            controlEnabled = app.temps.controlenabled;
             tstat[ts].coolOnHigh = app.temps.coolonhigh;
             setPoint = app.temps.setpoint;
             controlPoint = COOL;
@@ -62,7 +62,7 @@ void loopTstat(int ts)
         case TS_TYPE_TOWER:
             tempNow = device.sensor[TOWER].average;
             sensorEnabled = app.temps.enabled[TOWER];
-            controlEnabled = &app.temps.tfancontrolenabled;
+            controlEnabled = app.temps.tfancontrolenabled;
             tstat[ts].coolOnHigh = app.temps.tfanonhigh;
             setPoint = app.temps.tfansetpoint;
             controlPoint = SOLENOID;
@@ -83,7 +83,7 @@ void loopTstat(int ts)
         }
 
         // Disable temp control and display
-        *controlEnabled = false;
+        controlEnabled = false;
         tstat[ts].state = TSTAT_INACTIVE;
         return;
     }
