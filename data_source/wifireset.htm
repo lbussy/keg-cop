@@ -45,12 +45,6 @@
                     <li class="nav-item">
                         <a class="nav-link" id="home" href="/index/">Home</a>
                     </li>
-                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
-                        <a class="nav-link" href="/temps/">Temperatures</a>
-                    </li>
-                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
-                        <a class="nav-link" href="/temps/">Temperatures</a>
-                    </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="/settings/">Settings <span class="visually-hidden">(current)</span></a>
                     </li>
@@ -63,7 +57,7 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/advanced/update/index.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/advanced/wifi/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -83,16 +77,16 @@
 
             <div class="card border-dark mb-3">
 
-                <!-- OTA In Progress Information -->
-                <div id="subtitle" class="card-header">
-                    <h4 >Application Update Queued</h4>
+                <!-- Controller Reset Information -->
+                <div class="card-header" id="subtitle">
+                    <h4 >WiFi Reset In Progress</h4>
                 </div>
-                <div id="message" class="card-body">
-                    <p>
-                        Your request is being processed, please wait.
+                <div class="card-body" id="message">
+                    <p class="card-text">
+                        Please hold.
                     </p>
                 </div>
-            </div> <!-- OTA In Progress Information -->
+            </div> <!-- Controller Reset Information -->
 
         </div> <!-- Container -->
 
@@ -100,7 +94,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Copyright &copy; 2019-2022, Lee C. Bussy</span>
+            <span class="text-muted">Copyright &copy; 2019-2023, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -115,7 +109,7 @@
         </script>
 
     <script src="kegcop_post.js"></script>
-    <script src="ota2.js"></script>
+    <script src="wifireset.js"></script>
 
 </body>
 

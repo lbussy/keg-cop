@@ -45,11 +45,14 @@
                     <li class="nav-item">
                         <a class="nav-link" id="home" href="/index/">Home</a>
                     </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/settings/">Settings <span class="visually-hidden">(current)</span></a>
+                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
+                        <a class="nav-link" href="/temps/">Temperatures</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/help/">Help</a>
+                        <a class="nav-link" href="/settings/">Settings</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/help/">Help <span class="visually-hidden">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about/">About</a>
@@ -57,7 +60,7 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/advanced/reset/index.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/home/license.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -77,16 +80,32 @@
 
             <div class="card border-dark mb-3">
 
-                <!-- Controller Reset Information -->
-                <div class="card-header" id="subtitle">
-                    <h4 >Controller Reset In Progress</h4>
+                <div class="card-header d-flex"> <!-- Keg Cop License -->
+                    <h4 >Keg Cop License</h4>
                 </div>
-                <div class="card-body" id="message">
-                    <p class="card-text">
-                        Please hold.
-                    </p>
+                <div class="card-body">
+                    <p>Copyright 2020 Lee C. Bussy</p>
+
+                    <p>Permission is hereby granted, free of charge, to any person obtaining a copy
+                    of this software and associated documentation files (the "Software"), to deal
+                    in the Software without restriction, including without limitation the rights
+                    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                    copies of the Software, and to permit persons to whom the Software is
+                    furnished to do so, subject to the following conditions:</p>
+
+                    <p>The above copyright notice and this permission notice shall be included in all
+                    copies or substantial portions of the Software.</p>
+
+                    <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                    SOFTWARE.</p>
+
                 </div>
-            </div> <!-- Controller Reset Information -->
+            </div> <!-- Keg Cop License -->
 
         </div> <!-- Container -->
 
@@ -94,7 +113,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Copyright &copy; 2019-2022, Lee C. Bussy</span>
+            <span class="text-muted">Copyright &copy; 2019-2023, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -109,7 +128,7 @@
         </script>
 
     <script src="kegcop_post.js"></script>
-    <script src="controllerreset.js"></script>
+    <script src="license.js"></script>
 
 </body>
 

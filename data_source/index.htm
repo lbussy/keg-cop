@@ -43,13 +43,13 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" id="home" href="/index/">Home</a>
+                        <a class="nav-link active" href="/index/">Home <span class="visually-hidden">(current)</span></a>
                     </li>
-                    <li class="nav-item active" id="displaytemplink" name="displaytemplink" style="display: none">
-                        <a class="nav-link" href="/temps/">Temperatures <span class="visually-hidden">(current)</span></a>
+                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
+                        <a class="nav-link" href="/temps/">Temperatures</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/settings/">Settings</a>
+                        <a class="nav-link" href="/settings/">Settings</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/help/">Help</a>
@@ -60,7 +60,7 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/temperatures/index.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/home/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -74,20 +74,22 @@
         <div id="tempAlert_placeholder"></div>
         <div id="configAlert_placeholder"></div>
 
-        <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
+            <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
 
-        <div class="container" id="tempsApp"> <!-- Container -->
+        <div class="container" id="indexApp"> <!-- Container -->
 
-            <div class="card border-dark mb-3"> <!-- Temperature Information -->
+            <div class="card border-dark mb-3" id="indexCard"> <!-- Taps Information -->
 
                 <div class="card-header d-flex"> <!-- Double Header -->
                     <ul class="navbar me-auto">
-                        <h4><span id="templistName"></span></h4>
+                        <h4><span id="taplistName"></span></h4>
                     </ul>
                     <ul class="navbar ms-auto">
                         <h5 id="coolstate" class="alert">
-                            <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="settings/#tempcontrol">
-                                Control point: <span id="controlPoint"></span> Sensor
+                            <a id="coolstatetooltip" data-toggle="tooltip" data-placement="left" class="no-underline" href="/temps/">
+                                <span id="controlPoint"></span>
+                                <span id="controlTemp"></span>
+                                <span id="tempFormat"></span>
                             </a>
                             <a style="display:none;" id="fanstatetooltip" data-toggle="tooltip" data-placement="right" class="no-underline" href="/settings/#tempcontrol">
                                 <span class="fa-stack" id="towerFan"></span>
@@ -96,12 +98,11 @@
                     </ul>
                     <div class="clearfix"></div>
                 </div> <!-- Double Header -->
-
                 <div class="card-body"> <!-- Chart Container -->
-                    <canvas class="chart" id="tempChart"></canvas>
+                    <canvas class="chart" id="tapChart"></canvas>
                 </div> <!-- Chart Container -->
 
-            </div> <!-- Temperature Information -->
+            </div> <!-- Taps Information -->
 
         </div> <!-- Container -->
 
@@ -109,7 +110,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Copyright &copy; 2019-2022, Lee C. Bussy</span>
+            <span class="text-muted">Copyright © 2019-2023, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -132,7 +133,7 @@
         </script>
 
     <script src="kegcop_post.js"></script>
-    <script src="temps.js"></script>
+    <script src="index.js"></script>
 
 </body>
 

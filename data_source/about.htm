@@ -51,16 +51,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/settings/">Settings</a>
                     </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/help/">Help <span class="visually-hidden">(current)</span></a>
-                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about/">About</a>
+                        <a class="nav-link" href="/help/">Help</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/about/">About <span class="visually-hidden">(current)</span></a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/home/license.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/about/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -79,33 +79,56 @@
         <div class="container" id="settingsapp"> <!-- Container -->
 
             <div class="card border-dark mb-3">
-
-                <div class="card-header d-flex"> <!-- Keg Cop License -->
-                    <h4 >Keg Cop License</h4>
+                <!-- About Keg Cop Information -->
+                <div class="card-header d-flex">
+                    <ul class="navbar me-auto">
+                        <h4 >
+                            About Keg Cop:
+                            <span id="thisVersion">(version loading...)</span>
+                            [<span class="text-warning" id="thisBranch"></span>]
+                            (<span class="text-danger" id="thisBuild"></span>)
+                        </h4>
+                    </ul>
                 </div>
                 <div class="card-body">
-                    <p>Copyright 2020 Lee C. Bussy</p>
-
-                    <p>Permission is hereby granted, free of charge, to any person obtaining a copy
-                    of this software and associated documentation files (the "Software"), to deal
-                    in the Software without restriction, including without limitation the rights
-                    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-                    copies of the Software, and to permit persons to whom the Software is
-                    furnished to do so, subject to the following conditions:</p>
-
-                    <p>The above copyright notice and this permission notice shall be included in all
-                    copies or substantial portions of the Software.</p>
-
-                    <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-                    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-                    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-                    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-                    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-                    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-                    SOFTWARE.</p>
-
+                    <p><a id="noChange" href="https://www.kegcop.com">Keg Cop</a> is a project developed
+                        by Lee Bussy and <a href="license.htm">is licensed under
+                            The MIT License</a>. Inquiries may be directed to
+                        <a id="noChange" href="https://www.homebrewtalk.com/forum/members/lbussy.144719">
+                            LBussy</a> on the 
+                            <a id="noChange" href="https://www.homebrewtalk.com">
+                            HomeBrewTalk Forums</a> (free registration required).
+                    </p>
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr class="table-firmware table-success">
+                                <th scope="row">Uptime:</th>
+                                <td>
+                                    <div id="uptime" data-html="true" data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-info">
+                                <th scope="row">Reset Reason:</th>
+                                <td>
+                                    <div id="resetreason" data-html="true" data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-success">
+                                <th scope="row">Heap Information:</th>
+                                <td>
+                                    <div id="heap" data-html="true" data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-info">
+                                <th scope="row">User Agent:</th>
+                                <td>
+                                    <div id="useragent" data-html="true" data-original-title="Information about your current browser." data-toggle="tooltip">... loading</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div> <!-- Keg Cop License -->
+            </div> <!-- About Keg Cop Information -->
 
         </div> <!-- Container -->
 
@@ -113,7 +136,7 @@
 
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">Copyright &copy; 2019-2022, Lee C. Bussy</span>
+            <span class="text-muted">Copyright &copy; 2019-2023, Lee C. Bussy</span>
         </div>
     </footer>
 
@@ -128,7 +151,7 @@
         </script>
 
     <script src="kegcop_post.js"></script>
-    <script src="license.js"></script>
+    <script src="about.js"></script>
 
 </body>
 
