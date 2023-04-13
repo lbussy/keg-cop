@@ -522,7 +522,6 @@ function finishPage() { // Display page
 // PUT Handlers:
 
 function processPost(obj) {
-    console.log("DEBUG: Should be updating button.");
     posted = false;
     $(':submit').prop('disabled', true);
     $(':submit').html('<i class="fa fa-spinner fa-spin"></i> Updating');
@@ -1147,10 +1146,6 @@ function pulseReload(callback = null) { // Get pulses
                                 $('#ppu').val(parseInt(ppl));
                             }
                         }
-                        if ((pulses > 0) && ($('#ppu').val() > 0)) {
-                            // Enable Submit button
-                            $('.setppu').prop("disabled", false);
-                        }
                     }
                 }
                 if (typeof callback == "function") {
@@ -1170,7 +1165,10 @@ function pulseReload(callback = null) { // Get pulses
         })
         .always(function () {
             pulseReloadRunning = false;
-            // Can post-process here
+            if (($('#pulses').val() > 0) && ($('#ppu').val() > 0)) {
+                // Enable Submit button
+                $("#setppu").prop("disabled", false);
+            }
         }
         );
 }
@@ -1181,6 +1179,7 @@ function processTapCalPost(url, obj) {
     // Get form data
     tapNum = $('#flowmeter').val();
     ppu = $('#ppu').val();
+    $('#volume').val(""); // Clear previous ounces
     // Set tap form to this value to save a round trip
     $('input[name="tap' + tapnum + 'ppu"]').val(parseInt(ppu), 10);
 
