@@ -557,7 +557,7 @@ function buttonClearDelay() { // Poll to see if entire page is loaded
         setTimeout(function(){
             $(':submit').prop('disabled', false);
             $(':submit').html('Update');
-        }, 1000);
+        }, 500);
     } else {
         setTimeout(buttonClearDelay, 500); // Try again in 500 milliseconds
     }
