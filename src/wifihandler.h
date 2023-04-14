@@ -37,6 +37,7 @@ void wifiBlinker();
 void doWiFi();
 void doWiFi(bool dontUseStoredCreds);
 void resetWifi();
+const char * eventString(WiFiEvent_t event);
 
 // AsyncWiFiManager Callbacks
 void apCallback(AsyncWiFiManager *wiFiManager);

@@ -203,8 +203,8 @@ void saveParamsCallback()
 
 void WiFiEvent(WiFiEvent_t event)
 {
-    Serial.printf("[WiFi-event] event: %d\n", event);
-    if (!WiFi.isConnected())
+    Log.notice(F("[WiFi Event] (%d): %s\n" CR), event, eventString(event));
+    if (!WiFi.isConnected() && !wifiPause)
     {
         doWiFiReconnect = true;
     }
@@ -212,29 +212,164 @@ void WiFiEvent(WiFiEvent_t event)
 
 void reconnectWiFi()
 {
+    const char * prefix = "[WiFi-Reconnect]";
     wifiPause = true;
-    Log.warning(F("WiFi lost connection, reconnecting .."));
+    Log.warning(F("%s WiFi lost connection, reconnecting." CR), prefix);
+    Log.verbose(F("%s Diconnecting RPints." CR), prefix);
     disconnectRPints();
-    WiFi.scanNetworks();
-    WiFi.reconnect();
 
-    int WLcount = 0;
-    while (!WiFi.isConnected() && WLcount < 200)
-    {
-        _delay(100);
-        printDot(true);
-        ++WLcount;
-    }
-    printCR(true);
+    Log.verbose(F("%s Disconnecting WiFi." CR), prefix);
+    WiFi.disconnect(true, false);
+    delay(100);
+    Log.verbose(F("%s Setting autonconnect to false." CR), prefix);
+    WiFi.setAutoReconnect(false);
+    Log.verbose(F("%s Beginning WiFi." CR), prefix);
+    WiFi.begin();
 
-    if (!WiFi.isConnected())
+    // Will try for about 10 seconds (20x 500ms)
+    int tryDelay = 500;
+    int numberOfTries = 20;
+
+    // Wait for the WiFi event
+    while (true)
     {
-        // We failed to reconnect.
-        Log.error(F("Unable to reconnect WiFI, restarting." CR));
-        _delay(1000);
-        killDRD();
-        resetController();
+        Log.verbose(F("%s Entering wait loop." CR), prefix);
+        switch (WiFi.status())
+        {
+        case WL_NO_SSID_AVAIL:
+            Serial.println("[WiFi-Reconnect] SSID not found.");
+            break;
+        case WL_CONNECT_FAILED:
+            Serial.println("[WiFi-Reconnect] Failed: WiFi not connected.");
+            return;
+            break;
+        case WL_CONNECTION_LOST:
+            Serial.println("[WiFi-Reconnect] Connection was lost.");
+            break;
+        case WL_SCAN_COMPLETED:
+            Serial.println("[WiFi-Reconnect] Scan is completed.");
+            break;
+        case WL_DISCONNECTED:
+            Serial.println("[WiFi-Reconnect] WiFi is disconnected.");
+            break;
+        case WL_CONNECTED:
+            Log.notice(F("Connected. IP address: %s, RSSI: %l." CR), WiFi.localIP().toString().c_str(), WiFi.RSSI());
+            return;
+            break;
+        default:
+            Serial.printf("[WiFi-Reconnect] WiFi Status: %s\n", WiFi.status());
+            break;
+        }
+        delay(tryDelay);
+
+        if (numberOfTries <= 0)
+        {
+            WiFi.disconnect(true, false);
+            // We failed to reconnect.
+            Log.error(F("Unable to reconnect WiFI, restarting." CR));
+            _delay(1000);
+            killDRD();
+            resetController();
+        }
+        else
+        {
+            numberOfTries--;
+        }
+        if (WiFi.isConnected()) break;
+        Log.verbose(F("%s WiFi is connected, breaing loop." CR), prefix);
     }
+    Log.verbose(F("%s Connecting RPints." CR), prefix);
     setDoRPintsConnect();
     wifiPause = false;
+}
+
+const char * eventString(WiFiEvent_t event)
+{
+    switch (event)
+    {
+    case ARDUINO_EVENT_WIFI_READY:
+        return "ARDUINO_EVENT_WIFI_READY";
+        break;
+    case ARDUINO_EVENT_WIFI_SCAN_DONE:
+        return "ARDUINO_EVENT_WIFI_SCAN_DONE";
+        break;
+    case ARDUINO_EVENT_WIFI_STA_START:
+        return "ARDUINO_EVENT_WIFI_STA_START";
+        break;
+    case ARDUINO_EVENT_WIFI_STA_STOP:
+        return "ARDUINO_EVENT_WIFI_STA_STOP";
+        break;
+    case ARDUINO_EVENT_WIFI_STA_CONNECTED:
+        return "ARDUINO_EVENT_WIFI_STA_CONNECTED";
+        break;
+    case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
+        return "ARDUINO_EVENT_WIFI_STA_DISCONNECTED";
+        break;
+    case ARDUINO_EVENT_WIFI_STA_AUTHMODE_CHANGE:
+        return "ARDUINO_EVENT_WIFI_STA_AUTHMODE_CHANGE";
+        break;
+    case ARDUINO_EVENT_WIFI_STA_GOT_IP:
+        return "ARDUINO_EVENT_WIFI_STA_GOT_IP";
+        break;
+    case ARDUINO_EVENT_WIFI_STA_LOST_IP:
+        return "ARDUINO_EVENT_WIFI_STA_LOST_IP";
+        break;
+    case ARDUINO_EVENT_WPS_ER_SUCCESS:
+        return "ARDUINO_EVENT_WPS_ER_SUCCESS";
+        break;
+    case ARDUINO_EVENT_WPS_ER_FAILED:
+        return "ARDUINO_EVENT_WPS_ER_FAILED";
+        break;
+    case ARDUINO_EVENT_WPS_ER_TIMEOUT:
+        return "ARDUINO_EVENT_WPS_ER_TIMEOUT";
+        break;
+    case ARDUINO_EVENT_WPS_ER_PIN:
+        return "ARDUINO_EVENT_WPS_ER_PIN";
+        break;
+    case ARDUINO_EVENT_WIFI_AP_START:
+        return "ARDUINO_EVENT_WIFI_AP_START";
+        break;
+    case ARDUINO_EVENT_WIFI_AP_STOP:
+        return "ARDUINO_EVENT_WIFI_AP_STOP";
+        break;
+    case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
+        return "ARDUINO_EVENT_WIFI_AP_STACONNECTED";
+        break;
+    case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
+        return "ARDUINO_EVENT_WIFI_AP_STADISCONNECTED";
+        break;
+    case ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED:
+        return "ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED";
+        break;
+    case ARDUINO_EVENT_WIFI_AP_PROBEREQRECVED:
+        return "ARDUINO_EVENT_WIFI_AP_PROBEREQRECVED";
+        break;
+    case ARDUINO_EVENT_WIFI_AP_GOT_IP6:
+        return "ARDUINO_EVENT_WIFI_AP_GOT_IP6";
+        break;
+    case ARDUINO_EVENT_WIFI_STA_GOT_IP6:
+        return "ARDUINO_EVENT_WIFI_STA_GOT_IP6";
+        break;
+    case ARDUINO_EVENT_ETH_GOT_IP6:
+        return "ARDUINO_EVENT_ETH_GOT_IP6";
+        break;
+    case ARDUINO_EVENT_ETH_START:
+        return "ARDUINO_EVENT_ETH_START";
+        break;
+    case ARDUINO_EVENT_ETH_STOP:
+        return "ARDUINO_EVENT_ETH_STOP";
+        break;
+    case ARDUINO_EVENT_ETH_CONNECTED:
+        return "ARDUINO_EVENT_ETH_CONNECTED";
+        break;
+    case ARDUINO_EVENT_ETH_DISCONNECTED:
+        return "ARDUINO_EVENT_ETH_DISCONNECTED";
+        break;
+    case ARDUINO_EVENT_ETH_GOT_IP:
+        return "ARDUINO_EVENT_ETH_GOT_IP";
+        break;
+    default:
+        return "UNKNOWN";
+        break;
+    }
 }
