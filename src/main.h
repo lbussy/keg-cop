@@ -46,5 +46,6 @@ void setup();
 void loop();
 void stopMainProc();
 void startMainProc();
+void playDead();
 
 #endif // _MAIN_H

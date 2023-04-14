@@ -37,19 +37,17 @@ void setup()
 {
     drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
 
-    if (!loadAppConfig())
-    { // If configuration does not load, sit and blink slowly like an idiot
-        pinMode(LED, OUTPUT);
-        Ticker blinker;
-        blinker.attach_ms(CONFIGBLINK, []()
-                          { digitalWrite(LED, !(digitalRead(LED))); });
-        while (true)
-        {
-        };
+    serial();
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
+    {
+        Log.error(F("%s Load: Unable to mount filesystem, partition may be corrupt. Stopping." CR), AppKeys::appname);
+        playDead();
     }
 
-    serial();
-    FILESYSTEM.begin(false, "/spiffs", 32);
+    if (!loadAppConfig())
+    { // If configuration does not load, sit and blink slowly like an idiot
+        playDead();
+    }
 
     // Set wifi reset pin
     pinMode(RESETWIFI, INPUT_PULLUP);
@@ -200,4 +198,13 @@ void startMainProc()
                            { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
     doFanControlTicker.attach(TEMPLOOP, []()
                               { loopTstat(TS_TYPE_TOWER); }); // Update fan control loop
+}
+
+void playDead()
+{
+    Log.fatal(F("Stopping." CR));
+    pinMode(LED, OUTPUT);
+    Ticker blinker;
+    blinker.attach_ms(CONFIGBLINK, []()
+                      { digitalWrite(LED, !(digitalRead(LED))); });
 }
