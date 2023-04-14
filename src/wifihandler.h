@@ -27,7 +27,6 @@ SOFTWARE. */
 #include "appconfig.h"
 #include "tools.h"
 #include "rpintsclient.h"
-#include "main.h"
 
 #include <WiFi.h>
 #include <AsyncWiFiManager.h>
@@ -50,11 +49,8 @@ void webServerCallback();
 void WiFiEvent(WiFiEvent_t event);
 void reconnectWiFi();
 
-struct tcp_pcb;
-extern struct tcp_pcb *tcp_tw_pcbs;
-extern "C" void tcp_abort(struct tcp_pcb *pcb);
-void tcpCleanup(void);
-
 extern bool wifiPause;
+extern void stopMainProc();
+extern void startMainProc();
 
 #endif // _WIFI_H
