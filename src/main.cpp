@@ -116,7 +116,7 @@ void setup()
     if (!app.ota.badfw)
         execspiffs(); // Check for pending FILESYSTEM update
 
-    mDNSSetup();                 // Set up mDNS responder
+    mDNSStart();                 // Set up mDNS responder
     initWebServer();             // Turn on web server
     sensorInit();                // Initialize temperature sensors
     startTstat(TS_TYPE_CHAMBER); // Initialize temperature control

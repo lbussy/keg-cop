@@ -22,7 +22,7 @@ SOFTWARE. */
 
 #include "mdnshandler.h"
 
-void mDNSSetup()
+void mDNSStart()
 {
     if (!MDNS.begin(WiFi.getHostname()))
     { // Start the mDNS responder
@@ -33,6 +33,12 @@ void mDNSSetup()
         Log.notice(F("mDNS responder started for %s.local." CR), WiFi.getHostname());
         mDNSServiceAdvert();
     }
+}
+
+void mDNSStop()
+{
+    Log.notice(F("Stopping mDNS." CR));
+    MDNS.end();
 }
 
 void mDNSReset()

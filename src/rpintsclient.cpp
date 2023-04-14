@@ -93,6 +93,7 @@ void connectRPints()
 
 void disconnectRPints()
 {
+    Log.notice(F("%s Disconnecting RPints." CR));
     rpintsReconnectTimer.detach();
     if (rpintsClient.connected())
     {
