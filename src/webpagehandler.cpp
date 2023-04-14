@@ -70,7 +70,7 @@ static const char *tf_str[] = {
     "handleSetCalMode"};
 static int tapHandlers = sizeof(tf_str) / sizeof(tf_str[0]);
 
-void initWebServer()
+void startWebServer()
 {
     setRegPageHandlers();
     setAPIPageHandlers();

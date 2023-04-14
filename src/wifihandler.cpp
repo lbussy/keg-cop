@@ -220,6 +220,8 @@ void reconnectWiFi()
     disconnectRPints();
     Log.verbose(F("%s Stopping Serial and Telnet." CR), prefix);
     serialStop();
+    Log.verbose(F("%s Stopping Web Server." CR), prefix);
+    stopWebServer();
     Log.verbose(F("%s Stopping mDNS." CR), prefix);
     mDNSStop();
 
@@ -290,6 +292,8 @@ void reconnectWiFi()
     setDoRPintsConnect();
     Log.verbose(F("%s Starting mDNS." CR), prefix);
     mDNSStart();
+    Log.verbose(F("%s Starting Web Server." CR), prefix);
+    startWebServer();
     wifiPause = false;
 }
 

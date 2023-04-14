@@ -117,7 +117,7 @@ void setup()
         execspiffs(); // Check for pending FILESYSTEM update
 
     mDNSStart();                 // Set up mDNS responder
-    initWebServer();             // Turn on web server
+    startWebServer();            // Turn on web server
     sensorInit();                // Initialize temperature sensors
     startTstat(TS_TYPE_CHAMBER); // Initialize temperature control
     startTstat(TS_TYPE_TOWER);   // Initialize fan control
