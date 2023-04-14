@@ -218,6 +218,8 @@ void reconnectWiFi()
     Log.verbose(F("%s Diconnecting RPints." CR), prefix);
     disconnectRPints();
 
+    serialStop();
+
     Log.verbose(F("%s Disconnecting WiFi." CR), prefix);
     WiFi.disconnect(true, false);
     delay(100);
@@ -278,6 +280,7 @@ void reconnectWiFi()
         if (WiFi.isConnected()) break;
         Log.verbose(F("%s WiFi is connected, breaing loop." CR), prefix);
     }
+    serialRestart();
     Log.verbose(F("%s Connecting RPints." CR), prefix);
     setDoRPintsConnect();
     wifiPause = false;

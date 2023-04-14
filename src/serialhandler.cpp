@@ -33,7 +33,6 @@ void serial()
     strcat(buffer, AppKeys::appname);
     strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
-    // _delay(3000); // Delay to allow a monitor to start
     SERIAL.begin(BAUD);
     printCR(true);
     SERIAL.flush();
@@ -52,6 +51,37 @@ void serial()
         Log.notice(F("Serial logging started at %l." CR), BAUD);
     }
 #endif
+}
+
+void serialStop()
+{
+    Log.notice(F("Serial logging stopping. CR"));
+    SERIAL.flush();
+    SERIAL.disconnectClient();
+    SERIAL.end();
+    Serial.begin(BAUD);
+    #if !defined(DISABLE_LOGGING)
+    if (app.copconfig.serial)
+    {
+        Serial.setDebugOutput(false);
+        Log.begin(LOG_LEVEL_SILENT, &SERIAL, true);
+        Log.setPrefix(printTimestamp);
+    }
+    else if (!app.copconfig.serial)
+    {
+        Serial.setDebugOutput(true);
+        Log.begin(LOG_LEVEL, &SERIAL, true);
+        Log.setPrefix(printTimestamp);
+        Log.notice(F("Local serial logging started at %l." CR), BAUD);
+    }
+#endif
+}
+
+void serialRestart()
+{
+    Serial.flush();
+    Serial.end();
+    serial();
 }
 
 void printTimestamp(Print *_logOutput)
