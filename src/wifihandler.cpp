@@ -214,16 +214,24 @@ void reconnectWiFi()
 {
     const char * prefix = "[WiFi-Reconnect]";
     wifiPause = true;
+
+    Log.verbose(F("%s Stopping Serial and Telnet." CR), prefix);
+    serialStop();
+
     Log.warning(F("%s WiFi lost connection, reconnecting." CR), prefix);
 
     Log.verbose(F("%s Stopping RPints." CR), prefix);
     disconnectRPints();
-    Log.verbose(F("%s Stopping Serial and Telnet." CR), prefix);
-    serialStop();
     Log.verbose(F("%s Stopping Web Server." CR), prefix);
     stopWebServer();
     Log.verbose(F("%s Stopping mDNS." CR), prefix);
     mDNSStop();
+
+    Log.verbose(F("%s Saving configuration." CR), prefix);
+    saveFlowConfig();
+    saveAppConfig();
+    Log.verbose(F("%s Stopping Main Timers and Filesystem." CR), prefix);
+    stopMainProc();
 
     Log.verbose(F("%s Disconnecting WiFi." CR), prefix);
     WiFi.disconnect(true, false);
@@ -285,9 +293,10 @@ void reconnectWiFi()
         if (WiFi.isConnected()) break;
         Log.verbose(F("%s WiFi is connected, breaing loop." CR), prefix);
     }
+    Log.verbose(F("%s Starting Serial." CR), prefix);
     serialRestart();
-    Log.verbose(F("%s Starting mDNS." CR), prefix);
-    mDNSStart();
+    Log.verbose(F("%s Starting Main Timers and Filesystem." CR), prefix);
+    startMainProc();
     Log.verbose(F("%s Connecting RPints." CR), prefix);
     setDoRPintsConnect();
     Log.verbose(F("%s Starting mDNS." CR), prefix);

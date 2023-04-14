@@ -129,12 +129,12 @@ void setup()
 #endif
 
     // Setup tickers
-    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                // Poll temperature sensors
-    logPourTicker.attach(TAPLOOP, logFlow);                                       // Log pours
-    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                // Poll for server version
-    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);               // Send KegScreen Temp Report
+    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                             // Poll temperature sensors
+    logPourTicker.attach(TAPLOOP, logFlow);                                    // Log pours
+    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);             // Poll for server version
+    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);            // Send KegScreen Temp Report
     sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport); // Send Target Report
-    rebootTimer.attach(86400, setDoReset);                                        // Reboot every 24 hours
+    rebootTimer.attach(86400, setDoReset);                                     // Reboot every 24 hours
     doControlTicker.attach(TEMPLOOP, []()
                            { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
     doFanControlTicker.attach(TEMPLOOP, []()
@@ -153,18 +153,51 @@ void setup()
 
 void loop()
 {
-    // Check for Target URL Timing reset
-    if (app.urltarget.update)
+    if (!wifiPause)
     {
-        Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), app.urltarget.freq);
-        sendTargetReportTicker.detach();
-        sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport);
-        app.urltarget.update = false;
-    }
+        // Check for Target URL Timing reset
+        if (app.urltarget.update)
+        {
+            Log.notice(F("Resetting URL Target frequency timer to %l minutes." CR), app.urltarget.freq);
+            sendTargetReportTicker.detach();
+            sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport);
+            app.urltarget.update = false;
+        }
 
-    doOTALoop();
-    tickerLoop();
-    drd->loop();
-    serialLoop();
-    maintenanceLoop();
+        doOTALoop();
+        tickerLoop();
+        drd->loop();
+        serialLoop();
+        maintenanceLoop();
+    }
+}
+
+void stopMainProc()
+{
+    Log.notice(F("Stopping all main loop timers and filesystem." CR));
+    FILESYSTEM.end();
+    pollSensorsTicker.detach();
+    logPourTicker.detach();
+    getThatVersionTicker.detach();
+    sendKSTempReportTicker.detach();
+    sendTargetReportTicker.detach();
+    rebootTimer.detach();
+    doControlTicker.detach();
+    doFanControlTicker.detach();
+}
+
+void startMainProc()
+{
+    Log.verbose(F("Starting all main loop timers and filesystem" CR));
+    FILESYSTEM.begin(false, "/spiffs", 32);
+    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                             // Poll temperature sensors
+    logPourTicker.attach(TAPLOOP, logFlow);                                    // Log pours
+    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);             // Poll for server version
+    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);            // Send KegScreen Temp Report
+    sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport); // Send Target Report
+    rebootTimer.attach(86400, setDoReset);                                     // Reboot every 24 hours
+    doControlTicker.attach(TEMPLOOP, []()
+                           { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
+    doFanControlTicker.attach(TEMPLOOP, []()
+                              { loopTstat(TS_TYPE_TOWER); }); // Update fan control loop
 }
