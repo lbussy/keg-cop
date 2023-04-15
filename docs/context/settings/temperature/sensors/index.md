@@ -1,12 +1,12 @@
-.. _sensors:
+(sensors)=
 
-Sensor Control
-#######################
+# Sensor Control
 
-.. image:: sensors.png
-   :scale: 50%
-   :align: center
-   :alt: Temperature Sensor Settings
+```{image} sensors.png
+:align: center
+:alt: Temperature Sensor Settings
+:scale: 50%
+```
 
 You may apply a positive or negative calibration value individually for each temperature sensor.
 

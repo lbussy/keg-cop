@@ -14,14 +14,6 @@ import os
 import sys
 #sys.path.insert(0, os.path.abspath('.'))
 import subprocess
-import recommonmark
-
-# for MarkdownParser
-from recommonmark.transform import AutoStructify
-from sphinx_markdown_parser.parser import MarkdownParser
-
-# At top on conf.py (with other import statements)
-from sphinx_markdown_parser.transform import AutoStructify
 
 import sphinx_bootstrap_theme
 from sphinx.ext import todo
@@ -49,7 +41,7 @@ release = version
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['recommonmark', 'sphinx.ext.todo']
+extensions = ['myst_parser', 'sphinx.ext.todo']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -60,7 +52,7 @@ exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'README.*']
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = '.md'
 
 # The master toctree document.
 master_doc = 'index'
