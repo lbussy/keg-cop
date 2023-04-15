@@ -217,7 +217,7 @@ void reconnectWiFi()
     wifiPause = true;
     stopNetwork();
 
-    const char * prefix = "[WiFi-Reconnect]";
+    const char * prefix = "[WiFi Reconnect]";
 
     Log.verbose(F("%s Setting autonconnect to false." CR), prefix);
     WiFi.setAutoReconnect(false);
@@ -231,31 +231,32 @@ void reconnectWiFi()
     // Wait for the WiFi event
     while (true)
     {
-        Log.verbose(F("%s Entering wait loop." CR), prefix);
+        const char * loopprefix = "[WiFi Reconnect Status]";
+        Log.verbose(F("%s Entering wait loop." CR), loopprefix);
         switch (WiFi.status())
         {
         case WL_NO_SSID_AVAIL:
-            Log.notice(F("[WiFi-Reconnect] SSID not found." CR));
+            Log.notice(F("%s SSID not found." CR), loopprefix);
             break;
         case WL_CONNECT_FAILED:
-            Log.notice(F("[WiFi-Reconnect] Failed: WiFi not connected." CR));
+            Log.notice(F("%s Failed: WiFi not connected." CR), loopprefix);
             return;
             break;
         case WL_CONNECTION_LOST:
-            Log.notice(F("[WiFi-Reconnect] Connection was lost." CR));
+            Log.notice(F("%s Connection was lost." CR), loopprefix);
             break;
         case WL_SCAN_COMPLETED:
-            Log.notice(F("[WiFi-Reconnect] Scan is completed." CR));
+            Log.notice(F("%s Scan is completed." CR), loopprefix);
             break;
         case WL_DISCONNECTED:
-            Log.notice(F("[WiFi-Reconnect] WiFi is disconnected." CR));
+            Log.notice(F("%s WiFi is disconnected." CR), loopprefix);
             break;
         case WL_CONNECTED:
-            Log.notice(F("Connected. IP address: %s, RSSI: %l." CR), WiFi.localIP().toString().c_str(), WiFi.RSSI());
+            Log.notice(F("%s Connected. IP address: %s, RSSI: %l." CR), loopprefix, WiFi.localIP().toString().c_str(), WiFi.RSSI());
             return;
             break;
         default:
-            Log.notice(F("[WiFi-Reconnect] WiFi Status: %s" CR), WiFi.status());
+            Log.notice(F("%s WiFi Status (default): %s" CR), loopprefix, WiFi.status());
             break;
         }
         delay(tryDelay);
@@ -264,7 +265,7 @@ void reconnectWiFi()
         {
             WiFi.disconnect(true, false);
             // We failed to reconnect.
-            Log.error(F("Unable to reconnect WiFI, restarting." CR));
+            Log.error(F("%s Unable to reconnect WiFI, restarting." CR), prefix);
             _delay(1000);
             killDRD();
             resetController();
