@@ -142,7 +142,8 @@ void tickerLoop()
     }
     if (doWiFiReconnect && !wifiPause)
     { // WiFi event is a callback - prevent WDT
-        doWiFiReconnect = false;
+        pausingWiFi = false; // Clear interim state
+        doWiFiReconnect = false; // Clear semaphore
         reconnectWiFi();
     }
 

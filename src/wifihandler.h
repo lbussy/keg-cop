@@ -48,8 +48,11 @@ void saveParamsCallback();
 void webServerCallback();
 void WiFiEvent(WiFiEvent_t event);
 void reconnectWiFi();
+void stopNetwork();
+void startNetwork();
 
 extern bool wifiPause;
+extern bool pausingWiFi;
 extern void stopMainProc();
 extern void startMainProc();
 

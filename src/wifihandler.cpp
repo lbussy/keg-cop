@@ -23,6 +23,7 @@ SOFTWARE. */
 #include "wifihandler.h"
 
 bool wifiPause = false;
+bool pausingWiFi = false;
 bool shouldSaveConfig = false;
 Ticker blinker;
 
@@ -204,8 +205,9 @@ void saveParamsCallback()
 void WiFiEvent(WiFiEvent_t event)
 {
     Log.notice(F("[WiFi Event] (%d): %s" CR), event, eventString(event));
-    if (!WiFi.isConnected() && !wifiPause)
+    if (!WiFi.isConnected() && !wifiPause && !pausingWiFi)
     {
+        pausingWiFi = true; // Interim state
         doWiFiReconnect = true;
     }
 }
@@ -213,30 +215,10 @@ void WiFiEvent(WiFiEvent_t event)
 void reconnectWiFi()
 {
     wifiPause = true;
+    stopNetwork();
+
     const char * prefix = "[WiFi-Reconnect]";
 
-    // Restart logging without telnet
-    Log.verbose(F("%s Stopping Serial and Telnet." CR), prefix);
-    serialStop();
-
-    Log.warning(F("%s WiFi lost connection, reconnecting." CR), prefix);
-
-    Log.verbose(F("%s Stopping RPints." CR), prefix);
-    disconnectRPints();
-    Log.verbose(F("%s Stopping Web Server." CR), prefix);
-    stopWebServer();
-    Log.verbose(F("%s Stopping mDNS." CR), prefix);
-    mDNSStop();
-
-    Log.verbose(F("%s Saving configuration." CR), prefix);
-    saveFlowConfig();
-    saveAppConfig();
-    Log.verbose(F("%s Stopping Main Timers and Filesystem." CR), prefix);
-    stopMainProc();
-
-    Log.verbose(F("%s Disconnecting WiFi." CR), prefix);
-    WiFi.disconnect(true, false);
-    delay(100);
     Log.verbose(F("%s Setting autonconnect to false." CR), prefix);
     WiFi.setAutoReconnect(false);
     Log.verbose(F("%s Beginning WiFi." CR), prefix);
@@ -294,6 +276,43 @@ void reconnectWiFi()
         if (WiFi.isConnected()) break;
         Log.verbose(F("%s WiFi is connected, breaing loop." CR), prefix);
     }
+
+    startNetwork();
+    wifiPause = false;
+}
+
+void stopNetwork()
+{
+    const char * prefix = "[Stop Network]";
+
+    // Restart logging without telnet
+    Log.verbose(F("%s Stopping Serial and Telnet." CR), prefix);
+    serialStop();
+
+    Log.warning(F("%s WiFi lost connection, reconnecting." CR), prefix);
+
+    Log.verbose(F("%s Stopping RPints." CR), prefix);
+    disconnectRPints();
+    Log.verbose(F("%s Stopping Web Server." CR), prefix);
+    stopWebServer();
+    Log.verbose(F("%s Stopping mDNS." CR), prefix);
+    mDNSStop();
+
+    Log.verbose(F("%s Saving configuration." CR), prefix);
+    saveFlowConfig();
+    saveAppConfig();
+    Log.verbose(F("%s Stopping Main Timers and Filesystem." CR), prefix);
+    stopMainProc();
+
+    Log.verbose(F("%s Disconnecting WiFi." CR), prefix);
+    WiFi.disconnect(true, false);
+    delay(100);
+}
+
+void startNetwork()
+{
+    const char * prefix = "[Start Network]";
+
     Log.verbose(F("%s Starting Serial." CR), prefix);
     serialRestart();
     Log.verbose(F("%s Starting Main Timers and Filesystem." CR), prefix);
@@ -304,7 +323,6 @@ void reconnectWiFi()
     mDNSStart();
     Log.verbose(F("%s Starting Web Server." CR), prefix);
     startWebServer();
-    wifiPause = false;
 }
 
 const char * eventString(WiFiEvent_t event)
