@@ -240,6 +240,15 @@ void reconnectWiFi()
     bool breakMe = false;
     while (true)
     {
+        if (numberOfTries < 20)
+        {
+            // Disconnect and reconnect each time
+            Log.verbose(F("%s Disconnecting/reconnecting WiFi." CR), prefix);
+            WiFi.disconnect(true, false);
+            WiFi.begin();
+            delay(tryDelay);
+        }
+
         const char * loopprefix = "[WiFi Reconnect Status]";
         Log.verbose(F("%s Entering wait loop." CR), loopprefix);
         switch (WiFi.status())
@@ -292,7 +301,6 @@ void reconnectWiFi()
             Log.fatal(F("%s Unable to reconnect WiFI, restarting." CR), prefix);
             wifiFailRestart();
         }
-        delay(tryDelay);
     }
     if (WiFi.status() == WL_CONNECTED)
     {
