@@ -1,24 +1,24 @@
-.. _calibrate:
+(calibrate)=
 
-Calibrate Flowmeters
-######################
+# Calibrate Flowmeters
 
-.. image:: calibrate.png
-   :scale: 50%
-   :align: center
-   :alt: Flowmeter Calibration Screen
+```{image} calibrate.png
+:align: center
+:alt: Flowmeter Calibration Screen
+:scale: 50%
+```
 
 Upon opening the Calibrate Flowmeters page, you are presented with a dropdown to select the flowmeter to be calibrated. After choosing the meter, select a radio button to select between calibrating by a weight or a volume measurement.  The Choose Mode button will activate upon selecting a method. Pressing this button will open an additional dialog, depending upon your choice.
 
 Calibration by volume is often less accurate than weight; however, using volume is the most straightforward method.
 
-Calibration by Volume
-**********************
+## Calibration by Volume
 
-.. image:: volume.png
-   :scale: 50%
-   :align: center
-   :alt: Calibration by Volume Screen
+```{image} volume.png
+:align: center
+:alt: Calibration by Volume Screen
+:scale: 50%
+```
 
 Calibration by volume involves measuring a tap pull of a beverage and then recording that measurement. A larger pour will be more accurate than a smaller one. Enter volume measurements in the units for which you have configured Keg Cop. Use milliliters if using metric, or ounces if using imperial measurements.
 
@@ -26,13 +26,13 @@ As you draw a beverage during calibration, the Pulses field will update with the
 
 When you are satisfied, use the Set PPG/PPL button to lock in the calibration. If you wish to reset the calculation back to its default, use the Reset button instead of saving. The pulses collected will be debited according to the new rate if you save, or the previously configured rate if you reset.
 
-Calibration by Weight
-**********************
+## Calibration by Weight
 
-.. image:: weight.png
-   :scale: 50%
-   :align: center
-   :alt: Calibration by Weight Screen
+```{image} weight.png
+:align: center
+:alt: Calibration by Weight Screen
+:scale: 50%
+```
 
 Since some beverages may have a specific gravity other than 1.000, and we measure by volume, adjustment of the measure taking into account the SG is possible.  If you are unsure of what to use, 1.015 is a good middle of the road number for most homebrewed beer.  If you leave it blank, the calibration employs 1.000 (water equivalence).
 
@@ -42,7 +42,6 @@ As you draw a beverage during calibration, the Pulses field will update with the
 
 When you are satisfied, use the Set PPG/PPL button to lock in the calibration. If you wish to reset the calculation back to its default, use the Reset button instead of saving. The pulses collected will be debited according to the new rate if you save, or the previously configured rate if you reset.
 
-Tap Setup
-*********************
+## Tap Setup
 
-See the :ref:`Taps <taps>` settings page for other tap settings.
+See the {ref}`Taps <taps>` settings page for other tap settings.

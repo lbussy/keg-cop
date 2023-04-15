@@ -1,4 +1,4 @@
-recommonmark
+myst
 sphinx
 sphinx_bootstrap_theme
 sphinx_markdown_parser
