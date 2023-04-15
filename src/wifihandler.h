@@ -50,6 +50,7 @@ void WiFiEvent(WiFiEvent_t event);
 void reconnectWiFi();
 void stopNetwork();
 void startNetwork();
+void wifiFailRestart();
 
 extern bool wifiPause;
 extern bool pausingWiFi;

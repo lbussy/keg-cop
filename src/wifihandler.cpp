@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "wifihandler.h"
 
+#define TRY_WIFI_RECONNECT
+
 bool wifiPause = false;
 bool pausingWiFi = false;
 bool shouldSaveConfig = false;
@@ -215,13 +217,15 @@ void WiFiEvent(WiFiEvent_t event)
 void reconnectWiFi()
 {
     wifiPause = true;
+    const char * prefix = "[WiFi Reconnect]";
     stopNetwork();
 
-    const char * prefix = "[WiFi Reconnect]";
+#ifndef TRY_WIFI_RECONNECT
+    Log.notice(F("%s Not configured to reconnect, restarting." CR), prefix);
+    wifiFailRestart();
+#endif
 
-    Log.verbose(F("%s Setting autonconnect to false." CR), prefix);
-    WiFi.setAutoReconnect(false);
-    Log.verbose(F("%s Beginning WiFi." CR), prefix);
+    Log.notice(F("%s Beginning WiFi." CR), prefix);
     WiFi.begin();
 
     // Will try for about 10 seconds (20x 500ms)
@@ -229,6 +233,7 @@ void reconnectWiFi()
     int numberOfTries = 20;
 
     // Wait for the WiFi event
+    bool breakMe = false;
     while (true)
     {
         const char * loopprefix = "[WiFi Reconnect Status]";
@@ -239,11 +244,11 @@ void reconnectWiFi()
             Log.notice(F("%s SSID not found." CR), loopprefix);
             break;
         case WL_CONNECT_FAILED:
-            Log.notice(F("%s Failed: WiFi not connected." CR), loopprefix);
-            return;
+            Log.error(F("%s WiFi not connected." CR), loopprefix);
+            breakMe = true;
             break;
         case WL_CONNECTION_LOST:
-            Log.notice(F("%s Connection was lost." CR), loopprefix);
+            Log.warning(F("%s Connection was lost." CR), loopprefix);
             break;
         case WL_SCAN_COMPLETED:
             Log.notice(F("%s Scan is completed." CR), loopprefix);
@@ -253,38 +258,66 @@ void reconnectWiFi()
             break;
         case WL_CONNECTED:
             Log.notice(F("%s Connected. IP address: %s, RSSI: %l." CR), loopprefix, WiFi.localIP().toString().c_str(), WiFi.RSSI());
-            return;
+            breakMe = true;
             break;
         default:
-            Log.notice(F("%s WiFi Status (default): %s" CR), loopprefix, WiFi.status());
+            Log.verbose(F("%s WiFi Status (default): %s" CR), loopprefix, WiFi.status());
             break;
         }
-        delay(tryDelay);
 
+        if (breakMe && !WiFi.status() == WL_CONNECT_FAILED)
+        {
+            Log.verbose(F("%s WiFi is connected, breaing loop." CR), prefix);
+            break;
+        }
+        else if (breakMe && WiFi.status() == WL_CONNECT_FAILED)
+        {
+            Log.fatal(F("%s WiFi unable to connect, restarting." CR), prefix);
+            wifiFailRestart();
+        }
+        else if (breakMe)
+        {
+            break;
+        }
+
+        numberOfTries--;
         if (numberOfTries <= 0)
         {
             WiFi.disconnect(true, false);
             // We failed to reconnect.
-            Log.error(F("%s Unable to reconnect WiFI, restarting." CR), prefix);
-            _delay(1000);
-            killDRD();
-            resetController();
+            Log.fatal(F("%s Unable to reconnect WiFI, restarting." CR), prefix);
+            wifiFailRestart();
         }
-        else
-        {
-            numberOfTries--;
-        }
-        if (WiFi.isConnected()) break;
-        Log.verbose(F("%s WiFi is connected, breaing loop." CR), prefix);
+        delay(tryDelay);
     }
+    if (WiFi.status() == WL_CONNECTED)
+    {
+        // Start things back up
+        startNetwork();
+        wifiPause = false;
+    }
+    else
+    {
+        Log.fatal(F("%s WiFi unable to connect, loop failed, restarting." CR), prefix);
+        wifiFailRestart();
+    }
+}
 
-    startNetwork();
-    wifiPause = false;
+void wifiFailRestart()
+{
+    killDRD();
+    ESP.restart();
+    _delay(300);
 }
 
 void stopNetwork()
 {
     const char * prefix = "[Stop Network]";
+
+    killDRD();
+
+    Log.verbose(F("%s Setting autoconnect to false." CR), prefix);
+    WiFi.setAutoReconnect(false);
 
     // Restart logging without telnet
     Log.verbose(F("%s Stopping Serial and Telnet." CR), prefix);

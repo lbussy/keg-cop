@@ -63,6 +63,7 @@ void resetController()
     saveAppConfig();
     saveFlowConfig();
     ESP.restart();
+    _delay(300);
 }
 
 void setDoReset()

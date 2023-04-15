@@ -42,7 +42,7 @@ void setClock()
                 blinker.detach();
                 killDRD();
                 ESP.restart();
-                delay(1000); // Leave this here to avoid weirdness
+                _delay(300); // Leave this here to avoid weirdness
             }
             printCR(true);
             Log.notice(F("Re-requesting time hack."));
