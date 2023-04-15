@@ -203,7 +203,7 @@ void saveParamsCallback()
 
 void WiFiEvent(WiFiEvent_t event)
 {
-    Log.notice(F("[WiFi Event] (%d): %s\n" CR), event, eventString(event));
+    Log.notice(F("[WiFi Event] (%d): %s" CR), event, eventString(event));
     if (!WiFi.isConnected() && !wifiPause)
     {
         doWiFiReconnect = true;
@@ -212,9 +212,10 @@ void WiFiEvent(WiFiEvent_t event)
 
 void reconnectWiFi()
 {
-    const char * prefix = "[WiFi-Reconnect]";
     wifiPause = true;
+    const char * prefix = "[WiFi-Reconnect]";
 
+    // Restart logging without telnet
     Log.verbose(F("%s Stopping Serial and Telnet." CR), prefix);
     serialStop();
 
@@ -252,27 +253,27 @@ void reconnectWiFi()
         switch (WiFi.status())
         {
         case WL_NO_SSID_AVAIL:
-            Serial.println("[WiFi-Reconnect] SSID not found.");
+            Log.notice(F("[WiFi-Reconnect] SSID not found." CR));
             break;
         case WL_CONNECT_FAILED:
-            Serial.println("[WiFi-Reconnect] Failed: WiFi not connected.");
+            Log.notice(F("[WiFi-Reconnect] Failed: WiFi not connected." CR));
             return;
             break;
         case WL_CONNECTION_LOST:
-            Serial.println("[WiFi-Reconnect] Connection was lost.");
+            Log.notice(F("[WiFi-Reconnect] Connection was lost." CR));
             break;
         case WL_SCAN_COMPLETED:
-            Serial.println("[WiFi-Reconnect] Scan is completed.");
+            Log.notice(F("[WiFi-Reconnect] Scan is completed." CR));
             break;
         case WL_DISCONNECTED:
-            Serial.println("[WiFi-Reconnect] WiFi is disconnected.");
+            Log.notice(F("[WiFi-Reconnect] WiFi is disconnected." CR));
             break;
         case WL_CONNECTED:
             Log.notice(F("Connected. IP address: %s, RSSI: %l." CR), WiFi.localIP().toString().c_str(), WiFi.RSSI());
             return;
             break;
         default:
-            Serial.printf("[WiFi-Reconnect] WiFi Status: %s\n", WiFi.status());
+            Log.notice(F("[WiFi-Reconnect] WiFi Status: %s" CR), WiFi.status());
             break;
         }
         delay(tryDelay);
