@@ -140,7 +140,7 @@ void tickerLoop()
         sleep(3);
         resetWifi();
     }
-    if (doWiFiReconnect)
+    if (doWiFiReconnect && !wifiPause)
     { // WiFi event is a callback - prevent WDT
         doWiFiReconnect = false;
         reconnectWiFi();
