@@ -55,7 +55,7 @@ void serial()
 
 void serialStop()
 {
-    Log.notice(F("Serial logging stopping. CR"));
+    Log.notice(F("Serial logging stopping." CR));
     SERIAL.flush();
     SERIAL.disconnectClient();
     SERIAL.end();
