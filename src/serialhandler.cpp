@@ -59,7 +59,9 @@ void serialStop()
     SERIAL.flush();
     SERIAL.disconnectClient();
     SERIAL.end();
+     _delay(500);
     Serial.begin(BAUD);
+    _delay(500);
     #if !defined(DISABLE_LOGGING)
     if (app.copconfig.serial)
     {
