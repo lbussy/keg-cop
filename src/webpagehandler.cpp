@@ -2418,7 +2418,6 @@ void send_failed(AsyncWebServerRequest *request)
 
 void send_json(AsyncWebServerRequest *request, String &json)
 {
-    Log.verbose(F("Sending %s." CR), request->url().c_str());
     request->header("Cache-Control: no-store");
     request->send(200, F("application/json"), json);
 }
