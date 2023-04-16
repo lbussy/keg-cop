@@ -363,7 +363,7 @@ void killDRD()
     const char *drdfile = "/drd.dat";
     if (FILESYSTEM.begin())
     {
-        if (SPIFFS.exists(drdfile))
+        if (FILESYSTEM.exists(drdfile))
         {
             FILESYSTEM.remove(drdfile);
         }
