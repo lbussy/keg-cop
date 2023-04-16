@@ -127,7 +127,7 @@ SOFTWARE. */
 //
 #ifndef ESPREPBOOT
 // #define ESPREBOOT (uint32_t)3628800000
-#define ESPREBOOT (uint32_t) 1 * 60 * 60 * 1000 // Reboot every hour because Async sucks
+#define ESPREBOOT (uint32_t) 2 * 60 * 60 * 1000 // Reboot every X hours because Async sucks
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
