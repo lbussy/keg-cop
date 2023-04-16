@@ -37,6 +37,7 @@ void wifiBlinker();
 void doWiFi();
 void doWiFi(bool dontUseStoredCreds);
 void resetWifi();
+const char * eventString(WiFiEvent_t event);
 
 // AsyncWiFiManager Callbacks
 void apCallback(AsyncWiFiManager *wiFiManager);
@@ -47,12 +48,13 @@ void saveParamsCallback();
 void webServerCallback();
 void WiFiEvent(WiFiEvent_t event);
 void reconnectWiFi();
-
-struct tcp_pcb;
-extern struct tcp_pcb *tcp_tw_pcbs;
-extern "C" void tcp_abort(struct tcp_pcb *pcb);
-void tcpCleanup(void);
+void stopNetwork();
+void startNetwork();
+void wifiFailRestart();
 
 extern bool wifiPause;
+extern bool pausingWiFi;
+extern void stopMainProc();
+extern void startMainProc();
 
 #endif // _WIFI_H

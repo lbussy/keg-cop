@@ -111,7 +111,7 @@ bool sendTaplistio(int tapid)
              "https://api.taplist.io/api/v1/venues/%s/taps/%d/current-keg",
              app.taplistio.venue, flow.taps[tapid].taplistioTap);
 
-    Log.verbose(F("Taplist.io: Sending %s to %s\r\n"), payload_string, taplistio_url);
+    Log.verbose(F("Taplist.io: Sending %s to %s." CR), payload_string, taplistio_url);
 
     yield(); // Yield before we lock up the radio
 
@@ -136,7 +136,7 @@ bool sendTaplistio(int tapid)
 
                 if (httpResponseCode < HTTP_CODE_OK || httpResponseCode > HTTP_CODE_NO_CONTENT)
                 {
-                    Log.error(F("Taplist.io: Send failed (%d): %s. Response:\r\n%s\r\n"),
+                    Log.error(F("Taplist.io: Send failed (%d): %s. Response:\r\n%s" CR),
                               httpResponseCode,
                               http.errorToString(httpResponseCode).c_str(),
                               http.getString().c_str());
@@ -150,7 +150,7 @@ bool sendTaplistio(int tapid)
             }
             else
             {
-                Log.error(F("Taplist.io: Unable to create connection\r\n"));
+                Log.error(F("Taplist.io: Unable to create connection." CR));
                 result = false;
             }
         }

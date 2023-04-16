@@ -63,6 +63,7 @@ void resetController()
     saveAppConfig();
     saveFlowConfig();
     ESP.restart();
+    _delay(300);
 }
 
 void setDoReset()
@@ -140,9 +141,10 @@ void tickerLoop()
         sleep(3);
         resetWifi();
     }
-    if (doWiFiReconnect)
+    if (doWiFiReconnect && !wifiPause)
     { // WiFi event is a callback - prevent WDT
-        doWiFiReconnect = false;
+        pausingWiFi = false; // Clear interim state
+        doWiFiReconnect = false; // Clear semaphore
         reconnectWiFi();
     }
 
@@ -239,13 +241,13 @@ void maintenanceLoop()
     {
         // The ms clock will rollover after ~49 days.  To be on the safe side,
         // restart the ESP after about 42 days to reset the ms clock.
-        Log.warning(F("Maintenance: Six week routine restart."));
+        Log.warning(F("Maintenance: Scheduled restart." CR));
         resetController();
     }
     if (lastNTPUpdate > NTPRESET)
     {
         // Reset NTP (blocking) every measured 24 hours
-        Log.notice(F("Maintenance: Setting time"));
+        Log.notice(F("Maintenance: Setting time." CR));
         setClock();
     }
 }
@@ -361,7 +363,7 @@ void killDRD()
     const char *drdfile = "/drd.dat";
     if (FILESYSTEM.begin())
     {
-        if (SPIFFS.exists(drdfile))
+        if (FILESYSTEM.exists(drdfile))
         {
             FILESYSTEM.remove(drdfile);
         }

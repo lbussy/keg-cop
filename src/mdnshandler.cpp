@@ -22,7 +22,7 @@ SOFTWARE. */
 
 #include "mdnshandler.h"
 
-void mDNSSetup()
+void mDNSStart()
 {
     if (!MDNS.begin(WiFi.getHostname()))
     { // Start the mDNS responder
@@ -35,12 +35,18 @@ void mDNSSetup()
     }
 }
 
+void mDNSStop()
+{
+    Log.notice(F("Stopping mDNS." CR));
+    MDNS.end();
+}
+
 void mDNSReset()
 {
     MDNS.end();
     if (!MDNS.begin(app.copconfig.hostname))
     {
-        Log.error(F("Error resetting MDNS responder."));
+        Log.error(F("Error resetting MDNS responder." CR));
     }
     else
     {

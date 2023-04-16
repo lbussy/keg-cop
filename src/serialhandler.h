@@ -41,6 +41,8 @@ SOFTWARE. */
 
 // Basic Serial handlers
 void serial();
+void serialStop();
+void serialRestart();
 void toggleSerialCompat(bool);
 void printTimestamp(Print *_logOutput);
 void serialLoop();

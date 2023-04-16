@@ -47,7 +47,7 @@ SOFTWARE. */
 #include <ESPAsyncWebServer.h>
 #include <Arduino.h>
 
-void initWebServer();
+void startWebServer();
 void setRegPageHandlers();
 void setAPIPageHandlers();
 void setActionPageHandlers();

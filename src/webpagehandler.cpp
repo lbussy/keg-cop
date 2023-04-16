@@ -70,7 +70,7 @@ static const char *tf_str[] = {
     "handleSetCalMode"};
 static int tapHandlers = sizeof(tf_str) / sizeof(tf_str[0]);
 
-void initWebServer()
+void startWebServer()
 {
     setRegPageHandlers();
     setAPIPageHandlers();
@@ -134,11 +134,10 @@ void setAPIPageHandlers()
         JsonObject root = doc.to<JsonObject>();
         api.save(root);
 
-        // Serialize JSON to String
-        String api;
-        serializeJson(doc, api);
-
-        send_json(request, api); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -154,11 +153,10 @@ void setAPIPageHandlers()
         JsonObject root = doc.to<JsonObject>();
         api.actionAPI.save(root);
 
-        // Serialize JSON to String
-        String api;
-        serializeJson(doc, api);
-
-        send_json(request, api); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/action/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -174,11 +172,10 @@ void setAPIPageHandlers()
         JsonObject root = doc.to<JsonObject>();
         api.infoAPI.save(root);
 
-        // Serialize JSON to String
-        String api;
-        serializeJson(doc, api);
-
-        send_json(request, api); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/info/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -194,11 +191,10 @@ void setAPIPageHandlers()
         JsonObject root = doc.to<JsonObject>();
         api.configAPI.save(root);
 
-        // Serialize JSON to String
-        String api;
-        serializeJson(doc, api);
-
-        send_json(request, api); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/config/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -418,9 +414,10 @@ void setInfoPageHandlers()
         r["reason"] = rstReason();
         r["description"] = rstDescription();
 
-        String resetreason;
-        serializeJson(doc, resetreason);
-        send_json(request, resetreason); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/info/heap/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
@@ -444,9 +441,10 @@ void setInfoPageHandlers()
         h["max"] = (const uint16_t)max;
         h["frag"] = (const uint8_t)frag;
 
-        String heap;
-        serializeJson(doc, heap);
-        send_json(request, heap); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/info/uptime/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
@@ -469,9 +467,10 @@ void setInfoPageHandlers()
         u["seconds"] = seconds;
         u["millis"] = millis;
 
-        String ut = "";
-        serializeJson(doc, ut);
-        send_json(request, ut); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/info/thisVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
@@ -489,6 +488,7 @@ void setInfoPageHandlers()
         doc[AppKeys::badfs] = app.ota.badfs;
         doc[AppKeys::badfstime] = app.ota.badfstime;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
@@ -504,6 +504,7 @@ void setInfoPageHandlers()
         doc["fw_version"] = fw_version;
         doc["fs_version"] = fs_version;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
@@ -524,8 +525,9 @@ void setInfoPageHandlers()
             _pulse[i] = getPulseCount(i);
         }
 
+        // Serialize JSON to String and send
         String json;
-        serializeJson(doc, json); // Serialize JSON to String
+        serializeJson(doc, json);
         send_json(request, json); });
 
     server.on("/api/v1/info/tempcontrol/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
@@ -598,6 +600,7 @@ void setInfoPageHandlers()
         const bool displayenabled = (numEnabled > 0);
         doc["displayenabled"] = displayenabled;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
@@ -609,6 +612,7 @@ void setInfoPageHandlers()
 
         doc[AppKeys::secret] = app.copconfig.guid;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
@@ -620,6 +624,7 @@ void setInfoPageHandlers()
 
         doc[AppKeys::theme] = app.copconfig.theme;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
@@ -661,8 +666,9 @@ void setConfigurationPageHandlers()
         JsonObject root = doc.to<JsonObject>(); // Create JSON object
         app.save(root);                      // Fill the object with current config
 
+        // Serialize JSON to String and send
         String json;
-        serializeJson(doc, json); // Serialize JSON to String
+        serializeJson(doc, json);
         send_json(request, json); });
 
     server.on("/api/v1/config/settings/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
@@ -747,8 +753,9 @@ void setConfigurationPageHandlers()
         JsonObject root = doc.to<JsonObject>();      // Create JSON object
         flow.save(root);                             // Fill the object with current kegs
 
+        // Serialize JSON to String and send
         String json;
-        serializeJson(doc, json); // Serialize JSON to String
+        serializeJson(doc, json);
         send_json(request, json); });
 
     server.on("/api/v1/config/taps/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
@@ -2411,7 +2418,6 @@ void send_failed(AsyncWebServerRequest *request)
 
 void send_json(AsyncWebServerRequest *request, String &json)
 {
-    Log.verbose(F("Sending %s." CR), request->url().c_str());
     request->header("Cache-Control: no-store");
     request->send(200, F("application/json"), json);
 }

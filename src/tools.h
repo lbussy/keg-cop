@@ -70,5 +70,6 @@ void killDRD();
 unsigned long getTime();
 
 extern bool doWiFiReconnect;
+extern bool pausingWiFi;
 
 #endif
