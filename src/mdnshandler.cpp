@@ -46,7 +46,7 @@ void mDNSReset()
     MDNS.end();
     if (!MDNS.begin(app.copconfig.hostname))
     {
-        Log.error(F("Error resetting MDNS responder."));
+        Log.error(F("Error resetting MDNS responder." CR));
     }
     else
     {

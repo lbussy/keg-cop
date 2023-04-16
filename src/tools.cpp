@@ -241,13 +241,13 @@ void maintenanceLoop()
     {
         // The ms clock will rollover after ~49 days.  To be on the safe side,
         // restart the ESP after about 42 days to reset the ms clock.
-        Log.warning(F("Maintenance: Six week routine restart."));
+        Log.warning(F("Maintenance: Scheduled restart." CR));
         resetController();
     }
     if (lastNTPUpdate > NTPRESET)
     {
         // Reset NTP (blocking) every measured 24 hours
-        Log.notice(F("Maintenance: Setting time"));
+        Log.notice(F("Maintenance: Setting time." CR));
         setClock();
     }
 }
