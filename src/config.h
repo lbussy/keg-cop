@@ -126,8 +126,8 @@ SOFTWARE. */
 // Reset controller every 42 days
 //
 #ifndef ESPREPBOOT
-#define ESPREBOOT (uint32_t)3628800000
-// #define ESPREBOOT (uint32_t) 1 * 60 * 60 // Reboot every hour because Async sucks
+// #define ESPREBOOT (uint32_t)3628800000
+#define ESPREBOOT (uint32_t) 1 * 60 * 60 * 1000 // Reboot every hour because Async sucks
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
