@@ -109,11 +109,12 @@ void doUptime(bool reboot)
 bool deleteUptimeFile()
 {
     bool retVal =false;
-    if (!FILESYSTEM.begin())
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
     {
         retVal = false;
     }
     retVal = FILESYSTEM.remove(uptimefile);
+    FILESYSTEM.end();
     return retVal;
 }
 
@@ -134,7 +135,7 @@ bool loadUptime()
 bool loadUptimeFile()
 {
     bool retVal;
-    if (!FILESYSTEM.begin())
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
     {
         retVal = false;
     }
@@ -160,8 +161,8 @@ bool loadUptimeFile()
         }
         file.close();
     }
+    FILESYSTEM.end();
     return retVal;
-
 }
 
 bool saveUptime()
@@ -173,20 +174,28 @@ bool saveUptimeFile()
 {
     bool retVal;
     // Saves the uptime information to a file on FILESYSTEM
-    File file = FILESYSTEM.open(uptimefile,FILE_WRITE);
-    if (!file)
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
     {
         retVal = false;
     }
     else
     {
-        // Serialize JSON to file
-        if (!serializeUptime(file))
+        File file = FILESYSTEM.open(uptimefile,FILE_WRITE);
+        if (!file)
         {
             retVal = false;
         }
+        else
+        {
+            // Serialize JSON to file
+            if (!serializeUptime(file))
+            {
+                retVal = false;
+            }
+        }
+        file.close();
     }
-    file.close();
+    FILESYSTEM.end();
     return retVal;
 }
 
@@ -228,16 +237,24 @@ bool serializeUptime(Print &dst)
 bool printUptimeFile()
 {
     bool retVal = true;
-    // Prints the content of a file to the Serial
-    File file = FILESYSTEM.open(uptimefile,FILE_READ);
-    if (!file)
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
+    {
         retVal = false;
+    }
+    else
+    {
+        // Prints the content of a file to the Serial
+        File file = FILESYSTEM.open(uptimefile,FILE_READ);
+        if (!file)
+            retVal = false;
 
-    while (file.available())
-        printChar(true, (const char *)file.read());
+        while (file.available())
+            printChar(true, (const char *)file.read());
 
-    printCR(true);
-    file.close();
+        printCR(true);
+        file.close();
+    }
+    FILESYSTEM.end();
     return retVal;
 }
 
@@ -291,20 +308,28 @@ void Uptime::load(JsonObjectConst obj)
 bool writeLog(char *logLine)
 {
     bool retVal = true;
-    // Appends to the uptime log on FILESYSTEM
-    File file = FILESYSTEM.open(uptimelog, FILE_APPEND);
-    if (!file)
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
     {
-        file.close();
         retVal = false;
     }
+    else
+    {
+        // Appends to the uptime log on FILESYSTEM
+        File file = FILESYSTEM.open(uptimelog, FILE_APPEND);
+        if (!file)
+        {
+            file.close();
+            retVal = false;
+        }
 
-    // Log CSV to file
-    if (!file.println(logLine))
-    {
+        // Log CSV to file
+        if (!file.println(logLine))
+        {
+            file.close();
+            retVal = false;
+        }
         file.close();
-        retVal = false;
     }
-    file.close();
+    FILESYSTEM.end();
     return retVal;
 }

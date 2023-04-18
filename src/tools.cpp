@@ -361,13 +361,14 @@ void killDRD()
 {
     app.copconfig.nodrd = true;
     const char *drdfile = "/drd.dat";
-    if (FILESYSTEM.begin())
+    if (FILESYSTEM.begin(false, "/spiffs", 32))
     {
         if (FILESYSTEM.exists(drdfile))
         {
             FILESYSTEM.remove(drdfile);
         }
     }
+    FILESYSTEM.end();
 }
 
 unsigned long getTime()
