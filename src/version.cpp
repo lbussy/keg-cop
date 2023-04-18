@@ -36,7 +36,7 @@ const char *build_mode() { return stringify(BUILD_TYPE); }
 void fsver()
 {
     // Filesystem Version
-    if (FILESYSTEM.begin())
+    if (FILESYSTEM.begin(false, "/spiffs", 32))
     {
         // Loads the configuration from a file on FILESYSTEM
         File file = FILESYSTEM.open(versionfile,FILE_READ);
@@ -63,6 +63,7 @@ void fsver()
         }
         file.close();
     }
+    FILESYSTEM.end();
     return;
 }
 

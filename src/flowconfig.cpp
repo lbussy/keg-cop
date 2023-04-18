@@ -29,7 +29,7 @@ bool loadFlowConfig()
     Log.verbose(F("Flow Load: Loading flowmeter configuration." CR));
     bool loadOK = false;
     // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin())
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
     {
         Log.error(F("Flow Load: Unable to mount filesystem, partition may be corrupt." CR));
         loadOK = false;
@@ -73,6 +73,7 @@ bool loadFlowConfig()
             }
         }
     }
+    FILESYSTEM.end();
     return loadOK;
 }
 
@@ -81,7 +82,7 @@ bool saveFlowConfig()
     Log.verbose(F("%s Save: Saving configuration." CR), FlowmeterKeys::appname);
     bool saveOK = false;
     // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin())
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
     {
         Log.error(F("%s Save: Unable to mount filesystem, partition may be corrupt." CR), FlowmeterKeys::appname);
         saveOK = false;
@@ -108,16 +109,18 @@ bool saveFlowConfig()
         }
         file.close();
     }
+    FILESYSTEM.end();
     return saveOK;
 }
 
 bool deleteFlowConfigFile()
 {
     bool delOK = false;
-    if (FILESYSTEM.begin())
+    if (FILESYSTEM.begin(false, "/spiffs", 32))
     {
         delOK = FILESYSTEM.remove(FLOW_FILENAME);
     }
+    FILESYSTEM.end();
     return delOK;
 }
 

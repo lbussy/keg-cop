@@ -35,14 +35,11 @@ Ticker rebootTimer;
 
 void setup()
 {
-    drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
+    if (FILESYSTEM.begin(false, "/spiffs", 32))
+        drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
+    FILESYSTEM.end();
 
     serial();
-    if (!FILESYSTEM.begin(false, "/spiffs", 32))
-    {
-        Log.error(F("%s Load: Unable to mount filesystem, partition may be corrupt. Stopping." CR), AppKeys::appname);
-        playDead();
-    }
 
     if (!loadAppConfig())
     { // If configuration does not load, sit and blink slowly like an idiot
@@ -55,7 +52,10 @@ void setup()
     pinMode(LED, OUTPUT);
 
     // Check if portal is requested
-    if (!app.copconfig.nodrd && drd->detectDoubleReset())
+    FILESYSTEM.begin(false, "/spiffs", 32);
+    bool detectdrd = drd->detectDoubleReset();
+    FILESYSTEM.end();
+    if (!app.copconfig.nodrd && detectdrd)
     {
         Log.notice(F("DRD: Portal requested." CR));
         doWiFi(true);
@@ -164,7 +164,8 @@ void loop()
 
         doOTALoop();
         tickerLoop();
-        drd->loop();
+        if (FILESYSTEM.begin(false, "/spiffs", 32))
+            drd->loop();
         serialLoop();
         maintenanceLoop();
     }
@@ -187,7 +188,6 @@ void stopMainProc()
 void startMainProc()
 {
     Log.verbose(F("Starting all main loop timers and filesystem" CR));
-    FILESYSTEM.begin(false, "/spiffs", 32);
     pollSensorsTicker.attach(TEMPLOOP, pollTemps);                             // Poll temperature sensors
     logPourTicker.attach(TAPLOOP, logFlow);                                    // Log pours
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);             // Poll for server version

@@ -29,7 +29,7 @@ bool loadAppConfig()
     Log.verbose(F("%s Load: Loading configuration." CR), AppKeys::appname);
     bool loadOK = false;
     // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin())
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
     {
         Log.error(F("%s Load: Unable to mount filesystem, partition may be corrupt." CR), AppKeys::appname);
         loadOK = false;
@@ -73,6 +73,8 @@ bool loadAppConfig()
             }
         }
     }
+    Log.verbose(F("%s Load: Configuration load complete." CR), AppKeys::appname);
+    FILESYSTEM.end();
     return loadOK;
 }
 
@@ -81,7 +83,7 @@ bool saveAppConfig()
     Log.verbose(F("%s Save: Saving configuration." CR), AppKeys::appname);
     bool saveOK = false;
     // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin())
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
     {
         Log.error(F("%s Save: Unable to mount filesystem, partition may be corrupt." CR), AppKeys::appname);
         saveOK = false;
@@ -107,8 +109,10 @@ bool saveAppConfig()
             saveOK = true;
         }
         file.close();
+        FILESYSTEM.end();
         return true;
     }
+    FILESYSTEM.end();
     return saveOK;
 }
 

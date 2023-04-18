@@ -320,7 +320,7 @@ void doKSJSON()
     doc["deviceID"] = app.copconfig.guid;
 
     // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin())
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
     {
         Log.error(F("%s: Failed to connect to filesystem." CR), featureName);
     }
@@ -344,6 +344,7 @@ void doKSJSON()
         }
         file.close();
     }
+    FILESYSTEM.end();
 }
 
 void reportCBTapInfo(void *optParm, asyncHTTPrequest *report, int readyState)
