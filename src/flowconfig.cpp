@@ -28,52 +28,44 @@ bool loadFlowConfig()
 {
     Log.verbose(F("Flow Load: Loading flowmeter configuration." CR));
     bool loadOK = false;
-    // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin(false, "/spiffs", 32))
+
+    // Loads the configuration from a file on FILESYSTEM
+    File file = FILESYSTEM.open(FLOW_FILENAME, FILE_READ);
+    if (!FILESYSTEM.exists(FLOW_FILENAME) || !file)
     {
-        Log.error(F("Flow Load: Unable to mount filesystem, partition may be corrupt." CR));
+        Log.warning(F("Flow Load: Flowmeter configuration does not exist, default values will be attempted." CR));
+        loadOK = false;
+    }
+    else if (!deserializeFlowConfig(file))
+    {
+        Log.warning(F("Flow Load: Failed to load flowmeter configuration from filesystem, default values have been used." CR));
         loadOK = false;
     }
     else
     {
-        // Loads the configuration from a file on FILESYSTEM
-        File file = FILESYSTEM.open(FLOW_FILENAME, FILE_READ);
-        if (!FILESYSTEM.exists(FLOW_FILENAME) || !file)
+        loadOK = true;
+    }
+    file.close();
+
+    // Try to create a default configuration file
+    if (!loadOK)
+    {
+        if (!saveFlowConfig())  // Save a default config
         {
-            Log.warning(F("Flow Load: Flowmeter configuration does not exist, default values will be attempted." CR));
+            Log.error(F("Flow Load: Unable to generate default flowmeter configuration." CR));
             loadOK = false;
         }
-        else if (!deserializeFlowConfig(file))
+        else if (!loadFlowConfig()) // Try one more time to load the default config
         {
-            Log.warning(F("Flow Load: Failed to load flowmeter configuration from filesystem, default values have been used." CR));
+            Log.error(F("Flow Load: Unable to read default flowmeter configuration." CR));
             loadOK = false;
         }
         else
         {
             loadOK = true;
         }
-        file.close();
-
-        // Try to create a default configuration file
-        if (!loadOK)
-        {
-            if (!saveFlowConfig())  // Save a default config
-            {
-                Log.error(F("Flow Load: Unable to generate default flowmeter configuration." CR));
-                loadOK = false;
-            }
-            else if (!loadFlowConfig()) // Try one more time to load the default config
-            {
-                Log.error(F("Flow Load: Unable to read default flowmeter configuration." CR));
-                loadOK = false;
-            }
-            else
-            {
-                loadOK = true;
-            }
-        }
     }
-    FILESYSTEM.end();
+
     return loadOK;
 }
 
@@ -81,47 +73,33 @@ bool saveFlowConfig()
 {
     Log.verbose(F("%s Save: Saving configuration." CR), FlowmeterKeys::appname);
     bool saveOK = false;
-    // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin(false, "/spiffs", 32))
+
+    // Saves the configuration to a file on FILESYSTEM
+    File file = FILESYSTEM.open(FLOW_FILENAME, FILE_WRITE);
+    if (!file)
     {
-        Log.error(F("%s Save: Unable to mount filesystem, partition may be corrupt." CR), FlowmeterKeys::appname);
+        Log.error(F("%s Save: Unable to open or create file, partition may be corrupt." CR), FlowmeterKeys::appname);
+        saveOK = false;
+    }
+    // Serialize JSON to file
+    else if (!serializeFlowConfig(file))
+    {
+        Log.error(F("%s Save: Failed to save configuration, data may be lost." CR), FlowmeterKeys::appname);
         saveOK = false;
     }
     else
     {
-        // Saves the configuration to a file on FILESYSTEM
-        File file = FILESYSTEM.open(FLOW_FILENAME, FILE_WRITE);
-        if (!file)
-        {
-            Log.error(F("%s Save: Unable to open or create file, partition may be corrupt." CR), FlowmeterKeys::appname);
-            saveOK = false;
-        }
-        // Serialize JSON to file
-        else if (!serializeFlowConfig(file))
-        {
-            Log.error(F("%s Save: Failed to save configuration, data may be lost." CR), FlowmeterKeys::appname);
-            saveOK = false;
-        }
-        else
-        {
-            Log.verbose(F("%s Save: Configuration saved." CR), FlowmeterKeys::appname);
-            saveOK = true;
-        }
-        file.close();
+        Log.verbose(F("%s Save: Configuration saved." CR), FlowmeterKeys::appname);
+        saveOK = true;
     }
-    FILESYSTEM.end();
+    file.close();
+
     return saveOK;
 }
 
 bool deleteFlowConfigFile()
 {
-    bool delOK = false;
-    if (FILESYSTEM.begin(false, "/spiffs", 32))
-    {
-        delOK = FILESYSTEM.remove(FLOW_FILENAME);
-    }
-    FILESYSTEM.end();
-    return delOK;
+    return FILESYSTEM.remove(FLOW_FILENAME);
 }
 
 bool deserializeFlowConfig(Stream &src)

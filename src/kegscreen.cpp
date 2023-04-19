@@ -319,32 +319,23 @@ void doKSJSON()
     doc["path"] = KegScreenKeys::kstv_path;
     doc["deviceID"] = app.copconfig.guid;
 
-    // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin(false, "/spiffs", 32))
+    File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
+    if (!file)
     {
-        Log.error(F("%s: Failed to connect to filesystem." CR), featureName);
+        Log.error(F("%s: Failed to open JSON file." CR), featureName);
     }
     else
     {
-        File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
-        if (!file)
-        {
-            Log.error(F("%s: Failed to open JSON file." CR), featureName);
+        // Serialize JSON to file
+        if (serializeJson(doc, file) == 0) {
+            Log.error(F("%s: Failed to write JSON file." CR), featureName);
         }
         else
         {
-            // Serialize JSON to file
-            if (serializeJson(doc, file) == 0) {
-                Log.error(F("%s: Failed to write JSON file." CR), featureName);
-            }
-            else
-            {
-                Log.verbose(F("%s: JSON file written." CR), featureName);
-            }
+            Log.verbose(F("%s: JSON file written." CR), featureName);
         }
-        file.close();
     }
-    FILESYSTEM.end();
+    file.close();
 }
 
 void reportCBTapInfo(void *optParm, asyncHTTPrequest *report, int readyState)

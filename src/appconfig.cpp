@@ -28,53 +28,45 @@ bool loadAppConfig()
 {
     Log.verbose(F("%s Load: Loading configuration." CR), AppKeys::appname);
     bool loadOK = false;
-    // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin(false, "/spiffs", 32))
+
+    // Loads the configuration from a file on FILESYSTEM
+    File file = FILESYSTEM.open(APP_FILENAME, FILE_READ);
+    if (!FILESYSTEM.exists(APP_FILENAME) || !file)
     {
-        Log.error(F("%s Load: Unable to mount filesystem, partition may be corrupt." CR), AppKeys::appname);
+        Log.warning(F("%s Load: Configuration does not exist, default values will be attempted." CR), AppKeys::appname);
+        loadOK = false;
+    }
+    else if (!deserializeAppConfig(file))
+    {
+        Log.warning(F("%s Load: Failed to load configuration from filesystem, default values have been used." CR), AppKeys::appname);
         loadOK = false;
     }
     else
     {
-        // Loads the configuration from a file on FILESYSTEM
-        File file = FILESYSTEM.open(APP_FILENAME, FILE_READ);
-        if (!FILESYSTEM.exists(APP_FILENAME) || !file)
+        loadOK = true;
+    }
+    file.close();
+
+    // Try to create a default configuration file
+    if (!loadOK)
+    {
+        if (!saveAppConfig()) // Save a default config
         {
-            Log.warning(F("%s Load: Configuration does not exist, default values will be attempted." CR), AppKeys::appname);
+            Log.error(F("%s Load: Unable to generate default configuration." CR), AppKeys::appname);
             loadOK = false;
         }
-        else if (!deserializeAppConfig(file))
+        else if (!loadAppConfig()) // Try one more time to load the default config
         {
-            Log.warning(F("%s Load: Failed to load configuration from filesystem, default values have been used." CR), AppKeys::appname);
+            Log.error(F("%s Load: Unable to read default configuration." CR), AppKeys::appname);
             loadOK = false;
         }
         else
         {
             loadOK = true;
         }
-        file.close();
-
-        // Try to create a default configuration file
-        if (!loadOK)
-        {
-            if (!saveAppConfig()) // Save a default config
-            {
-                Log.error(F("%s Load: Unable to generate default configuration." CR), AppKeys::appname);
-                loadOK = false;
-            }
-            else if (!loadAppConfig()) // Try one more time to load the default config
-            {
-                Log.error(F("%s Load: Unable to read default configuration." CR), AppKeys::appname);
-                loadOK = false;
-            }
-            else
-            {
-                loadOK = true;
-            }
-        }
     }
+
     Log.verbose(F("%s Load: Configuration load complete." CR), AppKeys::appname);
-    FILESYSTEM.end();
     return loadOK;
 }
 
@@ -82,37 +74,28 @@ bool saveAppConfig()
 {
     Log.verbose(F("%s Save: Saving configuration." CR), AppKeys::appname);
     bool saveOK = false;
-    // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin(false, "/spiffs", 32))
+
+    // Saves the configuration to a file on FILESYSTEM
+    File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
+    if (!file)
     {
-        Log.error(F("%s Save: Unable to mount filesystem, partition may be corrupt." CR), AppKeys::appname);
+        Log.error(F("%s Save: Unable to open or create file, partition may be corrupt." CR), AppKeys::appname);
+        saveOK = false;
+    }
+    // Serialize JSON to file
+    else if (!serializeAppConfig(file))
+    {
+        Log.error(F("%s Save: Failed to save configuration, data may be lost." CR), AppKeys::appname);
         saveOK = false;
     }
     else
     {
-        // Saves the configuration to a file on FILESYSTEM
-        File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
-        if (!file)
-        {
-            Log.error(F("%s Save: Unable to open or create file, partition may be corrupt." CR), AppKeys::appname);
-            saveOK = false;
-        }
-        // Serialize JSON to file
-        else if (!serializeAppConfig(file))
-        {
-            Log.error(F("%s Save: Failed to save configuration, data may be lost." CR), AppKeys::appname);
-            saveOK = false;
-        }
-        else
-        {
-            Log.verbose(F("%s Save: Configuration saved." CR), AppKeys::appname);
-            saveOK = true;
-        }
-        file.close();
-        FILESYSTEM.end();
-        return true;
+        Log.verbose(F("%s Save: Configuration saved." CR), AppKeys::appname);
+        saveOK = true;
     }
-    FILESYSTEM.end();
+    file.close();
+    return true;
+
     return saveOK;
 }
 
