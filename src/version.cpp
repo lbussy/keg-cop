@@ -36,34 +36,30 @@ const char *build_mode() { return stringify(BUILD_TYPE); }
 void fsver()
 {
     // Filesystem Version
-    if (FILESYSTEM.begin(false, "/spiffs", 32))
+    // Loads the configuration from a file on FILESYSTEM
+    File file = FILESYSTEM.open(versionfile,FILE_READ);
+    if (FILESYSTEM.exists(versionfile) || !file)
     {
-        // Loads the configuration from a file on FILESYSTEM
-        File file = FILESYSTEM.open(versionfile,FILE_READ);
-        if (FILESYSTEM.exists(versionfile) || !file)
+        // Deserialize version
+        StaticJsonDocument<96> doc;
+
+        // Parse the JSON object in the file
+        DeserializationError err = deserializeJson(doc, file);
+
+        if (!err)
         {
-            // Deserialize version
-            StaticJsonDocument<96> doc;
-
-            // Parse the JSON object in the file
-            DeserializationError err = deserializeJson(doc, file);
-
-            if (!err)
+            if (doc["fs_version"].isNull())
             {
-                if (doc["fs_version"].isNull())
-                {
-                    strlcpy(fs_ver, "0.0.0", sizeof(fs_ver));
-                }
-                else
-                {
-                    const char *fs = doc["fs_version"];
-                    strlcpy(fs_ver, fs, sizeof(fs_ver));
-                }
+                strlcpy(fs_ver, "0.0.0", sizeof(fs_ver));
+            }
+            else
+            {
+                const char *fs = doc["fs_version"];
+                strlcpy(fs_ver, fs, sizeof(fs_ver));
             }
         }
-        file.close();
     }
-    FILESYSTEM.end();
+    file.close();
     return;
 }
 

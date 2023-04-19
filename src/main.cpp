@@ -22,7 +22,7 @@ SOFTWARE. */
 
 #include "main.h"
 
-DoubleResetDetector *drd;
+// DoubleResetDetector *drd;
 
 Ticker pollSensorsTicker;
 Ticker doControlTicker;
@@ -35,9 +35,10 @@ Ticker rebootTimer;
 
 void setup()
 {
-    if (FILESYSTEM.begin(false, "/spiffs", 32))
-        drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
-    FILESYSTEM.end();
+    if (!FILESYSTEM.begin(false, "/spiffs", 32))
+        playDead();
+
+    // drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
 
     serial();
 
@@ -52,9 +53,7 @@ void setup()
     pinMode(LED, OUTPUT);
 
     // Check if portal is requested
-    FILESYSTEM.begin(false, "/spiffs", 32);
-    bool detectdrd = drd->detectDoubleReset();
-    FILESYSTEM.end();
+    bool detectdrd = false; //drd->detectDoubleReset();
     if (!app.copconfig.nodrd && detectdrd)
     {
         Log.notice(F("DRD: Portal requested." CR));
@@ -164,8 +163,7 @@ void loop()
 
         doOTALoop();
         tickerLoop();
-        if (FILESYSTEM.begin(false, "/spiffs", 32))
-            drd->loop();
+        // drd->loop();
         serialLoop();
         maintenanceLoop();
     }

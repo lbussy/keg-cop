@@ -40,7 +40,7 @@ SOFTWARE. */
 #include "taplistio.h"
 
 #include <ArduinoLog.h>
-#include <ESP_DoubleResetDetector.h>
+//#include <ESP_DoubleResetDetector.h>
 
 void setup();
 void loop();

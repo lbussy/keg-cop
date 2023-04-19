@@ -131,10 +131,7 @@ bool deleteJsonFile(JSON_TYPE type)
         filename = APP_FILENAME;
     else if (type == JSON_FLOW)
         filename = FLOW_FILENAME;
-    if (!FILESYSTEM.begin(false, "/spiffs", 32))
-    {
-        retVal = false;
-    }
+
     retVal = FILESYSTEM.remove(filename);
     FILESYSTEM..end();
     return retVal;
