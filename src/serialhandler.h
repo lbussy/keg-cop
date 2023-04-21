@@ -40,7 +40,7 @@ SOFTWARE. */
 #include <esptelnet.h>
 
 // Basic Serial handlers
-void serial();
+void serialBegin();
 void serialStop();
 void serialRestart();
 void toggleSerialCompat(bool);

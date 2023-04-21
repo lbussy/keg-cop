@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "kegscreen.h"
 
+#define KS_FILENAME "/kstv.json"
+
 int tempReportIteration = 0;
 
 asyncHTTPrequest
@@ -319,7 +321,7 @@ void doKSJSON()
     doc["path"] = KegScreenKeys::kstv_path;
     doc["deviceID"] = app.copconfig.guid;
 
-    File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
+    File file = FILESYSTEM.open(KS_FILENAME, FILE_WRITE);
     if (!file)
     {
         Log.error(F("%s: Failed to open JSON file." CR), featureName);

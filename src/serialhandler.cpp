@@ -26,7 +26,7 @@ SOFTWARE. */
 ESPTelnet SerialAndTelnet;
 #define SERIAL SerialAndTelnet // Use Telnet
 
-void serial()
+void serialBegin()
 {
     char buffer[32];
     strcpy(buffer, (const char *)"Connected to ");
@@ -34,6 +34,8 @@ void serial()
     strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
     SERIAL.begin(BAUD);
+    while (!Serial) {;}
+    _delay(5000);
     printCR(true);
     SERIAL.flush();
 #if !defined(DISABLE_LOGGING)
@@ -83,7 +85,7 @@ void serialRestart()
 {
     Serial.flush();
     Serial.end();
-    serial();
+    serialBegin();
 }
 
 void printTimestamp(Print *_logOutput)

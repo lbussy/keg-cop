@@ -73,30 +73,30 @@ bool loadAppConfig()
 bool saveAppConfig()
 {
     Log.verbose(F("%s Save: Saving configuration." CR), AppKeys::appname);
-    bool saveOK = false;
+    bool retval = false;
 
     // Saves the configuration to a file on FILESYSTEM
     File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
     if (!file)
     {
         Log.error(F("%s Save: Unable to open or create file, partition may be corrupt." CR), AppKeys::appname);
-        saveOK = false;
+        retval = false;
     }
     // Serialize JSON to file
     else if (!serializeAppConfig(file))
     {
         Log.error(F("%s Save: Failed to save configuration, data may be lost." CR), AppKeys::appname);
-        saveOK = false;
+        retval = false;
     }
     else
     {
         Log.verbose(F("%s Save: Configuration saved." CR), AppKeys::appname);
-        saveOK = true;
+        retval = true;
     }
     file.close();
     return true;
 
-    return saveOK;
+    return retval;
 }
 
 bool deserializeAppConfig(Stream &src)
