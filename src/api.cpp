@@ -226,6 +226,12 @@ void InfoAPI::save(JsonObject obj) const
     strcat(_url, secret);
     strcat(_url, a_delim);
     obj["secret"] = _url;
+
+    // Theme
+    strcpy(_url, _base);
+    strcat(_url, theme);
+    strcat(_url, a_delim);
+    obj["theme"] = _url;
 }
 
 void ConfigAPI::save(JsonObject obj) const
@@ -249,12 +255,6 @@ void ConfigAPI::save(JsonObject obj) const
     strcat(_url, taps);
     strcat(_url, a_delim);
     obj["taps"] = _url;
-
-    // Theme
-    strcpy(_url, _base);
-    strcat(_url, theme);
-    strcat(_url, a_delim);
-    obj["theme"] = _url;
 }
 
 void API::save(JsonObject obj) const

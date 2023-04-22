@@ -665,7 +665,7 @@ Both `GET` and `PUT` are valid methods for this endpoint.
 
 ##### GET
 
-- **Address:** {file}`/api/v1/config/theme/`
+- **Address:** {file}`/api/v1/info/theme/`
 - **Valid Methods:** {file}`GET`
 - **Data:** Ignored
 - **Description:** The {file}`GET` method for this endpoint will return the current theme configuration.
@@ -684,7 +684,7 @@ Where:
 
 ##### PUT
 
-- **Address:** {file}`/api/v1/config/theme/`
+- **Address:** {file}`/api/v1/config/info/`
 - **Valid Methods:** {file}`PUT`
 - **Response:**  `200 Ok` on success, `500 Unable to process data` on failure.
 - **Description:** The {file}`PUT` method for this endpoint will allow endpoint configuration.

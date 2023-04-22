@@ -192,7 +192,7 @@ function getTheme(callback = null) { // Get theme settings
 
     if (getThemeRunning) return;
     getThemeRunning = true;
-    url += "/api/v1/config/theme/";
+    url += "/api/v1/info/theme/";
     var theme = $.getJSON(url, function () {})
         .done(function (theme) {
             try {
