@@ -64,6 +64,7 @@ struct InfoAPI
     const char tempcontrol[12] = "tempcontrol";
     const char secret[7] = "secret";
     const char theme[6] = "theme";
+    const char files[6] = "files";
 
     void load(JsonObjectConst);
     void save(JsonObject) const;

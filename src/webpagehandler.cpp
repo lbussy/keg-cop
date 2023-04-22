@@ -628,6 +628,33 @@ void setInfoPageHandlers()
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
+
+    server.on("/api/v1/info/files/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
+
+        // Get file list
+        std::vector<std::string> fileList;
+        File root = SPIFFS.open("/");
+        File file = root.openNextFile();
+        while (file)
+        {
+            fileList.push_back(file.name());
+            file = root.openNextFile();
+        }
+        std::sort(fileList.begin(), fileList.end());
+
+        DynamicJsonDocument doc(3072);
+        JsonArray array = doc.to<JsonArray>();
+        for (const auto &file : fileList)
+        {
+            array.add(file);
+        }
+
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 }
 
 void setConfigurationPageHandlers()

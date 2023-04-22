@@ -232,6 +232,12 @@ void InfoAPI::save(JsonObject obj) const
     strcat(_url, theme);
     strcat(_url, a_delim);
     obj["theme"] = _url;
+
+    // Files
+    strcpy(_url, _base);
+    strcat(_url, files);
+    strcat(_url, a_delim);
+    obj["files"] = _url;
 }
 
 void ConfigAPI::save(JsonObject obj) const
