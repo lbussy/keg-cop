@@ -113,23 +113,68 @@ function listFiles(callback = null) { // Get last reset reason
 }
 
 function downloadDeleteButton(filename, action) {
-    // TODO:    Synchronous XMLHttpRequest on the main thread is
-    //          deprecated because of its detrimental effects to
-    //          the end user’s experience.
     var url = "/api/v1/fs/handlefile/";
     var statusIndicator = $('#status');
     url += "?name=" + filename + "&action=" + action;
     xmlhttp = new XMLHttpRequest();
     if (action == "delete") {
-        xmlhttp.open("POST", url, false);
-        xmlhttp.send();
-        statusIndicator.html(xmlhttp.responseText);
-        listFiles();
+        deleteFile(
+            url,
+            function() {
+                statusIndicator.html(filename + " deleted.");
+                listFiles();
+            },
+            function(errorMessage) {
+                statusIndicator.html(errorMessage);
+            }
+        );
     }
     if (action == "download") {
-        statusIndicator.html("");
+        downloadFile(
+            url,
+            function(blob) {
+                statusIndicator.html(filename + " downloaded.");
+            },
+            function(errorMessage) {
+                statusIndicator.html(errorMessage);
+            }
+        );
         window.open(url, "_blank");
     }
+}
+
+function deleteFile(url, onSuccess, onFailure) {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                const blob = xhr.response;
+                onSuccess();
+            } else {
+                onFailure(`Failed with status code ${xhr.status}`);
+            }
+        }
+    };
+    xhr.open("GET", url, true);
+    xhr.send();
+}
+
+
+function downloadFile(url, onSuccess, onFailure) {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                const blob = xhr.response;
+                onSuccess(blob);
+            } else {
+                onFailure(`Failed with status code ${xhr.status}`);
+            }
+        }
+    };
+    xhr.open("GET", url, true);
+    xhr.responseType = "blob";
+    xhr.send();
 }
 
 function showUpload() {
