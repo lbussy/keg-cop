@@ -159,7 +159,6 @@ function deleteFile(url, onSuccess, onFailure) {
     xhr.send();
 }
 
-
 function downloadFile(url, onSuccess, onFailure) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
