@@ -77,7 +77,7 @@ void startWebServer()
     setActionPageHandlers();
     setInfoPageHandlers();
     setConfigurationPageHandlers();
-    setEditor();
+    setFSPageHandlers();
 
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request)
@@ -628,18 +628,39 @@ void setInfoPageHandlers()
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
+}
 
-    server.on("/api/v1/info/files/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+void setFSPageHandlers()
+{
+    // Filesystem Function Page Handlers
+
+    server.on("/fs/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        if (checkUserWebAuth(request))
+        {
+            AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/fs.htm", "text/html");
+            response->addHeader("Cache-Control","no-cache");
+            response->setCode(200);
+            request->send(response);
+        }
+        else
+        {
+            return request->requestAuthentication();
+        } });
+
+    server.on("/api/v1/fs/listfiles/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
         // Get file list
         std::vector<std::string> fileList;
-        File root = SPIFFS.open("/");
+        File root = FILESYSTEM.open("/");
         File file = root.openNextFile();
         while (file)
         {
-            fileList.push_back(file.name());
+            std::string fileEntry = (std::string)file.name() + "|" + std::to_string(file.size());
+            fileList.push_back(fileEntry);
             file = root.openNextFile();
         }
         std::sort(fileList.begin(), fileList.end());
@@ -655,6 +676,110 @@ void setInfoPageHandlers()
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
+
+    server.on("/api/v1/fs/fsinfo/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
+
+        StaticJsonDocument<64> doc;
+        JsonObject f = doc.createNestedObject("f");
+
+        size_t free = FILESYSTEM.totalBytes() - FILESYSTEM.usedBytes();
+        size_t used = FILESYSTEM.usedBytes();
+        size_t total = FILESYSTEM.totalBytes();
+
+        f["free"] = free;
+        f["used"] = used;
+        f["total"] = total;
+
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
+
+    server.on("/api/v1/fs/handlefile/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        const char * prefix = "[FS Handler]";
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
+        Log.verbose(F("%s Client: %s %s" CR), prefix, request->client()->remoteIP().toString().c_str(), request->url().c_str());
+        if (checkUserWebAuth(request))
+        {
+            if (request->hasParam("name") && request->hasParam("action"))
+            {
+                char fileName[38];   // File path + name
+                strcpy(fileName, "/");
+                strcat(fileName, request->getParam("name")->value().c_str());
+                const char *fileAction = request->getParam("action")->value().c_str();
+
+                Log.verbose(F("%s Action: %s %s?name=%s&action=%s" CR), prefix, request->client()->remoteIP().toString().c_str(), request->url().c_str(), fileName, fileAction);
+
+                if (!FILESYSTEM.exists(fileName))
+                {
+                    Log.error(F("%s File does not exist." CR), prefix);
+                    request->send(400, "text/plain", "File does not exist");
+                }
+                else
+                {
+                    Log.verbose(F("%s File exists." CR), prefix);
+                    if (strcmp(fileAction, "download") == 0) {
+                        Log.notice(F("%s Downloading %s." CR), prefix, fileName);
+                        request->send(FILESYSTEM, fileName, "application/octet-stream");
+                    } else if (strcmp(fileAction, "delete") == 0) {
+                        Log.notice(F("%s Deleting %s." CR), prefix, fileName);
+                        FILESYSTEM.remove(fileName);
+                        request->send(200, "text/plain", "Deleted File: " + String(fileName));
+                    } else {
+                        Log.error(F("%s Invalid action parameter: %s." CR), prefix, fileAction);
+                        request->send(400, "text/plain", "Invalid action param supplied");
+                    }
+                }
+            }
+            else
+            {
+                Log.error(F("%s Filename and action params required." CR), prefix);
+                request->send(400, "text/plain", "Filename and action params required");
+            }
+        }
+        else
+        {
+            return request->requestAuthentication();
+        } });
+
+    server.on("/api/v1/fs/upload/", KC_HTTP_POST, [](AsyncWebServerRequest *request)
+        { request->send(200);
+      }, handleUpload);
+}
+
+void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
+{
+    const char * prefix = "[Upload]";
+    if (checkUserWebAuth(request))
+    {
+        {
+            if (!index)
+            {
+                Log.verbose(F("%s Client: %s/%s" CR), prefix, request->client()->remoteIP().toString().c_str(), filename.c_str());
+                String _filename = "/" + filename;
+                request->_tempFile = SPIFFS.open(_filename, "w");
+            }
+            if (request->_tempFile)
+            {
+                if (len)
+                {
+                    request->_tempFile.write(data, len);
+                }
+                if (final)
+                {
+                    request->_tempFile.close();
+                    Log.notice(F("%s Upload of %s complete." CR), prefix, filename.c_str());
+                }
+            }
+        }
+    }
+    else
+    {
+        return request->requestAuthentication();
+    }  
 }
 
 void setConfigurationPageHandlers()
@@ -736,8 +861,7 @@ void setConfigurationPageHandlers()
         } });
 
     server.on("/api/v1/config/bulkload/", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-        send_not_allowed(request); });
+              { send_not_allowed(request); });
 
     server.on("/api/v1/config/bulkload/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
@@ -791,11 +915,6 @@ void setConfigurationPageHandlers()
         send_ok(request); });
 
     // Tap Handlers^
-}
-
-void setEditor()
-{
-    configureEditPages(server, SPIFFSEDITUSER, SPIFFSEDITPW, "edit");
 }
 
 void stopWebServer()
@@ -2216,13 +2335,13 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
 
     // Secret processing
     //
-    const char * needHeader = "X-KegCop-Secret";
+    const char *needHeader = "X-KegCop-Secret";
     if (request->hasHeader(needHeader))
     {
         didProcess = true;
-        AsyncWebHeader* bulkLoadHeader = request->getHeader(needHeader);
-        const char * headerVal = bulkLoadHeader->value().c_str();
-        //Log.notice(F("[DEBUG] Secret Check: Testing[%s]:[%s]." CR), app.copconfig.guid, headerVal);
+        AsyncWebHeader *bulkLoadHeader = request->getHeader(needHeader);
+        const char *headerVal = bulkLoadHeader->value().c_str();
+        // Log.notice(F("[DEBUG] Secret Check: Testing[%s]:[%s]." CR), app.copconfig.guid, headerVal);
         if (strcmp(headerVal, app.copconfig.guid) == 0)
         {
             didPass = true;
@@ -2261,15 +2380,16 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
     bool didPass = false;
     bool didProcess = false;
 
-    if (request->hasHeader("X-KegCop-BulkLoad-Type")) {
-        AsyncWebHeader* bulkLoadHeader = request->getHeader("X-KegCop-BulkLoad-Type");
-        const char * headerVal = bulkLoadHeader->value().c_str();
+    if (request->hasHeader("X-KegCop-BulkLoad-Type"))
+    {
+        AsyncWebHeader *bulkLoadHeader = request->getHeader("X-KegCop-BulkLoad-Type");
+        const char *headerVal = bulkLoadHeader->value().c_str();
         if (!strcmp(headerVal, "AppConfig") == 0)
         {
             Log.verbose(F("[DEBUG] handleJson() with %s" CR), bulkLoadHeader->value().c_str());
             didPass = true;
             bool oldImperial = app.copconfig.imperial;
-            const char * oldHostName = app.copconfig.hostname;
+            const char *oldHostName = app.copconfig.hostname;
 
             // Loop through all parameters
             int params = request->params();
@@ -2287,7 +2407,7 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
                     //
                     if (strcmp(name, "data") == 0)
                     {
-                        //if (!mergeJsonString(value, JSON_FLOW))
+                        // if (!mergeJsonString(value, JSON_FLOW))
                         if (!1)
                         {
                             Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
@@ -2300,37 +2420,37 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
                     }
                 }
             }
-    //         // Did we change copconfig.imperial?
-    //         if (app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
-    //         {
-    //             // We have to convert config manually since it's already changed in app.json
-    //             app.temps.setpoint = convertCtoF(app.temps.setpoint);
-    //             for (int i = 0; i < NUMSENSOR; i++)
-    //             {
-    //                 if (!app.temps.calibration[i] == 0)
-    //                     app.temps.calibration[i] = convertOneCtoF(app.temps.calibration[i]);
-    //             }
-    //             convertFlowtoImperial();
-    //         }
-    //         else if (!app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
-    //         {
-    //             // We have to convert config manually since it's already changed in app.json
-    //             app.temps.setpoint = convertFtoC(app.temps.setpoint);
-    //             for (int i = 0; i < NUMSENSOR; i++)
-    //             {
-    //                 if (!app.temps.calibration[i] == 0)
-    //                     app.temps.calibration[i] = convertOneFtoC(app.temps.calibration[i]);
-    //             }
-    //             convertFlowtoMetric();
-    //         }
-    //         // Did we change copconfig.hostname?
-    //         if (!strcmp(oldHostName, app.copconfig.hostname) == 0)
-    //         {
-    //             // TODO:  Do change hostname processing??
-    //         }
-    //         setDoSaveApp();
-    //         send_ok(request);
-    //         break;
+            //         // Did we change copconfig.imperial?
+            //         if (app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
+            //         {
+            //             // We have to convert config manually since it's already changed in app.json
+            //             app.temps.setpoint = convertCtoF(app.temps.setpoint);
+            //             for (int i = 0; i < NUMSENSOR; i++)
+            //             {
+            //                 if (!app.temps.calibration[i] == 0)
+            //                     app.temps.calibration[i] = convertOneCtoF(app.temps.calibration[i]);
+            //             }
+            //             convertFlowtoImperial();
+            //         }
+            //         else if (!app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
+            //         {
+            //             // We have to convert config manually since it's already changed in app.json
+            //             app.temps.setpoint = convertFtoC(app.temps.setpoint);
+            //             for (int i = 0; i < NUMSENSOR; i++)
+            //             {
+            //                 if (!app.temps.calibration[i] == 0)
+            //                     app.temps.calibration[i] = convertOneFtoC(app.temps.calibration[i]);
+            //             }
+            //             convertFlowtoMetric();
+            //         }
+            //         // Did we change copconfig.hostname?
+            //         if (!strcmp(oldHostName, app.copconfig.hostname) == 0)
+            //         {
+            //             // TODO:  Do change hostname processing??
+            //         }
+            //         setDoSaveApp();
+            //         send_ok(request);
+            //         break;
         }
         else if (!strcmp(headerVal, "FlowConfig") == 0)
         {
@@ -2354,7 +2474,7 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
                     //
                     if (strcmp(name, "data") == 0)
                     {
-                        //if (!mergeJsonString(value, JSON_FLOW))
+                        // if (!mergeJsonString(value, JSON_FLOW))
                         if (!1)
                         {
                             Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
@@ -2368,36 +2488,36 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
                 }
             }
 
-    //         // Did we change imperial?
-    //         if (flow.imperial && (!oldImperial == flow.imperial))
-    //         {
-    //             convertConfigtoImperial();
-    //             // We have to convert flow manually since it's already changed in flow.json
-    //             for (int i = 0; i < NUMTAPS; i++)
-    //             {
-    //                 for (int i = 0; i < NUMTAPS; i++)
-    //                 {
-    //                     flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu); // Reverse for pulses
-    //                     flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
-    //                     flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
-    //                 }
-    //             }
-    //         }
-    //         else if (!flow.imperial && (!oldImperial == flow.imperial))
-    //         {
-    //             convertConfigtoMetric();
-    //             // We have to convert flow manually since it's already changed in flow.json
-    //             for (int i = 0; i < NUMTAPS; i++)
-    //             {
-    //                 flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu); // Reverse for pulses
-    //                 flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
-    //                 flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
-    //             }
-    //         }
-    //         setDoSaveFlow();
-    //         send_ok(request);
-    //         break;
-    //     }
+            //         // Did we change imperial?
+            //         if (flow.imperial && (!oldImperial == flow.imperial))
+            //         {
+            //             convertConfigtoImperial();
+            //             // We have to convert flow manually since it's already changed in flow.json
+            //             for (int i = 0; i < NUMTAPS; i++)
+            //             {
+            //                 for (int i = 0; i < NUMTAPS; i++)
+            //                 {
+            //                     flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu); // Reverse for pulses
+            //                     flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
+            //                     flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
+            //                 }
+            //             }
+            //         }
+            //         else if (!flow.imperial && (!oldImperial == flow.imperial))
+            //         {
+            //             convertConfigtoMetric();
+            //             // We have to convert flow manually since it's already changed in flow.json
+            //             for (int i = 0; i < NUMTAPS; i++)
+            //             {
+            //                 flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu); // Reverse for pulses
+            //                 flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
+            //                 flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
+            //             }
+            //         }
+            //         setDoSaveFlow();
+            //         send_ok(request);
+            //         break;
+            //     }
         }
         else
         {
@@ -2406,7 +2526,8 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
             send_not_allowed(request);
         }
     }
-    else {
+    else
+    {
         Log.verbose(F("[DEBUG] handleJson() No X-KegCop-BulkLoad-Type header passed." CR));
     }
 
@@ -2453,4 +2574,21 @@ void send_ok(AsyncWebServerRequest *request)
 {
     request->header("Cache-Control: no-store");
     request->send(200, F("text/plain"), F("Ok"));
+}
+
+bool checkUserWebAuth(AsyncWebServerRequest *request)
+{
+    bool isAuthenticated = false;
+    const char *prefix = "[WebAuth]";
+
+    if (request->authenticate(SPIFFSEDITUSER, SPIFFSEDITPW))
+    {
+        Log.verbose(F("%s authenticated via username and password." CR), prefix);
+        isAuthenticated = true;
+    }
+    else
+    {
+        Log.verbose(F("%s User failed authentication." CR), prefix);
+    }
+    return isAuthenticated;
 }
