@@ -135,7 +135,6 @@ void setup()
                            { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
     doFanControlTicker.attach(TEMPLOOP, []()
                               { loopTstat(TS_TYPE_TOWER); }); // Update fan control loop
-    sendTIOTaps();                                            // Send initial Taplist.io keg levels
 
 #if !defined(DISABLE_LOGGING)
     if (app.copconfig.serial)
@@ -145,6 +144,7 @@ void setup()
 #else
     nullDoc("d");
 #endif
+    sendTIOTaps(); // Send initial Taplist.io keg levels
 }
 
 void loop()
