@@ -35,7 +35,7 @@ void serialBegin()
     SERIAL.setWelcomeMsg(buffer);
     SERIAL.begin(BAUD);
     while (!Serial) {;}
-    _delay(5000);
+    delay(5000);
     printCR(true);
     SERIAL.flush();
 #if !defined(DISABLE_LOGGING)
@@ -61,9 +61,9 @@ void serialStop()
     SERIAL.flush();
     SERIAL.disconnectClient();
     SERIAL.end();
-     _delay(500);
+     delay(500);
     Serial.begin(BAUD);
-    _delay(500);
+    delay(500);
     #if !defined(DISABLE_LOGGING)
     if (app.copconfig.serial)
     {

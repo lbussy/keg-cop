@@ -98,11 +98,11 @@ void doWiFi(bool dontUseStoredCreds)
             // Hit timeout on voluntary portal
             blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
-            _delay(3000);
+            delay(3000);
             digitalWrite(LED, HIGH);
             Log.notice(F("Hit timeout for on-demand portal, exiting." CR));
             resetController();
-            _delay(1000);
+            delay(1000);
         }
     }
     else
@@ -116,11 +116,11 @@ void doWiFi(bool dontUseStoredCreds)
             killDRD();
             blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
-            _delay(3000);
+            delay(3000);
             digitalWrite(LED, HIGH);
             Log.warning(F("Restarting." CR));
             resetController();
-            _delay(1000);
+            delay(1000);
         }
         else
         {
@@ -319,7 +319,7 @@ void wifiFailRestart()
 {
     killDRD();
     ESP.restart();
-    _delay(300);
+    delay(300);
 }
 
 void stopNetwork()

@@ -50,12 +50,6 @@ void initPourPulseKick()
     }
 }
 
-void _delay(unsigned long ulDelay)
-{
-    // Safe semi-blocking delay
-    vTaskDelay(ulDelay); // Builtin to ESP32
-}
-
 void resetController()
 {
     Log.notice(F("Reboot request - rebooting system." CR));
@@ -63,7 +57,7 @@ void resetController()
     saveAppConfig();
     saveFlowConfig();
     ESP.restart();
-    _delay(300);
+    delay(300);
 }
 
 void setDoReset()
