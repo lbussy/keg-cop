@@ -57,7 +57,7 @@ void connectRPints()
                     app.rpintstarget.host,
                     app.rpintstarget.port);
         LCBUrl url;
-        if (url.isMDNS(app.rpintstarget.host))
+        if (url.isMDNS(app.rpintstarget.host) && url.isValidIP(url.getIP(app.rpintstarget.host).toString().c_str()))
         {
             Log.verbose(F("MQTT: Resolved mDNS broker name: %s (%s)" CR),
                         app.rpintstarget.host,
@@ -148,6 +148,7 @@ void onRPintsConnect(bool sessionPresent)
 void onRPintsDisconnect(AsyncMqttClientDisconnectReason reason)
 {
     Log.verbose(F("Disconnected from MQTT." CR));
+    setDoRPintsConnect();
 }
 
 void onRPintsPublish(uint16_t packetId)
