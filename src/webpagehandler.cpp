@@ -2341,7 +2341,6 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
         didProcess = true;
         AsyncWebHeader *bulkLoadHeader = request->getHeader(needHeader);
         const char *headerVal = bulkLoadHeader->value().c_str();
-        // Log.notice(F("[DEBUG] Secret Check: Testing[%s]:[%s]." CR), app.copconfig.guid, headerVal);
         if (strcmp(headerVal, app.copconfig.guid) == 0)
         {
             didPass = true;
@@ -2386,7 +2385,6 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
         const char *headerVal = bulkLoadHeader->value().c_str();
         if (!strcmp(headerVal, "AppConfig") == 0)
         {
-            Log.verbose(F("[DEBUG] handleJson() with %s" CR), bulkLoadHeader->value().c_str());
             didPass = true;
             bool oldImperial = app.copconfig.imperial;
             const char *oldHostName = app.copconfig.hostname;
@@ -2401,7 +2399,7 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
                     // Process any p->name().c_str() / p->value().c_str() pairs
                     const char *name = p->name().c_str();
                     const char *value = p->value().c_str();
-                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value); // DEBUG
+                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
                     // Bulk Load mode Set
                     //
@@ -2454,7 +2452,6 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
         }
         else if (!strcmp(headerVal, "FlowConfig") == 0)
         {
-            Log.verbose(F("[DEBUG] handleJson()) with %s" CR), bulkLoadHeader->value().c_str());
             didPass = true;
             bool oldImperial = flow.imperial;
 
@@ -2468,7 +2465,7 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
                     // Process any p->name().c_str() / p->value().c_str() pairs
                     const char *name = p->name().c_str();
                     const char *value = p->value().c_str();
-                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value); // DEBUG
+                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
 
                     // Bulk Load mode Set
                     //
@@ -2522,13 +2519,12 @@ HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
         else
         {
             // No valid bulk load type passed
-            Log.verbose(F("[DEBUG] handleJson() No valid X-KegCop-BulkLoad-Type bulk load header passed: %s" CR), bulkLoadHeader->value().c_str());
             send_not_allowed(request);
         }
     }
     else
     {
-        Log.verbose(F("[DEBUG] handleJson() No X-KegCop-BulkLoad-Type header passed." CR));
+        //
     }
 
     if (!didProcess)
