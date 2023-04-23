@@ -23,7 +23,7 @@ var theme = localStorage.getItem('theme');
 if (theme) {
     document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
     if (is404) {
-        document.getElementById('theme_aux').href = theme.css || "/cerulean_aux.css";
+        document.getElementById('theme_aux').href = "/" + theme.css || "/cerulean_aux.css";
     } else {
         document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
     }
@@ -151,8 +151,8 @@ function setTheme(selection, reload = false) {
 
     var theme = {};
     var themes = [
-        {name:"cerulean", displayname: "Cerulean (light)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", css: "cerulean_aux.css", color: "#FFFFFF"},
-        {name:"superhero", displayname: "Superhero (dark)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", css: "superhero_aux.css",  color: "#000000"},
+        {name:"cerulean", displayname: "Cerulean (light)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css", css: "/cerulean_aux.css", color: "#FFFFFF"},
+        {name:"superhero", displayname: "Superhero (dark)", url: "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/superhero/bootstrap.min.css", css: "/superhero_aux.css",  color: "#000000"},
     ];
 
     try {
@@ -260,7 +260,6 @@ async function chooseTempMenu(callback = null) {
                 $('#displaytemplink').toggle();
             }
         } else {
-            console.info("A 405 here for 'tempcontrol' is because the feature is turned off.");
             sessionStorage.setItem("useTemps", false);
             if ($('#displaytemplink').is(':visible')) {
                 $('#displaytemplink').toggle();
