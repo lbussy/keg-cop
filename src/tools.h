@@ -40,7 +40,6 @@ SOFTWARE. */
 #include <Arduino.h>
 
 void initPourPulseKick();
-void _delay(unsigned long);
 void resetController();
 void setDoWiFiReset();
 void setDoReset();

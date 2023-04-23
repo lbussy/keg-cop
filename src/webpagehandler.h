@@ -38,7 +38,6 @@ SOFTWARE. */
 #include "resetreasons.h"
 #include "api.h"
 
-#include <editserver.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <ArduinoLog.h>
@@ -53,7 +52,7 @@ void setAPIPageHandlers();
 void setActionPageHandlers();
 void setInfoPageHandlers();
 void setConfigurationPageHandlers();
-void setEditor();
+void setFSPageHandlers();
 void stopWebServer();
 
 enum HANDLER_STATE
@@ -80,9 +79,13 @@ HANDLER_STATE handleThemePost(AsyncWebServerRequest *);
 HANDLER_STATE handleJson(AsyncWebServerRequest *);
 #endif
 
+
 void send_not_allowed(AsyncWebServerRequest *request);
 void send_failed(AsyncWebServerRequest *request);
 void send_json(AsyncWebServerRequest *request, String &json);
 void send_ok(AsyncWebServerRequest *request);
+std::string humanReadableSize(const size_t bytes);
+bool checkUserWebAuth(AsyncWebServerRequest *request);
+void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
 
 #endif // _WEBPAGEHANDLER_H

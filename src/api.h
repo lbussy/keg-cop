@@ -63,6 +63,8 @@ struct InfoAPI
     const char sensors[8] = "sensors";
     const char tempcontrol[12] = "tempcontrol";
     const char secret[7] = "secret";
+    const char theme[6] = "theme";
+    const char files[6] = "files";
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -73,7 +75,6 @@ struct ConfigAPI
     // Stores configuration API information
     const char base[7] = "config";
     const char settings[9] = "settings";
-    const char theme[6] = "theme";
     const char taps[5] = "taps";
 
     void load(JsonObjectConst);

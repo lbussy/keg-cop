@@ -117,6 +117,7 @@ These information provider pages exist within the Info API tree:
 - [Pulses]
 - [Sensors]
 - [Secret]
+- [Theme]
 
 #### Reset Reason
 
@@ -318,7 +319,7 @@ Where:
 - `sensors` = An array of temperature sensors denoting the `name`, `enable` status, and current `value` of each.
 - `displayenabled` = Boolean to display temperatures on the web UI or not.
 
-#### Sensors
+#### Secret
 
 - **Address:** {file}`/api/v1/info/secret/`
 - **Valid Methods:** {file}`ANY`
@@ -336,6 +337,23 @@ Where:
 Where:
 
 - `secret` = Hexidecimal string for representing controller GUID.
+
+#### Files
+
+- **Address:** {file}`/api/v1/info/files/`
+- **Valid Methods:** {file}`ANY`
+- **Data:** Ignored
+- **Description:** Filesystem file list.
+- **Error Message:** None.
+- **Response:**
+
+```json
+[
+  "README.md",
+  "about.htm.gz",
+  ...
+}
+```
 
 ### Configuration Page Handlers
 
@@ -373,7 +391,8 @@ Both `GET` and `PUT` are valid methods for this endpoint.
         "controlnum": 0,
         "serial": false,
         "imperial": true,
-        "tapsolenoid": true
+        "tapsolenoid": true,
+        "theme": "cerulean"
     },
     "ota": {
         "dospiffs1": false,
@@ -444,6 +463,7 @@ The PUT should follow standard form submission data format, with the following i
 - `controlnum` - A 1-based index of the controller sequence.  This should be unique in the brewery and will help identify the same tapid across multiple controllers.
 - `imperial` - A boolean representing imperial versus metric units to be used by the controller.  Changing this value will result in a conversion of all stored values to the target units.  Multiple toggles could result in accrued rounding errors and some loss of accuracy.
 - `tapsolenoid` - A simple control point intended to control a local solenoid by an upstream system or the web UI.
+- `theme` - Any pre-configured Bootstrap-compliant theme.
 
 ###### temps
 
@@ -665,11 +685,11 @@ Both `GET` and `PUT` are valid methods for this endpoint.
 
 ##### GET
 
-- **Address:** {file}`/api/v1/config/theme/`
-- **Valid Methods:** {file}`GET`
+- **Address:** {file}`/api/v1/info/theme/`
+- **Valid Methods:** {file}`ANY`
 - **Data:** Ignored
 - **Description:** The {file}`GET` method for this endpoint will return the current theme configuration.
-- **Error Message:** Any method other than `PUT` or `GET` will result in a `405 Method Not Allowed` error.
+- **Error Message:** None; any method will return valid JSON.
 - **Response:**
 
 ```json
@@ -679,19 +699,6 @@ Both `GET` and `PUT` are valid methods for this endpoint.
 ```
 
 Where:
-
-- `theme` = Any pre-configured Bootstrap-compliant theme
-
-##### PUT
-
-- **Address:** {file}`/api/v1/config/theme/`
-- **Valid Methods:** {file}`PUT`
-- **Response:**  `200 Ok` on success, `500 Unable to process data` on failure.
-- **Description:** The {file}`PUT` method for this endpoint will allow endpoint configuration.
-- **Error Message:** Any method other than {file}`PUT` or {file}`GET` will result in a `405 Method Not Allowed` error.
-- **Data:**
-
-The PUT should follow standard form submission data format, with the following item available.
 
 - `theme` = Any pre-configured Bootstrap-compliant theme
 
