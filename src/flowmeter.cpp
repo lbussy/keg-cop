@@ -141,14 +141,13 @@ void logFlow()
                 }
                 else
                 { // Log a pour
+                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
-                    setDoSaveFlow();
                     setQueuePourReport(i, pour);        // Queue upstream pour report
                     setQueuePulseReport(i, pulseCount); // Queue upstream pulse report
                     app.taplistio.update = true;   // Queue TIO report
                     setDoSaveFlow();
-                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                 }
             }
             else
