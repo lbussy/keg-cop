@@ -51,25 +51,6 @@ void setup()
     // Set LED pin
     pinMode(LED, OUTPUT);
 
-    // Check if portal is requested
-    bool detectdrd = drd->detectDoubleReset();
-    if (!app.copconfig.nodrd && detectdrd)
-    {
-        Log.notice(F("DRD: Portal requested." CR));
-        doWiFi(true);
-    }
-    else if (digitalRead(RESETWIFI) == LOW)
-    {
-        Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
-        doWiFi(true);
-    }
-    else
-    {
-        Log.notice(F("Starting WiFi." CR));
-        app.copconfig.nodrd = false;
-        doWiFi();
-    }
-
     // Set pins for relays
     pinMode(SOLENOID, OUTPUT);
     if (app.temps.tfancontrolenabled)
@@ -82,8 +63,6 @@ void setup()
     }
     pinMode(COOL, OUTPUT);
     digitalWrite(COOL, (app.temps.coolonhigh) ? LOW : HIGH);
-
-    setClock(); // Set NTP Time
 
     // Initialize flowmeters before checking for FILESYSTEM update
     if (!initFlow())
@@ -108,6 +87,27 @@ void setup()
     }
     saveFlowConfig();
     saveAppConfig();
+
+    // Check if portal is requested
+    bool detectdrd = drd->detectDoubleReset();
+    if (!app.copconfig.nodrd && detectdrd)
+    {
+        Log.notice(F("DRD: Portal requested." CR));
+        doWiFi(true);
+    }
+    else if (digitalRead(RESETWIFI) == LOW)
+    {
+        Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
+        doWiFi(true);
+    }
+    else
+    {
+        Log.notice(F("Starting WiFi." CR));
+        app.copconfig.nodrd = false;
+        doWiFi();
+    }
+
+    setClock(); // Set NTP Time
 
     if (!app.ota.badfw)
         execspiffs(); // Check for pending FILESYSTEM update
