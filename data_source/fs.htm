@@ -83,15 +83,38 @@
                 <div class="card-body">
 
                     <h5>File System Info:</h5>
-                    <p id="fsinfo">
-                        Free Storage: <span id="freespiffs"></span> <br />
-                        Used Storage: <span id="usedspiffs"></span> <br />
-                        Total Storage: <span id="totalspiffs"></span>
-                    </p>
+
+                    <table id="fsinfo" class="table table-hover">
+                        <tbody>
+                            <tr class="table-firmware table-primary">
+                                <th></th>
+                                <th scope="row">Free Storage:</th>
+                                <td>
+                                    <div id="freespiffs">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-default">
+                                <th></th>
+                                <th scope="row">Used Storage:</th>
+                                <td>
+                                    <div id="usedspiffs">... loading</div>
+                                </td>
+                            </tr>
+                            <tr class="table-firmware table-primary">
+                                <th></th>
+                                <th scope="row">Total Storage:</th>
+                                <td>
+                                    <div id="totalspiffs">... loading</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                     <p>
                         <button onclick="listFiles()">List Files</button>
                         <button onclick="showUpload()">Upload File</button>
                     </p>
+
                     <p id="status"></p>
                     <p id="detailsHeader"></p>
                     <p id="details"></p>
