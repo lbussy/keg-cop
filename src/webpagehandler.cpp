@@ -1313,7 +1313,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
 
             // Sensor settings
             //
-            if (strcmp(name, "roomcal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::roomcal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -1348,7 +1348,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "towercal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::towercal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -1383,7 +1383,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "uppercal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::uppercal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -1418,7 +1418,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "lowercal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::lowercal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -1453,7 +1453,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (strcmp(name, "kegcal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::kegcal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))

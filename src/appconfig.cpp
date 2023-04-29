@@ -387,16 +387,16 @@ void Temperatures::save(JsonObject obj) const
     obj[AppKeys::tfancontrolenabled] = tfancontrolenabled;
     obj[AppKeys::tfansetpoint] = tfansetpoint;
     obj[AppKeys::tfanonhigh] = tfanonhigh;
-    obj["roomenabled"] = enabled[0];
-    obj["roomcal"] = calibration[0];
-    obj["towerenabled"] = enabled[1];
-    obj["towercal"] = calibration[1];
-    obj["upperenabled"] = enabled[2];
-    obj["uppercal"] = calibration[2];
-    obj["lowerenabled"] = enabled[3];
-    obj["lowercal"] = calibration[3];
-    obj["kegenabled"] = enabled[4];
-    obj["kegcal"] = calibration[4];
+    obj[AppKeys::roomenabled] = enabled[0];
+    obj[AppKeys::roomcal] = calibration[0];
+    obj[AppKeys::towerenabled] = enabled[1];
+    obj[AppKeys::towercal] = calibration[1];
+    obj[AppKeys::upperenabled] = enabled[2];
+    obj[AppKeys::uppercal] = calibration[2];
+    obj[AppKeys::lowerenabled] = enabled[3];
+    obj[AppKeys::lowercal] = calibration[3];
+    obj[AppKeys::kegenabled] = enabled[4];
+    obj[AppKeys::kegcal] = calibration[4];
 }
 
 void Temperatures::load(JsonObjectConst obj)
@@ -466,94 +466,94 @@ void Temperatures::load(JsonObjectConst obj)
         tfanonhigh = obj[AppKeys::tfanonhigh];
     }
 
-    if (obj["roomenabled"].isNull())
+    if (obj[AppKeys::roomenabled].isNull())
     {
         enabled[0] = false;
     }
     else
     {
-        enabled[0] = obj["roomenabled"];
+        enabled[0] = obj[AppKeys::roomenabled];
     }
 
-    if (obj["roomcal"].isNull())
+    if (obj[AppKeys::roomcal].isNull())
     {
         calibration[0] = 0.0;
     }
     else
     {
-        calibration[0] = obj["roomcal"];
+        calibration[0] = obj[AppKeys::roomcal];
     }
 
-    if (obj["towerenabled"].isNull())
+    if (obj[AppKeys::towerenabled].isNull())
     {
         enabled[1] = false;
     }
     else
     {
-        enabled[1] = obj["towerenabled"];
+        enabled[1] = obj[AppKeys::towerenabled];
     }
 
-    if (obj["towercal"].isNull())
+    if (obj[AppKeys::towercal].isNull())
     {
         calibration[1] = 0.0;
     }
     else
     {
-        calibration[1] = obj["towercal"];
+        calibration[1] = obj[AppKeys::towercal];
     }
 
-    if (obj["upperenabled"].isNull())
+    if (obj[AppKeys::upperenabled].isNull())
     {
         enabled[2] = false;
     }
     else
     {
-        enabled[2] = obj["upperenabled"];
+        enabled[2] = obj[AppKeys::upperenabled];
     }
 
-    if (obj["uppercal"].isNull())
+    if (obj[AppKeys::uppercal].isNull())
     {
         calibration[2] = 0.0;
     }
     else
     {
-        calibration[2] = obj["uppercal"];
+        calibration[2] = obj[AppKeys::uppercal];
     }
 
-    if (obj["lowerenabled"].isNull())
+    if (obj[AppKeys::lowerenabled].isNull())
     {
         enabled[3] = false;
     }
     else
     {
-        enabled[3] = obj["lowerenabled"];
+        enabled[3] = obj[AppKeys::lowerenabled];
     }
 
-    if (obj["lowercal"].isNull())
+    if (obj[AppKeys::lowercal].isNull())
     {
         calibration[3] = 0.0;
     }
     else
     {
-        calibration[3] = obj["lowercal"];
+        calibration[3] = obj[AppKeys::lowercal];
     }
 
-    if (obj["kegenabled"].isNull())
+    if (obj[AppKeys::kegenabled].isNull())
     {
         enabled[4] = false;
     }
     else
     {
-        enabled[4] = obj["kegenabled"];
+        enabled[4] = obj[AppKeys::kegenabled];
     }
 
-    if (obj["kegcal"].isNull())
+    if (obj[AppKeys::kegcal].isNull())
     {
         calibration[4] = 0.0;
     }
     else
     {
-        calibration[4] = obj["kegcal"];
+        calibration[4] = obj[AppKeys::kegcal];
     }
 }
 
