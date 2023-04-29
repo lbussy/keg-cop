@@ -54,6 +54,7 @@ void setInfoPageHandlers();
 void setConfigurationPageHandlers();
 void setFSPageHandlers();
 void stopWebServer();
+static const char* getRealm(){ return AppKeys::appname; }
 
 enum HANDLER_STATE
 {
