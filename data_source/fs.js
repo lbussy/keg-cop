@@ -70,7 +70,6 @@ function getFree() {
 }
 
 function listFiles(callback = null) { // Get last reset reason
-    var statusIndicator = $('#status');
     var detailsHeader = $('#detailsHeader');
     var details = $('#details');
 
