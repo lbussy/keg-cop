@@ -122,6 +122,7 @@ function downloadDeleteButton(filename, action) {
             function() {
                 statusIndicator.html(filename + " deleted.");
                 listFiles();
+                // TODO:  Timeout this message
             },
             function(errorMessage) {
                 statusIndicator.html(errorMessage);
@@ -181,15 +182,28 @@ function showUpload() {
     var details = $('#details');
     detailsHeader.html("<h5>Upload File<h5>");
     statusIndicator.html("");
+    // var uploadform =
+    //     '<form method = "POST" enctype="multipart/form-data">' +
+    //     '<input type="file" name="data"/>' +
+    //     '<input type="submit" name="upload" value="Upload" title = "Upload File"></form>'
+    // details.html(uploadform);
     var uploadform =
-        '<form method = "POST" enctype="multipart/form-data">' +
-        '<input type="file" name="data"/>' +
-        '<input type="submit" name="upload" value="Upload" title = "Upload File"></form>'
-    details.html(uploadform);
-    var uploadform =
+        '<div class="input-group">' +
         '<form id="upload_form" enctype="multipart/form-data" method="post">' +
-        '<input type="file" name="uploadfile" id="uploadfile" onchange="uploadFile()"><br>' +
-        '<progress id="progressBar" value="0" max="100" style="width:300px;"></progress>' +
+
+        '<div class="input-group mb-3">' +
+        '<input type="file" name="uploadfile" id="uploadfile" class="form-control" onchange="uploadFile()">' +
+        '<div class="input-group-append">' +
+        '<span type="button" class="btn btn-secondary internal-action" onclick="listFiles()">Cancel</span>' +
+        '</div>' +
+        '</div>' +
+
+        '<br>' +
+
+        '<div class="progress">' +
+        '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>' +
+        '</div>' +
+
         '<h5 id="status"></h5>' +
         '<p id="loaded_n_total"></p>' +
         '</form>';
@@ -205,6 +219,7 @@ function uploadFile() {
     var details = $('#details');
 
     var file = fileInput[0].files[0];
+    var fileName = fileInput.val().split('/').pop().split('\\').pop();
 
     // Call the uploadFile function with the appropriate event handlers
     doUpload(file, "/api/v1/fs/upload/", function (event) {
@@ -212,6 +227,7 @@ function uploadFile() {
         var progress = Math.round((event.loaded / event.total) * 100);
         var loaded = event.loaded;
         loadedNtotal.html("Uploaded " + loaded + " bytes.");
+        progressIndicator.value(progress);
         progressIndicator.text(progress + '%');
         statusIndicator.html(progress + "% uploaded, please wait");
         if (progress >= 100) {
@@ -226,7 +242,8 @@ function uploadFile() {
         progressIndicator.value = 0;
         xmlhttp = new XMLHttpRequest();
         listFiles();
-        statusIndicator.html("File Uploaded.");
+        statusIndicator.html(fileName + " uploaded.");
+        // TODO: Timeout text
         detailsHeader.html("<h3>Files<h3>");
         details.html(xmlhttp.responseText);
     }, function () {
