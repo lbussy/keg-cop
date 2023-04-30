@@ -90,8 +90,8 @@ function listFiles(callback = null) { // Get last reset reason
                 var filesString = "<table><tr><th align='left'>Name</th><th align='left'>Size</th><th></th><th></th></tr>"
                 $.each(files, function (index, file) {
                     filesString += "<tr align='left'><td>" + file.split('|')[0] + "</td><td>" + humanReadableSize(parseInt(file.split('|')[1])) + "</td>";
-                    filesString += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"downloadDeleteButton(\'" + file.split('|')[0] + "\', \'download\')\">Download</button>";
-                    filesString += "<td><button type=\"button\" class=\"btn btn-warning\"onclick=\"downloadDeleteButton(\'" + file.split('|')[0] + "\', \'delete\')\">Delete</button></tr>";
+                    filesString += "<td><button type=\"button\" class=\"btn btn-primary internal-action\" onclick=\"downloadDeleteButton(\'" + file.split('|')[0] + "\', \'download\')\">Download</button>";
+                    filesString += "<td><button type=\"button\" class=\"btn btn-warning internal-action\"onclick=\"downloadDeleteButton(\'" + file.split('|')[0] + "\', \'delete\')\">Delete</button></tr>";
                 });
                 filesString += "</table>";
                 details.html(filesString);
