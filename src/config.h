@@ -126,7 +126,7 @@ SOFTWARE. */
 // Reset controller every 42 days
 //
 #ifndef ESPREBOOT
-#define ESPREBOOT (uint32_t) 42 * 24 * 60 * 60 * 1000 // Reboot every X days
+#define ESPREBOOT (unsigned long) 42 * 24 * 60 * 60 * 1000 // Reboot every X days
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ SOFTWARE. */
 // Reset NTP every 24 hours
 //
 #ifndef NTPRESET
-#define NTPRESET (uint32_t)86400000
+#define NTPRESET (unsigned long) 24 * 60 * 60 * 1000
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -146,7 +146,7 @@ SOFTWARE. */
 // Minumum Free Heap, triggers reset if below this value
 //
 #ifndef MINFREEHEAP
-#define MINFREEHEAP 10000
+#define MINFREEHEAP (unsigned long)10000
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
