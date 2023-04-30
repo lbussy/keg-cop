@@ -69,9 +69,20 @@ function getFree() {
 
 }
 
+function toggleFiles() {
+    if($('#fileList').is(':visible')) {
+        $("#listFiles").html("List Files");
+        $("#fileList").hide();
+    } else {
+        $("#listFiles").html("Hide Files");
+        $("#fileList").show();
+        listFiles();
+    }
+}
+
 function listFiles(callback = null) { // Get last reset reason
-    var detailsHeader = $('#detailsHeader');
-    var details = $('#details');
+    var fileHeader = $('#fileHeader');
+    var fileDetails = $('#fileDetails');
 
     if (loadFilesReasonRunning) return;
     loadFilesReasonRunning = true;
@@ -86,7 +97,7 @@ function listFiles(callback = null) { // Get last reset reason
     })
         .done(function (files) {
             try {
-                detailsHeader.html("<h5>File System Files:<h5>");
+                fileHeader.html("<h5>File System Files:<h5>");
                 var filesString = "<table><tr><th align='left'>Name</th><th align='left'>Size</th><th></th><th></th></tr>"
                 $.each(files, function (index, file) {
                     filesString += "<tr align='left'><td>" + file.split('|')[0] + "</td><td>" + humanReadableSize(parseInt(file.split('|')[1])) + "</td>";
@@ -94,14 +105,14 @@ function listFiles(callback = null) { // Get last reset reason
                     filesString += "<td><button type=\"button\" class=\"btn btn-warning internal-action\"onclick=\"downloadDeleteButton(\'" + file.split('|')[0] + "\', \'delete\')\">Delete</button></tr>";
                 });
                 filesString += "</table>";
-                details.html(filesString);
+                fileDetails.html(filesString);
             }
             catch {
-                details.html("(Error parsing file list.)");
+                fileDetails.html("(Error parsing file list.)");
             }
         })
         .fail(function () {
-            details.html("(Error loading file list.)");
+            fileDetails.html("(Error loading file list.)");
         })
         .always(function () {
             loadFilesReasonRunning = false
@@ -177,49 +188,21 @@ function downloadFile(url, onSuccess, onFailure) {
 }
 
 function showUpload() {
-    var statusIndicator = $('#status');
-    var detailsHeader = $('#detailsHeader');
-    var details = $('#details');
-    detailsHeader.html("<h5>Upload File<h5>");
-    statusIndicator.html("");
-    // var uploadform =
-    //     '<form method = "POST" enctype="multipart/form-data">' +
-    //     '<input type="file" name="data"/>' +
-    //     '<input type="submit" name="upload" value="Upload" title = "Upload File"></form>'
-    // details.html(uploadform);
-    var uploadform =
-        '<div class="input-group">' +
-        '<form id="upload_form" enctype="multipart/form-data" method="post">' +
-
-        '<div class="input-group mb-3">' +
-        '<input type="file" name="uploadfile" id="uploadfile" class="form-control" onchange="uploadFile()">' +
-        '<div class="input-group-append">' +
-        '<span type="button" class="btn btn-secondary internal-action" onclick="listFiles()">Cancel</span>' +
-        '</div>' +
-        '</div>' +
-
-        '<br>' +
-
-        '<div class="progress">' +
-        '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>' +
-        '</div>' +
-
-        '<h5 id="status"></h5>' +
-        '<p id="loaded_n_total"></p>' +
-        '</form>';
-    details.html(uploadform);
+    $("#uploadButton").attr("disabled", true);
+    $("#uploadFile").val(null);
+    $("#uploadForm").show();
 }
 
 function uploadFile() {
-    var fileInput = $('#uploadfile');
+    var fileInput = $('#uploadFile');
     var progressIndicator = $('#progressBar');
     var statusIndicator = $('#status');
     var loadedNtotal = $('#loaded_n_total');
-    var detailsHeader = $('#detailsHeader');
-    var details = $('#details');
+    var fileHeader = $('#fileHeader');
+    var fileDetails = $('#fileDetails');
 
     var file = fileInput[0].files[0];
-    var fileName = fileInput.val().split('/').pop().split('\\').pop();
+    var fileName = file.name;
 
     // Call the uploadFile function with the appropriate event handlers
     doUpload(file, "/api/v1/fs/upload/", function (event) {
@@ -227,8 +210,11 @@ function uploadFile() {
         var progress = Math.round((event.loaded / event.total) * 100);
         var loaded = event.loaded;
         loadedNtotal.html("Uploaded " + loaded + " bytes.");
-        progressIndicator.value(progress);
+
+        progressIndicator.setAttribute('aria-valuenow', progress);
+        progressIndicator.setAttribute('style','width:' + Number(progress)+'%');
         progressIndicator.text(progress + '%');
+
         statusIndicator.html(progress + "% uploaded, please wait");
         if (progress >= 100) {
             statusIndicator.html("Please wait, writing file to filesystem.");
@@ -238,14 +224,18 @@ function uploadFile() {
         statusIndicator.html("Upload Aborted.");
     }, function () {
         // Handle the complete event
-        statusIndicator.html("Upload Complete.");
-        progressIndicator.value = 0;
-        xmlhttp = new XMLHttpRequest();
+        statusIndicator.html("'" + fileName + "' uploaded.");
+
+        // progressIndicator.setAttribute('aria-valuenow', 100);
+        // progressIndicator.setAttribute('style','width:' + Number(100)+'%');
+        // progressIndicator.text(100 + '%');
+
+        // xmlhttp = new XMLHttpRequest();
         listFiles();
-        statusIndicator.html(fileName + " uploaded.");
-        // TODO: Timeout text
-        detailsHeader.html("<h3>Files<h3>");
-        details.html(xmlhttp.responseText);
+        fileHeader.html("<h3>Files<h3>");
+        // fileDetails.html(xmlhttp.responseText);
+
+        setTimeout(function(){ cancelUpload();}, 3000);
     }, function () {
         // Handle the failure event
         statusIndicator.html("Upload Failed.");
@@ -269,6 +259,20 @@ function doUpload(file, url, progressHandler, abortHandler, completeHandler, err
     // Open the XHR request and send the form data
     xhr.open('POST', url);
     xhr.send(formData);
+}
+
+function cancelUpload() {
+    $("#uploadButton").attr("disabled", true);
+    $("#uploadFile").val(null);
+    $("#uploadForm").hide();
+}
+
+function fileChange() {
+    if(  $('#uploadFile').get(0).files.length >= 1 ){
+        $("#uploadButton").attr("disabled", false);
+    } else {
+        $("#uploadButton").attr("disabled", true);
+    }
 }
 
 function humanReadableSize(bytes) {

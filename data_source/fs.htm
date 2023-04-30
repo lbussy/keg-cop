@@ -60,7 +60,8 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a id="noChange" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/help/index.html">?</a>
+                        <a id="noChange" class="navbar-brand nav-link active" target="_blank"
+                            href="https://docs.kegcop.com/en/latest/context/help/index.html">?</a>
                     </li>
                 </ul>
             </div>
@@ -77,7 +78,7 @@
 
                 <div class="card-header d-flex"> <!-- Keg Cop Filesystem -->
                     <ul class="navbar me-auto">
-                        <h4 >Keg Cop Filesystem</h4>
+                        <h4>Keg Cop Filesystem</h4>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -110,19 +111,64 @@
                         </tbody>
                     </table>
 
-                    <p>
-                        <button type="button" class="btn btn-primary internal-action" onclick="listFiles()">List Files</button>
-                        <button type="button" class="btn btn-secondary internal-action" onclick="showUpload()">Upload File</button>
-                    </p>
+                    <div id="buttons">
+                        <button id="listFiles" type="button" class="btn btn-primary internal-action" onclick="toggleFiles()">
+                            List Files
+                        </button>
+                        <button id="uploadFile" type="button" class="btn btn-secondary internal-action" onclick="showUpload()">
+                            Upload File
+                        </button>
+                    </div>
 
-                    <p id="status"></p>
-                    <p id="detailsHeader"></p>
-                    <p id="details"></p>
-                    
-                </div>
-            </div> <!-- Keg Cop Filesystem -->
+                    <!-- File Upload Div: -->
+                    <div id="uploadForm" style="display:none;">
+                        <p></p>
+                        <div>
+                            <h5>Upload File:</h5>
+                        </div>
+                        <div>
+                            <form enctype="multipart/form-data" method="post">
 
-        </div> <!-- Container -->
+                                <div class="input-group mb-3">
+                                    <input type="file" name="uploadFile" id="uploadFile" class="form-control"
+                                        onchange="fileChange()">
+                                    <div class="input-group-append">
+                                        <span id="uploadButton" type="button" class="btn btn-info internal-action"
+                                            onclick="uploadFile()">
+                                            Upload
+                                        </span>
+                                        <span id="cancelButton" type="button" class="btn btn-warning internal-action"
+                                            onclick="cancelUpload()">
+                                            Cancel
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <p id="status"></p>
+
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                        role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: 75%"></div>
+                                </div>
+
+                                <p id="loaded_n_total"></p>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- File Uplaoad Div^ -->
+
+                    <!-- File Details Div: -->
+                    <div id="fileList" style="display:none;">
+                        <p></p>
+                        <div id="fileHeader"></div>
+                        <div id="fileDetails"></div>
+                    </div>
+                    <!-- File Details Div^ -->
+
+                </div> <!-- Keg Cop Filesystem -->
+
+            </div> <!-- Container -->
 
     </main>
 
@@ -134,13 +180,13 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
+        </script>
 
     <script src="/kegcop_post.js"></script>
     <script src="/fs.js"></script>
