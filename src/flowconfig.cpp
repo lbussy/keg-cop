@@ -313,7 +313,8 @@ void debugFlowmeterLog(int numTap, bool fileExist) // DEBUG
         Log.error(F("%s Unable to open log file." CR), debugPrefix);
     }
 
-    std::string logline(debugPrefix + (const char)" ");
+    std::string logline(debugPrefix);
+    logline.append(" ");
     if (numTap >= 0)
     {
         logline.append("Null value encountered on tap ");
