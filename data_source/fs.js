@@ -207,9 +207,13 @@ function deleteFile(filename) {
 
     $(':button').attr('disabled', 'disabled');
 
-    var fileStatus = $('#fileStatus');
+    if (!window.confirm("Are you sure?")) {
+        $(':button').removeAttr("disabled");
+        deleteFileRunning = false;
+        return false;
+    }
 
-    // TODO:  Add an "are you sure?"
+    var fileStatus = $('#fileStatus');
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
