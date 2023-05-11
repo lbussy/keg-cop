@@ -14,6 +14,18 @@ function finishLoad() {
     // Catch page finished event from kegcop_pre.js
     chooseTempMenu();
     populatePage();
+    eventListeners();
+}
+
+function eventListeners() {
+    $("#listFiles").on("click", function(event) {
+        event.preventDefault();
+        toggleFiles();
+    });
+    $("#uploadFile").on("click", function(event) {
+        event.preventDefault();
+        showUpload();
+    });
 }
 
 function populatePage() { // Get page data
@@ -71,7 +83,7 @@ function getFree() {
 
 }
 
-function toggleFiles() {
+function toggleFiles(event) {
     if ($('#fileList').is(':visible')) {
         $("#listFiles").html("List Files");
         $("#fileList").hide();
@@ -99,16 +111,20 @@ function listFiles(callback = null) {
     var fileHeader = $('#fileHeader');
     var fileDetails = $('#fileDetails');
 
-    var files = $.getJSON(url, function () {
+    $.ajax({
+        url: url,
+        dataType: "json"
     })
         .done(function (files) {
             try {
                 fileHeader.html('<h5>File System Files:<h5>');
                 var filesString = '<table><tr><th align="left">Name</th><th align="left">Size</th><th></th><th></th></tr>';
                 $.each(files, function (index, file) {
-                    filesString += '<tr align="left"><td>' + file.split('|')[0] + '</td><td>' + humanReadableSize(parseInt(file.split('|')[1])) + '</td>';
-                    filesString += '<td><button type="button" class="btn btn-primary internal-action" onclick="downloadFile("' + file.split('|')[0] + '")">Download</button>';
-                    filesString += '<td><button type="button" class="btn btn-warning internal-action" onclick="deleteFile("' + file.split('|')[0] + '")">Delete</button></tr>';
+                    var fileSize = humanReadableSize(parseInt(file.split('|')[1]));
+                    var fileName = file.split('|')[0].trim();
+                    filesString += '<tr align="left"><td>' + fileName + '</td><td>' + fileSize + '</td>';
+                    filesString += '<td><div type="button" class="btn btn-primary internal-action" onclick="downloadFile(\'' + fileName + '\')">Download</div>';
+                    filesString += '<td><div type="button" class="btn btn-warning internal-action" onclick="deleteFile(\'' + fileName + '\')">Delete</div></tr>';
                 });
                 filesString += '</table>';
                 fileDetails.html(filesString);
@@ -128,15 +144,15 @@ function listFiles(callback = null) {
         });
 }
 
-function oldDownloadFile(filename) {
-    // TODO:  Delete this after testing
+function downloadFile(filename) {
     if (!dataHostCheckDone) {
-        setTimeout(oldDownloadFile, 10);
+        setTimeout(downloadFile(filename), 10);
         return;
     }
     if (downloadFileRunning) return;
     downloadFileRunning = true;
 
+    var statusIndicator = $('#status');
     var url = dataHost;
     if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -144,38 +160,30 @@ function oldDownloadFile(filename) {
     url += "/api/v1/fs/handlefile/";
     url += "?name=" + filename + "&action=download";
 
-    var statusIndicator = $('#status');
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'blob'; // Set the response type to blob
 
-    xmlhttp = new XMLHttpRequest();
-
-    doDownloadFile(
-        url,
-        function (blob) {
-            statusIndicator.html(filename + " downloaded.");
-        },
-        function (errorMessage) {
-            statusIndicator.html(errorMessage);
-        }
-    );
-    window.open(url, "_blank");
-}
-
-function doDownloadFile(url, onSuccess, onFailure) {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
+    xhr.onload = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 const blob = xhr.response;
-                onSuccess(blob);
+                window.open(url, "_blank");
             } else {
-                onFailure(`Failed with status code ${xhr.status}`);
+                statusIndicator.html('Request failed. Status: ' + xhr.status);
             }
         }
     };
-    xhr.open("GET", url, true);
-    xhr.responseType = "blob";
+    xhr.onerror = function () {
+        statusIndicator.html('Request failed. Network error.');
+    };
+    xhr.onabort = function () {
+        statusIndicator.html('Request aborted.');
+    };
+    xhr.onloadend = function () {
+        statusIndicator.html('Request completed.');
+    };
     xhr.send();
-    downloadFileRunning = false;
 }
 
 function deleteFile(filename) {
@@ -185,6 +193,10 @@ function deleteFile(filename) {
     }
     if (deleteFileRunning) return;
     deleteFileRunning = true;
+
+    var statusIndicator = $('#status');
+
+    // TODO:  Add an "are you sure?"
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
@@ -196,20 +208,20 @@ function deleteFile(filename) {
         type: "POST",
         url: url,
         headers: { "X-KegCop-Secret": secret },
-        data: { file_name: filename },
-        done: function () {
-            statusIndicator.html(filename + " deleted."); // TODO:  Timeout this message
-            listFiles();
-        },
-        fail: function (textStatus) {
-            statusIndicator.html(textStatus);
-        },
-        always: function () {
-            deleteFileRunning = false;
-        },
-        then: function () {
-            //
-        }
+        data: { file_name: filename }
+    })
+    .done(function () {
+        statusIndicator.html(filename + " deleted."); // TODO:  Timeout this message before re-listing files
+        listFiles();
+    })
+    .fail(function (textStatus) {
+        statusIndicator.html(textStatus);
+    })
+    .always(function () {
+        deleteFileRunning = false;
+    })
+    .then(function () {
+        //
     });
 }
 
@@ -310,37 +322,4 @@ function humanReadableSize(bytes) {
         return (bytes / 1024.0 / 1024.0).toFixed(2) + " MB";
     else
         return (bytes / 1024.0 / 1024.0 / 1024.0).toFixed(2) + " GB";
-}
-
-function downloadFile(filename) {
-    if (!dataHostCheckDone) {
-        setTimeout(downloadFile, 10);
-        return;
-    }
-    if (downloadFileRunning) return;
-    downloadFileRunning = true;
-
-    var url = dataHost;
-    if (url && url.endsWith("/")) {
-        url = url.slice(0, -1)
-    }
-    url += "/api/v1/fs/handlefile/";
-    url += "?name=" + filename + "&action=download";
-
-    var statusIndicator = $('#status');
-
-    return $.ajax({
-        url: url,
-        method: 'GET',
-        dataType: 'blob',
-    })
-        .done(function (data) {
-            statusIndicator.html(filename + " downloaded.");
-        })
-        .fail(function () {
-            statusIndicator.html(`Failed with status code ${xhr.status}`);
-        })
-        .always(function () {
-            //
-        });
 }
