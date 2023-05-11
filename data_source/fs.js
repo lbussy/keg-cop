@@ -118,13 +118,14 @@ function listFiles(callback = null) {
         .done(function (files) {
             try {
                 fileHeader.html('<h5>File System Files:<h5>');
-                var filesString = '<table><tr><th align="left">Name</th><th align="left">Size</th><th></th><th></th></tr>';
+                var filesString = '<table class="table table-hover"><tr><th scope="col" align="left">Name</th><th scope="col" align="left">Size</th><th scope="col"></th></tr>';
                 $.each(files, function (index, file) {
                     var fileSize = humanReadableSize(parseInt(file.split('|')[1]));
                     var fileName = file.split('|')[0].trim();
                     filesString += '<tr align="left"><td>' + fileName + '</td><td>' + fileSize + '</td>';
-                    filesString += '<td><div type="button" class="btn btn-primary internal-action" onclick="downloadFile(\'' + fileName + '\')">Download</div>';
-                    filesString += '<td><div type="button" class="btn btn-warning internal-action" onclick="deleteFile(\'' + fileName + '\')">Delete</div></tr>';
+                    filesString += '<td><span type="button" class="btn btn-primary internal-action" onclick="downloadFile(\'' + fileName + '\')">Download</span>';
+                    filesString += "&nbsp;"
+                    filesString += '<span type="button" class="btn btn-warning internal-action" onclick="deleteFile(\'' + fileName + '\')">Delete</span></td></tr>';
                 });
                 filesString += '</table>';
                 fileDetails.html(filesString);
