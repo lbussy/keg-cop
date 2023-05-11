@@ -77,6 +77,7 @@ struct Temperatures
     float tfansetpoint;
     bool tfanonhigh;
 
+
     void load(JsonObjectConst);
     void save(JsonObject) const;
 };
@@ -220,6 +221,17 @@ namespace AppKeys
     constexpr auto tfancontrolenabled = "tfancontrolenabled";
     constexpr auto tfansetpoint = "tfansetpoint";
     constexpr auto tfanonhigh = "tfanonhigh";
+
+    constexpr auto roomenabled = "roomenabled";
+    constexpr auto roomcal = "roomcal";
+    constexpr auto towerenabled = "towerenabled";
+    constexpr auto towercal = "towercal";
+    constexpr auto upperenabled = "upperenabled";
+    constexpr auto uppercal = "uppercal";
+    constexpr auto lowerenabled = "lowerenabled";
+    constexpr auto lowercal = "lowercal";
+    constexpr auto kegenabled = "kegenabled";
+    constexpr auto kegcal = "kegcal";
 
     // KegScreen
     constexpr auto url = "url";
