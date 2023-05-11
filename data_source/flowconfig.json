@@ -3,7 +3,8 @@
     "taps":[
         {
             "tapid":0,
-            "taplabel": 1,
+            "label": 1,
+            "taplistioTap": 0,
             "pin":0,
             "ppu":21120,
             "name":"Pudswiller Doors",
@@ -14,7 +15,8 @@
         },
         {
             "tapid":1,
-            "taplabel": 2,
+            "label": 2,
+            "taplistioTap": 1,
             "pin":4,
             "ppu":21120,
             "name":"Bug's House Ale",
@@ -25,7 +27,8 @@
         },
         {
             "tapid":2,
-            "taplabel": 3,
+            "label": 3,
+            "taplistioTap": 2,
             "pin":17,
             "ppu":21120,
             "name":"Navelgazer IPA",
@@ -36,7 +39,8 @@
         },
         {
             "tapid":3,
-            "taplabel": 4,
+            "label": 4,
+            "taplistioTap": 3,
             "pin":18,
             "ppu":21120,
             "name":"Tanked 7",
@@ -47,7 +51,8 @@
         },
         {
             "tapid":4,
-            "taplabel": 5,
+            "label": 5,
+            "taplistioTap": 4,
             "pin":19,
             "ppu":21120,
             "name":"Ringaling Lager",
@@ -58,7 +63,8 @@
         },
         {
             "tapid":5,
-            "taplabel": 6,
+            "label": 6,
+            "taplistioTap": 5,
             "pin":21,
             "ppu":21120,
             "name":"Peter Skee",
@@ -69,7 +75,8 @@
         },
         {
             "tapid":6,
-            "taplabel": 7,
+            "label": 7,
+            "taplistioTap": 6,
             "pin":22,
             "ppu":21120,
             "name":"Undead Guy",
@@ -80,7 +87,8 @@
         },
         {
             "tapid":7,
-            "taplabel": 8,
+            "label": 8,
+            "taplistioTap": 7,
             "pin":23,
             "ppu":21120,
             "name":"Who's Garden",
@@ -91,7 +99,8 @@
         },
         {
             "tapid":8,
-            "taplabel": 9,
+            "label": 9,
+            "taplistioTap": 8,
             "pin":12,
             "ppu":21120,
             "name":"Mystery Mead",
