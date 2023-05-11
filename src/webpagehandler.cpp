@@ -745,14 +745,15 @@ void setFSPageHandlers()
             return request->requestAuthentication();
         } });
 
-    server.on("/api/v1/fs/upload/", KC_HTTP_POST, [](AsyncWebServerRequest *request)
-        { request->send(200);
-      }, handleUpload);
+    server.on(
+        "/api/v1/fs/upload/", KC_HTTP_POST, [](AsyncWebServerRequest *request)
+        { request->send(200); },
+        handleUpload);
 }
 
 void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
 {
-    const char * prefix = "[Upload]";
+    const char *prefix = "[Upload]";
     if (checkUserWebAuth(request))
     {
         {
@@ -779,7 +780,7 @@ void handleUpload(AsyncWebServerRequest *request, String filename, size_t index,
     else
     {
         return request->requestAuthentication();
-    }  
+    }
 }
 
 void setConfigurationPageHandlers()
@@ -923,6 +924,8 @@ void stopWebServer()
     server.end();
     Log.notice(F("Web server stopped." CR));
 }
+
+static const char *getRealm() { return AppKeys::appname; }
 
 // Settings Handlers:
 
