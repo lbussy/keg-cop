@@ -2,8 +2,10 @@
 
 toggleLoader("off");
 // Semaphores
-var loadFilesReasonRunning = false;
+var listFilesRunning = false;
 var loadFreeRunning = false;
+var downloadFileRunning = false;
+var deleteFileRunning = false;
 // Pre Loader Variables
 var numReq = 1 + numReqPre;
 var loaded = 0;
@@ -25,7 +27,7 @@ function finishPage() { // Display page
 
 function getFree() {
     if (!dataHostCheckDone) {
-        setTimeout(loadHeap, 10);
+        setTimeout(getFree, 10);
         return;
     }
     if (loadFreeRunning) return;
@@ -70,7 +72,7 @@ function getFree() {
 }
 
 function toggleFiles() {
-    if($('#fileList').is(':visible')) {
+    if ($('#fileList').is(':visible')) {
         $("#listFiles").html("List Files");
         $("#fileList").hide();
     } else {
@@ -80,12 +82,13 @@ function toggleFiles() {
     }
 }
 
-function listFiles(callback = null) { // Get last reset reason
-    var fileHeader = $('#fileHeader');
-    var fileDetails = $('#fileDetails');
-
-    if (loadFilesReasonRunning) return;
-    loadFilesReasonRunning = true;
+function listFiles(callback = null) {
+    if (!dataHostCheckDone) {
+        setTimeout(listFiles, 10);
+        return;
+    }
+    if (listFilesRunning) return;
+    listFilesRunning = true;
 
     var url = dataHost;
     if (url && url.endsWith("/")) {
@@ -93,84 +96,71 @@ function listFiles(callback = null) { // Get last reset reason
     }
     url += "/api/v1/fs/listfiles/";
 
+    var fileHeader = $('#fileHeader');
+    var fileDetails = $('#fileDetails');
+
     var files = $.getJSON(url, function () {
     })
         .done(function (files) {
             try {
-                fileHeader.html("<h5>File System Files:<h5>");
-                var filesString = "<table><tr><th align='left'>Name</th><th align='left'>Size</th><th></th><th></th></tr>"
+                fileHeader.html('<h5>File System Files:<h5>');
+                var filesString = '<table><tr><th align="left">Name</th><th align="left">Size</th><th></th><th></th></tr>';
                 $.each(files, function (index, file) {
-                    filesString += "<tr align='left'><td>" + file.split('|')[0] + "</td><td>" + humanReadableSize(parseInt(file.split('|')[1])) + "</td>";
-                    filesString += "<td><button type=\"button\" class=\"btn btn-primary internal-action\" onclick=\"downloadDeleteButton(\'" + file.split('|')[0] + "\', \'download\')\">Download</button>";
-                    filesString += "<td><button type=\"button\" class=\"btn btn-warning internal-action\"onclick=\"downloadDeleteButton(\'" + file.split('|')[0] + "\', \'delete\')\">Delete</button></tr>";
+                    filesString += '<tr align="left"><td>' + file.split('|')[0] + '</td><td>' + humanReadableSize(parseInt(file.split('|')[1])) + '</td>';
+                    filesString += '<td><button type="button" class="btn btn-primary internal-action" onclick="downloadFile("' + file.split('|')[0] + '")">Download</button>';
+                    filesString += '<td><button type="button" class="btn btn-warning internal-action" onclick="deleteFile("' + file.split('|')[0] + '")">Delete</button></tr>';
                 });
-                filesString += "</table>";
+                filesString += '</table>';
                 fileDetails.html(filesString);
             }
             catch {
-                fileDetails.html("(Error parsing file list.)");
+                fileDetails.html('(Error parsing file list.)');
             }
         })
         .fail(function () {
-            fileDetails.html("(Error loading file list.)");
+            fileDetails.html('(Error loading file list.)');
         })
         .always(function () {
-            loadFilesReasonRunning = false
+            listFilesRunning = false
             if (typeof callback == "function") {
                 callback();
             }
         });
 }
 
-function downloadDeleteButton(filename, action) {
-    var url = "/api/v1/fs/handlefile/";
+function oldDownloadFile(filename) {
+    // TODO:  Delete this after testing
+    if (!dataHostCheckDone) {
+        setTimeout(oldDownloadFile, 10);
+        return;
+    }
+    if (downloadFileRunning) return;
+    downloadFileRunning = true;
+
+    var url = dataHost;
+    if (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/fs/handlefile/";
+    url += "?name=" + filename + "&action=download";
+
     var statusIndicator = $('#status');
-    url += "?name=" + filename + "&action=" + action;
+
     xmlhttp = new XMLHttpRequest();
-    if (action == "delete") {
-        deleteFile(
-            url,
-            function() {
-                statusIndicator.html(filename + " deleted.");
-                listFiles();
-                // TODO:  Timeout this message
-            },
-            function(errorMessage) {
-                statusIndicator.html(errorMessage);
-            }
-        );
-    }
-    if (action == "download") {
-        downloadFile(
-            url,
-            function(blob) {
-                statusIndicator.html(filename + " downloaded.");
-            },
-            function(errorMessage) {
-                statusIndicator.html(errorMessage);
-            }
-        );
-        window.open(url, "_blank");
-    }
-}
 
-function deleteFile(url, onSuccess, onFailure) {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                const blob = xhr.response;
-                onSuccess();
-            } else {
-                onFailure(`Failed with status code ${xhr.status}`);
-            }
+    doDownloadFile(
+        url,
+        function (blob) {
+            statusIndicator.html(filename + " downloaded.");
+        },
+        function (errorMessage) {
+            statusIndicator.html(errorMessage);
         }
-    };
-    xhr.open("GET", url, true);
-    xhr.send();
+    );
+    window.open(url, "_blank");
 }
 
-function downloadFile(url, onSuccess, onFailure) {
+function doDownloadFile(url, onSuccess, onFailure) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -185,6 +175,42 @@ function downloadFile(url, onSuccess, onFailure) {
     xhr.open("GET", url, true);
     xhr.responseType = "blob";
     xhr.send();
+    downloadFileRunning = false;
+}
+
+function deleteFile(filename) {
+    if (!dataHostCheckDone) {
+        setTimeout(deleteFile, 10);
+        return;
+    }
+    if (deleteFileRunning) return;
+    deleteFileRunning = true;
+
+    var url = dataHost;
+    if (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/fs/handlefile/?name=" + filename + "&action=delete";
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        headers: { "X-KegCop-Secret": secret },
+        data: { file_name: filename },
+        done: function () {
+            statusIndicator.html(filename + " deleted."); // TODO:  Timeout this message
+            listFiles();
+        },
+        fail: function (textStatus) {
+            statusIndicator.html(textStatus);
+        },
+        always: function () {
+            deleteFileRunning = false;
+        },
+        then: function () {
+            //
+        }
+    });
 }
 
 function showUpload() {
@@ -212,7 +238,7 @@ function uploadFile() {
         loadedNtotal.html("Uploaded " + loaded + " bytes.");
 
         progressIndicator.setAttribute('aria-valuenow', progress);
-        progressIndicator.setAttribute('style','width:' + Number(progress)+'%');
+        progressIndicator.setAttribute('style', 'width:' + Number(progress) + '%');
         progressIndicator.text(progress + '%');
 
         statusIndicator.html(progress + "% uploaded, please wait");
@@ -235,7 +261,7 @@ function uploadFile() {
         fileHeader.html("<h3>Files<h3>");
         // fileDetails.html(xmlhttp.responseText);
 
-        setTimeout(function(){ cancelUpload();}, 3000);
+        setTimeout(function () { cancelUpload(); }, 3000);
     }, function () {
         // Handle the failure event
         statusIndicator.html("Upload Failed.");
@@ -268,7 +294,7 @@ function cancelUpload() {
 }
 
 function fileChange() {
-    if(  $('#uploadFile').get(0).files.length >= 1 ){
+    if ($('#uploadFile').get(0).files.length >= 1) {
         $("#uploadButton").attr("disabled", false);
     } else {
         $("#uploadButton").attr("disabled", true);
@@ -284,4 +310,37 @@ function humanReadableSize(bytes) {
         return (bytes / 1024.0 / 1024.0).toFixed(2) + " MB";
     else
         return (bytes / 1024.0 / 1024.0 / 1024.0).toFixed(2) + " GB";
+}
+
+function downloadFile(filename) {
+    if (!dataHostCheckDone) {
+        setTimeout(downloadFile, 10);
+        return;
+    }
+    if (downloadFileRunning) return;
+    downloadFileRunning = true;
+
+    var url = dataHost;
+    if (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/fs/handlefile/";
+    url += "?name=" + filename + "&action=download";
+
+    var statusIndicator = $('#status');
+
+    return $.ajax({
+        url: url,
+        method: 'GET',
+        dataType: 'blob',
+    })
+        .done(function (data) {
+            statusIndicator.html(filename + " downloaded.");
+        })
+        .fail(function () {
+            statusIndicator.html(`Failed with status code ${xhr.status}`);
+        })
+        .always(function () {
+            //
+        });
 }
