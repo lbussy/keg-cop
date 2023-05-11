@@ -118,13 +118,13 @@ function listFiles(callback = null) {
         .done(function (files) {
             try {
                 fileHeader.html('<h5>File System Files:<h5>');
-                var filesString = '<table class="table table-hover"><tr><th scope="col" align="left">Name</th><th scope="col" align="left">Size</th><th scope="col"></th></tr>';
+                var filesString = '<table class="table table-hover"><tr><th scope="col" align="left">Name</th><th scope="col" align="left">Size</th><th scope="col">Action</th></tr>';
                 $.each(files, function (index, file) {
                     var fileSize = humanReadableSize(parseInt(file.split('|')[1]));
                     var fileName = file.split('|')[0].trim();
                     filesString += '<tr align="left"><td>' + fileName + '</td><td>' + fileSize + '</td>';
                     filesString += '<td><span type="button" class="btn btn-primary internal-action" onclick="downloadFile(\'' + fileName + '\')">Download</span>';
-                    filesString += "&nbsp;"
+                    filesString += '&nbsp;';
                     filesString += '<span type="button" class="btn btn-warning internal-action" onclick="deleteFile(\'' + fileName + '\')">Delete</span></td></tr>';
                 });
                 filesString += '</table>';
@@ -323,37 +323,4 @@ function humanReadableSize(bytes) {
         return (bytes / 1024.0 / 1024.0).toFixed(2) + " MB";
     else
         return (bytes / 1024.0 / 1024.0 / 1024.0).toFixed(2) + " GB";
-}
-
-function downloadFile(filename) {
-    if (!dataHostCheckDone) {
-        setTimeout(downloadFile, 10);
-        return;
-    }
-    if (downloadFileRunning) return;
-    downloadFileRunning = true;
-
-    var url = dataHost;
-    if (url && url.endsWith("/")) {
-        url = url.slice(0, -1)
-    }
-    url += "/api/v1/fs/handlefile/";
-    url += "?name=" + filename + "&action=download";
-
-    var statusIndicator = $('#status');
-
-    return $.ajax({
-        url: url,
-        method: 'GET',
-        dataType: 'blob',
-    })
-        .done(function (data) {
-            statusIndicator.html(filename + " downloaded.");
-        })
-        .fail(function () {
-            statusIndicator.html(`Failed with status code ${xhr.status}`);
-        })
-        .always(function () {
-            //
-        });
 }
