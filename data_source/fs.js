@@ -323,3 +323,36 @@ function humanReadableSize(bytes) {
     else
         return (bytes / 1024.0 / 1024.0 / 1024.0).toFixed(2) + " GB";
 }
+
+function downloadFile(filename) {
+    if (!dataHostCheckDone) {
+        setTimeout(downloadFile, 10);
+        return;
+    }
+    if (downloadFileRunning) return;
+    downloadFileRunning = true;
+
+    var url = dataHost;
+    if (url && url.endsWith("/")) {
+        url = url.slice(0, -1)
+    }
+    url += "/api/v1/fs/handlefile/";
+    url += "?name=" + filename + "&action=download";
+
+    var statusIndicator = $('#status');
+
+    return $.ajax({
+        url: url,
+        method: 'GET',
+        dataType: 'blob',
+    })
+        .done(function (data) {
+            statusIndicator.html(filename + " downloaded.");
+        })
+        .fail(function () {
+            statusIndicator.html(`Failed with status code ${xhr.status}`);
+        })
+        .always(function () {
+            //
+        });
+}
