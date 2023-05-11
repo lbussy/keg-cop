@@ -2580,7 +2580,7 @@ bool checkUserWebAuth(AsyncWebServerRequest *request)
     bool isAuthenticated = false;
     const char *prefix = "[WebAuth]";
 
-    if (request->authenticate(SPIFFSEDITUSER, SPIFFSEDITPW, getRealm()))
+    if (request->authenticate(SPIFFSEDITUSER, SPIFFSEDITPW))
     {
         Log.verbose(F("%s authenticated via username and password." CR), prefix);
         isAuthenticated = true;
