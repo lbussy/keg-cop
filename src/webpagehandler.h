@@ -54,6 +54,7 @@ void setInfoPageHandlers();
 void setConfigurationPageHandlers();
 void setFSPageHandlers();
 void stopWebServer();
+static const char* getRealm();
 
 enum HANDLER_STATE
 {

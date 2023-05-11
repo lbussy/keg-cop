@@ -83,6 +83,10 @@ bool deleteFlowConfigFile();
 bool deserializeFlowConfig(Stream &);
 bool serializeFlowConfig(Print &);
 
+void debugFlowmeterLog(int numTap); // DEBUG
+void debugFlowmeterLog(bool fileExist); // DEBUG
+void debugFlowmeterLog(int numTap, bool fileExist); // DEBUG
+
 extern Flowmeter flow;
 
 #endif // _FLOWCONFIG_H
