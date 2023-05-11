@@ -83,7 +83,7 @@ void merge(JsonVariant dst, JsonVariantConst src)
     }
 }
 
-bool printJsonile(JSON_TYPE type)
+bool printJsonFile(JSON_TYPE type)
 {
     // Prints the content of a file to the Serial
     String filename;
