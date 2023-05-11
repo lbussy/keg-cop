@@ -18,11 +18,11 @@ function finishLoad() {
 }
 
 function eventListeners() {
-    $("#listFiles").on("click", function(event) {
+    $("#listFiles").on("click", function (event) {
         event.preventDefault();
         toggleFiles();
     });
-    $("#uploadFile").on("click", function(event) {
+    $("#uploadFile").on("click", function (event) {
         event.preventDefault();
         showUpload();
     });
@@ -177,22 +177,22 @@ function downloadFile(filename) {
                 window.open(url, "_blank");
             } else {
                 fileStatus.html('Request failed. Status: ' + xhr.status);
-                setTimeout(function(){fileStatus.html("");},3000);
+                setTimeout(function () { fileStatus.html(""); }, 3000);
             }
             $(':button').removeAttr("disabled");
         }
     };
     xhr.onerror = function () {
         fileStatus.html('Request failed. Network error.');
-        setTimeout(function(){fileStatus.html("");},3000);
+        setTimeout(function () { fileStatus.html(""); }, 3000);
     };
     xhr.onabort = function () {
         fileStatus.html('Request aborted.');
-        setTimeout(function(){fileStatus.html("");},3000);
+        setTimeout(function () { fileStatus.html(""); }, 3000);
     };
     xhr.onloadend = function () {
         fileStatus.html('Request completed.');
-        setTimeout(function(){fileStatus.html("");},3000);
+        setTimeout(function () { fileStatus.html(""); }, 3000);
     };
     xhr.send();
 }
@@ -227,28 +227,30 @@ function deleteFile(filename) {
         headers: { "X-KegCop-Secret": secret },
         data: { file_name: filename }
     })
-    .done(function () {
-        fileStatus.html(filename + " deleted.");
-        listFiles();
-        setTimeout(function(){fileStatus.html("");},3000);
-    })
-    .fail(function (textStatus) {
-        fileStatus.html(textStatus);
-        setTimeout(function(){fileStatus.html("");},3000);
-    })
-    .always(function () {
-        deleteFileRunning = false;
-        $(':button').removeAttr("disabled");
-    })
-    .then(function () {
-        //
-    });
+        .done(function () {
+            fileStatus.html(filename + " deleted.");
+            listFiles();
+            setTimeout(function () { fileStatus.html(""); }, 3000);
+        })
+        .fail(function (textStatus) {
+            fileStatus.html(textStatus);
+            setTimeout(function () { fileStatus.html(""); }, 3000);
+        })
+        .always(function () {
+            deleteFileRunning = false;
+            $(':button').removeAttr("disabled");
+        })
+        .then(function () {
+            //
+        });
 }
 
 function showUpload() {
-    $("#uploadButton").attr("disabled", true);
+    //$("#uploadButton").attr("disabled", true); // DEBUG
     $("#uploadFile").val(null);
     $("#uploadForm").show();
+    $("#uploadForm").html("Sorry, upload is currently broken."); // DEBUG
+    setTimeout(function () { cancelUpload(); }, 3000); // DEBUG
 }
 
 function uploadFile() {
