@@ -177,18 +177,22 @@ function downloadFile(filename) {
                 window.open(url, "_blank");
             } else {
                 fileStatus.html('Request failed. Status: ' + xhr.status);
+                setTimeout(function(){fileStatus.html("");},3000);
             }
             $(':button').removeAttr("disabled");
         }
     };
     xhr.onerror = function () {
         fileStatus.html('Request failed. Network error.');
+        setTimeout(function(){fileStatus.html("");},3000);
     };
     xhr.onabort = function () {
         fileStatus.html('Request aborted.');
+        setTimeout(function(){fileStatus.html("");},3000);
     };
     xhr.onloadend = function () {
-        fileStatus.html('Request completed.'); // TODO:  Time these out
+        fileStatus.html('Request completed.');
+        setTimeout(function(){fileStatus.html("");},3000);
     };
     xhr.send();
 }
@@ -226,6 +230,7 @@ function deleteFile(filename) {
     })
     .fail(function (textStatus) {
         fileStatus.html(textStatus);
+        setTimeout(function(){fileStatus.html("");},3000);
     })
     .always(function () {
         deleteFileRunning = false;
