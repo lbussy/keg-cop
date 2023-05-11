@@ -112,12 +112,12 @@
                     </table>
 
                     <div>
-                        <div id="listFiles" type="button" class="btn btn-primary internal-action">
+                        <button id="listFiles" type="button" class="btn btn-primary internal-action">
                             List Files
-                        </div>
-                        <div id="uploadFile" type="button" class="btn btn-secondary internal-action">
+                        </button>
+                        <button id="uploadFile" type="button" class="btn btn-secondary internal-action">
                             Upload File
-                        </div>
+                        </button>
                     </div>
 
                     <!-- File Upload Div: -->
@@ -160,8 +160,13 @@
 
                     <!-- File Details Div: -->
                     <div id="fileList" style="display:none;">
-                        <p></p>
-                        <div id="fileHeader"></div>
+                        <p>&nbsp;</p>
+                        <hr>
+                        <div>
+                            <span id="fileHeader"></span>
+                            &nbsp;
+                            <span id="fileStatus"></span>
+                        </div>
                         <div id="fileDetails"></div>
                     </div>
                     <!-- File Details Div^ -->

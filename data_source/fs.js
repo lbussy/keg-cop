@@ -102,6 +102,8 @@ function listFiles(callback = null) {
     if (listFilesRunning) return;
     listFilesRunning = true;
 
+    $(':button').attr('disabled', 'disabled');
+
     var url = dataHost;
     if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -123,9 +125,9 @@ function listFiles(callback = null) {
                     var fileSize = humanReadableSize(parseInt(file.split('|')[1]));
                     var fileName = file.split('|')[0].trim();
                     filesString += '<tr align="left"><td>' + fileName + '</td><td>' + fileSize + '</td>';
-                    filesString += '<td><span type="button" class="btn btn-primary internal-action" onclick="downloadFile(\'' + fileName + '\')">Download</span>';
+                    filesString += '<td><button type="button" class="btn btn-primary internal-action" onclick="downloadFile(\'' + fileName + '\')">Download</button>';
                     filesString += '&nbsp;';
-                    filesString += '<span type="button" class="btn btn-warning internal-action" onclick="deleteFile(\'' + fileName + '\')">Delete</span></td></tr>';
+                    filesString += '<button type="button" class="btn btn-warning internal-action" onclick="deleteFile(\'' + fileName + '\')">Delete</button></td></tr>';
                 });
                 filesString += '</table>';
                 fileDetails.html(filesString);
@@ -142,6 +144,7 @@ function listFiles(callback = null) {
             if (typeof callback == "function") {
                 callback();
             }
+            $(':button').removeAttr("disabled");
         });
 }
 
@@ -153,7 +156,9 @@ function downloadFile(filename) {
     if (downloadFileRunning) return;
     downloadFileRunning = true;
 
-    var statusIndicator = $('#status');
+    $(':button').attr('disabled', 'disabled');
+
+    var fileStatus = $('#fileStatus');
     var url = dataHost;
     if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -171,18 +176,19 @@ function downloadFile(filename) {
                 const blob = xhr.response;
                 window.open(url, "_blank");
             } else {
-                statusIndicator.html('Request failed. Status: ' + xhr.status);
+                fileStatus.html('Request failed. Status: ' + xhr.status);
             }
+            $(':button').removeAttr("disabled");
         }
     };
     xhr.onerror = function () {
-        statusIndicator.html('Request failed. Network error.');
+        fileStatus.html('Request failed. Network error.');
     };
     xhr.onabort = function () {
-        statusIndicator.html('Request aborted.');
+        fileStatus.html('Request aborted.');
     };
     xhr.onloadend = function () {
-        statusIndicator.html('Request completed.');
+        fileStatus.html('Request completed.'); // TODO:  Time these out
     };
     xhr.send();
 }
@@ -195,7 +201,9 @@ function deleteFile(filename) {
     if (deleteFileRunning) return;
     deleteFileRunning = true;
 
-    var statusIndicator = $('#status');
+    $(':button').attr('disabled', 'disabled');
+
+    var fileStatus = $('#fileStatus');
 
     // TODO:  Add an "are you sure?"
 
@@ -212,14 +220,16 @@ function deleteFile(filename) {
         data: { file_name: filename }
     })
     .done(function () {
-        statusIndicator.html(filename + " deleted."); // TODO:  Timeout this message before re-listing files
+        fileStatus.html(filename + " deleted.");
         listFiles();
+        setTimeout(function(){fileStatus.html("");},3000);
     })
     .fail(function (textStatus) {
-        statusIndicator.html(textStatus);
+        fileStatus.html(textStatus);
     })
     .always(function () {
         deleteFileRunning = false;
+        $(':button').removeAttr("disabled");
     })
     .then(function () {
         //
