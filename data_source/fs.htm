@@ -115,55 +115,60 @@
                         <button id="listFiles" type="button" class="btn btn-primary internal-action">
                             List Files
                         </button>
-                        <button id="uploadFile" type="button" class="btn btn-secondary internal-action">
-                            Upload File
+                        <button id="controlUpload" type="button" class="btn btn-secondary internal-action">
+                            Show Upload
                         </button>
                     </div>
 
-                    <!-- File Upload Div: -->
-                    <div id="uploadForm" style="display:none;">
-                        <p></p>
-                        <div>
-                            <h5>Upload File:</h5>
-                        </div>
-                        <div>
-                            <form enctype="multipart/form-data" method="post">
+                    <!-- File upload div: -->
+                    <!-- Use: $("#fileUpload").hide(); or $("#fileUpload").show(); -->
+                    <div id="fileUpload" style="display: none" class="row">
+                        <p>&nbsp;</p>
+                        <hr>
+                        <div class="col">
 
-                                <div class="input-group mb-3">
-                                    <input type="file" name="uploadFile" id="uploadFile" class="form-control"
-                                        onchange="fileChange()">
-                                    <div class="input-group-append">
-                                        <span id="uploadButton" type="button" class="btn btn-info internal-action"
-                                            onclick="uploadFile()">
-                                            Upload
-                                        </span>
-                                        <span id="cancelButton" type="button" class="btn btn-warning internal-action"
-                                            onclick="cancelUpload()">
-                                            Cancel
-                                        </span>
-                                    </div>
+                            <div class="mb-3 mt-3">
+
+                                <h5 class="mb-3" style="font-weight: 300">Upload File</h5>
+
+                                <div class="form-group mb-3">
+                                    <input class="form-control" type="file" id="file_input" oninput="input_filename();">
                                 </div>
 
-                                <p id="status"></p>
+                                <button onclick="upload();" id="upload_btn" class="btn btn-primary"
+                                    disabled>Upload</button>
 
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                        role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                                        style="width: 75%"></div>
+                                <button class="btn btn-primary d-none" id="loading_btn" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Uploading...
+                                </button>
+
+                                <button type="button" id="cancel_btn" class="btn btn-secondary d-none">Cancel
+                                    upload</button>
+
+                            </div>
+
+                            <div id="progress_wrapper" class="d-none">
+                                <label id="progress_status"></label>
+                                <div class="progress mb-3">
+                                    <div id="progress" class="progress-bar" role="progressbar" aria-valuenow="25"
+                                        aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
+                            </div>
 
-                                <p id="loaded_n_total"></p>
-                            </form>
                         </div>
                     </div>
-                    <!-- File Upload Div^ -->
+                    <!-- File upload div^ -->
 
                     <!-- File Details Div: -->
                     <div id="fileList" style="display:none;">
                         <p>&nbsp;</p>
                         <hr>
                         <div>
-                            <span id="fileHeader"></span>
+                            <span id="fileHeader">
+                                <h5>File List Loading ...<h5>
+                            </span>
                             &nbsp;
                             <span id="fileStatus"></span>
                         </div>
