@@ -702,60 +702,75 @@ void setFSPageHandlers()
         const char * prefix = "[FS Handler]";
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         Log.verbose(F("%s Client: %s %s" CR), prefix, request->client()->remoteIP().toString().c_str(), request->url().c_str());
-        if (checkUserWebAuth(request))
+
+        switch (handleSecret(request))
         {
-            if (request->hasParam("name") && request->hasParam("action"))
-            {
-                char fileName[38];   // File path + name
-                strcpy(fileName, "/");
-                strcat(fileName, request->getParam("name")->value().c_str());
-                const char *fileAction = request->getParam("action")->value().c_str();
-
-                Log.verbose(F("%s Action: %s %s?name=%s&action=%s" CR), prefix, request->client()->remoteIP().toString().c_str(), request->url().c_str(), fileName, fileAction);
-
-                if (!FILESYSTEM.exists(fileName))
+            case PROCESSED:
+                if (checkUserWebAuth(request))
                 {
-                    Log.error(F("%s File does not exist." CR), prefix);
-                    request->send(400, "text/plain", "File does not exist");
+                    if (request->hasParam("name") && request->hasParam("action"))
+                    {
+                        char fileName[38];   // File path + name
+                        strcpy(fileName, "/");
+                        strcat(fileName, request->getParam("name")->value().c_str());
+                        const char *fileAction = request->getParam("action")->value().c_str();
+
+                        Log.verbose(F("%s Action: %s %s?name=%s&action=%s" CR), prefix, request->client()->remoteIP().toString().c_str(), request->url().c_str(), fileName, fileAction);
+
+                        if (!FILESYSTEM.exists(fileName))
+                        {
+                            Log.error(F("%s File does not exist." CR), prefix);
+                            request->send(400, "text/plain", "File does not exist");
+                        }
+                        else
+                        {
+                            Log.verbose(F("%s File exists." CR), prefix);
+                            if (strcmp(fileAction, "download") == 0) {
+                                Log.notice(F("%s Downloading %s." CR), prefix, fileName);
+                                request->send(FILESYSTEM, fileName, "application/octet-stream");
+                            } else if (strcmp(fileAction, "delete") == 0) {
+                                Log.notice(F("%s Deleting %s." CR), prefix, fileName);
+                                FILESYSTEM.remove(fileName);
+                                request->send(200, "text/plain", "Deleted File: " + String(fileName));
+                            } else {
+                                Log.error(F("%s Invalid action parameter: %s." CR), prefix, fileAction);
+                                request->send(400, "text/plain", "Invalid action param supplied");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Log.error(F("%s Filename and action params required." CR), prefix);
+                        request->send(400, "text/plain", "Filename and action params required");
+                    }
                 }
                 else
                 {
-                    Log.verbose(F("%s File exists." CR), prefix);
-                    if (strcmp(fileAction, "download") == 0) {
-                        Log.notice(F("%s Downloading %s." CR), prefix, fileName);
-                        request->send(FILESYSTEM, fileName, "application/octet-stream");
-                    } else if (strcmp(fileAction, "delete") == 0) {
-                        Log.notice(F("%s Deleting %s." CR), prefix, fileName);
-                        FILESYSTEM.remove(fileName);
-                        request->send(200, "text/plain", "Deleted File: " + String(fileName));
-                    } else {
-                        Log.error(F("%s Invalid action parameter: %s." CR), prefix, fileAction);
-                        request->send(400, "text/plain", "Invalid action param supplied");
-                    }
+                    return request->requestAuthentication();
                 }
-            }
-            else
-            {
-                Log.error(F("%s Filename and action params required." CR), prefix);
-                request->send(400, "text/plain", "Filename and action params required");
-            }
-        }
-        else
-        {
-            return request->requestAuthentication();
+                break;
+            case FAIL_PROCESS:
+                send_failed(request);
+                break;
+            case NOT_PROCCESSED:
+                send_not_allowed(request);
+                break;
         } });
 
     server.on(
         "/api/v1/fs/upload/", KC_HTTP_POST, [](AsyncWebServerRequest *request)
-        { request->send(200); },
+        { send_ok(request); },
         handleUpload);
 }
 
 void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
 {
     const char *prefix = "[Upload]";
-    if (checkUserWebAuth(request))
+
+    switch (handleSecret(request))
     {
+    case PROCESSED:
+        if (checkUserWebAuth(request))
         {
             if (!index)
             {
@@ -771,15 +786,23 @@ void handleUpload(AsyncWebServerRequest *request, String filename, size_t index,
                 }
                 if (final)
                 {
+                    send_ok(request);
                     request->_tempFile.close();
                     Log.notice(F("%s Upload of %s complete." CR), prefix, filename.c_str());
                 }
             }
         }
-    }
-    else
-    {
-        return request->requestAuthentication();
+        else
+        {
+            return request->requestAuthentication();
+        }
+        break;
+    case FAIL_PROCESS:
+        send_failed(request);
+        return;
+    case NOT_PROCCESSED:
+        send_not_allowed(request);
+        return;
     }
 }
 

@@ -274,6 +274,7 @@ function upload() {
     var request = new XMLHttpRequest();
     // Set the response type
     request.responseType = "text";
+
     // Disable the input during upload
     $("#file_input").attr("disabled", "disabled");
     // Hide the upload button
@@ -336,6 +337,8 @@ function upload() {
 
     // Open and send the request
     request.open("POST", url);
+    // Add Secret
+    request.setRequestHeader("X-KegCop-Secret", secret);
     request.send(data);
 }
 
