@@ -210,7 +210,7 @@ function deleteFile(filename) {
 
     $(':button').attr('disabled', 'disabled');
 
-    if (!window.confirm("Are you sure?")) {
+    if (!window.confirm(`Delete: ${filename}\n\nAre you sure?`)) {
         $(':button').removeAttr("disabled");
         deleteFileRunning = false;
         return false;
