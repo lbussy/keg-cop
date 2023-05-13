@@ -194,28 +194,6 @@
             // Disable input button
             $("#upload_btn").attr("disabled", "disabled");
         }
-        // Function to reset the page
-
-        function reset() {
-            // Clear the input
-            $("#file_input").val('');;
-            // Hide the cancel button
-            $("#cancel_btn").addClass("d-none");
-            // Reset the input element
-            $("#file_input").removeAttr('disabled');
-            // Show the upload button
-            $("#upload_btn").removeClass("d-none");
-            // Hide the loading button
-            $("#loading_btn").addClass("d-none");
-            // Hide the progress bar
-            $("#progress_wrapper").addClass("d-none");
-            // Reset the progress bar state
-            progress.setAttribute("style", `width: 0%`);
-            // Reset the input placeholder
-            $("#file_input_label").text("Select file");
-            // Reset progress text
-            $("#progress_status").text('');
-        }
     </script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
