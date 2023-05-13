@@ -16,7 +16,10 @@
 <body>
 
     <div class="container">
-        <div class="row">
+
+        <!-- File upload div: -->
+        <!-- Use: $("#fileUpload").hide(); or $("#fileUpload").show(); -->
+        <div id="fileUpload" class="row">
             <div class="col">
 
                 <div class="mb-3 mt-3">
@@ -54,6 +57,8 @@
 
             </div>
         </div>
+        <!-- File upload div^ -->
+
     </div>
 
     <script>
@@ -172,7 +177,25 @@
             $("#upload_btn").attr("disabled", false);
         }
 
+        // Function to show upload complete
+        function uploadComplete() {
+            // Clear the input
+            $("#file_input").val('');;
+            // Hide the cancel button
+            $("#cancel_btn").addClass("d-none");
+            // Reset the input element
+            $("#file_input").removeAttr('disabled');
+            // Show the upload button
+            $("#upload_btn").removeClass("d-none");
+            // Hide the loading button
+            $("#loading_btn").addClass("d-none");
+            // Reset the input placeholder
+            $("#file_input_label").text("Select file");
+            // Disable input button
+            $("#upload_btn").attr("disabled", "disabled");
+        }
         // Function to reset the page
+
         function reset() {
             // Clear the input
             $("#file_input").val('');;
@@ -193,24 +216,6 @@
             // Reset progress text
             $("#progress_status").text('');
         }
-
-        function uploadComplete() {
-            // Clear the input
-            $("#file_input").val('');;
-            // Hide the cancel button
-            $("#cancel_btn").addClass("d-none");
-            // Reset the input element
-            $("#file_input").removeAttr('disabled');
-            // Show the upload button
-            $("#upload_btn").removeClass("d-none");
-            // Hide the loading button
-            $("#loading_btn").addClass("d-none");
-            // Reset the input placeholder
-            $("#file_input_label").text("Select file");
-            // Disable input button
-            $("#upload_btn").attr("disabled", "disabled");
-        }
-
     </script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
