@@ -10,6 +10,9 @@ var deleteFileRunning = false;
 var numReq = 1 + numReqPre;
 var loaded = 0;
 
+// Get a reference to the progress bar, wrapper & status
+var progress = document.getElementById("progress");
+
 function finishLoad() {
     // Catch page finished event from kegcop_pre.js
     chooseTempMenu();
@@ -22,9 +25,9 @@ function eventListeners() {
         event.preventDefault();
         toggleFiles();
     });
-    $("#uploadFile").on("click", function (event) {
+    $("#controlUpload").on("click", function (event) {
         event.preventDefault();
-        showUpload();
+        toggleUpload();
     });
 }
 
@@ -91,6 +94,9 @@ function toggleFiles(event) {
         $("#listFiles").html("Hide Files");
         $("#fileList").show();
         listFiles();
+        // Hide the Upload
+        $("#fileUpload").hide();
+        $("#controlUpload").text("Show Upload");
     }
 }
 
@@ -207,7 +213,7 @@ function deleteFile(filename) {
 
     $(':button').attr('disabled', 'disabled');
 
-    if (!window.confirm("Are you sure?")) {
+    if (!window.confirm(`Delete: ${filename}\n\nAre you sure?`)) {
         $(':button').removeAttr("disabled");
         deleteFileRunning = false;
         return false;
@@ -245,94 +251,130 @@ function deleteFile(filename) {
         });
 }
 
-function showUpload() {
-    //$("#uploadButton").attr("disabled", true); // DEBUG
-    $("#uploadFile").val(null);
-    $("#uploadForm").show();
-    $("#uploadForm").html("Sorry, upload is currently broken."); // DEBUG
-    setTimeout(function () { cancelUpload(); }, 3000); // DEBUG
-}
-
-function uploadFile() {
-    var fileInput = $('#uploadFile');
-    var progressIndicator = $('#progressBar');
-    var statusIndicator = $('#status');
-    var loadedNtotal = $('#loaded_n_total');
-    var fileHeader = $('#fileHeader');
-    var fileDetails = $('#fileDetails');
-
-    var file = fileInput[0].files[0];
-    var fileName = file.name;
-
-    // Call the uploadFile function with the appropriate event handlers
-    doUpload(file, "/api/v1/fs/upload/", function (event) {
-        // Update the progress indicator with the current progress
-        var progress = Math.round((event.loaded / event.total) * 100);
-        var loaded = event.loaded;
-        loadedNtotal.html("Uploaded " + loaded + " bytes.");
-
-        progressIndicator.setAttribute('aria-valuenow', progress);
-        progressIndicator.setAttribute('style', 'width:' + Number(progress) + '%');
-        progressIndicator.text(progress + '%');
-
-        statusIndicator.html(progress + "% uploaded, please wait");
-        if (progress >= 100) {
-            statusIndicator.html("Please wait, writing file to filesystem.");
-        }
-    }, function () {
-        // Handle the abort event
-        statusIndicator.html("Upload Aborted.");
-    }, function () {
-        // Handle the complete event
-        statusIndicator.html("'" + fileName + "' uploaded.");
-
-        // progressIndicator.setAttribute('aria-valuenow', 100);
-        // progressIndicator.setAttribute('style','width:' + Number(100)+'%');
-        // progressIndicator.text(100 + '%');
-
-        // xmlhttp = new XMLHttpRequest();
-        listFiles();
-        fileHeader.html("<h3>Files<h3>");
-        // fileDetails.html(xmlhttp.responseText);
-
-        setTimeout(function () { cancelUpload(); }, 3000);
-    }, function () {
-        // Handle the failure event
-        statusIndicator.html("Upload Failed.");
-    });
-}
-
-function doUpload(file, url, progressHandler, abortHandler, completeHandler, errorHandler, callback = null) {
-    // Create a new form data object and append the file to it
-    var formData = new FormData();
-    formData.append('file', file);
-
-    // Create a new XHR request
-    var xhr = new XMLHttpRequest();
-
-    // Set up the event handlers for the XHR request
-    xhr.upload.addEventListener('progress', progressHandler);
-    xhr.addEventListener('abort', abortHandler);
-    xhr.addEventListener('load', completeHandler);
-    xhr.addEventListener('error', errorHandler);
-
-    // Open the XHR request and send the form data
-    xhr.open('POST', url);
-    xhr.send(formData);
-}
-
-function cancelUpload() {
-    $("#uploadButton").attr("disabled", true);
-    $("#uploadFile").val(null);
-    $("#uploadForm").hide();
-}
-
-function fileChange() {
-    if ($('#uploadFile').get(0).files.length >= 1) {
-        $("#uploadButton").attr("disabled", false);
+function toggleUpload() {
+    if ($("#fileUpload").is(":visible")) {
+        $("#fileUpload").hide();
+        $("#controlUpload").text("Show Upload");
     } else {
-        $("#uploadButton").attr("disabled", true);
+        $("#fileUpload").show();
+        $("#controlUpload").text("Hide Upload");
+        // Hide the File List
+        $("#listFiles").html("List Files");
+        $("#fileList").hide();
     }
+}
+
+function upload() { // Function to upload file
+    url = "/api/v1/fs/upload/";
+
+    // Reject if the file input is empty & throw alert
+    if (!$("#file_input").val()) {
+        $("#progress_status").text("No file selected.");
+        return;
+    }
+
+    // Create a new FormData instance
+    var data = new FormData();
+    // Create a XMLHTTPRequest instance
+    var request = new XMLHttpRequest();
+    // Set the response type
+    request.responseType = "text";
+
+    // Disable the input during upload
+    $("#file_input").attr("disabled", "disabled");
+    // Hide the upload button
+    $("#upload_btn").addClass("d-none");
+    // Show the loading button
+    $("#loading_btn").removeClass("d-none");
+    // Show the cancel button
+    $("#cancel_btn").removeClass("d-none");
+    // Show the progress bar
+    $("#progress_wrapper").removeClass("d-none");
+    // Get a reference to the file
+    var file = $("#file_input").prop('files')[0];
+    // Get a reference to the filename
+    var filename = file.name;
+    // Get a reference to the filesize & set a cookie
+    var filesize = file.size;
+    // Append the file to the FormData instance
+    data.append("file", file);
+    // Set status to waiting
+    $("#progress_status").text("Waiting.");
+
+    // Event Handlers:
+    //
+    // Request progress handler
+    request.upload.addEventListener("progress", function (e) {
+        // Get the loaded amount and total filesize (bytes)
+        var loaded = e.loaded;
+        var total = e.total
+
+        // Calculate percent uploaded
+        var percent_complete = (loaded / total) * 100;
+
+        // Update the progress text and progress bar
+        progress.setAttribute("style", `width: ${Math.floor(percent_complete)}%`);
+        $("#progress_status").text(`${Math.floor(percent_complete)}% uploaded.`);
+    });
+
+    // Request load handler (transfer complete success)
+    request.upload.addEventListener("load", function (e) {
+        uploadComplete();
+        $("#progress_status").text(`${filename} uploaded.`);
+    });
+
+    // Request error handler
+    request.addEventListener("error", function (e) {
+        uploadComplete();
+        $("#progress_status").text(`Error uploading ${filename}`);
+    });
+
+    // Request abort handler
+    request.addEventListener("abort", function (e) {
+        uploadComplete();
+        $("#progress_status").text(`Upload of ${filename} cancelled`);
+    });
+
+    // Cancel event listener
+    $("#cancel_btn").on("click", function () {
+        request.abort();
+    })
+
+    // Open and send the request
+    request.open("POST", url);
+    // Add Secret
+    request.setRequestHeader("X-KegCop-Secret", secret);
+    request.send(data);
+}
+
+function input_filename() {// Function to update the input placeholder
+    // Hide the progress bar
+    $("#progress_wrapper").addClass("d-none");
+    // Reset the progress bar state
+    progress.setAttribute("style", `width: 0%`);
+    // Reset progress text
+    $("#progress_status").text('');
+    // Set input to file name
+    $("#file_input_label").text($("#file_input").prop('files')[0].name);
+    // Enable upload button
+    $("#upload_btn").attr("disabled", false);
+}
+
+function uploadComplete() { // Function to show upload complete
+    // Clear the input
+    $("#file_input").val('');;
+    // Hide the cancel button
+    $("#cancel_btn").addClass("d-none");
+    // Reset the input element
+    $("#file_input").removeAttr('disabled');
+    // Show the upload button
+    $("#upload_btn").removeClass("d-none");
+    // Hide the loading button
+    $("#loading_btn").addClass("d-none");
+    // Reset the input placeholder
+    $("#file_input_label").text("Select file");
+    // Disable input button
+    $("#upload_btn").attr("disabled", "disabled");
 }
 
 function humanReadableSize(bytes) {

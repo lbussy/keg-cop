@@ -2,8 +2,6 @@
 
 [ ] - Consider a more generic MQTT (Like: https://github.com/lbussy/brew-bubbles/issues/50)
 [ ] - Document `/fs/`
-[ ] - Make sure we are using secret on `/fs/` stuff
-[ ] - Fix progress on uploads
 [ ] - Add configration parameter to use Telnet
 [ ] - Switch to LittleFS
 [ ] - Make a config/flowmeter backup
