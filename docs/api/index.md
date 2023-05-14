@@ -2,8 +2,12 @@
 
 # Keg Cop API
 
-:::{note}
-As of version 1.2.0, all PUT and action API usage must include an `X-KegCop-Secret` header with a value identical to the controller GUID.
+<div class="admonition note" name="html-admonition" style="background: lightgreen; padding: 10px">
+<p class="title">Important Security Note</p>
+<p>As of version 1.2.0, all PUT, POST, and action API usage must include an `X-KegCop-Secret` header with a value identical to the controller GUID.</p>
+<p>The secret may be obtained by querying the `/api/v1/info/secret` endpoint.</p>
+<p>This is obviously not intended to replace good security practices, and in no way would I ever recommend that you EVER expose this to the Internet or an unprotected network.</p>
+</div>
 
 The secret may be obtained by querying the `/api/v1/info/secret` endpoint.
 
@@ -12,28 +16,28 @@ This is obviously not intended to replace good security practices, and in no way
 
 Keg Cop uses a combination of API types:
 
-- [Client-Initiated Communication]
-- [Controller-Initiated Communication]
+- [Client-Initiated Communication](#client-initiated-communication)
+- [Controller-Initiated Communication](#controller-initiated-communication)
 
 ## Client-Initiated Communication
 
 Client-initiated communication is initiated from a system other than the controller to retrieve data or initiate a data update or state change in the controller.  This is broken down into:
 
-- [Action Page Handlers]: Pages that access will initiate a change or present a state.
-- [Info Page Handlers]: Pages accessed to retrieve information about the controller's state and its systems.
-- [Configuration Page Handlers]: Pages intended to provide a means by which the controller and application features and properties may be updated.
+- [Action Page Handlers](#action-page-handlers): Pages that access will initiate a change or present a state.
+- [Info Page Handlers](#info-page-handlers): Pages accessed to retrieve information about the controller's state and its systems.
+- [Configuration Page Handlers](#configuration-page-handlers): Pages intended to provide a means by which the controller and application features and properties may be updated.
 
 ### Action Page Handlers
 
 These action page handlers exist within the Action Page API tree:
 
-- [Ping]
-- [WiFi Reset]
-- [Controller Reset]
-- [Online Update]
-- [Clear Update State]
-- [Set Calibration Mode]
-- [Clear Calibration Mode]
+- [Ping](#ping)
+- [WiFi Reset](#wifi-reset)
+- [Controller Reset](#controller-reset)
+- [Online Update](#online-update)
+- [Clear Update State](#clear-uodate-state)
+- [Set Calibration Mode](#set-calibration-mode)
+- [Clear Calibration Mode](#clear-calibration-mode)
 
 #### Ping
 
@@ -102,22 +106,15 @@ These action page handlers exist within the Action Page API tree:
 
 These information provider pages exist within the Info API tree:
 
-- [Reset Reason]
-- [Heap Information]
-- [Uptime]
-- [This Version]
-- [That Version]
-- [Pulses]
-- [Sensors]
-- [Reset Reason]
-- [Heap Information]
-- [Uptime]
-- [This Version]
-- [That Version]
-- [Pulses]
-- [Sensors]
-- [Secret]
-- [Theme]
+- [Reset Reason](#reset-reason)
+- [Heap Information](heap_information)
+- [Uptime](#uptime)
+- [This Version](#this-version)
+- [That Version](#that-version)
+- [Pulses](#pulses)
+- [Sensors](#sensors)
+- [Secret](#secret)
+- [Theme](#theme)
 
 #### Reset Reason
 
@@ -338,20 +335,18 @@ Where:
 
 - `secret` = Hexidecimal string for representing controller GUID.
 
-#### Files
+#### Theme
 
-- **Address:** {file}`/api/v1/info/files/`
+- **Address:** {file}`/api/v1/info/theme/`
 - **Valid Methods:** {file}`ANY`
 - **Data:** Ignored
-- **Description:** Filesystem file list.
+- **Description:** Name of the current Bootswatch theme.
 - **Error Message:** None.
 - **Response:**
 
 ```json
-[
-  "README.md",
-  "about.htm.gz",
-  ...
+{
+  "theme": "cerulean"
 }
 ```
 
@@ -359,9 +354,8 @@ Where:
 
 The configuration page API tree allows retrieval of current states or setting condition and properties via the same endpoint.  Available pages are:
 
-- [Settings]
-- [Taps]
-- [Theme]
+- [Settings](#settings)
+- [Taps](#taps)
 
 #### Settings
 
@@ -679,46 +673,23 @@ The tap array follows the following format for each of the nine available taps:
 - `remain` = The amount remaining, in floating-point current units, of the attached keg.
 - `active` = Denotes whether the tap is active (displayed) or not.
 
-#### Theme
-
-Both `GET` and `PUT` are valid methods for this endpoint.
-
-##### GET
-
-- **Address:** {file}`/api/v1/info/theme/`
-- **Valid Methods:** {file}`ANY`
-- **Data:** Ignored
-- **Description:** The {file}`GET` method for this endpoint will return the current theme configuration.
-- **Error Message:** None; any method will return valid JSON.
-- **Response:**
-
-```json
-{
-"theme": "cerulean"
-}
-```
-
-Where:
-
-- `theme` = Any pre-configured Bootstrap-compliant theme
-
 ## Controller-Initiated Communication
 
 These reports are sent, when so configured, via WiFi to upstream systems.
 
-- [KegScreen]
-- [URL]
-- [Raspberry Pints]
+- [KegScreen](#kegscreen)
+- [URL](#url)
+- [Raspberry Pints](#raspberry-pints)
 
 ### KegScreen
 
 Keg Cop sends five different reports to the upstream KegScreen system:
 
-- [Send Tap Information Report]
-- [Send Pulse Report]
-- [Send Kick Report]
-- [Send Cooling State Report]
-- [Send Temperature Report]
+- [Send Tap Information Report](#send-tap-information-report)
+- [Send Pulse Report](#send-pulse-report)
+- [Send Kick Report](#send-kick-report)
+- [Send Cooling State Report](#send-cooling-state-report)
+- [Send Temperature Report](#send-temperature-report)
 
 #### Send Tap Information Report
 

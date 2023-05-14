@@ -16,9 +16,9 @@ A vestigial UI has been created if you desire to back up or restore your configu
 :scale: 50%
 ```
 
-:::{note}
-The username is `admin` and the password is `p@ssword`.
-:::
+<div class="admonition note" name="html-admonition" style="background: lightgreen; padding: 10px">
+<p class="title">The username is `admin` and the password is `p@ssword`.</p>
+</div>
 
 Here you can:
 
