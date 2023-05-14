@@ -94,6 +94,9 @@ function toggleFiles(event) {
         $("#listFiles").html("Hide Files");
         $("#fileList").show();
         listFiles();
+        // Hide the Upload
+        $("#fileUpload").hide();
+        $("#controlUpload").text("Show Upload");
     }
 }
 
@@ -255,11 +258,13 @@ function toggleUpload() {
     } else {
         $("#fileUpload").show();
         $("#controlUpload").text("Hide Upload");
+        // Hide the File List
+        $("#listFiles").html("List Files");
+        $("#fileList").hide();
     }
 }
 
-// Function to upload file
-function upload() {
+function upload() { // Function to upload file
     url = "/api/v1/fs/upload/";
 
     // Reject if the file input is empty & throw alert
@@ -342,8 +347,7 @@ function upload() {
     request.send(data);
 }
 
-// Function to update the input placeholder
-function input_filename() {
+function input_filename() {// Function to update the input placeholder
     // Hide the progress bar
     $("#progress_wrapper").addClass("d-none");
     // Reset the progress bar state
@@ -356,8 +360,7 @@ function input_filename() {
     $("#upload_btn").attr("disabled", false);
 }
 
-// Function to show upload complete
-function uploadComplete() {
+function uploadComplete() { // Function to show upload complete
     // Clear the input
     $("#file_input").val('');;
     // Hide the cancel button
