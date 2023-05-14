@@ -29,14 +29,16 @@ SOFTWARE. */
 
 #include <ArduinoJson.h>
 
-#define CAPACITY_ACTION_API 768
-#define CAPACITY_INFO_API 768
-#define CAPACITY_CONFIG_API 384
-#define CAPACITY_API 512
+#define CAPACITY_V1_ACTION_API 768
+#define CAPACITY_V1_INFO_API 1024
+#define CAPACITY_V1_CONFIG_API 192
+#define CAPACITY_V1_FS_API 384
+#define CAPACITY_V1_API 256
+#define CAPACITY_API 128
 
-struct ActionAPI
+struct Action_API_V1
 {
-    // Stores action API information
+    // Stores action API_V1 information
     const char base[7] = "action";
     const char ping[5] = "ping";
     const char wifireset[10] = "wifireset";
@@ -50,9 +52,9 @@ struct ActionAPI
     void save(JsonObject) const;
 };
 
-struct InfoAPI
+struct Info_API_V1
 {
-    // Stores information API information
+    // Stores information API_V1 information
     const char base[5] = "info";
     const char resetreason[12] = "resetreason";
     const char heap[5] = "heap";
@@ -69,9 +71,9 @@ struct InfoAPI
     void save(JsonObject) const;
 };
 
-struct ConfigAPI
+struct Config_API_V1
 {
-    // Stores configuration API information
+    // Stores configuration API_V1 information
     const char base[7] = "config";
     const char settings[9] = "settings";
     const char taps[5] = "taps";
@@ -80,22 +82,39 @@ struct ConfigAPI
     void save(JsonObject) const;
 };
 
-struct API
+struct Files_API_V1
 {
-    const char base[7] = "api/v1";
-    ActionAPI actionAPI;
-    InfoAPI infoAPI;
-    ConfigAPI configAPI;
+    // Stores files API_V1 information
+    const char base[3] = "fs";
+    const char listfiles[10] = "listfiles";
+    const char fsinfo[7] = "fsinfo";
+    const char handlefile[11] = "handlefile";
+    const char upload[7] = "upload";
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
 };
 
-// bool serializeActionAPI(Print &dst);
-// bool serializeInfoAPI(Print &dst);
-// bool serializeConfigAPI(Print &dst);
-// bool serializeAPI(Print &dst);
-// bool printAPI();
+struct API_V1
+{
+    const char base[3] = "v1";
+    Action_API_V1 actionAPI;
+    Info_API_V1 infoAPI;
+    Config_API_V1 configAPI;
+    Files_API_V1 filesAPI;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+struct API
+{
+    const char base[4] = "api";
+    API_V1 api_v1;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
 
 extern API api;
 

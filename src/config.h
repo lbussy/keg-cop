@@ -35,7 +35,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Define API Key (identifies application to target)
+// Define API_V1 Key (identifies application to target)
 //
 #ifndef API_KEY
 #define API_KEY "keg_cop"

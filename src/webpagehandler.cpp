@@ -125,14 +125,33 @@ void setRegPageHandlers()
 
 void setAPIPageHandlers()
 {
+    server.on("/api/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+
+        // Serialize API_V1
+        StaticJsonDocument<CAPACITY_API> doc;
+        JsonObject root = doc.to<JsonObject>();
+        api.save(root);
+
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
+
+    server.on("/api/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
     server.on("/api/v1/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
-        // Serialize API
-        StaticJsonDocument<CAPACITY_API> doc;
+        // Serialize API_V1
+        StaticJsonDocument<CAPACITY_V1_API> doc;
         JsonObject root = doc.to<JsonObject>();
-        api.save(root);
+        api.api_v1.save(root);
 
         // Serialize JSON to String and send
         String json;
@@ -149,9 +168,9 @@ void setAPIPageHandlers()
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
-        StaticJsonDocument<CAPACITY_ACTION_API> doc;
+        StaticJsonDocument<CAPACITY_V1_ACTION_API> doc;
         JsonObject root = doc.to<JsonObject>();
-        api.actionAPI.save(root);
+        api.api_v1.actionAPI.save(root);
 
         // Serialize JSON to String and send
         String json;
@@ -168,9 +187,9 @@ void setAPIPageHandlers()
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
-        StaticJsonDocument<CAPACITY_INFO_API> doc;
+        StaticJsonDocument<CAPACITY_V1_INFO_API> doc;
         JsonObject root = doc.to<JsonObject>();
-        api.infoAPI.save(root);
+        api.api_v1.infoAPI.save(root);
 
         // Serialize JSON to String and send
         String json;
@@ -187,9 +206,9 @@ void setAPIPageHandlers()
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
-        StaticJsonDocument<CAPACITY_CONFIG_API> doc;
+        StaticJsonDocument<CAPACITY_V1_CONFIG_API> doc;
         JsonObject root = doc.to<JsonObject>();
-        api.configAPI.save(root);
+        api.api_v1.configAPI.save(root);
 
         // Serialize JSON to String and send
         String json;
@@ -197,6 +216,25 @@ void setAPIPageHandlers()
         send_json(request, json); });
 
     server.on("/api/v1/config/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/fs/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+
+        // Serialize configuration
+        StaticJsonDocument<CAPACITY_V1_FS_API> doc;
+        JsonObject root = doc.to<JsonObject>();
+        api.api_v1.filesAPI.save(root);
+
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
+
+    server.on("/api/v1/fs/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
         // Needed for pre-flights
         send_ok(request); });
@@ -649,7 +687,7 @@ void setFSPageHandlers()
             return request->requestAuthentication();
         } });
 
-    server.on("/api/v1/fs/listfiles/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/fs/listfiles/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -677,7 +715,7 @@ void setFSPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/fs/fsinfo/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/fs/fsinfo/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
 
@@ -697,7 +735,7 @@ void setFSPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/fs/handlefile/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/fs/handlefile/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
         const char * prefix = "[FS Handler]";
         Log.verbose(F("Sending %s." CR), request->url().c_str());
@@ -761,6 +799,16 @@ void setFSPageHandlers()
         "/api/v1/fs/upload/", KC_HTTP_POST, [](AsyncWebServerRequest *request)
         { send_ok(request); },
         handleUpload);
+
+    server.on("/api/v1/fs/upload/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        send_ok(request);
+              });
+
+    server.on("/api/v1/fs/upload/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        send_not_allowed(request);
+              });
 }
 
 void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
