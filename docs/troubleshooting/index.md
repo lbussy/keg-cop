@@ -8,17 +8,17 @@ This section will grow over time. I will add things here representing items that
 
 ## Backup and Restore
 
-A vestigial UI has been created if you desire to back up or restore your configuration.  You may find this by navigating to `http://{kegcopname}.local/edit` (or via the IP address.)
+A filesystem UI has been created if you desire to back up or restore your configuration.  You may find this by navigating to `http://{hostname}.local/edit` (or via the IP address.)
 
-```{image} filesystem_editor.png
+```{image} filesystem_info.png
 :align: center
 :alt: Filesystem Editor
 :scale: 50%
 ```
 
-<div class="admonition note" name="html-admonition" style="background: lightgreen; padding: 10px">
-<p class="title">The username is `admin` and the password is `p@ssword`.</p>
-</div>
+:::{note}
+The username is `admin` and the password is `p@ssword`.
+:::
 
 Here you can:
 
