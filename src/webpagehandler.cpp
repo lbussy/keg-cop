@@ -88,6 +88,7 @@ void startWebServer()
         }
         else
         {
+            // TODO:  If we get a 404, try redirecting to root
             Log.verbose(F("Processing 404 for %s." CR), request->url().c_str());
             AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
             response->setCode(404);
@@ -735,51 +736,101 @@ void setFSPageHandlers()
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/fs/handlefile/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/fs/downloadfile/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
         const char * prefix = "[FS Handler]";
-        Log.verbose(F("Sending %s." CR), request->url().c_str());
-        Log.verbose(F("%s Client: %s %s" CR), prefix, request->client()->remoteIP().toString().c_str(), request->url().c_str());
+        Log.verbose(F("%s Processing %s." CR), prefix, request->url().c_str());
 
+        int params = request->params();
+        for (int i = 0; i < params; i++)
+        {
+            AsyncWebParameter *p = request->getParam(i);
+
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+
+            Log.verbose(F("%s Sending %s." CR), prefix, request->url().c_str());
+            Log.verbose(F("%s Client: %s %s" CR), prefix, request->client()->remoteIP().toString().c_str(), request->url().c_str());
+
+            if (strcmp(name, "name") == 0 && strcmp(value, "") != 0)
+            {
+                char fileName[34];
+                strcpy(fileName, "/");
+                strcat(fileName, value);
+                Log.notice(F("%s Processing download for %s." CR), prefix, fileName);
+                if (!FILESYSTEM.exists(fileName))
+                {
+                    Log.error(F("%s File does not exist." CR), prefix);
+                    request->send(404, "text/plain", "File does not exist.");
+                }
+                else
+                {
+                    Log.notice(F("%s Downloading %s." CR), prefix, fileName);
+                    Log.notice(F("%s Downloading %s." CR), prefix, fileName);
+                    request->send(FILESYSTEM, fileName, "application/octet-stream");
+                }
+            }
+        } });
+
+    server.on("/api/v1/fs/downloadfile/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/fs/downloadfile/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on("/api/v1/fs/deletefile/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
+        const char * prefix = "[FS Handler]";
+        Log.verbose(F("%s Processing %s." CR), prefix, request->url().c_str());
         switch (handleSecret(request))
         {
             case PROCESSED:
                 if (checkUserWebAuth(request))
                 {
-                    if (request->hasParam("name") && request->hasParam("action"))
+                    int params = request->params();
+                    for (int i = 0; i < params; i++)
                     {
-                        char fileName[38];   // File path + name
-                        strcpy(fileName, "/");
-                        strcat(fileName, request->getParam("name")->value().c_str());
-                        const char *fileAction = request->getParam("action")->value().c_str();
-
-                        Log.verbose(F("%s Action: %s %s?name=%s&action=%s" CR), prefix, request->client()->remoteIP().toString().c_str(), request->url().c_str(), fileName, fileAction);
-
-                        if (!FILESYSTEM.exists(fileName))
+                        AsyncWebParameter *p = request->getParam(i);
+                        if (p->isPost())
                         {
-                            Log.error(F("%s File does not exist." CR), prefix);
-                            request->send(400, "text/plain", "File does not exist");
-                        }
-                        else
-                        {
-                            Log.verbose(F("%s File exists." CR), prefix);
-                            if (strcmp(fileAction, "download") == 0) {
-                                Log.notice(F("%s Downloading %s." CR), prefix, fileName);
-                                request->send(FILESYSTEM, fileName, "application/octet-stream");
-                            } else if (strcmp(fileAction, "delete") == 0) {
-                                Log.notice(F("%s Deleting %s." CR), prefix, fileName);
-                                FILESYSTEM.remove(fileName);
-                                request->send(200, "text/plain", "Deleted File: " + String(fileName));
-                            } else {
-                                Log.error(F("%s Invalid action parameter: %s." CR), prefix, fileAction);
-                                request->send(400, "text/plain", "Invalid action param supplied");
+                            // Process any p->name().c_str() / p->value().c_str() pairs
+                            const char *name = p->name().c_str();
+                            const char *value = p->value().c_str();
+
+                            // Delete file
+                            if (strcmp(name, "delete") == 0 && strcmp(value, "") != 0)
+                            {
+                                char fileName[34];
+                                strcpy(fileName, "/");
+                                strcat(fileName, value);
+                                Log.notice(F("%s Processing delete for %s." CR), prefix, fileName);
+                                if (!FILESYSTEM.exists(fileName))
+                                {
+                                    Log.error(F("%s File does not exist." CR), prefix);
+                                    request->send(400, "text/plain", "File does not exist.");
+                                }
+                                else
+                                {
+                                    Log.verbose(F("%s File exists." CR), prefix);
+                                    Log.notice(F("%s Deleting %s." CR), prefix, fileName);
+                                    if (FILESYSTEM.remove(fileName))
+                                    {
+                                        request->send(200, "text/plain", "Deleted File: " + String(fileName));
+                                        Log.notice(F("%s Deleted: %s." CR), prefix, fileName);
+                                    }
+                                    else
+                                    {
+                                        Log.error(F("%s Unable to delete file." CR), prefix);
+                                        request->send(400, "text/plain", "Unable to delete file.");
+                                    }
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        Log.error(F("%s Filename and action params required." CR), prefix);
-                        request->send(400, "text/plain", "Filename and action params required");
                     }
                 }
                 else
@@ -795,20 +846,26 @@ void setFSPageHandlers()
                 break;
         } });
 
+    server.on("/api/v1/fs/deletefile/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/fs/deletefile/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
     server.on(
         "/api/v1/fs/upload/", KC_HTTP_POST, [](AsyncWebServerRequest *request)
         { send_ok(request); },
         handleUpload);
 
     server.on("/api/v1/fs/upload/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
-              {
-        send_ok(request);
-              });
+              { send_ok(request); });
 
     server.on("/api/v1/fs/upload/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
-              {
-        send_not_allowed(request);
-              });
+              { send_not_allowed(request); });
 }
 
 void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)

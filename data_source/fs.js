@@ -131,7 +131,8 @@ function listFiles(callback = null) {
                     var fileSize = humanReadableSize(parseInt(file.split('|')[1]));
                     var fileName = file.split('|')[0].trim();
                     filesString += '<tr align="left"><td>' + fileName + '</td><td>' + fileSize + '</td>';
-                    filesString += '<td><button type="button" class="btn btn-primary internal-action" onclick="downloadFile(\'' + fileName + '\')">Download</button>';
+                    filesString += '<td>'
+                    filesString += '<button type="button" class="btn btn-primary internal-action" onclick="downloadFile(\'' + fileName + '\')">Download</button>';
                     filesString += '&nbsp;';
                     filesString += '<button type="button" class="btn btn-warning internal-action" onclick="deleteFile(\'' + fileName + '\')">Delete</button></td></tr>';
                 });
@@ -169,11 +170,11 @@ function downloadFile(filename) {
     if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
-    url += "/api/v1/fs/handlefile/";
-    url += "?name=" + filename + "&action=download";
+    url += "/api/v1/fs/downloadfile/";
+    url += "?name=" + filename;
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
+    xhr.open('GET', url);
     xhr.responseType = 'blob'; // Set the response type to blob
 
     xhr.onload = function () {
@@ -181,6 +182,7 @@ function downloadFile(filename) {
             if (xhr.status === 200) {
                 const blob = xhr.response;
                 window.open(url, "_blank");
+                // TODO:  Fucking download buttons are disabled
             } else {
                 fileStatus.html('Request failed. Status: ' + xhr.status);
                 setTimeout(function () { fileStatus.html(""); }, 3000);
@@ -219,28 +221,30 @@ function deleteFile(filename) {
         return false;
     }
 
-    var fileStatus = $('#fileStatus');
-
     var url = dataHost;
     if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
     }
-    url += "/api/v1/fs/handlefile/?name=" + filename + "&action=delete";
+    url += "/api/v1/fs/deletefile/";
+
+    data = {
+        delete: filename,
+    };
 
     $.ajax({
-        type: "POST",
+        type: "PUT",
         url: url,
         headers: { "X-KegCop-Secret": secret },
-        data: { file_name: filename }
+        data,
     })
         .done(function () {
-            fileStatus.html(filename + " deleted.");
+            $('#fileStatus').html(filename + " deleted.");
             listFiles();
-            setTimeout(function () { fileStatus.html(""); }, 3000);
+            setTimeout(function () { $('#fileStatus').html(""); }, 3000);
         })
         .fail(function (textStatus) {
-            fileStatus.html(textStatus);
-            setTimeout(function () { fileStatus.html(""); }, 3000);
+            $('#fileStatus').html(textStatus);
+            setTimeout(function () { $('#fileStatus').html(""); }, 3000);
         })
         .always(function () {
             deleteFileRunning = false;
@@ -265,6 +269,7 @@ function toggleUpload() {
 }
 
 function upload() { // Function to upload file
+
     url = "/api/v1/fs/upload/";
 
     // Reject if the file input is empty & throw alert
