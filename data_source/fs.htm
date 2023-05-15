@@ -83,34 +83,39 @@
                 </div>
                 <div class="card-body">
 
-                    <h5>File System Info:</h5>
+                    <h5>Filesystem Info:</h5>
 
-                    <table id="fsinfo" class="table table-hover">
-                        <tbody>
-                            <tr class="table-firmware table-primary">
-                                <th></th>
-                                <th scope="row">Free Storage:</th>
-                                <td>
-                                    <div id="freespiffs">... loading</div>
-                                </td>
-                            </tr>
-                            <tr class="table-firmware table-default">
-                                <th></th>
-                                <th scope="row">Used Storage:</th>
-                                <td>
-                                    <div id="usedspiffs">... loading</div>
-                                </td>
-                            </tr>
-                            <tr class="table-firmware table-primary">
-                                <th></th>
-                                <th scope="row">Total Storage:</th>
-                                <td>
-                                    <div id="totalspiffs">... loading</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- Filesystem Info: -->
+                    <div>
+                        <table id="fsinfo" class="table table-hover">
+                            <tbody>
+                                <tr class="table-firmware table-primary">
+                                    <th></th>
+                                    <th scope="row">Free Storage:</th>
+                                    <td>
+                                        <div id="freespiffs">... loading</div>
+                                    </td>
+                                </tr>
+                                <tr class="table-firmware table-default">
+                                    <th></th>
+                                    <th scope="row">Used Storage:</th>
+                                    <td>
+                                        <div id="usedspiffs">... loading</div>
+                                    </td>
+                                </tr>
+                                <tr class="table-firmware table-primary">
+                                    <th></th>
+                                    <th scope="row">Total Storage:</th>
+                                    <td>
+                                        <div id="totalspiffs">... loading</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Filesystem Info^ -->
 
+                    <!-- Button Group: -->
                     <div>
                         <button id="listFiles" type="button" class="btn btn-primary internal-action">
                             List Files
@@ -119,6 +124,7 @@
                             Show Upload
                         </button>
                     </div>
+                    <!-- Button Group^ -->
 
                     <!-- File upload div: -->
                     <div id="fileUpload" style="display: none" class="row">
@@ -165,11 +171,11 @@
                         <p>&nbsp;</p>
                         <hr>
                         <div>
-                            <span id="fileHeader">
+                            <div id="fileHeader">
                                 <h5>File List Loading ...<h5>
-                            </span>
+                            </div>
                             &nbsp;
-                            <span id="fileStatus"></span>
+                            <div id="fileStatus"></div>
                         </div>
                         <div id="fileDetails"></div>
                     </div>

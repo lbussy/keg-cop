@@ -116,16 +116,13 @@ function listFiles(callback = null) {
     }
     url += "/api/v1/fs/listfiles/";
 
-    var fileHeader = $('#fileHeader');
-    var fileDetails = $('#fileDetails');
-
     $.ajax({
         url: url,
         dataType: "json"
     })
         .done(function (files) {
             try {
-                fileHeader.html('<h5>File System Files:<h5>');
+                $('#fileHeader').html('<h5>Filesystem Files:<h5>');
                 var filesString = '<table class="table table-hover"><tr><th scope="col" align="left">Name</th><th scope="col" align="left">Size</th><th scope="col">Action</th></tr>';
                 $.each(files, function (index, file) {
                     var fileSize = humanReadableSize(parseInt(file.split('|')[1]));
@@ -137,14 +134,14 @@ function listFiles(callback = null) {
                     filesString += '<button type="button" class="btn btn-warning internal-action" onclick="deleteFile(\'' + fileName + '\')">Delete</button></td></tr>';
                 });
                 filesString += '</table>';
-                fileDetails.html(filesString);
+                $('#fileDetails').html(filesString);
             }
             catch {
-                fileDetails.html('(Error parsing file list.)');
+                $('#fileDetails').html('(Error parsing file list.)');
             }
         })
         .fail(function () {
-            fileDetails.html('(Error loading file list.)');
+            $('#fileDetails').html('(Error loading file list.)');
         })
         .always(function () {
             listFilesRunning = false
@@ -165,7 +162,6 @@ function downloadFile(filename) {
 
     $(':button').attr('disabled', 'disabled');
 
-    var fileStatus = $('#fileStatus');
     var url = dataHost;
     if (url && url.endsWith("/")) {
         url = url.slice(0, -1)
@@ -182,28 +178,24 @@ function downloadFile(filename) {
             if (xhr.status === 200) {
                 const blob = xhr.response;
                 window.open(url, "_blank");
-                // TODO:  Fucking download buttons are disabled
             } else {
-                fileStatus.html('Request failed. Status: ' + xhr.status);
-                setTimeout(function () { fileStatus.html(""); }, 3000);
+                $('#fileStatus').html('Request failed. Status: ' + xhr.status);
+                setTimeout(function () { $('#fileStatus').html(""); }, 3000);
             }
-            $(':button').removeAttr("disabled");
-            downloadFileRunning = false;
         }
     };
     xhr.onerror = function () {
-        fileStatus.html('Request failed. Network error.');
-        setTimeout(function () { fileStatus.html(""); }, 3000);
-        downloadFileRunning = false;
+        $('#fileStatus').html('Request failed. Network error.');
+        setTimeout(function () { $('#fileStatus').html(""); }, 3000);
     };
     xhr.onabort = function () {
-        fileStatus.html('Request aborted.');
-        setTimeout(function () { fileStatus.html(""); }, 3000);
-        downloadFileRunning = false;
+        $('#fileStatus').html('Request aborted.');
+        setTimeout(function () { $('#fileStatus').html(""); }, 3000);
     };
     xhr.onloadend = function () {
-        fileStatus.html('Request completed.');
-        setTimeout(function () { fileStatus.html(""); }, 3000);
+        $('#fileStatus').html('Request completed.');
+        setTimeout(function () { $('#fileStatus').html(""); }, 3000);
+        $(':button').removeAttr("disabled");
         downloadFileRunning = false;
     };
     xhr.send();
