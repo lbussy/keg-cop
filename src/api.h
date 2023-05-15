@@ -32,7 +32,7 @@ SOFTWARE. */
 #define CAPACITY_V1_ACTION_API 768
 #define CAPACITY_V1_INFO_API 1024
 #define CAPACITY_V1_CONFIG_API 192
-#define CAPACITY_V1_FS_API 384
+#define CAPACITY_V1_FS_API 512
 #define CAPACITY_V1_API 256
 #define CAPACITY_API 128
 
@@ -88,7 +88,8 @@ struct Files_API_V1
     const char base[3] = "fs";
     const char listfiles[10] = "listfiles";
     const char fsinfo[7] = "fsinfo";
-    const char handlefile[11] = "handlefile";
+    const char downloadfile[13] = "downloadfile";
+    const char deletefile[11] = "deletefile";
     const char upload[7] = "upload";
 
     void load(JsonObjectConst);

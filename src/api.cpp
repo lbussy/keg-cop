@@ -227,11 +227,17 @@ void Files_API_V1::save(JsonObject obj) const
     strcat(_url, a_delim);
     obj["fsinfo"] = _url;
 
-    // Handle File (download/delete)
+    // File download
     strcpy(_url, _base);
-    strcat(_url, handlefile);
+    strcat(_url, downloadfile);
     strcat(_url, a_delim);
-    obj["handlefile"] = _url;
+    obj["downloadfile"] = _url;
+
+    // Delete file
+    strcpy(_url, _base);
+    strcat(_url, deletefile);
+    strcat(_url, a_delim);
+    obj["deletefile"] = _url;
 
     // Upload File
     strcpy(_url, _base);
