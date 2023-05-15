@@ -88,7 +88,7 @@ void startWebServer()
         }
         else
         {
-            // TODO:  If we get a 404, try redirecting to root
+            // TODO:  If we get a 404 and there is an extension, try redirecting to root
             Log.verbose(F("Processing 404 for %s." CR), request->url().c_str());
             AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
             response->setCode(404);
@@ -763,15 +763,18 @@ void setFSPageHandlers()
                 {
                     Log.error(F("%s File does not exist." CR), prefix);
                     request->send(404, "text/plain", "File does not exist.");
+                    return;
                 }
                 else
                 {
                     Log.notice(F("%s Downloading %s." CR), prefix, fileName);
-                    Log.notice(F("%s Downloading %s." CR), prefix, fileName);
                     request->send(FILESYSTEM, fileName, "application/octet-stream");
+                    return;
                 }
             }
-        } });
+        }
+            send_not_allowed(request);
+        });
 
     server.on("/api/v1/fs/downloadfile/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {

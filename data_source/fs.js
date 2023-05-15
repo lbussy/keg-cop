@@ -188,19 +188,23 @@ function downloadFile(filename) {
                 setTimeout(function () { fileStatus.html(""); }, 3000);
             }
             $(':button').removeAttr("disabled");
+            downloadFileRunning = false;
         }
     };
     xhr.onerror = function () {
         fileStatus.html('Request failed. Network error.');
         setTimeout(function () { fileStatus.html(""); }, 3000);
+        downloadFileRunning = false;
     };
     xhr.onabort = function () {
         fileStatus.html('Request aborted.');
         setTimeout(function () { fileStatus.html(""); }, 3000);
+        downloadFileRunning = false;
     };
     xhr.onloadend = function () {
         fileStatus.html('Request completed.');
         setTimeout(function () { fileStatus.html(""); }, 3000);
+        downloadFileRunning = false;
     };
     xhr.send();
 }
