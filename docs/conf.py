@@ -42,7 +42,7 @@ release = version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['myst_parser', 'sphinx.ext.todo']
-myst_enable_extensions = ['html_admonition']
+myst_enable_extensions = ['html_admonition', 'colon_fence']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

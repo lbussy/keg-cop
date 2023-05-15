@@ -2,12 +2,13 @@
 
 # Keg Cop API
 
-<div class="admonition note" name="html-admonition" style="background: lightgreen; padding: 10px">
-<p class="title">Important Security Note</p>
-<p>As of version 1.2.0, all PUT, POST, and action API usage must include an `X-KegCop-Secret` header with a value identical to the controller GUID.</p>
-<p>The secret may be obtained by querying the `/api/v1/info/secret` endpoint.</p>
-<p>This is obviously not intended to replace good security practices, and in no way would I ever recommend that you EVER expose this to the Internet or an unprotected network.</p>
-</div>
+:::{caution}
+As of version 1.2.0, all PUT, POST, and action API usage must include an `X-KegCop-Secret` header with a value identical to the controller GUID.
+
+The secret may be obtained by querying the `/api/v1/info/secret` endpoint.
+
+This is obviously not intended to replace good security practices, and in no way would I ever recommend that you EVER expose this to the Internet or an unprotected network.
+:::
 
 The secret may be obtained by querying the `/api/v1/info/secret` endpoint.
 
@@ -35,7 +36,7 @@ These action page handlers exist within the Action Page API tree:
 - [WiFi Reset](#wifi-reset)
 - [Controller Reset](#controller-reset)
 - [Online Update](#online-update)
-- [Clear Update State](#clear-uodate-state)
+- [Clear Update State](#clear-update-state)
 - [Set Calibration Mode](#set-calibration-mode)
 - [Clear Calibration Mode](#clear-calibration-mode)
 
@@ -107,7 +108,7 @@ These action page handlers exist within the Action Page API tree:
 These information provider pages exist within the Info API tree:
 
 - [Reset Reason](#reset-reason)
-- [Heap Information](heap_information)
+- [Heap Information](#heap-information)
 - [Uptime](#uptime)
 - [This Version](#this-version)
 - [That Version](#that-version)
