@@ -124,7 +124,7 @@ void logFlow()
                 pulse[i] = lastPulse[i]; // Discard the foam pulses
                 flow.taps[i].active = false;
                 setQueueKickReport(i);
-                saveFlowConfig();
+                setDoSaveFlow();
             }
             else if ((millis() - lastPulseTime[i] > POURDELAY) && (pulse[i] > 0))
             { // If we have stopped pouring, and there's something to log

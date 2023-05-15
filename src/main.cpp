@@ -85,8 +85,8 @@ void setup()
     {
         flow.taps[i].calibrating = false;
     }
-    saveFlowConfig();
-    saveAppConfig();
+    setDoSaveApp();
+    setDoSaveFlow();
 
     // Check if portal is requested
     bool detectdrd = drd->detectDoubleReset();

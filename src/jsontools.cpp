@@ -185,7 +185,7 @@ void convertFlowtoImperial()
             flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
             flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
         }
-        saveFlowConfig();
+        setDoSaveFlow();
     }
 }
 
@@ -203,6 +203,6 @@ void convertFlowtoMetric()
             flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
             flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
         }
-        saveFlowConfig();
+        setDoSaveFlow();
     }
 }
