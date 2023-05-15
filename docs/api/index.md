@@ -2,38 +2,39 @@
 
 # Keg Cop API
 
-:::{note}
-As of version 1.2.0, all PUT and action API usage must include an `X-KegCop-Secret` header with a value identical to the controller GUID.
+:::{caution}
+As of version 1.2.0, all PUT, POST, and action API usage must include an `X-KegCop-Secret` header with a value identical to the controller GUID.
 
-The secret may be obtained by querying the `/api/v1/info/secret` endpoint.
+You may obtain the secret by querying the `/api/v1/info/secret` endpoint.
 
-This is obviously not intended to replace good security practices, and in no way would I ever recommend that you EVER expose this to the Internet or an unprotected network.
+The "secret" is not intended to replace good security practices, and in no way would I ever recommend that you EVER expose this to the Internet or an unprotected network.
 :::
 
 Keg Cop uses a combination of API types:
 
-- [Client-Initiated Communication]
-- [Controller-Initiated Communication]
+- [Client-Initiated Communication](#client-initiated-communication)
+- [Controller-Initiated Communication](#controller-initiated-communication)
 
 ## Client-Initiated Communication
 
-Client-initiated communication is initiated from a system other than the controller to retrieve data or initiate a data update or state change in the controller.  This is broken down into:
+Client-initiated communication is initiated from a system other than the controller to retrieve data or execute a data update or state change in the controller.  These communications are broken down into:
 
-- [Action Page Handlers]: Pages that access will initiate a change or present a state.
-- [Info Page Handlers]: Pages accessed to retrieve information about the controller's state and its systems.
-- [Configuration Page Handlers]: Pages intended to provide a means by which the controller and application features and properties may be updated.
+- [Action Page Handlers](#action-page-handlers): Pages that access will initiate a change or present a state.
+- [Info Page Handlers](#info-page-handlers): Pages accessed to retrieve information about the controller's state and its systems.
+- [Configuration Page Handlers](#configuration-page-handlers): Pages intended to provide a means by which you may update the controller and application features.
+- [Filesystem Page Handlers](#filesystem-page-handlers): Allow direct manipulation of the files stored and served by the controller.
 
 ### Action Page Handlers
 
 These action page handlers exist within the Action Page API tree:
 
-- [Ping]
-- [WiFi Reset]
-- [Controller Reset]
-- [Online Update]
-- [Clear Update State]
-- [Set Calibration Mode]
-- [Clear Calibration Mode]
+- [Ping](#ping)
+- [WiFi Reset](#wifi-reset)
+- [Controller Reset](#controller-reset)
+- [Online Update](#online-update)
+- [Clear Update State](#clear-update-state)
+- [Set Calibration Mode](#set-calibration-mode)
+- [Clear Calibration Mode](#clear-calibration-mode)
 
 #### Ping
 
@@ -41,7 +42,7 @@ These action page handlers exist within the Action Page API tree:
 - **Valid Methods:**  {file}`GET`
 - **Data:**  Ignored
 - **Response:** {file}`200 Ok`
-- **Description:** While not an action per se, this page provides a simple response intended to semaphore the existence of the controller.
+- **Description:** While not an action per se, this page provides a simple response to semaphore the controller's presence on the network.
 - **Error Message:** None
 
 #### WiFi Reset
@@ -50,7 +51,7 @@ These action page handlers exist within the Action Page API tree:
 - **Valid Methods:** {file}`PUT`
 - **Data:** Ignored
 - **Response:** {file}`200 Ok`
-- **Description:** This endpoint will initiate both erasure of the saved WiFi credentials and a controller restart.  As the restart will be without credentials, this will cause the controller to start a captive portal for configuration.
+- **Description:** This endpoint will initiate the erasure of the saved WiFi credentials and a controller restart.  The restart will not be able to retrieve WiFi credentials; this will cause the controller to start a captive portal for configuration.
 - **Error Message:** Any method other than {file}`PUT` will result in a {file}`405 Method Not Allowed` error.
 
 #### Controller Reset
@@ -59,7 +60,7 @@ These action page handlers exist within the Action Page API tree:
 - **Valid Methods:** {file}`PUT`
 - **Data:** Ignored
 - **Response:** {file}`200 Ok`
-- **Description:** This endpoint will initiate a controller restart with no loss of data.
+- **Description:** This endpoint will initiate a controller restart without losing data.
 - **Error Message:** Any method other than {file}`PUT` will result in a {file}`405 Method Not Allowed` error.
 
 #### Online Update
@@ -68,7 +69,7 @@ These action page handlers exist within the Action Page API tree:
 - **Valid Methods:** {file}`PUT`
 - **Data:** Ignored
 - **Response:** {file}`200 Ok`
-- **Description:** This endpoint will initiate a controller upgrade attempt using the firmware avaialble at the author's website.  Both firmware and filesystem updates will be attempted.  The controller will restart several times during this process.
+- **Description:** This endpoint will initiate a controller upgrade attempt using the firmware available at the author's website.  The controller will attempt to update both firmware and the filesystem.  The controller will restart several times during this process.
 - **Error Message:** Any method other than {file}`PUT` will result in a {file}`405 Method Not Allowed` error.
 
 #### Clear Update State
@@ -77,7 +78,7 @@ These action page handlers exist within the Action Page API tree:
 - **Valid Methods:** {file}`PUT`
 - **Data:** Ignored
 - **Response:** {file}`200 Ok`
-- **Description:** This endpoint will clear the update semaphores which trigger an update attempt initiated on a controller restart.
+- **Description:** This endpoint will clear the update semaphores that trigger an update attempt initiated on a controller restart.
 - **Error Message:** Any method other than {file}`PUT` will result in a {file}`405 Method Not Allowed` error.
 
 #### Set Calibration Mode
@@ -86,7 +87,7 @@ These action page handlers exist within the Action Page API tree:
 - **Valid Methods:** {file}`PUT`
 - **Data:** Ignored
 - **Response:** {file}`200 Ok`
-- **Description:** This endpoint will put the controller in calibration mode.  This mode pauses pour calculations in order to allow a user to measure a pour and calculate pulses per unit.  The pulses accumulated will debit upon completion.
+- **Description:** This endpoint will put the controller in calibration mode.  This mode pauses pour calculations to allow users to measure a pour and calculate pulses per unit.  The pulses accumulated will debit upon completion.
 - **Error Message:** Any method other than {file}`PUT` will result in a {file}`405 Method Not Allowed` error.
 
 #### Clear Calibration Mode
@@ -95,29 +96,22 @@ These action page handlers exist within the Action Page API tree:
 - **Valid Methods:** {file}`PUT`
 - **Data:** Ignored
 - **Response:** {file}`200 Ok`
-- **Description:** This endpoint will clear the calibration mode, and debit any accumulated pulses.
+- **Description:** This endpoint will clear the calibration mode and debit any accumulated pulses.
 - **Error Message:** Any method other than {file}`PUT` will result in a {file}`405 Method Not Allowed` error.
 
 ### Info Page Handlers
 
 These information provider pages exist within the Info API tree:
 
-- [Reset Reason]
-- [Heap Information]
-- [Uptime]
-- [This Version]
-- [That Version]
-- [Pulses]
-- [Sensors]
-- [Reset Reason]
-- [Heap Information]
-- [Uptime]
-- [This Version]
-- [That Version]
-- [Pulses]
-- [Sensors]
-- [Secret]
-- [Theme]
+- [Reset Reason](#reset-reason)
+- [Heap Information](#heap-information)
+- [Uptime](#uptime)
+- [This Version](#this-version)
+- [That Version](#that-version)
+- [Pulses](#pulses)
+- [Sensors](#sensors)
+- [Secret](#secret)
+- [Theme](#theme)
 
 #### Reset Reason
 
@@ -172,7 +166,7 @@ Where:
 - **Address:** {file}`/api/v1/info/uptime/`
 - **Valid Methods:** {file}`ANY`
 - **Data:** Ignored
-- **Description:** Elapsed time since last controller reset.
+- **Description:** Elapsed time since the last controller reset.
 - **Error Message:** None.
 - **Response:**
 
@@ -264,7 +258,7 @@ Where:
 - **Address:** {file}`/api/v1/info/sensors/`
 - **Valid Methods:** {file}`ANY`
 - **Data:** Ignored
-- **Description:** Information pertaining to temperature sensors and control.
+- **Description:** Information about temperature sensors and control.
 - **Error Message:** None.
 - **Response:**
 
@@ -309,12 +303,12 @@ Where:
 Where:
 
 - `imperial` = True for imperial units, false for metric.
-- `controlpoint` = Zero-based index representing the current [sensor] by which temperature is being controlled.
+- `controlpoint` = Zero-based index representing the current [sensor] by which the system controls temperature.
 - `setting` = Temperature setting in current units.
-- `status` = Zero based index representing the current temperature control [state].
+- `status` = Zero-based index representing the current temperature control [state].
 - `controlenabled` = Boolean for enabling temperature control.
 - `tfansetpoint` = Temperature setting for tower fan in current units.
-- `tfanstate` = Zero based index representing the current tower temperature control [state].
+- `tfanstate` = Zero-based index representing the current tower temperature control [state].
 - `tfancontrolenabled` = Boolean for enabling tower temperature control.
 - `sensors` = An array of temperature sensors denoting the `name`, `enable` status, and current `value` of each.
 - `displayenabled` = Boolean to display temperatures on the web UI or not.
@@ -338,34 +332,31 @@ Where:
 
 - `secret` = Hexidecimal string for representing controller GUID.
 
-#### Files
+#### Theme
 
-- **Address:** {file}`/api/v1/info/files/`
+- **Address:** {file}`/api/v1/info/theme/`
 - **Valid Methods:** {file}`ANY`
 - **Data:** Ignored
-- **Description:** Filesystem file list.
+- **Description:** Name of the current Bootswatch theme.
 - **Error Message:** None.
 - **Response:**
 
 ```json
-[
-  "README.md",
-  "about.htm.gz",
-  ...
+{
+  "theme": "cerulean"
 }
 ```
 
 ### Configuration Page Handlers
 
-The configuration page API tree allows retrieval of current states or setting condition and properties via the same endpoint.  Available pages are:
+The configuration page API tree allows retrieval of current states or setting conditions and properties via the same endpoint.  Available pages are:
 
-- [Settings]
-- [Taps]
-- [Theme]
+- [Settings](#settings)
+- [Taps](#taps)
 
 #### Settings
 
-Both `GET` and `PUT` are valid methods for this endpoint.
+`GET` and `PUT` are valid methods for this endpoint.
 
 ##### GET
 
@@ -456,33 +447,33 @@ The PUT should follow standard form submission data format, with the following i
 
 ###### copconfig
 
-- `guid` - Not configurable via settings, this is a calculated/derived value unique to the controller.
+- `guid` - Not configurable via settings; this is a calculated/derived value unique to the controller.
 - `hostname` - A string representing a valid hostname (without the .local portion) between 3 and 32 characters.
 - `breweryname` - A string representing the brewery name, used to logically group multiple controllers and display the web page.
 - `kegeratorname` - A string representing the kegerator name, used to identify the controller and displayed within the web page display.
-- `controlnum` - A 1-based index of the controller sequence.  This should be unique in the brewery and will help identify the same tapid across multiple controllers.
+- `controlnum` - A 1-based index of the controller sequence.  The number should be unique in the brewery and will help identify the same tapid across multiple controllers.
 - `imperial` - A boolean representing imperial versus metric units to be used by the controller.  Changing this value will result in a conversion of all stored values to the target units.  Multiple toggles could result in accrued rounding errors and some loss of accuracy.
 - `tapsolenoid` - A simple control point intended to control a local solenoid by an upstream system or the web UI.
 - `theme` - Any pre-configured Bootstrap-compliant theme.
 
 ###### temps
 
-- `setpoint` - The temperature setpoint in the configured units to which the system will cool the cabinet.  This is a floating-point number.
-- `controlpoint` - A zero-based index indicating the [sensor] by which the system will be cooled.
+- `setpoint` - The temperature setpoint in the configured units to which the system will cool the cabinet.  Setpoint is a floating-point number.
+- `controlpoint` - A zero-based index indicating the [sensor] by which the system cools.
 - `controlenabled` - A boolean turning temperature control on and off.
-- `tfansetpoint` = The temperature setpoint for cooling in the configured units to which the system will cool the tower.  This is a floating-point number.
-- `tfanstate` = Zero based index representing the current tower temperature control [state].
+- `tfansetpoint` = The temperature setpoint for cooling in the configured units to which the system will cool the tower.  The set point is a floating-point number.
+- `tfanstate` = Zero-based index representing the current tower temperature control [state].
 - `tfancontrolenabled` = Boolean for enabling tower temperature control.
 - `enableroom` - Enable the room sensor to be displayed.
-- `roomcal` - A signed floating-point number by which the room sensor will be calibrated.
+- `roomcal` - A signed floating-point number by which the controller will calibrate the room sensor.
 - `enabletower` - Enable the tower sensor to be displayed.
-- `towercal` - A signed floating-point number by which the tower sensor will be calibrated.
-- `enableupper` - Enable the uppercal sensor to be displayed.
-- `uppercal` - A signed floating-point number by which the upper sensor will be calibrated.
-- `enablelower` - Enable the lower sensor to be displayed.
-- `lowercal` - A signed floating-point number by which the lower sensor will be calibrated.
+- `towercal` - A signed floating-point number by which the controller will calibrate the tower sensor.
+- `enableupper` - Enable the upper chamber sensor to be displayed.
+- `uppercal` - A signed floating-point number by which the controller will calibrate the upper chamber sensor.
+- `enablelower` - Enable the lower chamber sensor to be displayed.
+- `lowercal` - A signed floating-point number by which the controller will calibrate the lower chamber sensor.
 - `enablekeg` - Enable the keg sensor to be displayed.
-- `kegcal` - A signed floating-point number by which the keg sensor will be calibrated.
+- `kegcal` - A signed floating-point number by which the controller will calibrate the keg sensor.
 
 ###### kegscreen (url)
 
@@ -500,13 +491,13 @@ The PUT should follow standard form submission data format, with the following i
 
 - `venue` - The taplist.io venue name.
 - `secret` - The taplist.io API secret key.
-- `lastsent` - Time (epoch) the report was last sent.  Used for rate limiting.
+- `lastsent` - Time (epoch) the controller sent the last report.  Used for rate limiting.
 - `update` - Whether there is a Taplist.io update pending.
 
 ###### urltarget
 
 - `targeturl` - The full URL target for the generic URL target.
-- `targetfreq` - The frequency at which data will be pushed.
+- `targetfreq` - The frequency at which the controller will push data.
 
 #### Taps
 
@@ -640,7 +631,7 @@ Both `GET` and `PUT` are valid methods for this endpoint.
 Where:
 
 - `imperial` = True for imperial units, false for metric.
-- `taps` = An array with information for each of the taps configured.
+- `taps` = An array with information for each tap configured.
 
 Tap information follows the following format:
 
@@ -652,7 +643,7 @@ Tap information follows the following format:
 - `name` = The name of the beverage currently on tap.
 - `capacity` = The capacity, in current units, of the attached keg.
 - `remaining` = The amount remaining, in current units, of the attached keg.
-- `active` = Denotes whether the tap is active (displayed) or not.
+- `active` = Denotes whether the tap is active (displayed).
 - `calibrating` = Switch to put the tap in calibration mode.
 
 ##### PUT
@@ -667,7 +658,7 @@ Tap information follows the following format:
 The PUT should follow standard form submission data format, with the following items available.  Items not listed are not available for change.  Some names are not the same as they appear in the JSON; the PUT format is flattened but represented below in groups by the JSON stanza.
 
 `imperial` = True for imperial units, false for metric.
-`taps` = An array with information for each of the taps configured.
+`taps` = An array with information for each configured tap.
 
 The tap array follows the following format for each of the nine available taps:
 
@@ -675,54 +666,166 @@ The tap array follows the following format for each of the nine available taps:
 - `label` = The one-based label representing the tap number externally.
 - `ppu` = The pulses per configured flow unit.
 - `bevname` = The name of the beverage currently on tap.
-- `cap` = The capacity, in floating-point current units, of the attached keg.
-- `remain` = The amount remaining, in floating-point current units, of the attached keg.
-- `active` = Denotes whether the tap is active (displayed) or not.
+- `cap` = The capacity of the attached keg in floating-point current units.
+- `remain` = The amount remaining of the attached keg in floating-point current units.
+- `active` = Denotes whether the tap is active (displayed).
 
-#### Theme
+### Filesystem Page Handlers
 
-Both `GET` and `PUT` are valid methods for this endpoint.
+These action page handlers exist within the Action Page API tree:
 
-##### GET
+- [Filesystem Info](#filesystem-info)
+- [List Files](#list-files)
+- [Download File](#download-file)
+- [Delete File](#delete-file)
+- [Upload File](#upload-file)
 
-- **Address:** {file}`/api/v1/info/theme/`
-- **Valid Methods:** {file}`ANY`
-- **Data:** Ignored
-- **Description:** The {file}`GET` method for this endpoint will return the current theme configuration.
-- **Error Message:** None; any method will return valid JSON.
-- **Response:**
+#### Filesystem Info
+
+- **Address:**  {file}`/api/v1/fs/fsinfo/`
+- **Valid Methods:**  {file}`GET`
+- **Data:**  Ignored
+- **Response:** {file}`200 Ok`
+- **Description:** This page provides filesystem usage information.
+- **Error Message:** None
 
 ```json
 {
-"theme": "cerulean"
+  "f": {
+    "free": 211342,
+    "used": 263299,
+    "total": 474641
+  }
 }
 ```
 
 Where:
 
-- `theme` = Any pre-configured Bootstrap-compliant theme
+- `free`= Free space on the filesystem
+- `used`= Space used on the filesystem
+- `total`= Total filesystem size
+
+#### List Files
+
+- **Address:**  {file}`/api/v1/fs/listfiles/`
+- **Valid Methods:**  {file}`GET`
+- **Data:**  Ignored
+- **Response:** {file}`200 Ok`
+- **Description:** This page lists all files in the filesystem with their size in bytes.
+- **Error Message:** None
+
+```json
+[
+  "README.md|263",
+  "about.htm.gz|2195",
+  "about.js.gz|1609",
+  "android-chrome-192x192.png|23775",
+  "android-chrome-512x512.png|101113",
+  "appconfig.json|1449",
+  "apple-touch-icon.png|15957",
+  "browserconfig.xml|244",
+  "cerulean_aux.css.gz|158",
+  "controllerreset.htm.gz|1700",
+  "controllerreset.js.gz|870",
+  "drd.dat|4",
+  "favicon-16x16.png|1425",
+  "favicon-32x32.png|2301",
+  "favicon.ico|15086",
+  "flowconfig.json|2272",
+  "fs.htm|9202",
+  "fs.js|11950",
+  "help.htm.gz|1966",
+  "help.js.gz|229",
+  "index.htm.gz|2061",
+  "index.js.gz|3166",
+  "kegcop.css.gz|507",
+  "kegcop_post.js.gz|1079",
+  "kegcop_pre.js.gz|4523",
+  "kstv.json|105",
+  "license.htm.gz|2325",
+  "license.js.gz|204",
+  "mstile-150x150.png|2582",
+  "newedit.htm.gz|1812",
+  "newedit.js.gz|1941",
+  "ota.htm.gz|1762",
+  "ota.js.gz|1590",
+  "settings.htm.gz|10013",
+  "settings.js.gz|7510",
+  "site.webmanifest|424",
+  "superhero_aux.css.gz|161",
+  "temps.htm.gz|2065",
+  "temps.js.gz|2626",
+  "test.htm.gz|2247",
+  "uptime.csv|534",
+  "uptime.json|69",
+  "version.json|73",
+  "wifireset.htm.gz|1695",
+  "wifireset.js.gz|709"
+]
+```
+
+Where:
+
+`README.md|263`= A file named `README.md` with a size of 263 bytes.
+
+#### Download File
+
+- **Address:**  {file}`/api/v1/fs/downloadfile/`
+- **Valid Methods:**  {file}`GET`
+- **Data:**  URL-encoded query
+- **Response:** {file}`200 Ok`
+- **Description:** When the controller receives a proper URL encoded request, this endpoint will prompt the browser for a file download.
+- **Error Message:** None
+
+Request encoding:
+
+`?name=README.md`= Where `name` is the query tag name followed by `README.md` as the file the controller will send.
+
+#### Delete File
+
+- **Address:**  {file}`/api/v1/fs/deletefile/`
+- **Valid Methods:**  {file}`PUT`
+- **Response:** {file}`200 Ok`
+- **Description:** This page deletes a file on the filesystem.
+- **Error Message:** None
+- **Data:**
+
+The PUT should follow standard form submission data format, with the following item available.
+
+`name` = Name of the file to be deleted.
+
+#### Upload File
+
+- **Address:**  {file}`/api/v1/fs/uploadfile/`
+- **Valid Methods:**  {file}`POST`
+- **Response:** {file}`200 Ok`
+- **Description:** This page allows uploading a file to the filesystem.
+- **Error Message:** None
+- **Data:**
+
+The POST is an `XMLHttpRequest()` with the file contained within the `FormData()` object selected by the "file" input control.
 
 ## Controller-Initiated Communication
 
-These reports are sent, when so configured, via WiFi to upstream systems.
+The controller will send communications, when so configured, via WiFi to upstream systems.
 
-- [KegScreen]
-- [URL]
-- [Raspberry Pints]
+- [KegScreen](#kegscreen)
+- [URL](#url)
+- [Raspberry Pints](#raspberry-pints)
 
 ### KegScreen
 
 Keg Cop sends five different reports to the upstream KegScreen system:
 
-- [Send Tap Information Report]
-- [Send Pulse Report]
-- [Send Kick Report]
-- [Send Cooling State Report]
-- [Send Temperature Report]
+- [Send Tap Information Report](#send-tap-information-report)
+- [Send Pulse Report](#send-pulse-report)
+- [Send Kick Report](#send-kick-report)
+- [Send Cooling State Report](#send-cooling-state-report)
+- [Send Temperature Report](#send-temperature-report)
 
 #### Send Tap Information Report
 
-This report is sent to the upstream system whenever a change is made to any tap information.  The configuration is as follows:
+This report is sent to the upstream system whenever the system logs a change to any tap information.  The configuration is as follows:
 
 ```json
 {
@@ -764,7 +867,7 @@ Whenever a pour completes, Keg Cop sends a pour report to the KegScreen system. 
 
 #### Send Kick Report
 
-Keg Cop employs an algorithm for detecting a kicked keg. When the pour volume exceeds a predetermined amount per second, Keg Cop considers that as evidence the keg is blowing foam and will mark the keg inactive. A kick report will be sent to the KegScreen system. The format is as follows:
+Keg Cop employs an algorithm for detecting a kicked keg.  When the pour volume exceeds a predetermined amount per second, Keg Cop considers that as evidence the keg is blowing foam and will mark the keg inactive.  The system will send a kick report to the KegScreen system.  The format is as follows:
 
 ```json
 {
@@ -780,7 +883,7 @@ Keg Cop employs an algorithm for detecting a kicked keg. When the pour volume ex
 
 #### Send Cooling State Report
 
-Whenever the cooling state changes, a state report is triggered for the KegScreen system.  The format is as follows:
+A state report is triggered for the KegScreen system whenever the cooling state changes.  The format is as follows:
 
 ```json
 {
@@ -800,18 +903,18 @@ Whenever the cooling state changes, a state report is triggered for the KegScree
 Where:
 
 - `API` = Intended to be an indicator to the upstream system for the source of information.
-- `guid` = A unique identifier for the controller, used to help differentiate between multiple Keg Cops.
+- `guid` = A unique identifier for the controller to help differentiate between multiple Keg Cops.
 - `hostname` = Current mDNS hostname.
 - `brewername` = A name used to group several Keg Cops logically.
 - `reporttype` = The type of information to be found in this report.
 - `state` = A zero-based index representing the current temperature control [state]
 - `tfansetpoint` = Temperature setting for tower fan in current units.
-- `tfanstate` = Zero based index representing the current tower temperature control [state].
+- `tfanstate` = Zero-based index representing the current tower temperature control [state].
 - `tfancontrolenabled` = Boolean for enabling tower temperature control.
 
 #### Send Temperature Report
 
-A report containing all temperature points is sent to the KegScreen system every minute. The format is as follows:
+The controller sends a report containing all temperature points to the KegScreen system every minute.  The format is as follows:
 
 ```json
 {
@@ -861,7 +964,7 @@ A report containing all temperature points is sent to the KegScreen system every
 
 ### URL
 
-The Target URL Report provides a holistic picture of the system to a custom/third-party endpoint. It is a timer-based POST; a change of state does not trigger it. As with all target system configurations within Keg Cop, it will post to HTTP only. The format is as follows:
+The Target URL Report provides a holistic system picture of a custom/third-party endpoint.  It is a timer-based POST; a state change does not trigger it.  As with all target system configurations within Keg Cop, it will post to HTTP only.  The format is as follows:
 
 ```json
 {
@@ -977,7 +1080,7 @@ The Target URL Report provides a holistic picture of the system to a custom/thir
 
 ### Raspberry Pints
 
-Keg Cop will send a message via MQTT to a configured endpoint.  Raspberry Pints does not leverage standard MQTT format; this format is specific to Raspberry Pints.  The format is as follows:
+Keg Cop will send a message via MQTT to a configured endpoint.  Raspberry Pints does not leverage the standard MQTT format; this format is specific to Raspberry Pints.  The structure is as follows:
 
 ```
 P;-1;0;737
@@ -986,7 +1089,7 @@ P;-1;0;737
 Where:
 
 - `P` = A pulse report (the only one currently supported via MQTT by Raspberry Pints.)
-- `-1` = The user.  Since Keg Cop does not support user IDs, a -1 is sent to indicate "no user."
+- `-1` = The user.  Since Keg Cop does not support user IDs, a -1 indicates "no user."
 - `0` = Tap number.
 - `737` = Number of raw pulses to report.
 

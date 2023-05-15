@@ -23,6 +23,7 @@ settings/advanced/calibrate/index
 settings/advanced/reset/index
 settings/advanced/update/index
 settings/advanced/wifi/index
+filesystem/index
 help/index
 about/index
 about/license

@@ -21,107 +21,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "api.h"
-
 API api;
-const char* a_urlstart = "http://";
-const char* a_tld = ".local";
-const char* a_delim = "/";
+const char *a_urlstart = "http://";
+const char *a_tld = ".local";
+const char *a_delim = "/";
 
-// bool serializeActionAPI(Print &dst)
-// {
-//     // Serialize configuration
-//     StaticJsonDocument<CAP_ACTION_API> doc;
-
-//     // Create an object at the root
-//     JsonObject root = doc.to<JsonObject>();
-
-//     // Fill the object
-//     api.actionAPI.save(root);
-
-//     // Serialize JSON to file
-//     return serializeJsonPretty(doc, dst) > 0;
-// }
-
-// bool serializeInfoAPI(Print &dst)
-// {
-//     // Serialize configuration
-//     StaticJsonDocument<CAP_INFO_API> doc;
-
-//     // Create an object at the root
-//     JsonObject root = doc.to<JsonObject>();
-
-//     // Fill the object
-//     api.infoAPI.save(root);
-
-//     // Serialize JSON to file
-//     return serializeJsonPretty(doc, dst) > 0;
-// }
-
-// bool serializeConfigAPI(Print &dst)
-// {
-//     // Serialize configuration
-//     StaticJsonDocument<CAP_CONFIG_API> doc;
-
-//     // Create an object at the root
-//     JsonObject root = doc.to<JsonObject>();
-
-//     // Fill the object
-//     api.configAPI.save(root);
-
-//     // Serialize JSON to file
-//     return serializeJsonPretty(doc, dst) > 0;
-// }
-
-// bool serializeAPI(Print &dst)
-// {
-//     // Serialize configuration
-//     StaticJsonDocument<CAP_API> doc;
-
-//     // Create an object at the root
-//     JsonObject root = doc.to<JsonObject>();
-
-//     // Fill the object
-//     api.save(root);
-
-//     // Serialize JSON to file
-//     return serializeJsonPretty(doc, dst) > 0;
-// }
-
-// bool printAPI()
-// {
-//     // Serialize configuration
-//     StaticJsonDocument<CAP_SER_CONF> doc;
-
-//     // Create an object at the root
-//     JsonObject root = doc.to<JsonObject>();
-
-//     // Fill the object
-//     api.save(root);
-
-//     bool retval = true;
-//     // Serialize JSON to file
-//     retval = serializeJson(doc, Serial) > 0;
-//     printCR(true);
-//     return retval;
-// }
-
-void gen_base(char *_base, const char *_key_base) {
+void gen_api(char *_base, const char *_key_base)
+{
     strcpy(_base, a_urlstart);
     strcat(_base, app.copconfig.hostname);
     strcat(_base, a_tld);
-    strcat(_base, a_delim);
-    strcat(_base, api.base);
     strcat(_base, a_delim);
     strcat(_base, _key_base);
     strcat(_base, a_delim);
 }
 
-void ActionAPI::save(JsonObject obj) const
+void Action_API_V1::save(JsonObject obj) const
 {
     // Concatenate the base URL:
-    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/vX/xxxxxxxxxxxxx/
-    char _base[68];
-    gen_base(_base, base); // gen_base
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/
+    API_V1 v1;
+    char _base[61];
+    gen_api(_base, api.base);
+    strcat(_base, v1.base);
+    strcat(_base, a_delim);
+    // Concatenate base + this URL:
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/action/
+    strcat(_base, base);
+    strcat(_base, a_delim);
 
     // Re-use char array:
     char _url[83];
@@ -169,12 +96,19 @@ void ActionAPI::save(JsonObject obj) const
     obj["setcalmode"] = _url;
 }
 
-void InfoAPI::save(JsonObject obj) const
+void Info_API_V1::save(JsonObject obj) const
 {
     // Concatenate the base URL:
-    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/vX/xxxxxxxxxxxxx/
-    char _base[68];
-    gen_base(_base, base);
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/
+    API_V1 v1;
+    char _base[59];
+    gen_api(_base, api.base);
+    strcat(_base, v1.base);
+    strcat(_base, a_delim);
+    // Concatenate base + this URL:
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/info/
+    strcat(_base, base);
+    strcat(_base, a_delim);
 
     // Re-use char array:
     char _url[81];
@@ -232,20 +166,21 @@ void InfoAPI::save(JsonObject obj) const
     strcat(_url, theme);
     strcat(_url, a_delim);
     obj["theme"] = _url;
-
-    // Files
-    strcpy(_url, _base);
-    strcat(_url, files);
-    strcat(_url, a_delim);
-    obj["files"] = _url;
 }
 
-void ConfigAPI::save(JsonObject obj) const
+void Config_API_V1::save(JsonObject obj) const
 {
     // Concatenate the base URL:
-    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/vX/xxxxxxxxxxxxx/
-    char _base[68];
-    gen_base(_base, base);
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/
+    API_V1 v1;
+    char _base[61];
+    gen_api(_base, api.base);
+    strcat(_base, v1.base);
+    strcat(_base, a_delim);
+    // Concatenate base + this URL:
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/config/
+    strcat(_base, base);
+    strcat(_base, a_delim);
 
     // Re-use char array:
     char _url[83];
@@ -263,37 +198,104 @@ void ConfigAPI::save(JsonObject obj) const
     obj["taps"] = _url;
 }
 
-void API::save(JsonObject obj) const
+void Files_API_V1::save(JsonObject obj) const
 {
     // Concatenate the base URL:
-    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/xxx/
-    // Different base from gen_base
-    char _base[54];
-    strcpy(_base, a_urlstart);
-    strcat(_base, app.copconfig.hostname);
-    strcat(_base, a_tld);
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/
+    API_V1 v1;
+    char _base[57];
+    gen_api(_base, api.base);
+    strcat(_base, v1.base);
     strcat(_base, a_delim);
+    // Concatenate base + this URL:
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/fs/
+    strcat(_base, base);
+    strcat(_base, a_delim);
+
+    // Re-use char array:
+    char _url[83];
+
+    // List Files
+    strcpy(_url, _base);
+    strcat(_url, listfiles);
+    strcat(_url, a_delim);
+    obj["listfiles"] = _url;
+
+    // Filesystem Info
+    strcpy(_url, _base);
+    strcat(_url, fsinfo);
+    strcat(_url, a_delim);
+    obj["fsinfo"] = _url;
+
+    // File download
+    strcpy(_url, _base);
+    strcat(_url, downloadfile);
+    strcat(_url, a_delim);
+    obj["downloadfile"] = _url;
+
+    // Delete file
+    strcpy(_url, _base);
+    strcat(_url, deletefile);
+    strcat(_url, a_delim);
+    obj["deletefile"] = _url;
+
+    // Upload File
+    strcpy(_url, _base);
+    strcat(_url, upload);
+    strcat(_url, a_delim);
+    obj["upload"] = _url;
+}
+
+void API_V1::save(JsonObject obj) const
+{
+    // Concatenate the base URL:
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/v1/
+    char _base[54];
+    gen_api(_base, api.base);
     strcat(_base, base);
     strcat(_base, a_delim);
 
     // Re-use char array:
     char _url[68];
 
-    // Action API
+    // Action API_V1
     strcpy(_url, _base);
     strcat(_url, actionAPI.base);
     strcat(_url, a_delim);
     obj["action"] = _url;
 
-    // Info API
+    // Info API_V1
     strcpy(_url, _base);
     strcat(_url, infoAPI.base);
     strcat(_url, a_delim);
     obj["info"] = _url;
 
-    // Config API
+    // Config API_V1
     strcpy(_url, _base);
     strcat(_url, configAPI.base);
     strcat(_url, a_delim);
     obj["config"] = _url;
+
+    // Files API_V1
+    strcpy(_url, _base);
+    strcat(_url, filesAPI.base);
+    strcat(_url, a_delim);
+    obj["fs"] = _url;
+}
+
+void API::save(JsonObject obj) const
+{
+    // Concatenate the base URL:
+    // http://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.local/api/
+    char _base[51];
+    gen_api(_base, base);
+
+    // URL Array:
+    char _url[54];
+
+    // V1
+    strcpy(_url, _base);
+    strcat(_url, api_v1.base);
+    strcat(_url, a_delim);
+    obj["v1"] = _url;
 }

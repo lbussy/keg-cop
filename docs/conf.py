@@ -42,6 +42,7 @@ release = version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['myst_parser', 'sphinx.ext.todo']
+myst_enable_extensions = ['html_admonition', 'colon_fence']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -56,6 +57,9 @@ source_suffix = '.md'
 
 # The master toctree document.
 master_doc = 'index'
+
+myst_heading_anchors = 4
+
 
 # -- Options for HTML output -------------------------------------------------
 

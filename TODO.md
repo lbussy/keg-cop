@@ -1,12 +1,11 @@
 # TODO:
 
-[ ] - Consider a more generic MQTT (Like: https://github.com/lbussy/brew-bubbles/issues/50)
-[ ] - Document `/fs/`
-[ ] - Add configration parameter to use Telnet
-[ ] - Switch to LittleFS
-[ ] - Make a config/flowmeter backup
+- [ ] Consider a more generic MQTT (Like: https://github.com/lbussy/brew-bubbles/issues/50)
+- [ ] Add configration parameter to use Telnet
+- [ ] Switch to LittleFS
+- [ ] Make a config/flowmeter backup
 
-Crash:
+Crash (this might be the one):
 
 ```
 2023-04-26T18:07:37Z V: KegScreen reporting not enabled, skipping (Tap Info).
