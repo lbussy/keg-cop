@@ -21,13 +21,8 @@ const UA = navigator.userAgent;
 // Use last known theme:
 var theme = localStorage.getItem('theme');
 if (theme) {
-    console.info("A 404 for the '_aux' file here is normal.");
     document.getElementById('theme').href = theme.url || "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css";
-    if (is404) {
-        document.getElementById('theme_aux').href = "/" + theme.css || "/cerulean_aux.css";
-    } else {
-        document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
-    }
+    document.getElementById('theme_aux').href = theme.css || "cerulean_aux.css";
     document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.color || "#ffffff");
 }
 
