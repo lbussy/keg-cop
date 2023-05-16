@@ -4,3 +4,4 @@
 - [ ] Add configration parameter to use Telnet
 - [ ] Switch to LittleFS
 - [ ] Make a config/flowmeter backup
+- [ ] Backup the config

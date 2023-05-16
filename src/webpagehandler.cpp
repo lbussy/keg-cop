@@ -88,7 +88,6 @@ void startWebServer()
         }
         else
         {
-            // TODO:  If we get a 404 and there is an extension, try redirecting to root
             Log.verbose(F("Processing 404 for %s." CR), request->url().c_str());
             AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
             response->setCode(404);
