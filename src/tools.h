@@ -34,7 +34,9 @@ SOFTWARE. */
 #include "uptimelog.h"
 #include "taplistio.h"
 
-#include <SPIFFS.h>
+#include <FS.h>
+#include <LittleFS.h>
+
 #include <AsyncWiFiManager.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>

@@ -29,7 +29,9 @@ SOFTWARE. */
 #include "kegscreen.h"
 #include "flowconfig.h"
 
-#include <SPIFFS.h>
+#include <FS.h>
+#include <LittleFS.h>
+
 #include <ArduinoJson.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>
