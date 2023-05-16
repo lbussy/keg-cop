@@ -88,10 +88,22 @@ void startWebServer()
         }
         else
         {
-            Log.verbose(F("Processing 404 for %s." CR), request->url().c_str());
-            AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
-            response->setCode(404);
-            request->send(response);
+            bool do404 = true;
+            // This is to catch anything that gets here with a filename in other than root
+            if (request->url().indexOf(".") >= 0 && request->url().indexOf("/") >= 0)
+            {
+                String url = request->url().substring(request->url().lastIndexOf("/"), request->url().length());
+                Log.notice(F("404 rewrite: Rewriting %s to %s" CR), request->url().c_str(), url.c_str());
+                request->send(FILESYSTEM, url, "text/html");
+                do404 = false;
+            }
+            if (do404)
+            {
+                Log.warning(F("Processing 404 for %s." CR), request->url().c_str());
+                AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
+                response->setCode(404);
+                request->send(response);
+            }
         } });
 
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
