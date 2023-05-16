@@ -43,6 +43,7 @@ bool loadFlowConfig()
     }
     else if (!deserializeFlowConfig(file))
     {
+        // TODO:  This was where one issue was reported
         Log.error(F("Flow Load: Failed to load flowmeter configuration from filesystem, default values have been used." CR));
         flowLoadError = true; // DEBUG
         debugFlowmeterLog(true); // DEBUG
@@ -101,7 +102,7 @@ bool saveFlowConfig()
         saveOK = true;
     }
     file.close();
-
+    // TODO: Make copy
     return saveOK;
 }
 
@@ -366,4 +367,5 @@ void debugFlowmeterLog(int numTap, bool fileExist) // DEBUG
         Log.error(F("%s Unable to write log file." CR), debugPrefix);
     }
     file.close();
+    // TODO: Restore copy and load
 }
