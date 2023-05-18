@@ -35,7 +35,6 @@ SOFTWARE. */
 #include <Arduino.h>
 
 // Flow methods
-void handleInterrupts(int);
 void logFlow();
 void logFlow(int tap, int pulses);
 unsigned long getPulseCount(int);
