@@ -30,59 +30,62 @@ volatile static unsigned long lastLoopTime[NUMTAPS];  // Monitor ongoing active 
 
 static IRAM_ATTR void HandleIntISR0(void)
 {
-    handleInterrupts(0);
+    pulse[0]++;
+    lastPulseTime[0] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR1(void)
 {
-    handleInterrupts(1);
+    pulse[1]++;
+    lastPulseTime[1] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR2(void)
 {
-    handleInterrupts(2);
+    pulse[2]++;
+    lastPulseTime[2] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR3(void)
 {
-    handleInterrupts(3);
+    pulse[3]++;
+    lastPulseTime[3] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR4(void)
 {
-    handleInterrupts(4);
+    pulse[4]++;
+    lastPulseTime[4] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR5(void)
 {
-    handleInterrupts(5);
+    pulse[5]++;
+    lastPulseTime[5] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR6(void)
 {
-    handleInterrupts(6);
+    pulse[6]++;
+    lastPulseTime[6] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR7(void)
 {
-    handleInterrupts(7);
+    pulse[7]++;
+    lastPulseTime[7] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR8(void)
 {
-    handleInterrupts(8);
+    pulse[8]++;
+    lastPulseTime[8] = millis(); // Reset while we are pouring
 }
 
 static void (*pf[])(void) = { // ISR Function Pointers
     HandleIntISR0, HandleIntISR1, HandleIntISR2,
     HandleIntISR3, HandleIntISR4, HandleIntISR5,
     HandleIntISR6, HandleIntISR7, HandleIntISR8};
-
-void IRAM_ATTR handleInterrupts(int tapNum)
-{ // Increment pulse count
-    pulse[tapNum]++;
-    lastPulseTime[tapNum] = millis(); // Reset while we are pouring
-}
 
 unsigned long getPulseCount(int tap)
 {
