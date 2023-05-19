@@ -91,7 +91,7 @@ def gzip_file( src_path, dst_path ):
 
 # gzip compress files from 'data' dir to 'data/gzip/' dir
 def gzip_webfiles( source, target, env ):
-    print( '\ngzip: Initiated gzip for SPIFFS\n' )
+    print( '\ngzip: Initiated gzip for filesystem\n' )
 
     # Check data dir
     if not os.path.exists( source_dir_path ):

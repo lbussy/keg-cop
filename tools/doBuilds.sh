@@ -67,7 +67,7 @@ get_git() {
             GITROOT="$SCRIPT_DIR"
         elif [[ -f "$SCRIPT_DIR/../platformio.ini" ]]; then
             # Platformio.ini is in the parent directory
-            GITROOT=`readlink -f "$SCRIPT_DIR/.."`
+            GITROOT=${readlink -f "$SCRIPT_DIR/.."}
         else
             echo -e "\nERROR: Git repository nor platformio.ini found."
             exit
@@ -149,7 +149,8 @@ copy_binaries() {
                 echo -e "Copying binaries for $env."
                 cp "$GITROOT"/.pio/build/"$env"/firmware.bin "$GITROOT"/"$BINLOC"/"$env"_firmware.bin
                 cp "$GITROOT"/.pio/build/"$env"/partitions.bin "$GITROOT"/"$BINLOC"/"$env"_partitions.bin
-                cp "$GITROOT"/.pio/build/"$env"/spiffs.bin "$GITROOT"/"$BINLOC"/"$env"_spiffs.bin
+                # TODO: Select between SPIFFS and LittleFS
+                cp "$GITROOT"/.pio/build/"$env"/littlefs.bin "$GITROOT"/"$BINLOC"/"$env"_littlefs.bin
             fi
         done
     else

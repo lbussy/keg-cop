@@ -27,8 +27,9 @@ SOFTWARE. */
 #include "ArduinoLog.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include <SPIFFS.h>
+
 #include <FS.h>
+#include <LittleFS.h>
 
 #define stringify(s) _stringifyDo(s)
 #define _stringifyDo(s) #s

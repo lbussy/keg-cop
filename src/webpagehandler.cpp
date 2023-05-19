@@ -895,7 +895,7 @@ void handleUpload(AsyncWebServerRequest *request, String filename, size_t index,
             {
                 Log.verbose(F("%s Client: %s/%s" CR), prefix, request->client()->remoteIP().toString().c_str(), filename.c_str());
                 String _filename = "/" + filename;
-                request->_tempFile = SPIFFS.open(_filename, FILE_WRITE);
+                request->_tempFile = FILESYSTEM.open(_filename, FILE_WRITE);
             }
             if (request->_tempFile)
             {
