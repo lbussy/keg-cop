@@ -27,8 +27,9 @@ SOFTWARE. */
 #include "config.h"
 
 #include <ArduinoJson.h>
-#include <SPIFFS.h>
+
 #include <FS.h>
+#include <LittleFS.h>
 
 #define APP_FILENAME "/appconfig.json"
 #define CAPACITY_APP_SERIAL 2048

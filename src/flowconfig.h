@@ -23,7 +23,9 @@ SOFTWARE. */
 #ifndef _FLOWCONFIG_H
 #define _FLOWCONFIG_H
 
-#include <SPIFFS.h>
+#include <FS.h>
+#include <LittleFS.h>
+
 #include <ArduinoJson.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>

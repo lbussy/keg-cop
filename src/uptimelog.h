@@ -29,8 +29,10 @@ SOFTWARE. */
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include <SPIFFS.h>
+
 #include <FS.h>
+#include <LittleFS.h>
+
 #include <Ticker.h>
 
 #define CAP_SER_UPT 32

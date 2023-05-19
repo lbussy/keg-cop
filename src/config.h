@@ -58,9 +58,7 @@ SOFTWARE. */
 // Define Keg Cop's filesystem
 //
 #ifndef FILESYSTEM
-#ifdef ESP32
-#define FILESYSTEM SPIFFS
-#endif
+#define FILESYSTEM LittleFS
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -103,9 +101,9 @@ SOFTWARE. */
 // https://github.com/khoih-prog/ESP_DoubleResetDetector/
 //
 #ifndef DRD_TIMEOUT
-#define ESP_DRD_USE_SPIFFS true
+#define ESP_DRD_USE_LITTLEFS true
 #define DOUBLERESETDETECTOR_DEBUG false
-#define DRD_TIMEOUT 5
+#define DRD_TIMEOUT 3
 #define DRD_ADDRESS 0 // Not used for FILESYSTEM, still needed for init
 #endif
 //
