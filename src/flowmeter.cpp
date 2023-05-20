@@ -139,12 +139,12 @@ void logFlow()
 
                 if (isSmallPour(pulseCount, i))
                 { // Discard a small pour
-                    Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+                    Log.trace(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                     // Since we don't do anything with pulseCount here, we're ignoring it
                 }
                 else
                 { // Log a pour
-                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+                    Log.notice(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
                     setQueuePourReport(i, pour);        // Queue upstream pour report
@@ -186,12 +186,12 @@ bool isSmallPour(unsigned int count, int tap)
 
     if (isSmallPour)
     {
-        Log.verbose(F("Tap %d showed a small pour of %d pulses." CR), tap, count);
+        Log.trace(F("Tap %d showed a small pour of %d pulses." CR), tap, count);
         return true;
     }
     else
     {
-        Log.verbose(F("Tap %d is registering %d pulses." CR), tap, count);
+        Log.trace(F("Tap %d is registering %d pulses." CR), tap, count);
         return false;
     }
 }

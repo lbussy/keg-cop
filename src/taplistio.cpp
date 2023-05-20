@@ -61,12 +61,12 @@ void sendTIOTaps()
         }
         else if (flow.taps[t].taplistioTap == 0)
         {
-            Log.notice(F("Taplist.io: Tap %d has Taplist.io tap id set to 0 - skipping send." CR), t);
+            Log.trace(F("Taplist.io: Tap %d has Taplist.io tap id set to 0 - skipping send." CR), t);
             break;
         }
         else if (!flow.taps[t].active)
         {
-            Log.verbose(F("Taplist.io: Tap %d not active." CR), t);
+            Log.trace(F("Taplist.io: Tap %d not active." CR), t);
             return;
         }
         else if (!sendTaplistio(t))
@@ -75,7 +75,7 @@ void sendTIOTaps()
         }
         else
         {
-            Log.verbose(F("Taplist.io: Sent tap %l to Taplist.io." CR), t);
+            Log.notice(F("Taplist.io: Sent tap %l to Taplist.io." CR), t);
         }
     }
 
@@ -111,7 +111,7 @@ bool sendTaplistio(int tapid)
              "https://api.taplist.io/api/v1/venues/%s/taps/%d/current-keg",
              app.taplistio.venue, flow.taps[tapid].taplistioTap);
 
-    Log.verbose(F("Taplist.io: Sending %s to %s." CR), payload_string, taplistio_url);
+    Log.notice(F("Taplist.io: Sending %s to %s." CR), payload_string, taplistio_url);
 
     yield(); // Yield before we lock up the radio
 

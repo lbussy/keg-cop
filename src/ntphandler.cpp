@@ -38,7 +38,7 @@ void setClock()
             if (cycle > 9)
             {
                 printCR(true);
-                Log.warning(F("Unable to get time hack from server, restarting." CR));
+                Log.error(F("Unable to get time hack from server, restarting." CR));
                 blinker.detach();
                 killDRD();
                 ESP.restart();

@@ -95,14 +95,14 @@ void execspiffs()
         app.ota.dospiffs2 = false;
         app.ota.didupdate = false;
         killDRD();
-        saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
+        saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after filesystem wipes it
         saveFlowConfig(); // Save previous flowmeter data
-        Log.notice(F("HTTP FILESYSTEM OTA not attempted due to bad firmware update." CR));
+        Log.error(F("HTTP filesystem OTA not attempted due to bad firmware update." CR));
         return;
     }
     if (app.ota.dospiffs1)
     {
-        Log.notice(F("Rebooting a second time before FILESYSTEM OTA pull." CR));
+        Log.notice(F("Rebooting a second time before filesystem OTA pull." CR));
         app.ota.dospiffs1 = false;
         app.ota.dospiffs2 = true;
         app.ota.didupdate = false;
@@ -116,7 +116,7 @@ void execspiffs()
     }
     else if (app.ota.dospiffs2)
     {
-        Log.notice(F("Starting the FILESYSTEM OTA pull." CR));
+        Log.notice(F("Starting the filesystem OTA pull." CR));
 
         // Stop web server before OTA update - will restart on reset
         stopWebServer();
@@ -135,38 +135,38 @@ void execspiffs()
         switch (ret)
         {
         case HTTP_UPDATE_FAILED:
-            Log.error(F("HTTP FILESYSTEM OTA Update failed." CR));
+            Log.error(F("HTTP filesystem OTA Update failed." CR));
             app.ota.dospiffs1 = false;
             app.ota.dospiffs2 = false;
             app.ota.didupdate = false;
             logBadFSUpdate();
             killDRD();
-            saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
+            saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after filesystem wipes it
             saveFlowConfig(); // Save previous flowmeter data
-            Log.notice(F("HTTP FILESYSTEM OTA Update complete, restarting." CR));
+            Log.notice(F("HTTP filesystem OTA Update complete, restarting." CR));
             ESP.restart();
             break;
 
         case HTTP_UPDATE_NO_UPDATES:
-            Log.notice(F("HTTP FILESYSTEM OTA Update: No updates." CR));
+            Log.notice(F("HTTP filesystem OTA Update: No updates." CR));
             break;
 
         case HTTP_UPDATE_OK:
-            // Reset FILESYSTEM update flag
+            // Reset filesystem update flag
             app.ota.dospiffs1 = false;
             app.ota.dospiffs2 = false;
             app.ota.didupdate = true;
             killDRD();
-            saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after FILESYSTEM wipes it
+            saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after filesystem wipes it
             saveFlowConfig(); // Save previous flowmeter data
-            Log.notice(F("HTTP FILESYSTEM OTA Update complete, restarting." CR));
+            Log.notice(F("HTTP filesystem OTA Update complete, restarting." CR));
             ESP.restart();
             break;
         }
     }
     else
     {
-        Log.verbose(F("No OTA pending." CR));
+        Log.trace(F("No OTA pending." CR));
     }
 }
 
@@ -195,7 +195,7 @@ HTTPUpdateResult execSPIFFSOTA(char *host, int port, char *path)
 }
 
 #ifdef ESP32
-// OTA updating of firmware or FILESYSTEM
+// OTA updating of firmware or filesystem
 HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
 {
     WiFiClient client;
@@ -289,7 +289,7 @@ HTTPUpdateResult execOTA(char *host, int port, char *path, int cmd)
     // Check contentLength and content type
     if (contentLength && isValidContentType)
     {
-        // Check if there is enough to OTA Update and set the type of update FIRMWARE or FILESYSTEM
+        // Check if there is enough to OTA Update and set the type of update FIRMWARE or filesystem
         Log.notice(F("OTA type: %s" CR), (cmd == U_SPIFFS) ? String("FILESYSTEM").c_str() : String("FIRMWARE").c_str());
         bool canBegin = Update.begin(contentLength, cmd);
 

@@ -53,7 +53,7 @@ void connectRPints()
         }
 
         // Set up connection to broker
-        Log.verbose(F("MQTT: Initializing connection to broker: %s on port: %d" CR),
+        Log.trace(F("MQTT: Initializing connection to broker: %s on port: %d" CR),
                     app.rpintstarget.host,
                     app.rpintstarget.port);
         LCBUrl url;
@@ -75,7 +75,7 @@ void connectRPints()
             rpintsClient.setServer(app.rpintstarget.host, app.rpintstarget.port);
         }
 
-        Log.verbose(F("MQTT: Connecting." CR));
+        Log.trace(F("MQTT: Connecting." CR));
         rpintsClient.connect();
         rpintsReconnectTimer.attach(5000, connectRPints);
     }
@@ -147,11 +147,11 @@ void onRPintsConnect(bool sessionPresent)
 
 void onRPintsDisconnect(AsyncMqttClientDisconnectReason reason)
 {
-    Log.verbose(F("Disconnected from MQTT." CR));
+    Log.trace(F("Disconnected from MQTT." CR));
     setDoRPintsConnect();
 }
 
 void onRPintsPublish(uint16_t packetId)
 {
-    Log.verbose(F("MQTT: Publish acknowledged, packet ID: %d." CR), packetId);
+    Log.notice(F("MQTT: Publish acknowledged, packet ID: %d." CR), packetId);
 }

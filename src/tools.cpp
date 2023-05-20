@@ -228,14 +228,14 @@ void maintenanceLoop()
 {
     if (ESP.getFreeHeap() < MINFREEHEAP)
     {
-        Log.warning(F("Maintenance: Heap memory has degraded below safe minimum, restarting." CR));
+        Log.error(F("Maintenance: Heap memory has degraded below safe minimum, restarting." CR));
         resetController();
     }
     if (millis() > ESPREBOOT)
     {
         // The ms clock will rollover after ~49 days.  To be on the safe side,
         // restart the ESP after about 42 days to reset the ms clock.
-        Log.warning(F("Maintenance: Scheduled restart." CR));
+        Log.notice(F("Maintenance: Scheduled restart." CR));
         resetController();
     }
     if (lastNTPUpdate > NTPRESET)
