@@ -29,7 +29,7 @@ bool flowLoadError = false; // DEBUG
 
 bool loadFlowConfig()
 {
-    Log.verbose(F("Flow Load: Loading flowmeter configuration." CR));
+    Log.notice(F("Flow Load: Loading flowmeter configuration." CR));
     bool loadOK = false;
 
     // Loads the configuration from a file on FILESYSTEM
@@ -80,7 +80,7 @@ bool loadFlowConfig()
 
 bool saveFlowConfig()
 {
-    Log.verbose(F("%s Save: Saving configuration." CR), FlowmeterKeys::appname);
+    Log.notice(F("%s Save: Saving configuration." CR), FlowmeterKeys::appname);
     bool saveOK = false;
 
     // Saves the configuration to a file on FILESYSTEM
@@ -98,7 +98,7 @@ bool saveFlowConfig()
     }
     else
     {
-        Log.verbose(F("%s Save: Configuration saved." CR), FlowmeterKeys::appname);
+        Log.trace(F("%s Save: Configuration saved." CR), FlowmeterKeys::appname);
         saveOK = true;
     }
     file.close();
@@ -172,7 +172,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.verbose(F(" %s Null value for label %d" CR), flowdebug, numTap); // DEBUG
+            Log.warning(F(" %s Null value for label %d" CR), flowdebug, numTap); // DEBUG
             loadFailed = true; // DEBUG
         }
         label = tapid + 1; // Default to sequential 1-based label
@@ -186,7 +186,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.verbose(F(" %s Null value for TIO %d" CR), flowdebug, numTap); // DEBUG
+            Log.warning(F(" %s Null value for TIO %d" CR), flowdebug, numTap); // DEBUG
             loadFailed = true; // DEBUG
         }
         taplistioTap = 0; // Default to sequential 1-based label
@@ -200,7 +200,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.verbose(F(" %s Null value for PPU %d" CR), flowdebug, numTap); // DEBUG
+            Log.warning(F(" %s Null value for PPU %d" CR), flowdebug, numTap); // DEBUG
             loadFailed = true; // DEBUG
         }
         ppu = PPU;
@@ -214,7 +214,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.verbose(F(" %s Null value for name %d" CR), flowdebug, numTap); // DEBUG
+            Log.warning(F(" %s Null value for name %d" CR), flowdebug, numTap); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(name, DEFAULTBEV, sizeof(name));
@@ -228,7 +228,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.verbose(F(" %s Null value for capacity %d" CR), flowdebug, numTap); // DEBUG
+            Log.warning(F(" %s Null value for capacity %d" CR), flowdebug, numTap); // DEBUG
             loadFailed = true; // DEBUG
         }
         capacity = KEGSIZE;
@@ -242,7 +242,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.verbose(F(" %s Null value for remaining %d" CR), flowdebug, numTap); // DEBUG
+            Log.warning(F(" %s Null value for remaining %d" CR), flowdebug, numTap); // DEBUG
             loadFailed = true; // DEBUG
         }
         remaining = 0;
@@ -256,7 +256,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.verbose(F(" %s Null value for active %d" CR), flowdebug, numTap); // DEBUG
+            Log.warning(F(" %s Null value for active %d" CR), flowdebug, numTap); // DEBUG
             loadFailed = true; // DEBUG
         }
         active = false;
@@ -270,7 +270,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.verbose(F(" %s Null value for calibrating %d" CR), flowdebug, numTap); // DEBUG
+            Log.warning(F(" %s Null value for calibrating %d" CR), flowdebug, numTap); // DEBUG
             loadFailed = true; // DEBUG
         }
         calibrating = false;

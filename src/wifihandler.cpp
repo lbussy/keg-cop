@@ -112,13 +112,12 @@ void doWiFi(bool dontUseStoredCreds)
         wm.setConfigPortalTimeout(120);
         if (!wm.autoConnect(app.apconfig.ssid, app.apconfig.passphrase))
         {
-            Log.warning(F("Failed to connect and/or hit timeout." CR));
+            Log.error(F("Failed to connect and/or hit timeout.  Restarting." CR));
             killDRD();
             blinker.detach(); // Turn off blinker
             digitalWrite(LED, LOW);
             delay(3000);
             digitalWrite(LED, HIGH);
-            Log.warning(F("Restarting." CR));
             resetController();
             delay(1000);
         }
@@ -243,7 +242,7 @@ void reconnectWiFi()
         if (numberOfTries < 20)
         {
             // Disconnect and reconnect each time
-            Log.verbose(F("%s Disconnecting/reconnecting WiFi." CR), prefix);
+            Log.notice(F("%s Disconnecting/reconnecting WiFi." CR), prefix);
             WiFi.disconnect(true, false);
             WiFi.begin();
             delay(tryDelay);

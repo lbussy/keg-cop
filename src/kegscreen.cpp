@@ -245,12 +245,12 @@ bool sendReport(ReportKey thisKey, const char * json) {
         String connection = "";
         if (url.isMDNS(url.getHost().c_str()))
         { // Is mDNS (== .local)
-            Log.verbose(F("%s: Preparing POST to: %s (%s)" CR), reportname[thisKey], url.getUrl().c_str(), connectionIP.toString().c_str());
+            Log.trace(F("%s: Preparing POST to: %s (%s)" CR), reportname[thisKey], url.getUrl().c_str(), connectionIP.toString().c_str());
             connection = url.getIPUrl();
         }
         else
         { // Not mDNS (!= .local)
-            Log.verbose(F("%s: Preparing POST to: %s" CR), reportname[thisKey], url.getUrl().c_str());
+            Log.trace(F("%s: Preparing POST to: %s" CR), reportname[thisKey], url.getUrl().c_str());
             connection = url.getUrl();
         }
         if (connection.length() > 0)
@@ -266,7 +266,7 @@ bool sendReport(ReportKey thisKey, const char * json) {
                 }
                 else
                 {
-                    Log.verbose(F("%s: POST to %s dispatched." CR), reportname[thisKey], connection.c_str());
+                    Log.notice(F("%s: POST to %s dispatched." CR), reportname[thisKey], connection.c_str());
                 }
             }
             else
@@ -334,7 +334,7 @@ void doKSJSON()
         }
         else
         {
-            Log.verbose(F("%s: JSON file written." CR), featureName);
+            Log.trace(F("%s: JSON file written." CR), featureName);
         }
     }
     file.close();

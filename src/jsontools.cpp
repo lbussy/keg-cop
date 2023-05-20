@@ -143,7 +143,7 @@ void convertConfigtoImperial()
     // Loop through all config numbers and convert to Imperial
     if (!app.copconfig.imperial) // Make sure it's not already set
     {
-        Log.verbose(F("Converting metric config to imperial." CR));
+        Log.notice(F("Converting metric config to imperial." CR));
         app.copconfig.imperial = true;
         app.temps.setpoint = convertCtoF(app.temps.setpoint);
         for (int i = 0; i < NUMSENSOR; i++)
@@ -160,7 +160,7 @@ void convertConfigtoMetric()
     // Loop through all config numbers and convert to Metric
     if (app.copconfig.imperial) // Make sure it's not already set
     {
-        Log.verbose(F("Converting imperial config to metric." CR));
+        Log.notice(F("Converting imperial config to metric." CR));
         app.copconfig.imperial = false;
         app.temps.setpoint = convertFtoC(app.temps.setpoint);
         for (int i = 0; i < NUMSENSOR; i++)
@@ -176,7 +176,7 @@ void convertFlowtoImperial()
 {
     if (!flow.imperial)
     {
-        Log.verbose(F("Converting metric flow data to imperial." CR));
+        Log.notice(F("Converting metric flow data to imperial." CR));
         flow.imperial = true;
         for (int i = 0; i < NUMTAPS; i++)
         {
@@ -194,7 +194,7 @@ void convertFlowtoMetric()
     // Loop through all flow numbers and convert to Metric
     if (flow.imperial)
     {
-        Log.verbose(F("Converting imperial flow data to metric." CR));
+        Log.notice(F("Converting imperial flow data to metric." CR));
         flow.imperial = false;
         for (int i = 0; i < NUMTAPS; i++)
         {

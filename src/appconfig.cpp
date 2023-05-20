@@ -26,19 +26,19 @@ AppConfig app;
 
 bool loadAppConfig()
 {
-    Log.verbose(F("%s Load: Loading configuration." CR), AppKeys::appname);
+    Log.notice(F("%s Load: Loading configuration." CR), AppKeys::appname);
     bool loadOK = false;
 
     // Loads the configuration from a file on FILESYSTEM
     File file = FILESYSTEM.open(APP_FILENAME, FILE_READ);
     if (!FILESYSTEM.exists(APP_FILENAME) || !file)
     {
-        Log.warning(F("%s Load: Configuration does not exist, default values will be attempted." CR), AppKeys::appname);
+        Log.error(F("%s Load: Configuration does not exist, default values will be attempted." CR), AppKeys::appname);
         loadOK = false;
     }
     else if (!deserializeAppConfig(file))
     {
-        Log.warning(F("%s Load: Failed to load configuration from filesystem, default values have been used." CR), AppKeys::appname);
+        Log.error(F("%s Load: Failed to load configuration from filesystem, default values have been used." CR), AppKeys::appname);
         loadOK = false;
     }
     else
@@ -66,13 +66,13 @@ bool loadAppConfig()
         }
     }
 
-    Log.verbose(F("%s Load: Configuration load complete." CR), AppKeys::appname);
+    Log.trace(F("%s Load: Configuration load complete." CR), AppKeys::appname);
     return loadOK;
 }
 
 bool saveAppConfig()
 {
-    Log.verbose(F("%s Save: Saving configuration." CR), AppKeys::appname);
+    Log.notice(F("%s Save: Saving configuration." CR), AppKeys::appname);
     bool retval = false;
 
     // Saves the configuration to a file on FILESYSTEM
@@ -90,7 +90,7 @@ bool saveAppConfig()
     }
     else
     {
-        Log.verbose(F("%s Save: Configuration saved." CR), AppKeys::appname);
+        Log.trace(F("%s Save: Configuration saved." CR), AppKeys::appname);
         retval = true;
     }
     file.close();

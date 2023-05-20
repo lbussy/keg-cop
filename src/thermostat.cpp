@@ -182,11 +182,11 @@ void reportTstat(int ts)
     switch (tstat[ts].state)
     {
     case TSTAT_INACTIVE:
-        Log.verbose(F("[TSTAT_INACTIVE] %s cooling is disabled." CR), thermostatName[ts]);
+        Log.trace(F("[TSTAT_INACTIVE] %s cooling is disabled." CR), thermostatName[ts]);
         break;
 
     case TSTAT_COOL_BEGIN:
-        Log.verbose(F("[TSTAT_COOL_BEGIN] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
+        Log.trace(F("[TSTAT_COOL_BEGIN] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
                     thermostatName[ts],
                     tstat[ts].cooling,
                     tempNow,
@@ -199,7 +199,7 @@ void reportTstat(int ts)
         break;
 
     case TSTAT_COOL_MINOFF:
-        Log.verbose(F("[TSTAT_COOL_MINOFF] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, wait time has been %D seconds." CR),
+        Log.trace(F("[TSTAT_COOL_MINOFF] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, wait time has been %D seconds." CR),
                     thermostatName[ts], 
                     tstat[ts].cooling,
                     tempNow,
@@ -212,7 +212,7 @@ void reportTstat(int ts)
         break;
 
     case TSTAT_COOL_ACTIVE:
-        Log.verbose(F("[TSTAT_COOL_ACTIVE] %s cooling is %T, control point %D°%s, setpoint %D°%s. Run started %D seconds ago, runnning for %D seconds." CR),
+        Log.trace(F("[TSTAT_COOL_ACTIVE] %s cooling is %T, control point %D°%s, setpoint %D°%s. Run started %D seconds ago, runnning for %D seconds." CR),
                     thermostatName[ts],
                     tstat[ts].cooling,
                     tempNow,
@@ -224,7 +224,7 @@ void reportTstat(int ts)
         break;
 
     case TSTAT_OFF_END:
-        Log.verbose(F("[TSTAT_OFF_END] %s cooling is %T, control point %D°%s, setpoint,  %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
+        Log.trace(F("[TSTAT_OFF_END] %s cooling is %T, control point %D°%s, setpoint,  %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
                     thermostatName[ts],
                     tstat[ts].cooling,
                     tempNow,
@@ -236,7 +236,7 @@ void reportTstat(int ts)
         break;
 
     case TSTAT_OFF_MINON:
-        Log.verbose(F("[TSTAT_OFF_MINON] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
+        Log.trace(F("[TSTAT_OFF_MINON] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
                     thermostatName[ts],
                     tstat[ts].cooling,
                     tempNow,
@@ -249,7 +249,7 @@ void reportTstat(int ts)
         break;
 
     case TSTAT_OFF_INACTIVE:
-        Log.verbose(F("[TSTAT_OFF_INACTIVE] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
+        Log.trace(F("[TSTAT_OFF_INACTIVE] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
                     thermostatName[ts],
                     tstat[ts].cooling,
                     tempNow,
@@ -261,7 +261,7 @@ void reportTstat(int ts)
         break;
 
     case TSTAT_UNKNOWN:
-        Log.verbose(F("[TSTAT_UNKNOWN] %s thermostat is in an unknown state." CR), thermostatName[ts]);
+        Log.trace(F("[TSTAT_UNKNOWN] %s thermostat is in an unknown state." CR), thermostatName[ts]);
         break;
     }
 }

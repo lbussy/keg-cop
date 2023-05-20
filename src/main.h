@@ -46,6 +46,6 @@ void setup();
 void loop();
 void stopMainProc();
 void startMainProc();
-void playDead();
+void playDead(String cause);
 
 #endif // _MAIN_H

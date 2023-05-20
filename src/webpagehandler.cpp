@@ -2724,12 +2724,12 @@ bool checkUserWebAuth(AsyncWebServerRequest *request)
 
     if (request->authenticate(SPIFFSEDITUSER, SPIFFSEDITPW))
     {
-        Log.verbose(F("%s authenticated via username and password." CR), prefix);
+        Log.trace(F("%s authenticated via username and password." CR), prefix);
         isAuthenticated = true;
     }
     else
     {
-        Log.verbose(F("%s User failed authentication." CR), prefix);
+        Log.warning(F("%s User failed authentication." CR), prefix);
     }
     return isAuthenticated;
 }
