@@ -36,15 +36,14 @@ Ticker rebootTimer;
 void setup()
 {
     if (!FILESYSTEM.begin(false, "/spiffs", 32))
-        playDead();
+        playDead("filesystem");
 
     drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
-    serialBegin();
 
     if (!loadAppConfig())
-    { // If configuration does not load, sit and blink slowly like an idiot
-        playDead();
-    }
+        playDead("App config");
+
+    serialBegin();
 
     // Set wifi reset pin
     pinMode(RESETWIFI, INPUT_PULLUP);
@@ -197,9 +196,19 @@ void startMainProc()
                               { loopTstat(TS_TYPE_TOWER); }); // Update fan control loop
 }
 
-void playDead()
+void playDead(String cause = "")
 {
-    Log.fatal(F("Stopping." CR));
+    if (!Serial)
+    {
+        Serial.begin(BAUD);
+        while (!Serial) {;}
+        Serial.flush();
+        Serial.println();
+    }
+    if (cause.length() > 1)
+        Serial.printf("Fatal error in %s, stopping \n"), cause;
+    else
+        Serial.println(F("Fatal error, stopping."));
     pinMode(LED, OUTPUT);
     Ticker blinker;
     blinker.attach_ms(CONFIGBLINK, []()
