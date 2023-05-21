@@ -127,8 +127,9 @@
                         <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Advanced</span>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-toggle="tab" href="#flowcal">Calibrate Flowmeters</a>
-                            <a class="dropdown-item" data-toggle="tab" href="#reset">Reset Controller</a>
                             <a class="dropdown-item" data-toggle="tab" href="#update">Update Application</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#debug">Configure Debug</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#reset">Reset Controller</a>
                             <a class="dropdown-item" data-toggle="tab" href="#wifi">Reset WiFi</a>
                         </div>
                     </li>
@@ -2124,7 +2125,6 @@
 
                     </div> <!-- Keg Screen Tab -->
 
-
                     <div class="tab-pane fade" id="targeturl"> <!-- URL Target Tab -->
 
                         <div class="card-header d-flex">
@@ -2562,6 +2562,30 @@
                             </div>
                         </div>
                     </div> <!-- Update Controller Tab -->
+
+                    <div class="tab-pane fade" id="debug"> <!-- Debug Configuration Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Debug Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                Keg Cop provides debug information via Serial as well as (optional) Telnet connections.
+                            </p>
+                            <p>
+                                Because Telnet does not have authentication and the communicaitons are insecure, it may
+                                be considered a security risk and is disabled by default.
+                            </p>
+                            <p>
+                                Additionaly, various debug levels are available to tailor the verbosity to your preferences.
+                            </p>
+                            <p>
+                                Note that you may change these settings at any time, however they will not have any effect 
+                                until after you reset the controller.
+                            </p>
+                        </div>
+                    </div> <!-- Debug Configuration Tab -->
 
                     <div class="tab-pane fade" id="wifi"> <!-- Reset WiFi Tab -->
                         <div class="card-header d-flex">
