@@ -264,18 +264,28 @@ function populateConfig(callback = null) { // Get configuration settings
                     $('input[name=tfanonhigh]').attr("disabled", true);             // Eanble invert control
                 }
 
-                var theme = config.copconfig.theme.toLowerCase();
-                var setThemeCheck = false;
-                for (var i = 0; i < document.themeselect.theme.length; i++) {
-                    if (document.themeselect.theme[i].value == theme) {
-                        document.themeselect.theme[i].checked = true;
-                        setThemeCheck = true;
-                        setTheme(theme);
-                        break;
+                try {
+                    var theme = config.copconfig.theme.toLowerCase();
+                    var setThemeCheck = false;
+                    for (var i = 0; i < document.themeselect.theme.length; i++) {
+                        if (document.themeselect.theme[i].value == theme) {
+                            document.themeselect.theme[i].checked = true;
+                            setThemeCheck = true;
+                            setTheme(theme);
+                            break;
+                        }
                     }
-                }
-                if (!setThemeCheck) {
+                    if (!setThemeCheck) {
+                        setTheme("cerulean");
+                    }
+                } catch {
                     setTheme("cerulean");
+                }
+
+                try {
+                    // TODO: Load telnet and loglevel
+                } catch {
+                    // TODO: Choose default for telnet and loglevel
                 }
 
                 try {
