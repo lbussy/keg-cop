@@ -43,7 +43,7 @@ bool loadFlowConfig()
     }
     else if (!deserializeFlowConfig(file))
     {
-        // TODO:  This was where one issue was reported
+        // TODO: This was where one issue was reported
         Log.error(F("Flow Load: Failed to load flowmeter configuration from filesystem, default values have been used." CR));
         flowLoadError = true; // DEBUG
         debugFlowmeterLog(true); // DEBUG
@@ -74,7 +74,8 @@ bool loadFlowConfig()
         }
     }
 
-    flowLoadError = false;
+    Log.trace(F("%s Flowmeter config load complete." CR), FlowmeterKeys::appname);
+    flowLoadError = false; // DEBUG
     return loadOK;
 }
 
@@ -162,11 +163,11 @@ void Taps::save(JsonObject obj) const
 void Taps::load(JsonObjectConst obj, int numTap)
 {
     const char *flowdebug = "[FLOWDEBUG]"; // DEBUG
+    bool loadFailed = false; // DEBUG
     // Load Tap[numtap] configuration
     //
     tapid = numTap;
     pin = flowPins[numTap];
-    bool loadFailed = false; // DEBUG
 
     if (obj[FlowmeterKeys::label].isNull() || obj[FlowmeterKeys::label] == 0)
     {
@@ -367,5 +368,5 @@ void debugFlowmeterLog(int numTap, bool fileExist) // DEBUG
         Log.error(F("%s Unable to write log file." CR), debugPrefix);
     }
     file.close();
-    // TODO: Restore copy and load
+    // TODO: Restore copy and load from FLOW_BACKUP_FILENAME
 }
