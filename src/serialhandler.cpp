@@ -33,6 +33,7 @@ void serialBegin()
     strcat(buffer, AppKeys::appname);
     strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
+    SERIAL.setPort(TELNETPORT);
     SERIAL.begin(BAUD);
     while (!Serial) {;}
     delay(5000);
@@ -48,7 +49,7 @@ void serialBegin()
     else if (!app.copconfig.serial)
     {
         SERIAL.setDebugOutput(true);
-        Log.begin(LOG_LEVEL, &SERIAL, true);
+        Log.begin(app.copconfig.loglevel, &SERIAL, true);
         Log.setPrefix(printTimestamp);
         Log.notice(F("Serial logging started at %l." CR), BAUD);
     }
