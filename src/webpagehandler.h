@@ -76,6 +76,7 @@ HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *);
 HANDLER_STATE handleSecret(AsyncWebServerRequest *);
 HANDLER_STATE handleThemePost(AsyncWebServerRequest *);
+HANDLER_STATE handleDebugPost(AsyncWebServerRequest *);
 #ifdef JSONLOADER
 HANDLER_STATE handleJson(AsyncWebServerRequest *);
 #endif
