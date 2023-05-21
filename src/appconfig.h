@@ -60,6 +60,8 @@ struct CopConfig
     bool pouremulate;
     bool tempemulate;
     char theme[32];
+    bool telnet;
+    uint8_t loglevel;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -211,6 +213,8 @@ namespace AppKeys
     constexpr auto pouremulate = "pouremulate";
     constexpr auto tempemulate = "tempemulate";
     constexpr auto theme = "theme";
+    constexpr auto telnet = "telnet";
+    constexpr auto loglevel = "loglevel";
 
     // Temperatures
     constexpr auto setpoint = "setpoint";
