@@ -47,7 +47,8 @@ static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration funct
     handleMQTTTargetPost,
     handleUrlTargetPost,
     handleCloudTargetPost,
-    handleThemePost};
+    handleThemePost,
+    handleDebugPost};
 static const char *cf_str[] = {
     "handleControllerPost",
     "handleControlPost",
@@ -57,7 +58,8 @@ static const char *cf_str[] = {
     "handleMQTTTargetPost",
     "handleUrlTargetPost",
     "handleCloudTargetPost",
-    "handleThemePost"};
+    "handleThemePost",
+    "handleDebugPost"};
 static int controlHandlers = sizeof(cf_str) / sizeof(cf_str[0]);
 
 static HANDLER_STATE (*tf[])(AsyncWebServerRequest *) = { // Tap functions
@@ -2128,6 +2130,81 @@ HANDLER_STATE handleThemePost(AsyncWebServerRequest *request) // Handle URL targ
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
+        }
+    }
+    // Return values
+    if (didChange)
+    {
+        setDoSaveApp();
+    }
+    if (didFail)
+    {
+        return FAIL_PROCESS;
+    }
+    else if (didChange)
+    {
+        return PROCESSED;
+    }
+    else
+    {
+        return NOT_PROCCESSED;
+    }
+}
+
+HANDLER_STATE handleDebugPost(AsyncWebServerRequest *request) // Handle Debug target
+{
+    bool didFail = false;
+    bool didChange = false;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Debug settings
+            //
+            if (strcmp(name, "telnet") == 0) // Enable telnet
+            {
+                if (strcmp(value, "true") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.copconfig.telnet = true;
+                }
+                else if (strcmp(value, "false") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.copconfig.telnet = false;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, AppKeys::loglevel) == 0) // Set log level
+            {
+                const double val = atof(value);
+                if ((val < 0) || (val > 6))
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.copconfig.loglevel = val;
+                }
+            }
+
         }
     }
     // Return values
