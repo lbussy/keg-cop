@@ -41,7 +41,7 @@ bool loadAppConfig(const char * filename)
         appLoadError = true; // DEBUG
         debugAppLog(false); // DEBUG
         loadOK = false;
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
     else if (!deserializeAppConfig(file))
     {
@@ -49,7 +49,7 @@ bool loadAppConfig(const char * filename)
         appLoadError = true; // DEBUG
         debugAppLog(true); // DEBUG
         loadOK = false;
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
     else
     {
@@ -108,7 +108,7 @@ bool saveAppConfig(const char * filename)
     file.close();
     if (retval)
     {
-        // TODO: Make copy
+        copyFile(APP_FILENAME, APP_FILENAME_BACKUP);
     }
     return retval;
 }
@@ -191,7 +191,7 @@ void ApConfig::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("ApConfig");
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -312,7 +312,7 @@ void OTA::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("OTA");
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -510,7 +510,7 @@ void CopConfig::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("CopConfig");
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -781,7 +781,7 @@ void Temperatures::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("Temps");
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -828,7 +828,7 @@ void KegScreen::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("KegScreen");
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -905,7 +905,7 @@ void TaplistIO::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("TIO");
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -967,7 +967,7 @@ void URLTarget::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("TIO");
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -1074,7 +1074,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("MQTT");
-        // TODO: Restore copy and load from APP_BACKUP_FILENAME
+        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 

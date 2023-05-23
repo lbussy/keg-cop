@@ -36,7 +36,7 @@ SOFTWARE. */
 #define CAPACITY_FLOW_SERIAL 3072
 #define CAPACITY_FLOW_DESERIAL 3072
 #define FLOW_FILENAME "/flowconfig.json"
-#define FLOW_BACKUP_FILENAME "/flowconfig.backup"
+#define FLOW_FILENAME_BACKUP "/flowconfig.backup"
 
 struct Taps
 {

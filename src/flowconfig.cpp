@@ -109,7 +109,7 @@ bool saveFlowConfig(const char *filename)
     file.close();
     if (saveOK)
     {
-        // TODO: Make Copy
+        copyFile(FLOW_FILENAME, FLOW_FILENAME_BACKUP);
     }
     return saveOK;
 }
