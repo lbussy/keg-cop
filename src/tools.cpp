@@ -38,7 +38,7 @@ bool doSetSaveApp = false;        // Semaphore required to save config
 bool doSetSaveFlowConfig = false; // Semaphore required to save flowconfig
 bool doTapInfoReport[NUMTAPS] = {
     false, false, false, false, false, false, false, false}; // Semaphore for reset
-bool doWiFiReconnect = false;                         // Semaphore to reconnect WiFi
+bool doWiFiReconnect = false;                                // Semaphore to reconnect WiFi
 
 void initPourPulseKick()
 {
@@ -136,8 +136,8 @@ void tickerLoop()
         resetWifi();
     }
     if (doWiFiReconnect && !wifiPause)
-    { // WiFi event is a callback - prevent WDT
-        pausingWiFi = false; // Clear interim state
+    {                            // WiFi event is a callback - prevent WDT
+        pausingWiFi = false;     // Clear interim state
         doWiFiReconnect = false; // Clear semaphore
         reconnectWiFi();
     }
@@ -373,4 +373,46 @@ unsigned long getTime()
     }
     time(&now);
     return now;
+}
+
+bool copyFile(String src, String dst)
+{
+    bool retval = true;
+
+    if (!src.startsWith("/"))
+        src = "/" + src;
+        
+    if (!dst.startsWith("/"))
+        src = "/" + src;
+        
+    // Open the source file for reading
+    File sourceFile = FILESYSTEM.open(src, "r");
+    if (!sourceFile)
+    {
+        Log.warning(F("Failed to open source: %s" CR), src);
+        retval = false;
+    }
+
+    // Create the destination file for writing
+    File destinationFile = LittleFS.open(dst, "w");
+    if (!destinationFile)
+    {
+        Log.warning(F("Failed to create destination: %s" CR), dst);
+        sourceFile.close();
+        retval = false;
+    }
+
+    // Copy the contents of the source file to the destination file
+    while (sourceFile.available())
+    {
+        char data = sourceFile.read();
+        destinationFile.write(data);
+    }
+
+    // Close the files
+    sourceFile.close();
+    destinationFile.close();
+
+    Log.notice(F("File %s sucessfully copied to %s" CR), src, dst);
+    return retval;
 }
