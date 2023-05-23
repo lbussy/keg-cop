@@ -73,6 +73,10 @@ bool loadFlowConfig()
             loadOK = true;
         }
     }
+    else
+    {
+        // TODO: Restore Backup and Reload
+    }
 
     Log.trace(F("%s Flowmeter config load complete." CR), FlowmeterKeys::appname);
     flowLoadError = false; // DEBUG
@@ -103,7 +107,10 @@ bool saveFlowConfig()
         saveOK = true;
     }
     file.close();
-    // TODO: Make copy
+    if (saveOK)
+    {
+        // TODO: Make Copy
+    }
     return saveOK;
 }
 
@@ -284,6 +291,7 @@ void Taps::load(JsonObjectConst obj, int numTap)
     if (loadFailed) // DEBUG
     {
         debugFlowmeterLog(numTap);
+        // TODO: Restore Backup and Reload
     }
 }
 
@@ -368,5 +376,4 @@ void debugFlowmeterLog(int numTap, bool fileExist) // DEBUG
         Log.error(F("%s Unable to write log file." CR), debugPrefix);
     }
     file.close();
-    // TODO: Restore copy and load from FLOW_BACKUP_FILENAME
 }

@@ -41,6 +41,7 @@ bool loadAppConfig()
         appLoadError = true; // DEBUG
         debugAppLog(false); // DEBUG
         loadOK = false;
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
     else if (!deserializeAppConfig(file))
     {
@@ -48,6 +49,7 @@ bool loadAppConfig()
         appLoadError = true; // DEBUG
         debugAppLog(true); // DEBUG
         loadOK = false;
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
     else
     {
@@ -58,6 +60,7 @@ bool loadAppConfig()
     // Try to create a default configuration file
     if (!loadOK)
     {
+        // TODO: See if we want to do this if we restored
         if (!saveAppConfig()) // Save a default config
         {
             Log.error(F("%s Load: Unable to generate default configuration." CR), AppKeys::appname);
@@ -103,7 +106,10 @@ bool saveAppConfig()
         retval = true;
     }
     file.close();
-    // TODO: Make copy
+    if (retval)
+    {
+        // TODO: Make copy
+    }
     return retval;
 }
 
@@ -185,6 +191,7 @@ void ApConfig::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("ApConfig");
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
 }
 
@@ -305,6 +312,7 @@ void OTA::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("OTA");
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
 }
 
@@ -502,6 +510,7 @@ void CopConfig::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("CopConfig");
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
 }
 
@@ -772,6 +781,7 @@ void Temperatures::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("Temps");
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
 }
 
@@ -818,6 +828,7 @@ void KegScreen::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("KegScreen");
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
 }
 
@@ -894,6 +905,7 @@ void TaplistIO::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("TIO");
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
 }
 
@@ -955,6 +967,7 @@ void URLTarget::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("TIO");
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
 }
 
@@ -1061,6 +1074,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     if (loadFailed) // DEBUG
     {
         debugAppLog("MQTT");
+        // TODO: Restore copy and load from APP_BACKUP_FILENAME
     }
 }
 
@@ -1143,5 +1157,4 @@ void debugAppLog(String area, bool fileExist) // DEBUG
         Log.error(F("%s Unable to write log file." CR), debugPrefix);
     }
     file.close();
-    // TODO: Restore copy and load from APP_BACKUP_FILENAME
 }
