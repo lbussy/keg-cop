@@ -1,7 +1,7 @@
 # TODO:
 
 - [ ] Consider a more generic MQTT (Like: https://github.com/lbussy/brew-bubbles/issues/50)
-- [ ] Add configration parameter to use Telnet
+- [ ] Add configration parameter to use Telnet (`debug_config`)
     - [ ] Figure out how to turn off Telnet
     - [ ] Document loglevel
     - [ ] Document telnet
