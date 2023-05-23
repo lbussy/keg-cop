@@ -37,8 +37,8 @@ void execfw()
     app.ota.dospiffs2 = false;
     app.ota.didupdate = false;
     killDRD();
-    saveAppConfig();
-    saveFlowConfig();
+    saveAppConfig(APP_FILENAME);
+    saveFlowConfig(FLOW_FILENAME);
 
     String fw_url = UPGRADEURL;
     fw_url += board();
@@ -61,8 +61,8 @@ void execfw()
         app.ota.didupdate = false;
         logBadFWUpdate();
         killDRD();
-        saveAppConfig();
-        saveFlowConfig();
+        saveAppConfig(APP_FILENAME);
+        saveFlowConfig(FLOW_FILENAME);
         ESP.restart();
         break;
 
@@ -73,15 +73,15 @@ void execfw()
         app.ota.dospiffs2 = false;
         app.ota.didupdate = false;
         killDRD();
-        saveAppConfig();
-        saveFlowConfig();
+        saveAppConfig(APP_FILENAME);
+        saveFlowConfig(FLOW_FILENAME);
         ESP.restart();
         break;
 
     case HTTP_UPDATE_OK:
         Log.notice(F("HTTP Firmware OTA Update complete, restarting." CR));
         killDRD();
-        saveAppConfig();
+        saveAppConfig(APP_FILENAME);
         ESP.restart();
         break;
     }
@@ -95,8 +95,8 @@ void execspiffs()
         app.ota.dospiffs2 = false;
         app.ota.didupdate = false;
         killDRD();
-        saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after filesystem wipes it
-        saveFlowConfig(); // Save previous flowmeter data
+        saveAppConfig(APP_FILENAME);   // This not only saves the flags, it (re)saves the whole config after filesystem wipes it
+        saveFlowConfig(FLOW_FILENAME); // Save previous flowmeter data
         Log.error(F("HTTP filesystem OTA not attempted due to bad firmware update." CR));
         return;
     }
@@ -107,9 +107,8 @@ void execspiffs()
         app.ota.dospiffs2 = true;
         app.ota.didupdate = false;
         killDRD();
-        saveAppConfig();
-        saveFlowConfig();
-        saveAppConfig();
+        saveAppConfig(APP_FILENAME);
+        saveFlowConfig(FLOW_FILENAME);
         ESP.restart();
         delay(1000);
         return;
@@ -141,8 +140,8 @@ void execspiffs()
             app.ota.didupdate = false;
             logBadFSUpdate();
             killDRD();
-            saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after filesystem wipes it
-            saveFlowConfig(); // Save previous flowmeter data
+            saveAppConfig(APP_FILENAME);   // This not only saves the flags, it (re)saves the whole config after filesystem wipes it
+            saveFlowConfig(FLOW_FILENAME); // Save previous flowmeter data
             Log.notice(F("HTTP filesystem OTA Update complete, restarting." CR));
             ESP.restart();
             break;
@@ -157,8 +156,8 @@ void execspiffs()
             app.ota.dospiffs2 = false;
             app.ota.didupdate = true;
             killDRD();
-            saveAppConfig();     // This not only saves the flags, it (re)saves the whole config after filesystem wipes it
-            saveFlowConfig(); // Save previous flowmeter data
+            saveAppConfig(APP_FILENAME);   // This not only saves the flags, it (re)saves the whole config after filesystem wipes it
+            saveFlowConfig(FLOW_FILENAME); // Save previous flowmeter data
             Log.notice(F("HTTP filesystem OTA Update complete, restarting." CR));
             ESP.restart();
             break;

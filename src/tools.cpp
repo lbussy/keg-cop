@@ -54,8 +54,8 @@ void resetController()
 {
     Log.notice(F("Reboot request - rebooting system." CR));
     killDRD();
-    saveAppConfig();
-    saveFlowConfig();
+    saveAppConfig(APP_FILENAME);
+    saveFlowConfig(FLOW_FILENAME);
     ESP.restart();
     delay(300);
 }
@@ -151,13 +151,13 @@ void tickerLoop()
     if (doSetSaveApp)
     { // Save AppConfig
         doSetSaveApp = false;
-        saveAppConfig();
+        saveAppConfig(APP_FILENAME);
     }
 
     if (doSetSaveFlowConfig)
     { // Save Flow Config
         doSetSaveFlowConfig = false;
-        saveFlowConfig();
+        saveFlowConfig(FLOW_FILENAME);
     }
 
     // External Event Reports

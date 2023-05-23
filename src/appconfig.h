@@ -280,8 +280,8 @@ namespace AppKeys
 
 extern AppConfig app;
 
-bool loadAppConfig();
-bool saveAppConfig();
+bool loadAppConfig(const char * filename);
+bool saveAppConfig(const char * filename);
 bool serializeAppConfig(Print &);
 bool deserializeAppConfig(Stream &);
 void debugAppLog(String area);

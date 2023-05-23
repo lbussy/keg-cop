@@ -343,8 +343,8 @@ void stopNetwork()
     mDNSStop();
 
     Log.verbose(F("%s Saving configuration." CR), prefix);
-    saveFlowConfig();
-    saveAppConfig();
+    saveFlowConfig(FLOW_FILENAME);
+    saveAppConfig(APP_FILENAME);
     Log.verbose(F("%s Stopping Main Timers and Filesystem." CR), prefix);
     stopMainProc();
 

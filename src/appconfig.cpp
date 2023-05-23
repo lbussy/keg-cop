@@ -28,14 +28,14 @@ AppConfig app;
 bool appLoadError = false; // DEBUG
 const char *appdebug = "[APPDEBUG]"; // DEBUG
 
-bool loadAppConfig()
+bool loadAppConfig(const char * filename)
 {
     Log.notice(F("%s Load: Loading configuration." CR), AppKeys::appname);
     bool loadOK = false;
 
     // Loads the configuration from a file on FILESYSTEM
-    File file = FILESYSTEM.open(APP_FILENAME, FILE_READ);
-    if (!FILESYSTEM.exists(APP_FILENAME) || !file)
+    File file = FILESYSTEM.open(filename, FILE_READ);
+    if (!FILESYSTEM.exists(filename) || !file)
     {
         Log.error(F("%s Load: Configuration does not exist, default values will be attempted." CR), AppKeys::appname);
         appLoadError = true; // DEBUG
@@ -61,12 +61,12 @@ bool loadAppConfig()
     if (!loadOK)
     {
         // TODO: See if we want to do this if we restored
-        if (!saveAppConfig()) // Save a default config
+        if (!saveAppConfig(filename)) // Save a default config
         {
             Log.error(F("%s Load: Unable to generate default configuration." CR), AppKeys::appname);
             loadOK = false;
         }
-        else if (!loadAppConfig()) // Try one more time to load the default config
+        else if (!loadAppConfig(filename)) // Try one more time to load the default config
         {
             Log.error(F("%s Load: Unable to read default configuration." CR), AppKeys::appname);
             loadOK = false;
@@ -82,13 +82,13 @@ bool loadAppConfig()
     return loadOK;
 }
 
-bool saveAppConfig()
+bool saveAppConfig(const char * filename)
 {
     Log.notice(F("%s Save: Saving configuration." CR), AppKeys::appname);
     bool retval = false;
 
     // Saves the configuration to a file on FILESYSTEM
-    File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
+    File file = FILESYSTEM.open(filename, FILE_WRITE);
     if (!file)
     {
         Log.error(F("%s Save: Unable to open or create file, partition may be corrupt." CR), AppKeys::appname);
