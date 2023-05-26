@@ -25,26 +25,34 @@ SOFTWARE. */
 Flowmeter flow;
 
 #define FLOW_DEBUG_LOG "/flowdebuglog.txt" // DEBUG
-bool flowLoadError = false;                // DEBUG
+bool flowLoadError = false;                // DEBUG (Used to skip error processing when major issue with file exists)
 
-bool loadFlowConfig(const char * filename)
+bool loadFlowConfig(const char *filename)
 {
-    Log.notice(F("Flow Load: Loading flowmeter configuration." CR));
+    loadFlowConfig(filename, false);
+}
+
+bool loadFlowConfig(const char *filename, bool isBackup)
+{
+    const char *flowLoad = "[FLOWLOAD]";
+
+    Log.notice(F("%s Loading flowmeter configuration from %s." CR), flowLoad, filename);
     bool loadOK = false;
+    bool loadedBackup = false;
 
     // Loads the configuration from a file on FILESYSTEM
-    File file = FILESYSTEM.open(FLOW_FILENAME, FILE_READ);
-    if (!FILESYSTEM.exists(FLOW_FILENAME) || !file)
+    File file = FILESYSTEM.open(filename, FILE_READ);
+    if (!FILESYSTEM.exists(filename) || !file)
     {
-        Log.error(F("Flow Load: Flowmeter configuration does not exist, default values will be attempted." CR));
+        Log.error(F("%s Flowmeter configuration %s does not exist." CR), flowLoad, filename);
         flowLoadError = true;     // DEBUG
         debugFlowmeterLog(false); // DEBUG
         loadOK = false;
     }
     else if (!deserializeFlowConfig(file))
     {
-        // TODO: This was where one issue was reported
-        Log.error(F("Flow Load: Failed to load flowmeter configuration from filesystem, default values have been used." CR));
+        // DEBUG: This was where one issue was reported (maybe we truncated part of the JSON?)
+        Log.error(F("%s Failed to load %s from filesystem." CR), flowLoad, filename);
         flowLoadError = true;    // DEBUG
         debugFlowmeterLog(true); // DEBUG
         loadOK = false;
@@ -55,27 +63,20 @@ bool loadFlowConfig(const char * filename)
     }
     file.close();
 
-    // Try to create a default configuration file
-    if (!loadOK)
+    if (!loadOK && !isBackup) // We're only partially screwed, maybe
     {
-        if (!saveFlowConfig(FLOW_FILENAME)) // Save a default config
+        if (!loadFlowConfig(FLOW_FILENAME_BACKUP, true)) // Try with the backup file
         {
-            Log.error(F("Flow Load: Unable to generate default flowmeter configuration." CR));
-            loadOK = false;
-        }
-        else if (!loadFlowConfig(filename)) // Try one more time to load the default config
-        {
-            Log.error(F("Flow Load: Unable to read default flowmeter configuration." CR));
-            loadOK = false;
+            Log.error(F("%s Failed to load configuration from backup, creating from defaults." CR), flowLoad);
+            saveFlowConfig(FLOW_FILENAME);
         }
         else
         {
+            // We ripped success from the jaws of defeat with cutting edge-code
+            Log.notice(F("%s Sucessfully loaded configuration fro backup." CR), flowLoad);
+            saveFlowConfig(FLOW_FILENAME);
             loadOK = true;
         }
-    }
-    else
-    {
-        // TODO: Restore Backup and Reload
     }
 
     Log.trace(F("%s Flowmeter config load complete." CR), FlowmeterKeys::appname);

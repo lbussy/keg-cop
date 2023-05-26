@@ -81,6 +81,7 @@ namespace FlowmeterKeys
 
 // JSON Methods
 bool loadFlowConfig(const char *filename);
+bool loadFlowConfig(const char *filename, bool isBackup);
 bool saveFlowConfig(const char *filename);
 bool deserializeFlowConfig(Stream &);
 bool serializeFlowConfig(Print &);
