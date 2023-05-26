@@ -28,6 +28,7 @@ AppConfig app;
 bool appLoadError = false; // DEBUG
 const char *appdebug = "[APPDEBUG]"; // DEBUG
 
+// TODO:  Do the same thing I did for Flowconfig
 bool loadAppConfig(const char * filename)
 {
     Log.notice(F("%s Load: Loading configuration." CR), AppKeys::appname);
