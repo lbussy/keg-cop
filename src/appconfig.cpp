@@ -332,6 +332,8 @@ void CopConfig::save(JsonObject obj) const
     obj[AppKeys::pouremulate] = pouremulate;
     obj[AppKeys::tempemulate] = tempemulate;
     obj[AppKeys::theme] = theme;
+    obj[AppKeys::telnet] = telnet;
+    obj[AppKeys::loglevel] = loglevel;
 }
 
 void CopConfig::load(JsonObjectConst obj)
@@ -495,7 +497,7 @@ void CopConfig::load(JsonObjectConst obj)
         tempemulate = obj[AppKeys::tempemulate];
     }
 
-    if (obj[AppKeys::theme].isNull())
+    if (obj[AppKeys::telnet].isNull())
     {
         if (!appLoadError)
         {
@@ -506,7 +508,16 @@ void CopConfig::load(JsonObjectConst obj)
     }
     else
     {
-        strlcpy(theme, obj[AppKeys::theme], sizeof(theme));
+        telnet = obj[AppKeys::telnet];
+    }
+
+    if (obj[AppKeys::loglevel].isNull())
+    {
+        loglevel = 6;
+    }
+    else
+    {
+        loglevel = obj[AppKeys::theme];
     }
 
     if (loadFailed) // DEBUG
