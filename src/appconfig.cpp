@@ -26,31 +26,36 @@ AppConfig app;
 
 #define APP_DEBUG_LOG "/appdebuglog.txt" // DEBUG
 bool appLoadError = false; // DEBUG
-const char *appdebug = "[APPDEBUG]"; // DEBUG
 
-// TODO:  Do the same thing I did for Flowconfig
-bool loadAppConfig(const char * filename)
+const char *appConfig = "[APPCONFIG]"; // DEBUG
+
+bool loadAppConfig(const char *filename)
 {
-    Log.notice(F("%s Load: Loading configuration." CR), AppKeys::appname);
+    return loadAppConfig(filename, false);
+}
+
+bool loadAppConfig(const char *filename, bool isBackup)
+{
+    Log.notice(F("%s Loading configuration." CR), appConfig);
     bool loadOK = false;
+    bool loadedBackup = false;
 
     // Loads the configuration from a file on FILESYSTEM
     File file = FILESYSTEM.open(filename, FILE_READ);
     if (!FILESYSTEM.exists(filename) || !file)
     {
-        Log.error(F("%s Load: Configuration does not exist, default values will be attempted." CR), AppKeys::appname);
-        appLoadError = true; // DEBUG
+        Log.error(F("%s configuration %s does not exist." CR), appConfig, filename);
+        appLoadError = true;     // DEBUG
         debugAppLog(false); // DEBUG
         loadOK = false;
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
     else if (!deserializeAppConfig(file))
     {
-        Log.error(F("%s Load: Failed to load configuration from filesystem, default values have been used." CR), AppKeys::appname);
-        appLoadError = true; // DEBUG
+        // DEBUG: This was where one issue was reported (maybe we truncated part of the JSON?)
+        Log.error(F("%s Failed to load %s from filesystem." CR), appConfig, filename);
+        appLoadError = true;    // DEBUG
         debugAppLog(true); // DEBUG
         loadOK = false;
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
     else
     {
@@ -58,27 +63,23 @@ bool loadAppConfig(const char * filename)
     }
     file.close();
 
-    // Try to create a default configuration file
-    if (!loadOK)
+    if (!loadOK && !isBackup) // We're only partially screwed, maybe
     {
-        // TODO: See if we want to do this if we restored
-        if (!saveAppConfig(filename)) // Save a default config
+        if (!loadAppConfig(APP_FILENAME_BACKUP, true)) // Try with the backup file
         {
-            Log.error(F("%s Load: Unable to generate default configuration." CR), AppKeys::appname);
-            loadOK = false;
-        }
-        else if (!loadAppConfig(filename)) // Try one more time to load the default config
-        {
-            Log.error(F("%s Load: Unable to read default configuration." CR), AppKeys::appname);
-            loadOK = false;
+            Log.error(F("%s Failed to load configuration from backup, creating from defaults." CR), appConfig);
+            saveAppConfig(APP_FILENAME);
         }
         else
         {
+            // We ripped success from the jaws of defeat with cutting edge-code
+            Log.notice(F("%s Sucessfully loaded configuration fro backup." CR), appConfig);
+            saveAppConfig(APP_FILENAME);
             loadOK = true;
         }
     }
 
-    Log.trace(F("%s Load: Configuration load complete." CR), AppKeys::appname);
+    Log.trace(F("%s Configuration load complete." CR), appConfig);
     appLoadError = false;
     return loadOK;
 }
@@ -165,7 +166,7 @@ void ApConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for ssid." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for ssid." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(ssid, APNAME, sizeof(ssid));
@@ -179,7 +180,7 @@ void ApConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for passphrase." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for passphrase." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(passphrase, AP_PASSWD, sizeof(passphrase));
@@ -216,7 +217,7 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for dospiffs1." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for dospiffs1." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         dospiffs1 = false;
@@ -230,7 +231,7 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for dospiffs2." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for dospiffs2." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         dospiffs2 = false;
@@ -244,7 +245,7 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for didupdate." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for didupdate." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         didupdate = false;
@@ -258,7 +259,7 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for badfw." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for badfw." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         badfw = false;
@@ -272,7 +273,7 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for badfwtime." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for badfwtime." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         badfwtime = getTime();
@@ -286,7 +287,7 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for badfs." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for badfs." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         badfs = false;
@@ -300,7 +301,7 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for badfstime." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for badfstime." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         badfwtime = getTime();
@@ -344,7 +345,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for hostname." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for hostname." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(hostname, APNAME, sizeof(hostname));
@@ -358,7 +359,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for nodrd." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for nodrd." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         nodrd = false;
@@ -372,7 +373,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for breweryname." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for breweryname." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(breweryname, BRWYNAME, sizeof(breweryname));
@@ -386,7 +387,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for kegeratorname." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for kegeratorname." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(kegeratorname, KNAME, sizeof(kegeratorname));
@@ -400,7 +401,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for controlnum." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for controlnum." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         controlnum = 1;
@@ -414,7 +415,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for imperial." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for imperial." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         imperial = IMPERIAL;
@@ -428,7 +429,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for serial." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for serial." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         serial = false;
@@ -446,7 +447,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tapsolenoid." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for tapsolenoid." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         tapsolenoid = TSOL;
@@ -470,7 +471,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for pouremulate." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for pouremulate." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         pouremulate = false;
@@ -484,7 +485,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tempemulate." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for tempemulate." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         tempemulate = false;
@@ -498,7 +499,7 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for theme." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for theme." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(theme, THEME, sizeof(theme));
@@ -545,7 +546,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for setpoint." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for setpoint." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         setpoint = DEFSET;
@@ -559,7 +560,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for controlpoint." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for controlpoint." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         controlpoint = DEFCON;
@@ -573,7 +574,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for controlenabled." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for controlenabled." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         controlenabled = CTRLENABLE;
@@ -587,7 +588,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for coolonhigh." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for coolonhigh." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         coolonhigh = false;
@@ -601,7 +602,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tfancontrolenabled." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for tfancontrolenabled." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         tfancontrolenabled = false;
@@ -615,7 +616,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tfansetpoint." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for tfansetpoint." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         tfansetpoint = DEFSET;
@@ -629,7 +630,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tfanonhigh." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for tfanonhigh." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         tfanonhigh = false;
@@ -643,7 +644,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for roomenabled." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for roomenabled." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         enabled[0] = false;
@@ -657,7 +658,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for roomcal." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for roomcal." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         calibration[0] = 0.0;
@@ -671,7 +672,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for towerenabled." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for towerenabled." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         enabled[1] = false;
@@ -685,7 +686,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for towercal." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for towercal." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         calibration[1] = 0.0;
@@ -699,7 +700,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for upperenabled." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for upperenabled." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         enabled[2] = false;
@@ -713,7 +714,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for uppercal." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for uppercal." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         calibration[2] = 0.0;
@@ -727,7 +728,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for lowerenabled." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for lowerenabled." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         enabled[3] = false;
@@ -741,7 +742,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for lowercal." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for lowercal." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         calibration[3] = 0.0;
@@ -755,7 +756,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for kegenabled." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for kegenabled." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         enabled[4] = false;
@@ -769,7 +770,7 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for kegcal." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for kegcal." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         calibration[4] = 0.0;
@@ -802,7 +803,7 @@ void KegScreen::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for KSUrl." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for KSUrl." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(url, "", sizeof(url));
@@ -816,7 +817,7 @@ void KegScreen::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for KSUpdate." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for KSUpdate." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         update = false;
@@ -851,7 +852,7 @@ void TaplistIO::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for TIOVenue." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for TIOVenue." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(venue, "", sizeof(venue));
@@ -865,7 +866,7 @@ void TaplistIO::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for TIOSecret." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for TIOSecret." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(secret, "", sizeof(secret));
@@ -879,7 +880,7 @@ void TaplistIO::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for TIOLastSent." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for TIOLastSent." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         lastsent = 0;
@@ -893,7 +894,7 @@ void TaplistIO::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for TIOUpdate." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for TIOUpdate." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         update = true;
@@ -927,7 +928,7 @@ void URLTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for URLurl." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for URLurl." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(url, "", sizeof(url));
@@ -941,7 +942,7 @@ void URLTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for URLfreq." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for URLfreq." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         freq = 15;
@@ -955,7 +956,7 @@ void URLTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for URLupdate." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for URLupdate." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         update = false;
@@ -992,7 +993,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTThost." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for MQTThost." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(host, "", sizeof(host));
@@ -1006,7 +1007,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTPort." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for MQTTPort." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         port = 1883;
@@ -1020,7 +1021,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTusername." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for MQTTusername." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(username, "", sizeof(username));
@@ -1034,7 +1035,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTpassword." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for MQTTpassword." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(password, "", sizeof(password));
@@ -1048,7 +1049,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTtopic." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for MQTTtopic." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         strlcpy(topic, "kegcop", sizeof(topic));
@@ -1062,7 +1063,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTupdate." CR), appdebug); // DEBUG
+            Log.warning(F(" %s Null value for MQTTupdate." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
         update = false;
