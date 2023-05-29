@@ -29,7 +29,7 @@ bool flowLoadError = false;                // DEBUG (Used to skip error processi
 
 bool loadFlowConfig(const char *filename)
 {
-    loadFlowConfig(filename, false);
+    return loadFlowConfig(filename, false);
 }
 
 bool loadFlowConfig(const char *filename, bool isBackup)
