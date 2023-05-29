@@ -19,7 +19,9 @@ JSON Definition:
 		"imperial": false,
 		"serial": false,
 		"tapsolenoid": false,
-		"theme": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+		"theme": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"telnet": true,
+		"loglevel": 6
 	},
 	"ota": {
 		"dospiffs1": false,
@@ -87,7 +89,7 @@ Parsing/Deserializing:
 ```
 // Stream& input;
 
-StaticJsonDocument<3072> doc;
+DynamicJsonDocument doc(3072);
 
 DeserializationError error = deserializeJson(doc, input);
 
@@ -110,6 +112,8 @@ bool copconfig_imperial = copconfig["imperial"]; // false
 bool copconfig_serial = copconfig["serial"]; // false
 bool copconfig_tapsolenoid = copconfig["tapsolenoid"]; // false
 const char* copconfig_theme = copconfig["theme"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+bool copconfig_telnet = copconfig["telnet"]; // true
+int copconfig_loglevel = copconfig["loglevel"]; // 6
 
 JsonObject ota = doc["ota"];
 bool ota_dospiffs1 = ota["dospiffs1"]; // false
@@ -180,6 +184,8 @@ copconfig["imperial"] = false;
 copconfig["serial"] = false;
 copconfig["tapsolenoid"] = false;
 copconfig["theme"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+copconfig["telnet"] = true;
+copconfig["loglevel"] = 6;
 
 JsonObject ota = doc.createNestedObject("ota");
 ota["dospiffs1"] = false;
