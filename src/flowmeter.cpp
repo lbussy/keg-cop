@@ -112,7 +112,7 @@ bool initFlow()
         lastPulseTime[i] = millis(); // For pour detector
         initPourPulseKick();
     }
-    return loadFlowConfig();
+    return loadFlowConfig(FLOW_FILENAME);
 }
 
 void logFlow()

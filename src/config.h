@@ -121,10 +121,10 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Reset controller every 42 days
+// Reset controller every XX days (in millis)
 //
 #ifndef ESPREBOOT
-#define ESPREBOOT (unsigned long) 42 * 24 * 60 * 60 * 1000 // Reboot every X days
+#define ESPREBOOT (unsigned long) 42 * 24 * 60 * 60 * 1000 // Reboot every 42 days
 #endif
 //
 //////////////////////////////////////////////////////////////////////////

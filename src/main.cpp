@@ -40,7 +40,7 @@ void setup()
 
     drd = new DoubleResetDetector(DRD_TIMEOUT, DRD_ADDRESS);
 
-    if (!loadAppConfig())
+    if (!loadAppConfig(APP_FILENAME))
         playDead("App config");
 
     serialBegin();

@@ -494,7 +494,7 @@ void toggleSerialCompat(bool enable)
     if (enable && !app.copconfig.serial)
     {
         app.copconfig.serial = true;
-        saveAppConfig();
+        saveAppConfig(APP_FILENAME);
         SERIAL.flush();
         SERIAL.setDebugOutput(false);
         Log.setLevel(LOG_LEVEL_SILENT);
@@ -502,7 +502,7 @@ void toggleSerialCompat(bool enable)
     else if (!enable && app.copconfig.serial)
     {
         app.copconfig.serial = false;
-        saveAppConfig();
+        saveAppConfig(APP_FILENAME);
         SERIAL.flush();
         SERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &SERIAL, true);
@@ -530,14 +530,14 @@ void togglePourEmulation(bool enable)
         if (enable && !app.copconfig.pouremulate)
         {
             app.copconfig.pouremulate = true;
-            saveAppConfig();
+            saveAppConfig(APP_FILENAME);
             SERIAL.println(F("Pour emulation mode on."));
             SERIAL.print(F("Tap Command > "));
         }
         else if (!enable && app.copconfig.pouremulate)
         {
             app.copconfig.pouremulate = false;
-            saveAppConfig();
+            saveAppConfig(APP_FILENAME);
             SERIAL.println(F("Pour emulation mode off."));
         }
         else
@@ -673,14 +673,14 @@ void toggleTempEmulation(bool enable)
         if (enable && !app.copconfig.tempemulate)
         {
             app.copconfig.tempemulate = true;
-            saveAppConfig();
+            saveAppConfig(APP_FILENAME);
             SERIAL.println(F("Temperature emulation mode on."));
             SERIAL.print(F("Temp Command > "));
         }
         else if (!enable && app.copconfig.tempemulate)
         {
             app.copconfig.tempemulate = false;
-            saveAppConfig();
+            saveAppConfig(APP_FILENAME);
             SERIAL.println(F("Temperature emulation mode off."));
         }
         else

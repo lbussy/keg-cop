@@ -69,6 +69,7 @@ std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep
 void getGuid(char *str); // 17 chars including null terminator
 void killDRD();
 unsigned long getTime();
+bool copyFile(String src, String dst);
 
 extern bool doWiFiReconnect;
 extern bool pausingWiFi;
