@@ -6,4 +6,3 @@
     - [ ] Document loglevel
     - [ ] Document telnet
     - [ ] Add fail detect to loglevel and telnet after merge
-- [ ] Make a config/flowmeter backup?
