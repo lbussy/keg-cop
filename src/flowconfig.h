@@ -36,6 +36,7 @@ SOFTWARE. */
 #define CAPACITY_FLOW_SERIAL 3072
 #define CAPACITY_FLOW_DESERIAL 3072
 #define FLOW_FILENAME "/flowconfig.json"
+#define FLOW_FILENAME_BACKUP "/flowconfig.backup"
 
 struct Taps
 {
@@ -63,7 +64,8 @@ struct Flowmeter
     void save(JsonObject) const;
 };
 
-namespace FlowmeterKeys {
+namespace FlowmeterKeys
+{
     constexpr auto appname = "Flowmeter Config";
     constexpr auto tapid = "tapid";
     constexpr auto label = "label";
@@ -78,15 +80,14 @@ namespace FlowmeterKeys {
 };
 
 // JSON Methods
-bool loadFlowConfig();
-bool loadFlowFile();
-bool saveFlowConfig();
-bool deleteFlowConfigFile();
+bool loadFlowConfig(const char *filename);
+bool loadFlowConfig(const char *filename, bool isBackup);
+bool saveFlowConfig(const char *filename);
 bool deserializeFlowConfig(Stream &);
 bool serializeFlowConfig(Print &);
 
-void debugFlowmeterLog(int numTap); // DEBUG
-void debugFlowmeterLog(bool fileExist); // DEBUG
+void debugFlowmeterLog(int numTap);                 // DEBUG
+void debugFlowmeterLog(bool fileExist);             // DEBUG
 void debugFlowmeterLog(int numTap, bool fileExist); // DEBUG
 
 extern Flowmeter flow;

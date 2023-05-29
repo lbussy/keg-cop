@@ -82,7 +82,7 @@ void sendTIOTaps()
     tioReporting = false;
     app.taplistio.lastsent = now;
     app.taplistio.update = false;
-    saveAppConfig();
+    saveAppConfig(APP_FILENAME);
 }
 
 bool sendTaplistio(int tapid)

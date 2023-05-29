@@ -71,7 +71,6 @@ void doWiFi(bool dontUseStoredCreds)
     // wm.setCustomHeadElement("<style>html{filter: invert(100%); -webkit-filter: invert(100%);}</style>");
     // wm.setClass(F("invert"));   // Set dark theme
 
-    // wm.setCountry(WIFI_COUNTRY);    // Setting wifi country seems to improve OSX soft ap connectivity (TODO: crashes now)
     wm.setWiFiAPChannel(WIFI_CHAN); // Set WiFi channel
 
     wm.setShowStaticFields(true); // Force show static ip fields
@@ -344,8 +343,8 @@ void stopNetwork()
     mDNSStop();
 
     Log.verbose(F("%s Saving configuration." CR), prefix);
-    saveFlowConfig();
-    saveAppConfig();
+    saveFlowConfig(FLOW_FILENAME);
+    saveAppConfig(APP_FILENAME);
     Log.verbose(F("%s Stopping Main Timers and Filesystem." CR), prefix);
     stopMainProc();
 

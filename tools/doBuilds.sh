@@ -141,6 +141,7 @@ build_binaries() {
 }
 
 copy_binaries() {
+    local isLittleFS=false
     echo
     if [ -d "$GITROOT"/"$BINLOC"/ ]; then
         for env in "${ENVIRONMENTS[@]}"
@@ -149,8 +150,18 @@ copy_binaries() {
                 echo -e "Copying binaries for $env."
                 cp "$GITROOT"/.pio/build/"$env"/firmware.bin "$GITROOT"/"$BINLOC"/"$env"_firmware.bin
                 cp "$GITROOT"/.pio/build/"$env"/partitions.bin "$GITROOT"/"$BINLOC"/"$env"_partitions.bin
-                # TODO: Select between SPIFFS and LittleFS
-                cp "$GITROOT"/.pio/build/"$env"/littlefs.bin "$GITROOT"/"$BINLOC"/"$env"_littlefs.bin
+
+                # Handle SPIFFS vs LittleFS
+                while IFS= read -r line; do
+                if [[ $line == "board_build.filesystem"* && $line == *"littlefs" ]]; then
+                    isLittleFS=true
+                fi
+                done < "$GITROOT"/platformio.ini
+                if [ "$isLittleFS" ]; then
+                    cp "$GITROOT"/.pio/build/"$env"/littlefs.bin "$GITROOT"/"$BINLOC"/"$env"_littlefs.bin
+                else
+                    cp "$GITROOT"/.pio/build/"$env"/spiffs.bin "$GITROOT"/"$BINLOC"/"$env"_spiffs.bin
+                fi
             fi
         done
     else

@@ -31,9 +31,10 @@ SOFTWARE. */
 #include <FS.h>
 #include <LittleFS.h>
 
-#define APP_FILENAME "/appconfig.json"
 #define CAPACITY_APP_SERIAL 2048
 #define CAPACITY_APP_DESERIAL 3072
+#define APP_FILENAME "/appconfig.json"
+#define APP_FILENAME_BACKUP "/appconfig.backup"
 
 struct ApConfig
 {
@@ -279,9 +280,13 @@ namespace AppKeys
 
 extern AppConfig app;
 
-bool loadAppConfig();
-bool saveAppConfig();
+bool loadAppConfig(const char *filename);
+bool loadAppConfig(const char *filename, bool isBackup);
+bool saveAppConfig(const char * filename);
 bool serializeAppConfig(Print &);
 bool deserializeAppConfig(Stream &);
+void debugAppLog(String area);
+void debugAppLog(bool fileExist);
+void debugAppLog(String area, bool fileExist);
 
 #endif // _JSONCONFIG_H
