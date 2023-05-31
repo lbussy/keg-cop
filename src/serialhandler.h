@@ -37,7 +37,7 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
-#include <esptelnet.h>
+#include <telnetspy.h>
 
 // Basic Serial handlers
 void serialBegin();

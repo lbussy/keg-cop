@@ -22,12 +22,20 @@ SOFTWARE. */
 
 #include "serialhandler.h"
 
+TelnetSpy SerialAndTelnet;
 #undef SERIAL
-ESPTelnet SerialAndTelnet;
-#define SERIAL SerialAndTelnet // Use Telnet
+#define SERIAL SerialAndTelnet
 
 void serialBegin()
 {
+    if (true)
+    {
+
+    }
+    else
+    {
+
+    }
     char buffer[32];
     strcpy(buffer, (const char *)"Connected to ");
     strcat(buffer, AppKeys::appname);
@@ -163,8 +171,8 @@ void flush(bool safe)
 
 void serialLoop()
 {
-    SerialAndTelnet.handle();
-    if (SerialAndTelnet.available() > 0)
+    SERIAL.handle();
+    if (SERIAL.available() > 0)
     {
         if (!app.copconfig.serial)
         { // Turn on/off Serial Mode
