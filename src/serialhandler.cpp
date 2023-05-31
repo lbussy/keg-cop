@@ -28,14 +28,6 @@ TelnetSpy SerialAndTelnet;
 
 void serialBegin()
 {
-    if (true)
-    {
-
-    }
-    else
-    {
-
-    }
     char buffer[32];
     strcpy(buffer, (const char *)"Connected to ");
     strcat(buffer, AppKeys::appname);
@@ -47,6 +39,7 @@ void serialBegin()
     delay(5000);
     printCR(true);
     SERIAL.flush();
+    toggleTelnet(app.copconfig.telnet);
 #if !defined(DISABLE_LOGGING)
     if (app.copconfig.serial)
     {
@@ -529,6 +522,16 @@ void nullDoc(const char *wrapper)
     doc[wrapper] = nullptr;
     serializeJson(doc, SERIAL);
     printCR();
+}
+
+bool telnetEnabled()
+{
+    return SERIAL.enabled();
+}
+
+void toggleTelnet(bool enabled)
+{
+    SERIAL.toggle(enabled);
 }
 
 void togglePourEmulation(bool enable)

@@ -47,6 +47,10 @@ void toggleSerialCompat(bool);
 void printTimestamp(Print *_logOutput);
 void serialLoop();
 
+// Telnet Handlers
+bool telnetEnabled();
+void toggleTelnet(bool enabled);
+
 // Debug Commands
 void togglePourEmulation(bool);
 void handlePourEmulateCommands();
