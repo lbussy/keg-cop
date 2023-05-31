@@ -283,9 +283,19 @@ function populateConfig(callback = null) { // Get configuration settings
                 }
 
                 try {
-                    // TODO: Load telnet and loglevel
+                    $('#loglevel option').eq(config.copconfig.loglevel).prop('selected',true);
                 } catch {
-                    // TODO: Choose default for telnet and loglevel
+                    $('#loglevel option').eq(6).prop('selected',true);
+                }
+
+                try {
+                    if (config.copconfig.telnet) {
+                        $('input:radio[name="telnet"]')[1].checked = true;
+                    } else {
+                        $('input:radio[name="telnet"]')[0].checked = true;
+                    }
+                } catch {
+                    $('input:radio[name="telnet"]')[0].checked = true;
                 }
 
                 try {
@@ -601,6 +611,9 @@ function processPost(obj) {
             break;
         case "#flowcal":
             processTapCalPost(url, obj);
+            break;
+        case "#debug":
+            processDebugPost(url, obj);
             break;
         default:
             // Unknown hash location passed
@@ -938,6 +951,9 @@ function updateHelp(hashLoc) {
         case "#flowcal":
             url = url + "/en/latest/context/settings/advanced/calibrate/index.html";
             break;
+        case "#flowcal":
+            url = url + "/en/latest/context/settings/advanced/debug/index.html";
+            break;
         default:
             // Unknown hash location passed
             break;
@@ -1201,4 +1217,21 @@ function processTapCalPost(url, obj) {
     putData(url, data, false, false, function () {
         resetFlowCalForm();
     });
+}
+
+function processDebugPost(url, obj) {
+    // Handle debug configuration post
+    var data = {};
+
+    // Get form data
+    var $form = $(obj);
+    loglevel = $('#loglevel').val();
+    telnet = $('input[name="telnet"]:checked').val();
+
+    // Process put
+    data = {
+        loglevel: loglevel,
+        telnet: telnet
+    };
+    putData(url, data);
 }
