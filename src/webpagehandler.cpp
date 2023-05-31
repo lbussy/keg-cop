@@ -2204,9 +2204,9 @@ HANDLER_STATE handleDebugPost(AsyncWebServerRequest *request) // Handle Debug ta
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.copconfig.loglevel = val;
+                    Log.setLevel(val);
                 }
             }
-
         }
     }
     // Return values
