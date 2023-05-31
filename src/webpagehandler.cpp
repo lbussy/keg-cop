@@ -2176,12 +2176,14 @@ HANDLER_STATE handleDebugPost(AsyncWebServerRequest *request) // Handle Debug ta
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.copconfig.telnet = true;
+                    toggleTelnet(true);
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.copconfig.telnet = false;
+                    toggleTelnet(false);
                 }
                 else
                 {
