@@ -16,7 +16,7 @@ settings/taps/index
 settings/temperature/control/index
 settings/temperature/sensors/index
 settings/targets/kegscreen/index
-settings/targets/url/index
+settings/targets/rest/index
 settings/targets/rpints/index
 settings/targets/taplistio/index
 settings/advanced/calibrate/index

@@ -40,7 +40,7 @@ At a minimum, you will want to look at the settings menu to set up your new devi
 Targets:
 
 - {ref}`KegScreen Target <kegscreen>`
-- {ref}`URL Target <url>`
+- {ref}`Generic REST Endpoint <rest>`
 - {ref}`Raspberry Pints Target <rpints>`
 - {ref}`Taplist.io <taplistio>`
 
