@@ -810,7 +810,7 @@ The POST is an `XMLHttpRequest()` with the file contained within the `FormData()
 The controller will send communications, when so configured, via WiFi to upstream systems.
 
 - [KegScreen](#kegscreen)
-- [URL](#url)
+- [Generic REST](#rest)
 - [Raspberry Pints](#raspberry-pints)
 
 ### KegScreen
@@ -962,9 +962,9 @@ The controller sends a report containing all temperature points to the KegScreen
 }
 ```
 
-### URL
+### Generic REST
 
-The Target URL Report provides a holistic system picture of a custom/third-party endpoint.  It is a timer-based POST; a state change does not trigger it.  As with all target system configurations within Keg Cop, it will post to HTTP only.  The format is as follows:
+The Generic REST Report provides a holistic system picture of a custom/third-party endpoint.  It is a timer-based POST; a state change does not trigger it.  As with all target system configurations within Keg Cop, it will post to HTTP only.  The format is as follows:
 
 ```json
 {
