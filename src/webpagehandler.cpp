@@ -2169,7 +2169,7 @@ HANDLER_STATE handleDebugPost(AsyncWebServerRequest *request) // Handle Debug ta
 
             // Debug settings
             //
-            if (strcmp(name, "telnet") == 0) // Enable telnet
+            if (strcmp(name, AppKeys::telnet) == 0) // Enable telnet
             {
                 if (strcmp(value, "true") == 0)
                 {
