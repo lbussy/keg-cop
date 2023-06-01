@@ -22,9 +22,9 @@ SOFTWARE. */
 
 #include "serialhandler.h"
 
+TelnetSpy SerialAndTelnet;
 #undef SERIAL
-ESPTelnet SerialAndTelnet;
-#define SERIAL SerialAndTelnet // Use Telnet
+#define SERIAL SerialAndTelnet
 
 void serialBegin()
 {
@@ -39,6 +39,7 @@ void serialBegin()
     delay(5000);
     printCR(true);
     SERIAL.flush();
+    toggleTelnet(app.copconfig.telnet);
 #if !defined(DISABLE_LOGGING)
     if (app.copconfig.serial)
     {
@@ -163,8 +164,8 @@ void flush(bool safe)
 
 void serialLoop()
 {
-    SerialAndTelnet.handle();
-    if (SerialAndTelnet.available() > 0)
+    SERIAL.handle();
+    if (SERIAL.available() > 0)
     {
         if (!app.copconfig.serial)
         { // Turn on/off Serial Mode
@@ -521,6 +522,16 @@ void nullDoc(const char *wrapper)
     doc[wrapper] = nullptr;
     serializeJson(doc, SERIAL);
     printCR();
+}
+
+bool telnetEnabled()
+{
+    return SERIAL.enabled();
+}
+
+void toggleTelnet(bool enabled)
+{
+    SERIAL.toggle(enabled);
 }
 
 void togglePourEmulation(bool enable)

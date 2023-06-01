@@ -501,10 +501,10 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for theme." CR), appConfig); // DEBUG
+            Log.warning(F(" %s Null value for telnet." CR), appConfig); // DEBUG
             loadFailed = true; // DEBUG
         }
-        strlcpy(theme, THEME, sizeof(theme));
+        telnet = false;
     }
     else
     {

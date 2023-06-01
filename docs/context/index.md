@@ -20,6 +20,7 @@ settings/targets/rest/index
 settings/targets/rpints/index
 settings/targets/taplistio/index
 settings/advanced/calibrate/index
+settings/advanced/debug/index
 settings/advanced/reset/index
 settings/advanced/update/index
 settings/advanced/wifi/index

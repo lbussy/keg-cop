@@ -383,7 +383,9 @@ The configuration page API tree allows retrieval of current states or setting co
         "serial": false,
         "imperial": true,
         "tapsolenoid": true,
-        "theme": "cerulean"
+        "theme": "cerulean",
+        "loglevel": 6,
+        "telnet": true
     },
     "ota": {
         "dospiffs1": false,
@@ -455,6 +457,8 @@ The PUT should follow standard form submission data format, with the following i
 - `imperial` - A boolean representing imperial versus metric units to be used by the controller.  Changing this value will result in a conversion of all stored values to the target units.  Multiple toggles could result in accrued rounding errors and some loss of accuracy.
 - `tapsolenoid` - A simple control point intended to control a local solenoid by an upstream system or the web UI.
 - `theme` - Any pre-configured Bootstrap-compliant theme.
+- `loglevel` - Verbosity of log levels, 6 is highest, 0 is no logging.
+- `telnet` - Enables or disables the telnet interface.
 
 ###### temps
 

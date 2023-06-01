@@ -37,7 +37,7 @@ SOFTWARE. */
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
-#include <esptelnet.h>
+#include <telnetspy.h>
 
 // Basic Serial handlers
 void serialBegin();
@@ -46,6 +46,10 @@ void serialRestart();
 void toggleSerialCompat(bool);
 void printTimestamp(Print *_logOutput);
 void serialLoop();
+
+// Telnet Handlers
+bool telnetEnabled();
+void toggleTelnet(bool enabled);
 
 // Debug Commands
 void togglePourEmulation(bool);

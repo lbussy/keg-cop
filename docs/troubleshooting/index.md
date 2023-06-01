@@ -13,7 +13,7 @@ A filesystem UI has been created if you desire to back up or restore your config
 ```{image} filesystem_info.png
 :align: center
 :alt: Filesystem Editor
-:scale: 50%
+:scale: 30%
 ```
 
 :::{note}

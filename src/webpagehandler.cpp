@@ -2169,19 +2169,21 @@ HANDLER_STATE handleDebugPost(AsyncWebServerRequest *request) // Handle Debug ta
 
             // Debug settings
             //
-            if (strcmp(name, "telnet") == 0) // Enable telnet
+            if (strcmp(name, AppKeys::telnet) == 0) // Enable telnet
             {
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.copconfig.telnet = true;
+                    toggleTelnet(true);
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.copconfig.telnet = false;
+                    toggleTelnet(false);
                 }
                 else
                 {
@@ -2202,9 +2204,9 @@ HANDLER_STATE handleDebugPost(AsyncWebServerRequest *request) // Handle Debug ta
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.copconfig.loglevel = val;
+                    Log.setLevel(val);
                 }
             }
-
         }
     }
     // Return values

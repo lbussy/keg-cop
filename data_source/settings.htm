@@ -2126,7 +2126,6 @@
                     </div> <!-- Keg Screen Tab -->
 
                     <div class="tab-pane fade" id="targeturl"> <!-- Generic REST Target Tab -->
-
                         <div class="card-header d-flex">
                             <ul class="navbar me-auto">
                                 <h4>Generic REST Configuration</h4>
@@ -2571,19 +2570,72 @@
                         </div>
                         <div class="card-body">
                             <p>
-                                Keg Cop provides debug information via Serial as well as (optional) Telnet connections.
+                                Keg Cop provides debug information via Serial and (optional) Telnet connections.
                             </p>
                             <p>
-                                Because Telnet does not have authentication and the communicaitons are insecure, it may
-                                be considered a security risk and is disabled by default.
+                                Because Telnet does not have authentication and the communications are insecure, it may be considered a security risk and is disabled by default.
                             </p>
                             <p>
-                                Additionaly, various debug levels are available to tailor the verbosity to your preferences.
+                                Additionally, various debug levels are available to tailor the verbosity of the Serial and Telnet messages to your preferences.
                             </p>
-                            <p>
-                                Note that you may change these settings at any time, however they will not have any effect 
-                                until after you reset the controller.
-                            </p>
+                            <hr>
+                            <!-- Debug Control -->
+                            <div class="row col-sm-12 justify-content-center">
+
+                                <!-- Debug Level -->
+                                <div class="col-sm-2">
+                                    <label
+                                        for="loglevel" class="col-form-label" data-toggle="tooltip"
+                                        title="Debug level for serial and telnet messages.">
+                                        Debug Level
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select class="form-select" id="loglevel" name="loglevel" data-form-type="other">
+                                        <option>0 - Silent, no output</option>
+                                        <option>1 - Fatal errors </option>
+                                        <option>2 - All errors </option>
+                                        <option>3 - Errors and warnings </option>
+                                        <option>4 - Errors, warnings, and notices </option>
+                                        <option>5 - Errors, warnings, notices, and traces </option>
+                                        <option>6 - All</option>
+                                      </select>
+                                </div>
+                                <!-- Debug Level -->
+
+                                <!-- Enable Telnet -->
+                                <div class="col-sm-5">
+                                    <fieldset class="form-group">
+                                        <div class="row justify-content-center">
+                                            <div class="col-sm-5">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Telnet disabled">
+                                                        <input type="radio" class="form-check-input" name="telnet" id="telnet" value="false">
+                                                        Telnet Disabled
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Telnet enabled">
+                                                        <input type="radio" class="form-check-input" name="telnet" id="telnet" value="true">
+                                                        Telnet Enabled
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <!-- Enable Telnet -->
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </div>
+                            <!-- Debug Control -->
                         </div>
                     </div> <!-- Debug Configuration Tab -->
 

@@ -5,7 +5,7 @@
 ```{image} control.png
 :align: center
 :alt: Temperature Control
-:scale: 50%
+:scale: 30%
 ```
 
 This page allows you to set temperature contol options.
