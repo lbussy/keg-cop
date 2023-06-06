@@ -393,10 +393,10 @@ bool copyFile(String src, String dst)
 
     if (!src.startsWith("/"))
         src = "/" + src;
-        
+
     if (!dst.startsWith("/"))
         src = "/" + src;
-        
+
     // Open the source file for reading
     File sourceFile = FILESYSTEM.open(src, "r");
     if (!sourceFile)
@@ -427,4 +427,24 @@ bool copyFile(String src, String dst)
 
     Log.notice(F("File %s sucessfully copied to %s" CR), src.c_str(), dst.c_str());
     return retval;
+}
+
+struct tcp_pcb;
+extern struct tcp_pcb *tcp_tw_pcbs;
+extern "C" void tcp_abort(struct tcp_pcb *pcb);
+void tcp_cleanup()
+{ // TCP Cleanup, to avoid memory crash.
+    while (tcp_tw_pcbs)
+        tcp_abort(tcp_tw_pcbs);
+}
+
+float reduceFloatPrecision(float f, int dec) {
+  char buffer[10];
+  dtostrf(f, 6, dec, &buffer[0]);
+  return atof(&buffer[0]);
+}
+
+char* convertFloatToString(float f, char* buffer, int dec) {
+  dtostrf(f, 6, dec, buffer);
+  return buffer;
 }
