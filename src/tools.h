@@ -54,6 +54,7 @@ void setQueuePulseReport(int tapNum, int pulses);
 void setQueueKickReport(int tapNum);
 void setDoSaveUptime();
 void setDoSaveApp();
+void setDoSaveTelnet();
 void setDoSaveFlow();
 void tickerLoop();
 void maintenanceLoop();
