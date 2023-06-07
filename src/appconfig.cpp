@@ -497,6 +497,20 @@ void CopConfig::load(JsonObjectConst obj)
         tempemulate = obj[AppKeys::tempemulate];
     }
 
+    if (obj[AppKeys::theme].isNull())
+    {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for theme." CR), appConfig); // DEBUG
+            loadFailed = true; // DEBUG
+        }
+        strlcpy(theme, "cerulean", sizeof(theme));
+    }
+    else
+    {
+        strlcpy(theme, obj[AppKeys::theme], sizeof(theme));
+    }
+
     if (obj[AppKeys::telnet].isNull())
     {
         if (!appLoadError)
@@ -513,17 +527,21 @@ void CopConfig::load(JsonObjectConst obj)
 
     if (obj[AppKeys::loglevel].isNull())
     {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for loglevel." CR), appConfig); // DEBUG
+            loadFailed = true; // DEBUG
+        }
         loglevel = 6;
     }
     else
     {
-        loglevel = obj[AppKeys::theme];
+        loglevel = obj[AppKeys::loglevel];
     }
 
     if (loadFailed) // DEBUG
     {
         debugAppLog("CopConfig");
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 

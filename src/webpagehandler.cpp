@@ -786,8 +786,7 @@ void setFSPageHandlers()
                 }
             }
         }
-            send_not_allowed(request);
-        });
+            send_not_allowed(request); });
 
     server.on("/api/v1/fs/downloadfile/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -2173,17 +2172,31 @@ HANDLER_STATE handleDebugPost(AsyncWebServerRequest *request) // Handle Debug ta
             {
                 if (strcmp(value, "true") == 0)
                 {
-                    didChange = true;
-                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                    app.copconfig.telnet = true;
-                    toggleTelnet(true);
+                    if (!app.copconfig.telnet)
+                    {
+                        didChange = true;
+                        Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        app.copconfig.telnet = true;
+                        setDoSaveTelnet();
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings Update: [%s]:(%s) not changed." CR), name, value);
+                    }
                 }
                 else if (strcmp(value, "false") == 0)
                 {
-                    didChange = true;
-                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                    app.copconfig.telnet = false;
-                    toggleTelnet(false);
+                    if (app.copconfig.telnet)
+                    {
+                        didChange = true;
+                        Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        app.copconfig.telnet = false;
+                        setDoSaveTelnet();
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings Update: [%s]:(%s) not changed." CR), name, value);
+                    }
                 }
                 else
                 {

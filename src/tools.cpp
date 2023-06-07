@@ -35,6 +35,7 @@ bool doRPintsConnect = false;     // Semaphore for MQTT (re)connect
 bool doTaplistIOConnect = false;  // Semaphore for Taplist.IO Report
 bool doSetSaveUptime = false;     // Semaphore required to save reboot time
 bool doSetSaveApp = false;        // Semaphore required to save config
+bool doSaveTelnet = false;        // Semaphore required to save telnet config
 bool doSetSaveFlowConfig = false; // Semaphore required to save flowconfig
 bool doTapInfoReport[NUMTAPS] = {
     false, false, false, false, false, false, false, false}; // Semaphore for reset
@@ -100,6 +101,11 @@ void setDoSaveApp()
     doSetSaveApp = true; // Semaphore required to save config
 }
 
+void setDoSaveTelnet()
+{
+    doSaveTelnet = true; // Semaphore required to save config
+}
+
 void setDoSaveFlow()
 {
     doSetSaveFlowConfig = true; // Semaphore required to save flowconfig
@@ -152,6 +158,12 @@ void tickerLoop()
     { // Save AppConfig
         doSetSaveApp = false;
         saveAppConfig(APP_FILENAME);
+    }
+
+    if (doSaveTelnet)
+    { // Toggle Telnet
+        doSaveTelnet = false;
+        toggleTelnet(app.copconfig.telnet);
     }
 
     if (doSetSaveFlowConfig)
@@ -413,6 +425,6 @@ bool copyFile(String src, String dst)
     sourceFile.close();
     destinationFile.close();
 
-    Log.notice(F("File %s sucessfully copied to %s" CR), src, dst);
+    Log.notice(F("File %s sucessfully copied to %s" CR), src.c_str(), dst.c_str());
     return retval;
 }

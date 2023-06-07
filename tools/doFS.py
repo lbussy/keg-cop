@@ -150,16 +150,29 @@ def gzip_webfiles( source, target, env ):
     # Now copy the others:
     copy_other_files()
 
+def check_littlefs(file_path):
+    with open(file_path, 'r') as file:
+        for line in file:
+            line = line.strip()  # Remove leading/trailing whitespaces
+            if line.startswith('board_build.filesystem') and line.endswith('littlefs'):
+                return True
+    return False
+
 try:
     # Define destination directory
     source_dir_path = os.path.join( env.get( 'PROJECT_DIR' ), DATA_SOURCE_NAME )
     # Define source directory
     dest_path = env.get( 'PROJECT_DATA_DIR' )
-    # dest_path = os.path.join( env.get( 'PROJECT_DATA_DIR' ), GZIP_DIR_NAME )
-
+    # Define FS type
+    if (check_littlefs(os.path.join( env.get( 'PROJECT_DIR' ), "platformio.ini" ))):
+        print("Filesystem = littlefs")
+        fs_name = "littlefs"
+    else:
+        print("Filesystem = spiffs")
+        fs_name = "spiffs"
 except:
     print( 'gzip: Unable to find PROJECT_DATA_DIR.' )
     exit(-1)
 
 # Do work
-env.AddPreAction( '$BUILD_DIR/spiffs.bin', gzip_webfiles )
+env.AddPreAction( '$BUILD_DIR/' + fs_name + '.bin', gzip_webfiles )
