@@ -13,7 +13,9 @@
         "serial": false,
         "imperial": true,
         "tapsolenoid": true,
-		"theme": "cerulean"
+		"theme": "cerulean",
+        "loglevel": 6,
+        "telnet": false
     },
     "ota": {
         "dospiffs1": false,
