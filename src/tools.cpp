@@ -413,6 +413,6 @@ bool copyFile(String src, String dst)
     sourceFile.close();
     destinationFile.close();
 
-    Log.notice(F("File %s sucessfully copied to %s" CR), src, dst);
+    Log.notice(F("File %s sucessfully copied to %s" CR), src.c_str(), dst.c_str());
     return retval;
 }
