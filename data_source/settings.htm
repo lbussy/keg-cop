@@ -1499,32 +1499,6 @@
 
                                 <p></p>
 
-                                <!--
-                                <fieldset class="form-group">
-                                    <div class="row justify-content-center">
-										<div class="col-sm-2">&nbsp;</div>
-                                        <div class="col-sm-2">
-                                            <p data-toggle="tooltip" title="Turn serial reporting compatibility on or off - disables serial debug when enabled">Serial</p>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <div class="form-check">
-                                                <label class="form-check-label" data-toggle="tooltip" title="Turn serial reporting off">
-                                                    <input type="radio" class="form-check-input" name="serial" id="serial" value="false"
-                                                        checked="">
-                                                    Disabled
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <label class="form-check-label" data-toggle="tooltip" title="Turn serial reporting on">
-                                                    <input type="radio" class="form-check-input" name="serial" id="serial" value="true">
-                                                    Enabled
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                -->
-
                                 <fieldset class="form-group">
                                     <div class="row justify-content-center">
 										<div class="col-sm-2">&nbsp;</div>
@@ -2582,58 +2556,63 @@
                             <!-- Debug Control -->
                             <div class="row col-sm-12 justify-content-center">
 
-                                <!-- Debug Level -->
-                                <div class="col-sm-2">
-                                    <label
-                                        for="loglevel" class="col-form-label" data-toggle="tooltip"
-                                        title="Debug level for serial and telnet messages.">
-                                        Debug Level
-                                    </label>
-                                </div>
-                                <div class="col-sm-5">
-                                    <select class="form-select" id="loglevel" name="loglevel" data-form-type="other">
-                                        <option>0 - Silent, no output</option>
-                                        <option>1 - Fatal errors </option>
-                                        <option>2 - All errors </option>
-                                        <option>3 - Errors and warnings </option>
-                                        <option>4 - Errors, warnings, and notices </option>
-                                        <option>5 - Errors, warnings, notices, and traces </option>
-                                        <option>6 - All</option>
-                                      </select>
-                                </div>
-                                <!-- Debug Level -->
+                                <form id="tap0" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                                    <div class="row col-sm-12 justify-content-center">
 
-                                <!-- Enable Telnet -->
-                                <div class="col-sm-5">
-                                    <fieldset class="form-group">
-                                        <div class="row justify-content-center">
-                                            <div class="col-sm-5">
-                                                <div class="form-check">
-                                                    <label class="form-check-label" data-toggle="tooltip" title="Telnet disabled">
-                                                        <input type="radio" class="form-check-input" name="telnet" id="telnet" value="false">
-                                                        Telnet Disabled
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <label class="form-check-label" data-toggle="tooltip" title="Telnet enabled">
-                                                        <input type="radio" class="form-check-input" name="telnet" id="telnet" value="true">
-                                                        Telnet Enabled
-                                                    </label>
-                                                </div>
-                                            </div>
+                                        <!-- Log Level -->
+                                        <div class="col-sm-2">
+                                            <label
+                                                for="loglevel" class="col-form-label" data-toggle="tooltip"
+                                                title="Debug level for serial and telnet messages.">
+                                                Debug Level
+                                            </label>
                                         </div>
-                                    </fieldset>
-                                </div>
-                                <!-- Enable Telnet -->
+                                        <div class="col-sm-4">
+                                            <select class="form-select" id="loglevel" name="loglevel" data-form-type="other">
+                                                <option>0 - Silent, no output</option>
+                                                <option>1 - Fatal errors </option>
+                                                <option>2 - All errors </option>
+                                                <option>3 - Errors and warnings </option>
+                                                <option>4 - Errors, warnings, and notices </option>
+                                                <option>5 - Errors, warnings, notices, and traces </option>
+                                                <option>6 - All</option>
+                                            </select>
+                                        </div>
+                                        <!-- Log Level -->
 
-                                <p></p>
+                                        <!-- Enable Telnet -->
+                                        <div class="col-sm-6">
+                                            <fieldset class="form-group">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-sm-5">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Telnet disabled">
+                                                                <input type="radio" class="form-check-input" name="telnet" id="telnet" value="false">
+                                                                Telnet Disabled
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Telnet enabled">
+                                                                <input type="radio" class="form-check-input" name="telnet" id="telnet" value="true">
+                                                                Telnet Enabled
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <!-- Enable Telnet -->
 
-                                <div class="d-grid gap-2 col-3 mx-auto">
-                                    <button id="submitsettings" class="btn btn-primary"
-                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
-                                    </button>
-                                </div>
+                                    </div>
 
+                                    <p></p>
+
+                                    <div class="d-grid gap-2 col-3 mx-auto">
+                                        <button id="submitsettings" class="btn btn-primary"
+                                            onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                             <!-- Debug Control -->
                         </div>
