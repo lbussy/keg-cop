@@ -513,17 +513,21 @@ void CopConfig::load(JsonObjectConst obj)
 
     if (obj[AppKeys::loglevel].isNull())
     {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for loglevel." CR), appConfig); // DEBUG
+            loadFailed = true; // DEBUG
+        }
         loglevel = 6;
     }
     else
     {
-        loglevel = obj[AppKeys::theme];
+        loglevel = obj[AppKeys::loglevel];
     }
 
     if (loadFailed) // DEBUG
     {
         debugAppLog("CopConfig");
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
