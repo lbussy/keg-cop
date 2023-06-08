@@ -33,7 +33,7 @@ import glob
 DATA_SOURCE_NAME = 'data_source'
 # Filenames / suffixes which need to be compressed
 source_file_prefix = ''
-extensions = [ 'css', 'html', 'htm', 'js', 'png' ]
+extensions = [ 'css', 'html', 'htm', 'js' ]
 
 # Copy files that are not to be compressed
 def copy_other_files():
