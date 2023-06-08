@@ -74,12 +74,12 @@ static int tapHandlers = sizeof(tf_str) / sizeof(tf_str[0]);
 
 void startWebServer()
 {
-    setRegPageHandlers();
     setAPIPageHandlers();
     setActionPageHandlers();
     setInfoPageHandlers();
     setConfigurationPageHandlers();
     setFSPageHandlers();
+    setRegPageHandlers();
 
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request)
