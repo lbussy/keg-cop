@@ -74,12 +74,12 @@ static int tapHandlers = sizeof(tf_str) / sizeof(tf_str[0]);
 
 void startWebServer()
 {
+    setRegPageHandlers();
     setAPIPageHandlers();
     setActionPageHandlers();
     setInfoPageHandlers();
     setConfigurationPageHandlers();
     setFSPageHandlers();
-    setRegPageHandlers();
 
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request)
@@ -122,19 +122,19 @@ void setRegPageHandlers()
 {
     // Regular page aliases
 
-    server.serveStatic("/", FILESYSTEM, "/").setDefaultFile("index.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic("/index/", FILESYSTEM, "/").setDefaultFile("index.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic(KegScreenKeys::kstv_path, FILESYSTEM, "/").setDefaultFile("index.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic("/bulkload/", FILESYSTEM, "/").setDefaultFile("bulkload.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic("/about/", FILESYSTEM, "/").setDefaultFile("about.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic("/help/", FILESYSTEM, "/").setDefaultFile("help.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic("/license/", FILESYSTEM, "/").setDefaultFile("license.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic("/temps/", FILESYSTEM, "/").setDefaultFile("temps.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic("/ota/", FILESYSTEM, "/").setDefaultFile("ota.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic("/settings/", FILESYSTEM, "/").setDefaultFile("settings.htm.gz").setCacheControl("max-age=600");
+    server.serveStatic("/", FILESYSTEM, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
+    server.serveStatic("/index/", FILESYSTEM, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
+    server.serveStatic(KegScreenKeys::kstv_path, FILESYSTEM, "/").setDefaultFile("index.htm").setCacheControl("max-age=600");
+    server.serveStatic("/bulkload/", FILESYSTEM, "/").setDefaultFile("bulkload.htm").setCacheControl("max-age=600");
+    server.serveStatic("/about/", FILESYSTEM, "/").setDefaultFile("about.htm").setCacheControl("max-age=600");
+    server.serveStatic("/help/", FILESYSTEM, "/").setDefaultFile("help.htm").setCacheControl("max-age=600");
+    server.serveStatic("/license/", FILESYSTEM, "/").setDefaultFile("license.htm").setCacheControl("max-age=600");
+    server.serveStatic("/temps/", FILESYSTEM, "/").setDefaultFile("temps.htm").setCacheControl("max-age=600");
+    server.serveStatic("/ota/", FILESYSTEM, "/").setDefaultFile("ota.htm").setCacheControl("max-age=600");
+    server.serveStatic("/settings/", FILESYSTEM, "/").setDefaultFile("settings.htm").setCacheControl("max-age=600");
     server.serveStatic("/controllerreset/", FILESYSTEM, "/").setDefaultFile("controllerreset.htm").setCacheControl("max-age=600");
-    server.serveStatic("/wifireset/", FILESYSTEM, "/").setDefaultFile("wifireset.htm.gz").setCacheControl("max-age=600");
-    server.serveStatic("/404/", FILESYSTEM, "/").setDefaultFile("404.htm.gz").setCacheControl("max-age=600"); // This is just to render the page normally for testing
+    server.serveStatic("/wifireset/", FILESYSTEM, "/").setDefaultFile("wifireset.htm").setCacheControl("max-age=600");
+    server.serveStatic("/404/", FILESYSTEM, "/").setDefaultFile("404.htm").setCacheControl("max-age=600"); // This is just to render the page normally for testing
 }
 
 void setAPIPageHandlers()
