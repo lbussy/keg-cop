@@ -335,8 +335,6 @@ void stopNetwork()
 
     Log.warning(F("%s WiFi lost connection, reconnecting." CR), prefix);
 
-    Log.verbose(F("%s Stopping RPints." CR), prefix);
-    disconnectRPints();
     Log.verbose(F("%s Stopping Web Server." CR), prefix);
     stopWebServer();
     Log.verbose(F("%s Stopping mDNS." CR), prefix);
@@ -361,8 +359,6 @@ void startNetwork()
     serialRestart();
     Log.verbose(F("%s Starting Main Timers and Filesystem." CR), prefix);
     startMainProc();
-    Log.verbose(F("%s Connecting RPints." CR), prefix);
-    setDoRPintsConnect();
     Log.verbose(F("%s Starting mDNS." CR), prefix);
     mDNSStart();
     Log.verbose(F("%s Starting Web Server." CR), prefix);

@@ -1913,11 +1913,6 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (changedMqtt)
-            {
-                disconnectRPints();
-                setDoRPintsConnect();
-            }
         }
     }
     // Return values
