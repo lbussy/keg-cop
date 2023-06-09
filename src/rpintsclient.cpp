@@ -55,34 +55,3 @@ void RPints::sendPourReport(int tapID, unsigned int pulses)
     _push->sendMqtt(outStr);
     tpl.freeMemory();
 }
-
-void connectRPints()
-{
-    // Set up connection to broker
-    Log.trace(F("%s Initializing connection to broker: %s on port: %d" CR),
-              rpints,
-              app.rpintstarget.host,
-              app.rpintstarget.port);
-    LCBUrl url;
-    if (url.isMDNS(app.rpintstarget.host) && url.isValidIP(url.getIP(app.rpintstarget.host).toString().c_str()))
-    {
-        Log.verbose(F("%s Resolved mDNS broker name: %s (%s)" CR),
-                    rpints,
-                    app.rpintstarget.host,
-                    url.getIP(app.rpintstarget.host).toString().c_str(),
-                    app.rpintstarget.port);
-        // rpintsClient.setServer(url.getIP(app.rpintstarget.host), app.rpintstarget.port); TODO
-    }
-    else if (url.isValidIP(app.rpintstarget.host) || url.isValidHostName(app.rpintstarget.host))
-    {
-        IPAddress hostIP;
-        // rpintsClient.setServer(hostIP.fromString(app.rpintstarget.host), app.rpintstarget.port); // TODO
-    }
-    else
-    {
-        // rpintsClient.setServer(app.rpintstarget.host, app.rpintstarget.port); // TODO
-    }
-
-    Log.trace(F("%s Connecting." CR), rpints);
-    // rpintsClient.connect(); TODO
-}

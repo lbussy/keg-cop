@@ -66,14 +66,14 @@ double convertOneFtoC(double);
 double convertOneCtoF(double);
 double convertGtoL(double);
 double convertLtoG(double);
+float reduceFloatPrecision(float f, int dec);
+char* convertFloatToString(float f, char* buf, int dec = 2);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
 void getGuid(char *str); // 17 chars including null terminator
 void killDRD();
 unsigned long getTime();
 bool copyFile(String src, String dst);
 void tcp_cleanup();
-float reduceFloatPrecision(float f, int dec);
-char* convertFloatToString(float f, char* buf, int dec = 2);
 
 extern bool doWiFiReconnect;
 extern bool pausingWiFi;
