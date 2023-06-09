@@ -23,14 +23,7 @@ SOFTWARE. */
 #ifndef _WIFI_H
 #define _WIFI_H
 
-#include "config.h"
-#include "appconfig.h"
-#include "tools.h"
-
-#include <WiFi.h>
 #include <AsyncWiFiManager.h>
-#include <Ticker.h>
-#include <ArduinoLog.h>
 
 void wifiBlinker();
 void doWiFi();

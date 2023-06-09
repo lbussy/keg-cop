@@ -23,18 +23,8 @@ SOFTWARE. */
 #ifndef _KEGSCREEN_H
 #define _KEGSCREEN_H
 
-#include "config.h"
-#include "appconfig.h"
-#include "flowmeter.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-
-#include <LCBUrl.h>
-#include <ArduinoLog.h>
-#include <AsyncTCP.h>
 #include <asyncHTTPrequest.h>
 #include <ArduinoJson.h>
-#include <Arduino.h>
 
 /**
  * \brief Strings used for JSON keys

@@ -23,20 +23,8 @@ SOFTWARE. */
 #ifndef _FLOWCONFIG_H
 #define _FLOWCONFIG_H
 
-#include <FS.h>
-#include <LittleFS.h>
-
-#include <ArduinoJson.h>
-#include <ArduinoLog.h>
-#include <Arduino.h>
-
 #include "config.h"
-#include "flowmeter.h"
-
-#define CAPACITY_FLOW_SERIAL 3072
-#define CAPACITY_FLOW_DESERIAL 3072
-#define FLOW_FILENAME "/flowconfig.json"
-#define FLOW_FILENAME_BACKUP "/flowconfig.backup"
+#include <ArduinoJson.h>
 
 struct Taps
 {

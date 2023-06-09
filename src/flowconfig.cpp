@@ -22,6 +22,15 @@ SOFTWARE. */
 
 #include "flowconfig.h"
 
+#include "tools.h"
+#include "appconfig.h"
+#include "flowmeter.h"
+
+#include <FS.h>
+#include <LittleFS.h>
+#include <ArduinoLog.h>
+#include <Arduino.h>
+
 Flowmeter flow;
 
 #define FLOW_DEBUG_LOG "/flowdebuglog.txt" // DEBUG

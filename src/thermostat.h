@@ -24,9 +24,6 @@ SOFTWARE. */
 #define _THERMOSTAT_H
 
 #include "config.h"
-#include "tempsensors.h"
-#include "appconfig.h"
-#include "thermostat.h"
 
 enum ThermostatState
 {

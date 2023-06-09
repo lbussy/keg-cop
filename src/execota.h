@@ -23,16 +23,7 @@ SOFTWARE. */
 #ifndef _EXECOTA_H
 #define _EXECOTA_H
 
-#include <Update.h>
-#include <HTTPClient.h>
-
-#include "appconfig.h"
-#include "flowconfig.h"
-#include "webpagehandler.h"
-#include <LCBUrl.h>
-
-#include <ArduinoLog.h>
-#include <Arduino.h>
+class String;
 
 void execfw();
 void execspiffs();

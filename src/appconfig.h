@@ -23,18 +23,8 @@ SOFTWARE. */
 #ifndef _JSONCONFIG_H
 #define _JSONCONFIG_H
 
-#include "serialhandler.h"
 #include "config.h"
-
 #include <ArduinoJson.h>
-
-#include <FS.h>
-#include <LittleFS.h>
-
-#define CAPACITY_APP_SERIAL 2048
-#define CAPACITY_APP_DESERIAL 3072
-#define APP_FILENAME "/appconfig.json"
-#define APP_FILENAME_BACKUP "/appconfig.backup"
 
 struct ApConfig
 {

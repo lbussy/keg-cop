@@ -22,6 +22,23 @@ SOFTWARE. */
 
 #include "uptimelog.h"
 
+#include "config.h"
+#include "tools.h"
+#include "serialhandler.h"
+#include "resetreasons.h"
+
+#include <Arduino.h>
+#include <ArduinoLog.h>
+#include <FS.h>
+#include <LittleFS.h>
+#include <Ticker.h>
+
+#define CAP_SER_UPT 32
+#define CAP_DESER_UPT 96
+
+#define UPTIME_FILE "/uptime.json"
+#define UPTIME_LOG "/uptime.csv"
+
 Uptime uptime;
 Ticker saveRebootTime;
 static const char *uptimefile = UPTIME_FILE;

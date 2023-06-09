@@ -23,23 +23,8 @@ SOFTWARE. */
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
-#include "config.h"
-#include "ntphandler.h"
-#include "kegscreen.h"
-#include "thermostat.h"
-#include "urltarget.h"
-#include "mdnshandler.h"
-#include "wifihandler.h"
-#include "uptime.h"
-#include "uptimelog.h"
-#include "taplistio.h"
-
-#include <FS.h>
-#include <LittleFS.h>
-
-#include <AsyncWiFiManager.h>
-#include <ArduinoLog.h>
-#include <Arduino.h>
+#include <string>
+class String;
 
 void initPourPulseKick();
 void resetController();

@@ -22,6 +22,34 @@ SOFTWARE. */
 
 #include "webpagehandler.h"
 
+#include "uptime.h"
+#include "wifihandler.h"
+#include "appconfig.h"
+#include "jsontools.h"
+#include "version.h"
+#include "config.h"
+#include "thatVersion.h"
+#include "execota.h"
+#include "flowmeter.h"
+#include "mdnshandler.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+#include "resetreasons.h"
+#include "api.h"
+#include "kegscreen.h"
+#include "tools.h"
+#include "flowconfig.h"
+#include "serialhandler.h"
+
+#include <WiFi.h>
+#include <ESPmDNS.h>
+#include <ArduinoLog.h>
+#include <ArduinoJson.h>
+#include <AsyncJson.h>
+#include <ESPAsyncWebServer.h>
+#include <Arduino.h>
+#include <LCBUrl.h>
+
 AsyncWebServer server(PORT);
 
 // This BS is needed because a wierd combo of libs and core is causing the

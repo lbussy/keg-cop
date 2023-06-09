@@ -24,17 +24,6 @@ SOFTWARE. */
 #define _URLTARGET_H
 
 #include "config.h"
-#include "appconfig.h"
-#include "flowmeter.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-
-#include <LCBUrl.h>
-#include <ArduinoLog.h>
-#include <AsyncTCP.h>
-#include <asyncHTTPrequest.h>
-#include <ArduinoJson.h>
-#include <Arduino.h>
 
 struct TapsReport
 {
@@ -72,6 +61,9 @@ struct UrlReport
     TapsReport tap[NUMTAPS];
     SensorsReport sensor[NUMSENSOR];
 };
+
+class asyncHTTPrequest;
+class String;
 
 bool sendTargetReport();                                   // Push complete report
 bool sendTReport(const String &);                          // Handle the business of sending report

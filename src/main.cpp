@@ -22,6 +22,29 @@ SOFTWARE. */
 
 #include "main.h"
 
+#include "thatVersion.h"
+#include "kegscreen.h"
+#include "appconfig.h"
+#include "serialhandler.h"
+#include "config.h"
+#include "ntphandler.h"
+#include "wifihandler.h"
+#include "webpagehandler.h"
+#include "version.h"
+#include "mdnshandler.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+#include "flowmeter.h"
+#include "tools.h"
+#include "execota.h"
+#include "uptimelog.h"
+#include "taplistio.h"
+#include "flowconfig.h"
+
+#include <ArduinoLog.h>
+#include <ESP_DoubleResetDetector.h>
+#include <Ticker.h>
+
 DoubleResetDetector *drd;
 
 Ticker pollSensorsTicker;

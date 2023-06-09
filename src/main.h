@@ -23,24 +23,7 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
-#include "appconfig.h"
-#include "serialhandler.h"
-#include "config.h"
-#include "ntphandler.h"
-#include "wifihandler.h"
-#include "webpagehandler.h"
-#include "version.h"
-#include "mdnshandler.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-#include "flowmeter.h"
-#include "tools.h"
-#include "execota.h"
-#include "uptimelog.h"
-#include "taplistio.h"
-
-#include <ArduinoLog.h>
-#include <ESP_DoubleResetDetector.h>
+class String;
 
 void setup();
 void loop();
