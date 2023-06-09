@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "kegscreen.h"
 
+#include "flowconfig.h"
+
 #define KS_FILENAME "/kstv.json"
 
 int tempReportIteration = 0;

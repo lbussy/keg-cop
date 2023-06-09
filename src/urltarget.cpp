@@ -25,6 +25,7 @@ SOFTWARE. */
 #include "config.h"
 #include "appconfig.h"
 #include "flowmeter.h"
+#include "flowconfig.h"
 #include "tempsensors.h"
 #include "thermostat.h"
 #include "tools.h"

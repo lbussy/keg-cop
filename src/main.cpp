@@ -23,6 +23,7 @@ SOFTWARE. */
 #include "main.h"
 
 #include "thatVersion.h"
+#include "kegscreen.h"
 
 DoubleResetDetector *drd;
 

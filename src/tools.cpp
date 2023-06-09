@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "tools.h"
+
 #include "taplistio.h"
 #include "config.h"
 #include "ntphandler.h"
@@ -31,6 +32,7 @@ SOFTWARE. */
 #include "wifihandler.h"
 #include "uptime.h"
 #include "uptimelog.h"
+#include "flowconfig.h"
 
 #include <FS.h>
 #include <LittleFS.h>

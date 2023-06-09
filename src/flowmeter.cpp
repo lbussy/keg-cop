@@ -23,6 +23,17 @@ SOFTWARE. */
 #include "flowmeter.h"
 
 #include "tools.h"
+#include "serialhandler.h"
+#include "config.h"
+#include "appconfig.h"
+#include "kegscreen.h"
+#include "flowconfig.h"
+
+#include <FS.h>
+#include <LittleFS.h>
+#include <ArduinoJson.h>
+#include <ArduinoLog.h>
+#include <Arduino.h>
 
 int flowPins[NUMTAPS] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7, FLOW8};
 volatile static unsigned long pulse[NUMTAPS];         // Unregistered pulse counter

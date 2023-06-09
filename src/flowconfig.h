@@ -23,15 +23,13 @@ SOFTWARE. */
 #ifndef _FLOWCONFIG_H
 #define _FLOWCONFIG_H
 
+#include "config.h"
+
 #include <FS.h>
 #include <LittleFS.h>
-
 #include <ArduinoJson.h>
 #include <ArduinoLog.h>
 #include <Arduino.h>
-
-#include "config.h"
-#include "flowmeter.h"
 
 struct Taps
 {

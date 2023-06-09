@@ -36,6 +36,7 @@ SOFTWARE. */
 #include "thermostat.h"
 #include "resetreasons.h"
 #include "api.h"
+#include "kegscreen.h"
 
 #include <WiFi.h>
 #include <ESPmDNS.h>

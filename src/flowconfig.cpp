@@ -23,6 +23,9 @@ SOFTWARE. */
 #include "flowconfig.h"
 
 #include "tools.h"
+#include "appconfig.h"
+#include "flowmeter.h"
+#include "flowconfig.h"
 
 Flowmeter flow;
 
