@@ -22,6 +22,15 @@ SOFTWARE. */
 
 #include "uptimelog.h"
 
+#include "config.h"
+#include "tools.h"
+#include "serialhandler.h"
+
+#include <Arduino.h>
+#include <FS.h>
+#include <LittleFS.h>
+#include <Ticker.h>
+
 #define CAP_SER_UPT 32
 #define CAP_DESER_UPT 96
 

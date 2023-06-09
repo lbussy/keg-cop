@@ -23,17 +23,7 @@ SOFTWARE. */
 #ifndef _UPTIMELOG_H
 #define _UPTIMELOG_H
 
-#include "config.h"
-#include "tools.h"
-#include "serialhandler.h"
-
-#include <Arduino.h>
 #include <ArduinoJson.h>
-
-#include <FS.h>
-#include <LittleFS.h>
-
-#include <Ticker.h>
 
 struct Uptime
 {
