@@ -117,7 +117,6 @@ void setup()
     startTstat(TS_TYPE_CHAMBER); // Initialize temperature control
     startTstat(TS_TYPE_TOWER);   // Initialize fan control
     doVersionPoll();             // Get server version at startup
-    setupRPints();               // Set up MQTT
     doKSJSON();                  // Add KegScreen TV configuration
 #ifdef _DEBUG_BUILD
     doUptime(true); // Uptime log start
