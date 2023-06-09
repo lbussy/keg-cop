@@ -24,12 +24,7 @@ SOFTWARE. */
 #define _FLOWCONFIG_H
 
 #include "config.h"
-
-#include <FS.h>
-#include <LittleFS.h>
 #include <ArduinoJson.h>
-#include <ArduinoLog.h>
-#include <Arduino.h>
 
 struct Taps
 {

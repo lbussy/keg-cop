@@ -25,7 +25,11 @@ SOFTWARE. */
 #include "tools.h"
 #include "appconfig.h"
 #include "flowmeter.h"
-#include "flowconfig.h"
+
+#include <FS.h>
+#include <LittleFS.h>
+#include <ArduinoLog.h>
+#include <Arduino.h>
 
 Flowmeter flow;
 
