@@ -22,6 +22,19 @@ SOFTWARE. */
 
 #include "urltarget.h"
 
+#include "config.h"
+#include "appconfig.h"
+#include "flowmeter.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+
+#include <LCBUrl.h>
+#include <ArduinoLog.h>
+#include <AsyncTCP.h>
+#include <asyncHTTPrequest.h>
+#include <ArduinoJson.h>
+#include <Arduino.h>
+
 asyncHTTPrequest urltarget;
 static const char *reportkey = "targeturlreport";
 static const char *reportname = "Target URL Report";
