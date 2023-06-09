@@ -23,10 +23,6 @@ SOFTWARE. */
 #ifndef _API_H
 #define _API_H
 
-#include "appconfig.h"
-#include "flowconfig.h"
-#include "serialhandler.h"
-
 #include <ArduinoJson.h>
 
 struct Action_API_V1
