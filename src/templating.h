@@ -1,30 +1,7 @@
 /* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
+   Copyright (c) 2021-22 Magnus
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. */
-
-// Adopted and adapted under the following license:
-
-/* MIT License
-
-Copyright (c) 2021-22 Magnus
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -48,11 +25,14 @@ SOFTWARE. */
 #define _TEMPLATING_H
 
 #include "serialhandler.h"
+#include "tools.h"
+
 #include <Arduino.h>
 #include <algorithm>
 
 #define MAX_KEY_VAL 20
-#define TPL "[TPL]:"
+
+const char * tpl = "[TPL]:";
 
 class TemplatingEngine
 {
@@ -92,16 +72,16 @@ private:
             }
         }
 
-        Log.notice(F("TPL : Buffer needed %d." CR), size);
+        Log.notice(F("%s Buffer needed %d." CR), tpl, size);
 
         freeMemory(); // In case this is reused
         _output = static_cast<char *>(malloc(size + 20));
 
         if (!_output)
         {
-            Log.error(F("TPL : Unable to allocate memory for transforming template, "
+            Log.error(F("%s Unable to allocate memory for transforming template, "
                         "needed %d." CR),
-                      size);
+                      tpl, size);
             return;
         }
 
@@ -133,8 +113,8 @@ private:
         }
         // strncat(_output, format + k, size - k);
         strncat(_output, format + k, strlen(format + k));
-        Log.notice(F("TPL : Transformed template %d chars to %d chars" CR),
-                   strlen(format), strlen(_output));
+        Log.notice(F("%s Transformed template %d chars to %d chars" CR),
+                   tpl, strlen(format), strlen(_output));
     }
 
 public:
@@ -167,7 +147,7 @@ public:
             }
         }
 
-        Log.warning(F("%s Too many keys, max is %d." CR), TPL, MAX_KEY_VAL);
+        Log.warning(F("%s Too many keys, max is %d." CR), tpl, MAX_KEY_VAL);
     }
 
     void dumpAll()
@@ -177,7 +157,7 @@ public:
         {
             if (!_items[i].key.equals(""))
             {
-                Log.notice(F("Key=\'%s\', Val=\'%s\'"), _items[i].key.c_str(), _items[i].val.c_str());
+                Log.verbose(F("%s Key=\'%s\', Val=\'%s\'" CR), tpl, _items[i].key.c_str(), _items[i].val.c_str());
             }
         }
     }
