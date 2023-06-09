@@ -22,6 +22,10 @@ SOFTWARE. */
 
 #include "thermostat.h"
 
+#include "config.h"
+#include "tempsensors.h"
+#include "appconfig.h"
+
 Thermostat tstat[TS_COUNT];
 ControlPoint cp[TS_COUNT];
 
