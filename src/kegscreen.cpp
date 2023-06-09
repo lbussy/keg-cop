@@ -23,6 +23,16 @@ SOFTWARE. */
 #include "kegscreen.h"
 
 #include "flowconfig.h"
+#include "config.h"
+#include "appconfig.h"
+#include "flowmeter.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+
+#include <LCBUrl.h>
+#include <ArduinoLog.h>
+#include <AsyncTCP.h>
+#include <Arduino.h>
 
 #define KS_FILENAME "/kstv.json"
 

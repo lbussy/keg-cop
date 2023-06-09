@@ -33,6 +33,8 @@ SOFTWARE. */
 #include "uptime.h"
 #include "uptimelog.h"
 #include "flowconfig.h"
+#include "appconfig.h"
+#include "serialhandler.h"
 
 #include <FS.h>
 #include <LittleFS.h>
