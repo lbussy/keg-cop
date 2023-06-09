@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "resetreasons.h"
 
+#include <Arduino.h>
+
 const int reset = (int)esp_reset_reason();
 
 const char *resetReason[11] = {
