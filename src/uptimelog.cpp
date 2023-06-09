@@ -22,6 +22,12 @@ SOFTWARE. */
 
 #include "uptimelog.h"
 
+#define CAP_SER_UPT 32
+#define CAP_DESER_UPT 96
+
+#define UPTIME_FILE "/uptime.json"
+#define UPTIME_LOG "/uptime.csv"
+
 Uptime uptime;
 Ticker saveRebootTime;
 static const char *uptimefile = UPTIME_FILE;

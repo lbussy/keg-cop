@@ -24,10 +24,10 @@ SOFTWARE. */
 
 AppConfig app;
 
-#define APP_DEBUG_LOG "/appdebuglog.txt" // DEBUG
-bool appLoadError = false; // DEBUG
+#define APP_DEBUG_LOG "/appdebuglog.txt"
+bool appLoadError = false;
 
-const char *appConfig = "[APPCONFIG]"; // DEBUG
+const char *appConfig = "[APPCONFIG]";
 
 bool loadAppConfig(const char *filename)
 {
@@ -45,16 +45,15 @@ bool loadAppConfig(const char *filename, bool isBackup)
     if (!FILESYSTEM.exists(filename) || !file)
     {
         Log.error(F("%s configuration %s does not exist." CR), appConfig, filename);
-        appLoadError = true;     // DEBUG
-        debugAppLog(false); // DEBUG
+        appLoadError = true;
+        debugAppLog(false);
         loadOK = false;
     }
     else if (!deserializeAppConfig(file))
     {
-        // DEBUG: This was where one issue was reported (maybe we truncated part of the JSON?)
         Log.error(F("%s Failed to load %s from filesystem." CR), appConfig, filename);
-        appLoadError = true;    // DEBUG
-        debugAppLog(true); // DEBUG
+        appLoadError = true;
+        debugAppLog(true);
         loadOK = false;
     }
     else
@@ -158,7 +157,7 @@ void ApConfig::save(JsonObject obj) const
 
 void ApConfig::load(JsonObjectConst obj)
 {
-    bool loadFailed = false; // DEBUG
+    bool loadFailed = false;
 
     // Load Access Point configuration
     //
@@ -166,8 +165,8 @@ void ApConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for ssid." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for ssid." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(ssid, APNAME, sizeof(ssid));
     }
@@ -180,8 +179,8 @@ void ApConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for passphrase." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for passphrase." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(passphrase, AP_PASSWD, sizeof(passphrase));
     }
@@ -190,10 +189,9 @@ void ApConfig::load(JsonObjectConst obj)
         strlcpy(passphrase, obj[AppKeys::passphrase], sizeof(passphrase));
     }
 
-    if (loadFailed) // DEBUG
+    if (loadFailed)
     {
         debugAppLog("ApConfig");
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 

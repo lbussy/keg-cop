@@ -22,6 +22,17 @@ SOFTWARE. */
 
 #include "tempsensors.h"
 
+// Device resolution
+#define TEMP_9_BIT 0x1F  //  9 bit
+#define TEMP_10_BIT 0x3F // 10 bit
+#define TEMP_11_BIT 0x5F // 11 bit
+#define TEMP_12_BIT 0x7F // 12 bit
+
+// Error Codes
+#define DEVICE_DISCONNECTED_C -127
+// #define DEVICE_DISCONNECTED_F -196.6
+// #define DEVICE_DISCONNECTED_RAW -7040
+
 Devices device;
 
 void sensorInit()

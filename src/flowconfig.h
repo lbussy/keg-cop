@@ -33,11 +33,6 @@ SOFTWARE. */
 #include "config.h"
 #include "flowmeter.h"
 
-#define CAPACITY_FLOW_SERIAL 3072
-#define CAPACITY_FLOW_DESERIAL 3072
-#define FLOW_FILENAME "/flowconfig.json"
-#define FLOW_FILENAME_BACKUP "/flowconfig.backup"
-
 struct Taps
 {
     int tapid;                // Tap ID (internal)

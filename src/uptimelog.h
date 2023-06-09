@@ -35,12 +35,6 @@ SOFTWARE. */
 
 #include <Ticker.h>
 
-#define CAP_SER_UPT 32
-#define CAP_DESER_UPT 96
-
-#define UPTIME_FILE "/uptime.json"
-#define UPTIME_LOG "/uptime.csv"
-
 struct Uptime
 {
     // Stores the uptime data
