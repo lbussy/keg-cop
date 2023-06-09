@@ -28,6 +28,8 @@ SOFTWARE. */
 #include "appconfig.h"
 #include "tools.h"
 #include "mdnshandler.h"
+#include "flowconfig.h"
+#include "webpagehandler.h"
 
 #include <WiFi.h>
 #include <Ticker.h>

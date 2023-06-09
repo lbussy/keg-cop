@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "flowmeter.h"
 
+#include "tools.h"
+
 int flowPins[NUMTAPS] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7, FLOW8};
 volatile static unsigned long pulse[NUMTAPS];         // Unregistered pulse counter
 volatile static unsigned long lastPulse[NUMTAPS];     // Pulses pending at last poll

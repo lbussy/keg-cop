@@ -27,6 +27,7 @@ SOFTWARE. */
 #include "flowmeter.h"
 #include "tempsensors.h"
 #include "thermostat.h"
+#include "tools.h"
 
 #include <LCBUrl.h>
 #include <ArduinoLog.h>

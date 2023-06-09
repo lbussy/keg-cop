@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "main.h"
 
+#include "thatVersion.h"
+
 DoubleResetDetector *drd;
 
 Ticker pollSensorsTicker;

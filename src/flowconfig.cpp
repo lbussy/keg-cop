@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "flowconfig.h"
 
+#include "tools.h"
+
 Flowmeter flow;
 
 #define FLOW_DEBUG_LOG "/flowdebuglog.txt" // DEBUG

@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "jsontools.h"
 
+#include "tools.h"
+
 #define MAX(x,y) ((x>y)?x:y)
 #define CAPACITY MAX(CAPACITY_APP_SERIAL, CAPACITY_FLOW_SERIAL)
 

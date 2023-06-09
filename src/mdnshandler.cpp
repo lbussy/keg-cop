@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "mdnshandler.h"
 
+#include "kegscreen.h"
+
 void mDNSStart()
 {
     if (!MDNS.begin(WiFi.getHostname()))

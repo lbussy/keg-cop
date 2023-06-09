@@ -25,8 +25,10 @@ SOFTWARE. */
 
 #include "appconfig.h"
 #include "config.h"
+#include "tools.h"
 #include <ArduinoLog.h>
 #include <ESPmDNS.h>
+#include <WiFi.h>
 
 void mDNSStart();
 void mDNSStop();

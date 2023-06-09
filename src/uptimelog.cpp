@@ -25,8 +25,10 @@ SOFTWARE. */
 #include "config.h"
 #include "tools.h"
 #include "serialhandler.h"
+#include "resetreasons.h"
 
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include <FS.h>
 #include <LittleFS.h>
 #include <Ticker.h>

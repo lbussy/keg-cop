@@ -23,9 +23,11 @@ SOFTWARE. */
 #include "tempsensors.h"
 
 #include "appconfig.h"
+#include "tools.h"
 
 #include <OneWire.h>
 #include <DS18B20.h>
+#include <ArduinoLog.h>
 
 // Device resolution
 #define TEMP_9_BIT 0x1F  //  9 bit

@@ -22,6 +22,10 @@ SOFTWARE. */
 
 #include "appconfig.h"
 
+#include "tools.h"
+
+#include <ArduinoLog.h>
+
 AppConfig app;
 
 #define APP_DEBUG_LOG "/appdebuglog.txt"
