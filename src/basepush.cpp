@@ -1,4 +1,5 @@
 /* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
+   Copyright (c) 2021-22 Magnus
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -20,39 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-// Adopted and adapted under the following license:
-
-/* MIT License
-
-Copyright (c) 2021-22 Magnus
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. */
-
-#if defined(ESP8266)
-#include <ESP8266mDNS.h>
-#else
-#include <ESPmDNS.h>
-#endif
-#include <MQTT.h>
-
 #include <basepush.h>
-#include <ArduinoLog.h>
 
 const char *push = "[PUSH]:";
 const int timeout = 10;
@@ -308,7 +277,7 @@ const int timeout = 10;
 //     return _response;
 // }
 
-void BasePush:: sendMqtt(String &payload, const char *target, int port,
+void BasePush::sendMqtt(String &payload, const char *target, int port,
                         const char *user, const char *pass)
 {
     // payload=: topic1,data1|topic2,data2|...
@@ -400,27 +369,27 @@ void BasePush:: sendMqtt(String &payload, const char *target, int port,
     tcp_cleanup();
 }
 
-bool BasePush::sendHttpPost(String &payload)
-{
-    sendHttpPost(payload, _config->getTargetHttpPost(),
-                 _config->getHeader1HttpPost(), _config->getHeader2HttpPost());
-    return _lastSuccess;
-}
+// bool BasePush::sendHttpPost(String &payload)
+// {
+//     sendHttpPost(payload, _config->getTargetHttpPost(),
+//                  _config->getHeader1HttpPost(), _config->getHeader2HttpPost());
+//     return _lastSuccess;
+// }
 
-bool BasePush::sendHttpGet(String &payload)
-{
-    sendHttpGet(payload, _config->getTargetHttpGet(),
-                _config->getHeader1HttpGet(), _config->getHeader2HttpGet());
-    return _lastSuccess;
-}
+// bool BasePush::sendHttpGet(String &payload)
+// {
+//     sendHttpGet(payload, _config->getTargetHttpGet(),
+//                 _config->getHeader1HttpGet(), _config->getHeader2HttpGet());
+//     return _lastSuccess;
+// }
 
-bool BasePush::sendInfluxDb2(String &payload)
-{
-    sendInfluxDb2(payload, _config->getTargetInfluxDB2(),
-                  _config->getOrgInfluxDB2(), _config->getBucketInfluxDB2(),
-                  _config->getTokenInfluxDB2());
-    return _lastSuccess;
-}
+// bool BasePush::sendInfluxDb2(String &payload)
+// {
+//     sendInfluxDb2(payload, _config->getTargetInfluxDB2(),
+//                   _config->getOrgInfluxDB2(), _config->getBucketInfluxDB2(),
+//                   _config->getTokenInfluxDB2());
+//     return _lastSuccess;
+// }
 
 bool BasePush::sendMqtt(String &payload)
 {
