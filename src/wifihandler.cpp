@@ -24,6 +24,14 @@ SOFTWARE. */
 
 //#define TRY_WIFI_RECONNECT
 
+#include "config.h"
+#include "appconfig.h"
+#include "tools.h"
+
+#include <WiFi.h>
+#include <Ticker.h>
+#include <ArduinoLog.h>
+
 bool wifiPause = false;
 bool pausingWiFi = false;
 bool shouldSaveConfig = false;
