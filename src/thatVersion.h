@@ -23,14 +23,9 @@ SOFTWARE. */
 #ifndef _THATVERSION_H
 #define _THATVERSION_H
 
-#include "config.h"
-#include "wifihandler.h"
-
-#include <ArduinoLog.h>
-#include <AsyncTCP.h>
-#include <asyncHTTPrequest.h>
 #include <ArduinoJson.h>
-#include <Arduino.h>
+
+class asyncHTTPrequest;
 
 struct ThatVersion
 {
