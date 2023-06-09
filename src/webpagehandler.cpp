@@ -37,6 +37,7 @@ SOFTWARE. */
 #include "resetreasons.h"
 #include "api.h"
 #include "kegscreen.h"
+#include "tools.h"
 
 #include <WiFi.h>
 #include <ESPmDNS.h>

@@ -22,7 +22,14 @@ SOFTWARE. */
 
 #include "mdnshandler.h"
 
+#include "appconfig.h"
+#include "config.h"
+#include "tools.h"
 #include "kegscreen.h"
+
+#include <ArduinoLog.h>
+#include <ESPmDNS.h>
+#include <WiFi.h>
 
 void mDNSStart()
 {
