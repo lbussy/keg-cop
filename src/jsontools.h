@@ -23,12 +23,6 @@ SOFTWARE. */
 #ifndef _JSONTOOLS_H
 #define _JSONTOOLS_H
 
-#include <ArduinoJson.h>
-#include <Arduino.h>
-
-#include "appconfig.h"
-#include "flowconfig.h"
-
 enum JSON_TYPE
 {
     JSON_APP,
