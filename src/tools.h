@@ -48,7 +48,7 @@ void setDoReset();
 void setDoKSTempReport();
 void setDoTapInfoReport(int);
 void setDoTargetReport();
-void setDoRPintsConnect();
+void setDoRPintsPush();
 void setQueuePourReport(int tapNum, float pour);
 void setQueuePulseReport(int tapNum, int pulses);
 void setQueueKickReport(int tapNum);

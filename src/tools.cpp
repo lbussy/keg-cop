@@ -31,7 +31,6 @@ bool doReset = false;             // Semaphore for reset
 bool doWiFiReset = false;         // Semaphore for WiFi reset
 bool doKSTempReport = false;      // Semaphore for KegScreen Temps Report
 bool doTargetReport = false;      // Semaphore for URL Target Report
-bool doRPintsConnect = false;     // Semaphore for MQTT (re)connect
 bool doTaplistIOConnect = false;  // Semaphore for Taplist.IO Report
 bool doSetSaveUptime = false;     // Semaphore required to save reboot time
 bool doSetSaveApp = false;        // Semaphore required to save config
@@ -84,11 +83,6 @@ void setDoTapInfoReport(int tap)
 void setDoTargetReport()
 {
     doTargetReport = true; // Semaphore required for URL Target Report
-}
-
-void setDoRPintsConnect()
-{
-    doRPintsConnect = true; // Semaphore required for MQTT (re)connect
 }
 
 void setDoSaveUptime()
@@ -181,7 +175,7 @@ void tickerLoop()
             // Send report from pour queue
             if (queuePourReport[i] > 0)
             {
-                sendPulsesRPints(i, queuePulseReport[i]);
+                // sendPulsesRPints(i, queuePulseReport[i]); // TODO: RPints push
                 sendPourReport(i, queuePourReport[i]);
                 queuePourReport[i] = 0;
                 queuePulseReport[i] = 0;
@@ -215,11 +209,6 @@ void tickerLoop()
         {
             doTargetReport = false;
             sendTargetReport();
-        }
-        if (doRPintsConnect)
-        {
-            doRPintsConnect = false;
-            connectRPints();
         }
         if (doTaplistIOConnect && !tioReporting)
         {
