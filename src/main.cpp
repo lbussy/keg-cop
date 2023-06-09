@@ -25,6 +25,8 @@ SOFTWARE. */
 #include "thatVersion.h"
 #include "kegscreen.h"
 
+#include <Ticker.h>
+
 DoubleResetDetector *drd;
 
 Ticker pollSensorsTicker;
