@@ -22,6 +22,14 @@ SOFTWARE. */
 
 #include "version.h"
 
+#include "config.h"
+#include "ArduinoLog.h"
+#include <Arduino.h>
+#include <ArduinoJson.h>
+
+#include <FS.h>
+#include <LittleFS.h>
+
 static const char *versionfile = VERSIONJSON;
 static char fs_ver[32];
 

@@ -23,16 +23,7 @@ SOFTWARE. */
 #ifndef _VERSION_H
 #define _VERSION_H
 
-#include "config.h"
-#include "ArduinoLog.h"
-#include <Arduino.h>
-#include <ArduinoJson.h>
-
-#include <FS.h>
-#include <LittleFS.h>
-
-#define stringify(s) _stringifyDo(s)
-#define _stringifyDo(s) #s
+class String;
 
 const char *project();
 const char *fw_version();
