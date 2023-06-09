@@ -46,6 +46,7 @@ SOFTWARE. */
 #include <AsyncJson.h>
 #include <ESPAsyncWebServer.h>
 #include <Arduino.h>
+#include <LCBUrl.h>
 
 AsyncWebServer server(PORT);
 
