@@ -23,7 +23,10 @@ SOFTWARE. */
 #include "appconfig.h"
 
 #include "tools.h"
+#include "serialhandler.h"
 
+#include <FS.h>
+#include <LittleFS.h>
 #include <ArduinoLog.h>
 
 AppConfig app;

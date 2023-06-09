@@ -23,13 +23,8 @@ SOFTWARE. */
 #ifndef _JSONCONFIG_H
 #define _JSONCONFIG_H
 
-#include "serialhandler.h"
 #include "config.h"
-
 #include <ArduinoJson.h>
-
-#include <FS.h>
-#include <LittleFS.h>
 
 struct ApConfig
 {

@@ -23,6 +23,8 @@ SOFTWARE. */
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <LittleFS.h>
+
 //////////////////////////////////////////////////////////////////////////
 //
 // Stringify Defines

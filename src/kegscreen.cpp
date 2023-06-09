@@ -32,6 +32,7 @@ SOFTWARE. */
 #include <LCBUrl.h>
 #include <ArduinoLog.h>
 #include <AsyncTCP.h>
+#include <FS.h>
 #include <Arduino.h>
 
 #define KS_FILENAME "/kstv.json"
