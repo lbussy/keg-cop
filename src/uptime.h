@@ -23,8 +23,6 @@ SOFTWARE. */
 #ifndef _UPTIME_H
 #define _UPTIME_H
 
-#include <Arduino.h>
-
 void getNow();
 void setValues();
 const int uptimeDays(bool refr = false);

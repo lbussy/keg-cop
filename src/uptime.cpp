@@ -22,6 +22,8 @@ SOFTWARE. */
 
 #include "uptime.h"
 
+#include <Arduino.h>
+
 #define UPTIME_REFRESH 1
 #define DAY_MILLIS 86400000
 #define HOUR_MILLIS 3600000
