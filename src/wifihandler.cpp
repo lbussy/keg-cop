@@ -27,6 +27,7 @@ SOFTWARE. */
 #include "config.h"
 #include "appconfig.h"
 #include "tools.h"
+#include "mdnshandler.h"
 
 #include <WiFi.h>
 #include <Ticker.h>

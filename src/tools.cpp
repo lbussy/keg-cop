@@ -21,7 +21,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "tools.h"
+
 #include "taplistio.h"
+#include "config.h"
+#include "ntphandler.h"
+#include "kegscreen.h"
+#include "thermostat.h"
+#include "urltarget.h"
+#include "mdnshandler.h"
+#include "wifihandler.h"
+#include "uptime.h"
+#include "uptimelog.h"
+
+#include <FS.h>
+#include <LittleFS.h>
+
+#include <AsyncWiFiManager.h>
+#include <ArduinoLog.h>
+#include <Arduino.h>
 
 float queuePourReport[NUMTAPS];         // Store pending pours
 unsigned int queuePulseReport[NUMTAPS]; // Store pending pulses
