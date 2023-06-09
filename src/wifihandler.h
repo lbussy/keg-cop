@@ -26,7 +26,6 @@ SOFTWARE. */
 #include "config.h"
 #include "appconfig.h"
 #include "tools.h"
-#include "rpintsclient.h"
 
 #include <WiFi.h>
 #include <AsyncWiFiManager.h>
