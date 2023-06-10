@@ -47,7 +47,7 @@ RPints::RPints()
 
 void RPints::sendRPPulseReport(int tapID, unsigned int pulses)
 {
-    if (app.rpintstarget.username == NULL || app.rpintstarget.username[0] == '\0')
+    if (app.rpintstarget.host == NULL || app.rpintstarget.host[0] == '\0')
     {
         Log.verbose(F("%s Target not configured." CR), rpints);
         return;
