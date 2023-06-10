@@ -294,9 +294,8 @@ const int timeout = 10;
 void BasePush::sendMqtt(String &payload, const char *target, int port,
                         const char *user, const char *pass)
 {
-    // payload=: topic1,data1|topic2,data2|...
-
-    Log.notice(F("%s Sending values to MQTT." CR), push);
+    Log.notice(F("%s Sending %s to MQTT." CR), push, payload.c_str());
+    return;
     _lastResponseCode = 0;
     _lastSuccess = false;
 
@@ -407,6 +406,8 @@ void BasePush::sendMqtt(String &payload, const char *target, int port,
 
 bool BasePush::sendMqtt(String &payload)
 {
+    Log.notice(F("%s Sending '%s' to MQTT target." CR), push, payload.c_str());
+    return true;
     sendMqtt(payload, app.rpintstarget.host, app.rpintstarget.port,
              app.rpintstarget.username, app.rpintstarget.password);
     return _lastSuccess;

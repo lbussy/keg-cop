@@ -75,7 +75,7 @@ void TemplatingEngine::transform(const char *format)
         }
     }
 
-    Log.notice(F("%s Buffer needed %d." CR), tpl, size);
+    // Log.notice(F("%s Buffer needed %d." CR), tpl, size);
 
     freeMemory(); // In case this is reused
     _output = static_cast<char *>(malloc(size + 20));
@@ -116,8 +116,8 @@ void TemplatingEngine::transform(const char *format)
     }
     // strncat(_output, format + k, size - k);
     strncat(_output, format + k, strlen(format + k));
-    Log.notice(F("%s Transformed template %d chars to %d chars" CR),
-               tpl, strlen(format), strlen(_output));
+    // Log.notice(F("%s Transformed template %d chars to %d chars" CR),
+    //            tpl, strlen(format), strlen(_output));
 }
 
 void TemplatingEngine::setVal(String key, float val, int dec = 2)
