@@ -35,6 +35,7 @@ SOFTWARE. */
 #include "flowconfig.h"
 #include "appconfig.h"
 #include "serialhandler.h"
+#include "rpintsclient.h"
 
 #include <FS.h>
 #include <LittleFS.h>
@@ -195,7 +196,8 @@ void tickerLoop()
             // Send report from pour queue
             if (queuePourReport[i] > 0)
             {
-                // sendPulsesRPints(i, queuePulseReport[i]); // TODO: RPints push
+                RPints rpints;
+                rpints.sendRPPourReport(i, queuePulseReport[i]);
                 sendPourReport(i, queuePourReport[i]);
                 queuePourReport[i] = 0;
                 queuePulseReport[i] = 0;

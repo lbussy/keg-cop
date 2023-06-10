@@ -1,5 +1,4 @@
 /* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
-   Copyright (c) 2021-22 Magnus
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -21,26 +20,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include <templating.h>
+#ifndef _RPINTSCLIENT_H
+#define _RPINTSCLIENT_H
 
-#include <templating.h>
+class BasePush;
 
-// the useDefaultTemplate param is there to support unit tests.
-const char *TemplatingEngine::create(const char *base)
+class RPints
 {
-#if LOG_LEVEL == 6
-    Log.verbose(F("%s Base '%s'." CR), tpl, base);
-#endif
+protected:
+    BasePush *_push;
 
-    // Insert data into template.
-    transform(base);
+public:
+    RPints();
 
-#if LOG_LEVEL == 6
-    Log.verbose(F("%s Transformed '%s'." CR), tpl, base);
-#endif
+    void sendRPPourReport(int tapID, unsigned int pulses);
+};
 
-    if (_output)
-        return _output;
-
-    return "";
-}
+#endif // _RPINTSCLIENT_H

@@ -26,21 +26,14 @@ SOFTWARE. */
 
 #include "tools.h"
 
-// #if defined(ESP8266)
-// #include <ESP8266mDNS.h>
-// #else
-// #include <ESPmDNS.h>
-// #endif
-
 #if defined(ESP8266)
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecure.h>
 #else
 #include <HTTPClient.h>
+#include <WiFiClient.h>
+#include <WiFiClientSecure.h>
 #endif
-
-#include <ArduinoLog.h>
-#include <MQTT.h>
 
 class BasePush
 {

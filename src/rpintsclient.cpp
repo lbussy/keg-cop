@@ -22,6 +22,12 @@ SOFTWARE. */
 
 #include "rpintsclient.h"
 
+#include "appconfig.h"
+#include "templating.h"
+#include "basepush.h"
+
+#include <ArduinoLog.h>
+
 // Raspberry Pints Pour Report:
 // P;-1;0;737
 // P = A pulse report (the only one currently supported via MQTT by Raspberry Pints.)
@@ -33,7 +39,13 @@ SOFTWARE. */
 static PGM_P pourTemplate PROGMEM = "${topic}:P;-1;${tapnum};${pulses}";
 const char *rpints = "[RPINTS]:";
 
-void RPints::sendPourReport(int tapID, unsigned int pulses)
+RPints::RPints()
+{
+    BasePush *push;
+    _push = push;
+}
+
+void RPints::sendRPPourReport(int tapID, unsigned int pulses)
 {
     if (app.rpintstarget.username == NULL || app.rpintstarget.username[0] == '\0')
     {

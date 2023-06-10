@@ -23,6 +23,20 @@ SOFTWARE. */
 
 #include <basepush.h>
 
+#include "appconfig.h"
+
+#if defined(ESP8266)
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecure.h>
+#else
+#include <HTTPClient.h>
+#include <WiFiClient.h>
+#include <WiFiClientSecure.h>
+#endif
+
+#include <ArduinoLog.h>
+#include <MQTT.h>
+
 const char *push = "[PUSH]:";
 const int timeout = 10;
 

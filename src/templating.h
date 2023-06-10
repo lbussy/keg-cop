@@ -1,4 +1,5 @@
 /* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
+   Copyright (c) 2021-22 Magnus
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -20,24 +21,46 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _RPINTSCLIENT_H
-#define _RPINTSCLIENT_H
+#ifndef _TEMPLATING_H
+#define _TEMPLATING_H
 
-#include "appconfig.h"
-#include "templating.h"
-#include "basepush.h"
+#include "tools.h"
 
+#include <Arduino.h>
 #include <ArduinoLog.h>
+#include <string>
 
-class RPints
+#define MAX_KEY_VAL 20
+
+class TemplatingEngine
 {
-protected:
-    BasePush *_push;
+private:
+    struct KeyVal
+    {
+        String key;
+        String val;
+    };
+    KeyVal _items[MAX_KEY_VAL];
+
+    void transform(const char *format);
+
+    char _buffer[20] = "";
+    char *_output = NULL;
 
 public:
-    explicit RPints(BasePush *push) { _push = push; }
+    TemplatingEngine() {}
+    ~TemplatingEngine() { freeMemory(); }
 
-    void sendPourReport(int tapID, unsigned int pulses);
+    void setVal(String key, float val, int dec);
+    void setVal(String key, int val);
+    void setVal(String key, char val);
+    void setVal(String key, String val);
+
+    void dumpAll();
+
+    void freeMemory();
+
+    const char *create(const char *base);
 };
 
-#endif // _RPINTSCLIENT_H
+#endif // _TEMPLATING_H
