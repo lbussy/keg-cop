@@ -74,9 +74,9 @@ bool saveFlowConfig(const char *filename);
 bool deserializeFlowConfig(Stream &);
 bool serializeFlowConfig(Print &);
 
-void debugFlowmeterLog(int numTap);                 // DEBUG
-void debugFlowmeterLog(bool fileExist);             // DEBUG
-void debugFlowmeterLog(int numTap, bool fileExist); // DEBUG
+void debugFlowmeterLog(int numTap);
+void debugFlowmeterLog(bool fileExist);
+void debugFlowmeterLog(int numTap, bool fileExist);
 
 extern Flowmeter flow;
 

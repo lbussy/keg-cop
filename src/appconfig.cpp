@@ -215,15 +215,15 @@ void OTA::save(JsonObject obj) const
 
 void OTA::load(JsonObjectConst obj)
 {
-    bool loadFailed = false; // DEBUG
+    bool loadFailed = false;
     // Load OTA configuration
     //
     if (obj[AppKeys::dospiffs1].isNull())
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for dospiffs1." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for dospiffs1." CR), appConfig);
+            loadFailed = true;
         }
         dospiffs1 = false;
     }
@@ -236,8 +236,8 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for dospiffs2." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for dospiffs2." CR), appConfig);
+            loadFailed = true;
         }
         dospiffs2 = false;
     }
@@ -250,8 +250,8 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for didupdate." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for didupdate." CR), appConfig);
+            loadFailed = true;
         }
         didupdate = false;
     }
@@ -264,8 +264,8 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for badfw." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for badfw." CR), appConfig);
+            loadFailed = true;
         }
         badfw = false;
     }
@@ -278,8 +278,8 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for badfwtime." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for badfwtime." CR), appConfig);
+            loadFailed = true;
         }
         badfwtime = getTime();
     }
@@ -292,8 +292,8 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for badfs." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for badfs." CR), appConfig);
+            loadFailed = true;
         }
         badfs = false;
     }
@@ -306,8 +306,8 @@ void OTA::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for badfstime." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for badfstime." CR), appConfig);
+            loadFailed = true;
         }
         badfwtime = getTime();
     }
@@ -316,10 +316,9 @@ void OTA::load(JsonObjectConst obj)
         badfstime = obj[AppKeys::badfstime];
     }
 
-    if (loadFailed) // DEBUG
+    if (loadFailed)
     {
         debugAppLog("OTA");
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -343,7 +342,7 @@ void CopConfig::save(JsonObject obj) const
 
 void CopConfig::load(JsonObjectConst obj)
 {
-    bool loadFailed = false; // DEBUG
+    bool loadFailed = false;
     // Load Cop configuration
     //
     getGuid(guid); // Always get this
@@ -352,8 +351,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for hostname." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for hostname." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(hostname, APNAME, sizeof(hostname));
     }
@@ -366,8 +365,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for nodrd." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for nodrd." CR), appConfig);
+            loadFailed = true;
         }
         nodrd = false;
     }
@@ -380,8 +379,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for breweryname." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for breweryname." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(breweryname, BRWYNAME, sizeof(breweryname));
     }
@@ -394,8 +393,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for kegeratorname." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for kegeratorname." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(kegeratorname, KNAME, sizeof(kegeratorname));
     }
@@ -408,8 +407,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for controlnum." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for controlnum." CR), appConfig);
+            loadFailed = true;
         }
         controlnum = 1;
     }
@@ -422,8 +421,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for imperial." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for imperial." CR), appConfig);
+            loadFailed = true;
         }
         imperial = IMPERIAL;
     }
@@ -436,8 +435,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for serial." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for serial." CR), appConfig);
+            loadFailed = true;
         }
         serial = false;
     }
@@ -454,8 +453,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tapsolenoid." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for tapsolenoid." CR), appConfig);
+            loadFailed = true;
         }
         tapsolenoid = TSOL;
         digitalWrite(SOLENOID, HIGH);
@@ -478,8 +477,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for pouremulate." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for pouremulate." CR), appConfig);
+            loadFailed = true;
         }
         pouremulate = false;
     }
@@ -492,8 +491,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tempemulate." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for tempemulate." CR), appConfig);
+            loadFailed = true;
         }
         tempemulate = false;
     }
@@ -506,8 +505,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for theme." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for theme." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(theme, "cerulean", sizeof(theme));
     }
@@ -520,8 +519,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for telnet." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for telnet." CR), appConfig);
+            loadFailed = true;
         }
         telnet = false;
     }
@@ -534,8 +533,8 @@ void CopConfig::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for loglevel." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for loglevel." CR), appConfig);
+            loadFailed = true;
         }
         loglevel = 6;
     }
@@ -544,7 +543,7 @@ void CopConfig::load(JsonObjectConst obj)
         loglevel = obj[AppKeys::loglevel];
     }
 
-    if (loadFailed) // DEBUG
+    if (loadFailed)
     {
         debugAppLog("CopConfig");
     }
@@ -573,15 +572,15 @@ void Temperatures::save(JsonObject obj) const
 
 void Temperatures::load(JsonObjectConst obj)
 {
-    bool loadFailed = false; // DEBUG
+    bool loadFailed = false;
     // Load Temperature configuration
     //
     if (obj[AppKeys::setpoint].isNull())
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for setpoint." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for setpoint." CR), appConfig);
+            loadFailed = true;
         }
         setpoint = DEFSET;
     }
@@ -594,8 +593,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for controlpoint." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for controlpoint." CR), appConfig);
+            loadFailed = true;
         }
         controlpoint = DEFCON;
     }
@@ -608,8 +607,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for controlenabled." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for controlenabled." CR), appConfig);
+            loadFailed = true;
         }
         controlenabled = CTRLENABLE;
     }
@@ -622,8 +621,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for coolonhigh." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for coolonhigh." CR), appConfig);
+            loadFailed = true;
         }
         coolonhigh = false;
     }
@@ -636,8 +635,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tfancontrolenabled." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for tfancontrolenabled." CR), appConfig);
+            loadFailed = true;
         }
         tfancontrolenabled = false;
     }
@@ -650,8 +649,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tfansetpoint." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for tfansetpoint." CR), appConfig);
+            loadFailed = true;
         }
         tfansetpoint = DEFSET;
     }
@@ -664,8 +663,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for tfanonhigh." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for tfanonhigh." CR), appConfig);
+            loadFailed = true;
         }
         tfanonhigh = false;
     }
@@ -678,8 +677,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for roomenabled." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for roomenabled." CR), appConfig);
+            loadFailed = true;
         }
         enabled[0] = false;
     }
@@ -692,8 +691,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for roomcal." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for roomcal." CR), appConfig);
+            loadFailed = true;
         }
         calibration[0] = 0.0;
     }
@@ -706,8 +705,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for towerenabled." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for towerenabled." CR), appConfig);
+            loadFailed = true;
         }
         enabled[1] = false;
     }
@@ -720,8 +719,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for towercal." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for towercal." CR), appConfig);
+            loadFailed = true;
         }
         calibration[1] = 0.0;
     }
@@ -734,8 +733,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for upperenabled." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for upperenabled." CR), appConfig);
+            loadFailed = true;
         }
         enabled[2] = false;
     }
@@ -748,8 +747,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for uppercal." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for uppercal." CR), appConfig);
+            loadFailed = true;
         }
         calibration[2] = 0.0;
     }
@@ -762,8 +761,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for lowerenabled." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for lowerenabled." CR), appConfig);
+            loadFailed = true;
         }
         enabled[3] = false;
     }
@@ -776,8 +775,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for lowercal." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for lowercal." CR), appConfig);
+            loadFailed = true;
         }
         calibration[3] = 0.0;
     }
@@ -790,8 +789,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for kegenabled." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for kegenabled." CR), appConfig);
+            loadFailed = true;
         }
         enabled[4] = false;
     }
@@ -804,8 +803,8 @@ void Temperatures::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for kegcal." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for kegcal." CR), appConfig);
+            loadFailed = true;
         }
         calibration[4] = 0.0;
     }
@@ -814,10 +813,9 @@ void Temperatures::load(JsonObjectConst obj)
         calibration[4] = obj[AppKeys::kegcal];
     }
 
-    if (loadFailed) // DEBUG
+    if (loadFailed)
     {
         debugAppLog("Temps");
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -829,7 +827,7 @@ void KegScreen::save(JsonObject obj) const
 
 void KegScreen::load(JsonObjectConst obj)
 {
-    bool loadFailed = false; // DEBUG
+    bool loadFailed = false;
 
     // Load KegScreen configuration
     //
@@ -837,8 +835,8 @@ void KegScreen::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for KSUrl." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for KSUrl." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(url, "", sizeof(url));
     }
@@ -851,8 +849,8 @@ void KegScreen::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for KSUpdate." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for KSUpdate." CR), appConfig);
+            loadFailed = true;
         }
         update = false;
     }
@@ -861,10 +859,9 @@ void KegScreen::load(JsonObjectConst obj)
         update = obj[AppKeys::update];
     }
 
-    if (loadFailed) // DEBUG
+    if (loadFailed)
     {
         debugAppLog("KegScreen");
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -878,7 +875,7 @@ void TaplistIO::save(JsonObject obj) const
 
 void TaplistIO::load(JsonObjectConst obj)
 {
-    bool loadFailed = false; // DEBUG
+    bool loadFailed = false;
 
     // Load TaplistIO configuration
     //
@@ -886,8 +883,8 @@ void TaplistIO::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for TIOVenue." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for TIOVenue." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(venue, "", sizeof(venue));
     }
@@ -900,8 +897,8 @@ void TaplistIO::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for TIOSecret." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for TIOSecret." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(secret, "", sizeof(secret));
     }
@@ -914,8 +911,8 @@ void TaplistIO::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for TIOLastSent." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for TIOLastSent." CR), appConfig);
+            loadFailed = true;
         }
         lastsent = 0;
     }
@@ -928,8 +925,8 @@ void TaplistIO::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for TIOUpdate." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for TIOUpdate." CR), appConfig);
+            loadFailed = true;
         }
         update = true;
     }
@@ -938,10 +935,9 @@ void TaplistIO::load(JsonObjectConst obj)
         update = obj[AppKeys::update];
     }
 
-    if (loadFailed) // DEBUG
+    if (loadFailed)
     {
         debugAppLog("TIO");
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -954,7 +950,7 @@ void URLTarget::save(JsonObject obj) const
 
 void URLTarget::load(JsonObjectConst obj)
 {
-    bool loadFailed = false; // DEBUG
+    bool loadFailed = false;
 
     // Load URL Target configuration
     //
@@ -962,8 +958,8 @@ void URLTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for URLurl." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for URLurl." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(url, "", sizeof(url));
     }
@@ -976,8 +972,8 @@ void URLTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for URLfreq." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for URLfreq." CR), appConfig);
+            loadFailed = true;
         }
         freq = 15;
     }
@@ -990,8 +986,8 @@ void URLTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for URLupdate." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for URLupdate." CR), appConfig);
+            loadFailed = true;
         }
         update = false;
     }
@@ -1000,10 +996,9 @@ void URLTarget::load(JsonObjectConst obj)
         update = obj[AppKeys::update];
     }
 
-    if (loadFailed) // DEBUG
+    if (loadFailed)
     {
         debugAppLog("TIO");
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -1019,7 +1014,7 @@ void MQTTTarget::save(JsonObject obj) const
 
 void MQTTTarget::load(JsonObjectConst obj)
 {
-    bool loadFailed = false; // DEBUG
+    bool loadFailed = false;
 
     // Load MQTT Target configuration
     //
@@ -1027,8 +1022,8 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTThost." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for MQTThost." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(host, "", sizeof(host));
     }
@@ -1041,8 +1036,8 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTPort." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for MQTTPort." CR), appConfig);
+            loadFailed = true;
         }
         port = 1883;
     }
@@ -1055,8 +1050,8 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTusername." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for MQTTusername." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(username, "", sizeof(username));
     }
@@ -1069,8 +1064,8 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTpassword." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for MQTTpassword." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(password, "", sizeof(password));
     }
@@ -1083,8 +1078,8 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTtopic." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for MQTTtopic." CR), appConfig);
+            loadFailed = true;
         }
         strlcpy(topic, "kegcop", sizeof(topic));
     }
@@ -1097,8 +1092,8 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTupdate." CR), appConfig); // DEBUG
-            loadFailed = true; // DEBUG
+            Log.warning(F(" %s Null value for MQTTupdate." CR), appConfig);
+            loadFailed = true;
         }
         update = false;
     }
@@ -1107,10 +1102,9 @@ void MQTTTarget::load(JsonObjectConst obj)
         update = obj[AppKeys::update];
     }
 
-    if (loadFailed) // DEBUG
+    if (loadFailed)
     {
         debugAppLog("MQTT");
-        // TODO: Restore copy and load from APP_FILENAME_BACKUP
     }
 }
 
@@ -1148,17 +1142,17 @@ void AppConfig::load(JsonObjectConst obj)
     rpintstarget.load(obj[AppKeys::rpintstarget]);
 }
 
-void debugFlowmeterLog(String area) // DEBUG
+void debugFlowmeterLog(String area)
 {
     debugAppLog(area, true);
 }
 
-void debugAppLog(bool fileExist) // DEBUG
+void debugAppLog(bool fileExist)
 {
     debugAppLog("", fileExist);
 }
 
-void debugAppLog(String area, bool fileExist) // DEBUG
+void debugAppLog(String area, bool fileExist)
 {
     const char * debugPrefix = "[DEBUGAPP]";
     File file = FILESYSTEM.open(APP_DEBUG_LOG, FILE_APPEND);

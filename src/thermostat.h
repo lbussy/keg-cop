@@ -70,6 +70,5 @@ void loopTstat(int ts);
 void newStatReport(int ts);
 
 extern Thermostat tstat[];
-extern ControlPoint cp[];
 
 #endif // _THERMOSTAT_H

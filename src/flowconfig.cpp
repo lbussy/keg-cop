@@ -33,8 +33,8 @@ SOFTWARE. */
 
 Flowmeter flow;
 
-#define FLOW_DEBUG_LOG "/flowdebuglog.txt" // DEBUG
-bool flowLoadError = false;                // DEBUG (Used to skip error processing when major issue with file exists)
+#define FLOW_DEBUG_LOG "/flowdebuglog.txt"
+bool flowLoadError = false;
 
 bool loadFlowConfig(const char *filename)
 {
@@ -54,16 +54,15 @@ bool loadFlowConfig(const char *filename, bool isBackup)
     if (!FILESYSTEM.exists(filename) || !file)
     {
         Log.error(F("%s Flowmeter configuration %s does not exist." CR), flowLoad, filename);
-        flowLoadError = true;     // DEBUG
-        debugFlowmeterLog(false); // DEBUG
+        flowLoadError = true;
+        debugFlowmeterLog(false);
         loadOK = false;
     }
     else if (!deserializeFlowConfig(file))
     {
-        // DEBUG: This was where one issue was reported (maybe we truncated part of the JSON?)
         Log.error(F("%s Failed to load %s from filesystem." CR), flowLoad, filename);
-        flowLoadError = true;    // DEBUG
-        debugFlowmeterLog(true); // DEBUG
+        flowLoadError = true;
+        debugFlowmeterLog(true);
         loadOK = false;
     }
     else
@@ -89,7 +88,7 @@ bool loadFlowConfig(const char *filename, bool isBackup)
     }
 
     Log.trace(F("%s Flowmeter config load complete." CR), FlowmeterKeys::appname);
-    flowLoadError = false; // DEBUG
+    flowLoadError = false;
     return loadOK;
 }
 
@@ -174,8 +173,8 @@ void Taps::save(JsonObject obj) const
 
 void Taps::load(JsonObjectConst obj, int numTap)
 {
-    const char *flowdebug = "[FLOWDEBUG]"; // DEBUG
-    bool loadFailed = false;               // DEBUG
+    const char *flowdebug = "[FLOWDEBUG]";
+    bool loadFailed = false;
     // Load Tap[numtap] configuration
     //
     tapid = numTap;
@@ -185,8 +184,8 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.warning(F(" %s Null value for label %d" CR), flowdebug, numTap); // DEBUG
-            loadFailed = true;                                                   // DEBUG
+            Log.warning(F(" %s Null value for label %d" CR), flowdebug, numTap);
+            loadFailed = true;
         }
         label = tapid + 1; // Default to sequential 1-based label
     }
@@ -199,8 +198,8 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.warning(F(" %s Null value for TIO %d" CR), flowdebug, numTap); // DEBUG
-            loadFailed = true;                                                 // DEBUG
+            Log.warning(F(" %s Null value for TIO %d" CR), flowdebug, numTap);
+            loadFailed = true;
         }
         taplistioTap = 0; // Default to sequential 1-based label
     }
@@ -213,8 +212,8 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.warning(F(" %s Null value for PPU %d" CR), flowdebug, numTap); // DEBUG
-            loadFailed = true;                                                 // DEBUG
+            Log.warning(F(" %s Null value for PPU %d" CR), flowdebug, numTap);
+            loadFailed = true;
         }
         ppu = PPU;
     }
@@ -227,8 +226,8 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.warning(F(" %s Null value for name %d" CR), flowdebug, numTap); // DEBUG
-            loadFailed = true;                                                  // DEBUG
+            Log.warning(F(" %s Null value for name %d" CR), flowdebug, numTap);
+            loadFailed = true;
         }
         strlcpy(name, DEFAULTBEV, sizeof(name));
     }
@@ -241,8 +240,8 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.warning(F(" %s Null value for capacity %d" CR), flowdebug, numTap); // DEBUG
-            loadFailed = true;                                                      // DEBUG
+            Log.warning(F(" %s Null value for capacity %d" CR), flowdebug, numTap);
+            loadFailed = true;
         }
         capacity = KEGSIZE;
     }
@@ -255,8 +254,8 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.warning(F(" %s Null value for remaining %d" CR), flowdebug, numTap); // DEBUG
-            loadFailed = true;                                                       // DEBUG
+            Log.warning(F(" %s Null value for remaining %d" CR), flowdebug, numTap);
+            loadFailed = true;
         }
         remaining = 0;
     }
@@ -269,8 +268,8 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.warning(F(" %s Null value for active %d" CR), flowdebug, numTap); // DEBUG
-            loadFailed = true;                                                    // DEBUG
+            Log.warning(F(" %s Null value for active %d" CR), flowdebug, numTap);
+            loadFailed = true;
         }
         active = false;
     }
@@ -283,8 +282,8 @@ void Taps::load(JsonObjectConst obj, int numTap)
     {
         if (!flowLoadError)
         {
-            Log.warning(F(" %s Null value for calibrating %d" CR), flowdebug, numTap); // DEBUG
-            loadFailed = true;                                                         // DEBUG
+            Log.warning(F(" %s Null value for calibrating %d" CR), flowdebug, numTap);
+            loadFailed = true;
         }
         calibrating = false;
     }
@@ -293,10 +292,9 @@ void Taps::load(JsonObjectConst obj, int numTap)
         calibrating = obj[FlowmeterKeys::calibrating];
     }
 
-    if (loadFailed) // DEBUG
+    if (loadFailed)
     {
         debugFlowmeterLog(numTap);
-        // TODO: Restore Backup and Reload
     }
 }
 
@@ -337,17 +335,17 @@ void Flowmeter::save(JsonObject obj) const
         taps[i].save(_taps.createNestedObject());
 }
 
-void debugFlowmeterLog(int numTap) // DEBUG
+void debugFlowmeterLog(int numTap)
 {
     debugFlowmeterLog(numTap, true);
 }
 
-void debugFlowmeterLog(bool fileExist) // DEBUG
+void debugFlowmeterLog(bool fileExist)
 {
     debugFlowmeterLog(-1, fileExist);
 }
 
-void debugFlowmeterLog(int numTap, bool fileExist) // DEBUG
+void debugFlowmeterLog(int numTap, bool fileExist)
 {
     const char *debugPrefix = "[DEBUGFLOW]";
     File file = FILESYSTEM.open(FLOW_DEBUG_LOG, FILE_APPEND);
