@@ -323,7 +323,7 @@ int BasePush::sendMqtt(String &payload, const char *target, int port,
         mqtt.begin(target, port, _wifi);
     }
 
-    if (!mqtt.connect("foo", "", ""))
+    if (!mqtt.connect(app.copconfig.hostname, user, pass))
     {
         Log.error(F("%s Timeout connecting to %s." CR), push, target);
         return -1;
