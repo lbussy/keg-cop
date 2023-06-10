@@ -45,8 +45,5 @@ void startNetwork();
 void wifiFailRestart();
 
 extern bool wifiPause;
-extern bool pausingWiFi;
-extern void stopMainProc();
-extern void startMainProc();
 
 #endif // _WIFI_H

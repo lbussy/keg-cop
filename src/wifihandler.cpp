@@ -31,6 +31,7 @@ SOFTWARE. */
 #include "flowconfig.h"
 #include "webpagehandler.h"
 #include "serialhandler.h"
+#include "main.h"
 
 #include <WiFi.h>
 #include <Ticker.h>
