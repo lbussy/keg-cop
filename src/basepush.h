@@ -38,34 +38,26 @@ SOFTWARE. */
 class BasePush
 {
 protected:
-    WiFiClient _wifi;
-    WiFiClientSecure _wifiSecure;
-    // HTTPClient _http;
-    // HTTPClient _httpSecure;
-    int _lastResponseCode = 0;
-    bool _lastSuccess = false;
+    HTTPClient _http;
+    HTTPClient _httpSecure;
 
-    // void probeMFLN(String serverPath);
-    // void addHttpHeader(HTTPClient &http, String header);
-    // bool isSecure(String target) { return target.startsWith("https://"); }
+    void probeMFLN(String serverPath);
+    void addHttpHeader(HTTPClient &http, String header);
+    bool isSecure(String target) { return target.startsWith("https://"); }
 
 public:
-    int getLastResponseCode() { return _lastResponseCode; }
-    bool wasLastSuccessful() { return _lastSuccess; }
-
-    // String sendHttpPost(String &payload, const char *target, const char *header1,
-    //                     const char *header2);
-    // String sendHttpGet(String &payload, const char *target, const char *header1,
-    //                    const char *header2);
-    // void sendInfluxDb2(String &payload, const char *target, const char *org,
-    //                    const char *bucket, const char *token);
-    void sendMqtt(String &payload, const char *target, int port, const char *user,
+    String sendHttpPost(String &payload, const char *target, const char *header1,
+                        const char *header2);
+    String sendHttpGet(String &payload, const char *target, const char *header1,
+                       const char *header2);
+    void sendInfluxDb2(String &payload, const char *target, const char *org,
+                       const char *bucket, const char *token);
+    int sendMqtt(String &payload, const char *target, int port, const char *user,
                   const char *pass);
 
-    // bool sendHttpPost(String &payload);
-    // bool sendHttpGet(String &payload);
-    // bool sendInfluxDb2(String &payload);
-    bool sendMqtt(String &payload);
+    bool sendHttpPost(String &payload);
+    bool sendHttpGet(String &payload);
+    bool sendInfluxDb2(String &payload);
 };
 
 #endif // _BASEPUSH_H

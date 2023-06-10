@@ -40,7 +40,7 @@ SOFTWARE. */
 const char *push = "[PUSH]:";
 const int timeout = 10;
 
-// void BasePush::probeMFLN(String serverPath)
+/* // void BasePush::probeMFLN(String serverPath)
 // {
 // #if defined(ESP8266)
 //     // serverPath=: http:://servername:port/path
@@ -289,15 +289,15 @@ const int timeout = 10;
 
 //     tcp_cleanup();
 //     return _response;
-// }
+// } */
 
-void BasePush::sendMqtt(String &payload, const char *target, int port,
+int BasePush::sendMqtt(String &payload, const char *target, int port,
                         const char *user, const char *pass)
 {
-    Log.notice(F("%s Sending %s to MQTT." CR), push, payload.c_str());
-    return;
-    _lastResponseCode = 0;
-    _lastSuccess = false;
+    WiFiClient _wifi;
+    WiFiClientSecure _wifiSecure;
+    int retval = 0;
+    Log.notice(F("%s Sending MQTT payload to %s." CR), push, target);
 
     MQTTClient mqtt(512);
 
@@ -323,10 +323,16 @@ void BasePush::sendMqtt(String &payload, const char *target, int port,
         mqtt.begin(target, port, _wifi);
     }
 
-    mqtt.connect(app.rpintstarget.host, user, pass);
+    if (!mqtt.connect("foo", "", ""))
+    {
+        Log.error(F("%s Timeout connecting to %s." CR), push, target);
+        return -1;
+    }
 
-    Log.verbose(F("%s url %s." CR), push, target);
-    Log.verbose(F("%s data %s." CR), push, payload.c_str());
+    Log.notice(F("%s Connected to %s." CR), push, target);
+
+    Log.trace(F("%s URL: %s." CR), push, target);
+    Log.trace(F("%s Data: %s." CR), push, payload.c_str());
 
     int lines = 1;
     // Find out how many lines are in the document. Each line is one
@@ -347,21 +353,18 @@ void BasePush::sendMqtt(String &payload, const char *target, int port,
         String topic = line.substring(0, line.indexOf(":"));
         String value = line.substring(line.indexOf(":") + 1);
 
-        Log.verbose(F("%s topic '%s', value '%s'." CR), topic.c_str(),
-                    push,
+        Log.verbose(F("%s Topic '%s', value '%s'." CR), push, topic.c_str(),
                     value.c_str());
 
         if (mqtt.publish(topic, value))
         {
-            _lastSuccess = true;
-            Log.notice(F("%s MQTT publish successful on %s" CR), push, topic.c_str());
-            _lastResponseCode = 0;
+            Log.notice(F("%s MQTT publish to %s successful on topic %s." CR), push, target, topic.c_str());
         }
         else
         {
-            _lastResponseCode = mqtt.lastError();
-            Log.error(F("%s MQTT publish failed on %s with error %d" CR),
-                      push, topic.c_str(), mqtt.lastError());
+            retval = mqtt.lastError();
+            Log.error(F("%s MQTT publish to %s failed on topic %s with error %d." CR),
+                      push, target, topic.c_str(), mqtt.lastError());
         }
 
         index = next + 1;
@@ -380,9 +383,10 @@ void BasePush::sendMqtt(String &payload, const char *target, int port,
     }
 
     tcp_cleanup();
+    return retval;
 }
 
-// bool BasePush::sendHttpPost(String &payload)
+/* // bool BasePush::sendHttpPost(String &payload)
 // {
 //     sendHttpPost(payload, _config->getTargetHttpPost(),
 //                  _config->getHeader1HttpPost(), _config->getHeader2HttpPost());
@@ -402,13 +406,4 @@ void BasePush::sendMqtt(String &payload, const char *target, int port,
 //                   _config->getOrgInfluxDB2(), _config->getBucketInfluxDB2(),
 //                   _config->getTokenInfluxDB2());
 //     return _lastSuccess;
-// }
-
-bool BasePush::sendMqtt(String &payload)
-{
-    Log.notice(F("%s Sending '%s' to MQTT target." CR), push, payload.c_str());
-    return true;
-    sendMqtt(payload, app.rpintstarget.host, app.rpintstarget.port,
-             app.rpintstarget.username, app.rpintstarget.password);
-    return _lastSuccess;
-}
+// } */

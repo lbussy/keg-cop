@@ -64,6 +64,7 @@ void RPints::sendRPPulseReport(int tapID, unsigned int pulses)
 
     const char *out = tpl.create(pourTemplate);
     String outStr(out);
-    _push->sendMqtt(outStr);
+    Log.trace(F("%s Payload: %s." CR), rpints, out);
+    _push->sendMqtt(outStr, app.rpintstarget.host, app.rpintstarget.port, app.rpintstarget.username, app.rpintstarget.password);
     tpl.freeMemory();
 }
