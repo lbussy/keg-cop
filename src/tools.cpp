@@ -196,10 +196,14 @@ void tickerLoop()
             // Send report from pour queue
             if (queuePourReport[i] > 0)
             {
-                RPints rpints;
-                rpints.sendRPPourReport(i, queuePulseReport[i]);
                 sendPourReport(i, queuePourReport[i]);
                 queuePourReport[i] = 0;
+            }
+            // Send report from pulse queue
+            if (queuePulseReport[i] > 0)
+            {
+                RPints rpints;
+                rpints.sendRPPulseReport(i, queuePulseReport[i]);
                 queuePulseReport[i] = 0;
             }
             // Send kick report
