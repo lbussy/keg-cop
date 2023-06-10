@@ -22,6 +22,29 @@ SOFTWARE. */
 
 #include "main.h"
 
+#include "thatVersion.h"
+#include "kegscreen.h"
+#include "appconfig.h"
+#include "serialhandler.h"
+#include "config.h"
+#include "ntphandler.h"
+#include "wifihandler.h"
+#include "webpagehandler.h"
+#include "version.h"
+#include "mdnshandler.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+#include "flowmeter.h"
+#include "tools.h"
+#include "execota.h"
+#include "uptimelog.h"
+#include "taplistio.h"
+#include "flowconfig.h"
+
+#include <ArduinoLog.h>
+#include <ESP_DoubleResetDetector.h>
+#include <Ticker.h>
+
 DoubleResetDetector *drd;
 
 Ticker pollSensorsTicker;
@@ -31,7 +54,6 @@ Ticker logPourTicker;
 Ticker getThatVersionTicker;
 Ticker sendKSTempReportTicker;
 Ticker sendTargetReportTicker;
-Ticker rebootTimer;
 
 void setup()
 {
@@ -117,7 +139,6 @@ void setup()
     startTstat(TS_TYPE_CHAMBER); // Initialize temperature control
     startTstat(TS_TYPE_TOWER);   // Initialize fan control
     doVersionPoll();             // Get server version at startup
-    setupRPints();               // Set up MQTT
     doKSJSON();                  // Add KegScreen TV configuration
 #ifdef _DEBUG_BUILD
     doUptime(true); // Uptime log start
@@ -129,7 +150,6 @@ void setup()
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);             // Poll for server version
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);            // Send KegScreen Temp Report
     sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport); // Send Target Report
-    rebootTimer.attach(86400, setDoReset);                                     // Reboot every 24 hours
     doControlTicker.attach(TEMPLOOP, []()
                            { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
     doFanControlTicker.attach(TEMPLOOP, []()
@@ -176,7 +196,6 @@ void stopMainProc()
     getThatVersionTicker.detach();
     sendKSTempReportTicker.detach();
     sendTargetReportTicker.detach();
-    rebootTimer.detach();
     doControlTicker.detach();
     doFanControlTicker.detach();
 }
@@ -189,7 +208,6 @@ void startMainProc()
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);             // Poll for server version
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);            // Send KegScreen Temp Report
     sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport); // Send Target Report
-    rebootTimer.attach(86400, setDoReset);                                     // Reboot every 24 hours
     doControlTicker.attach(TEMPLOOP, []()
                            { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
     doFanControlTicker.attach(TEMPLOOP, []()

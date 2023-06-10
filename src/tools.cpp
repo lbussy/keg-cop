@@ -21,7 +21,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "tools.h"
+
 #include "taplistio.h"
+#include "config.h"
+#include "ntphandler.h"
+#include "kegscreen.h"
+#include "thermostat.h"
+#include "urltarget.h"
+#include "mdnshandler.h"
+#include "wifihandler.h"
+#include "uptime.h"
+#include "uptimelog.h"
+#include "flowconfig.h"
+#include "appconfig.h"
+#include "serialhandler.h"
+#include "rpintsclient.h"
+
+#include <FS.h>
+#include <LittleFS.h>
+
+#include <AsyncWiFiManager.h>
+#include <ArduinoLog.h>
+#include <Arduino.h>
 
 float queuePourReport[NUMTAPS];         // Store pending pours
 unsigned int queuePulseReport[NUMTAPS]; // Store pending pulses
@@ -31,7 +52,6 @@ bool doReset = false;             // Semaphore for reset
 bool doWiFiReset = false;         // Semaphore for WiFi reset
 bool doKSTempReport = false;      // Semaphore for KegScreen Temps Report
 bool doTargetReport = false;      // Semaphore for URL Target Report
-bool doRPintsConnect = false;     // Semaphore for MQTT (re)connect
 bool doTaplistIOConnect = false;  // Semaphore for Taplist.IO Report
 bool doSetSaveUptime = false;     // Semaphore required to save reboot time
 bool doSetSaveApp = false;        // Semaphore required to save config
@@ -84,11 +104,6 @@ void setDoTapInfoReport(int tap)
 void setDoTargetReport()
 {
     doTargetReport = true; // Semaphore required for URL Target Report
-}
-
-void setDoRPintsConnect()
-{
-    doRPintsConnect = true; // Semaphore required for MQTT (re)connect
 }
 
 void setDoSaveUptime()
@@ -181,9 +196,14 @@ void tickerLoop()
             // Send report from pour queue
             if (queuePourReport[i] > 0)
             {
-                sendPulsesRPints(i, queuePulseReport[i]);
                 sendPourReport(i, queuePourReport[i]);
                 queuePourReport[i] = 0;
+            }
+            // Send report from pulse queue
+            if (queuePulseReport[i] > 0)
+            {
+                RPints rpints;
+                rpints.sendRPPulseReport(i, queuePulseReport[i]);
                 queuePulseReport[i] = 0;
             }
             // Send kick report
@@ -215,11 +235,6 @@ void tickerLoop()
         {
             doTargetReport = false;
             sendTargetReport();
-        }
-        if (doRPintsConnect)
-        {
-            doRPintsConnect = false;
-            connectRPints();
         }
         if (doTaplistIOConnect && !tioReporting)
         {
@@ -393,10 +408,10 @@ bool copyFile(String src, String dst)
 
     if (!src.startsWith("/"))
         src = "/" + src;
-        
+
     if (!dst.startsWith("/"))
         src = "/" + src;
-        
+
     // Open the source file for reading
     File sourceFile = FILESYSTEM.open(src, "r");
     if (!sourceFile)
@@ -427,4 +442,24 @@ bool copyFile(String src, String dst)
 
     Log.notice(F("File %s sucessfully copied to %s" CR), src.c_str(), dst.c_str());
     return retval;
+}
+
+struct tcp_pcb;
+extern struct tcp_pcb *tcp_tw_pcbs;
+extern "C" void tcp_abort(struct tcp_pcb *pcb);
+void tcp_cleanup()
+{ // TCP Cleanup, to avoid memory crash.
+    while (tcp_tw_pcbs)
+        tcp_abort(tcp_tw_pcbs);
+}
+
+float reduceFloatPrecision(float f, int dec) {
+  char buffer[10];
+  dtostrf(f, 6, dec, &buffer[0]);
+  return atof(&buffer[0]);
+}
+
+char* convertFloatToString(float f, char* buffer, int dec) {
+  dtostrf(f, 6, dec, buffer);
+  return buffer;
 }

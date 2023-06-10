@@ -23,23 +23,8 @@ SOFTWARE. */
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
-#include "config.h"
-#include "ntphandler.h"
-#include "kegscreen.h"
-#include "thermostat.h"
-#include "urltarget.h"
-#include "mdnshandler.h"
-#include "wifihandler.h"
-#include "uptime.h"
-#include "uptimelog.h"
-#include "taplistio.h"
-
-#include <FS.h>
-#include <LittleFS.h>
-
-#include <AsyncWiFiManager.h>
-#include <ArduinoLog.h>
-#include <Arduino.h>
+#include <string>
+class String;
 
 void initPourPulseKick();
 void resetController();
@@ -48,7 +33,7 @@ void setDoReset();
 void setDoKSTempReport();
 void setDoTapInfoReport(int);
 void setDoTargetReport();
-void setDoRPintsConnect();
+void setDoRPintsPush();
 void setQueuePourReport(int tapNum, float pour);
 void setQueuePulseReport(int tapNum, int pulses);
 void setQueueKickReport(int tapNum);
@@ -66,11 +51,14 @@ double convertOneFtoC(double);
 double convertOneCtoF(double);
 double convertGtoL(double);
 double convertLtoG(double);
+float reduceFloatPrecision(float f, int dec);
+char* convertFloatToString(float f, char* buf, int dec = 2);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
 void getGuid(char *str); // 17 chars including null terminator
 void killDRD();
 unsigned long getTime();
 bool copyFile(String src, String dst);
+void tcp_cleanup();
 
 extern bool doWiFiReconnect;
 extern bool pausingWiFi;

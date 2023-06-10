@@ -23,19 +23,17 @@ SOFTWARE. */
 #ifndef _RPINTSCLIENT_H
 #define _RPINTSCLIENT_H
 
-#include "appconfig.h"
-#include "tools.h"
+class BasePush;
 
-#include <AsyncMqttClient.h>
-#include <ArduinoLog.h>
-#include <Ticker.h>
+class RPints
+{
+protected:
+    BasePush *_push;
 
-void setupRPints();
-void connectRPints();
-void disconnectRPints();
-bool sendPulsesRPints(int tapID, unsigned int pulses);
-void onRPintsConnect(bool sessionPresent);
-void onRPintsDisconnect(AsyncMqttClientDisconnectReason reason);
-void onRPintsPublish(uint16_t packetId);
+public:
+    RPints();
+
+    void sendRPPulseReport(int tapID, unsigned int pulses);
+};
 
 #endif // _RPINTSCLIENT_H

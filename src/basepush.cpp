@@ -1,4 +1,5 @@
 /* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
+   Copyright (c) 2021-22 Magnus
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -20,44 +21,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-// Adopted and adapted under the following license:
+#include <basepush.h>
 
-/* MIT License
-
-Copyright (c) 2021-22 Magnus
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. */
+#include "appconfig.h"
 
 #if defined(ESP8266)
-#include <ESP8266mDNS.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecure.h>
 #else
-#include <ESPmDNS.h>
+#include <HTTPClient.h>
+#include <WiFiClient.h>
+#include <WiFiClientSecure.h>
 #endif
-#include <MQTT.h>
 
-#include <basepush.h>
 #include <ArduinoLog.h>
+#include <MQTT.h>
 
 const char *push = "[PUSH]:";
 const int timeout = 10;
 
-// void BasePush::probeMFLN(String serverPath)
+/* // void BasePush::probeMFLN(String serverPath)
 // {
 // #if defined(ESP8266)
 //     // serverPath=: http:://servername:port/path
@@ -306,16 +289,15 @@ const int timeout = 10;
 
 //     tcp_cleanup();
 //     return _response;
-// }
+// } */
 
-void BasePush:: sendMqtt(String &payload, const char *target, int port,
+int BasePush::sendMqtt(String &payload, const char *target, int port,
                         const char *user, const char *pass)
 {
-    // payload=: topic1,data1|topic2,data2|...
-
-    Log.notice(F("%s Sending values to MQTT." CR), push);
-    _lastResponseCode = 0;
-    _lastSuccess = false;
+    WiFiClient _wifi;
+    WiFiClientSecure _wifiSecure;
+    int retval = 0;
+    Log.notice(F("%s Sending MQTT payload to %s." CR), push, target);
 
     MQTTClient mqtt(512);
 
@@ -341,10 +323,16 @@ void BasePush:: sendMqtt(String &payload, const char *target, int port,
         mqtt.begin(target, port, _wifi);
     }
 
-    mqtt.connect(app.rpintstarget.host, user, pass);
+    if (!mqtt.connect("foo", "", ""))
+    {
+        Log.error(F("%s Timeout connecting to %s." CR), push, target);
+        return -1;
+    }
 
-    Log.verbose(F("%s url %s." CR), push, target);
-    Log.verbose(F("%s data %s." CR), push, payload.c_str());
+    Log.notice(F("%s Connected to %s." CR), push, target);
+
+    Log.trace(F("%s URL: %s." CR), push, target);
+    Log.trace(F("%s Data: %s." CR), push, payload.c_str());
 
     int lines = 1;
     // Find out how many lines are in the document. Each line is one
@@ -365,21 +353,18 @@ void BasePush:: sendMqtt(String &payload, const char *target, int port,
         String topic = line.substring(0, line.indexOf(":"));
         String value = line.substring(line.indexOf(":") + 1);
 
-        Log.verbose(F("%s topic '%s', value '%s'." CR), topic.c_str(),
-                    push,
+        Log.verbose(F("%s Topic '%s', value '%s'." CR), push, topic.c_str(),
                     value.c_str());
 
         if (mqtt.publish(topic, value))
         {
-            _lastSuccess = true;
-            Log.notice(F("%s MQTT publish successful on %s" CR), push, topic.c_str());
-            _lastResponseCode = 0;
+            Log.notice(F("%s MQTT publish to %s successful on topic %s." CR), push, target, topic.c_str());
         }
         else
         {
-            _lastResponseCode = mqtt.lastError();
-            Log.error(F("%s MQTT publish failed on %s with error %d" CR),
-                      push, topic.c_str(), mqtt.lastError());
+            retval = mqtt.lastError();
+            Log.error(F("%s MQTT publish to %s failed on topic %s with error %d." CR),
+                      push, target, topic.c_str(), mqtt.lastError());
         }
 
         index = next + 1;
@@ -398,33 +383,27 @@ void BasePush:: sendMqtt(String &payload, const char *target, int port,
     }
 
     tcp_cleanup();
+    return retval;
 }
 
-bool BasePush::sendHttpPost(String &payload)
-{
-    sendHttpPost(payload, _config->getTargetHttpPost(),
-                 _config->getHeader1HttpPost(), _config->getHeader2HttpPost());
-    return _lastSuccess;
-}
+/* // bool BasePush::sendHttpPost(String &payload)
+// {
+//     sendHttpPost(payload, _config->getTargetHttpPost(),
+//                  _config->getHeader1HttpPost(), _config->getHeader2HttpPost());
+//     return _lastSuccess;
+// }
 
-bool BasePush::sendHttpGet(String &payload)
-{
-    sendHttpGet(payload, _config->getTargetHttpGet(),
-                _config->getHeader1HttpGet(), _config->getHeader2HttpGet());
-    return _lastSuccess;
-}
+// bool BasePush::sendHttpGet(String &payload)
+// {
+//     sendHttpGet(payload, _config->getTargetHttpGet(),
+//                 _config->getHeader1HttpGet(), _config->getHeader2HttpGet());
+//     return _lastSuccess;
+// }
 
-bool BasePush::sendInfluxDb2(String &payload)
-{
-    sendInfluxDb2(payload, _config->getTargetInfluxDB2(),
-                  _config->getOrgInfluxDB2(), _config->getBucketInfluxDB2(),
-                  _config->getTokenInfluxDB2());
-    return _lastSuccess;
-}
-
-bool BasePush::sendMqtt(String &payload)
-{
-    sendMqtt(payload, app.rpintstarget.host, app.rpintstarget.port,
-             app.rpintstarget.username, app.rpintstarget.password);
-    return _lastSuccess;
-}
+// bool BasePush::sendInfluxDb2(String &payload)
+// {
+//     sendInfluxDb2(payload, _config->getTargetInfluxDB2(),
+//                   _config->getOrgInfluxDB2(), _config->getBucketInfluxDB2(),
+//                   _config->getTokenInfluxDB2());
+//     return _lastSuccess;
+// } */

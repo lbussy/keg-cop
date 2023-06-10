@@ -23,19 +23,6 @@ SOFTWARE. */
 #ifndef _FLOWMETER_H
 #define _FLOWMETER_H
 
-#include "serialhandler.h"
-#include "config.h"
-#include "appconfig.h"
-#include "kegscreen.h"
-#include "flowconfig.h"
-
-#include <FS.h>
-#include <LittleFS.h>
-
-#include <ArduinoJson.h>
-#include <ArduinoLog.h>
-#include <Arduino.h>
-
 // Flow methods
 void logFlow();
 void logFlow(int tap, int pulses);

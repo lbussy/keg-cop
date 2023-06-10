@@ -32,6 +32,8 @@ SOFTWARE. */
 #include "taplistio.h"
 #include "appconfig.h"
 #include "flowmeter.h"
+#include "flowconfig.h"
+#include "tools.h"
 
 void sendTIOTaps()
 {

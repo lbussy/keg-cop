@@ -23,6 +23,8 @@ SOFTWARE. */
 #ifndef _TAPLISTIO_H
 #define _TAPLISTIO_H
 
+#include "tools.h"
+
 void sendTIOTaps();
 bool sendTaplistio(int tapid);
 

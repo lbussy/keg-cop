@@ -22,6 +22,14 @@ SOFTWARE. */
 
 #include "jsontools.h"
 
+#include "tools.h"
+#include "appconfig.h"
+#include "flowconfig.h"
+
+#include <ArduinoJson.h>
+#include <Arduino.h>
+#include <ArduinoLog.h>
+
 #define MAX(x,y) ((x>y)?x:y)
 #define CAPACITY MAX(CAPACITY_APP_SERIAL, CAPACITY_FLOW_SERIAL)
 

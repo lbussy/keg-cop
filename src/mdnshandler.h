@@ -23,11 +23,6 @@ SOFTWARE. */
 #ifndef _MDNSHANDLER_H
 #define _MDNSHANDLER_H
 
-#include "appconfig.h"
-#include "config.h"
-#include <ArduinoLog.h>
-#include <ESPmDNS.h>
-
 void mDNSStart();
 void mDNSStop();
 void mDNSReset();

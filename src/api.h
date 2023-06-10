@@ -23,18 +23,7 @@ SOFTWARE. */
 #ifndef _API_H
 #define _API_H
 
-#include "appconfig.h"
-#include "flowconfig.h"
-#include "serialhandler.h"
-
 #include <ArduinoJson.h>
-
-#define CAPACITY_V1_ACTION_API 768
-#define CAPACITY_V1_INFO_API 1024
-#define CAPACITY_V1_CONFIG_API 192
-#define CAPACITY_V1_FS_API 512
-#define CAPACITY_V1_API 256
-#define CAPACITY_API 128
 
 struct Action_API_V1
 {

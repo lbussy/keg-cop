@@ -23,21 +23,11 @@ SOFTWARE. */
 #ifndef _SERIALLOG_H
 #define _SERIALLOG_H
 
-#include "tools.h"
-#include "config.h"
-#include "appconfig.h"
-#include "execota.h"
-#include "version.h"
-#include "thatVersion.h"
-#include "resetreasons.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-#include <ArduinoLog.h>
-#include <WiFiUdp.h>
-#include <ArduinoJson.h>
-#include <Arduino.h>
-
-#include <telnetspy.h>
+class Print;
+typedef __SIZE_TYPE__ size_t;
+class __FlashStringHelper;
+class String;
+class Printable;
 
 // Basic Serial handlers
 void serialBegin();

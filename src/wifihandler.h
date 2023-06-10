@@ -23,15 +23,7 @@ SOFTWARE. */
 #ifndef _WIFI_H
 #define _WIFI_H
 
-#include "config.h"
-#include "appconfig.h"
-#include "tools.h"
-#include "rpintsclient.h"
-
-#include <WiFi.h>
 #include <AsyncWiFiManager.h>
-#include <Ticker.h>
-#include <ArduinoLog.h>
 
 void wifiBlinker();
 void doWiFi();
@@ -53,8 +45,5 @@ void startNetwork();
 void wifiFailRestart();
 
 extern bool wifiPause;
-extern bool pausingWiFi;
-extern void stopMainProc();
-extern void startMainProc();
 
 #endif // _WIFI_H

@@ -21,6 +21,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "api.h"
+
+#include "appconfig.h"
+#include "flowconfig.h"
+#include "serialhandler.h"
+
 API api;
 const char *a_urlstart = "http://";
 const char *a_tld = ".local";

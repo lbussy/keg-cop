@@ -24,9 +24,6 @@ SOFTWARE. */
 #define _THERMOSTAT_H
 
 #include "config.h"
-#include "tempsensors.h"
-#include "appconfig.h"
-#include "thermostat.h"
 
 enum ThermostatState
 {
@@ -73,6 +70,5 @@ void loopTstat(int ts);
 void newStatReport(int ts);
 
 extern Thermostat tstat[];
-extern ControlPoint cp[];
 
 #endif // _THERMOSTAT_H
