@@ -54,7 +54,6 @@ Ticker logPourTicker;
 Ticker getThatVersionTicker;
 Ticker sendKSTempReportTicker;
 Ticker sendTargetReportTicker;
-Ticker rebootTimer;
 
 void setup()
 {
@@ -151,7 +150,6 @@ void setup()
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);             // Poll for server version
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);            // Send KegScreen Temp Report
     sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport); // Send Target Report
-    rebootTimer.attach(86400, setDoReset);                                     // Reboot every 24 hours
     doControlTicker.attach(TEMPLOOP, []()
                            { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
     doFanControlTicker.attach(TEMPLOOP, []()
@@ -198,7 +196,6 @@ void stopMainProc()
     getThatVersionTicker.detach();
     sendKSTempReportTicker.detach();
     sendTargetReportTicker.detach();
-    rebootTimer.detach();
     doControlTicker.detach();
     doFanControlTicker.detach();
 }
@@ -211,7 +208,6 @@ void startMainProc()
     getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);             // Poll for server version
     sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);            // Send KegScreen Temp Report
     sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport); // Send Target Report
-    rebootTimer.attach(86400, setDoReset);                                     // Reboot every 24 hours
     doControlTicker.attach(TEMPLOOP, []()
                            { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
     doFanControlTicker.attach(TEMPLOOP, []()
