@@ -33,7 +33,7 @@ protected:
 public:
     RPints();
 
-    void sendRPPourReport(int tapID, unsigned int pulses);
+    void sendRPPulseReport(int tapID, unsigned int pulses);
 };
 
 #endif // _RPINTSCLIENT_H

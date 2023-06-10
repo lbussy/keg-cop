@@ -36,7 +36,7 @@ SOFTWARE. */
 // 737 = Number of raw pulses to report.
 // "${topic}/P;-1;${tapnum};${pulses}";
 
-static PGM_P pourTemplate PROGMEM = "${topic}:P;-1;${tapnum};${pulses}";
+static PGM_P pourTemplate PROGMEM = "${topic}:P;-1;${tapID};${pulses}";
 const char *rpints = "[RPINTS]:";
 
 RPints::RPints()
@@ -45,7 +45,7 @@ RPints::RPints()
     _push = push;
 }
 
-void RPints::sendRPPourReport(int tapID, unsigned int pulses)
+void RPints::sendRPPulseReport(int tapID, unsigned int pulses)
 {
     if (app.rpintstarget.username == NULL || app.rpintstarget.username[0] == '\0')
     {
@@ -59,8 +59,8 @@ void RPints::sendRPPourReport(int tapID, unsigned int pulses)
     tpl.setVal("${tapID}", tapID);
     tpl.setVal("${pulses}", (int)pulses);
 
-    Log.notice(F("%s Sending POUR information to RPints, pour %d pulses [%d]." CR),
-               rpints, pulses, tapID);
+    Log.notice(F("%s Sending pulse information to RPints, tap %d, %d pulses." CR),
+               rpints, tapID, pulses);
 
     const char *out = tpl.create(pourTemplate);
     String outStr(out);
