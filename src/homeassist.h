@@ -21,20 +21,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _RPINTSCLIENT_H
-#define _RPINTSCLIENT_H
+#ifndef _HASTCLIENT_H
+#define _HASTCLIENT_H
 
 class BasePush;
 
-class RPints
+class HomeAssist
 {
 protected:
     BasePush *_push;
 
 public:
-    RPints();
-
-    void sendRPPulseReport(int tapID, unsigned int pulses);
+    HomeAssist();
+    
+    void sendHAPour(int tapID, unsigned int units);
 };
 
-#endif // _RPINTSCLIENT_H
+#endif // _HASTCLIENT_H

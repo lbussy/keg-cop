@@ -35,7 +35,7 @@ SOFTWARE. */
 #include "flowconfig.h"
 #include "appconfig.h"
 #include "serialhandler.h"
-#include "rpintsclient.h"
+#include "rpints.h"
 
 #include <FS.h>
 #include <LittleFS.h>
