@@ -1002,7 +1002,7 @@ void URLTarget::load(JsonObjectConst obj)
     }
 }
 
-void MQTTTarget::save(JsonObject obj) const
+void RPintsTarget::save(JsonObject obj) const
 {
     obj[AppKeys::host] = host;
     obj[AppKeys::port] = port;
@@ -1012,17 +1012,27 @@ void MQTTTarget::save(JsonObject obj) const
     obj[AppKeys::update] = update;
 }
 
-void MQTTTarget::load(JsonObjectConst obj)
+void HATarget::save(JsonObject obj) const
+{
+    obj[AppKeys::host] = host;
+    obj[AppKeys::port] = port;
+    obj[AppKeys::username] = username;
+    obj[AppKeys::password] = password;
+    obj[AppKeys::topic] = topic;
+    obj[AppKeys::update] = update;
+}
+
+void RPintsTarget::load(JsonObjectConst obj)
 {
     bool loadFailed = false;
 
-    // Load MQTT Target configuration
+    // Load RPints MQTT Target configuration
     //
     if (obj[AppKeys::host].isNull())
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTThost." CR), appConfig);
+            Log.warning(F(" %s Null value for RP MQTT host." CR), appConfig);
             loadFailed = true;
         }
         strlcpy(host, "", sizeof(host));
@@ -1036,7 +1046,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTPort." CR), appConfig);
+            Log.warning(F(" %s Null value for RP MQTT Port." CR), appConfig);
             loadFailed = true;
         }
         port = 1883;
@@ -1050,7 +1060,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTusername." CR), appConfig);
+            Log.warning(F(" %s Null value for RP MQTT username." CR), appConfig);
             loadFailed = true;
         }
         strlcpy(username, "", sizeof(username));
@@ -1064,7 +1074,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTpassword." CR), appConfig);
+            Log.warning(F(" %s Null value for RP MQTT password." CR), appConfig);
             loadFailed = true;
         }
         strlcpy(password, "", sizeof(password));
@@ -1078,7 +1088,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTtopic." CR), appConfig);
+            Log.warning(F(" %s Null value for RP MQTT topic." CR), appConfig);
             loadFailed = true;
         }
         strlcpy(topic, "kegcop", sizeof(topic));
@@ -1092,7 +1102,7 @@ void MQTTTarget::load(JsonObjectConst obj)
     {
         if (!appLoadError)
         {
-            Log.warning(F(" %s Null value for MQTTupdate." CR), appConfig);
+            Log.warning(F(" %s Null value for RO MQTT update." CR), appConfig);
             loadFailed = true;
         }
         update = false;
@@ -1104,7 +1114,103 @@ void MQTTTarget::load(JsonObjectConst obj)
 
     if (loadFailed)
     {
-        debugAppLog("MQTT");
+        debugAppLog("RPints");
+    }
+}
+
+void HATarget::load(JsonObjectConst obj)
+{
+    bool loadFailed = false;
+
+    // Load Home Assistane MQTT Target configuration
+    //
+    if (obj[AppKeys::host].isNull())
+    {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for HA MQTT host." CR), appConfig);
+            loadFailed = true;
+        }
+        strlcpy(host, "", sizeof(host));
+    }
+    else
+    {
+        strlcpy(host, obj[AppKeys::host], sizeof(host));
+    }
+
+    if (obj[AppKeys::port].isNull())
+    {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for HA MQTT Port." CR), appConfig);
+            loadFailed = true;
+        }
+        port = 1883;
+    }
+    else
+    {
+        port = obj[AppKeys::port];
+    }
+
+    if (obj[AppKeys::username].isNull())
+    {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for HA MQTT username." CR), appConfig);
+            loadFailed = true;
+        }
+        strlcpy(username, "", sizeof(username));
+    }
+    else
+    {
+        strlcpy(username, obj[AppKeys::username], sizeof(username));
+    }
+
+    if (obj[AppKeys::password].isNull())
+    {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for HA MQTT password." CR), appConfig);
+            loadFailed = true;
+        }
+        strlcpy(password, "", sizeof(password));
+    }
+    else
+    {
+        strlcpy(password, obj[AppKeys::password], sizeof(password));
+    }
+
+    if (obj[AppKeys::topic].isNull())
+    {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for HA MQTT topic." CR), appConfig);
+            loadFailed = true;
+        }
+        strlcpy(topic, "homeassistant", sizeof(topic));
+    }
+    else
+    {
+        strlcpy(topic, obj[AppKeys::topic], sizeof(topic));
+    }
+
+    if (obj[AppKeys::update].isNull())
+    {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for HA MQTT update." CR), appConfig);
+            loadFailed = true;
+        }
+        update = false;
+    }
+    else
+    {
+        update = obj[AppKeys::update];
+    }
+
+    if (loadFailed)
+    {
+        debugAppLog("HomeAsst");
     }
 }
 
@@ -1122,8 +1228,10 @@ void AppConfig::save(JsonObject obj) const
     kegscreen.save(obj.createNestedObject(AppKeys::kegscreen));
     // Add TaplistIO object
     taplistio.save(obj.createNestedObject(AppKeys::taplistio));
-    // Add MQTT object
+    // Add RPints MQTT object
     rpintstarget.save(obj.createNestedObject(AppKeys::rpintstarget));
+    // Add Home Assistant MQTT object
+    hatarget.save(obj.createNestedObject(AppKeys::hatarget));
     // Add Target object
     urltarget.save(obj.createNestedObject(AppKeys::urltarget));
 }
@@ -1140,6 +1248,7 @@ void AppConfig::load(JsonObjectConst obj)
     taplistio.load(obj[AppKeys::taplistio]);
     urltarget.load(obj[AppKeys::urltarget]);
     rpintstarget.load(obj[AppKeys::rpintstarget]);
+    hatarget.load(obj[AppKeys::hatarget]);
 }
 
 void debugFlowmeterLog(String area)

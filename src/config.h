@@ -839,7 +839,7 @@ SOFTWARE. */
 //
 #define APP_FILENAME "/appconfig.json"
 #define APP_FILENAME_BACKUP "/appconfig.backup"
-#define CAPACITY_APP_SERIAL 2048
+#define CAPACITY_APP_SERIAL 3072
 #define CAPACITY_APP_DESERIAL 3072
 //
 //////////////////////////////////////////////////////////////////////////

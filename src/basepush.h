@@ -38,9 +38,6 @@ SOFTWARE. */
 class BasePush
 {
 protected:
-    HTTPClient _http;
-    HTTPClient _httpSecure;
-
     void probeMFLN(String serverPath);
     void addHttpHeader(HTTPClient &http, String header);
     bool isSecure(String target) { return target.startsWith("https://"); }

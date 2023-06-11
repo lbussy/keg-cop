@@ -422,6 +422,14 @@ The configuration page API tree allows retrieval of current states or setting co
         "topic": "kegcop",
         "update": false
     },
+    "hatarget": {
+        "host": "hasst.local",
+        "port": 1883,
+        "username": "",
+        "password": "",
+        "topic": "homeassistant",
+        "update": false
+    },
     "taplistio": {
         "venue": "taplist-12345",
         "secret":"secret-abcdefghijk",
@@ -490,6 +498,14 @@ The PUT should follow standard form submission data format, with the following i
 - `rpintsusername` - The MQTT user name, blank if not used.
 - `rpintspassword` - The MQTT password, blank if not used.
 - `rpintstopic` - The MQTT topic.
+
+###### hatarget
+
+- `hahost` - The fully-qualified domain name for the Home Assistant system's MQTT broker.
+- `haport` - The target MQTT port.
+- `hausername` - The MQTT user name, blank if not used.
+- `hapassword` - The MQTT password, blank if not used.
+- `hatopic` - The MQTT topic.
 
 ###### taplistio
 
