@@ -145,7 +145,7 @@ bool sendTargetReport()
     }
     else
     {
-        Log.verbose(F("%s: reporting not enabled, skipping." CR), reportname);
+        Log.trace(F("%s: reporting not enabled, skipping." CR), reportname);
         retval = false;
     }
     return retval;
