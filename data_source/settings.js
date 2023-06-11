@@ -905,7 +905,7 @@ function processHAPost(url, obj) {
     haport = $form.find("input[name='haport']").val();
     hausername = $form.find("input[name='hausername']").val();
     hapassword = $form.find("input[name='hapassword']").val();
-    haopic = $form.find("input[name='hatopic']").val();
+    hatopic = $form.find("input[name='hatopic']").val();
 
     // Process put
     data = {

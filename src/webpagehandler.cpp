@@ -72,7 +72,8 @@ static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration funct
     handleSensorPost,
     handleKegScreenPost,
     handleTaplistIOPost,
-    handleMQTTTargetPost,
+    handleRPintsTargetPost,
+    handleHATargetPost,
     handleUrlTargetPost,
     handleCloudTargetPost,
     handleThemePost,
@@ -83,7 +84,8 @@ static const char *cf_str[] = {
     "handleSensorPost",
     "handleKegScreenPost",
     "handleTaplistIOPost",
-    "handleMQTTTargetPost",
+    "handleRPintsTargetPost",
+    "handleHATargetPost",
     "handleUrlTargetPost",
     "handleCloudTargetPost",
     "handleThemePost",
@@ -1824,7 +1826,7 @@ HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *request) // Handle URL 
     }
 }
 
-HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
+HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *request) // Handle RPints MQTT target
 {
     bool didFail = false;
     bool didChange = false;
@@ -1933,6 +1935,144 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.rpintstarget.topic, value, sizeof(app.rpintstarget.topic));
+                    changedMqtt++;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+        }
+    }
+    // Return values
+    if (didChange)
+    {
+        setDoSaveApp();
+    }
+    if (didFail)
+    {
+        return FAIL_PROCESS;
+    }
+    else if (didChange)
+    {
+        return PROCESSED;
+    }
+    else
+    {
+        return NOT_PROCCESSED;
+    }
+}
+
+HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home Asst MQTT target
+{
+    bool didFail = false;
+    bool didChange = false;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // MQTT Target settings
+            //
+            int changedMqtt = 0;
+            if (strcmp(name, "hahost") == 0) // Set MQTT broker host
+            {
+                LCBUrl url;
+                if (url.isValidHostName(value) && (strlen(value) > 3) && (strlen(value) < 128))
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    strlcpy(app.hatarget.host, value, sizeof(app.hatarget.host));
+                    changedMqtt++;
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(app.hatarget.host, value, sizeof(app.hatarget.host));
+                    changedMqtt++;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "haport") == 0) // Set the broker port
+            {
+                const double val = atof(value);
+                if ((val < 1) || (val > 65535))
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.hatarget.port = val;
+                    changedMqtt++;
+                }
+            }
+            if (strcmp(name, "hausername") == 0) // Set MQTT user name
+            {
+                if ((strlen(value) > 3) && (strlen(value) < 128))
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    strlcpy(app.hatarget.username, value, sizeof(app.hatarget.username));
+                    changedMqtt++;
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(app.hatarget.username, value, sizeof(app.hatarget.username));
+                    changedMqtt++;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "hapassword") == 0) // Set MQTT user password
+            {
+                if ((strlen(value) > 3) && (strlen(value) < 128))
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    strlcpy(app.hatarget.password, value, sizeof(app.hatarget.password));
+                    changedMqtt++;
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(app.hatarget.password, value, sizeof(app.hatarget.password));
+                    changedMqtt++;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "hatopic") == 0) // Set MQTT topic
+            {
+                if ((strlen(value) > 3) && (strlen(value) < 128))
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    strlcpy(app.hatarget.topic, value, sizeof(app.hatarget.topic));
                     changedMqtt++;
                 }
                 else
