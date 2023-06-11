@@ -367,6 +367,12 @@ function populateConfig(callback = null) { // Get configuration settings
                 $('input[name="rpintspassword"]').val(config.rpintstarget.password);
                 $('input[name="rpintstopic').val(config.rpintstarget.topic);
 
+                $('input[name="hahost"]').val(config.hatarget.host);
+                $('input[name="haport"]').val(parseInt(config.hatarget.port, 10));
+                $('input[name="hausername"]').val(config.hatarget.username);
+                $('input[name="hapassword"]').val(config.hatarget.password);
+                $('input[name="hatopic').val(config.hatarget.topic);
+
                 $('input[name="targeturl"]').val(config.urltarget.url);
                 $('input[name="targetfreq"]').val(parseInt(config.urltarget.freq, 10));
                 $('.updatepulsesecs').text(pulseReloadTimer / 1000);
@@ -605,6 +611,9 @@ function processPost(obj) {
             break;
         case "#rpints":
             processRPintsPost(url, obj);
+            break;
+        case "#hast":
+            processHAPost(url, obj);
             break;
         case "#controller":
             processControllerPost(url, obj);
@@ -864,7 +873,7 @@ function processTargetUrlPost(url, obj) {
 }
 
 function processRPintsPost(url, obj) {
-    // Handle target URL posts
+    // Handle RPints MQTT posts
     var data = {};
 
     // Get form data
@@ -882,6 +891,29 @@ function processRPintsPost(url, obj) {
         rpintsusername: rpintsusername,
         rpintspassword: rpintspassword,
         rpintstopic: rpintstopic
+    };
+    putData(url, data);
+}
+
+function processHAPost(url, obj) {
+    // Handle HA MQTT posts
+    var data = {};
+
+    // Get form data
+    var $form = $(obj);
+    hahost = $form.find("input[name='hahost']").val();
+    haport = $form.find("input[name='haport']").val();
+    hausername = $form.find("input[name='hausername']").val();
+    hapassword = $form.find("input[name='hapassword']").val();
+    haopic = $form.find("input[name='hatopic']").val();
+
+    // Process put
+    data = {
+        hahost: hahost,
+        haport: haport,
+        hausername: hausername,
+        hapassword: hapassword,
+        hatopic: hatopic
     };
     putData(url, data);
 }
@@ -944,6 +976,9 @@ function updateHelp(hashLoc) {
             break;
         case "#rpints":
             url = url + "/en/latest/context/settings/targets/rpints/index.html";
+            break;
+        case "#hast":
+            url = url + "/en/latest/context/settings/targets/hast/index.html";
             break;
         case "#controller":
             url = url + "/en/latest/context/settings/controller/index.html";
