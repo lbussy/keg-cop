@@ -35,6 +35,9 @@ public:
     HomeAssist();
     
     void sendHAPour(int tapID, unsigned int units);
+
+    bool checkSend();
+    String HomeAssist::sendHAMessage(String &outStr);
 };
 
 #endif // _HASTCLIENT_H

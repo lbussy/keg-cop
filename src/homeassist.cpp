@@ -74,26 +74,41 @@ HomeAssist::HomeAssist()
     _push = push;
 }
 
-void HomeAssist::sendHAPour(int tapID, unsigned int units)
+bool HomeAssist::checkSend()
 {
     if (app.hatarget.host == NULL || app.hatarget.host[0] == '\0')
     {
         Log.trace(F("%s Target not configured." CR), hast);
-        return;
+        return false;
     }
+    else
+    {
+        return true;
+    }
+}
+
+void HomeAssist::sendHAPour(int tapID, unsigned int units)
+{
+    if (!checkSend) return;
 
     TemplatingEngine tpl;
 
-    tpl.setVal("${topic}", app.hatarget.topic);
-    tpl.setVal("${tapID}", tapID);
-    tpl.setVal("${units}", (int)units);
+    // TODO:  Come up with template for pour
+    // tpl.setVal("${topic}", app.hatarget.topic);
+    // tpl.setVal("${tapID}", tapID);
+    // tpl.setVal("${units}", (int)units);
 
-    Log.notice(F("%s Sending pulse information to RPints, tap %d, %d pulses." CR),
-               hast, tapID, units);
+    Log.notice(F("%s Sending pour information, tap %d, %d %s." CR),
+               hast, tapID, units, (app.copconfig.imperial) ? F("oz") : F("mL"));
 
     const char *out = tpl.create(pourTemplate);
     String outStr(out);
-    Log.trace(F("%s Payload: %s." CR), hast, out);
-    _push->sendMqtt(outStr, app.rpintstarget.host, app.rpintstarget.port, app.rpintstarget.username, app.rpintstarget.password);
+    sendHAMessage(outStr);
     tpl.freeMemory();
+}
+
+String HomeAssist::sendHAMessage(String &outStr)
+{
+    Log.trace(F("%s Payload: %s." CR), hast, outStr.c_str());
+    _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
 }
