@@ -47,7 +47,9 @@ public:
     HASS();
 
     bool sendTapInfoDiscovery(); // Sent all taps to Auto-Discovery topic
-    bool sendTapStates();        // Sent state of all taps to state_topic
+    bool sendTapInfoDiscovery(int tap); // Sent all taps to Auto-Discovery topic
+    bool sendTapState();        // Sent state of all taps to state_topic
+    bool sendTapState(int tap);        // Sent state of all taps to state_topic
 
     // bool sendPourReport(int tap, float units); // Send pour report when a pour is done (single tap)
     // bool sendKickReport(int tap);              // Send a kick report when keg kicks

@@ -86,49 +86,88 @@ bool HASS::sendTapInfoDiscovery() // Push complete tap info
     bool okToSend = okSend();
     if (!okToSend) return okToSend;
 
+    bool retVal = true;
+
     for (int i = 0; i < NUMTAPS; i++)
     {
-        TemplatingEngine tpl;
-        tpl.setVal("${hostname}", app.copconfig.hostname);
-        tpl.setVal("${tapnum}", i + 1);
-        String taplabel = String(flow.taps[i].label) + ". " + flow.taps[i].name;
-        tpl.setVal("${taplabel}", taplabel);
-        tpl.setVal("${UOM}", (app.copconfig.imperial) ? "Gallons" : "Liters");
-        tpl.setVal("${GUID}", app.copconfig.guid);
-        tpl.setVal("${name}", app.copconfig.kegeratorname);
-        tpl.setVal("${ver}", fw_version());
-
-        const char *out = tpl.create(tapInfoDiscovTemplate);
-        String outStr(out);
-        Log.trace(F("%s Payload: %s." CR), prefix, out);
-        _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
-        tpl.freeMemory();
+        if (!sendTapInfoDiscovery(i)) retVal = false;
     }
 
-    return true;
+    return retVal;
 }
 
-bool HASS::sendTapStates() // Push complete tap info
+bool HASS::sendTapInfoDiscovery(int tap) // Push complete tap info
+{
+    int retVal = 0;
+
+    TemplatingEngine tpl;
+    tpl.setVal("${hostname}", app.copconfig.hostname);
+    tpl.setVal("${tapnum}", tap + 1);
+    String taplabel = String(flow.taps[tap].label) + ". " + flow.taps[tap].name;
+    tpl.setVal("${taplabel}", taplabel);
+    tpl.setVal("${UOM}", (app.copconfig.imperial) ? "Gallons" : "Liters");
+    tpl.setVal("${GUID}", app.copconfig.guid);
+    tpl.setVal("${name}", app.copconfig.kegeratorname);
+    tpl.setVal("${ver}", fw_version());
+
+    const char *out = tpl.create(tapInfoDiscovTemplate);
+    String outStr(out);
+    Log.trace(F("%s Payload: %s." CR), prefix, out);
+    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    tpl.freeMemory();
+
+    if (retVal == 0)
+    {
+        Log.verbose(F("%s Push discovery to tap %d ok." CR), prefix, tap);
+        return true;
+    }
+    else
+    {
+        Log.verbose(F("%s Push discovery to tap %d error (%d)." CR), prefix, tap, retVal);
+        return false;
+    }
+}
+
+bool HASS::sendTapState() // Push all taps info
 {
     bool okToSend = okSend();
     if (!okToSend) return okToSend;
 
+    bool retVal = true;
+
     for (int i = 0; i < NUMTAPS; i++)
     {
-        char _buf[30] = "";
-        convertFloatToString(flow.taps[i].remaining, &_buf[0], 2);
-
-        TemplatingEngine tpl;
-        tpl.setVal("${hostname}", app.copconfig.hostname);
-        tpl.setVal("${tapnum}", i + 1);
-        tpl.setVal("${volume}", (String)_buf);
-
-        const char *out = tpl.create(tapVolumeUpdateTemplate);
-        String outStr(out);
-        Log.trace(F("%s Payload: %s." CR), prefix, out);
-        _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
-        tpl.freeMemory();
+        if (!sendTapState(i)) retVal = false;
     }
 
-    return true;
+    return retVal;
+}
+
+bool HASS::sendTapState(int tap) // Push single tap info
+{
+    int retVal = 0;
+    char _buf[30] = "";
+    convertFloatToString(flow.taps[tap].remaining, &_buf[0], 2);
+
+    TemplatingEngine tpl;
+    tpl.setVal("${hostname}", app.copconfig.hostname);
+    tpl.setVal("${tapnum}", tap + 1);
+    tpl.setVal("${volume}", (String)_buf);
+
+    const char *out = tpl.create(tapVolumeUpdateTemplate);
+    String outStr(out);
+    Log.trace(F("%s Payload: %s." CR), prefix, out);
+    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    tpl.freeMemory();
+
+    if (retVal == 0)
+    {
+        Log.verbose(F("%s Push state to tap %d ok." CR), prefix, tap);
+        return true;
+    }
+    else
+    {
+        Log.verbose(F("%s Push state to tap %d error (%d)." CR), prefix, tap, retVal);
+        return false;
+    }
 }

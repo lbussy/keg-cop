@@ -167,7 +167,7 @@ void setup()
     sendTIOTaps();               // Send initial Taplist.io keg levels
     HASS hass;                   // DEBUG
     hass.sendTapInfoDiscovery(); // DEBUG
-    hass.sendTapStates();        // DEBUG
+    hass.sendTapState();         // DEBUG
 }
 
 void loop()
