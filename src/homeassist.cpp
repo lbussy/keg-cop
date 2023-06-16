@@ -21,64 +21,58 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include <homeassist.h>
+#include "homeassist.h"
 
 #include "appconfig.h"
 #include "templating.h"
 #include "basepush.h"
+#include "version.h"
+#include "flowconfig.h"
 
 #include <ArduinoLog.h>
 
-const char *volumeTemplate =
-    "homeassistant/sensor/${mdns}_volume${tap}/"
-    "config:{\"device_class\":\"volume\",\"name\":\"${mdns}_volume${tap}\","
-    "\"unit_of_measurement\":\"L\",\"state_topic\":\"homeassistant/sensor/"
-    "${mdns}_volume${tap}/state\",\"json_attributes_topic\":\"homeassistant/"
-    "sensor/${mdns}_volume${tap}/"
-    "attr\",\"unique_id\":\"${mdns}_volume${tap}\"}|"
-    "homeassistant/sensor/${mdns}_volume${tap}/state:${volume}|"
-    "homeassistant/sensor/${mdns}_volume${tap}/"
-    "attr:{\"glasses\":${glasses}}|";
-
-const char *beerTemplate =
-    "homeassistant/sensor/${mdns}_beer${tap}/config:"
-    "{\"name\":\"${mdns}_beer${tap}\",\"state_topic\":\"homeassistant/sensor/"
-    "${mdns}_beer${tap}/state\",\"json_attributes_topic\":\"homeassistant/"
-    "sensor/${mdns}_beer${tap}/"
-    "attr\",\"unique_id\":\"${mdns}_beer${tap}\"}|"
-    "homeassistant/sensor/${mdns}_beer${tap}/state:${beer-name}|"
-    "homeassistant/sensor/${mdns}_beer${tap}/"
-    "attr:{\"abv\":${beer-abv},\"abv\":${beer-abv},\"ibu\":${beer-ibu},\"ebc\":"
-    "${beer-"
-    "ebc}}|";
-
-const char *pourTemplate =
-    "homeassistant/sensor/${mdns}_pour${tap}/config:"
-    "{\"device_class\":\"volume\",\"name\":\"${mdns}_pour${tap}\",\"unit_of_"
-    "measurement\":\"L\",\"state_topic\":\"homeassistant/sensor/"
-    "${mdns}_pour${tap}/state\",\"unique_id\":\"${mdns}_pour${tap}\"}|"
-    "homeassistant/sensor/${mdns}_pour${tap}/state:${pour}|";
-
-const char *tempTemplate =
-    "homeassistant/sensor/${mdns}_temp/config:"
-    "{\"device_class\":\"temperature\",\"name\":\"${mdns}_temp\",\"unit_of_"
-    "measurement\":\"${temp-format}\",\"state_topic\":\"homeassistant/sensor/"
-    "${mdns}_temp/state\",\"unique_id\":\"${mdns}_temp\"}|"
-    "homeassistant/sensor/${mdns}_temp/state:${temp}|";
-
-const char *hast = "[HAST]:";
-
-HomeAssist::HomeAssist()
+HASS::HASS()
 {
     BasePush *push;
     _push = push;
 }
 
-bool HomeAssist::checkSend()
+PGM_P HASS::prefix = "[HASS]:";
+// Report Templates
+PGM_P HASS::tapInfoDiscovTemplate PROGMEM = // Tap Auto-Discovery Payload (per tap)
+    "homeassistant/sensor/${hostname}_tap${tapnum}/volume/config:"
+    "{"
+        "\"icon\":\"mdi:beer\","
+        "\"name\": \"${taplabel}\","
+        "\"device_class\": \"volume\","
+        "\"unit_of_measurement\": \"${UOM}\","
+        "\"state_topic\": \"kegcop/${hostname}_tap${tapnum}/volume/state\","
+        "\"json_attributes_topic\": \"kegcop/${hostname}_tap${tapnum}/volume/attr\","
+        "\"unique_id\": \"${hostname}_tap${tapnum}\","
+        "\"device\": {"
+            "\"configuration_url\":\"http://${hostname}.local/settings/\","
+            "\"identifiers\": \"${GUID}\","
+            "\"model\": \"Keg Cop\","
+            "\"name\": \"${name}\","
+            "\"manufacturer\": \"Lee Bussy\","
+            "\"sw_version\": \"${ver}\""
+        "}"
+    "}|";
+
+PGM_P HASS::tapVolumeUpdateTemplate PROGMEM =
+    "kegcop/${hostname}_tap${tapnum}/volume/state:"
+    "${volume}";
+
+// PGM_P HASS::pourReportTemplate PROGMEM = "";
+// PGM_P HASS::kickReportTemplate PROGMEM = "";
+// PGM_P HASS::coolStateTemplate PROGMEM = "";
+// PGM_P HASS::tempReport PROGMEM = "";
+
+bool HASS::okSend()
 {
     if (app.hatarget.host == NULL || app.hatarget.host[0] == '\0')
     {
-        Log.trace(F("%s Target not configured." CR), hast);
+        Log.trace(F("%s Target not configured." CR), prefix);
         return false;
     }
     else
@@ -87,28 +81,54 @@ bool HomeAssist::checkSend()
     }
 }
 
-void HomeAssist::sendHAPour(int tapID, unsigned int units)
+bool HASS::sendTapInfoDiscovery() // Push complete tap info
 {
-    if (!checkSend) return;
+    bool okToSend = okSend();
+    if (!okToSend) return okToSend;
 
-    TemplatingEngine tpl;
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        TemplatingEngine tpl;
+        tpl.setVal("${hostname}", app.copconfig.hostname);
+        tpl.setVal("${tapnum}", i + 1);
+        String taplabel = String(flow.taps[i].label) + ". " + flow.taps[i].name;
+        tpl.setVal("${taplabel}", taplabel);
+        tpl.setVal("${UOM}", (app.copconfig.imperial) ? "Gallons" : "Liters");
+        tpl.setVal("${GUID}", app.copconfig.guid);
+        tpl.setVal("${name}", app.copconfig.kegeratorname);
+        tpl.setVal("${ver}", fw_version());
 
-    // TODO:  Come up with template for pour
-    // tpl.setVal("${topic}", app.hatarget.topic);
-    // tpl.setVal("${tapID}", tapID);
-    // tpl.setVal("${units}", (int)units);
+        const char *out = tpl.create(tapInfoDiscovTemplate);
+        String outStr(out);
+        Log.trace(F("%s Payload: %s." CR), prefix, out);
+        _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+        tpl.freeMemory();
+    }
 
-    Log.notice(F("%s Sending pour information, tap %d, %d %s." CR),
-               hast, tapID, units, (app.copconfig.imperial) ? F("oz") : F("mL"));
-
-    const char *out = tpl.create(pourTemplate);
-    String outStr(out);
-    sendHAMessage(outStr);
-    tpl.freeMemory();
+    return true;
 }
 
-String HomeAssist::sendHAMessage(String &outStr)
+bool HASS::sendTapStates() // Push complete tap info
 {
-    Log.trace(F("%s Payload: %s." CR), hast, outStr.c_str());
-    _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    bool okToSend = okSend();
+    if (!okToSend) return okToSend;
+
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        char _buf[30] = "";
+        convertFloatToString(flow.taps[i].remaining, &_buf[0], 2);
+
+        TemplatingEngine tpl;
+        tpl.setVal("${hostname}", app.copconfig.hostname);
+        tpl.setVal("${tapnum}", i + 1);
+        tpl.setVal("${volume}", (String)_buf);
+
+        const char *out = tpl.create(tapVolumeUpdateTemplate);
+        String outStr(out);
+        Log.trace(F("%s Payload: %s." CR), prefix, out);
+        _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+        tpl.freeMemory();
+    }
+
+    return true;
 }

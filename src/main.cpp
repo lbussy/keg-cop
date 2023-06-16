@@ -40,6 +40,7 @@ SOFTWARE. */
 #include "uptimelog.h"
 #include "taplistio.h"
 #include "flowconfig.h"
+#include "homeassist.h"
 
 #include <ArduinoLog.h>
 #include <ESP_DoubleResetDetector.h>
@@ -163,7 +164,10 @@ void setup()
 #else
     nullDoc("d");
 #endif
-    sendTIOTaps(); // Send initial Taplist.io keg levels
+    sendTIOTaps();               // Send initial Taplist.io keg levels
+    HASS hass;                   // DEBUG
+    hass.sendTapInfoDiscovery(); // DEBUG
+    hass.sendTapStates();        // DEBUG
 }
 
 void loop()
@@ -219,7 +223,10 @@ void playDead(String cause = "")
     if (!Serial)
     {
         Serial.begin(BAUD);
-        while (!Serial) {;}
+        while (!Serial)
+        {
+            ;
+        }
         Serial.flush();
         Serial.println();
     }

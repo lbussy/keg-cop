@@ -21,23 +21,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _HASTCLIENT_H
-#define _HASTCLIENT_H
+#ifndef _HOMEASSIST_H
+#define _HOMEASSIST_H
 
+#include <Arduino.h>
 class BasePush;
 
-class HomeAssist
+class HASS
 {
-protected:
+private:
     BasePush *_push;
+    static PGM_P prefix;
+    // Report Templates
+    static PGM_P tapInfoDiscovTemplate;
+    static PGM_P tapVolumeUpdateTemplate;
+
+    static PGM_P pourReportTemplate;
+    static PGM_P kickReportTemplate;
+    static PGM_P coolStateTemplate;
+    static PGM_P tempReport;
+    // Members
+    bool okSend();
 
 public:
-    HomeAssist();
-    
-    void sendHAPour(int tapID, unsigned int units);
+    HASS();
 
-    bool checkSend();
-    String HomeAssist::sendHAMessage(String &outStr);
+    bool sendTapInfoDiscovery(); // Sent all taps to Auto-Discovery topic
+    bool sendTapStates();        // Sent state of all taps to state_topic
+
+    // bool sendPourReport(int tap, float units); // Send pour report when a pour is done (single tap)
+    // bool sendKickReport(int tap);              // Send a kick report when keg kicks
+    // bool sendCoolStateReport(int area);        // Send temp status when a cooling state changes
+    // bool sendTempReport(int sensor);           // Send a temp report on timer
 };
 
-#endif // _HASTCLIENT_H
+#endif // _HOMEASSIST_H
