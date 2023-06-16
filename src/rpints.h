@@ -24,17 +24,22 @@ SOFTWARE. */
 #ifndef _RPINTS_H
 #define _RPINTS_H
 
+#include <Arduino.h>
 class BasePush;
 
 class RPints
 {
-protected:
+private:
     BasePush *_push;
+    static PGM_P prefix;
+    static PGM_P pourTemplate;
+
+    bool okSend();
 
 public:
     RPints();
 
-    void sendRPPulseReport(int tapID, unsigned int pulses);
+    bool sendPulseReport(int tapID, unsigned int pulses);
 };
 
 #endif // _RPINTS_H

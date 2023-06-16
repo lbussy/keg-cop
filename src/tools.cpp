@@ -203,7 +203,7 @@ void tickerLoop()
             if (queuePulseReport[i] > 0)
             {
                 RPints rpints;
-                rpints.sendRPPulseReport(i, queuePulseReport[i]);
+                rpints.sendPulseReport(i, queuePulseReport[i]);
                 queuePulseReport[i] = 0;
             }
             // Send kick report

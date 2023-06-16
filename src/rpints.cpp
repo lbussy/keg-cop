@@ -29,6 +29,8 @@ SOFTWARE. */
 
 #include <ArduinoLog.h>
 
+PGM_P RPints::prefix = "[RPints]:";
+
 // Raspberry Pints Pour Report:
 // P;-1;0;737
 // P = A pulse report (the only one currently supported via MQTT by Raspberry Pints.)
@@ -37,8 +39,7 @@ SOFTWARE. */
 // 737 = Number of raw pulses to report.
 // "${topic}/P;-1;${tapnum};${pulses}";
 
-static PGM_P pourTemplate PROGMEM = "${topic}:P;-1;${tapID};${pulses}";
-const char *rpints = "[RPINTS]:";
+PGM_P RPints::pourTemplate PROGMEM = "${topic}:P;-1;${tapID};${pulses}";
 
 RPints::RPints()
 {
@@ -46,13 +47,22 @@ RPints::RPints()
     _push = push;
 }
 
-void RPints::sendRPPulseReport(int tapID, unsigned int pulses)
+bool RPints::okSend()
 {
     if (app.rpintstarget.host == NULL || app.rpintstarget.host[0] == '\0')
     {
-        Log.trace(F("%s Target not configured." CR), rpints);
-        return;
+        Log.trace(F("%s Target not configured." CR), prefix);
+        return false;
     }
+    else
+    {
+        return true;
+    }
+}
+
+bool RPints::sendPulseReport(int tapID, unsigned int pulses)
+{
+    if (!okSend()) return okSend();
 
     TemplatingEngine tpl;
 
@@ -60,12 +70,13 @@ void RPints::sendRPPulseReport(int tapID, unsigned int pulses)
     tpl.setVal("${tapID}", tapID);
     tpl.setVal("${pulses}", (int)pulses);
 
-    Log.notice(F("%s Sending pulse information to RPints, tap %d, %d pulses." CR),
-               rpints, tapID, pulses);
+    Log.notice(F("%s Sending pulse information, tap %d, %d pulses." CR),
+               prefix, tapID, pulses);
 
     const char *out = tpl.create(pourTemplate);
     String outStr(out);
-    Log.trace(F("%s Payload: %s." CR), rpints, out);
+    Log.trace(F("%s Payload: %s." CR), prefix, out);
     _push->sendMqtt(outStr, app.rpintstarget.host, app.rpintstarget.port, app.rpintstarget.username, app.rpintstarget.password);
     tpl.freeMemory();
+    return true;
 }
