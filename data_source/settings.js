@@ -612,7 +612,7 @@ function processPost(obj) {
         case "#rpints":
             processRPintsPost(url, obj);
             break;
-        case "#hast":
+        case "#hass":
             processHAPost(url, obj);
             break;
         case "#controller":
@@ -977,8 +977,8 @@ function updateHelp(hashLoc) {
         case "#rpints":
             url = url + "/en/latest/context/settings/targets/rpints/index.html";
             break;
-        case "#hast":
-            url = url + "/en/latest/context/settings/targets/hast/index.html";
+        case "#hass":
+            url = url + "/en/latest/context/settings/targets/hass/index.html";
             break;
         case "#controller":
             url = url + "/en/latest/context/settings/controller/index.html";

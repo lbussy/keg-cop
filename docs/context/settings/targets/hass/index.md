@@ -1,8 +1,8 @@
-(hast)=
+(hass)=
 
 # Home Assistant Target
 
-```{image} hast.png
+```{image} hass.png
 :align: center
 :alt: Home Assistant Settings
 :scale: 25%
