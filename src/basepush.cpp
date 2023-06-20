@@ -299,7 +299,7 @@ int BasePush::sendMqtt(String &payload, const char *target, int port,
     int retval = 0;
     Log.notice(F("%s Sending MQTT payload to %s." CR), push, target);
 
-    MQTTClient mqtt(512);
+    MQTTClient mqtt(768);
 
     if (port > 8000)
     {

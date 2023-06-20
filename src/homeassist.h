@@ -25,36 +25,52 @@ SOFTWARE. */
 #define _HOMEASSIST_H
 
 #include <Arduino.h>
+
+#include "tempsensors.h"
 class BasePush;
+
+enum HassBoolDeviceList
+{
+    HASS_TOWER_FAN,
+    HASS_CHAMBER_COOL,
+    HASS_SOLENOID,
+    HASS_MAX // Should never get this
+};
 
 class HASS
 {
 private:
     BasePush *_push;
     static PGM_P prefix;
-    // Report Templates
+    // Tap Report Templates
     static PGM_P tapInfoDiscovTemplate;
     static PGM_P tapVolumeUpdateTemplate;
+    // Binary Sensor Templates
+    static PGM_P binaryDiscovTemplate;
+    static PGM_P binaryUpdateTemplate;
+    // Sensor Templates
+    static PGM_P sensorInfoDiscovTemplate;
+    static PGM_P sensorVolumeUpdateTemplate;
 
-    static PGM_P pourReportTemplate;
-    static PGM_P kickReportTemplate;
-    static PGM_P coolStateTemplate;
-    static PGM_P tempReport;
     // Members
     bool okSend();
+    String sensorPoint(SensorList sensor);
 
 public:
     HASS();
 
-    bool sendTapInfoDiscovery(); // Sent all taps to Auto-Discovery topic
-    bool sendTapInfoDiscovery(int tap); // Sent all taps to Auto-Discovery topic
-    bool sendTapState();        // Sent state of all taps to state_topic
-    bool sendTapState(int tap);        // Sent state of all taps to state_topic
-
-    // bool sendPourReport(int tap, float units); // Send pour report when a pour is done (single tap)
-    // bool sendKickReport(int tap);              // Send a kick report when keg kicks
-    // bool sendCoolStateReport(int area);        // Send temp status when a cooling state changes
-    // bool sendTempReport(int sensor);           // Send a temp report on timer
+    bool sendTapInfoDiscovery();                               // Sent all taps to Auto-Discovery topic
+    bool sendTapInfoDiscovery(int tap);                        // Sent single tap to Auto-Discovery topic
+    bool sendTapState();                                       // Sent state of all taps to state_topic
+    bool sendTapState(int tap);                                // Sent state of single tap to state_topic
+    bool sendBinaryDiscovery();                                // Send all objects to Auto-Discovery template 
+    bool sendBinaryDiscovery(HassBoolDeviceList device);       // Send object to Auto-Discovery template
+    bool sendBinaryState();                                   // Send state of all objects to state topic
+    bool sendBinaryState(HassBoolDeviceList device); // Send state of object to state topic
+    bool sendSensorInfoDiscovery();                            // Send all sensors to Auto-Discovery topic
+    bool sendSensorInfoDiscovery(SensorList sensor);           // Send single sensor to Auto-Discovery topic
+    bool sendSensorInfoState();                                // Sent state of all sensors to state_topic
+    bool sendSensorInfoState(SensorList sensor);               // Sent state of single sensor to state_topic
 };
 
 #endif // _HOMEASSIST_H

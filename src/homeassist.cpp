@@ -28,8 +28,36 @@ SOFTWARE. */
 #include "basepush.h"
 #include "version.h"
 #include "flowconfig.h"
+#include "thermostat.h"
 
 #include <ArduinoLog.h>
+
+namespace HASSBoolEnum
+{
+    static const char *deviceType[] = {
+        "chambercool",
+        "towerfan",
+        "solenoid"};
+
+    static const char *deviceName[] = {
+        "Chamber Cool",
+        "Tower Fan",
+        "Solenoid"};
+
+    static const char *deviceIcon[] = {
+        "coolant-temperature",
+        "fan",
+        "pipe-valve"};
+
+    static const char *deviceClass[] = {
+        "running",
+        "running",
+        "opening"};
+
+    static const char *deviceState[] = {
+        "Off",
+        "On"};
+};
 
 HASS::HASS()
 {
@@ -38,7 +66,8 @@ HASS::HASS()
 }
 
 PGM_P HASS::prefix = "[HASS]:";
-// Report Templates
+
+// Tap Report Templates
 PGM_P HASS::tapInfoDiscovTemplate PROGMEM = // Tap Auto-Discovery Payload (per tap)
     "homeassistant/sensor/${hostname}_tap${tapnum}/volume/config:"
     "{"
@@ -63,10 +92,55 @@ PGM_P HASS::tapVolumeUpdateTemplate PROGMEM =
     "kegcop/${hostname}_tap${tapnum}/volume/state:"
     "${volume}";
 
-// PGM_P HASS::pourReportTemplate PROGMEM = "";
-// PGM_P HASS::kickReportTemplate PROGMEM = "";
-// PGM_P HASS::coolStateTemplate PROGMEM = "";
-// PGM_P HASS::tempReport PROGMEM = "";
+// Binary Sensor Templates
+PGM_P HASS::binaryDiscovTemplate PROGMEM =
+    "homeassistant/binary_sensor/${hostname}_${type}/${type}/config:"
+    "{"
+        "\"name\": \"${device_name}\","
+        "\"icon\":\"mdi:${icon}\","
+        "\"device_class\": \"${class}\","
+        "\"unique_id\": \"kegcop_${type}\","
+        "\"state_topic\": \"kegcop/${hostname}_${type}/${type}/state\","
+        "\"payload_on\": \"On\","
+        "\"payload_off\": \"Off\","
+        "\"device\": {"
+            "\"configuration_url\":\"http://kegcop.local/settings/\","
+            "\"identifiers\": \"${GUID}\","
+            "\"model\": \"Keg Cop\","
+            "\"name\": \"${name}\","
+            "\"manufacturer\": \"Lee Bussy\","
+            "\"sw_version\": \"${ver}\""
+        "}"
+    "}|";
+
+PGM_P HASS::binaryUpdateTemplate PROGMEM =
+    "kegcop/${hostname}_${type}/${type}/state:"
+    "${state}|";
+
+// Sensor Templates
+PGM_P HASS::sensorInfoDiscovTemplate PROGMEM = // Sensor Auto-Discovery Payload (per tap)
+    "homeassistant/sensor/${hostname}_${sensorpoint}/temperature/config:"
+    "{"
+        "\"icon\":\"mdi:snowflake-thermometer\","
+        "\"name\": \"${sensorname}\","
+        "\"device_class\": \"temperature\","
+        "\"unit_of_measurement\": \"${UOM}\","
+        "\"state_topic\": \"kegcop/${hostname}_${sensorpoint}/temperature/state\","
+        "\"json_attributes_topic\": \"kegcop/${hostname}_${sensorpoint}/temperature/attr\","
+        "\"unique_id\": \"${hostname}_${sensorpoint}\","
+        "\"device\": {"
+            "\"configuration_url\":\"http://${hostname}.local/settings/\","
+            "\"identifiers\": \"${GUID}\","
+            "\"model\": \"Keg Cop\","
+            "\"name\": \"${name}\","
+            "\"manufacturer\": \"Lee Bussy\","
+            "\"sw_version\": \"${ver}\""
+        "}"
+    "}|";
+
+PGM_P HASS::sensorVolumeUpdateTemplate PROGMEM =
+    "kegcop/${hostname}_${sensorpoint}/temperature/state:"
+    "${temp}";
 
 bool HASS::okSend()
 {
@@ -81,16 +155,26 @@ bool HASS::okSend()
     }
 }
 
+String HASS::sensorPoint(SensorList sensor)
+{
+    String retVal = (String)sensorName[sensor];
+    retVal.toLowerCase();
+    retVal.replace(" ", "_");
+    return retVal;
+}
+
 bool HASS::sendTapInfoDiscovery() // Push complete tap info
 {
     bool okToSend = okSend();
-    if (!okToSend) return okToSend;
+    if (!okToSend)
+        return okToSend;
 
     bool retVal = true;
 
     for (int i = 0; i < NUMTAPS; i++)
     {
-        if (!sendTapInfoDiscovery(i)) retVal = false;
+        if (!sendTapInfoDiscovery(i))
+            retVal = false;
     }
 
     return retVal;
@@ -99,6 +183,8 @@ bool HASS::sendTapInfoDiscovery() // Push complete tap info
 bool HASS::sendTapInfoDiscovery(int tap) // Push complete tap info
 {
     int retVal = 0;
+
+    if (!flow.taps[tap].active) return false;
 
     TemplatingEngine tpl;
     tpl.setVal("${hostname}", app.copconfig.hostname);
@@ -131,13 +217,15 @@ bool HASS::sendTapInfoDiscovery(int tap) // Push complete tap info
 bool HASS::sendTapState() // Push all taps info
 {
     bool okToSend = okSend();
-    if (!okToSend) return okToSend;
+    if (!okToSend)
+        return okToSend;
 
     bool retVal = true;
 
     for (int i = 0; i < NUMTAPS; i++)
     {
-        if (!sendTapState(i)) retVal = false;
+        if (!sendTapState(i))
+            retVal = false;
     }
 
     return retVal;
@@ -146,6 +234,9 @@ bool HASS::sendTapState() // Push all taps info
 bool HASS::sendTapState(int tap) // Push single tap info
 {
     int retVal = 0;
+
+    if (!flow.taps[tap].active) return false;
+
     char _buf[30] = "";
     convertFloatToString(flow.taps[tap].remaining, &_buf[0], 2);
 
@@ -168,6 +259,236 @@ bool HASS::sendTapState(int tap) // Push single tap info
     else
     {
         Log.verbose(F("%s Push state to tap %d error (%d)." CR), prefix, tap, retVal);
+        return false;
+    }
+}
+
+bool HASS::sendBinaryDiscovery() // Send all objects to Auto-Discovery template
+{
+    bool okToSend = okSend();
+    if (!okToSend)
+        return okToSend;
+
+    bool retVal = true;
+
+    for (int i = 0; i < HASS_MAX; i++)
+    {
+        if (!sendBinaryDiscovery((HassBoolDeviceList)i))
+            retVal = false;
+    }
+
+    return retVal;
+}
+
+bool HASS::sendBinaryDiscovery(HassBoolDeviceList device) // Send object to Auto-Discovery template
+{
+    switch (device)
+    {
+    case 0: // Chamber Cooling
+        if (!app.temps.controlenabled) return false;
+        break;
+    case 2: // Tower Fan
+        if (!app.temps.tfancontrolenabled) return false;
+        // TODO:  Make sure tfancontrol enables only when turned on
+        break;
+    case 3: // Solenoid Control
+        if (app.temps.tfancontrolenabled) return false;
+        // TODO:  Make sure solenoid enables only when tfancontrol is off
+        break;
+    default:
+        break;
+    }
+
+    int retVal = 0;
+
+    TemplatingEngine tpl;
+    tpl.setVal("${hostname}", app.copconfig.hostname);
+    tpl.setVal("${type}", HASSBoolEnum::deviceType[device]);
+    tpl.setVal("${device_name}", HASSBoolEnum::deviceName[device]);
+    tpl.setVal("${icon}", HASSBoolEnum::deviceIcon[device]);
+    tpl.setVal("${class}", HASSBoolEnum::deviceClass[device]);
+    tpl.setVal("${GUID}", app.copconfig.guid);
+    tpl.setVal("${name}", app.copconfig.kegeratorname);
+    tpl.setVal("${ver}", fw_version());
+
+    const char *out = tpl.create(binaryDiscovTemplate);
+    String outStr(out);
+    Log.trace(F("%s Payload: %s." CR), prefix, out);
+    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    tpl.freeMemory();
+
+    if (retVal == 0)
+    {
+        Log.verbose(F("%s Push discovery to %s ok." CR), prefix, HASSBoolEnum::deviceName[device]);
+        return true;
+    }
+    else
+    {
+        Log.verbose(F("%s Push discovery to %s error (%d)." CR), prefix, HASSBoolEnum::deviceName[device], retVal);
+        return false;
+    }
+}
+
+bool HASS::sendBinaryState() // Send all object states to stare topic
+{
+    bool okToSend = okSend();
+    if (!okToSend)
+        return okToSend;
+
+    bool retVal = true;
+
+    for (int i = 0; i < HASS_MAX; i++)
+    {
+        if (!sendBinaryState((HassBoolDeviceList)i))
+            retVal = false;
+    }
+
+    return retVal;
+}
+
+bool HASS::sendBinaryState(HassBoolDeviceList device) // Send state of object to state topic
+{
+    bool on = false;
+
+    switch (device)
+    {
+    case 0: // Chamber Cooling
+        if (!app.temps.controlenabled) return false;
+        on = tstat[TS_TYPE_CHAMBER].state;
+        break;
+    case 2: // Tower Fan
+        if (!app.temps.tfancontrolenabled) return false;
+        on = tstat[TS_TYPE_TOWER].state;
+        break;
+    case 3: // Solenoid Control
+        if (app.temps.tfancontrolenabled) return false;
+        on = app.copconfig.tapsolenoid;
+        break;
+    default:
+        break;
+    }
+
+    int retVal = 0;
+
+    TemplatingEngine tpl;
+    tpl.setVal("${hostname}", app.copconfig.hostname);
+    tpl.setVal("${type}", HASSBoolEnum::deviceType[device]);
+    tpl.setVal("${state}", HASSBoolEnum::deviceState[on]);
+
+    const char *out = tpl.create(binaryUpdateTemplate);
+    String outStr(out);
+    Log.trace(F("%s Payload: %s." CR), prefix, out);
+    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    tpl.freeMemory();
+
+    if (retVal == 0)
+    {
+        Log.verbose(F("%s Push state %s to %s." CR), prefix, HASSBoolEnum::deviceState[on], HASSBoolEnum::deviceName[device]);
+        return true;
+    }
+    else
+    {
+        Log.verbose(F("%s Push state %s to %s error (%d)." CR), prefix, HASSBoolEnum::deviceState[on], HASSBoolEnum::deviceName[device], retVal);
+        return false;
+    }
+}
+
+bool HASS::sendSensorInfoDiscovery() // Send all sensors to Auto-Discovery topic
+{
+    bool okToSend = okSend();
+    if (!okToSend)
+        return okToSend;
+
+    bool retVal = true;
+
+    for (int i = 0; i < NUMSENSOR; i++)
+    {
+        if (!sendSensorInfoDiscovery((SensorList)i))
+            retVal = false;
+    }
+
+    return retVal;
+}
+
+bool HASS::sendSensorInfoDiscovery(SensorList sensor) // Send single sensor to Auto-Discovery topic
+{
+    int retVal = 0;
+
+    if (!app.temps.enabled[sensor]) return false;  
+
+    TemplatingEngine tpl;
+    tpl.setVal("${hostname}", app.copconfig.hostname);
+    tpl.setVal("${sensorpoint}", sensorPoint(sensor));
+    tpl.setVal("${sensorname}", (String)sensorName[sensor] + (String) " Temp");
+    tpl.setVal("${UOM}", (app.copconfig.imperial) ? "°F" : "°C");
+    tpl.setVal("${GUID}", app.copconfig.guid);
+    tpl.setVal("${name}", app.copconfig.kegeratorname);
+    tpl.setVal("${ver}", fw_version());
+
+    const char *out = tpl.create(sensorInfoDiscovTemplate);
+    String outStr(out);
+    Log.trace(F("%s Payload: %s." CR), prefix, out);
+    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    tpl.freeMemory();
+
+    if (retVal == 0)
+    {
+        Log.verbose(F("%s Push discovery to sensor %s ok." CR), prefix, sensorName[sensor]);
+        return true;
+    }
+    else
+    {
+        Log.verbose(F("%s Push discovery to sensor %s error (%d)." CR), prefix, sensorName[sensor], retVal);
+        return false;
+    }
+}
+
+bool HASS::sendSensorInfoState() // Sent state of all sensors to state_topic
+{
+    bool okToSend = okSend();
+    if (!okToSend)
+        return okToSend;
+
+    bool retVal = true;
+
+    for (int i = 0; i < NUMSENSOR; i++)
+    {
+        if (!sendSensorInfoState((SensorList)i))
+            retVal = false;
+    }
+
+    return retVal;
+}
+
+bool HASS::sendSensorInfoState(SensorList sensor) // Sent state of single sensor to state_topic
+{
+    int retVal = 0;
+
+    if (!app.temps.enabled[sensor]) return false;  
+
+    double baseTemp = (app.copconfig.imperial) ? convertCtoF(getTempC(sensorPin[sensor])) : getTempC(sensorPin[sensor]);
+    char _buf[30] = "";
+    convertFloatToString(baseTemp, &_buf[0], 1);
+
+    TemplatingEngine tpl;
+    tpl.setVal("${hostname}", app.copconfig.hostname);
+    tpl.setVal("${sensorpoint}", sensorPoint(sensor));
+    tpl.setVal("${temp}", (String)_buf);
+
+    const char *out = tpl.create(sensorVolumeUpdateTemplate);
+    String outStr(out);
+    Log.trace(F("%s Payload: %s." CR), prefix, out);
+    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    tpl.freeMemory();
+
+    if (retVal == 0)
+    {
+        Log.verbose(F("%s Push state to sensor %s ok." CR), prefix, sensorName[sensor]);
+        return true;
+    }
+    else
+    {
+        Log.verbose(F("%s Push state to sensor %s error (%d)." CR), prefix, sensorName[sensor], retVal);
         return false;
     }
 }
