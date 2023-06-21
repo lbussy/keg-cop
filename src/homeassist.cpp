@@ -312,17 +312,16 @@ bool HASS::sendBinaryDiscovery(HassBoolDeviceList device) // Send object to Auto
     switch (device)
     {
     case 0: // Chamber Cooling
-        if (!app.temps.controlenabled) return false;
+        if (!app.temps.controlenabled) return false; // Cooling not enabled, don't send.
         break;
-    case 2: // Tower Fan
-        if (!app.temps.tfancontrolenabled) return false;
-        // TODO:  Make sure tfancontrol enables only when turned on
+    case 1: // Tower Fan
+        if (!app.temps.tfancontrolenabled) return false; // TFan control enabled - send TFan.
         break;
-    case 3: // Solenoid Control
-        if (app.temps.tfancontrolenabled) return false;
-        // TODO:  Make sure solenoid enables only when tfancontrol is off
+    case 2: // Solenoid Control
+        if (app.temps.tfancontrolenabled) return false; // TFan control disabled - send solenoid.
         break;
     default:
+        return false;
         break;
     }
 
@@ -383,11 +382,11 @@ bool HASS::sendBinaryState(HassBoolDeviceList device) // Send state of object to
         if (!app.temps.controlenabled) return false;
         on = tstat[TS_TYPE_CHAMBER].state;
         break;
-    case 2: // Tower Fan
+    case 1: // Tower Fan
         if (!app.temps.tfancontrolenabled) return false;
         on = tstat[TS_TYPE_TOWER].state;
         break;
-    case 3: // Solenoid Control
+    case 2: // Solenoid Control
         if (app.temps.tfancontrolenabled) return false;
         on = app.copconfig.tapsolenoid;
         break;
