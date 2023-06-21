@@ -68,26 +68,26 @@ HASS::HASS()
 PGM_P HASS::prefix = "[HASS]:";
 
 PGM_P HASS::deviceTemplate PROGMEM =
-    "\"device\": {"
-        "\"configuration_url\":\"http://${hostname}.local/settings/\","
-        "\"identifiers\": \"${GUID}\","
-        "\"model\": \"Keg Cop\","
-        "\"name\": \"${devicename}\","
-        "\"manufacturer\": \"Lee Bussy\","
-        "\"sw_version\": \"${ver}\""
+    "'device': {"
+        "'configuration_url':'http://${hostname}.local/settings/',"
+        "'identifiers': '${GUID}',"
+        "'model': 'Keg Cop',"
+        "'name': '${devicename}',"
+        "'manufacturer': 'Lee Bussy',"
+        "'sw_version': '${ver}'"
     "}";
 
 // Tap Report Templates
 PGM_P HASS::tapInfoDiscovTemplate PROGMEM = // Tap Auto-Discovery Payload (per tap)
     "homeassistant/sensor/${hostname}_tap${tapnum}/volume/config:"
     "{"
-        "\"icon\":\"mdi:beer\","
-        "\"name\": \"${taplabelnum}. ${taplabel}\","
-        "\"device_class\": \"volume\","
-        "\"unit_of_measurement\": \"${UOM}\","
-        "\"state_topic\": \"kegcop/${hostname}_tap${tapnum}/volume/state\","
-        "\"json_attributes_topic\": \"kegcop/${hostname}_tap${tapnum}/volume/attr\","
-        "\"unique_id\": \"${hostname}_tap${tapnum}\","
+        "'icon':'mdi:beer',"
+        "'name': '${taplabelnum}. ${taplabel}',"
+        "'device_class': 'volume',"
+        "'unit_of_measurement': '${UOM}',"
+        "'state_topic': 'kegcop/${hostname}_tap${tapnum}/volume/state',"
+        "'json_attributes_topic': 'kegcop/${hostname}_tap${tapnum}/volume/attr',"
+        "'unique_id': '${hostname}_tap${tapnum}',"
         "${device}"
     "}|";
 
@@ -99,13 +99,13 @@ PGM_P HASS::tapVolumeUpdateTemplate PROGMEM =
 PGM_P HASS::binaryDiscovTemplate PROGMEM =
     "homeassistant/binary_sensor/${hostname}_${type}/${type}/config:"
     "{"
-        "\"name\": \"${device_name}\","
-        "\"icon\":\"mdi:${icon}\","
-        "\"device_class\": \"${class}\","
-        "\"unique_id\": \"kegcop_${type}\","
-        "\"state_topic\": \"kegcop/${hostname}_${type}/${type}/state\","
-        "\"payload_on\": \"On\","
-        "\"payload_off\": \"Off\","
+        "'name': '${device_name}',"
+        "'icon':'mdi:${icon}',"
+        "'device_class': '${class}',"
+        "'unique_id': 'kegcop_${type}',"
+        "'state_topic': 'kegcop/${hostname}_${type}/${type}/state',"
+        "'payload_on': 'On',"
+        "'payload_off': 'Off',"
         "${device}"
     "}|";
 
@@ -117,13 +117,13 @@ PGM_P HASS::binaryUpdateTemplate PROGMEM =
 PGM_P HASS::sensorInfoDiscovTemplate PROGMEM = // Sensor Auto-Discovery Payload (per tap)
     "homeassistant/sensor/${hostname}_${sensorpoint}/temperature/config:"
     "{"
-        "\"icon\":\"mdi:snowflake-thermometer\","
-        "\"name\": \"${sensorname}\","
-        "\"device_class\": \"temperature\","
-        "\"unit_of_measurement\": \"${UOM}\","
-        "\"state_topic\": \"kegcop/${hostname}_${sensorpoint}/temperature/state\","
-        "\"json_attributes_topic\": \"kegcop/${hostname}_${sensorpoint}/temperature/attr\","
-        "\"unique_id\": \"${hostname}_${sensorpoint}\","
+        "'icon':'mdi:snowflake-thermometer',"
+        "'name': '${sensorname}',"
+        "'device_class': 'temperature',"
+        "'unit_of_measurement': '${UOM}',"
+        "'state_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/state',"
+        "'json_attributes_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/attr',"
+        "'unique_id': '${hostname}_${sensorpoint}',"
         "${device}"
     "}|";
 
@@ -181,7 +181,7 @@ const char *HASS::deviceJSON() // Re-use device portion of JSON
     String templ = deviceTemplate;
     swapTicks(templ);
     const char *out = tpl.create(templ.c_str());
-    Log.trace(F("%s Device: %s." CR), prefix, out); // DEBUG
+
     String outStr(out);
     tpl.freeMemory();
     return outStr.c_str();
@@ -221,7 +221,10 @@ bool HASS::sendTapInfoDiscovery(int tap) // Push complete tap info
     // Standard device stanza
     tpl.setVal("${device}", deviceJSON()); // Device template
 
-    const char *out = tpl.create(tapInfoDiscovTemplate);
+    String templ = tapInfoDiscovTemplate;
+    swapTicks(templ);
+    const char *out = tpl.create(templ.c_str());
+
     retVal = sendPayload(out);
     tpl.freeMemory();
 
@@ -268,7 +271,10 @@ bool HASS::sendTapState(int tap) // Push single tap info
     tpl.setVal("${tapnum}", tap + 1);
     tpl.setVal("${volume}", (String)_buf);
 
-    const char *out = tpl.create(tapVolumeUpdateTemplate);
+    String templ = tapVolumeUpdateTemplate;
+    swapTicks(templ);
+    const char *out = tpl.create(templ.c_str());
+
     retVal = sendPayload(out);
     tpl.freeMemory();
 
@@ -331,7 +337,10 @@ bool HASS::sendBinaryDiscovery(HassBoolDeviceList device) // Send object to Auto
     // Standard device stanza
     tpl.setVal("${device}", deviceJSON()); // Device template
 
-    const char *out = tpl.create(binaryDiscovTemplate);
+    String templ = binaryDiscovTemplate;
+    swapTicks(templ);
+    const char *out = tpl.create(templ.c_str());
+
     retVal = sendPayload(out);
     tpl.freeMemory();
 
@@ -393,7 +402,10 @@ bool HASS::sendBinaryState(HassBoolDeviceList device) // Send state of object to
     tpl.setVal("${type}", HASSBoolEnum::deviceType[device]);
     tpl.setVal("${state}", HASSBoolEnum::deviceState[on]);
 
-    const char *out = tpl.create(binaryUpdateTemplate);
+    String templ = binaryUpdateTemplate;
+    swapTicks(templ);
+    const char *out = tpl.create(templ.c_str());
+
     retVal = sendPayload(out);
     tpl.freeMemory();
 
@@ -440,7 +452,10 @@ bool HASS::sendSensorInfoDiscovery(SensorList sensor) // Send single sensor to A
     // Standard device stanza
     tpl.setVal("${device}", deviceJSON()); // Device template
 
-    const char *out = tpl.create(sensorInfoDiscovTemplate);
+    String templ = sensorInfoDiscovTemplate;
+    swapTicks(templ);
+    const char *out = tpl.create(templ.c_str());
+
     retVal = sendPayload(out);
     tpl.freeMemory();
 
@@ -488,7 +503,10 @@ bool HASS::sendSensorInfoState(SensorList sensor) // Sent state of single sensor
     tpl.setVal("${sensorpoint}", removeSensorSpaces(sensor));
     tpl.setVal("${temp}", (String)_buf);
 
-    const char *out = tpl.create(sensorVolumeUpdateTemplate);
+    String templ = sensorVolumeUpdateTemplate;
+    swapTicks(templ);
+    const char *out = tpl.create(templ.c_str());
+
     retVal = sendPayload(out);
     tpl.freeMemory();
 
