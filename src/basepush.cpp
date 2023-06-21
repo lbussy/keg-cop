@@ -329,7 +329,7 @@ int BasePush::sendMqtt(String &payload, const char *target, int port,
         return -1;
     }
 
-    Log.notice(F("%s Connected to %s." CR), push, target);
+    Log.verbose(F("%s Connected to %s." CR), push, target);
 
     Log.trace(F("%s URL: %s." CR), push, target);
     Log.trace(F("%s Data: %s." CR), push, payload.c_str());
