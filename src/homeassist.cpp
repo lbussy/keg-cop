@@ -67,25 +67,28 @@ HASS::HASS()
 
 PGM_P HASS::prefix = "[HASS]:";
 
+PGM_P HASS::deviceTemplate PROGMEM =
+    "\"device\": {"
+        "\"configuration_url\":\"http://${hostname}.local/settings/\","
+        "\"identifiers\": \"${GUID}\","
+        "\"model\": \"Keg Cop\","
+        "\"name\": \"${devicename}\","
+        "\"manufacturer\": \"Lee Bussy\","
+        "\"sw_version\": \"${ver}\""
+    "}";
+
 // Tap Report Templates
 PGM_P HASS::tapInfoDiscovTemplate PROGMEM = // Tap Auto-Discovery Payload (per tap)
     "homeassistant/sensor/${hostname}_tap${tapnum}/volume/config:"
     "{"
         "\"icon\":\"mdi:beer\","
-        "\"name\": \"${taplabel}\","
+        "\"name\": \"${taplabelnum}. ${taplabel}\","
         "\"device_class\": \"volume\","
         "\"unit_of_measurement\": \"${UOM}\","
         "\"state_topic\": \"kegcop/${hostname}_tap${tapnum}/volume/state\","
         "\"json_attributes_topic\": \"kegcop/${hostname}_tap${tapnum}/volume/attr\","
         "\"unique_id\": \"${hostname}_tap${tapnum}\","
-        "\"device\": {"
-            "\"configuration_url\":\"http://${hostname}.local/settings/\","
-            "\"identifiers\": \"${GUID}\","
-            "\"model\": \"Keg Cop\","
-            "\"name\": \"${name}\","
-            "\"manufacturer\": \"Lee Bussy\","
-            "\"sw_version\": \"${ver}\""
-        "}"
+        "${device}"
     "}|";
 
 PGM_P HASS::tapVolumeUpdateTemplate PROGMEM =
@@ -103,14 +106,7 @@ PGM_P HASS::binaryDiscovTemplate PROGMEM =
         "\"state_topic\": \"kegcop/${hostname}_${type}/${type}/state\","
         "\"payload_on\": \"On\","
         "\"payload_off\": \"Off\","
-        "\"device\": {"
-            "\"configuration_url\":\"http://kegcop.local/settings/\","
-            "\"identifiers\": \"${GUID}\","
-            "\"model\": \"Keg Cop\","
-            "\"name\": \"${name}\","
-            "\"manufacturer\": \"Lee Bussy\","
-            "\"sw_version\": \"${ver}\""
-        "}"
+        "${device}"
     "}|";
 
 PGM_P HASS::binaryUpdateTemplate PROGMEM =
@@ -128,14 +124,7 @@ PGM_P HASS::sensorInfoDiscovTemplate PROGMEM = // Sensor Auto-Discovery Payload 
         "\"state_topic\": \"kegcop/${hostname}_${sensorpoint}/temperature/state\","
         "\"json_attributes_topic\": \"kegcop/${hostname}_${sensorpoint}/temperature/attr\","
         "\"unique_id\": \"${hostname}_${sensorpoint}\","
-        "\"device\": {"
-            "\"configuration_url\":\"http://${hostname}.local/settings/\","
-            "\"identifiers\": \"${GUID}\","
-            "\"model\": \"Keg Cop\","
-            "\"name\": \"${name}\","
-            "\"manufacturer\": \"Lee Bussy\","
-            "\"sw_version\": \"${ver}\""
-        "}"
+        "${device}"
     "}|";
 
 PGM_P HASS::sensorVolumeUpdateTemplate PROGMEM =
@@ -155,12 +144,47 @@ bool HASS::okSend()
     }
 }
 
-String HASS::sensorPoint(SensorList sensor)
+String HASS::removeSensorSpaces(SensorList sensor) // Replace ' ' with '_'
 {
     String retVal = (String)sensorName[sensor];
     retVal.toLowerCase();
     retVal.replace(" ", "_");
     return retVal;
+}
+
+void HASS::swapTicks(String &jsonString) // Replace ' with "
+{
+    jsonString.replace("'", "\"");
+}
+
+void HASS::swapQuotes(String &jsonString) // Replace ' with "
+{
+    jsonString.replace("\"", "\'");
+}
+
+int HASS::sendPayload(const char *jsonPayload)
+{
+    Log.trace(F("%s Payload: %s." CR), prefix, jsonPayload);
+    String outStr(jsonPayload);
+    return _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+}
+
+const char *HASS::deviceJSON() // Re-use device portion of JSON
+{
+    TemplatingEngine tpl;
+
+    tpl.setVal("${hostname}", app.copconfig.hostname);
+    tpl.setVal("${GUID}", app.copconfig.guid);
+    tpl.setVal("${devicename}", app.copconfig.kegeratorname);
+    tpl.setVal("${ver}", fw_version());
+
+    String templ = deviceTemplate;
+    swapTicks(templ);
+    const char *out = tpl.create(templ.c_str());
+    Log.trace(F("%s Device: %s." CR), prefix, out); // DEBUG
+    String outStr(out);
+    tpl.freeMemory();
+    return outStr.c_str();
 }
 
 bool HASS::sendTapInfoDiscovery() // Push complete tap info
@@ -189,17 +213,16 @@ bool HASS::sendTapInfoDiscovery(int tap) // Push complete tap info
     TemplatingEngine tpl;
     tpl.setVal("${hostname}", app.copconfig.hostname);
     tpl.setVal("${tapnum}", tap + 1);
-    String taplabel = String(flow.taps[tap].label) + ". " + flow.taps[tap].name;
-    tpl.setVal("${taplabel}", taplabel);
+    tpl.setVal("${taplabelnum}", flow.taps[tap].label);
+    String bevName = flow.taps[tap].name;
+    swapQuotes(bevName);
+    tpl.setVal("${taplabel}", bevName);
     tpl.setVal("${UOM}", (app.copconfig.imperial) ? "Gallons" : "Liters");
-    tpl.setVal("${GUID}", app.copconfig.guid);
-    tpl.setVal("${name}", app.copconfig.kegeratorname);
-    tpl.setVal("${ver}", fw_version());
+    // Standard device stanza
+    tpl.setVal("${device}", deviceJSON()); // Device template
 
     const char *out = tpl.create(tapInfoDiscovTemplate);
-    String outStr(out);
-    Log.trace(F("%s Payload: %s." CR), prefix, out);
-    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    retVal = sendPayload(out);
     tpl.freeMemory();
 
     if (retVal == 0)
@@ -246,9 +269,7 @@ bool HASS::sendTapState(int tap) // Push single tap info
     tpl.setVal("${volume}", (String)_buf);
 
     const char *out = tpl.create(tapVolumeUpdateTemplate);
-    String outStr(out);
-    Log.trace(F("%s Payload: %s." CR), prefix, out);
-    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    retVal = sendPayload(out);
     tpl.freeMemory();
 
     if (retVal == 0)
@@ -307,14 +328,11 @@ bool HASS::sendBinaryDiscovery(HassBoolDeviceList device) // Send object to Auto
     tpl.setVal("${device_name}", HASSBoolEnum::deviceName[device]);
     tpl.setVal("${icon}", HASSBoolEnum::deviceIcon[device]);
     tpl.setVal("${class}", HASSBoolEnum::deviceClass[device]);
-    tpl.setVal("${GUID}", app.copconfig.guid);
-    tpl.setVal("${name}", app.copconfig.kegeratorname);
-    tpl.setVal("${ver}", fw_version());
+    // Standard device stanza
+    tpl.setVal("${device}", deviceJSON()); // Device template
 
     const char *out = tpl.create(binaryDiscovTemplate);
-    String outStr(out);
-    Log.trace(F("%s Payload: %s." CR), prefix, out);
-    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    retVal = sendPayload(out);
     tpl.freeMemory();
 
     if (retVal == 0)
@@ -376,9 +394,7 @@ bool HASS::sendBinaryState(HassBoolDeviceList device) // Send state of object to
     tpl.setVal("${state}", HASSBoolEnum::deviceState[on]);
 
     const char *out = tpl.create(binaryUpdateTemplate);
-    String outStr(out);
-    Log.trace(F("%s Payload: %s." CR), prefix, out);
-    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    retVal = sendPayload(out);
     tpl.freeMemory();
 
     if (retVal == 0)
@@ -418,17 +434,14 @@ bool HASS::sendSensorInfoDiscovery(SensorList sensor) // Send single sensor to A
 
     TemplatingEngine tpl;
     tpl.setVal("${hostname}", app.copconfig.hostname);
-    tpl.setVal("${sensorpoint}", sensorPoint(sensor));
+    tpl.setVal("${sensorpoint}", removeSensorSpaces(sensor));
     tpl.setVal("${sensorname}", (String)sensorName[sensor] + (String) " Temp");
     tpl.setVal("${UOM}", (app.copconfig.imperial) ? "°F" : "°C");
-    tpl.setVal("${GUID}", app.copconfig.guid);
-    tpl.setVal("${name}", app.copconfig.kegeratorname);
-    tpl.setVal("${ver}", fw_version());
+    // Standard device stanza
+    tpl.setVal("${device}", deviceJSON()); // Device template
 
     const char *out = tpl.create(sensorInfoDiscovTemplate);
-    String outStr(out);
-    Log.trace(F("%s Payload: %s." CR), prefix, out);
-    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    retVal = sendPayload(out);
     tpl.freeMemory();
 
     if (retVal == 0)
@@ -472,13 +485,11 @@ bool HASS::sendSensorInfoState(SensorList sensor) // Sent state of single sensor
 
     TemplatingEngine tpl;
     tpl.setVal("${hostname}", app.copconfig.hostname);
-    tpl.setVal("${sensorpoint}", sensorPoint(sensor));
+    tpl.setVal("${sensorpoint}", removeSensorSpaces(sensor));
     tpl.setVal("${temp}", (String)_buf);
 
     const char *out = tpl.create(sensorVolumeUpdateTemplate);
-    String outStr(out);
-    Log.trace(F("%s Payload: %s." CR), prefix, out);
-    retVal = _push->sendMqtt(outStr, app.hatarget.host, app.hatarget.port, app.hatarget.username, app.hatarget.password);
+    retVal = sendPayload(out);
     tpl.freeMemory();
 
     if (retVal == 0)

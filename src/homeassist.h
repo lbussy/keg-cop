@@ -42,6 +42,8 @@ class HASS
 private:
     BasePush *_push;
     static PGM_P prefix;
+    // Device Template
+    static PGM_P deviceTemplate;
     // Tap Report Templates
     static PGM_P tapInfoDiscovTemplate;
     static PGM_P tapVolumeUpdateTemplate;
@@ -52,25 +54,29 @@ private:
     static PGM_P sensorInfoDiscovTemplate;
     static PGM_P sensorVolumeUpdateTemplate;
 
-    // Members
+    // Private Members
     bool okSend();
-    String sensorPoint(SensorList sensor);
+    String removeSensorSpaces(SensorList sensor);
+    const char *deviceJSON();                 // Provide standard device JSON
+    void swapTicks(String &jsonString);       // Replace single ticks with quotes
+    void swapQuotes(String &jsonString);      // Escape quotes
+    int sendPayload(const char *jsonPayload); // Send raw payload
 
 public:
     HASS();
 
-    bool sendTapInfoDiscovery();                               // Sent all taps to Auto-Discovery topic
-    bool sendTapInfoDiscovery(int tap);                        // Sent single tap to Auto-Discovery topic
-    bool sendTapState();                                       // Sent state of all taps to state_topic
-    bool sendTapState(int tap);                                // Sent state of single tap to state_topic
-    bool sendBinaryDiscovery();                                // Send all objects to Auto-Discovery template 
-    bool sendBinaryDiscovery(HassBoolDeviceList device);       // Send object to Auto-Discovery template
-    bool sendBinaryState();                                   // Send state of all objects to state topic
-    bool sendBinaryState(HassBoolDeviceList device); // Send state of object to state topic
-    bool sendSensorInfoDiscovery();                            // Send all sensors to Auto-Discovery topic
-    bool sendSensorInfoDiscovery(SensorList sensor);           // Send single sensor to Auto-Discovery topic
-    bool sendSensorInfoState();                                // Sent state of all sensors to state_topic
-    bool sendSensorInfoState(SensorList sensor);               // Sent state of single sensor to state_topic
+    bool sendTapInfoDiscovery();                         // Sent all taps to Auto-Discovery topic
+    bool sendTapInfoDiscovery(int tap);                  // Sent single tap to Auto-Discovery topic
+    bool sendTapState();                                 // Sent state of all taps to state_topic
+    bool sendTapState(int tap);                          // Sent state of single tap to state_topic
+    bool sendBinaryDiscovery();                          // Send all objects to Auto-Discovery template
+    bool sendBinaryDiscovery(HassBoolDeviceList device); // Send object to Auto-Discovery template
+    bool sendBinaryState();                              // Send state of all objects to state topic
+    bool sendBinaryState(HassBoolDeviceList device);     // Send state of object to state topic
+    bool sendSensorInfoDiscovery();                      // Send all sensors to Auto-Discovery topic
+    bool sendSensorInfoDiscovery(SensorList sensor);     // Send single sensor to Auto-Discovery topic
+    bool sendSensorInfoState();                          // Sent state of all sensors to state_topic
+    bool sendSensorInfoState(SensorList sensor);         // Sent state of single sensor to state_topic
 };
 
 #endif // _HOMEASSIST_H
