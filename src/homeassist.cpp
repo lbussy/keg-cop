@@ -69,26 +69,26 @@ PGM_P HASS::prefix = "[HASS]:";
 
 PGM_P HASS::deviceTemplate PROGMEM =
     "'device': {"
-        "'configuration_url':'http://${hostname}.local/settings/',"
-        "'identifiers': '${GUID}',"
-        "'model': 'Keg Cop',"
-        "'name': '${devicename}',"
-        "'manufacturer': 'Lee Bussy',"
-        "'sw_version': '${ver}'"
+    "'configuration_url':'http://${hostname}.local/settings/',"
+    "'identifiers': '${GUID}',"
+    "'model': 'Keg Cop',"
+    "'name': '${devicename}',"
+    "'manufacturer': 'Lee Bussy',"
+    "'sw_version': '${ver}'"
     "}";
 
 // Tap Report Templates
 PGM_P HASS::tapInfoDiscovTemplate PROGMEM = // Tap Auto-Discovery Payload (per tap)
     "homeassistant/sensor/${hostname}_tap${tapnum}/volume/config:"
     "{"
-        "'icon':'mdi:beer',"
-        "'name': '${taplabelnum}. ${taplabel}',"
-        "'device_class': 'volume',"
-        "'unit_of_measurement': '${UOM}',"
-        "'state_topic': 'kegcop/${hostname}_tap${tapnum}/volume/state',"
-        "'json_attributes_topic': 'kegcop/${hostname}_tap${tapnum}/volume/attr',"
-        "'unique_id': '${hostname}_tap${tapnum}',"
-        "${device}"
+    "'icon':'mdi:beer',"
+    "'name': '${taplabelnum}. ${taplabel}',"
+    "'device_class': 'volume',"
+    "'unit_of_measurement': '${UOM}',"
+    "'state_topic': 'kegcop/${hostname}_tap${tapnum}/volume/state',"
+    "'json_attributes_topic': 'kegcop/${hostname}_tap${tapnum}/volume/attr',"
+    "'unique_id': '${hostname}_tap${tapnum}',"
+    "${device}"
     "}|";
 
 PGM_P HASS::tapVolumeUpdateTemplate PROGMEM =
@@ -99,14 +99,14 @@ PGM_P HASS::tapVolumeUpdateTemplate PROGMEM =
 PGM_P HASS::binaryDiscovTemplate PROGMEM =
     "homeassistant/binary_sensor/${hostname}_${type}/${type}/config:"
     "{"
-        "'name': '${device_name}',"
-        "'icon':'mdi:${icon}',"
-        "'device_class': '${class}',"
-        "'unique_id': 'kegcop_${type}',"
-        "'state_topic': 'kegcop/${hostname}_${type}/${type}/state',"
-        "'payload_on': 'On',"
-        "'payload_off': 'Off',"
-        "${device}"
+    "'name': '${device_name}',"
+    "'icon':'mdi:${icon}',"
+    "'device_class': '${class}',"
+    "'unique_id': 'kegcop_${type}',"
+    "'state_topic': 'kegcop/${hostname}_${type}/${type}/state',"
+    "'payload_on': 'On',"
+    "'payload_off': 'Off',"
+    "${device}"
     "}|";
 
 PGM_P HASS::binaryUpdateTemplate PROGMEM =
@@ -117,14 +117,14 @@ PGM_P HASS::binaryUpdateTemplate PROGMEM =
 PGM_P HASS::sensorInfoDiscovTemplate PROGMEM = // Sensor Auto-Discovery Payload (per tap)
     "homeassistant/sensor/${hostname}_${sensorpoint}/temperature/config:"
     "{"
-        "'icon':'mdi:snowflake-thermometer',"
-        "'name': '${sensorname}',"
-        "'device_class': 'temperature',"
-        "'unit_of_measurement': '${UOM}',"
-        "'state_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/state',"
-        "'json_attributes_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/attr',"
-        "'unique_id': '${hostname}_${sensorpoint}',"
-        "${device}"
+    "'icon':'mdi:snowflake-thermometer',"
+    "'name': '${sensorname}',"
+    "'device_class': 'temperature',"
+    "'unit_of_measurement': '${UOM}',"
+    "'state_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/state',"
+    "'json_attributes_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/attr',"
+    "'unique_id': '${hostname}_${sensorpoint}',"
+    "${device}"
     "}|";
 
 PGM_P HASS::sensorVolumeUpdateTemplate PROGMEM =
@@ -206,9 +206,9 @@ bool HASS::sendTapInfoDiscovery() // Push complete tap info
 
 bool HASS::sendTapInfoDiscovery(int tap) // Push complete tap info
 {
-    int retVal = 0;
-
     if (!flow.taps[tap].active) return false;
+
+    int retVal = 0;
 
     TemplatingEngine tpl;
     tpl.setVal("${hostname}", app.copconfig.hostname);
@@ -259,9 +259,9 @@ bool HASS::sendTapState() // Push all taps info
 
 bool HASS::sendTapState(int tap) // Push single tap info
 {
-    int retVal = 0;
-
     if (!flow.taps[tap].active) return false;
+    
+    int retVal = 0;
 
     char _buf[30] = "";
     convertFloatToString(flow.taps[tap].remaining, &_buf[0], 2);
@@ -312,13 +312,16 @@ bool HASS::sendBinaryDiscovery(HassBoolDeviceList device) // Send object to Auto
     switch (device)
     {
     case 0: // Chamber Cooling
-        if (!app.temps.controlenabled) return false; // Cooling not enabled, don't send.
+        if (!app.temps.controlenabled)
+            return false; // Cooling not enabled, don't send.
         break;
     case 1: // Tower Fan
-        if (!app.temps.tfancontrolenabled) return false; // TFan control enabled - send TFan.
+        if (!app.temps.tfancontrolenabled)
+            return false; // TFan control enabled - send TFan.
         break;
     case 2: // Solenoid Control
-        if (app.temps.tfancontrolenabled) return false; // TFan control disabled - send solenoid.
+        if (app.temps.tfancontrolenabled)
+            return false; // TFan control disabled - send solenoid.
         break;
     default:
         return false;
@@ -379,15 +382,18 @@ bool HASS::sendBinaryState(HassBoolDeviceList device) // Send state of object to
     switch (device)
     {
     case 0: // Chamber Cooling
-        if (!app.temps.controlenabled) return false;
+        if (!app.temps.controlenabled)
+            return false;
         on = tstat[TS_TYPE_CHAMBER].state;
         break;
     case 1: // Tower Fan
-        if (!app.temps.tfancontrolenabled) return false;
+        if (!app.temps.tfancontrolenabled)
+            return false;
         on = tstat[TS_TYPE_TOWER].state;
         break;
     case 2: // Solenoid Control
-        if (app.temps.tfancontrolenabled) return false;
+        if (app.temps.tfancontrolenabled)
+            return false;
         on = app.copconfig.tapsolenoid;
         break;
     default:
@@ -439,9 +445,9 @@ bool HASS::sendSensorInfoDiscovery() // Send all sensors to Auto-Discovery topic
 
 bool HASS::sendSensorInfoDiscovery(SensorList sensor) // Send single sensor to Auto-Discovery topic
 {
-    int retVal = 0;
+    if (!app.temps.enabled[sensor]) return false; // Skip disabled sensors.
 
-    if (!app.temps.enabled[sensor]) return false;  
+    int retVal = 0;
 
     TemplatingEngine tpl;
     tpl.setVal("${hostname}", app.copconfig.hostname);
@@ -489,9 +495,9 @@ bool HASS::sendSensorInfoState() // Sent state of all sensors to state_topic
 
 bool HASS::sendSensorInfoState(SensorList sensor) // Sent state of single sensor to state_topic
 {
-    int retVal = 0;
+    if (!app.temps.enabled[sensor]) return false; // Skip disabled sensors.
 
-    if (!app.temps.enabled[sensor]) return false;  
+    int retVal = 0;
 
     double baseTemp = (app.copconfig.imperial) ? convertCtoF(getTempC(sensorPin[sensor])) : getTempC(sensorPin[sensor]);
     char _buf[30] = "";
