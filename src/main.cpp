@@ -164,10 +164,8 @@ void setup()
 #else
     nullDoc("d");
 #endif
-    sendTIOTaps();               // Send initial Taplist.io keg levels
-    HASS hass;                   // DEBUG
-    hass.sendTapInfoDiscovery(); // DEBUG
-    hass.sendTapState();         // DEBUG
+    sendTIOTaps();  // Send initial Taplist.io keg levels
+    queueAllHASS(); // Queue all HASS data
 }
 
 void loop()
@@ -188,6 +186,7 @@ void loop()
         drd->loop();
         serialLoop();
         maintenanceLoop();
+        doHASSLoop();
     }
 }
 

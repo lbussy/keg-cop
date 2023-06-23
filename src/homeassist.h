@@ -65,18 +65,41 @@ private:
 public:
     HASS();
 
-    bool sendTapInfoDiscovery();                         // Sent all taps to Auto-Discovery topic
-    bool sendTapInfoDiscovery(int tap);                  // Sent single tap to Auto-Discovery topic
+    // Semaphores
+    bool tapDiscoveryPending[NUMTAPS];      // Sent all taps to Auto-Discovery topic
+    bool tapStatePending[NUMTAPS];          // Sent state of all taps to state_topic
+    bool binaryDiscoveryPending[CTRLPTS];   // Send all objects to Auto-Discovery template
+    bool binaryStatePending[CTRLPTS];       // Send state of all objects to state topic
+    bool sensorDiscoveryPending[NUMSENSOR]; // Send all sensors to Auto-Discovery topic
+    bool sensorStatePending[NUMSENSOR];     // Sent state of all sensors to state_topic
+
+    bool sendTapDiscovery();                             // Sent all taps to Auto-Discovery topic
+    bool sendTapDiscovery(int tap);                      // Sent single tap to Auto-Discovery topic
     bool sendTapState();                                 // Sent state of all taps to state_topic
     bool sendTapState(int tap);                          // Sent state of single tap to state_topic
     bool sendBinaryDiscovery();                          // Send all objects to Auto-Discovery template
     bool sendBinaryDiscovery(HassBoolDeviceList device); // Send object to Auto-Discovery template
     bool sendBinaryState();                              // Send state of all objects to state topic
     bool sendBinaryState(HassBoolDeviceList device);     // Send state of object to state topic
-    bool sendSensorInfoDiscovery();                      // Send all sensors to Auto-Discovery topic
-    bool sendSensorInfoDiscovery(SensorList sensor);     // Send single sensor to Auto-Discovery topic
-    bool sendSensorInfoState();                          // Sent state of all sensors to state_topic
-    bool sendSensorInfoState(SensorList sensor);         // Sent state of single sensor to state_topic
+    bool sendSensorDiscovery();                          // Send all sensors to Auto-Discovery topic
+    bool sendSensorDiscovery(SensorList sensor);         // Send single sensor to Auto-Discovery topic
+    bool sendSensorState();                              // Sent state of all sensors to state_topic
+    bool sendSensorState(SensorList sensor);             // Sent state of single sensor to state_topic
 };
+
+void doHASSLoop();                                  // Main HASS handling for loop processing
+void queueAllHASS();                                // Queue All HASS dispatches
+void setTapDiscovery();                             // Sent all taps to Auto-Discovery topic
+void setTapDiscovery(int tap);                      // Sent single tap to Auto-Discovery topic
+void setTapState();                                 // Sent state of all taps to state_topic
+void setTapState(int tap);                          // Sent state of single tap to state_topic
+void setBinaryDiscovery();                          // Send all objects to Auto-Discovery template
+void setBinaryDiscovery(HassBoolDeviceList device); // Send object to Auto-Discovery template
+void setBinaryState();                              // Send state of all objects to state topic
+void setBinaryState(HassBoolDeviceList device);     // Send state of object to state topic
+void setSensorDiscovery();                          // Send all sensors to Auto-Discovery topic
+void setSensorDiscovery(SensorList sensor);         // Send single sensor to Auto-Discovery topic
+void setSensorState();                              // Sent state of all sensors to state_topic
+void setSensorState(SensorList sensor);             // Sent state of single sensor to state_topic
 
 #endif // _HOMEASSIST_H

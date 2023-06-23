@@ -32,6 +32,8 @@ SOFTWARE. */
 
 #include <ArduinoLog.h>
 
+HASS hass;
+
 namespace HASSBoolEnum
 {
     static const char *deviceType[] = {
@@ -187,7 +189,7 @@ const char *HASS::deviceJSON() // Re-use device portion of JSON
     return outStr.c_str();
 }
 
-bool HASS::sendTapInfoDiscovery() // Push complete tap info
+bool HASS::sendTapDiscovery() // Push complete tap info
 {
     bool okToSend = okSend();
     if (!okToSend)
@@ -197,16 +199,17 @@ bool HASS::sendTapInfoDiscovery() // Push complete tap info
 
     for (int i = 0; i < NUMTAPS; i++)
     {
-        if (!sendTapInfoDiscovery(i))
+        if (!sendTapDiscovery(i))
             retVal = false;
     }
 
     return retVal;
 }
 
-bool HASS::sendTapInfoDiscovery(int tap) // Push complete tap info
+bool HASS::sendTapDiscovery(int tap) // Push complete tap info
 {
-    if (!flow.taps[tap].active) return false;
+    if (!flow.taps[tap].active)
+        return false;
 
     int retVal = 0;
 
@@ -259,8 +262,9 @@ bool HASS::sendTapState() // Push all taps info
 
 bool HASS::sendTapState(int tap) // Push single tap info
 {
-    if (!flow.taps[tap].active) return false;
-    
+    if (!flow.taps[tap].active)
+        return false;
+
     int retVal = 0;
 
     char _buf[30] = "";
@@ -366,7 +370,7 @@ bool HASS::sendBinaryState() // Send all object states to stare topic
 
     bool retVal = true;
 
-    for (int i = 0; i < HASS_MAX; i++)
+    for (int i = 0; i < CTRLPTS; i++)
     {
         if (!sendBinaryState((HassBoolDeviceList)i))
             retVal = false;
@@ -384,12 +388,12 @@ bool HASS::sendBinaryState(HassBoolDeviceList device) // Send state of object to
     case 0: // Chamber Cooling
         if (!app.temps.controlenabled)
             return false;
-        on = tstat[TS_TYPE_CHAMBER].state;
+        on = (tstat[TS_TYPE_CHAMBER].state == TSTAT_COOL_ACTIVE);
         break;
     case 1: // Tower Fan
         if (!app.temps.tfancontrolenabled)
             return false;
-        on = tstat[TS_TYPE_TOWER].state;
+        on = (tstat[TS_TYPE_TOWER].state == TSTAT_COOL_ACTIVE);
         break;
     case 2: // Solenoid Control
         if (app.temps.tfancontrolenabled)
@@ -426,7 +430,7 @@ bool HASS::sendBinaryState(HassBoolDeviceList device) // Send state of object to
     }
 }
 
-bool HASS::sendSensorInfoDiscovery() // Send all sensors to Auto-Discovery topic
+bool HASS::sendSensorDiscovery() // Send all sensors to Auto-Discovery topic
 {
     bool okToSend = okSend();
     if (!okToSend)
@@ -436,16 +440,17 @@ bool HASS::sendSensorInfoDiscovery() // Send all sensors to Auto-Discovery topic
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
-        if (!sendSensorInfoDiscovery((SensorList)i))
+        if (!sendSensorDiscovery((SensorList)i))
             retVal = false;
     }
 
     return retVal;
 }
 
-bool HASS::sendSensorInfoDiscovery(SensorList sensor) // Send single sensor to Auto-Discovery topic
+bool HASS::sendSensorDiscovery(SensorList sensor) // Send single sensor to Auto-Discovery topic
 {
-    if (!app.temps.enabled[sensor]) return false; // Skip disabled sensors.
+    if (!app.temps.enabled[sensor])
+        return false; // Skip disabled sensors.
 
     int retVal = 0;
 
@@ -476,7 +481,7 @@ bool HASS::sendSensorInfoDiscovery(SensorList sensor) // Send single sensor to A
     }
 }
 
-bool HASS::sendSensorInfoState() // Sent state of all sensors to state_topic
+bool HASS::sendSensorState() // Sent state of all sensors to state_topic
 {
     bool okToSend = okSend();
     if (!okToSend)
@@ -486,16 +491,17 @@ bool HASS::sendSensorInfoState() // Sent state of all sensors to state_topic
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
-        if (!sendSensorInfoState((SensorList)i))
+        if (!sendSensorState((SensorList)i))
             retVal = false;
     }
 
     return retVal;
 }
 
-bool HASS::sendSensorInfoState(SensorList sensor) // Sent state of single sensor to state_topic
+bool HASS::sendSensorState(SensorList sensor) // Sent state of single sensor to state_topic
 {
-    if (!app.temps.enabled[sensor]) return false; // Skip disabled sensors.
+    if (!app.temps.enabled[sensor])
+        return false; // Skip disabled sensors.
 
     int retVal = 0;
 
@@ -525,4 +531,132 @@ bool HASS::sendSensorInfoState(SensorList sensor) // Sent state of single sensor
         Log.verbose(F("%s Push state to sensor %s error (%d)." CR), prefix, sensorName[sensor], retVal);
         return false;
     }
+}
+
+void doHASSLoop() // Main HASS handling for loop processing
+{
+    for (int i = 0; i < NUMTAPS; i++) // Send Tap Information
+    {
+        if (hass.tapDiscoveryPending[i])
+        {
+            hass.tapDiscoveryPending[i] = !hass.sendTapDiscovery(i);
+        }
+        if (hass.tapStatePending[i] && !hass.tapDiscoveryPending[i])
+        {
+            hass.tapStatePending[i] = !hass.sendTapState(i);
+        }
+    }
+
+    for (int i = 0; i < CTRLPTS; i++) // Send Control Point Information
+    {
+        if (hass.binaryDiscoveryPending[i])
+        {
+            hass.binaryDiscoveryPending[i] = !hass.sendBinaryDiscovery((HassBoolDeviceList)i);
+        }
+        if (hass.binaryStatePending[i] && !hass.binaryDiscoveryPending[i])
+        {
+            hass.binaryStatePending[i] = !hass.sendBinaryState((HassBoolDeviceList)i);
+        }
+    }
+
+    for (int i = 0; i < NUMSENSOR; i++) // Send Temp Sensor Information
+    {
+        if (hass.sensorDiscoveryPending[i])
+        {
+            hass.sensorDiscoveryPending[i] = !hass.sendSensorDiscovery((SensorList)i);
+        }
+        if (hass.sensorStatePending[i] && !hass.sensorDiscoveryPending[(SensorList)i])
+        {
+            hass.sensorStatePending[i] = !hass.sendSensorState((SensorList)i);
+        }
+    }
+}
+
+void queueAllHASS() // Queue All HASS dispatches
+{
+    Log.notice(F("Queuing HASS discovery for all entities." CR));
+    setTapDiscovery();    // Sent all taps to Auto-Discovery topic
+    setTapState();        // Sent state of all taps to state_topic
+    setBinaryDiscovery(); // Send all objects to Auto-Discovery template
+    setBinaryState();     // Send state of all objects to state topic
+    setSensorDiscovery(); // Send all sensors to Auto-Discovery topic
+    setSensorState();     // Sent state of all sensors to state_topic
+}
+
+void setTapDiscovery() // Sent all taps to Auto-Discovery topic
+{
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        setTapDiscovery(i);
+    }
+}
+
+void setTapDiscovery(int tap) // Sent single tap to Auto-Discovery topic
+{
+    hass.tapDiscoveryPending[tap] = true;
+}
+
+void setTapState() // Sent state of all taps to state_topic
+{
+    for (int i = 0; i < NUMTAPS; i++)
+    {
+        setTapState(i);
+    }
+}
+
+void setTapState(int tap) // Sent state of single tap to state_topic
+{
+    hass.tapStatePending[tap] = true;
+}
+
+void setBinaryDiscovery() // Send all objects to Auto-Discovery template
+{
+    for (int i = 0; i < CTRLPTS; i++)
+    {
+        setBinaryDiscovery((HassBoolDeviceList)i);
+    }
+}
+
+void setBinaryDiscovery(HassBoolDeviceList device) // Send object to Auto-Discovery template
+{
+    hass.binaryDiscoveryPending[device] = true;
+}
+
+void setBinaryState() // Send state of all objects to state topic
+{
+    for (int i = 0; i < CTRLPTS; i++)
+    {
+        setBinaryState((HassBoolDeviceList)i);
+    }
+}
+
+void setBinaryState(HassBoolDeviceList device) // Send state of object to state topic
+{
+    hass.binaryStatePending[(HassBoolDeviceList)device] = true;
+}
+
+void setSensorDiscovery() // Send all sensors to Auto-Discovery topic
+{
+    for (int i = 0; i < NUMSENSOR; i++)
+    {
+        setSensorDiscovery((SensorList)i);
+    }
+}
+
+void setSensorDiscovery(SensorList sensor) // Send single sensor to Auto-Discovery topic
+{
+    hass.sensorDiscoveryPending[(HassBoolDeviceList)sensor] = true;
+}
+
+void setSensorState() // Sent state of all sensors to state_topic
+{
+    for (int i = 0; i < NUMSENSOR; i++)
+    {
+        setSensorState((SensorList)i);
+    }
+}
+
+void setSensorState(SensorList sensor) // Sent state of single sensor to state_topic
+{
+    hass.sensorStatePending[(SensorList)sensor] = true;
 }
