@@ -51,7 +51,6 @@ bool RPints::okSend()
 {
     if (app.rpintstarget.host == NULL || app.rpintstarget.host[0] == '\0')
     {
-        Log.trace(F("%s Target not configured." CR), prefix);
         return false;
     }
     else
