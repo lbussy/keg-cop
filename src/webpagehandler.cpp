@@ -1351,6 +1351,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable tower fan or solenoid when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.controlenabled = true;
                 }
@@ -1391,12 +1392,14 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable tower fan or solenoid when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.tfancontrolenabled = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable tower fan or solenoid when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.tfancontrolenabled = false;
                 }
@@ -1509,12 +1512,14 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[0] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[0] = false;
                 }
@@ -1544,12 +1549,14 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[1] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[1] = false;
                 }
@@ -1579,12 +1586,14 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[2] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[2] = false;
                 }
@@ -1614,12 +1623,14 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[3] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[3] = false;
                 }
@@ -1649,12 +1660,14 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[4] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
+                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[4] = false;
                 }
@@ -2087,6 +2100,7 @@ HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home 
     if (didChange)
     {
         setDoSaveApp();
+        // TODO:  MQTT - Figure out how to trigger all entities and states if we are turned on
     }
     if (didFail)
     {
@@ -2558,6 +2572,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
     if (didChange)
     {
         setDoSaveFlow();
+        // TODO:  MQTT - Figure out how to enable/disable a tap when enabled/disabled or kicked 
         if (tapNum >= 0)
         {
             setDoTapInfoReport(tapNum);

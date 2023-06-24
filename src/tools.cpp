@@ -36,6 +36,7 @@ SOFTWARE. */
 #include "appconfig.h"
 #include "serialhandler.h"
 #include "rpints.h"
+#include "homeassist.h"
 
 #include <FS.h>
 #include <LittleFS.h>
@@ -197,6 +198,7 @@ void tickerLoop()
             if (queuePourReport[i] > 0)
             {
                 sendPourReport(i, queuePourReport[i]);
+                setTapState(i); // Send MQTT state for [i]
                 queuePourReport[i] = 0;
             }
             // Send report from pulse queue
@@ -211,6 +213,7 @@ void tickerLoop()
             {
                 queueKickReport[i] = false;
                 sendKickReport(i);
+                // TODO:  MQTT - Figure out how to disable state for [i]
             }
             // Send temp control state change
             if (tstat[TS_TYPE_CHAMBER].queueStateChange == true || tstat[TS_TYPE_TOWER].queueStateChange == true)
@@ -218,18 +221,26 @@ void tickerLoop()
                 tstat[TS_TYPE_CHAMBER].queueStateChange = false;
                 tstat[TS_TYPE_TOWER].queueStateChange = false;
                 sendCoolStateReport();
+                // Send MQTT discovery and state for chamber and tower
+                setBinaryDiscovery();
+                setBinaryState();
             }
             // Send Tap Info Report
             if (doTapInfoReport[i] == true)
             {
                 doTapInfoReport[i] = false;
                 sendTapInfoReport(i);
+                // Send MQTT discovery and state for [i]
+                setTapDiscovery(i);
+                setTapState(i);
             }
         }
         if (doKSTempReport)
         {
             doKSTempReport = false;
             sendTempReport();
+            // Send MQTT state for all sensors
+            setSensorState();
         }
         if (doTargetReport)
         {
