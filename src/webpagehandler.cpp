@@ -2089,7 +2089,7 @@ HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home 
     if (didChange)
     {
         setDoSaveApp();
-        if (!app.hatarget.host == NULL && !app.hatarget.host[0] == '\0')
+        if ((app.hatarget.host == NULL || app.hatarget.host[0] == '\0') == false)
         {
             queueHASSDiscov(); // Queue all HASS discovery
             queueHASSAvail();  // Keep sending availability updates
