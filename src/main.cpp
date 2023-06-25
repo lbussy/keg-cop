@@ -55,8 +55,6 @@ Ticker logPourTicker;
 Ticker getThatVersionTicker;
 Ticker sendKSTempReportTicker;
 Ticker sendTargetReportTicker;
-Ticker sendHASSAvail;
-Ticker sendHASSState;
 
 void setup()
 {
@@ -166,10 +164,10 @@ void setup()
 #else
     nullDoc("d");
 #endif
-    sendTIOTaps();                                                    // Send initial Taplist.io keg levels
-    queueHASSDiscov();                                                // Queue all HASS discovery
-    sendHASSAvail.attach(HASSUPDATE + random(5, 20), queueHASSAvail); // Keep sending availability updates
-    sendHASSState.attach(HASSUPDATE + random(5, 20), queueHASSState); // Keep sending state updates
+    sendTIOTaps();                                   // Send initial Taplist.io keg levels
+    sendHASSDiscovery.attach(5, queueHASSDiscov);    // Queue all HASS discovery and send on timer
+    sendHASSAvailability.attach(30, queueHASSAvail); // Queue all HASS availability and send on timer
+    sendHASSState.attach(40, queueHASSState);        // Queue all HASS states and send on timer
 }
 
 void loop()

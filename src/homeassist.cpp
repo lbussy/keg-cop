@@ -30,6 +30,7 @@ SOFTWARE. */
 #include "flowconfig.h"
 #include "thermostat.h"
 #include "tools.h"
+#include "main.h"
 
 #include <ArduinoLog.h>
 
@@ -76,29 +77,29 @@ PGM_P HASS::prefix = "[HASS]:";
 
 PGM_P HASS::deviceTemplate PROGMEM =
     "'device': {"
-        "'configuration_url':'http://${hostname}.local/settings/',"
-        "'identifiers': '${GUID}',"
-        "'model': 'Keg Cop',"
-        "'name': '${devicename}',"
-        "'manufacturer': 'Lee Bussy',"
-        "'sw_version': '${ver}'"
+    "'configuration_url':'http://${hostname}.local/settings/',"
+    "'identifiers': '${GUID}',"
+    "'model': 'Keg Cop',"
+    "'name': '${devicename}',"
+    "'manufacturer': 'Lee Bussy',"
+    "'sw_version': '${ver}'"
     "}";
 
 // Tap Report Templates
 PGM_P HASS::tapInfoDiscovTemplate PROGMEM = // Tap Auto-Discovery Payload (per tap)
     "homeassistant/sensor/${hostname}_tap${tapnum}/volume/config:"
     "{"
-        "'icon':'mdi:beer',"
-        "'name': '${taplabelnum}. ${taplabel}',"
-        "'device_class': 'volume',"
-        "'unit_of_measurement': '${UOM}',"
-        "'state_topic': 'kegcop/${hostname}_tap${tapnum}/volume/state',"
-        "'json_attributes_topic': 'kegcop/${hostname}_tap${tapnum}/volume/attr',"
-        "'availability_topic': 'kegcop/${hostname}_tap${tapnum}/tap/availability',"
-        "'payload_available': '${availability-on}',"
-        "'payload_not_available': '${availability-off}',"
-        "'unique_id': '${hostname}_tap${tapnum}',"
-        "${device}"
+    "'icon':'mdi:beer',"
+    "'name': '${taplabelnum}. ${taplabel}',"
+    "'device_class': 'volume',"
+    "'unit_of_measurement': '${UOM}',"
+    "'state_topic': 'kegcop/${hostname}_tap${tapnum}/volume/state',"
+    "'json_attributes_topic': 'kegcop/${hostname}_tap${tapnum}/volume/attr',"
+    "'availability_topic': 'kegcop/${hostname}_tap${tapnum}/tap/availability',"
+    "'payload_available': '${availability-on}',"
+    "'payload_not_available': '${availability-off}',"
+    "'unique_id': '${hostname}_tap${tapnum}',"
+    "${device}"
     "}|";
 
 PGM_P HASS::tapVolumeUpdateTemplate PROGMEM =
@@ -113,17 +114,17 @@ PGM_P HASS::tapAvailUpdateTemplate PROGMEM =
 PGM_P HASS::binaryDiscovTemplate PROGMEM =
     "homeassistant/binary_sensor/${hostname}_${type}/${type}/config:"
     "{"
-        "'name': '${device_name}',"
-        "'icon':'mdi:${icon}',"
-        "'device_class': '${class}',"
-        "'unique_id': 'kegcop_${type}',"
-        "'state_topic': 'kegcop/${hostname}_${type}/${type}/state',"
-        "'payload_on': 'On',"
-        "'payload_off': 'Off',"
-        "'availability_topic': 'kegcop/${hostname}_${type}/${type}/availability',"
-        "'payload_available': '${availability-on}',"
-        "'payload_not_available': '${availability-off}',"
-        "${device}"
+    "'name': '${device_name}',"
+    "'icon':'mdi:${icon}',"
+    "'device_class': '${class}',"
+    "'unique_id': 'kegcop_${type}',"
+    "'state_topic': 'kegcop/${hostname}_${type}/${type}/state',"
+    "'payload_on': 'On',"
+    "'payload_off': 'Off',"
+    "'availability_topic': 'kegcop/${hostname}_${type}/${type}/availability',"
+    "'payload_available': '${availability-on}',"
+    "'payload_not_available': '${availability-off}',"
+    "${device}"
     "}|";
 
 PGM_P HASS::binaryUpdateTemplate PROGMEM =
@@ -137,18 +138,18 @@ PGM_P HASS::binaryAvailTemplate PROGMEM =
 // Sensor Templates
 PGM_P HASS::sensorInfoDiscovTemplate PROGMEM = // Sensor Auto-Discovery Payload (per tap)
     "homeassistant/sensor/${hostname}_${sensorpoint}/temperature/config:"
-        "{"
-        "'icon':'mdi:snowflake-thermometer',"
-        "'name': '${sensorname}',"
-        "'device_class': 'temperature',"
-        "'unit_of_measurement': '${UOM}',"
-        "'state_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/state',"
-        "'json_attributes_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/attr',"
-        "'availability_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/availability',"
-        "'payload_available': '${availability-on}',"
-        "'payload_not_available': '${availability-off}',"
-        "'unique_id': '${hostname}_${sensorpoint}',"
-        "${device}"
+    "{"
+    "'icon':'mdi:snowflake-thermometer',"
+    "'name': '${sensorname}',"
+    "'device_class': 'temperature',"
+    "'unit_of_measurement': '${UOM}',"
+    "'state_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/state',"
+    "'json_attributes_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/attr',"
+    "'availability_topic': 'kegcop/${hostname}_${sensorpoint}/temperature/availability',"
+    "'payload_available': '${availability-on}',"
+    "'payload_not_available': '${availability-off}',"
+    "'unique_id': '${hostname}_${sensorpoint}',"
+    "${device}"
     "}|";
 
 PGM_P HASS::sensorTempUpdateTemplate PROGMEM =
@@ -794,25 +795,31 @@ void doHASSLoop() // Main HASS handling for loop processing
 void queueHASSDiscov() // Queue all HASS discovery
 {
     Log.notice(F("Queuing HASS discovery for all entities." CR));
-    setTapDiscovery();    // Sent all taps to Auto-Discovery topic
-    setBinaryDiscovery(); // Send all objects to Auto-Discovery template
-    setSensorDiscovery(); // Send all sensors to Auto-Discovery topic
+    setTapDiscovery();                                                     // Sent all taps to Auto-Discovery topic
+    setBinaryDiscovery();                                                  // Send all objects to Auto-Discovery template
+    setSensorDiscovery();                                                  // Send all sensors to Auto-Discovery topic
+    sendHASSDiscovery.detach();                                            // Detach initial timer
+    sendHASSDiscovery.attach(HASSUPDATE + random(5, 20), queueHASSDiscov); // Set continuous timer
 }
 
 void queueHASSState() // Queue all HASS states
 {
     Log.notice(F("Queuing HASS states for all entities." CR));
-    setTapState();    // Sent state of all taps to state_topic
-    setBinaryState(); // Send state of all objects to state topic
-    setSensorState(); // Sent state of all sensors to state_topic
+    setTapState();                                                     // Sent state of all taps to state_topic
+    setBinaryState();                                                  // Send state of all objects to state topic
+    setSensorState();                                                  // Sent state of all sensors to state_topic
+    sendHASSState.detach();                                            // Detach initial timer
+    sendHASSState.attach(HASSUPDATE + random(5, 20), queueHASSDiscov); // Set continuous timer
 }
 
 void queueHASSAvail() // Queue HASS availability
 {
     Log.notice(F("Queuing HASS availability for all entities." CR));
-    setTapAvail();    // Sent availability of all taps to availability_topic
-    setBinaryAvail(); // Send availability of all objects to availability_topic
-    setSensorAvail(); // Sent availability of all sensors to availability_topic
+    setTapAvail();                                                            // Sent availability of all taps to availability_topic
+    setBinaryAvail();                                                         // Send availability of all objects to availability_topic
+    setSensorAvail();                                                         // Sent availability of all sensors to availability_topic
+    sendHASSAvailability.detach();                                            // Detach initial timer
+    sendHASSAvailability.attach(HASSUPDATE + random(5, 20), queueHASSDiscov); // Set continuous timer
 }
 
 void setTapDiscovery() // Sent all taps to Auto-Discovery topic

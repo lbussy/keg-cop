@@ -25,6 +25,12 @@ SOFTWARE. */
 
 class String;
 
+#include <Ticker.h>
+
+Ticker sendHASSDiscovery;
+Ticker sendHASSAvailability;
+Ticker sendHASSState;
+
 void setup();
 void loop();
 void stopMainProc();
