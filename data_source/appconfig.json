@@ -14,7 +14,7 @@
         "imperial": true,
         "tapsolenoid": true,
 		"theme": "cerulean",
-        "loglevel": 6,
+        "loglevel": 4,
         "telnet": false
     },
     "ota": {

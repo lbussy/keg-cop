@@ -358,7 +358,7 @@ int BasePush::sendMqtt(String &payload, const char *target, int port,
 
         if (mqtt.publish(topic, value))
         {
-            Log.notice(F("%s MQTT publish to %s successful on topic %s." CR), push, target, topic.c_str());
+            Log.verbose(F("%s MQTT publish to %s successful on topic %s." CR), push, target, topic.c_str());
         }
         else
         {
