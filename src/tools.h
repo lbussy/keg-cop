@@ -59,6 +59,7 @@ void killDRD();
 unsigned long getTime();
 bool copyFile(String src, String dst);
 void tcp_cleanup();
+void safeDelay(unsigned long delay);
 
 extern bool doWiFiReconnect;
 extern bool pausingWiFi;

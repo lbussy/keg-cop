@@ -474,3 +474,13 @@ char* convertFloatToString(float f, char* buffer, int dec) {
   dtostrf(f, 6, dec, buffer);
   return buffer;
 }
+
+void safeDelay(unsigned long delay) // A "safe" delay
+{
+    unsigned int now = millis();
+    unsigned int target = now + delay;
+    while (millis() < target)
+    {
+        yield();
+    }
+}
