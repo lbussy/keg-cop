@@ -30,13 +30,6 @@ enum JSON_TYPE
     JSON_MAX
 };
 
-#ifdef JSONLOADER
-void merge(JsonVariant, JsonVariantConst);
-void mergeJsonObject(JsonVariantConst, JSON_TYPE);
-bool mergeJsonString(String, JSON_TYPE);
-bool printJsonFile(JSON_TYPE);
-bool printJsonConfig(JSON_TYPE);
-#endif
 bool deleteJsonFile(JSON_TYPE);
 // App Config Conversions
 void convertConfigtoImperial();
