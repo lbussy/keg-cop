@@ -213,7 +213,7 @@ void tickerLoop()
             {
                 queueKickReport[i] = false;
                 sendKickReport(i);
-                // TODO:  MQTT - Figure out how to disable state for [i]
+                setTapAvail(i); // Disable tap in HA
             }
             // Send temp control state change
             if (tstat[TS_TYPE_CHAMBER].queueStateChange == true || tstat[TS_TYPE_TOWER].queueStateChange == true)
@@ -230,9 +230,10 @@ void tickerLoop()
             {
                 doTapInfoReport[i] = false;
                 sendTapInfoReport(i);
-                // Send MQTT discovery and state for [i]
+                // Send MQTT discovery, availability and state for [i]
                 setTapDiscovery(i);
                 setTapState(i);
+                setTapAvail(i);
             }
         }
         if (doKSTempReport)

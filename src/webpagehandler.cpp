@@ -40,6 +40,7 @@ SOFTWARE. */
 #include "tools.h"
 #include "flowconfig.h"
 #include "serialhandler.h"
+#include "homeassist.h"
 
 #include <WiFi.h>
 #include <ESPmDNS.h>
@@ -1002,47 +1003,6 @@ void setConfigurationPageHandlers()
         // Required for CORS preflight on some PUT/POST
         send_ok(request); });
 
-#ifdef JSONLOADER
-    server.on("/api/v1/config/bulkload/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
-              {
-        // Process settings update
-        Log.verbose(F("Processing put to %s." CR), request->url().c_str());
-
-        switch (handleSecret(request))
-        {
-            case PROCESSED:
-                {
-                    HANDLER_STATE thisState = handleJson(request);
-                    if (thisState == PROCESSED)
-                    {
-                        send_ok(request);
-                    }
-                    else if (thisState == FAIL_PROCESS)
-                    {
-                        send_failed(request);
-                    } else if (thisState == NOT_PROCCESSED)
-                    {
-                        send_ok(request);
-                    }
-                    break;
-                }
-            case FAIL_PROCESS:
-                send_failed(request);
-                break;
-            case NOT_PROCCESSED:
-                send_not_allowed(request);
-                break;
-        } });
-
-    server.on("/api/v1/config/bulkload/", HTTP_GET, [](AsyncWebServerRequest *request)
-              { send_not_allowed(request); });
-
-    server.on("/api/v1/config/bulkload/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
-              {
-        // Required for CORS preflight on some PUT/POST
-        send_ok(request); });
-#endif
-
     // Settings Handlers^
     // Tap Handlers:
 
@@ -1351,7 +1311,6 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable tower fan or solenoid when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.controlenabled = true;
                 }
@@ -1365,6 +1324,12 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                if (didChange) // Send MQTT discovery, availability and state for chamber cooling control
+                {
+                    setBinaryDiscovery(HASS_CHAMBER_COOL);
+                    setBinaryState(HASS_CHAMBER_COOL);
+                    setBinaryAvail(HASS_CHAMBER_COOL);
                 }
             }
             if (strcmp(name, AppKeys::coolonhigh) == 0) // Enable cooling on pin high (reverse)
@@ -1392,14 +1357,12 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable tower fan or solenoid when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.tfancontrolenabled = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable tower fan or solenoid when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.tfancontrolenabled = false;
                 }
@@ -1407,6 +1370,12 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                if (didChange) // Send MQTT discovery, availability and state for tower fan control
+                {
+                    setBinaryDiscovery(HASS_TOWER_FAN);
+                    setBinaryState(HASS_TOWER_FAN);
+                    setBinaryAvail(HASS_TOWER_FAN);
                 }
             }
             if (strcmp(name, AppKeys::tfansetpoint) == 0) // Set Tower fan setpoint
@@ -1512,14 +1481,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[0] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[0] = false;
                 }
@@ -1527,6 +1494,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorDiscovery(ROOM);
+                    setSensorState(ROOM);
+                    setSensorAvail(ROOM);
                 }
             }
             if (strcmp(name, AppKeys::towercal) == 0) // Set the sensor calibration
@@ -1549,14 +1522,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[1] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[1] = false;
                 }
@@ -1564,6 +1535,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorDiscovery(TOWER);
+                    setSensorState(TOWER);
+                    setSensorAvail(TOWER);
                 }
             }
             if (strcmp(name, AppKeys::uppercal) == 0) // Set the sensor calibration
@@ -1586,14 +1563,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[2] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[2] = false;
                 }
@@ -1601,6 +1576,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorDiscovery(UPPER);
+                    setSensorState(UPPER);
+                    setSensorAvail(UPPER);
                 }
             }
             if (strcmp(name, AppKeys::lowercal) == 0) // Set the sensor calibration
@@ -1623,14 +1604,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[3] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[3] = false;
                 }
@@ -1638,6 +1617,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorDiscovery(LOWER);
+                    setSensorState(LOWER);
+                    setSensorAvail(LOWER);
                 }
             }
             if (strcmp(name, AppKeys::kegcal) == 0) // Set the sensor calibration
@@ -1660,14 +1645,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[4] = true;
                 }
                 else if (strcmp(value, "false") == 0)
                 {
                     didChange = true;
-                    // TODO:  MQTT - Figure out how to enable/disable a sensor when switched
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.temps.enabled[4] = false;
                 }
@@ -1675,6 +1658,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorDiscovery(KEG);
+                    setSensorState(KEG);
+                    setSensorAvail(KEG);
                 }
             }
         }
@@ -2100,7 +2089,12 @@ HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home 
     if (didChange)
     {
         setDoSaveApp();
-        // TODO:  MQTT - Figure out how to trigger all entities and states if we are turned on
+        if (!app.hatarget.host == NULL && !app.hatarget.host[0] == '\0')
+        {
+            queueHASSDiscov(); // Queue all HASS discovery
+            queueHASSAvail();  // Keep sending availability updates
+            queueHASSState();  // Keep sending state updates
+        }
     }
     if (didFail)
     {
@@ -2572,7 +2566,6 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
     if (didChange)
     {
         setDoSaveFlow();
-        // TODO:  MQTT - Figure out how to enable/disable a tap when enabled/disabled or kicked 
         if (tapNum >= 0)
         {
             setDoTapInfoReport(tapNum);
@@ -2785,181 +2778,6 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
 }
 
 // Secret Handler^
-
-// JSON Handler:
-
-#ifdef JSONLOADER
-HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
-{
-    bool didPass = false;
-    bool didProcess = false;
-
-    if (request->hasHeader("X-KegCop-BulkLoad-Type"))
-    {
-        AsyncWebHeader *bulkLoadHeader = request->getHeader("X-KegCop-BulkLoad-Type");
-        const char *headerVal = bulkLoadHeader->value().c_str();
-        if (!strcmp(headerVal, "AppConfig") == 0)
-        {
-            didPass = true;
-            bool oldImperial = app.copconfig.imperial;
-            const char *oldHostName = app.copconfig.hostname;
-
-            // Loop through all parameters
-            int params = request->params();
-            for (int i = 0; i < params; i++)
-            {
-                AsyncWebParameter *p = request->getParam(i);
-                if (p->isPost())
-                {
-                    // Process any p->name().c_str() / p->value().c_str() pairs
-                    const char *name = p->name().c_str();
-                    const char *value = p->value().c_str();
-                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
-
-                    // Bulk Load mode Set
-                    //
-                    if (strcmp(name, "data") == 0)
-                    {
-                        // if (!mergeJsonString(value, JSON_FLOW))
-                        if (!1)
-                        {
-                            Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
-                        }
-                        else
-                        {
-                            didProcess = true;
-                            Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                        }
-                    }
-                }
-            }
-            //         // Did we change copconfig.imperial?
-            //         if (app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
-            //         {
-            //             // We have to convert config manually since it's already changed in app.json
-            //             app.temps.setpoint = convertCtoF(app.temps.setpoint);
-            //             for (int i = 0; i < NUMSENSOR; i++)
-            //             {
-            //                 if (!app.temps.calibration[i] == 0)
-            //                     app.temps.calibration[i] = convertOneCtoF(app.temps.calibration[i]);
-            //             }
-            //             convertFlowtoImperial();
-            //         }
-            //         else if (!app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
-            //         {
-            //             // We have to convert config manually since it's already changed in app.json
-            //             app.temps.setpoint = convertFtoC(app.temps.setpoint);
-            //             for (int i = 0; i < NUMSENSOR; i++)
-            //             {
-            //                 if (!app.temps.calibration[i] == 0)
-            //                     app.temps.calibration[i] = convertOneFtoC(app.temps.calibration[i]);
-            //             }
-            //             convertFlowtoMetric();
-            //         }
-            //         // Did we change copconfig.hostname?
-            //         if (!strcmp(oldHostName, app.copconfig.hostname) == 0)
-            //         {
-            //             // TODO:  Do change hostname processing??
-            //         }
-            //         setDoSaveApp();
-            //         send_ok(request);
-            //         break;
-        }
-        else if (!strcmp(headerVal, "FlowConfig") == 0)
-        {
-            didPass = true;
-            bool oldImperial = flow.imperial;
-
-            // Loop through all parameters
-            int params = request->params();
-            for (int i = 0; i < params; i++)
-            {
-                AsyncWebParameter *p = request->getParam(i);
-                if (p->isPost())
-                {
-                    // Process any p->name().c_str() / p->value().c_str() pairs
-                    const char *name = p->name().c_str();
-                    const char *value = p->value().c_str();
-                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
-
-                    // Bulk Load mode Set
-                    //
-                    if (strcmp(name, "data") == 0)
-                    {
-                        // if (!mergeJsonString(value, JSON_FLOW))
-                        if (!1)
-                        {
-                            Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
-                        }
-                        else
-                        {
-                            didProcess = true;
-                            Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                        }
-                    }
-                }
-            }
-
-            //         // Did we change imperial?
-            //         if (flow.imperial && (!oldImperial == flow.imperial))
-            //         {
-            //             convertConfigtoImperial();
-            //             // We have to convert flow manually since it's already changed in flow.json
-            //             for (int i = 0; i < NUMTAPS; i++)
-            //             {
-            //                 for (int i = 0; i < NUMTAPS; i++)
-            //                 {
-            //                     flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu); // Reverse for pulses
-            //                     flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
-            //                     flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
-            //                 }
-            //             }
-            //         }
-            //         else if (!flow.imperial && (!oldImperial == flow.imperial))
-            //         {
-            //             convertConfigtoMetric();
-            //             // We have to convert flow manually since it's already changed in flow.json
-            //             for (int i = 0; i < NUMTAPS; i++)
-            //             {
-            //                 flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu); // Reverse for pulses
-            //                 flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
-            //                 flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
-            //             }
-            //         }
-            //         setDoSaveFlow();
-            //         send_ok(request);
-            //         break;
-            //     }
-        }
-        else
-        {
-            // No valid bulk load type passed
-            send_not_allowed(request);
-        }
-    }
-    else
-    {
-        //
-    }
-
-    if (!didProcess)
-    {
-        Log.warning(F("Bulk Loader: JSON not processed." CR));
-        return NOT_PROCCESSED;
-    }
-    // Return values
-    if (didProcess && didPass)
-    {
-        return PROCESSED;
-    }
-    else
-    {
-        return FAIL_PROCESS;
-    }
-}
-#endif
-
-// JSON Handler^
 
 void send_not_allowed(AsyncWebServerRequest *request)
 {
