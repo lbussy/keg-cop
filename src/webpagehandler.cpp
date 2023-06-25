@@ -1234,7 +1234,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             }
             if (strcmp(name, AppKeys::tapsolenoid) == 0)
             {
-                if (app.temps.tfancontrolenabled) // Set active
+                if (!app.temps.tfancontrolenabled) // Set active
                 {
                     if (strcmp(value, "energized") == 0)
                     {
