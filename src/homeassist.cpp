@@ -794,7 +794,7 @@ void doHASSLoop() // Main HASS handling for loop processing
 
 void queueHASSDiscov() // Queue all HASS discovery
 {
-    Log.notice(F("Queuing HASS discovery for all entities." CR));
+    Log.verbose(F("Queuing HASS discovery for all entities." CR));
     setTapDiscovery();                                                     // Sent all taps to Auto-Discovery topic
     setBinaryDiscovery();                                                  // Send all objects to Auto-Discovery template
     setSensorDiscovery();                                                  // Send all sensors to Auto-Discovery topic
@@ -804,7 +804,7 @@ void queueHASSDiscov() // Queue all HASS discovery
 
 void queueHASSState() // Queue all HASS states
 {
-    Log.notice(F("Queuing HASS states for all entities." CR));
+    Log.verbose(F("Queuing HASS states for all entities." CR));
     setTapState();                                                     // Sent state of all taps to state_topic
     setBinaryState();                                                  // Send state of all objects to state topic
     setSensorState();                                                  // Sent state of all sensors to state_topic
@@ -814,7 +814,7 @@ void queueHASSState() // Queue all HASS states
 
 void queueHASSAvail() // Queue HASS availability
 {
-    Log.notice(F("Queuing HASS availability for all entities." CR));
+    Log.verbose(F("Queuing HASS availability for all entities." CR));
     setTapAvail();                                                            // Sent availability of all taps to availability_topic
     setBinaryAvail();                                                         // Send availability of all objects to availability_topic
     setSensorAvail();                                                         // Sent availability of all sensors to availability_topic
