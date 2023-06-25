@@ -55,6 +55,8 @@ Ticker logPourTicker;
 Ticker getThatVersionTicker;
 Ticker sendKSTempReportTicker;
 Ticker sendTargetReportTicker;
+Ticker sendHASSAvail;
+Ticker sendHASSState;
 
 void setup()
 {
@@ -146,11 +148,11 @@ void setup()
 #endif
 
     // Setup tickers
-    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                             // Poll temperature sensors
-    logPourTicker.attach(TAPLOOP, logFlow);                                    // Log pours
-    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);             // Poll for server version
-    sendKSTempReportTicker.attach(KSTEMPREPORT, setDoKSTempReport);            // Send KegScreen Temp Report
-    sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport); // Send Target Report
+    pollSensorsTicker.attach(TEMPLOOP, pollTemps);                                  // Poll temperature sensors
+    logPourTicker.attach(TAPLOOP, logFlow);                                         // Log pours
+    getThatVersionTicker.attach(POLLSERVERVERSION, doVersionPoll);                  // Poll for server version
+    sendKSTempReportTicker.attach(KSTEMPREPORT + random(1, 20), setDoKSTempReport); // Send KegScreen Temp Report
+    sendTargetReportTicker.attach(app.urltarget.freq * 60, setDoTargetReport);      // Send Target Report
     doControlTicker.attach(TEMPLOOP, []()
                            { loopTstat(TS_TYPE_CHAMBER); }); // Update temperature control loop
     doFanControlTicker.attach(TEMPLOOP, []()
@@ -164,8 +166,10 @@ void setup()
 #else
     nullDoc("d");
 #endif
-    sendTIOTaps();  // Send initial Taplist.io keg levels
-    queueAllHASS(); // Queue all HASS data
+    sendTIOTaps();                                                    // Send initial Taplist.io keg levels
+    queueHASSDiscov();                                                // Queue all HASS discovery
+    sendHASSAvail.attach(HASSUPDATE + random(5, 20), queueHASSAvail); // Keep sending availability updates
+    sendHASSState.attach(HASSUPDATE + random(5, 20), queueHASSState); // Keep sending state updates
 }
 
 void loop()
