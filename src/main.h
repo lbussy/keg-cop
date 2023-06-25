@@ -27,9 +27,9 @@ class String;
 
 #include <Ticker.h>
 
-Ticker sendHASSDiscovery;
-Ticker sendHASSAvailability;
-Ticker sendHASSState;
+extern Ticker sendHASSDiscovery;
+extern Ticker sendHASSAvailability;
+extern Ticker sendHASSState;
 
 void setup();
 void loop();

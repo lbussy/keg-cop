@@ -55,6 +55,9 @@ Ticker logPourTicker;
 Ticker getThatVersionTicker;
 Ticker sendKSTempReportTicker;
 Ticker sendTargetReportTicker;
+Ticker sendHASSDiscovery;
+Ticker sendHASSAvailability;
+Ticker sendHASSState;
 
 void setup()
 {
