@@ -1506,9 +1506,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 if (didChange) // Send MQTT discovery, availability and state for temp sensor
                 {
-                    setSensorDiscovery(ROOM);
-                    setSensorState(ROOM);
-                    setSensorAvail(ROOM);
+                    setSensorPoint(ROOM);
                 }
             }
             if (strcmp(name, AppKeys::towercal) == 0) // Set the sensor calibration
@@ -1547,9 +1545,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 if (didChange) // Send MQTT discovery, availability and state for temp sensor
                 {
-                    setSensorDiscovery(TOWER);
-                    setSensorState(TOWER);
-                    setSensorAvail(TOWER);
+                    setSensorPoint(TOWER);
                 }
             }
             if (strcmp(name, AppKeys::uppercal) == 0) // Set the sensor calibration
@@ -1588,9 +1584,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 if (didChange) // Send MQTT discovery, availability and state for temp sensor
                 {
-                    setSensorDiscovery(UPPER);
-                    setSensorState(UPPER);
-                    setSensorAvail(UPPER);
+                    setSensorPoint(UPPER);
                 }
             }
             if (strcmp(name, AppKeys::lowercal) == 0) // Set the sensor calibration
@@ -1629,9 +1623,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 if (didChange) // Send MQTT discovery, availability and state for temp sensor
                 {
-                    setSensorDiscovery(LOWER);
-                    setSensorState(LOWER);
-                    setSensorAvail(LOWER);
+                    setSensorPoint(LOWER);
                 }
             }
             if (strcmp(name, AppKeys::kegcal) == 0) // Set the sensor calibration
@@ -1670,9 +1662,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 }
                 if (didChange) // Send MQTT discovery, availability and state for temp sensor
                 {
-                    setSensorDiscovery(KEG);
-                    setSensorState(KEG);
-                    setSensorAvail(KEG);
+                    setSensorPoint(KEG);
                 }
             }
         }
