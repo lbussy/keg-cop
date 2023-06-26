@@ -26,6 +26,7 @@ SOFTWARE. */
 #include "tempsensors.h"
 #include "appconfig.h"
 #include "tools.h"
+#include "homeassist.h"
 
 #include <ArduinoLog.h>
 
@@ -92,6 +93,8 @@ void loopTstat(int ts)
         // Disable temp control and display
         controlEnabled = false;
         tstat[ts].state = TSTAT_INACTIVE;
+
+        setBinaryPoint((HassBoolDeviceList)ts);
         return;
     }
 
