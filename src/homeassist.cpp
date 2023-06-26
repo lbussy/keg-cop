@@ -799,7 +799,7 @@ void queueHASSDiscov() // Queue all HASS discovery
     setBinaryDiscovery();                                                  // Send all objects to Auto-Discovery template
     setSensorDiscovery();                                                  // Send all sensors to Auto-Discovery topic
     sendHASSDiscovery.detach();                                            // Detach initial timer
-    sendHASSDiscovery.attach(HASSUPDATE + random(5, 20), queueHASSDiscov); // Set continuous timer
+    sendHASSDiscovery.attach(HASSUPDATE + random(10, 60), queueHASSDiscov); // Set continuous timer
 }
 
 void queueHASSState() // Queue all HASS states
@@ -809,7 +809,7 @@ void queueHASSState() // Queue all HASS states
     setBinaryState();                                                  // Send state of all objects to state topic
     setSensorState();                                                  // Sent state of all sensors to state_topic
     sendHASSState.detach();                                            // Detach initial timer
-    sendHASSState.attach(HASSUPDATE + random(5, 20), queueHASSDiscov); // Set continuous timer
+    sendHASSState.attach(HASSUPDATE + random(10, 60), queueHASSDiscov); // Set continuous timer
 }
 
 void queueHASSAvail() // Queue HASS availability
@@ -819,7 +819,7 @@ void queueHASSAvail() // Queue HASS availability
     setBinaryAvail();                                                         // Send availability of all objects to availability_topic
     setSensorAvail();                                                         // Sent availability of all sensors to availability_topic
     sendHASSAvailability.detach();                                            // Detach initial timer
-    sendHASSAvailability.attach(HASSUPDATE + random(5, 20), queueHASSDiscov); // Set continuous timer
+    sendHASSAvailability.attach(HASSUPDATE + random(10, 60), queueHASSDiscov); // Set continuous timer
 }
 
 void setTapDiscovery() // Sent all taps to Auto-Discovery topic
@@ -861,6 +861,13 @@ void setTapAvail(int tap) // Sent state of single tap to availability_topic
     hass.tapAvailPending[tap] = true;
 }
 
+void setTapPoint(int tap) // (Re)set a single tap
+{
+    setTapDiscovery(tap);
+    setTapState(tap);
+    setTapAvail(tap);
+}
+
 void setBinaryDiscovery() // Send all objects to Auto-Discovery template
 {
     for (int i = 0; i < CTRLPTS; i++)
@@ -900,6 +907,13 @@ void setBinaryAvail(HassBoolDeviceList device) // Send availability of object to
     hass.binaryAvailPending[(HassBoolDeviceList)device] = true;
 }
 
+void setBinaryPoint(HassBoolDeviceList device) // (Re)set a single control point
+{
+    setBinaryDiscovery(device);
+    setBinaryState(device);
+    setBinaryAvail(device);
+}
+
 void setSensorDiscovery() // Send all sensors to Auto-Discovery topic
 {
     for (int i = 0; i < NUMSENSOR; i++)
@@ -937,4 +951,11 @@ void setSensorAvail() // Sent availability of all sensors to availability_topic
 void setSensorAvail(SensorList sensor) // Sent availability of single sensor to availability_topic
 {
     hass.sensorAvailPending[(SensorList)sensor] = true;
+}
+
+void setSensorPoint(SensorList sensor) // (Re)set a single sensor
+{
+    setSensorDiscovery(sensor);
+    setSensorState(sensor);
+    setSensorAvail(sensor);
 }

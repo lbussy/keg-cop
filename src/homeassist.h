@@ -109,17 +109,20 @@ void setTapState();                                 // Sent state of all taps to
 void setTapState(int tap);                          // Sent state of single tap to state_topic
 void setTapAvail();                                 // Sent availability of all taps to availability_topic
 void setTapAvail(int tap);                          // Sent availability of single tap to availability_topic
+void setTapPoint(int tap);                          // (Re)set a single tap
 void setBinaryDiscovery();                          // Send all objects to Auto-Discovery template
 void setBinaryDiscovery(HassBoolDeviceList device); // Send object to Auto-Discovery template
 void setBinaryState();                              // Send state of all objects to state topic
 void setBinaryState(HassBoolDeviceList device);     // Send state of object to state topic
 void setBinaryAvail();                              // Send availability of all objects to availability_topic
 void setBinaryAvail(HassBoolDeviceList device);     // Send availability of object to availability_topic
+void setBinaryPoint(HassBoolDeviceList device);     // (Re)set a single control point
 void setSensorDiscovery();                          // Send all sensors to Auto-Discovery topic
 void setSensorDiscovery(SensorList sensor);         // Send single sensor to Auto-Discovery topic
 void setSensorState();                              // Sent state of all sensors to state_topic
 void setSensorState(SensorList sensor);             // Sent state of single sensor to state_topic
 void setSensorAvail();                              // Sent availability of all sensors to availability_topic
 void setSensorAvail(SensorList sensor);             // Sent availability of single sensor to availability_topic
+void setSensorPoint(SensorList sensor);             // (Re)set a single sensor
 
 #endif // _HOMEASSIST_H
