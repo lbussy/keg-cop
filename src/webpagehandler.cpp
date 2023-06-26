@@ -1487,6 +1487,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enableroom") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[ROOM];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1504,7 +1505,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
-                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                if (oldState != app.temps.enabled[ROOM]) // Send MQTT discovery, availability and state for temp sensor
                 {
                     setSensorPoint(ROOM);
                 }
@@ -1526,6 +1527,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enabletower") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[TOWER];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1543,7 +1545,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
-                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                if (oldState != app.temps.enabled[TOWER]) // Send MQTT discovery, availability and state for temp sensor
                 {
                     setSensorPoint(TOWER);
                 }
@@ -1565,6 +1567,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enableupper") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[UPPER];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1582,7 +1585,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
-                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                if (oldState != app.temps.enabled[UPPER]) // Send MQTT discovery, availability and state for temp sensor
                 {
                     setSensorPoint(UPPER);
                 }
@@ -1604,6 +1607,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enablelower") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[LOWER];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1621,7 +1625,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
-                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                if (oldState != app.temps.enabled[LOWER]) // Send MQTT discovery, availability and state for temp sensor
                 {
                     setSensorPoint(LOWER);
                 }
@@ -1643,6 +1647,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enablekeg") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[KEG];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1660,7 +1665,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
-                if (didChange) // Send MQTT discovery, availability and state for temp sensor
+                if (oldState != app.temps.enabled[KEG]) // Send MQTT discovery, availability and state for temp sensor
                 {
                     setSensorPoint(KEG);
                 }
