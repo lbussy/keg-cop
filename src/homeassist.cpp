@@ -684,7 +684,7 @@ bool HASS::sendSensorAvail() // Sent availability of all sensors to availability
 
     for (int i = 0; i < NUMSENSOR; i++)
     {
-        if (!sendSensorState((SensorList)i))
+        if (!sendSensorAvail((SensorList)i))
             retVal = false;
     }
 
