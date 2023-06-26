@@ -90,7 +90,7 @@ SOFTWARE. */
 //
 #ifndef LOG_LEVEL
 #ifdef _DEBUG_BUILD
-#define LOG_LEVEL LOG_LEVEL_VERBOSE // All
+#define LOG_LEVEL LOG_LEVEL_NOTICE
 #else
 #define LOG_LEVEL LOG_LEVEL_NOTICE // Errors, warnings and notices
 #endif
@@ -114,7 +114,7 @@ SOFTWARE. */
 #ifndef DRD_TIMEOUT
 #define ESP_DRD_USE_LITTLEFS true
 #define DOUBLERESETDETECTOR_DEBUG false
-#define DRD_TIMEOUT 3
+#define DRD_TIMEOUT 5
 #define DRD_ADDRESS 0 // Not used for FILESYSTEM, still needed for init
 #endif
 //
@@ -146,6 +146,16 @@ SOFTWARE. */
 //
 #ifndef NTPRESET
 #define NTPRESET (unsigned long) 24 * 60 * 60 * 1000
+#endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Timer for HASS Availability
+//
+#ifndef HASSUPDATE
+#define HASSUPDATE 5 * 60
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -392,16 +402,6 @@ SOFTWARE. */
 //
 #ifndef CTRLPTS
 #define CTRLPTS 3
-#endif
-//
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-//
-// Timer for HASS Availability
-//
-#ifndef HASSUPDATE
-#define HASSUPDATE 60
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
