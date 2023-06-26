@@ -1215,6 +1215,8 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                         didFail = true;
                         Log.warning(F("Settings Update: [%s]:(%s) not valid." CR), name, value);
                     }
+                    setBinaryPoint(HASS_TOWER_FAN);
+                    setBinaryPoint(HASS_SOLENOID);
                 }
                 else
                 {
@@ -1373,9 +1375,16 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 }
                 if (didChange) // Send MQTT discovery, availability and state for tower fan control
                 {
-                    setBinaryDiscovery(HASS_TOWER_FAN);
-                    setBinaryState(HASS_TOWER_FAN);
-                    setBinaryAvail(HASS_TOWER_FAN);
+                    setBinaryPoint(HASS_TOWER_FAN);
+                    setBinaryPoint(HASS_SOLENOID);
+                    if (!app.temps.tfancontrolenabled && !app.copconfig.tapsolenoid)
+                    {
+                        digitalWrite(SOLENOID, HIGH); // Solenoid off
+                    }
+                    else if (!app.temps.tfancontrolenabled && app.copconfig.tapsolenoid)
+                    {
+                        digitalWrite(SOLENOID, LOW); // Solenoid on
+                    }
                 }
             }
             if (strcmp(name, AppKeys::tfansetpoint) == 0) // Set Tower fan setpoint
