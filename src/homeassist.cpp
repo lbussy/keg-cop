@@ -584,9 +584,6 @@ bool HASS::sendSensorDiscovery(SensorList sensor) // Send single sensor to Auto-
     if (!okToSend)
         return okToSend;
 
-    if (!app.temps.enabled[sensor])
-        return false; // Skip disabled sensors.
-
     int retVal = 0;
 
     TemplatingEngine tpl;
@@ -641,9 +638,6 @@ bool HASS::sendSensorState(SensorList sensor) // Sent state of single sensor to 
     if (!okToSend)
         return okToSend;
 
-    if (!app.temps.enabled[sensor])
-        return false; // Skip disabled sensors.
-
     int retVal = 0;
 
     double baseTemp = (app.copconfig.imperial) ? convertCtoF(getTempC(sensorPin[sensor])) : getTempC(sensorPin[sensor]);
@@ -696,9 +690,6 @@ bool HASS::sendSensorAvail(SensorList sensor) // Sent availability of single sen
     bool okToSend = okSend();
     if (!okToSend)
         return okToSend;
-
-    if (!app.temps.enabled[sensor])
-        return false; // Skip disabled sensors.
 
     int retVal = 0;
 
