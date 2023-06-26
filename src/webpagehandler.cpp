@@ -1329,9 +1329,7 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 }
                 if (didChange) // Send MQTT discovery, availability and state for chamber cooling control
                 {
-                    setBinaryDiscovery(HASS_CHAMBER_COOL);
-                    setBinaryState(HASS_CHAMBER_COOL);
-                    setBinaryAvail(HASS_CHAMBER_COOL);
+                    setBinaryPoint(HASS_CHAMBER_COOL);
                 }
             }
             if (strcmp(name, AppKeys::coolonhigh) == 0) // Enable cooling on pin high (reverse)
@@ -2572,6 +2570,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
         setDoSaveFlow();
         if (tapNum >= 0)
         {
+            setTapPoint(tapNum);
             setDoTapInfoReport(tapNum);
         }
     }
