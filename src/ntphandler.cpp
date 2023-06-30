@@ -22,6 +22,16 @@ SOFTWARE. */
 
 #include "ntphandler.h"
 
+#include "serialhandler.h"
+#include "appconfig.h"
+#include "tools.h"
+#include "config.h"
+#include <Ticker.h>
+#include <ArduinoLog.h>
+#include <sntp.h>   // sntp_get_current_timestamp()
+
+#include <WiFi.h>
+
 void setClock()
 {
     Ticker blinker;

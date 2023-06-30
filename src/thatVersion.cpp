@@ -22,6 +22,14 @@ SOFTWARE. */
 
 #include "thatVersion.h"
 
+#include "config.h"
+#include "wifihandler.h"
+
+#include <ArduinoLog.h>
+#include <AsyncTCP.h>
+#include <asyncHTTPrequest.h>
+#include <Arduino.h>
+
 asyncHTTPrequest request;
 ThatVersion thatVersion;
 

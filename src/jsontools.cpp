@@ -22,121 +22,16 @@ SOFTWARE. */
 
 #include "jsontools.h"
 
+#include "tools.h"
+#include "appconfig.h"
+#include "flowconfig.h"
+
+#include <ArduinoJson.h>
+#include <Arduino.h>
+#include <ArduinoLog.h>
+
 #define MAX(x,y) ((x>y)?x:y)
 #define CAPACITY MAX(CAPACITY_APP_SERIAL, CAPACITY_FLOW_SERIAL)
-
-#ifdef JSONLOADER
-bool mergeJsonString(String newJson, JSON_TYPE type)
-{
-    DynamicJsonDocument doc(CAPACITY);
-    // Serialize the string that was passed
-    DeserializationError err = deserializeJson(doc, newJson);
-    if (err)
-    {
-        printChar(true, err.c_str());
-        printCR(true);
-        return false;
-    }
-    else
-    {
-        mergeJsonObject(doc, type);
-        return true;
-    }
-}
-
-void mergeJsonObject(JsonVariantConst src, JSON_TYPE type)
-{
-    // Serialize configuration
-    DynamicJsonDocument doc(CAPACITY);
-
-    // Create an object at the root
-    JsonObject root = doc.to<JsonObject>();
-
-    // TODO:  Choose the correct object type here
-    // Fill the object
-    app.save(root);
-
-    // Merge in the configuration
-    merge(root, src);
-    // Move new object to config
-    // TODO:  Choose the correct object type here
-    app.load(root);
-    // TODO:  Choose the correct function here
-    setDoSaveApp();
-}
-
-void merge(JsonVariant dst, JsonVariantConst src)
-{
-    if (src.is<JsonObjectConst>())
-    {
-        for (JsonPairConst kvp : src.as<JsonObjectConst>())
-        {
-            if (dst.containsKey(kvp.key()))
-                merge(dst[kvp.key()], kvp.value());
-            else
-                dst[kvp.key()] = kvp.value();
-        }
-    }
-    else
-    {
-        dst.set(src);
-    }
-}
-
-bool printJsonFile(JSON_TYPE type)
-{
-    // Prints the content of a file to the Serial
-    String filename;
-    bool retVal = true;
-    if (type == JSON_APP)
-        filename = APP_FILENAME;
-    else if (type == JSON_FLOW)
-        filename = FLOW_FILENAME;
-    File file = FILESYSTEM.open(filename, FILE_READ);
-    if (!file)
-        retVal = false;
-
-    while (file.available())
-        printChar(true, (const char *)file.read());
-
-    printCR(true);
-    file.close();
-    return retVal;
-}
-
-bool printJsonConfig(JSON_TYPE type)
-{
-    // Serialize configuration
-    DynamicJsonDocument doc(CAPACITY);
-
-    // Create an object at the root
-    JsonObject root = doc.to<JsonObject>();
-
-    // TODO:  Choose the correct object type here
-    // Fill the object
-    flow.save(root);
-
-    bool retval = true;
-    // Serialize JSON to file
-    retval = serializeJson(doc, Serial) > 0;
-    printCR(true);
-    return retval;
-}
-
-bool deleteJsonFile(JSON_TYPE type)
-{
-    String filename;
-    bool retVal = true;
-    if (type == JSON_APP)
-        filename = APP_FILENAME;
-    else if (type == JSON_FLOW)
-        filename = FLOW_FILENAME;
-
-    retVal = FILESYSTEM.remove(filename);
-    FILESYSTEM..end();
-    return retVal;
-}
-#endif
 
 void convertConfigtoImperial()
 {

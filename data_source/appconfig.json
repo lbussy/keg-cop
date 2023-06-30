@@ -14,7 +14,7 @@
         "imperial": true,
         "tapsolenoid": true,
 		"theme": "cerulean",
-        "loglevel": 6,
+        "loglevel": 4,
         "telnet": false
     },
     "ota": {
@@ -55,6 +55,14 @@
         "username": "",
         "password": "",
         "topic": "kegcop",
+        "update": false
+    },
+    "hatarget": {
+        "host": "",
+        "port": 1883,
+        "username": "",
+        "password": "",
+        "topic": "homeassistant",
         "update": false
     },
     "taplistio": {

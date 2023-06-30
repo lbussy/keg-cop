@@ -22,6 +22,19 @@ SOFTWARE. */
 
 #include "kegscreen.h"
 
+#include "flowconfig.h"
+#include "config.h"
+#include "appconfig.h"
+#include "flowmeter.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+
+#include <LCBUrl.h>
+#include <ArduinoLog.h>
+#include <AsyncTCP.h>
+#include <FS.h>
+#include <Arduino.h>
+
 #define KS_FILENAME "/kstv.json"
 
 int tempReportIteration = 0;
@@ -95,7 +108,7 @@ bool sendTapInfoReport(int tapid)
         }
         else
         {
-            Log.verbose(F("KegScreen reporting not enabled, skipping (Tap Info)." CR));
+            Log.trace(F("KegScreen reporting not enabled, skipping (Tap Info)." CR));
             return false;
         }
     }
@@ -128,7 +141,7 @@ bool sendPourReport(int tapid, float dispensed)
         }
         else
         {
-            Log.verbose(F("KegScreen reporting not enabled, skipping (Pour Report)." CR));
+            Log.trace(F("KegScreen reporting not enabled, skipping (Pour Report)." CR));
             retval = false;
         }
     }
@@ -156,7 +169,7 @@ bool sendKickReport(int tapid)
         }
         else
         {
-            Log.verbose(F("KegScreen reporting not enabled, skipping (Kick Report)." CR));
+            Log.trace(F("KegScreen reporting not enabled, skipping (Kick Report)." CR));
             return false;
         }
     }
@@ -176,7 +189,7 @@ bool sendCoolStateReport()
     StaticJsonDocument<384> doc;
 
     if (!kegscreenIsEnabled) {
-        Log.verbose(F("KegScreen reporting not enabled, skipping (Cool State)." CR));
+        Log.trace(F("KegScreen reporting not enabled, skipping (Cool State)." CR));
         return false;
     }
 
@@ -192,7 +205,7 @@ bool sendTempReport()
     const ReportKey reportkey = KS_TEMPREPORT;
     if (!kegscreenIsEnabled && tempReportIteration < 10) // If KegScreen is enabled
     {
-        Log.verbose(F("KegScreen reporting not enabled, skipping (Temp Report)." CR));
+        Log.trace(F("KegScreen reporting not enabled, skipping (Temp Report)." CR));
         tempReportIteration = 0;
         return false;
     }

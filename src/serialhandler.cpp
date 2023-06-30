@@ -22,6 +22,23 @@ SOFTWARE. */
 
 #include "serialhandler.h"
 
+#include "tools.h"
+#include "config.h"
+#include "appconfig.h"
+#include "execota.h"
+#include "version.h"
+#include "thatVersion.h"
+#include "resetreasons.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+#include "flowmeter.h"
+
+#include <ArduinoLog.h>
+#include <WiFiUdp.h>
+#include <ArduinoJson.h>
+#include <Arduino.h>
+#include <telnetspy.h>
+
 TelnetSpy SerialAndTelnet;
 #undef SERIAL
 #define SERIAL SerialAndTelnet

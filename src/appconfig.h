@@ -23,18 +23,8 @@ SOFTWARE. */
 #ifndef _JSONCONFIG_H
 #define _JSONCONFIG_H
 
-#include "serialhandler.h"
 #include "config.h"
-
 #include <ArduinoJson.h>
-
-#include <FS.h>
-#include <LittleFS.h>
-
-#define CAPACITY_APP_SERIAL 2048
-#define CAPACITY_APP_DESERIAL 3072
-#define APP_FILENAME "/appconfig.json"
-#define APP_FILENAME_BACKUP "/appconfig.backup"
 
 struct ApConfig
 {
@@ -108,7 +98,21 @@ struct TaplistIO
     void save(JsonObject) const;
 };
 
-struct MQTTTarget
+struct RPintsTarget
+{
+    // Stores MQTT Target configuration
+    char host[64];
+    int port;
+    char username[32];
+    char password[32];
+    char topic[30];
+    bool update;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+struct HATarget
 {
     // Stores MQTT Target configuration
     char host[64];
@@ -171,7 +175,8 @@ struct AppConfig
     KegScreen kegscreen;
     TaplistIO taplistio;
     URLTarget urltarget;
-    MQTTTarget rpintstarget;
+    RPintsTarget rpintstarget;
+    HATarget hatarget;
     CloudTarget cloud;
 
     void load(JsonObjectConst);
@@ -195,6 +200,7 @@ namespace AppKeys
     constexpr auto taplistio = "taplistio";
     constexpr auto urltarget = "urltarget";
     constexpr auto rpintstarget = "rpintstarget";
+    constexpr auto hatarget = "hatarget";
     constexpr auto cloud = "cloud";
 
     // AP Config

@@ -22,6 +22,21 @@ SOFTWARE. */
 
 #include "execota.h"
 
+#include "tools.h"
+#include "version.h"
+#include "appconfig.h"
+#include "flowconfig.h"
+#include "webpagehandler.h"
+#include "appconfig.h"
+#include "flowconfig.h"
+#include "webpagehandler.h"
+
+#include <Update.h>
+#include <HTTPClient.h>
+#include <LCBUrl.h>
+#include <ArduinoLog.h>
+#include <Arduino.h>
+
 void execfw()
 {
     Log.notice(F("Starting the Firmware OTA pull, will reboot without notice." CR));

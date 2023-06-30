@@ -1,4 +1,5 @@
 /* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
+   Copyright (c) 2021-22 Magnus
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -20,53 +21,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _URLTARGET_H
-#define _URLTARGET_H
+#ifndef _BASEPUSH_H
+#define _BASEPUSH_H
 
-#include "config.h"
+#include "tools.h"
 
-struct TapsReport
+#if defined(ESP8266)
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecure.h>
+#else
+#include <HTTPClient.h>
+#include <WiFiClient.h>
+#include <WiFiClientSecure.h>
+#endif
+
+class BasePush
 {
-    int tapid;
-    int ppu;
-    char name[32];
-    float capacity;
-    float remaining;
-    bool active;
+protected:
+    void probeMFLN(String serverPath);
+    void addHttpHeader(HTTPClient &http, String header);
+    bool isSecure(String target) { return target.startsWith("https://"); }
+
+public:
+    String sendHttpPost(String &payload, const char *target, const char *header1,
+                        const char *header2);
+    String sendHttpGet(String &payload, const char *target, const char *header1,
+                       const char *header2);
+    void sendInfluxDb2(String &payload, const char *target, const char *org,
+                       const char *bucket, const char *token);
+    int sendMqtt(String &payload, const char *target, int port, const char *user,
+                  const char *pass);
+
+    bool sendHttpPost(String &payload);
+    bool sendHttpGet(String &payload);
+    bool sendInfluxDb2(String &payload);
 };
 
-struct SensorsReport
-{
-    char name[32];
-    double average;
-    bool enabled;
-};
-
-struct UrlReport
-{
-    char api[32];
-    char guid[17];
-    char hostname[32];
-    char breweryname[64];
-    char kegeratorname[64];
-    char reporttype[16];
-    bool imperial;
-    int controlpoint;
-    float setpoint;
-    int state;
-    bool controlenabled;
-    float tfansetpoint;
-    int tfanstate;
-    bool tfancontrolenabled;
-    TapsReport tap[NUMTAPS];
-    SensorsReport sensor[NUMSENSOR];
-};
-
-class asyncHTTPrequest;
-class String;
-
-bool sendTargetReport();                                   // Push complete report
-bool sendTReport(const String &);                          // Handle the business of sending report
-void targetResultHandler(void *, asyncHTTPrequest *, int); // Callback method for asynch
-
-#endif // _URLTARGET_H
+#endif // _BASEPUSH_H

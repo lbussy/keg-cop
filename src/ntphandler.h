@@ -23,15 +23,8 @@ SOFTWARE. */
 #ifndef _NTP_H
 #define _NTP_H
 
-#include <WiFi.h>
-
-#include "serialhandler.h"
-#include "appconfig.h"
-#include "tools.h"
-#include "config.h"
-#include <Ticker.h>
-#include <ArduinoLog.h>
-#include <sntp.h>   // sntp_get_current_timestamp()
+class String;
+#include <stdint.h>
 
 void setClock();
 String getDTS();

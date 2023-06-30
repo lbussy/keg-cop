@@ -24,6 +24,19 @@ SOFTWARE. */
 
 //#define TRY_WIFI_RECONNECT
 
+#include "config.h"
+#include "appconfig.h"
+#include "tools.h"
+#include "mdnshandler.h"
+#include "flowconfig.h"
+#include "webpagehandler.h"
+#include "serialhandler.h"
+#include "main.h"
+
+#include <WiFi.h>
+#include <Ticker.h>
+#include <ArduinoLog.h>
+
 bool wifiPause = false;
 bool pausingWiFi = false;
 bool shouldSaveConfig = false;
@@ -335,8 +348,6 @@ void stopNetwork()
 
     Log.warning(F("%s WiFi lost connection, reconnecting." CR), prefix);
 
-    Log.verbose(F("%s Stopping RPints." CR), prefix);
-    disconnectRPints();
     Log.verbose(F("%s Stopping Web Server." CR), prefix);
     stopWebServer();
     Log.verbose(F("%s Stopping mDNS." CR), prefix);
@@ -361,8 +372,6 @@ void startNetwork()
     serialRestart();
     Log.verbose(F("%s Starting Main Timers and Filesystem." CR), prefix);
     startMainProc();
-    Log.verbose(F("%s Connecting RPints." CR), prefix);
-    setDoRPintsConnect();
     Log.verbose(F("%s Starting mDNS." CR), prefix);
     mDNSStart();
     Log.verbose(F("%s Starting Web Server." CR), prefix);

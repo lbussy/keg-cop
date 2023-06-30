@@ -1,4 +1,5 @@
 /* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
+   Copyright (c) 2021-22 Magnus
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -20,22 +21,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _RPINTSCLIENT_H
-#define _RPINTSCLIENT_H
+#ifndef _RPINTS_H
+#define _RPINTS_H
 
-#include "appconfig.h"
-#include "tools.h"
+#include <Arduino.h>
+class BasePush;
 
-#include <AsyncMqttClient.h>
-#include <ArduinoLog.h>
-#include <Ticker.h>
+class RPints
+{
+private:
+    BasePush *_push;
+    static PGM_P prefix;
+    static PGM_P pourTemplate;
 
-void setupRPints();
-void connectRPints();
-void disconnectRPints();
-bool sendPulsesRPints(int tapID, unsigned int pulses);
-void onRPintsConnect(bool sessionPresent);
-void onRPintsDisconnect(AsyncMqttClientDisconnectReason reason);
-void onRPintsPublish(uint16_t packetId);
+    bool okSend();
 
-#endif // _RPINTSCLIENT_H
+public:
+    RPints();
+
+    bool sendPulseReport(int tapID, unsigned int pulses);
+};
+
+#endif // _RPINTS_H

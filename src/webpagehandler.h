@@ -23,28 +23,8 @@ SOFTWARE. */
 #ifndef _WEBPAGEHANDLER_H
 #define _WEBPAGEHANDLER_H
 
-#include "uptime.h"
-#include "wifihandler.h"
-#include "appconfig.h"
-#include "jsontools.h"
-#include "version.h"
-#include "config.h"
-#include "thatVersion.h"
-#include "execota.h"
-#include "flowmeter.h"
-#include "mdnshandler.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-#include "resetreasons.h"
-#include "api.h"
-
-#include <WiFi.h>
-#include <ESPmDNS.h>
-#include <ArduinoLog.h>
-#include <ArduinoJson.h>
-#include <AsyncJson.h>
-#include <ESPAsyncWebServer.h>
-#include <Arduino.h>
+#include <stddef.h>
+#include <stdint.h>
 
 void startWebServer();
 void setRegPageHandlers();
@@ -63,6 +43,9 @@ enum HANDLER_STATE
     PROCESSED
 };
 
+class AsyncWebServerRequest;
+class String;
+
 HANDLER_STATE handleTapPost(AsyncWebServerRequest *);
 HANDLER_STATE handleTapCal(AsyncWebServerRequest *);
 HANDLER_STATE handleControllerPost(AsyncWebServerRequest *);
@@ -71,22 +54,18 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *);
 HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *);
 HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *);
 HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *);
-HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *);
+HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *);
+HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *);
 HANDLER_STATE handleSecret(AsyncWebServerRequest *);
 HANDLER_STATE handleThemePost(AsyncWebServerRequest *);
 HANDLER_STATE handleDebugPost(AsyncWebServerRequest *);
-#ifdef JSONLOADER
-HANDLER_STATE handleJson(AsyncWebServerRequest *);
-#endif
-
 
 void send_not_allowed(AsyncWebServerRequest *request);
 void send_failed(AsyncWebServerRequest *request);
 void send_json(AsyncWebServerRequest *request, String &json);
 void send_ok(AsyncWebServerRequest *request);
-std::string humanReadableSize(const size_t bytes);
 bool checkUserWebAuth(AsyncWebServerRequest *request);
 void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
 

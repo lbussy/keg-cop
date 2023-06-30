@@ -22,6 +22,14 @@ SOFTWARE. */
 
 #include "thermostat.h"
 
+#include "config.h"
+#include "tempsensors.h"
+#include "appconfig.h"
+#include "tools.h"
+#include "homeassist.h"
+
+#include <ArduinoLog.h>
+
 Thermostat tstat[TS_COUNT];
 ControlPoint cp[TS_COUNT];
 
@@ -47,44 +55,50 @@ void loopTstat(int ts)
     double setPoint;
     int minOn;
     int minOff;
-    switch(ts)
+    switch (ts)
     { // Set up different control/sensor points
-        case TS_TYPE_CHAMBER:
-            tempNow = device.sensor[app.temps.controlpoint].average;
-            sensorEnabled = app.temps.enabled[app.temps.controlpoint];
-            controlEnabled = app.temps.controlenabled;
-            tstat[ts].coolOnHigh = app.temps.coolonhigh;
-            setPoint = app.temps.setpoint;
-            controlPoint = COOL;
-            minOn = MIN_ON;
-            minOff = MIN_OFF;
-            break;
-        case TS_TYPE_TOWER:
-            tempNow = device.sensor[TOWER].average;
-            sensorEnabled = app.temps.enabled[TOWER];
-            controlEnabled = app.temps.tfancontrolenabled;
-            tstat[ts].coolOnHigh = app.temps.tfanonhigh;
-            setPoint = app.temps.tfansetpoint;
-            controlPoint = SOLENOID;
-            minOn = 0;
-            minOff = 0;
-            break;
+    case TS_TYPE_CHAMBER:
+        tempNow = device.sensor[app.temps.controlpoint].average;
+        sensorEnabled = app.temps.enabled[app.temps.controlpoint];
+        controlEnabled = app.temps.controlenabled;
+        tstat[ts].coolOnHigh = app.temps.coolonhigh;
+        setPoint = app.temps.setpoint;
+        controlPoint = COOL;
+        minOn = MIN_ON;
+        minOff = MIN_OFF;
+        break;
+    case TS_TYPE_TOWER:
+        tempNow = device.sensor[TOWER].average;
+        sensorEnabled = app.temps.enabled[TOWER];
+        controlEnabled = app.temps.tfancontrolenabled;
+        tstat[ts].coolOnHigh = app.temps.tfanonhigh;
+        setPoint = app.temps.tfansetpoint;
+        controlPoint = SOLENOID;
+        minOn = 0;
+        minOff = 0;
+        break;
     }
 
     // If the assigned control point or temp control is disabled
-    if (!sensorEnabled || (!controlEnabled))
+    if (!sensorEnabled || !controlEnabled)
     {
         // If cooling, turn off cooling
         if (tstat[ts].cooling)
         {
             tstat[ts].lastOff = now;
-            digitalWrite(tstat[ts].controlPoint, (tstat[ts].coolOnHigh)? LOW: HIGH);
+            digitalWrite(tstat[ts].controlPoint, (tstat[ts].coolOnHigh) ? LOW : HIGH);
             tstat[ts].cooling = false;
         }
 
-        // Disable temp control and display
-        controlEnabled = false;
+        if (!sensorEnabled && controlEnabled) // If the sensor is disabled and control enabled, stop controlling
+        {
+            if (ts == TS_TYPE_CHAMBER) app.temps.controlenabled = false;
+            if (ts == TS_TYPE_TOWER) app.temps.tfancontrolenabled = false;
+            setDoSaveApp();
+            setBinaryPoint((HassBoolDeviceList)ts);
+        }
         tstat[ts].state = TSTAT_INACTIVE;
+        
         return;
     }
 
@@ -106,7 +120,7 @@ void loopTstat(int ts)
         {
             // Not yet cooling, no delay, turn on cool relay
             tstat[ts].lastOn = now;
-            digitalWrite(controlPoint, (tstat[ts].coolOnHigh)? HIGH: LOW);
+            digitalWrite(controlPoint, (tstat[ts].coolOnHigh) ? HIGH : LOW);
             tstat[ts].cooling = true;
             tstat[ts].state = TSTAT_COOL_BEGIN;
         }
@@ -131,7 +145,7 @@ void loopTstat(int ts)
             {
                 // Turn off cooling
                 tstat[ts].lastOff = now;
-                digitalWrite(controlPoint, (tstat[ts].coolOnHigh)? LOW: HIGH);
+                digitalWrite(controlPoint, (tstat[ts].coolOnHigh) ? LOW : HIGH);
                 tstat[ts].cooling = false;
                 tstat[ts].state = TSTAT_OFF_END;
             }
@@ -187,77 +201,77 @@ void reportTstat(int ts)
 
     case TSTAT_COOL_BEGIN:
         Log.trace(F("[TSTAT_COOL_BEGIN] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
-                    thermostatName[ts],
-                    tstat[ts].cooling,
-                    tempNow,
-                    tempFormat,
-                    setpoint,
-                    tempFormat,
-                    lastontime,
-                    lastofftime,
-                    runtime);
+                  thermostatName[ts],
+                  tstat[ts].cooling,
+                  tempNow,
+                  tempFormat,
+                  setpoint,
+                  tempFormat,
+                  lastontime,
+                  lastofftime,
+                  runtime);
         break;
 
     case TSTAT_COOL_MINOFF:
         Log.trace(F("[TSTAT_COOL_MINOFF] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, wait time has been %D seconds." CR),
-                    thermostatName[ts], 
-                    tstat[ts].cooling,
-                    tempNow,
-                    tempFormat,
-                    setpoint,
-                    tempFormat,
-                    lastontime,
-                    lastofftime,
-                    wait);
+                  thermostatName[ts],
+                  tstat[ts].cooling,
+                  tempNow,
+                  tempFormat,
+                  setpoint,
+                  tempFormat,
+                  lastontime,
+                  lastofftime,
+                  wait);
         break;
 
     case TSTAT_COOL_ACTIVE:
         Log.trace(F("[TSTAT_COOL_ACTIVE] %s cooling is %T, control point %D°%s, setpoint %D°%s. Run started %D seconds ago, runnning for %D seconds." CR),
-                    thermostatName[ts],
-                    tstat[ts].cooling,
-                    tempNow,
-                    tempFormat,
-                    setpoint,
-                    tempFormat,
-                    lastontime,
-                    runtime);
+                  thermostatName[ts],
+                  tstat[ts].cooling,
+                  tempNow,
+                  tempFormat,
+                  setpoint,
+                  tempFormat,
+                  lastontime,
+                  runtime);
         break;
 
     case TSTAT_OFF_END:
         Log.trace(F("[TSTAT_OFF_END] %s cooling is %T, control point %D°%s, setpoint,  %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
-                    thermostatName[ts],
-                    tstat[ts].cooling,
-                    tempNow,
-                    tempFormat,
-                    setpoint,
-                    tempFormat,
-                    lastontime,
-                    wait);
+                  thermostatName[ts],
+                  tstat[ts].cooling,
+                  tempNow,
+                  tempFormat,
+                  setpoint,
+                  tempFormat,
+                  lastontime,
+                  wait);
         break;
 
     case TSTAT_OFF_MINON:
         Log.trace(F("[TSTAT_OFF_MINON] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago, running for %D seconds." CR),
-                    thermostatName[ts],
-                    tstat[ts].cooling,
-                    tempNow,
-                    tempFormat,
-                    setpoint,
-                    tempFormat,
-                    lastontime,
-                    lastofftime,
-                    runtime);
+                  thermostatName[ts],
+                  tstat[ts].cooling,
+                  tempNow,
+                  tempFormat,
+                  setpoint,
+                  tempFormat,
+                  lastontime,
+                  lastofftime,
+                  runtime);
         break;
 
     case TSTAT_OFF_INACTIVE:
         Log.trace(F("[TSTAT_OFF_INACTIVE] %s cooling is %T, control point %D°%s, setpoint %D°%s. Last run started %D seconds ago, last run ended %D seconds ago." CR),
-                    thermostatName[ts],
-                    tstat[ts].cooling,
-                    tempNow,
-                    tempFormat,
-                    setpoint,
-                    tempFormat,
-                    lastontime,
-                    lastofftime);
+                  thermostatName[ts],
+                  tstat[ts].cooling,
+                  tempNow,
+                  tempFormat,
+                  setpoint,
+                  tempFormat,
+                  lastontime,
+                  lastofftime);
         break;
 
     case TSTAT_UNKNOWN:

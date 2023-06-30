@@ -22,6 +22,21 @@ SOFTWARE. */
 
 #include "urltarget.h"
 
+#include "config.h"
+#include "appconfig.h"
+#include "flowmeter.h"
+#include "flowconfig.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+#include "tools.h"
+
+#include <LCBUrl.h>
+#include <ArduinoLog.h>
+#include <AsyncTCP.h>
+#include <asyncHTTPrequest.h>
+#include <ArduinoJson.h>
+#include <Arduino.h>
+
 asyncHTTPrequest urltarget;
 static const char *reportkey = "targeturlreport";
 static const char *reportname = "Target URL Report";
@@ -130,7 +145,7 @@ bool sendTargetReport()
     }
     else
     {
-        Log.verbose(F("%s: reporting not enabled, skipping." CR), reportname);
+        Log.trace(F("%s: reporting not enabled, skipping." CR), reportname);
         retval = false;
     }
     return retval;

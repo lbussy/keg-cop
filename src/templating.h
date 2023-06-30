@@ -1,4 +1,5 @@
 /* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
+   Copyright (c) 2021-22 Magnus
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -20,20 +21,46 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef _VERSION_H
-#define _VERSION_H
+#ifndef _TEMPLATING_H
+#define _TEMPLATING_H
 
-class String;
+#include "tools.h"
 
-const char *project();
-const char *fw_version();
-const char *fs_version();
-void fsver();
-const char *branch();
-const char *build();
-const char *board();
-const char *build_mode();
+#include <Arduino.h>
+#include <ArduinoLog.h>
+#include <string>
 
-int versionCompare(String, String);
+#define MAX_KEY_VAL 20
 
-#endif // _VERSION_H
+class TemplatingEngine
+{
+private:
+    struct KeyVal
+    {
+        String key;
+        String val;
+    };
+    KeyVal _items[MAX_KEY_VAL];
+
+    void transform(const char *format);
+
+    char _buffer[20] = "";
+    char *_output = NULL;
+
+public:
+    TemplatingEngine() {}
+    ~TemplatingEngine() { freeMemory(); }
+
+    void setVal(String key, float val, int dec);
+    void setVal(String key, int val);
+    void setVal(String key, char val);
+    void setVal(String key, String val);
+
+    void dumpAll();
+
+    void freeMemory();
+
+    const char *create(const char *base);
+};
+
+#endif // _TEMPLATING_H
