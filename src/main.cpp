@@ -118,11 +118,13 @@ void setup()
     if (!app.copconfig.nodrd && detectdrd)
     {
         Log.notice(F("DRD: Portal requested." CR));
+        killDRD();
         doWiFi(true);
     }
     else if (digitalRead(RESETWIFI) == LOW)
     {
         Log.notice(F("Pin %d low, presenting portal." CR), RESETWIFI);
+        killDRD();
         doWiFi(true);
     }
     else
