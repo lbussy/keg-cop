@@ -1848,7 +1848,6 @@ HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *request) // Handle R
 
             // MQTT Target settings
             //
-            int changedMqtt = 0;
             if (strcmp(name, "rpintshost") == 0) // Set MQTT broker host
             {
                 LCBUrl url;
@@ -1857,14 +1856,12 @@ HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *request) // Handle R
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.rpintstarget.host, value, sizeof(app.rpintstarget.host));
-                    changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
                     strlcpy(app.rpintstarget.host, value, sizeof(app.rpintstarget.host));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -1885,7 +1882,6 @@ HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *request) // Handle R
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.rpintstarget.port = val;
-                    changedMqtt++;
                 }
             }
             if (strcmp(name, "rpintsusername") == 0) // Set MQTT user name
@@ -1895,14 +1891,12 @@ HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *request) // Handle R
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.rpintstarget.username, value, sizeof(app.rpintstarget.username));
-                    changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
                     strlcpy(app.rpintstarget.username, value, sizeof(app.rpintstarget.username));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -1917,14 +1911,12 @@ HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *request) // Handle R
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.rpintstarget.password, value, sizeof(app.rpintstarget.password));
-                    changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
                     strlcpy(app.rpintstarget.password, value, sizeof(app.rpintstarget.password));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -1939,7 +1931,6 @@ HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *request) // Handle R
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.rpintstarget.topic, value, sizeof(app.rpintstarget.topic));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -1986,7 +1977,6 @@ HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home 
 
             // MQTT Target settings
             //
-            int changedMqtt = 0;
             if (strcmp(name, "hahost") == 0) // Set MQTT broker host
             {
                 LCBUrl url;
@@ -1995,14 +1985,12 @@ HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home 
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.hatarget.host, value, sizeof(app.hatarget.host));
-                    changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
                     strlcpy(app.hatarget.host, value, sizeof(app.hatarget.host));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -2023,7 +2011,6 @@ HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home 
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.hatarget.port = val;
-                    changedMqtt++;
                 }
             }
             if (strcmp(name, "hausername") == 0) // Set MQTT user name
@@ -2033,14 +2020,12 @@ HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home 
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.hatarget.username, value, sizeof(app.hatarget.username));
-                    changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
                     strlcpy(app.hatarget.username, value, sizeof(app.hatarget.username));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -2055,14 +2040,12 @@ HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home 
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.hatarget.password, value, sizeof(app.hatarget.password));
-                    changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
                     strlcpy(app.hatarget.password, value, sizeof(app.hatarget.password));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -2077,7 +2060,6 @@ HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home 
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.hatarget.topic, value, sizeof(app.hatarget.topic));
-                    changedMqtt++;
                 }
                 else
                 {
