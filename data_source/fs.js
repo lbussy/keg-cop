@@ -254,10 +254,10 @@ function deleteFile(filename) {
 function toggleUpload() {
     if ($("#fileUpload").is(":visible")) {
         $("#fileUpload").hide();
-        $("#controlUpload").text("Show Upload");
+        $("#controlUpload").text("Show Uploader");
     } else {
         $("#fileUpload").show();
-        $("#controlUpload").text("Hide Upload");
+        $("#controlUpload").text("Hide Uploader");
         // Hide the File List
         $("#listFiles").html("List Files");
         $("#fileList").hide();

@@ -15,7 +15,8 @@
         "tapsolenoid": true,
 		"theme": "cerulean",
         "loglevel": 4,
-        "telnet": false
+        "telnet": false,
+        "kickdetect": true
     },
     "ota": {
         "dospiffs1": false,

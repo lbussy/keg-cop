@@ -385,7 +385,9 @@ The configuration page API tree allows retrieval of current states or setting co
         "tapsolenoid": true,
         "theme": "cerulean",
         "loglevel": 6,
-        "telnet": true
+        "telnet": true,
+        "loglevel": 6,
+        "kickdetect": true
     },
     "ota": {
         "dospiffs1": false,
@@ -467,6 +469,7 @@ The PUT should follow standard form submission data format, with the following i
 - `theme` - Any pre-configured Bootstrap-compliant theme.
 - `loglevel` - Verbosity of log levels, 6 is highest, 0 is no logging.
 - `telnet` - Enables or disables the telnet interface.
+- `kickdetect` - Enables or disables the "keg is kicked" detection".
 
 ###### temps
 

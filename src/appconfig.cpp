@@ -338,6 +338,7 @@ void CopConfig::save(JsonObject obj) const
     obj[AppKeys::theme] = theme;
     obj[AppKeys::telnet] = telnet;
     obj[AppKeys::loglevel] = loglevel;
+    obj[AppKeys::kickdetect] = kickdetect;
 }
 
 void CopConfig::load(JsonObjectConst obj)
@@ -541,6 +542,20 @@ void CopConfig::load(JsonObjectConst obj)
     else
     {
         loglevel = obj[AppKeys::loglevel];
+    }
+
+    if (obj[AppKeys::kickdetect].isNull())
+    {
+        if (!appLoadError)
+        {
+            Log.warning(F(" %s Null value for kickdetect." CR), appConfig);
+            loadFailed = true;
+        }
+        kickdetect = true;
+    }
+    else
+    {
+        kickdetect = obj[AppKeys::kickdetect];
     }
 
     if (loadFailed)

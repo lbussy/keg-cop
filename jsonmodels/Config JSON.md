@@ -21,7 +21,8 @@ JSON Definition:
 		"tapsolenoid": false,
 		"theme": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"telnet": true,
-		"loglevel": 6
+		"loglevel": 6,
+		"kickdetect": true
 	},
 	"ota": {
 		"dospiffs1": false,
@@ -121,6 +122,7 @@ bool copconfig_tapsolenoid = copconfig["tapsolenoid"]; // false
 const char* copconfig_theme = copconfig["theme"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 bool copconfig_telnet = copconfig["telnet"]; // true
 int copconfig_loglevel = copconfig["loglevel"]; // 6
+bool copconfig_kickdetect = copconfig["kickdetect"]; // true
 
 JsonObject ota = doc["ota"];
 bool ota_dospiffs1 = ota["dospiffs1"]; // false
@@ -200,6 +202,7 @@ copconfig["tapsolenoid"] = false;
 copconfig["theme"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 copconfig["telnet"] = true;
 copconfig["loglevel"] = 6;
+copconfig["kickdetect"] = true;
 
 JsonObject ota = doc.createNestedObject("ota");
 ota["dospiffs1"] = false;
