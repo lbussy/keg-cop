@@ -52,6 +52,7 @@ struct CopConfig
     bool tempemulate;
     char theme[32];
     bool telnet;
+    bool kickdetect;
     uint8_t loglevel;
 
     void load(JsonObjectConst);
@@ -221,6 +222,7 @@ namespace AppKeys
     constexpr auto tempemulate = "tempemulate";
     constexpr auto theme = "theme";
     constexpr auto telnet = "telnet";
+    constexpr auto kickdetect = "kickdetect";
     constexpr auto loglevel = "loglevel";
 
     // Temperatures
