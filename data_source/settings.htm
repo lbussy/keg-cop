@@ -1526,6 +1526,31 @@
 
                                 <p></p>
 
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+										<div class="col-sm-2">&nbsp;</div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn kick detection on or off">Kick Detect</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Detect kick actions">
+                                                    <input type="radio" class="form-check-input" name="kickdetect" id="kickdetect" value="on">
+                                                    Detect
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="De-energize the solenoid relay">
+                                                    <input type="radio" class="form-check-input" name="kickdetect" id="kickdetect" value="off">
+                                                    Ignore
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
                                 <div class="d-grid gap-2 col-3 mx-auto">
                                     <button id="submitsettings" class="btn btn-primary"
                                         onclick="if(!this.form.checkValidity(this)){return (false);}">Update

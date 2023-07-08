@@ -1223,6 +1223,26 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                     Log.notice(F("Settings Update: [%s]:(%s) not valid when tower fan control is enabled - skipping." CR), name, value);
                 }
             }
+            if (strcmp(name, AppKeys::kickdetect) == 0) // Set kick detect
+            {
+                if (strcmp(value, "on") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.copconfig.kickdetect = true;
+                }
+                else if (strcmp(value, "off") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.copconfig.kickdetect = false;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
         }
         if (hostnamechanged)
         { // We reset hostname, process

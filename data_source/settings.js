@@ -96,12 +96,12 @@ $("input[type='reset']").closest('form').on('reset', function (event) { // Reset
 // Handle click on enable/disable radio buttons
 $('input[type=radio][name=tfancontrolenabled]').change(function () {
     if (this.value == 'true') {
-        $("#tfansetpoint").prop("disabled", false);                // Enable radio control
+        $("#tfansetpoint").prop("disabled", false);             // Enable radio control
         $('input[name=tapsolenoid]').attr("disabled", true);    // Disable Solenoid control
         $('input[name=tfanonhigh]').attr("disabled", false);    // Eable invert control
     }
     else if (this.value == 'false') {
-        $("#tfansetpoint").prop("disabled", true);                 // Enable radio control
+        $("#tfansetpoint").prop("disabled", true);              // Enable radio control
         $('input[name=tapsolenoid]').attr("disabled", false);   // Disable Solenoid control
         $('input[name=tfanonhigh]').attr("disabled", true);     // Eable invert control
     }
@@ -242,6 +242,11 @@ function populateConfig(callback = null) { // Get configuration settings
                     imperial = false;
                     $('input:radio[name="imperial"]')[0].checked = true;
                 }
+                if (config.copconfig.kickdetect) {
+                    $('input:radio[name="kickdetect"]')[0].checked = true;
+                } else {
+                    $('input:radio[name="kickdetect"]')[1].checked = true;
+                }
 
                 try {
                     if (config.temps.tfancontrolenabled) {
@@ -283,9 +288,9 @@ function populateConfig(callback = null) { // Get configuration settings
                 }
 
                 try {
-                    $('#loglevel option').eq(config.copconfig.loglevel).prop('selected',true);
+                    $('#loglevel option').eq(config.copconfig.loglevel).prop('selected', true);
                 } catch {
-                    $('#loglevel option').eq(6).prop('selected',true);
+                    $('#loglevel option').eq(6).prop('selected', true);
                 }
 
                 try {
@@ -674,6 +679,7 @@ function processControllerPost(url, obj) {
     imperialVal = $("[name='imperial']:checked").val();
     serialVal = $("[name='serial']:checked").val();
     tapsolenoidVal = $("[name='tapsolenoid']:checked").val();
+    kickdetect = $("[name='kickdetect']:checked").val();
 
     // Hold some data about what we changed
     var reloadpage = false;
@@ -716,6 +722,7 @@ function processControllerPost(url, obj) {
             imperial: imperialVal,
             serial: serialVal,
             tapsolenoid: tapsolenoidVal,
+            kickdetect: kickdetect,
         }
         if (hostnamechanged && reloadpage) {
             var newpage = cleanURL(window.location.href, hostnameVal + ".local")
@@ -792,7 +799,7 @@ function processSensorControlPost(url, obj) {
     kegcal = $form.find("input[name='kegcal']").val();
     enablekeg = $form.find("input[name='enablekeg']:checked").val();
 
-    if (JSON.parse(enableroom) || JSON.parse(enabletower) || JSON.parse(enableupper) || JSON.parse(enablelower) || JSON.parse(enablekeg))  {
+    if (JSON.parse(enableroom) || JSON.parse(enabletower) || JSON.parse(enableupper) || JSON.parse(enablelower) || JSON.parse(enablekeg)) {
         sessionStorage.setItem("useTemps", true);
     } else {
         sessionStorage.setItem("useTemps", false);
@@ -923,7 +930,7 @@ function putData(url, data, newpage = false, newdata = false, callback = null) {
 
     $.ajax({
         url: url,
-        headers: {"X-KegCop-Secret": secret },
+        headers: { "X-KegCop-Secret": secret },
         data: data,
         type: 'PUT'
     })
