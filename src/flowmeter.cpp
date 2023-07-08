@@ -210,7 +210,9 @@ bool isSmallPour(unsigned int count, int tap)
 }
 
 bool isKicked(int meter)
-{ // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
+{
+    if (!app.copconfig.kickdetect) return false; // Kick detect is off
+    // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
     // Get elapsed time and pulses
     const double secs = (millis() - lastLoopTime[meter]) / 1000;
     const int pulses = pulse[meter] - lastPulse[meter];
