@@ -22,7 +22,7 @@ SOFTWARE. */
 
 #include "wifihandler.h"
 
-//#define TRY_WIFI_RECONNECT
+#define TRY_WIFI_RECONNECT
 
 #include "config.h"
 #include "appconfig.h"
