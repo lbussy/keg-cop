@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,16 +23,7 @@ SOFTWARE. */
 #ifndef _EXECOTA_H
 #define _EXECOTA_H
 
-#include <Update.h>
-#include <HTTPClient.h>
-
-#include "appconfig.h"
-#include "flowconfig.h"
-#include "webpagehandler.h"
-#include <LCBUrl.h>
-
-#include <ArduinoLog.h>
-#include <Arduino.h>
+class String;
 
 void execfw();
 void execspiffs();

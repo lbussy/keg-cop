@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -24,17 +24,6 @@ SOFTWARE. */
 #define _URLTARGET_H
 
 #include "config.h"
-#include "appconfig.h"
-#include "flowmeter.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-
-#include <LCBUrl.h>
-#include <ArduinoLog.h>
-#include <AsyncTCP.h>
-#include <asyncHTTPrequest.h>
-#include <ArduinoJson.h>
-#include <Arduino.h>
 
 struct TapsReport
 {
@@ -72,6 +61,9 @@ struct UrlReport
     TapsReport tap[NUMTAPS];
     SensorsReport sensor[NUMSENSOR];
 };
+
+class asyncHTTPrequest;
+class String;
 
 bool sendTargetReport();                                   // Push complete report
 bool sendTReport(const String &);                          // Handle the business of sending report

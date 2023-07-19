@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -22,21 +22,41 @@ SOFTWARE. */
 
 #include "serialhandler.h"
 
-#undef SERIAL
-ESPTelnet SerialAndTelnet;
-#define SERIAL SerialAndTelnet // Use Telnet
+#include "tools.h"
+#include "config.h"
+#include "appconfig.h"
+#include "execota.h"
+#include "version.h"
+#include "thatVersion.h"
+#include "resetreasons.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+#include "flowmeter.h"
 
-void serial()
+#include <ArduinoLog.h>
+#include <WiFiUdp.h>
+#include <ArduinoJson.h>
+#include <Arduino.h>
+#include <telnetspy.h>
+
+TelnetSpy SerialAndTelnet;
+#undef SERIAL
+#define SERIAL SerialAndTelnet
+
+void serialBegin()
 {
     char buffer[32];
     strcpy(buffer, (const char *)"Connected to ");
     strcat(buffer, AppKeys::appname);
     strcat(buffer, (const char *)"\n");
     SERIAL.setWelcomeMsg(buffer);
-    // _delay(3000); // Delay to allow a monitor to start
+    SERIAL.setPort(TELNETPORT);
     SERIAL.begin(BAUD);
+    while (!Serial) {;}
+    delay(5000);
     printCR(true);
     SERIAL.flush();
+    toggleTelnet(app.copconfig.telnet);
 #if !defined(DISABLE_LOGGING)
     if (app.copconfig.serial)
     {
@@ -47,11 +67,44 @@ void serial()
     else if (!app.copconfig.serial)
     {
         SERIAL.setDebugOutput(true);
-        Log.begin(LOG_LEVEL, &SERIAL, true);
+        Log.begin(app.copconfig.loglevel, &SERIAL, true);
         Log.setPrefix(printTimestamp);
         Log.notice(F("Serial logging started at %l." CR), BAUD);
     }
 #endif
+}
+
+void serialStop()
+{
+    Log.notice(F("Serial logging stopping." CR));
+    SERIAL.flush();
+    SERIAL.disconnectClient();
+    SERIAL.end();
+     delay(500);
+    Serial.begin(BAUD);
+    delay(500);
+    #if !defined(DISABLE_LOGGING)
+    if (app.copconfig.serial)
+    {
+        Serial.setDebugOutput(false);
+        Log.begin(LOG_LEVEL_SILENT, &SERIAL, true);
+        Log.setPrefix(printTimestamp);
+    }
+    else if (!app.copconfig.serial)
+    {
+        Serial.setDebugOutput(true);
+        Log.begin(LOG_LEVEL, &SERIAL, true);
+        Log.setPrefix(printTimestamp);
+        Log.notice(F("Local serial logging started at %l." CR), BAUD);
+    }
+#endif
+}
+
+void serialRestart()
+{
+    Serial.flush();
+    Serial.end();
+    serialBegin();
 }
 
 void printTimestamp(Print *_logOutput)
@@ -128,8 +181,8 @@ void flush(bool safe)
 
 void serialLoop()
 {
-    SerialAndTelnet.handle();
-    if (SerialAndTelnet.available() > 0)
+    SERIAL.handle();
+    if (SERIAL.available() > 0)
     {
         if (!app.copconfig.serial)
         { // Turn on/off Serial Mode
@@ -459,7 +512,7 @@ void toggleSerialCompat(bool enable)
     if (enable && !app.copconfig.serial)
     {
         app.copconfig.serial = true;
-        saveAppConfig();
+        saveAppConfig(APP_FILENAME);
         SERIAL.flush();
         SERIAL.setDebugOutput(false);
         Log.setLevel(LOG_LEVEL_SILENT);
@@ -467,7 +520,7 @@ void toggleSerialCompat(bool enable)
     else if (!enable && app.copconfig.serial)
     {
         app.copconfig.serial = false;
-        saveAppConfig();
+        saveAppConfig(APP_FILENAME);
         SERIAL.flush();
         SERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &SERIAL, true);
@@ -488,6 +541,16 @@ void nullDoc(const char *wrapper)
     printCR();
 }
 
+bool telnetEnabled()
+{
+    return SERIAL.enabled();
+}
+
+void toggleTelnet(bool enabled)
+{
+    SERIAL.toggle(enabled);
+}
+
 void togglePourEmulation(bool enable)
 {
     if (app.copconfig.serial)
@@ -495,14 +558,14 @@ void togglePourEmulation(bool enable)
         if (enable && !app.copconfig.pouremulate)
         {
             app.copconfig.pouremulate = true;
-            saveAppConfig();
+            saveAppConfig(APP_FILENAME);
             SERIAL.println(F("Pour emulation mode on."));
             SERIAL.print(F("Tap Command > "));
         }
         else if (!enable && app.copconfig.pouremulate)
         {
             app.copconfig.pouremulate = false;
-            saveAppConfig();
+            saveAppConfig(APP_FILENAME);
             SERIAL.println(F("Pour emulation mode off."));
         }
         else
@@ -638,14 +701,14 @@ void toggleTempEmulation(bool enable)
         if (enable && !app.copconfig.tempemulate)
         {
             app.copconfig.tempemulate = true;
-            saveAppConfig();
+            saveAppConfig(APP_FILENAME);
             SERIAL.println(F("Temperature emulation mode on."));
             SERIAL.print(F("Temp Command > "));
         }
         else if (!enable && app.copconfig.tempemulate)
         {
             app.copconfig.tempemulate = false;
-            saveAppConfig();
+            saveAppConfig(APP_FILENAME);
             SERIAL.println(F("Temperature emulation mode off."));
         }
         else

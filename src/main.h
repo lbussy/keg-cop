@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,23 +23,18 @@ SOFTWARE. */
 #ifndef _MAIN_H
 #define _MAIN_H
 
-#include "appconfig.h"
-#include "serialhandler.h"
-#include "config.h"
-#include "ntphandler.h"
-#include "wifihandler.h"
-#include "webpagehandler.h"
-#include "version.h"
-#include "mdnshandler.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-#include "flowmeter.h"
-#include "tools.h"
-#include "execota.h"
-#include "uptimelog.h"
-#include "taplistio.h"
+class String;
 
-#include <ArduinoLog.h>
-#include <ESP_DoubleResetDetector.h>
+#include <Ticker.h>
+
+extern Ticker sendHASSDiscovery;
+extern Ticker sendHASSAvailability;
+extern Ticker sendHASSState;
+
+void setup();
+void loop();
+void stopMainProc();
+void startMainProc();
+void playDead(String cause);
 
 #endif // _MAIN_H

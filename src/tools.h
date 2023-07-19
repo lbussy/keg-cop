@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,36 +23,23 @@ SOFTWARE. */
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
-#include "config.h"
-#include "ntphandler.h"
-#include "kegscreen.h"
-#include "thermostat.h"
-#include "urltarget.h"
-#include "mdnshandler.h"
-#include "wifihandler.h"
-#include "uptime.h"
-#include "uptimelog.h"
-#include "taplistio.h"
-
-#include <SPIFFS.h>
-#include <AsyncWiFiManager.h>
-#include <ArduinoLog.h>
-#include <Arduino.h>
+#include <string>
+class String;
 
 void initPourPulseKick();
-void _delay(unsigned long);
 void resetController();
 void setDoWiFiReset();
 void setDoReset();
 void setDoKSTempReport();
 void setDoTapInfoReport(int);
 void setDoTargetReport();
-void setDoRPintsConnect();
+void setDoRPintsPush();
 void setQueuePourReport(int tapNum, float pour);
 void setQueuePulseReport(int tapNum, int pulses);
 void setQueueKickReport(int tapNum);
 void setDoSaveUptime();
 void setDoSaveApp();
+void setDoSaveTelnet();
 void setDoSaveFlow();
 void tickerLoop();
 void maintenanceLoop();
@@ -64,11 +51,17 @@ double convertOneFtoC(double);
 double convertOneCtoF(double);
 double convertGtoL(double);
 double convertLtoG(double);
+float reduceFloatPrecision(float f, int dec);
+char* convertFloatToString(float f, char* buf, int dec = 2);
 std::string addThousandSeparators(std::string, char, char, char sourceDecimalSep);
 void getGuid(char *str); // 17 chars including null terminator
 void killDRD();
 unsigned long getTime();
+bool copyFile(String src, String dst);
+void tcp_cleanup();
+void safeDelay(unsigned long delay);
 
 extern bool doWiFiReconnect;
+extern bool pausingWiFi;
 
 #endif

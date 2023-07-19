@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -22,6 +22,16 @@ SOFTWARE. */
 
 #include "ntphandler.h"
 
+#include "serialhandler.h"
+#include "appconfig.h"
+#include "tools.h"
+#include "config.h"
+#include <Ticker.h>
+#include <ArduinoLog.h>
+#include <sntp.h>   // sntp_get_current_timestamp()
+
+#include <WiFi.h>
+
 void setClock()
 {
     Ticker blinker;
@@ -38,11 +48,11 @@ void setClock()
             if (cycle > 9)
             {
                 printCR(true);
-                Log.warning(F("Unable to get time hack from server, restarting." CR));
+                Log.error(F("Unable to get time hack from server, restarting." CR));
                 blinker.detach();
                 killDRD();
                 ESP.restart();
-                delay(1000); // Leave this here to avoid weirdness
+                delay(300); // Leave this here to avoid weirdness
             }
             printCR(true);
             Log.notice(F("Re-requesting time hack."));

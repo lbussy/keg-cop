@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -21,6 +21,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "uptimelog.h"
+
+#include "config.h"
+#include "tools.h"
+#include "serialhandler.h"
+#include "resetreasons.h"
+
+#include <Arduino.h>
+#include <ArduinoLog.h>
+#include <FS.h>
+#include <LittleFS.h>
+#include <Ticker.h>
+
+#define CAP_SER_UPT 32
+#define CAP_DESER_UPT 96
+
+#define UPTIME_FILE "/uptime.json"
+#define UPTIME_LOG "/uptime.csv"
 
 Uptime uptime;
 Ticker saveRebootTime;
@@ -108,13 +125,7 @@ void doUptime(bool reboot)
 
 bool deleteUptimeFile()
 {
-    bool retVal =false;
-    if (!FILESYSTEM.begin())
-    {
-        retVal = false;
-    }
-    retVal = FILESYSTEM.remove(uptimefile);
-    return retVal;
+    return FILESYSTEM.remove(uptimefile);
 }
 
 bool loadUptime()
@@ -134,34 +145,27 @@ bool loadUptime()
 bool loadUptimeFile()
 {
     bool retVal;
-    if (!FILESYSTEM.begin())
+
+    // Loads uptime information from a file on FILESYSTEM
+    File file = FILESYSTEM.open(uptimefile,FILE_READ);
+    if (!FILESYSTEM.exists(uptimefile) || !file)
     {
-        retVal = false;
+        // File does not exist or unable to read file
     }
     else
     {
-        // Loads uptime information from a file on FILESYSTEM
-        File file = FILESYSTEM.open(uptimefile,FILE_READ);
-        if (!FILESYSTEM.exists(uptimefile) || !file)
+        // Existing uptime info present
+        if (!deserializeUptime(file))
         {
-            // File does not exist or unable to read file
+            retVal = false;
         }
         else
         {
-            // Existing uptime info present
-            if (!deserializeUptime(file))
-            {
-                retVal = false;
-            }
-            else
-            {
-                retVal = true;
-            }
+            retVal = true;
         }
-        file.close();
     }
+    file.close();
     return retVal;
-
 }
 
 bool saveUptime()
@@ -173,6 +177,7 @@ bool saveUptimeFile()
 {
     bool retVal;
     // Saves the uptime information to a file on FILESYSTEM
+
     File file = FILESYSTEM.open(uptimefile,FILE_WRITE);
     if (!file)
     {
@@ -187,6 +192,7 @@ bool saveUptimeFile()
         }
     }
     file.close();
+
     return retVal;
 }
 

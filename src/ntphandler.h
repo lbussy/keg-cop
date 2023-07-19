@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,15 +23,8 @@ SOFTWARE. */
 #ifndef _NTP_H
 #define _NTP_H
 
-#include <WiFi.h>
-
-#include "serialhandler.h"
-#include "appconfig.h"
-#include "tools.h"
-#include "config.h"
-#include <Ticker.h>
-#include <ArduinoLog.h>
-#include <sntp.h>   // sntp_get_current_timestamp()
+class String;
+#include <stdint.h>
 
 void setClock();
 String getDTS();

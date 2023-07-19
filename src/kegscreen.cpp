@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -21,6 +21,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "kegscreen.h"
+
+#include "flowconfig.h"
+#include "config.h"
+#include "appconfig.h"
+#include "flowmeter.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+
+#include <LCBUrl.h>
+#include <ArduinoLog.h>
+#include <AsyncTCP.h>
+#include <FS.h>
+#include <Arduino.h>
+
+#define KS_FILENAME "/kstv.json"
 
 int tempReportIteration = 0;
 
@@ -93,7 +108,7 @@ bool sendTapInfoReport(int tapid)
         }
         else
         {
-            Log.verbose(F("KegScreen reporting not enabled, skipping (Tap Info)." CR));
+            Log.trace(F("KegScreen reporting not enabled, skipping (Tap Info)." CR));
             return false;
         }
     }
@@ -126,7 +141,7 @@ bool sendPourReport(int tapid, float dispensed)
         }
         else
         {
-            Log.verbose(F("KegScreen reporting not enabled, skipping (Pour Report)." CR));
+            Log.trace(F("KegScreen reporting not enabled, skipping (Pour Report)." CR));
             retval = false;
         }
     }
@@ -154,7 +169,7 @@ bool sendKickReport(int tapid)
         }
         else
         {
-            Log.verbose(F("KegScreen reporting not enabled, skipping (Kick Report)." CR));
+            Log.trace(F("KegScreen reporting not enabled, skipping (Kick Report)." CR));
             return false;
         }
     }
@@ -174,7 +189,7 @@ bool sendCoolStateReport()
     StaticJsonDocument<384> doc;
 
     if (!kegscreenIsEnabled) {
-        Log.verbose(F("KegScreen reporting not enabled, skipping (Cool State)." CR));
+        Log.trace(F("KegScreen reporting not enabled, skipping (Cool State)." CR));
         return false;
     }
 
@@ -190,7 +205,7 @@ bool sendTempReport()
     const ReportKey reportkey = KS_TEMPREPORT;
     if (!kegscreenIsEnabled && tempReportIteration < 10) // If KegScreen is enabled
     {
-        Log.verbose(F("KegScreen reporting not enabled, skipping (Temp Report)." CR));
+        Log.trace(F("KegScreen reporting not enabled, skipping (Temp Report)." CR));
         tempReportIteration = 0;
         return false;
     }
@@ -243,12 +258,12 @@ bool sendReport(ReportKey thisKey, const char * json) {
         String connection = "";
         if (url.isMDNS(url.getHost().c_str()))
         { // Is mDNS (== .local)
-            Log.verbose(F("%s: Preparing POST to: %s (%s)" CR), reportname[thisKey], url.getUrl().c_str(), connectionIP.toString().c_str());
+            Log.trace(F("%s: Preparing POST to: %s (%s)" CR), reportname[thisKey], url.getUrl().c_str(), connectionIP.toString().c_str());
             connection = url.getIPUrl();
         }
         else
         { // Not mDNS (!= .local)
-            Log.verbose(F("%s: Preparing POST to: %s" CR), reportname[thisKey], url.getUrl().c_str());
+            Log.trace(F("%s: Preparing POST to: %s" CR), reportname[thisKey], url.getUrl().c_str());
             connection = url.getUrl();
         }
         if (connection.length() > 0)
@@ -264,7 +279,7 @@ bool sendReport(ReportKey thisKey, const char * json) {
                 }
                 else
                 {
-                    Log.verbose(F("%s: POST to %s dispatched." CR), reportname[thisKey], connection.c_str());
+                    Log.notice(F("%s: POST to %s dispatched." CR), reportname[thisKey], connection.c_str());
                 }
             }
             else
@@ -299,12 +314,11 @@ bool sendReport(ReportKey thisKey, const char * json) {
 
 void doKSMDNS()
 {
-    MDNS.addService(AppKeys::kegscreen, AppKeys::tcp, PORT);
     MDNS.addService(KegScreenKeys::kstv, AppKeys::tcp, PORT);
 
 // TXT records
     MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::devicetype, AppKeys::apikey);
-    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, F("path"), KegScreenKeys::kstv_path);
+    MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::path, KegScreenKeys::kstv_path);
     MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::appendID, "no");
     MDNS.addServiceTxt(KegScreenKeys::kstv, AppKeys::tcp, KegScreenKeys::deviceid, app.copconfig.guid);
 }
@@ -320,31 +334,23 @@ void doKSJSON()
     doc["path"] = KegScreenKeys::kstv_path;
     doc["deviceID"] = app.copconfig.guid;
 
-    // Make sure FILESTYSTEM exists
-    if (!FILESYSTEM.begin())
+    File file = FILESYSTEM.open(KS_FILENAME, FILE_WRITE);
+    if (!file)
     {
-        Log.error(F("%s: Failed to connect to filesystem." CR), featureName);
+        Log.error(F("%s: Failed to open JSON file." CR), featureName);
     }
     else
     {
-        File file = FILESYSTEM.open(APP_FILENAME, FILE_WRITE);
-        if (!file)
-        {
-            Log.error(F("%s: Failed to open JSON file." CR), featureName);
+        // Serialize JSON to file
+        if (serializeJson(doc, file) == 0) {
+            Log.error(F("%s: Failed to write JSON file." CR), featureName);
         }
         else
         {
-            // Serialize JSON to file
-            if (serializeJson(doc, file) == 0) {
-                Log.error(F("%s: Failed to write JSON file." CR), featureName);
-            }
-            else
-            {
-                Log.verbose(F("%s: JSON file written." CR), featureName);
-            }
+            Log.trace(F("%s: JSON file written." CR), featureName);
         }
-        file.close();
     }
+    file.close();
 }
 
 void reportCBTapInfo(void *optParm, asyncHTTPrequest *report, int readyState)

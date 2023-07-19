@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -22,6 +22,35 @@ SOFTWARE. */
 
 #include "webpagehandler.h"
 
+#include "uptime.h"
+#include "wifihandler.h"
+#include "appconfig.h"
+#include "jsontools.h"
+#include "version.h"
+#include "config.h"
+#include "thatVersion.h"
+#include "execota.h"
+#include "flowmeter.h"
+#include "mdnshandler.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+#include "resetreasons.h"
+#include "api.h"
+#include "kegscreen.h"
+#include "tools.h"
+#include "flowconfig.h"
+#include "serialhandler.h"
+#include "homeassist.h"
+
+#include <WiFi.h>
+#include <ESPmDNS.h>
+#include <ArduinoLog.h>
+#include <ArduinoJson.h>
+#include <AsyncJson.h>
+#include <ESPAsyncWebServer.h>
+#include <Arduino.h>
+#include <LCBUrl.h>
+
 AsyncWebServer server(PORT);
 
 // This BS is needed because a wierd combo of libs and core is causing the
@@ -44,20 +73,24 @@ static HANDLER_STATE (*cf[])(AsyncWebServerRequest *) = { // Configuration funct
     handleSensorPost,
     handleKegScreenPost,
     handleTaplistIOPost,
-    handleMQTTTargetPost,
+    handleRPintsTargetPost,
+    handleHATargetPost,
     handleUrlTargetPost,
     handleCloudTargetPost,
-    handleThemePost};
+    handleThemePost,
+    handleDebugPost};
 static const char *cf_str[] = {
     "handleControllerPost",
     "handleControlPost",
     "handleSensorPost",
     "handleKegScreenPost",
     "handleTaplistIOPost",
-    "handleMQTTTargetPost",
+    "handleRPintsTargetPost",
+    "handleHATargetPost",
     "handleUrlTargetPost",
     "handleCloudTargetPost",
-    "handleThemePost"};
+    "handleThemePost",
+    "handleDebugPost"};
 static int controlHandlers = sizeof(cf_str) / sizeof(cf_str[0]);
 
 static HANDLER_STATE (*tf[])(AsyncWebServerRequest *) = { // Tap functions
@@ -70,14 +103,14 @@ static const char *tf_str[] = {
     "handleSetCalMode"};
 static int tapHandlers = sizeof(tf_str) / sizeof(tf_str[0]);
 
-void initWebServer()
+void startWebServer()
 {
-    setRegPageHandlers();
     setAPIPageHandlers();
     setActionPageHandlers();
     setInfoPageHandlers();
     setConfigurationPageHandlers();
-    setEditor();
+    setFSPageHandlers();
+    setRegPageHandlers();
 
     // File not found handler
     server.onNotFound([](AsyncWebServerRequest *request)
@@ -88,10 +121,22 @@ void initWebServer()
         }
         else
         {
-            Log.verbose(F("Processing 404 for %s." CR), request->url().c_str());
-            AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
-            response->setCode(404);
-            request->send(response);
+            bool do404 = true;
+            // This is to catch anything that gets here with a filename in other than root
+            if (request->url().indexOf(".") >= 0 && request->url().indexOf("/") >= 0)
+            {
+                String url = request->url().substring(request->url().lastIndexOf("/"), request->url().length());
+                Log.notice(F("404 rewrite: Rewriting %s to %s" CR), request->url().c_str(), url.c_str());
+                request->send(FILESYSTEM, url, "text/html");
+                do404 = false;
+            }
+            if (do404)
+            {
+                Log.warning(F("Processing 404 for %s." CR), request->url().c_str());
+                AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/404.htm", "text/html");
+                response->setCode(404);
+                request->send(response);
+            }
         } });
 
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
@@ -125,20 +170,38 @@ void setRegPageHandlers()
 
 void setAPIPageHandlers()
 {
-    server.on("/api/v1/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+    server.on("/api/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
-        // Serialize API
+        // Serialize API_V1
         StaticJsonDocument<CAPACITY_API> doc;
         JsonObject root = doc.to<JsonObject>();
         api.save(root);
 
-        // Serialize JSON to String
-        String api;
-        serializeJson(doc, api);
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
-        send_json(request, api); });
+    server.on("/api/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+
+        // Serialize API_V1
+        StaticJsonDocument<CAPACITY_V1_API> doc;
+        JsonObject root = doc.to<JsonObject>();
+        api.api_v1.save(root);
+
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -150,15 +213,14 @@ void setAPIPageHandlers()
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
-        StaticJsonDocument<CAPACITY_ACTION_API> doc;
+        StaticJsonDocument<CAPACITY_V1_ACTION_API> doc;
         JsonObject root = doc.to<JsonObject>();
-        api.actionAPI.save(root);
+        api.api_v1.actionAPI.save(root);
 
-        // Serialize JSON to String
-        String api;
-        serializeJson(doc, api);
-
-        send_json(request, api); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/action/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -170,15 +232,14 @@ void setAPIPageHandlers()
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
-        StaticJsonDocument<CAPACITY_INFO_API> doc;
+        StaticJsonDocument<CAPACITY_V1_INFO_API> doc;
         JsonObject root = doc.to<JsonObject>();
-        api.infoAPI.save(root);
+        api.api_v1.infoAPI.save(root);
 
-        // Serialize JSON to String
-        String api;
-        serializeJson(doc, api);
-
-        send_json(request, api); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/info/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
@@ -190,17 +251,35 @@ void setAPIPageHandlers()
         Log.verbose(F("Processing %s." CR), request->url().c_str());
 
         // Serialize configuration
-        StaticJsonDocument<CAPACITY_CONFIG_API> doc;
+        StaticJsonDocument<CAPACITY_V1_CONFIG_API> doc;
         JsonObject root = doc.to<JsonObject>();
-        api.configAPI.save(root);
+        api.api_v1.configAPI.save(root);
 
-        // Serialize JSON to String
-        String api;
-        serializeJson(doc, api);
-
-        send_json(request, api); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/config/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/fs/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+
+        // Serialize configuration
+        StaticJsonDocument<CAPACITY_V1_FS_API> doc;
+        JsonObject root = doc.to<JsonObject>();
+        api.api_v1.filesAPI.save(root);
+
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
+
+    server.on("/api/v1/fs/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
               {
         // Needed for pre-flights
         send_ok(request); });
@@ -418,9 +497,10 @@ void setInfoPageHandlers()
         r["reason"] = rstReason();
         r["description"] = rstDescription();
 
-        String resetreason;
-        serializeJson(doc, resetreason);
-        send_json(request, resetreason); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/info/heap/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
@@ -444,9 +524,10 @@ void setInfoPageHandlers()
         h["max"] = (const uint16_t)max;
         h["frag"] = (const uint8_t)frag;
 
-        String heap;
-        serializeJson(doc, heap);
-        send_json(request, heap); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/info/uptime/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
@@ -469,9 +550,10 @@ void setInfoPageHandlers()
         u["seconds"] = seconds;
         u["millis"] = millis;
 
-        String ut = "";
-        serializeJson(doc, ut);
-        send_json(request, ut); });
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
 
     server.on("/api/v1/info/thisVersion/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
@@ -489,6 +571,7 @@ void setInfoPageHandlers()
         doc[AppKeys::badfs] = app.ota.badfs;
         doc[AppKeys::badfstime] = app.ota.badfstime;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
@@ -504,6 +587,7 @@ void setInfoPageHandlers()
         doc["fw_version"] = fw_version;
         doc["fs_version"] = fs_version;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
@@ -524,8 +608,9 @@ void setInfoPageHandlers()
             _pulse[i] = getPulseCount(i);
         }
 
+        // Serialize JSON to String and send
         String json;
-        serializeJson(doc, json); // Serialize JSON to String
+        serializeJson(doc, json);
         send_json(request, json); });
 
     server.on("/api/v1/info/tempcontrol/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
@@ -598,6 +683,7 @@ void setInfoPageHandlers()
         const bool displayenabled = (numEnabled > 0);
         doc["displayenabled"] = displayenabled;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
@@ -609,20 +695,266 @@ void setInfoPageHandlers()
 
         doc[AppKeys::secret] = app.copconfig.guid;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
 
-    server.on("/api/v1/config/theme/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+    server.on("/api/v1/info/theme/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         Log.verbose(F("Sending %s." CR), request->url().c_str());
         StaticJsonDocument<48> doc;
 
         doc[AppKeys::theme] = app.copconfig.theme;
 
+        // Serialize JSON to String and send
         String json;
         serializeJson(doc, json);
         send_json(request, json); });
+}
+
+void setFSPageHandlers()
+{
+    // Filesystem Function Page Handlers
+
+    server.on("/fs/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Processing %s." CR), request->url().c_str());
+        if (checkUserWebAuth(request))
+        {
+            AsyncWebServerResponse* response = request->beginResponse(FILESYSTEM, "/fs.htm", "text/html");
+            response->addHeader("Cache-Control","no-cache");
+            response->setCode(200);
+            request->send(response);
+        }
+        else
+        {
+            return request->requestAuthentication();
+        } });
+
+    server.on("/api/v1/fs/listfiles/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
+
+        // Get file list
+        std::vector<std::string> fileList;
+        File root = FILESYSTEM.open("/");
+        File file = root.openNextFile();
+        while (file)
+        {
+            std::string fileEntry = (std::string)file.name() + "|" + std::to_string(file.size());
+            fileList.push_back(fileEntry);
+            file = root.openNextFile();
+        }
+        std::sort(fileList.begin(), fileList.end());
+
+        DynamicJsonDocument doc(3072);
+        JsonArray array = doc.to<JsonArray>();
+        for (const auto &file : fileList)
+        {
+            array.add(file);
+        }
+
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
+
+    server.on("/api/v1/fs/fsinfo/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        Log.verbose(F("Sending %s." CR), request->url().c_str());
+
+        StaticJsonDocument<64> doc;
+        JsonObject f = doc.createNestedObject("f");
+
+        size_t free = FILESYSTEM.totalBytes() - FILESYSTEM.usedBytes();
+        size_t used = FILESYSTEM.usedBytes();
+        size_t total = FILESYSTEM.totalBytes();
+
+        f["free"] = free;
+        f["used"] = used;
+        f["total"] = total;
+
+        // Serialize JSON to String and send
+        String json;
+        serializeJson(doc, json);
+        send_json(request, json); });
+
+    server.on("/api/v1/fs/downloadfile/", KC_HTTP_GET, [](AsyncWebServerRequest *request)
+              {
+        const char * prefix = "[FS Handler]";
+        Log.verbose(F("%s Processing %s." CR), prefix, request->url().c_str());
+
+        int params = request->params();
+        for (int i = 0; i < params; i++)
+        {
+            AsyncWebParameter *p = request->getParam(i);
+
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+
+            Log.verbose(F("%s Sending %s." CR), prefix, request->url().c_str());
+            Log.verbose(F("%s Client: %s %s" CR), prefix, request->client()->remoteIP().toString().c_str(), request->url().c_str());
+
+            if (strcmp(name, "name") == 0 && strcmp(value, "") != 0)
+            {
+                char fileName[34];
+                strcpy(fileName, "/");
+                strcat(fileName, value);
+                Log.notice(F("%s Processing download for %s." CR), prefix, fileName);
+                if (!FILESYSTEM.exists(fileName))
+                {
+                    Log.error(F("%s File does not exist." CR), prefix);
+                    request->send(404, "text/plain", "File does not exist.");
+                    return;
+                }
+                else
+                {
+                    Log.notice(F("%s Downloading %s." CR), prefix, fileName);
+                    request->send(FILESYSTEM, fileName, "application/octet-stream");
+                    return;
+                }
+            }
+        }
+            send_not_allowed(request); });
+
+    server.on("/api/v1/fs/downloadfile/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/fs/downloadfile/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on("/api/v1/fs/deletefile/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
+              {
+        const char * prefix = "[FS Handler]";
+        Log.verbose(F("%s Processing %s." CR), prefix, request->url().c_str());
+        switch (handleSecret(request))
+        {
+            case PROCESSED:
+                if (checkUserWebAuth(request))
+                {
+                    int params = request->params();
+                    for (int i = 0; i < params; i++)
+                    {
+                        AsyncWebParameter *p = request->getParam(i);
+                        if (p->isPost())
+                        {
+                            // Process any p->name().c_str() / p->value().c_str() pairs
+                            const char *name = p->name().c_str();
+                            const char *value = p->value().c_str();
+
+                            // Delete file
+                            if (strcmp(name, "delete") == 0 && strcmp(value, "") != 0)
+                            {
+                                char fileName[34];
+                                strcpy(fileName, "/");
+                                strcat(fileName, value);
+                                Log.notice(F("%s Processing delete for %s." CR), prefix, fileName);
+                                if (!FILESYSTEM.exists(fileName))
+                                {
+                                    Log.error(F("%s File does not exist." CR), prefix);
+                                    request->send(400, "text/plain", "File does not exist.");
+                                }
+                                else
+                                {
+                                    Log.verbose(F("%s File exists." CR), prefix);
+                                    Log.notice(F("%s Deleting %s." CR), prefix, fileName);
+                                    if (FILESYSTEM.remove(fileName))
+                                    {
+                                        request->send(200, "text/plain", "Deleted File: " + String(fileName));
+                                        Log.notice(F("%s Deleted: %s." CR), prefix, fileName);
+                                    }
+                                    else
+                                    {
+                                        Log.error(F("%s Unable to delete file." CR), prefix);
+                                        request->send(400, "text/plain", "Unable to delete file.");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return request->requestAuthentication();
+                }
+                break;
+            case FAIL_PROCESS:
+                send_failed(request);
+                break;
+            case NOT_PROCCESSED:
+                send_not_allowed(request);
+                break;
+        } });
+
+    server.on("/api/v1/fs/deletefile/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              {
+        // Needed for pre-flights
+        send_ok(request); });
+
+    server.on("/api/v1/fs/deletefile/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              {
+        // Required for CORS preflight on some PUT/POST
+        send_not_allowed(request); });
+
+    server.on(
+        "/api/v1/fs/upload/", KC_HTTP_POST, [](AsyncWebServerRequest *request)
+        { send_ok(request); },
+        handleUpload);
+
+    server.on("/api/v1/fs/upload/", KC_HTTP_OPTIONS, [](AsyncWebServerRequest *request)
+              { send_ok(request); });
+
+    server.on("/api/v1/fs/upload/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
+              { send_not_allowed(request); });
+}
+
+void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
+{
+    const char *prefix = "[Upload]";
+
+    switch (handleSecret(request))
+    {
+    case PROCESSED:
+        if (checkUserWebAuth(request))
+        {
+            if (!index)
+            {
+                Log.verbose(F("%s Client: %s/%s" CR), prefix, request->client()->remoteIP().toString().c_str(), filename.c_str());
+                String _filename = "/" + filename;
+                request->_tempFile = FILESYSTEM.open(_filename, FILE_WRITE);
+            }
+            if (request->_tempFile)
+            {
+                if (len)
+                {
+                    request->_tempFile.write(data, len);
+                }
+                if (final)
+                {
+                    send_ok(request);
+                    request->_tempFile.close();
+                    Log.notice(F("%s Upload of %s complete." CR), prefix, filename.c_str());
+                }
+            }
+        }
+        else
+        {
+            return request->requestAuthentication();
+        }
+        break;
+    case FAIL_PROCESS:
+        send_failed(request);
+        return;
+    case NOT_PROCCESSED:
+        send_not_allowed(request);
+        return;
+    }
 }
 
 void setConfigurationPageHandlers()
@@ -661,56 +993,15 @@ void setConfigurationPageHandlers()
         JsonObject root = doc.to<JsonObject>(); // Create JSON object
         app.save(root);                      // Fill the object with current config
 
+        // Serialize JSON to String and send
         String json;
-        serializeJson(doc, json); // Serialize JSON to String
+        serializeJson(doc, json);
         send_json(request, json); });
 
     server.on("/api/v1/config/settings/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
               {
         // Required for CORS preflight on some PUT/POST
         send_ok(request); });
-
-#ifdef JSONLOADER
-    server.on("/api/v1/config/bulkload/", KC_HTTP_PUT, [](AsyncWebServerRequest *request)
-              {
-        // Process settings update
-        Log.verbose(F("Processing put to %s." CR), request->url().c_str());
-
-        switch (handleSecret(request))
-        {
-            case PROCESSED:
-                {
-                    HANDLER_STATE thisState = handleJson(request);
-                    if (thisState == PROCESSED)
-                    {
-                        send_ok(request);
-                    }
-                    else if (thisState == FAIL_PROCESS)
-                    {
-                        send_failed(request);
-                    } else if (thisState == NOT_PROCCESSED)
-                    {
-                        send_ok(request);
-                    }
-                    break;
-                }
-            case FAIL_PROCESS:
-                send_failed(request);
-                break;
-            case NOT_PROCCESSED:
-                send_not_allowed(request);
-                break;
-        } });
-
-    server.on("/api/v1/config/bulkload/", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-        send_not_allowed(request); });
-
-    server.on("/api/v1/config/bulkload/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
-              {
-        // Required for CORS preflight on some PUT/POST
-        send_ok(request); });
-#endif
 
     // Settings Handlers^
     // Tap Handlers:
@@ -747,8 +1038,9 @@ void setConfigurationPageHandlers()
         JsonObject root = doc.to<JsonObject>();      // Create JSON object
         flow.save(root);                             // Fill the object with current kegs
 
+        // Serialize JSON to String and send
         String json;
-        serializeJson(doc, json); // Serialize JSON to String
+        serializeJson(doc, json);
         send_json(request, json); });
 
     server.on("/api/v1/config/taps/", KC_HTTP_ANY, [](AsyncWebServerRequest *request)
@@ -759,17 +1051,14 @@ void setConfigurationPageHandlers()
     // Tap Handlers^
 }
 
-void setEditor()
-{
-    configureEditPages(server, SPIFFSEDITUSER, SPIFFSEDITPW, "edit");
-}
-
 void stopWebServer()
 {
     server.reset();
     server.end();
     Log.notice(F("Web server stopped." CR));
 }
+
+static const char *getRealm() { return AppKeys::appname; }
 
 // Settings Handlers:
 
@@ -905,7 +1194,7 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
             }
             if (strcmp(name, AppKeys::tapsolenoid) == 0)
             {
-                if (app.temps.tfancontrolenabled) // Set active
+                if (!app.temps.tfancontrolenabled) // Set active
                 {
                     if (strcmp(value, "energized") == 0)
                     {
@@ -926,10 +1215,32 @@ HANDLER_STATE handleControllerPost(AsyncWebServerRequest *request) // Handle con
                         didFail = true;
                         Log.warning(F("Settings Update: [%s]:(%s) not valid." CR), name, value);
                     }
+                    setBinaryPoint(HASS_TOWER_FAN);
+                    setBinaryPoint(HASS_SOLENOID);
                 }
                 else
                 {
                     Log.notice(F("Settings Update: [%s]:(%s) not valid when tower fan control is enabled - skipping." CR), name, value);
+                }
+            }
+            if (strcmp(name, AppKeys::kickdetect) == 0) // Set kick detect
+            {
+                if (strcmp(value, "on") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.copconfig.kickdetect = true;
+                }
+                else if (strcmp(value, "off") == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.copconfig.kickdetect = false;
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
         }
@@ -1036,6 +1347,10 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
+                if (didChange) // Send MQTT discovery, availability and state for chamber cooling control
+                {
+                    setBinaryPoint(HASS_CHAMBER_COOL);
+                }
             }
             if (strcmp(name, AppKeys::coolonhigh) == 0) // Enable cooling on pin high (reverse)
             {
@@ -1075,6 +1390,19 @@ HANDLER_STATE handleControlPost(AsyncWebServerRequest *request) // Handle temp c
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                if (didChange) // Send MQTT discovery, availability and state for tower fan control
+                {
+                    setBinaryPoint(HASS_TOWER_FAN);
+                    setBinaryPoint(HASS_SOLENOID);
+                    if (!app.temps.tfancontrolenabled && !app.copconfig.tapsolenoid)
+                    {
+                        digitalWrite(SOLENOID, HIGH); // Solenoid off
+                    }
+                    else if (!app.temps.tfancontrolenabled && app.copconfig.tapsolenoid)
+                    {
+                        digitalWrite(SOLENOID, LOW); // Solenoid on
+                    }
                 }
             }
             if (strcmp(name, AppKeys::tfansetpoint) == 0) // Set Tower fan setpoint
@@ -1160,7 +1488,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
 
             // Sensor settings
             //
-            if (strcmp(name, "roomcal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::roomcal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -1177,6 +1505,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enableroom") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[ROOM];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1194,8 +1523,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
+                if (oldState != app.temps.enabled[ROOM]) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorPoint(ROOM);
+                }
             }
-            if (strcmp(name, "towercal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::towercal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -1212,6 +1545,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enabletower") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[TOWER];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1229,8 +1563,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
+                if (oldState != app.temps.enabled[TOWER]) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorPoint(TOWER);
+                }
             }
-            if (strcmp(name, "uppercal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::uppercal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -1247,6 +1585,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enableupper") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[UPPER];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1264,8 +1603,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
+                if (oldState != app.temps.enabled[UPPER]) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorPoint(UPPER);
+                }
             }
-            if (strcmp(name, "lowercal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::lowercal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -1282,6 +1625,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enablelower") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[LOWER];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1299,8 +1643,12 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
+                if (oldState != app.temps.enabled[LOWER]) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorPoint(LOWER);
+                }
             }
-            if (strcmp(name, "kegcal") == 0) // Set the sensor calibration
+            if (strcmp(name, AppKeys::kegcal) == 0) // Set the sensor calibration
             {
                 const double val = atof(value);
                 if ((val < -25) || (val > 25))
@@ -1317,6 +1665,7 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
             }
             if (strcmp(name, "enablekeg") == 0) // Enable sensor
             {
+                bool oldState = app.temps.enabled[KEG];
                 if (strcmp(value, "true") == 0)
                 {
                     didChange = true;
@@ -1333,6 +1682,10 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *request) // Handle sensor 
                 {
                     didFail = true;
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                if (oldState != app.temps.enabled[KEG]) // Send MQTT discovery, availability and state for temp sensor
+                {
+                    setSensorPoint(KEG);
                 }
             }
         }
@@ -1497,7 +1850,7 @@ HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *request) // Handle URL 
     }
 }
 
-HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQTT target
+HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *request) // Handle RPints MQTT target
 {
     bool didFail = false;
     bool didChange = false;
@@ -1515,7 +1868,6 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
 
             // MQTT Target settings
             //
-            int changedMqtt = 0;
             if (strcmp(name, "rpintshost") == 0) // Set MQTT broker host
             {
                 LCBUrl url;
@@ -1524,14 +1876,12 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.rpintstarget.host, value, sizeof(app.rpintstarget.host));
-                    changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
                     strlcpy(app.rpintstarget.host, value, sizeof(app.rpintstarget.host));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -1552,7 +1902,6 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     app.rpintstarget.port = val;
-                    changedMqtt++;
                 }
             }
             if (strcmp(name, "rpintsusername") == 0) // Set MQTT user name
@@ -1562,14 +1911,12 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.rpintstarget.username, value, sizeof(app.rpintstarget.username));
-                    changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
                     strlcpy(app.rpintstarget.username, value, sizeof(app.rpintstarget.username));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -1584,14 +1931,12 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.rpintstarget.password, value, sizeof(app.rpintstarget.password));
-                    changedMqtt++;
                 }
                 else if (strcmp(value, "") == 0 || strlen(value) == 0)
                 {
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
                     strlcpy(app.rpintstarget.password, value, sizeof(app.rpintstarget.password));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -1606,7 +1951,6 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                     didChange = true;
                     Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
                     strlcpy(app.rpintstarget.topic, value, sizeof(app.rpintstarget.topic));
-                    changedMqtt++;
                 }
                 else
                 {
@@ -1614,10 +1958,134 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
                     Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
                 }
             }
-            if (changedMqtt)
+        }
+    }
+    // Return values
+    if (didChange)
+    {
+        setDoSaveApp();
+    }
+    if (didFail)
+    {
+        return FAIL_PROCESS;
+    }
+    else if (didChange)
+    {
+        return PROCESSED;
+    }
+    else
+    {
+        return NOT_PROCCESSED;
+    }
+}
+
+HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *request) // Handle Home Asst MQTT target
+{
+    bool didFail = false;
+    bool didChange = false;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // MQTT Target settings
+            //
+            if (strcmp(name, "hahost") == 0) // Set MQTT broker host
             {
-                disconnectRPints();
-                setDoRPintsConnect();
+                LCBUrl url;
+                if (url.isValidHostName(value) && (strlen(value) > 3) && (strlen(value) < 128))
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    strlcpy(app.hatarget.host, value, sizeof(app.hatarget.host));
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(app.hatarget.host, value, sizeof(app.hatarget.host));
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "haport") == 0) // Set the broker port
+            {
+                const double val = atof(value);
+                if ((val < 1) || (val > 65535))
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.hatarget.port = val;
+                }
+            }
+            if (strcmp(name, "hausername") == 0) // Set MQTT user name
+            {
+                if ((strlen(value) > 3) && (strlen(value) < 128))
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    strlcpy(app.hatarget.username, value, sizeof(app.hatarget.username));
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(app.hatarget.username, value, sizeof(app.hatarget.username));
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "hapassword") == 0) // Set MQTT user password
+            {
+                if ((strlen(value) > 3) && (strlen(value) < 128))
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    strlcpy(app.hatarget.password, value, sizeof(app.hatarget.password));
+                }
+                else if (strcmp(value, "") == 0 || strlen(value) == 0)
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) cleared." CR), name, value);
+                    strlcpy(app.hatarget.password, value, sizeof(app.hatarget.password));
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, "hatopic") == 0) // Set MQTT topic
+            {
+                if ((strlen(value) > 3) && (strlen(value) < 128))
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    strlcpy(app.hatarget.topic, value, sizeof(app.hatarget.topic));
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
             }
         }
     }
@@ -1625,6 +2093,12 @@ HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *request) // Handle MQT
     if (didChange)
     {
         setDoSaveApp();
+        if ((app.hatarget.host == NULL || app.hatarget.host[0] == '\0') == false)
+        {
+            queueHASSDiscov(); // Queue all HASS discovery
+            queueHASSAvail();  // Keep sending availability updates
+            queueHASSState();  // Keep sending state updates
+        }
     }
     if (didFail)
     {
@@ -1851,6 +2325,97 @@ HANDLER_STATE handleThemePost(AsyncWebServerRequest *request) // Handle URL targ
     }
 }
 
+HANDLER_STATE handleDebugPost(AsyncWebServerRequest *request) // Handle Debug target
+{
+    bool didFail = false;
+    bool didChange = false;
+    // Loop through all parameters
+    int params = request->params();
+    for (int i = 0; i < params; i++)
+    {
+        AsyncWebParameter *p = request->getParam(i);
+        if (p->isPost())
+        {
+            // Process any p->name().c_str() / p->value().c_str() pairs
+            const char *name = p->name().c_str();
+            const char *value = p->value().c_str();
+            // Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value);
+
+            // Debug settings
+            //
+            if (strcmp(name, AppKeys::telnet) == 0) // Enable telnet
+            {
+                if (strcmp(value, "true") == 0)
+                {
+                    if (!app.copconfig.telnet)
+                    {
+                        didChange = true;
+                        Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        app.copconfig.telnet = true;
+                        setDoSaveTelnet();
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings Update: [%s]:(%s) not changed." CR), name, value);
+                    }
+                }
+                else if (strcmp(value, "false") == 0)
+                {
+                    if (app.copconfig.telnet)
+                    {
+                        didChange = true;
+                        Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                        app.copconfig.telnet = false;
+                        setDoSaveTelnet();
+                    }
+                    else
+                    {
+                        Log.notice(F("Settings Update: [%s]:(%s) not changed." CR), name, value);
+                    }
+                }
+                else
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+            }
+            if (strcmp(name, AppKeys::loglevel) == 0) // Set log level
+            {
+                const double val = atof(value);
+                if ((val < 0) || (val > 6))
+                {
+                    didFail = true;
+                    Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
+                }
+                else
+                {
+                    didChange = true;
+                    Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
+                    app.copconfig.loglevel = val;
+                    Log.setLevel(val);
+                }
+            }
+        }
+    }
+    // Return values
+    if (didChange)
+    {
+        setDoSaveApp();
+    }
+    if (didFail)
+    {
+        return FAIL_PROCESS;
+    }
+    else if (didChange)
+    {
+        return PROCESSED;
+    }
+    else
+    {
+        return NOT_PROCCESSED;
+    }
+}
+
 // Settings Handlers^
 
 // Tap Handlers:
@@ -2007,6 +2572,7 @@ HANDLER_STATE handleTapPost(AsyncWebServerRequest *request) // Handle tap settin
         setDoSaveFlow();
         if (tapNum >= 0)
         {
+            setTapPoint(tapNum);
             setDoTapInfoReport(tapNum);
         }
     }
@@ -2182,13 +2748,12 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
 
     // Secret processing
     //
-    const char * needHeader = "X-KegCop-Secret";
+    const char *needHeader = "X-KegCop-Secret";
     if (request->hasHeader(needHeader))
     {
         didProcess = true;
-        AsyncWebHeader* bulkLoadHeader = request->getHeader(needHeader);
-        const char * headerVal = bulkLoadHeader->value().c_str();
-        //Log.notice(F("[DEBUG] Secret Check: Testing[%s]:[%s]." CR), app.copconfig.guid, headerVal);
+        AsyncWebHeader *bulkLoadHeader = request->getHeader(needHeader);
+        const char *headerVal = bulkLoadHeader->value().c_str();
         if (strcmp(headerVal, app.copconfig.guid) == 0)
         {
             didPass = true;
@@ -2219,182 +2784,6 @@ HANDLER_STATE handleSecret(AsyncWebServerRequest *request) // Handle checking se
 
 // Secret Handler^
 
-// JSON Handler:
-
-#ifdef JSONLOADER
-HANDLER_STATE handleJson(AsyncWebServerRequest *request) // Handle checking JSON
-{
-    bool didPass = false;
-    bool didProcess = false;
-
-    if (request->hasHeader("X-KegCop-BulkLoad-Type")) {
-        AsyncWebHeader* bulkLoadHeader = request->getHeader("X-KegCop-BulkLoad-Type");
-        const char * headerVal = bulkLoadHeader->value().c_str();
-        if (!strcmp(headerVal, "AppConfig") == 0)
-        {
-            Log.verbose(F("[DEBUG] handleJson() with %s" CR), bulkLoadHeader->value().c_str());
-            didPass = true;
-            bool oldImperial = app.copconfig.imperial;
-            const char * oldHostName = app.copconfig.hostname;
-
-            // Loop through all parameters
-            int params = request->params();
-            for (int i = 0; i < params; i++)
-            {
-                AsyncWebParameter *p = request->getParam(i);
-                if (p->isPost())
-                {
-                    // Process any p->name().c_str() / p->value().c_str() pairs
-                    const char *name = p->name().c_str();
-                    const char *value = p->value().c_str();
-                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value); // DEBUG
-
-                    // Bulk Load mode Set
-                    //
-                    if (strcmp(name, "data") == 0)
-                    {
-                        //if (!mergeJsonString(value, JSON_FLOW))
-                        if (!1)
-                        {
-                            Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
-                        }
-                        else
-                        {
-                            didProcess = true;
-                            Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                        }
-                    }
-                }
-            }
-    //         // Did we change copconfig.imperial?
-    //         if (app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
-    //         {
-    //             // We have to convert config manually since it's already changed in app.json
-    //             app.temps.setpoint = convertCtoF(app.temps.setpoint);
-    //             for (int i = 0; i < NUMSENSOR; i++)
-    //             {
-    //                 if (!app.temps.calibration[i] == 0)
-    //                     app.temps.calibration[i] = convertOneCtoF(app.temps.calibration[i]);
-    //             }
-    //             convertFlowtoImperial();
-    //         }
-    //         else if (!app.copconfig.imperial && (!oldImperial == app.copconfig.imperial))
-    //         {
-    //             // We have to convert config manually since it's already changed in app.json
-    //             app.temps.setpoint = convertFtoC(app.temps.setpoint);
-    //             for (int i = 0; i < NUMSENSOR; i++)
-    //             {
-    //                 if (!app.temps.calibration[i] == 0)
-    //                     app.temps.calibration[i] = convertOneFtoC(app.temps.calibration[i]);
-    //             }
-    //             convertFlowtoMetric();
-    //         }
-    //         // Did we change copconfig.hostname?
-    //         if (!strcmp(oldHostName, app.copconfig.hostname) == 0)
-    //         {
-    //             // TODO:  Do change hostname processing??
-    //         }
-    //         setDoSaveApp();
-    //         send_ok(request);
-    //         break;
-        }
-        else if (!strcmp(headerVal, "FlowConfig") == 0)
-        {
-            Log.verbose(F("[DEBUG] handleJson()) with %s" CR), bulkLoadHeader->value().c_str());
-            didPass = true;
-            bool oldImperial = flow.imperial;
-
-            // Loop through all parameters
-            int params = request->params();
-            for (int i = 0; i < params; i++)
-            {
-                AsyncWebParameter *p = request->getParam(i);
-                if (p->isPost())
-                {
-                    // Process any p->name().c_str() / p->value().c_str() pairs
-                    const char *name = p->name().c_str();
-                    const char *value = p->value().c_str();
-                    Log.verbose(F("Processing [%s]:(%s) pair." CR), name, value); // DEBUG
-
-                    // Bulk Load mode Set
-                    //
-                    if (strcmp(name, "data") == 0)
-                    {
-                        //if (!mergeJsonString(value, JSON_FLOW))
-                        if (!1)
-                        {
-                            Log.warning(F("Settings Update Error: [%s]:(%s) not valid." CR), name, value);
-                        }
-                        else
-                        {
-                            didProcess = true;
-                            Log.notice(F("Settings Update: [%s]:(%s) applied." CR), name, value);
-                        }
-                    }
-                }
-            }
-
-    //         // Did we change imperial?
-    //         if (flow.imperial && (!oldImperial == flow.imperial))
-    //         {
-    //             convertConfigtoImperial();
-    //             // We have to convert flow manually since it's already changed in flow.json
-    //             for (int i = 0; i < NUMTAPS; i++)
-    //             {
-    //                 for (int i = 0; i < NUMTAPS; i++)
-    //                 {
-    //                     flow.taps[i].ppu = convertGtoL(flow.taps[i].ppu); // Reverse for pulses
-    //                     flow.taps[i].capacity = convertLtoG(flow.taps[i].capacity);
-    //                     flow.taps[i].remaining = convertLtoG(flow.taps[i].remaining);
-    //                 }
-    //             }
-    //         }
-    //         else if (!flow.imperial && (!oldImperial == flow.imperial))
-    //         {
-    //             convertConfigtoMetric();
-    //             // We have to convert flow manually since it's already changed in flow.json
-    //             for (int i = 0; i < NUMTAPS; i++)
-    //             {
-    //                 flow.taps[i].ppu = convertLtoG(flow.taps[i].ppu); // Reverse for pulses
-    //                 flow.taps[i].capacity = convertGtoL(flow.taps[i].capacity);
-    //                 flow.taps[i].remaining = convertGtoL(flow.taps[i].remaining);
-    //             }
-    //         }
-    //         setDoSaveFlow();
-    //         send_ok(request);
-    //         break;
-    //     }
-        }
-        else
-        {
-            // No valid bulk load type passed
-            Log.verbose(F("[DEBUG] handleJson() No valid X-KegCop-BulkLoad-Type bulk load header passed: %s" CR), bulkLoadHeader->value().c_str());
-            send_not_allowed(request);
-        }
-    }
-    else {
-        Log.verbose(F("[DEBUG] handleJson() No X-KegCop-BulkLoad-Type header passed." CR));
-    }
-
-    if (!didProcess)
-    {
-        Log.warning(F("Bulk Loader: JSON not processed." CR));
-        return NOT_PROCCESSED;
-    }
-    // Return values
-    if (didProcess && didPass)
-    {
-        return PROCESSED;
-    }
-    else
-    {
-        return FAIL_PROCESS;
-    }
-}
-#endif
-
-// JSON Handler^
-
 void send_not_allowed(AsyncWebServerRequest *request)
 {
     Log.notice(F("Not processing %s; request type was %s." CR), request->url().c_str(), request->methodToString());
@@ -2411,7 +2800,6 @@ void send_failed(AsyncWebServerRequest *request)
 
 void send_json(AsyncWebServerRequest *request, String &json)
 {
-    Log.verbose(F("Sending %s." CR), request->url().c_str());
     request->header("Cache-Control: no-store");
     request->send(200, F("application/json"), json);
 }
@@ -2420,4 +2808,21 @@ void send_ok(AsyncWebServerRequest *request)
 {
     request->header("Cache-Control: no-store");
     request->send(200, F("text/plain"), F("Ok"));
+}
+
+bool checkUserWebAuth(AsyncWebServerRequest *request)
+{
+    bool isAuthenticated = false;
+    const char *prefix = "[WebAuth]";
+
+    if (request->authenticate(SPIFFSEDITUSER, SPIFFSEDITPW))
+    {
+        Log.trace(F("%s authenticated via username and password." CR), prefix);
+        isAuthenticated = true;
+    }
+    else
+    {
+        Log.warning(F("%s User failed authentication." CR), prefix);
+    }
+    return isAuthenticated;
 }

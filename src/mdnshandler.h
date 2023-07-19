@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,12 +23,8 @@ SOFTWARE. */
 #ifndef _MDNSHANDLER_H
 #define _MDNSHANDLER_H
 
-#include "appconfig.h"
-#include "config.h"
-#include <ArduinoLog.h>
-#include <ESPmDNS.h>
-
-void mDNSSetup();
+void mDNSStart();
+void mDNSStop();
 void mDNSReset();
 void mDNSServiceAdvert();
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,15 +23,7 @@ SOFTWARE. */
 #ifndef _VERSION_H
 #define _VERSION_H
 
-#include "config.h"
-#include "ArduinoLog.h"
-#include <Arduino.h>
-#include <ArduinoJson.h>
-#include <SPIFFS.h>
-#include <FS.h>
-
-#define stringify(s) _stringifyDo(s)
-#define _stringifyDo(s) #s
+class String;
 
 const char *project();
 const char *fw_version();

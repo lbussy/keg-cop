@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,27 +23,23 @@ SOFTWARE. */
 #ifndef _SERIALLOG_H
 #define _SERIALLOG_H
 
-#include "tools.h"
-#include "config.h"
-#include "appconfig.h"
-#include "execota.h"
-#include "version.h"
-#include "thatVersion.h"
-#include "resetreasons.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-#include <ArduinoLog.h>
-#include <WiFiUdp.h>
-#include <ArduinoJson.h>
-#include <Arduino.h>
-
-#include <esptelnet.h>
+class Print;
+typedef __SIZE_TYPE__ size_t;
+class __FlashStringHelper;
+class String;
+class Printable;
 
 // Basic Serial handlers
-void serial();
+void serialBegin();
+void serialStop();
+void serialRestart();
 void toggleSerialCompat(bool);
 void printTimestamp(Print *_logOutput);
 void serialLoop();
+
+// Telnet Handlers
+bool telnetEnabled();
+void toggleTelnet(bool enabled);
 
 // Debug Commands
 void togglePourEmulation(bool);

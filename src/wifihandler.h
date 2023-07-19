@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,20 +23,13 @@ SOFTWARE. */
 #ifndef _WIFI_H
 #define _WIFI_H
 
-#include "config.h"
-#include "appconfig.h"
-#include "tools.h"
-#include "rpintsclient.h"
-
-#include <WiFi.h>
 #include <AsyncWiFiManager.h>
-#include <Ticker.h>
-#include <ArduinoLog.h>
 
 void wifiBlinker();
 void doWiFi();
 void doWiFi(bool dontUseStoredCreds);
 void resetWifi();
+const char * eventString(WiFiEvent_t event);
 
 // AsyncWiFiManager Callbacks
 void apCallback(AsyncWiFiManager *wiFiManager);
@@ -47,11 +40,9 @@ void saveParamsCallback();
 void webServerCallback();
 void WiFiEvent(WiFiEvent_t event);
 void reconnectWiFi();
-
-struct tcp_pcb;
-extern struct tcp_pcb *tcp_tw_pcbs;
-extern "C" void tcp_abort(struct tcp_pcb *pcb);
-void tcpCleanup(void);
+void stopNetwork();
+void startNetwork();
+void wifiFailRestart();
 
 extern bool wifiPause;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -21,6 +21,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "urltarget.h"
+
+#include "config.h"
+#include "appconfig.h"
+#include "flowmeter.h"
+#include "flowconfig.h"
+#include "tempsensors.h"
+#include "thermostat.h"
+#include "tools.h"
+
+#include <LCBUrl.h>
+#include <ArduinoLog.h>
+#include <AsyncTCP.h>
+#include <asyncHTTPrequest.h>
+#include <ArduinoJson.h>
+#include <Arduino.h>
 
 asyncHTTPrequest urltarget;
 static const char *reportkey = "targeturlreport";
@@ -130,7 +145,7 @@ bool sendTargetReport()
     }
     else
     {
-        Log.verbose(F("%s: reporting not enabled, skipping." CR), reportname);
+        Log.trace(F("%s: reporting not enabled, skipping." CR), reportname);
         retval = false;
     }
     return retval;
@@ -174,6 +189,10 @@ bool sendTReport(const String &json)
                     Log.warning(F("Warning: Failed to send %s POST to %s." CR), reportname, connection.c_str());
                     return false;
                 }
+                else
+                {
+                    Log.notice(F("Sent %s POST to %s." CR), reportname, connection.c_str());
+                }
             }
             else
             {
@@ -194,7 +213,7 @@ bool sendTReport(const String &json)
         switch (state)
         {
         case 1 ... 3:
-            Log.warning(F("Warning: Previous transaction for %s POST is still in progress(%dms)." CR), reportname, elapsed);
+            Log.verbose(F("Warning: Previous transaction for %s POST is still in progress(%dms)." CR), reportname, elapsed);
             break;
         default:
             Log.warning(F("Warning: Previous transaction for %s POST is in an unknown state (%d)." CR), reportname, state);
@@ -245,7 +264,7 @@ void targetResultHandler(void *optParm, asyncHTTPrequest *report, int readyState
             switch (code)
             {
             default:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed request." CR), reportname, code);
+                Log.warning(F("Warning: %s: HTTP response code %d received from completed request." CR), reportname, code);
                 break;
             }
             break;
@@ -263,7 +282,7 @@ void targetResultHandler(void *optParm, asyncHTTPrequest *report, int readyState
             switch (code)
             {
             default:
-                Log.error(F("Warning: %s: HTTP response code %d (redirect) received from completed request." CR), reportname, code);
+                Log.warning(F("Warning: %s: HTTP response code %d (redirect) received from completed request." CR), reportname, code);
                 break;
             }
             break;
@@ -272,16 +291,16 @@ void targetResultHandler(void *optParm, asyncHTTPrequest *report, int readyState
             switch (code)
             {
             case 400:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Bad request." CR), reportname, code);
+                Log.error(F("Error: %s: HTTP response code %d received from completed transaction. Bad request." CR), reportname, code);
                 break;
             case 401:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Unauthorized." CR), reportname, code);
+                Log.error(F("Error: %s: HTTP response code %d received from completed transaction. Unauthorized." CR), reportname, code);
                 break;
             case 403:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Forbidden." CR), reportname, code);
+                Log.error(F("Error: %s: HTTP response code %d received from completed transaction. Forbidden." CR), reportname, code);
                 break;
             case 404:
-                Log.error(F("Warning: %s: HTTP response code %d received from completed transaction. Page not found." CR), reportname, code);
+                Log.error(F("Error: %s: HTTP response code %d received from completed transaction. Page not found." CR), reportname, code);
                 break;
             case 408:
                 Log.error(F("Error: %s: HTTP response code %d received (%dms). The request timed out." CR), reportname, code, elapsed);

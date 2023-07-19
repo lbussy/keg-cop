@@ -19,7 +19,10 @@ JSON Definition:
 		"imperial": false,
 		"serial": false,
 		"tapsolenoid": false,
-		"theme": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+		"theme": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"telnet": true,
+		"loglevel": 6,
+		"kickdetect": true
 	},
 	"ota": {
 		"dospiffs1": false,
@@ -69,6 +72,13 @@ JSON Definition:
 		"username": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"topic": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	},
+	"hatarget": {
+		"url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"port": 99999,
+		"username": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		"topic": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	}
 }
 ```
@@ -78,7 +88,7 @@ Size:
 
 ```
 Deserial:	3072
-Serial:		2048
+Serial:		3072
 ```
 
 Parsing/Deserializing:
@@ -87,7 +97,7 @@ Parsing/Deserializing:
 ```
 // Stream& input;
 
-StaticJsonDocument<3072> doc;
+DynamicJsonDocument doc(3072);
 
 DeserializationError error = deserializeJson(doc, input);
 
@@ -110,6 +120,9 @@ bool copconfig_imperial = copconfig["imperial"]; // false
 bool copconfig_serial = copconfig["serial"]; // false
 bool copconfig_tapsolenoid = copconfig["tapsolenoid"]; // false
 const char* copconfig_theme = copconfig["theme"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+bool copconfig_telnet = copconfig["telnet"]; // true
+int copconfig_loglevel = copconfig["loglevel"]; // 6
+bool copconfig_kickdetect = copconfig["kickdetect"]; // true
 
 JsonObject ota = doc["ota"];
 bool ota_dospiffs1 = ota["dospiffs1"]; // false
@@ -158,13 +171,20 @@ long rpintstarget_port = rpintstarget["port"]; // 99999
 const char* rpintstarget_username = rpintstarget["username"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* rpintstarget_password = rpintstarget["password"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 const char* rpintstarget_topic = rpintstarget["topic"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+JsonObject hatarget = doc["hatarget"];
+const char* hatarget_url = hatarget["url"];
+long hatarget_port = hatarget["port"]; // 99999
+const char* hatarget_username = hatarget["username"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* hatarget_password = hatarget["password"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+const char* hatarget_topic = hatarget["topic"]; // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 Serializing:
 ------------
 
 ```
-StaticJsonDocument<2048> doc;
+DynamicJsonDocument doc(3072);
 
 JsonObject apconfig = doc.createNestedObject("apconfig");
 apconfig["ssid"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
@@ -180,6 +200,9 @@ copconfig["imperial"] = false;
 copconfig["serial"] = false;
 copconfig["tapsolenoid"] = false;
 copconfig["theme"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+copconfig["telnet"] = true;
+copconfig["loglevel"] = 6;
+copconfig["kickdetect"] = true;
 
 JsonObject ota = doc.createNestedObject("ota");
 ota["dospiffs1"] = false;
@@ -227,6 +250,13 @@ rpintstarget["port"] = 99999;
 rpintstarget["username"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 rpintstarget["password"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 rpintstarget["topic"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+
+JsonObject hatarget = doc.createNestedObject("hatarget");
+hatarget["url"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+hatarget["port"] = 99999;
+hatarget["username"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+hatarget["password"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+hatarget["topic"] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 serializeJson(doc, output);
 ```

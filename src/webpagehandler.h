@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,38 +23,18 @@ SOFTWARE. */
 #ifndef _WEBPAGEHANDLER_H
 #define _WEBPAGEHANDLER_H
 
-#include "uptime.h"
-#include "wifihandler.h"
-#include "appconfig.h"
-#include "jsontools.h"
-#include "version.h"
-#include "config.h"
-#include "thatVersion.h"
-#include "execota.h"
-#include "flowmeter.h"
-#include "mdnshandler.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-#include "resetreasons.h"
-#include "api.h"
+#include <stddef.h>
+#include <stdint.h>
 
-#include <editserver.h>
-#include <WiFi.h>
-#include <ESPmDNS.h>
-#include <ArduinoLog.h>
-#include <ArduinoJson.h>
-#include <AsyncJson.h>
-#include <ESPAsyncWebServer.h>
-#include <Arduino.h>
-
-void initWebServer();
+void startWebServer();
 void setRegPageHandlers();
 void setAPIPageHandlers();
 void setActionPageHandlers();
 void setInfoPageHandlers();
 void setConfigurationPageHandlers();
-void setEditor();
+void setFSPageHandlers();
 void stopWebServer();
+static const char* getRealm();
 
 enum HANDLER_STATE
 {
@@ -62,6 +42,9 @@ enum HANDLER_STATE
     FAIL_PROCESS,
     PROCESSED
 };
+
+class AsyncWebServerRequest;
+class String;
 
 HANDLER_STATE handleTapPost(AsyncWebServerRequest *);
 HANDLER_STATE handleTapCal(AsyncWebServerRequest *);
@@ -71,18 +54,19 @@ HANDLER_STATE handleSensorPost(AsyncWebServerRequest *);
 HANDLER_STATE handleKegScreenPost(AsyncWebServerRequest *);
 HANDLER_STATE handleTaplistIOPost(AsyncWebServerRequest *);
 HANDLER_STATE handleUrlTargetPost(AsyncWebServerRequest *);
-HANDLER_STATE handleMQTTTargetPost(AsyncWebServerRequest *);
+HANDLER_STATE handleRPintsTargetPost(AsyncWebServerRequest *);
+HANDLER_STATE handleHATargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleCloudTargetPost(AsyncWebServerRequest *);
 HANDLER_STATE handleSetCalMode(AsyncWebServerRequest *);
 HANDLER_STATE handleSecret(AsyncWebServerRequest *);
 HANDLER_STATE handleThemePost(AsyncWebServerRequest *);
-#ifdef JSONLOADER
-HANDLER_STATE handleJson(AsyncWebServerRequest *);
-#endif
+HANDLER_STATE handleDebugPost(AsyncWebServerRequest *);
 
 void send_not_allowed(AsyncWebServerRequest *request);
 void send_failed(AsyncWebServerRequest *request);
 void send_json(AsyncWebServerRequest *request, String &json);
 void send_ok(AsyncWebServerRequest *request);
+bool checkUserWebAuth(AsyncWebServerRequest *request);
+void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
 
 #endif // _WEBPAGEHANDLER_H

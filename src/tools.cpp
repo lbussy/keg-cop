@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -21,7 +21,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "tools.h"
+
 #include "taplistio.h"
+#include "config.h"
+#include "ntphandler.h"
+#include "kegscreen.h"
+#include "thermostat.h"
+#include "urltarget.h"
+#include "mdnshandler.h"
+#include "wifihandler.h"
+#include "uptime.h"
+#include "uptimelog.h"
+#include "flowconfig.h"
+#include "appconfig.h"
+#include "serialhandler.h"
+#include "rpints.h"
+#include "homeassist.h"
+
+#include <FS.h>
+#include <LittleFS.h>
+
+#include <AsyncWiFiManager.h>
+#include <ArduinoLog.h>
+#include <Arduino.h>
 
 float queuePourReport[NUMTAPS];         // Store pending pours
 unsigned int queuePulseReport[NUMTAPS]; // Store pending pulses
@@ -31,14 +53,14 @@ bool doReset = false;             // Semaphore for reset
 bool doWiFiReset = false;         // Semaphore for WiFi reset
 bool doKSTempReport = false;      // Semaphore for KegScreen Temps Report
 bool doTargetReport = false;      // Semaphore for URL Target Report
-bool doRPintsConnect = false;     // Semaphore for MQTT (re)connect
 bool doTaplistIOConnect = false;  // Semaphore for Taplist.IO Report
 bool doSetSaveUptime = false;     // Semaphore required to save reboot time
 bool doSetSaveApp = false;        // Semaphore required to save config
+bool doSaveTelnet = false;        // Semaphore required to save telnet config
 bool doSetSaveFlowConfig = false; // Semaphore required to save flowconfig
 bool doTapInfoReport[NUMTAPS] = {
     false, false, false, false, false, false, false, false}; // Semaphore for reset
-bool doWiFiReconnect = false;                         // Semaphore to reconnect WiFi
+bool doWiFiReconnect = false;                                // Semaphore to reconnect WiFi
 
 void initPourPulseKick()
 {
@@ -50,19 +72,14 @@ void initPourPulseKick()
     }
 }
 
-void _delay(unsigned long ulDelay)
-{
-    // Safe semi-blocking delay
-    vTaskDelay(ulDelay); // Builtin to ESP32
-}
-
 void resetController()
 {
     Log.notice(F("Reboot request - rebooting system." CR));
     killDRD();
-    saveAppConfig();
-    saveFlowConfig();
+    saveAppConfig(APP_FILENAME);
+    saveFlowConfig(FLOW_FILENAME);
     ESP.restart();
+    delay(300);
 }
 
 void setDoReset()
@@ -90,11 +107,6 @@ void setDoTargetReport()
     doTargetReport = true; // Semaphore required for URL Target Report
 }
 
-void setDoRPintsConnect()
-{
-    doRPintsConnect = true; // Semaphore required for MQTT (re)connect
-}
-
 void setDoSaveUptime()
 {
     doSetSaveUptime = true; // Semaphore required to save reboot time
@@ -103,6 +115,11 @@ void setDoSaveUptime()
 void setDoSaveApp()
 {
     doSetSaveApp = true; // Semaphore required to save config
+}
+
+void setDoSaveTelnet()
+{
+    doSaveTelnet = true; // Semaphore required to save config
 }
 
 void setDoSaveFlow()
@@ -140,9 +157,10 @@ void tickerLoop()
         sleep(3);
         resetWifi();
     }
-    if (doWiFiReconnect)
-    { // WiFi event is a callback - prevent WDT
-        doWiFiReconnect = false;
+    if (doWiFiReconnect && !wifiPause)
+    {                            // WiFi event is a callback - prevent WDT
+        pausingWiFi = false;     // Clear interim state
+        doWiFiReconnect = false; // Clear semaphore
         reconnectWiFi();
     }
 
@@ -155,13 +173,19 @@ void tickerLoop()
     if (doSetSaveApp)
     { // Save AppConfig
         doSetSaveApp = false;
-        saveAppConfig();
+        saveAppConfig(APP_FILENAME);
+    }
+
+    if (doSaveTelnet)
+    { // Toggle Telnet
+        doSaveTelnet = false;
+        toggleTelnet(app.copconfig.telnet);
     }
 
     if (doSetSaveFlowConfig)
     { // Save Flow Config
         doSetSaveFlowConfig = false;
-        saveFlowConfig();
+        saveFlowConfig(FLOW_FILENAME);
     }
 
     // External Event Reports
@@ -173,9 +197,15 @@ void tickerLoop()
             // Send report from pour queue
             if (queuePourReport[i] > 0)
             {
-                sendPulsesRPints(i, queuePulseReport[i]);
                 sendPourReport(i, queuePourReport[i]);
+                setTapState(i); // Send MQTT state for [i]
                 queuePourReport[i] = 0;
+            }
+            // Send report from pulse queue
+            if (queuePulseReport[i] > 0)
+            {
+                RPints rpints;
+                rpints.sendPulseReport(i, queuePulseReport[i]);
                 queuePulseReport[i] = 0;
             }
             // Send kick report
@@ -183,6 +213,7 @@ void tickerLoop()
             {
                 queueKickReport[i] = false;
                 sendKickReport(i);
+                setTapPoint(i); // Disable tap in HA
             }
             // Send temp control state change
             if (tstat[TS_TYPE_CHAMBER].queueStateChange == true || tstat[TS_TYPE_TOWER].queueStateChange == true)
@@ -190,28 +221,30 @@ void tickerLoop()
                 tstat[TS_TYPE_CHAMBER].queueStateChange = false;
                 tstat[TS_TYPE_TOWER].queueStateChange = false;
                 sendCoolStateReport();
+                // Send MQTT discovery and state for chamber and tower
+                setBinaryDiscovery();
+                setBinaryState();
             }
             // Send Tap Info Report
             if (doTapInfoReport[i] == true)
             {
                 doTapInfoReport[i] = false;
                 sendTapInfoReport(i);
+                // Send MQTT discovery, availability and state for [i]
+                setTapPoint(i);
             }
         }
         if (doKSTempReport)
         {
             doKSTempReport = false;
             sendTempReport();
+            // Send MQTT state for all sensors
+            setSensorState();
         }
         if (doTargetReport)
         {
             doTargetReport = false;
             sendTargetReport();
-        }
-        if (doRPintsConnect)
-        {
-            doRPintsConnect = false;
-            connectRPints();
         }
         if (doTaplistIOConnect && !tioReporting)
         {
@@ -232,20 +265,20 @@ void maintenanceLoop()
 {
     if (ESP.getFreeHeap() < MINFREEHEAP)
     {
-        Log.warning(F("Maintenance: Heap memory has degraded below safe minimum, restarting." CR));
+        Log.error(F("Maintenance: Heap memory has degraded below safe minimum, restarting." CR));
         resetController();
     }
     if (millis() > ESPREBOOT)
     {
         // The ms clock will rollover after ~49 days.  To be on the safe side,
         // restart the ESP after about 42 days to reset the ms clock.
-        Log.warning(F("Maintenance: Six week routine restart."));
+        Log.notice(F("Maintenance: Scheduled restart." CR));
         resetController();
     }
     if (lastNTPUpdate > NTPRESET)
     {
         // Reset NTP (blocking) every measured 24 hours
-        Log.notice(F("Maintenance: Setting time"));
+        Log.notice(F("Maintenance: Setting time." CR));
         setClock();
     }
 }
@@ -359,12 +392,10 @@ void killDRD()
 {
     app.copconfig.nodrd = true;
     const char *drdfile = "/drd.dat";
-    if (FILESYSTEM.begin())
+
+    if (FILESYSTEM.exists(drdfile))
     {
-        if (SPIFFS.exists(drdfile))
-        {
-            FILESYSTEM.remove(drdfile);
-        }
+        FILESYSTEM.remove(drdfile);
     }
 }
 
@@ -379,4 +410,76 @@ unsigned long getTime()
     }
     time(&now);
     return now;
+}
+
+bool copyFile(String src, String dst)
+{
+    bool retval = true;
+
+    if (!src.startsWith("/"))
+        src = "/" + src;
+
+    if (!dst.startsWith("/"))
+        src = "/" + src;
+
+    // Open the source file for reading
+    File sourceFile = FILESYSTEM.open(src, "r");
+    if (!sourceFile)
+    {
+        Log.warning(F("Failed to open source: %s" CR), src);
+        retval = false;
+    }
+
+    // Create the destination file for writing
+    File destinationFile = LittleFS.open(dst, "w");
+    if (!destinationFile)
+    {
+        Log.warning(F("Failed to create destination: %s" CR), dst);
+        sourceFile.close();
+        retval = false;
+    }
+
+    // Copy the contents of the source file to the destination file
+    while (sourceFile.available())
+    {
+        char data = sourceFile.read();
+        destinationFile.write(data);
+    }
+
+    // Close the files
+    sourceFile.close();
+    destinationFile.close();
+
+    Log.notice(F("File %s sucessfully copied to %s" CR), src.c_str(), dst.c_str());
+    return retval;
+}
+
+struct tcp_pcb;
+extern struct tcp_pcb *tcp_tw_pcbs;
+extern "C" void tcp_abort(struct tcp_pcb *pcb);
+void tcp_cleanup()
+{ // TCP Cleanup, to avoid memory crash.
+    while (tcp_tw_pcbs)
+        tcp_abort(tcp_tw_pcbs);
+}
+
+float reduceFloatPrecision(float f, int dec) {
+  char buffer[10];
+  dtostrf(f, 6, dec, &buffer[0]);
+  return atof(&buffer[0]);
+}
+
+char* convertFloatToString(float f, char* buffer, int dec) {
+  dtostrf(f, 6, dec, buffer);
+  return buffer;
+}
+
+void safeDelay(unsigned long delay) // A "safe" delay
+{
+    unsigned int now = millis();
+    unsigned int target = now + delay;
+    while (millis() < target)
+    {
+        yield();
+    }
 }

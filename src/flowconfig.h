@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,17 +23,8 @@ SOFTWARE. */
 #ifndef _FLOWCONFIG_H
 #define _FLOWCONFIG_H
 
-#include <SPIFFS.h>
-#include <ArduinoJson.h>
-#include <ArduinoLog.h>
-#include <Arduino.h>
-
 #include "config.h"
-#include "flowmeter.h"
-
-#define CAPACITY_FLOW_SERIAL 3072
-#define CAPACITY_FLOW_DESERIAL 3072
-#define FLOW_FILENAME "/flowconfig.json"
+#include <ArduinoJson.h>
 
 struct Taps
 {
@@ -61,7 +52,8 @@ struct Flowmeter
     void save(JsonObject) const;
 };
 
-namespace FlowmeterKeys {
+namespace FlowmeterKeys
+{
     constexpr auto appname = "Flowmeter Config";
     constexpr auto tapid = "tapid";
     constexpr auto label = "label";
@@ -76,12 +68,15 @@ namespace FlowmeterKeys {
 };
 
 // JSON Methods
-bool loadFlowConfig();
-bool loadFlowFile();
-bool saveFlowConfig();
-bool deleteFlowConfigFile();
+bool loadFlowConfig(const char *filename);
+bool loadFlowConfig(const char *filename, bool isBackup);
+bool saveFlowConfig(const char *filename);
 bool deserializeFlowConfig(Stream &);
 bool serializeFlowConfig(Print &);
+
+void debugFlowmeterLog(int numTap);
+void debugFlowmeterLog(bool fileExist);
+void debugFlowmeterLog(int numTap, bool fileExist);
 
 extern Flowmeter flow;
 

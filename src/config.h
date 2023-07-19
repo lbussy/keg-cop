@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,6 +23,17 @@ SOFTWARE. */
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <LittleFS.h>
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Stringify Defines
+//
+#define stringify(s) _stringifyDo(s)
+#define _stringifyDo(s) #s
+//
+//////////////////////////////////////////////////////////////////////////
+
 //////////////////////////////////////////////////////////////////////////
 //
 // Define App Name (identifies application to target)
@@ -35,7 +46,7 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Define API Key (identifies application to target)
+// Define API_V1 Key (identifies application to target)
 //
 #ifndef API_KEY
 #define API_KEY "keg_cop"
@@ -58,9 +69,7 @@ SOFTWARE. */
 // Define Keg Cop's filesystem
 //
 #ifndef FILESYSTEM
-#ifdef ESP32
-#define FILESYSTEM SPIFFS
-#endif
+#define FILESYSTEM LittleFS
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -81,7 +90,7 @@ SOFTWARE. */
 //
 #ifndef LOG_LEVEL
 #ifdef _DEBUG_BUILD
-#define LOG_LEVEL LOG_LEVEL_VERBOSE // All
+#define LOG_LEVEL LOG_LEVEL_NOTICE
 #else
 #define LOG_LEVEL LOG_LEVEL_NOTICE // Errors, warnings and notices
 #endif
@@ -103,7 +112,7 @@ SOFTWARE. */
 // https://github.com/khoih-prog/ESP_DoubleResetDetector/
 //
 #ifndef DRD_TIMEOUT
-#define ESP_DRD_USE_SPIFFS true
+#define ESP_DRD_USE_LITTLEFS true
 #define DOUBLERESETDETECTOR_DEBUG false
 #define DRD_TIMEOUT 5
 #define DRD_ADDRESS 0 // Not used for FILESYSTEM, still needed for init
@@ -123,10 +132,10 @@ SOFTWARE. */
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Reset controller every 42 days
+// Reset controller every XX days (in millis)
 //
-#ifndef ESPREPBOOT
-#define ESPREBOOT (uint32_t)3628800000
+#ifndef ESPREBOOT
+#define ESPREBOOT (unsigned long) 42 * 24 * 60 * 60 * 1000 // Reboot every 42 days
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -136,7 +145,17 @@ SOFTWARE. */
 // Reset NTP every 24 hours
 //
 #ifndef NTPRESET
-#define NTPRESET (uint32_t)86400000
+#define NTPRESET (unsigned long) 24 * 60 * 60 * 1000
+#endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Timer for HASS Availability
+//
+#ifndef HASSUPDATE
+#define HASSUPDATE 5 * 60
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -146,7 +165,7 @@ SOFTWARE. */
 // Minumum Free Heap, triggers reset if below this value
 //
 #ifndef MINFREEHEAP
-#define MINFREEHEAP 10000
+#define MINFREEHEAP (unsigned long)10000
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -373,6 +392,16 @@ SOFTWARE. */
 #define FMAX (double)80
 #define CMIN (double)0.5
 #define CMAX (double)26.6
+#endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Define number of control points (cooling, solenoid, tower fan)
+//
+#ifndef CTRLPTS
+#define CTRLPTS 3
 #endif
 //
 //////////////////////////////////////////////////////////////////////////
@@ -808,6 +837,41 @@ SOFTWARE. */
 #ifndef KICKSPEED
 #define KICKSPEED 4
 #endif
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
+// API Document Sizes
+//
+#define CAPACITY_V1_ACTION_API 768
+#define CAPACITY_V1_INFO_API 1024
+#define CAPACITY_V1_CONFIG_API 192
+#define CAPACITY_V1_FS_API 512
+#define CAPACITY_V1_API 256
+#define CAPACITY_API 128
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Configuration Elements
+//
+#define APP_FILENAME "/appconfig.json"
+#define APP_FILENAME_BACKUP "/appconfig.backup"
+#define CAPACITY_APP_SERIAL 3072
+#define CAPACITY_APP_DESERIAL 3072
+//
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Flow Elements
+//
+#define FLOW_FILENAME "/flowconfig.json"
+#define FLOW_FILENAME_BACKUP "/flowconfig.backup"
+#define CAPACITY_FLOW_SERIAL 3072
+#define CAPACITY_FLOW_DESERIAL 3072
 //
 //////////////////////////////////////////////////////////////////////////
 

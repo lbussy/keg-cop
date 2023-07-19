@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -32,6 +32,8 @@ SOFTWARE. */
 #include "taplistio.h"
 #include "appconfig.h"
 #include "flowmeter.h"
+#include "flowconfig.h"
+#include "tools.h"
 
 void sendTIOTaps()
 {
@@ -61,12 +63,12 @@ void sendTIOTaps()
         }
         else if (flow.taps[t].taplistioTap == 0)
         {
-            Log.notice(F("Taplist.io: Tap %d has Taplist.io tap id set to 0 - skipping send." CR), t);
+            Log.trace(F("Taplist.io: Tap %d has Taplist.io tap id set to 0 - skipping send." CR), t);
             break;
         }
         else if (!flow.taps[t].active)
         {
-            Log.verbose(F("Taplist.io: Tap %d not active." CR), t);
+            Log.trace(F("Taplist.io: Tap %d not active." CR), t);
             return;
         }
         else if (!sendTaplistio(t))
@@ -75,14 +77,14 @@ void sendTIOTaps()
         }
         else
         {
-            Log.verbose(F("Taplist.io: Sent tap %l to Taplist.io." CR), t);
+            Log.notice(F("Taplist.io: Sent tap %l to Taplist.io." CR), t);
         }
     }
 
     tioReporting = false;
     app.taplistio.lastsent = now;
     app.taplistio.update = false;
-    saveAppConfig();
+    saveAppConfig(APP_FILENAME);
 }
 
 bool sendTaplistio(int tapid)
@@ -111,7 +113,7 @@ bool sendTaplistio(int tapid)
              "https://api.taplist.io/api/v1/venues/%s/taps/%d/current-keg",
              app.taplistio.venue, flow.taps[tapid].taplistioTap);
 
-    Log.verbose(F("Taplist.io: Sending %s to %s\r\n"), payload_string, taplistio_url);
+    Log.notice(F("Taplist.io: Sending %s to %s." CR), payload_string, taplistio_url);
 
     yield(); // Yield before we lock up the radio
 
@@ -136,7 +138,7 @@ bool sendTaplistio(int tapid)
 
                 if (httpResponseCode < HTTP_CODE_OK || httpResponseCode > HTTP_CODE_NO_CONTENT)
                 {
-                    Log.error(F("Taplist.io: Send failed (%d): %s. Response:\r\n%s\r\n"),
+                    Log.error(F("Taplist.io: Send failed (%d): %s. Response:\r\n%s" CR),
                               httpResponseCode,
                               http.errorToString(httpResponseCode).c_str(),
                               http.getString().c_str());
@@ -150,7 +152,7 @@ bool sendTaplistio(int tapid)
             }
             else
             {
-                Log.error(F("Taplist.io: Unable to create connection\r\n"));
+                Log.error(F("Taplist.io: Unable to create connection." CR));
                 result = false;
             }
         }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -22,6 +22,19 @@ SOFTWARE. */
 
 #include "flowmeter.h"
 
+#include "tools.h"
+#include "serialhandler.h"
+#include "config.h"
+#include "appconfig.h"
+#include "kegscreen.h"
+#include "flowconfig.h"
+
+#include <FS.h>
+#include <LittleFS.h>
+#include <ArduinoJson.h>
+#include <ArduinoLog.h>
+#include <Arduino.h>
+
 int flowPins[NUMTAPS] = {FLOW0, FLOW1, FLOW2, FLOW3, FLOW4, FLOW5, FLOW6, FLOW7, FLOW8};
 volatile static unsigned long pulse[NUMTAPS];         // Unregistered pulse counter
 volatile static unsigned long lastPulse[NUMTAPS];     // Pulses pending at last poll
@@ -30,59 +43,62 @@ volatile static unsigned long lastLoopTime[NUMTAPS];  // Monitor ongoing active 
 
 static IRAM_ATTR void HandleIntISR0(void)
 {
-    handleInterrupts(0);
+    pulse[0]++;
+    lastPulseTime[0] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR1(void)
 {
-    handleInterrupts(1);
+    pulse[1]++;
+    lastPulseTime[1] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR2(void)
 {
-    handleInterrupts(2);
+    pulse[2]++;
+    lastPulseTime[2] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR3(void)
 {
-    handleInterrupts(3);
+    pulse[3]++;
+    lastPulseTime[3] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR4(void)
 {
-    handleInterrupts(4);
+    pulse[4]++;
+    lastPulseTime[4] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR5(void)
 {
-    handleInterrupts(5);
+    pulse[5]++;
+    lastPulseTime[5] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR6(void)
 {
-    handleInterrupts(6);
+    pulse[6]++;
+    lastPulseTime[6] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR7(void)
 {
-    handleInterrupts(7);
+    pulse[7]++;
+    lastPulseTime[7] = millis(); // Reset while we are pouring
 }
 
 static IRAM_ATTR void HandleIntISR8(void)
 {
-    handleInterrupts(8);
+    pulse[8]++;
+    lastPulseTime[8] = millis(); // Reset while we are pouring
 }
 
 static void (*pf[])(void) = { // ISR Function Pointers
     HandleIntISR0, HandleIntISR1, HandleIntISR2,
     HandleIntISR3, HandleIntISR4, HandleIntISR5,
     HandleIntISR6, HandleIntISR7, HandleIntISR8};
-
-void IRAM_ATTR handleInterrupts(int tapNum)
-{ // Increment pulse count
-    pulse[tapNum]++;
-    lastPulseTime[tapNum] = millis(); // Reset while we are pouring
-}
 
 unsigned long getPulseCount(int tap)
 {
@@ -109,7 +125,7 @@ bool initFlow()
         lastPulseTime[i] = millis(); // For pour detector
         initPourPulseKick();
     }
-    return loadFlowConfig();
+    return loadFlowConfig(FLOW_FILENAME);
 }
 
 void logFlow()
@@ -124,7 +140,7 @@ void logFlow()
                 pulse[i] = lastPulse[i]; // Discard the foam pulses
                 flow.taps[i].active = false;
                 setQueueKickReport(i);
-                saveFlowConfig();
+                setDoSaveFlow();
             }
             else if ((millis() - lastPulseTime[i] > POURDELAY) && (pulse[i] > 0))
             { // If we have stopped pouring, and there's something to log
@@ -136,19 +152,18 @@ void logFlow()
 
                 if (isSmallPour(pulseCount, i))
                 { // Discard a small pour
-                    Log.verbose(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
+                    Log.trace(F("Discarding %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                     // Since we don't do anything with pulseCount here, we're ignoring it
                 }
                 else
                 { // Log a pour
+                    Log.notice(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                     float pour = (float)pulseCount / (float)flow.taps[i].ppu;
                     flow.taps[i].remaining = flow.taps[i].remaining - pour;
-                    setDoSaveFlow();
                     setQueuePourReport(i, pour);        // Queue upstream pour report
                     setQueuePulseReport(i, pulseCount); // Queue upstream pulse report
                     app.taplistio.update = true;   // Queue TIO report
                     setDoSaveFlow();
-                    Log.verbose(F("Debiting %d pulses from tap %d on pin %d." CR), pulseCount, i, flow.taps[i].pin);
                 }
             }
             else
@@ -184,18 +199,20 @@ bool isSmallPour(unsigned int count, int tap)
 
     if (isSmallPour)
     {
-        Log.verbose(F("Tap %d showed a small pour of %d pulses." CR), tap, count);
+        Log.trace(F("Tap %d showed a small pour of %d pulses." CR), tap, count);
         return true;
     }
     else
     {
-        Log.verbose(F("Tap %d is registering %d pulses." CR), tap, count);
+        Log.trace(F("Tap %d is registering %d pulses." CR), tap, count);
         return false;
     }
 }
 
 bool isKicked(int meter)
-{ // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
+{
+    if (!app.copconfig.kickdetect) return false; // Kick detect is off
+    // Kick detector - keg is blowing foam if pps > KICKSPEED in oz/sec
     // Get elapsed time and pulses
     const double secs = (millis() - lastLoopTime[meter]) / 1000;
     const int pulses = pulse[meter] - lastPulse[meter];

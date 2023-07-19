@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,18 +23,8 @@ SOFTWARE. */
 #ifndef _KEGSCREEN_H
 #define _KEGSCREEN_H
 
-#include "config.h"
-#include "appconfig.h"
-#include "flowmeter.h"
-#include "tempsensors.h"
-#include "thermostat.h"
-
-#include <LCBUrl.h>
-#include <ArduinoLog.h>
-#include <AsyncTCP.h>
 #include <asyncHTTPrequest.h>
 #include <ArduinoJson.h>
-#include <Arduino.h>
 
 /**
  * \brief Strings used for JSON keys
@@ -78,7 +68,8 @@ namespace KegScreenKeys {
     // JSON/MDNS Keys
     constexpr auto name ="name";
     constexpr auto devicetype ="deviceType";
-    constexpr auto appendID = "appenddID";
+    constexpr auto path="path";
+    constexpr auto appendID = "appendID";
     constexpr auto deviceid = "deviceID";
 };
 

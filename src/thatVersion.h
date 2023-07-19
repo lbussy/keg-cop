@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,14 +23,9 @@ SOFTWARE. */
 #ifndef _THATVERSION_H
 #define _THATVERSION_H
 
-#include "config.h"
-#include "wifihandler.h"
-
-#include <ArduinoLog.h>
-#include <AsyncTCP.h>
-#include <asyncHTTPrequest.h>
 #include <ArduinoJson.h>
-#include <Arduino.h>
+
+class asyncHTTPrequest;
 
 struct ThatVersion
 {

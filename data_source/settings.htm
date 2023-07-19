@@ -1,0 +1,2801 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description" content="Keg Cop, a Home Brewing application">
+    <meta name="author" content="Lee Bussy">
+
+    <title>Keg Cop</title>
+
+    <link rel="canonical" href="https://www.kegcop.com">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta id="theme_color" name="theme-color" content="#ffffff">
+
+    <link id="theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/cerulean/bootstrap.min.css">
+    <link id="theme_aux" rel="stylesheet" href="/cerulean_aux.css">
+    <link rel="stylesheet" href="/kegcop.css">
+    <script src="https://kit.fontawesome.com/e51821420e.js" crossorigin="anonymous"></script>
+    <script src="/kegcop_pre.js"></script>
+</head>
+
+<body class="d-flex flex-column h-100">
+
+    <div class="loader" id="loader"></div> <!-- Load Page Load Spinner Container -->
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="/index/">
+                <img src="/mstile-150x150.png" style="width:25px;height:25px;">
+                &nbsp;Keg Cop
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" id="home" href="/index/">Home</a>
+                    </li>
+                    <li class="nav-item" id="displaytemplink" name="displaytemplink" style="display: none">
+                        <a class="nav-link" href="/temps/">Temperatures</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/settings/">Settings <span class="visually-hidden">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/help/">Help</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">About</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a id="noChange" id="contexthelp" name="contexthelp" class="navbar-brand nav-link active" target="_blank" href="https://docs.kegcop.com/en/latest/context/settings/index.html">?</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="flex-shrink-0">
+
+        <div id="settingsAlert_placeholder"></div>
+        <div id="flowAlert_placeholder"></div>
+        <div id="tempAlert_placeholder"></div>
+        <div id="configAlert_placeholder"></div>
+
+        <div class="container" id="settingsApp" style="visibility:hidden;"> <!-- Container -->
+
+            <div class="card border-dark mb-3"> <!-- Keg Cop Settings -->
+
+                <ul class="nav nav-tabs"> <!-- Navigation Tab navigation -->
+
+                    <li class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Application</span>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#controller">Controller Behavior</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#themeselect">Theme</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Taps</span>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#tap0">Tap 1</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap1">Tap 2</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap2">Tap 3</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap3">Tap 4</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap4">Tap 5</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap5">Tap 6</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap6">Tap 7</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap7">Tap 8</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tap8">Tap 9</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Temperature</span>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#sensorcontrol">Sensors</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#tempcontrol">Control</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Targets</span>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#kegscreen">KegScreen</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#taplistio">Taplist.io</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#targeturl">Generic REST</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#rpints">Raspberry Pints</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#hass">Home Assistant</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <span class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Advanced</span>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="tab" href="#flowcal">Calibrate Flowmeters</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#update">Update Application</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#debug">Configure Debug</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#reset">Reset Controller</a>
+                            <a class="dropdown-item" data-toggle="tab" href="#wifi">Reset WiFi</a>
+                        </div>
+                    </li>
+
+                </ul> <!-- Navigation tab navigation -->
+
+                <div id="myTabContent" class="tab-content"> <!-- Navigation Tab contents -->
+
+                    <div class="tab-pane fade active show" id="advanced"> <!-- Initial Page Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Settings for Keg Cop</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                Use the tabs above to navigate the various settings and customize Keg Cop for your own use. Be sure to use the
+                                update button after changing a field.
+                            </p>
+                        </div>
+                    </div> <!-- Initial Page Tab -->
+
+                    <div class="tab-pane fade" id="tap0"> <!-- Tap 0 Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 1 Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap0" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="0">
+
+                                <div class="form-group row">
+                                    <label for="tap0label" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the desired numeric label for your tap">
+                                        Tap Label
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap0label" id="tap0label"
+                                            min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div id="taplist.io_0" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap0taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to which this tap will link. Set to 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap0taplistioTap"
+                                                id="tap0taplistioTap" min="0" max="255" step="1" placeholder="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap0ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap0ppu" id="tap0ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap0bevname" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap0bevname"
+                                            id="tap0bevname" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap0cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap0cap" id="tap0cap"
+                                            min=".0001" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap0remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap0remain"
+                                            id="tap0remain" min=".000" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap Usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap0active" id="tap0active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap0active" id="tap0active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitSettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Tap 0 Tab -->
+
+                    <div class="tab-pane fade" id="tap1"> <!-- Tap 1 Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 2 Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap1" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="1">
+
+                                <div class="form-group row">
+                                    <label for="tap1label" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the desired numeric label for your tap">
+                                        Tap Label
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap1label" id="tap1label"
+                                            min="1" max="99" step="1" placeholder="0" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div id="taplist.io_1" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap1taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap Number
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap1taplistioTap"
+                                                id="tap1taplistioTap" min="0" max="255" step="1" placeholder="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap1ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap1ppu" id="tap1ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap1bevname" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap1bevname"
+                                            id="tap1bevname" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap1cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap1cap" id="tap1cap"
+                                            min=".0001" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap1remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap1remain"
+                                            id="tap1remain" min=".000" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap1active" id="tap1active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap1active" id="tap1active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Tap 1 Tab -->
+
+                    <div class="tab-pane fade" id="tap2"> <!-- Tap 2 Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 3 Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap2" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="2">
+
+                                <div class="form-group row">
+                                    <label for="tap2label" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the desired numeric label for your tap">
+                                        Tap Label
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap2label" id="tap2label"
+                                            min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div id="taplist.io_2" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap2taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap Number
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap2taplistioTap"
+                                                id="tap2taplistioTap" min="0" max="255" step="1" placeholder="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap2ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap2ppu" id="tap2ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap2bevname" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap2bevname"
+                                            id="tap2bevname" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap2cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap2cap" id="tap2cap"
+                                            min=".0001" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap2remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap2remain"
+                                            id="tap2remain" min=".000" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap2active" id="tap2active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap2active" id="tap2active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Tap 2 Tab -->
+
+                    <div class="tab-pane fade" id="tap3"> <!-- Tap 3 Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 4 Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap3" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="3">
+
+                                <div class="form-group row">
+                                    <label for="tap3label" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the desired numeric label for your tap">
+                                        Tap Label
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap3label" id="tap3label"
+                                            min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div id="taplist.io_3" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap3taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap Number
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap3taplistioTap"
+                                                id="tap3taplistioTap" min="0" max="255" step="1" placeholder="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap3ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap3ppu" id="tap3ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap3bevname" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap3bevname"
+                                            id="tap3bevname" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap3cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap3cap" id="tap3cap"
+                                            min=".0001" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap3remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap3remain"
+                                            id="tap3remain" min=".000" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap3active" id="tap3active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap3active" id="tap3active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Tap 3 Tab -->
+
+                    <div class="tab-pane fade" id="tap4"> <!-- Tap 4 Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 5 Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap4" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="4">
+
+                                <div class="form-group row">
+                                    <label for="tap4label" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the desired numeric label for your tap">
+                                        Tap Label
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap4label" id="tap4label"
+                                            min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div id="taplist.io_4" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap4taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap Number
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap4taplistioTap"
+                                                id="tap4taplistioTap" min="0" max="255" step="1" placeholder="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap4ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap4ppu" id="tap4ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap4bevname" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap4bevname"
+                                            id="tap4bevname" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap4cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap4cap" id="tap4cap"
+                                            min=".0001" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap4remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap4remain"
+                                            id="tap4remain" min=".000" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap4active" id="tap4active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap4active" id="tap4active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Tap 4 Tab -->
+
+                    <div class="tab-pane fade" id="tap5"> <!-- Tap 5 Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 6 Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap5" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="5">
+
+                                <div class="form-group row">
+                                    <label for="tap5label" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the desired numeric label for your tap">
+                                        Tap Label
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap5label" id="tap5label"
+                                            min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div id="taplist.io_5" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap5taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap Number
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap5taplistioTap"
+                                                id="tap5taplistioTap" min="0" max="255" step="1" placeholder="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap5ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap5ppu" id="tap5ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap5bevname" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap5bevname"
+                                            id="tap5bevname" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap5cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap5cap" id="tap5cap"
+                                            min=".0001" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap5remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap5remain"
+                                            id="tap5remain" min=".000" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap5active" id="tap5active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap5active" id="tap5active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Tap 5 Tab -->
+
+                    <div class="tab-pane fade" id="tap6"> <!-- Tap 6 Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 7 Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap6" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="6">
+
+                                <div class="form-group row">
+                                    <label for="tap6label" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the desired numeric label for your tap">
+                                        Tap Label
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap6label" id="tap6label"
+                                            min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div id="taplist.io_6" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap6taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap Number
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap6taplistioTap"
+                                                id="tap6taplistioTap" min="0" max="255" step="1" placeholder="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap6ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap6ppu" id="tap6ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap6bevname" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap6bevname"
+                                            id="tap6bevname" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap6cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap6cap" id="tap6cap"
+                                            min=".0001" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap6remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap6remain"
+                                            id="tap6remain" min=".000" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap6active" id="tap6active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap6active" id="tap6active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Tap 6 Tab -->
+
+                    <div class="tab-pane fade" id="tap7"> <!-- Tap 7 Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 8 Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap7" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="7">
+
+                                <div class="form-group row">
+                                    <label for="tap7label" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the desired numeric label for your tap">
+                                        Tap Label
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap7label" id="tap7label"
+                                            min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div id="taplist.io_7" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap7taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap Number
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap7taplistioTap"
+                                                id="tap7taplistioTap" min="0" max="255" step="1" placeholder="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap7ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap7ppu" id="tap7ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap7bevname" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap7bevname"
+                                            id="tap7bevname" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap7cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap7cap" id="tap7cap"
+                                            min=".0001" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap7remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap7remain"
+                                            id="tap7remain" min=".000" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap7active" id="tap7active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap7active" id="tap7active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Tap 7 Tab -->
+
+                    <div class="tab-pane fade" id="tap8"> <!-- Tap 8 Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Tap 9 Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="tap8" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                <input type="hidden" id="tapnum" name="tapnum" value="7">
+
+                                <div class="form-group row">
+                                    <label for="tap8label" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the desired numeric label for your tap">
+                                        Tap Label
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap8label" id="tap8label"
+                                            min="1" max="99" step="1" placeholder="1" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div id="taplist.io_8" style="display: none;">
+                                    <div class="form-group row">
+                                        <label for="tap8taplistioTap" class="col-sm-3 col-form-label"
+                                            data-toggle="tooltip"
+                                            title="Tap number at Taplist.io to link this tap's readings to. 0 to disable sending this tap to Taplist.io.">
+                                            Taplist.io Tap Number
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" name="tap8taplistioTap"
+                                                id="tap8taplistioTap" min="0" max="255" placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap8ppu" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Enter the pulses per unit depending upon system configuration for your flowmeter and layout">
+                                        Pulses per <span class="galliter">Unit</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap8ppu" id="tap8ppu"
+                                            min="10" max="99999" step="1" placeholder="21120" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap8bevname" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the beverage to display on this tap">
+                                        Beverage Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="tap8bevname"
+                                            id="tap8bevname" minlength="1" maxlength="64"
+                                            placeholder="Pudswiller Doors" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap8cap" class="col-sm-3 col-form-label" data-toggle="tooltip"
+                                        title="Capacity of this tap in gallons or liters depending on system configuration">
+                                        <span class="caplong">Capacity</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap8cap" id="tap8cap"
+                                            min=".0001" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="tap8remain" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Contents remaining in this tap in gallons or liters depending on system configuration">
+                                        <span class="remlong">Remaining</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="tap8remain"
+                                            id="tap8remain" min=".000" max="999" step="any" placeholder="5" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn tap display on or off">Tap usage</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is active">
+                                                        <input type="radio" class="form-check-input" name="tap8active" id="tap8active" value="active">
+                                                        Active
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <label class="form-check-label" data-toggle="tooltip" title="Tap is inactive">
+                                                        <input type="radio" class="form-check-input" name="tap8active" id="tap8active" value="inactive"
+                                                            checked="">
+                                                        Inactive
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Tap 8 Tab -->
+
+                    <div class="tab-pane fade" id="controller"> <!-- Controller Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Controller Settings</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="controller" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <div class="form-group row">
+                                    <label for="hostname" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Host name for the controller to access during use (do not include the '.local' portion)">
+                                        Host Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="hostname"
+                                            id="hostname" minlength="3" maxlength="32"
+                                            placeholder="kegcop" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="breweryname" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the brewery or brewer to be displayed">
+                                        Brewery Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="breweryname"
+                                            id="breweryname" minlength="3" maxlength="32"
+                                            placeholder="My Homebrew" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="kegeratorname" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Name of the kegerator or controller">
+                                        Kegerator Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="kegeratorname"
+                                            id="kegeratorname" minlength="3" maxlength="32"
+                                            placeholder="My Kegerator" required>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="controlnum" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Select the controller number in this kegerator (1 if this is the only one.)">
+                                        Controller Number
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" name="controlnum" id="controlnum">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+										<div class="col-sm-2">&nbsp;</div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Toggle between metric or imperial units">Units</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change the application to use metric units (℃ and Liters)">
+                                                    <input type="radio" class="form-check-input" name="imperial" id="imperial" value="false">
+                                                    Metric
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change the to use imperial units (℉ and Gallons)">
+                                                    <input type="radio" class="form-check-input" name="imperial" id="imperial" value="true"
+                                                        checked="">
+                                                    Imperial
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+										<div class="col-sm-2">&nbsp;</div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn solenoid on or off">Solenoid Relay</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Energize the solenoid relay">
+                                                    <input type="radio" class="form-check-input" name="tapsolenoid" id="tapsolenoid" value="energized">
+                                                    Energized
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="De-energize the solenoid relay">
+                                                    <input type="radio" class="form-check-input" name="tapsolenoid" id="tapsolenoid" value="deenergized"
+                                                        checked="">
+                                                    De-energized
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+										<div class="col-sm-2">&nbsp;</div>
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Turn kick detection on or off">Kick Detect</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Detect kick actions">
+                                                    <input type="radio" class="form-check-input" name="kickdetect" id="kickdetect" value="on">
+                                                    Detect
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="De-energize the solenoid relay">
+                                                    <input type="radio" class="form-check-input" name="kickdetect" id="kickdetect" value="off">
+                                                    Ignore
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Controller Tab -->
+
+                    <div class="tab-pane fade" id="themeselect"> <!-- Themes Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>UI Theme</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form name="themeselect" id="themeselect" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <fieldset class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-2">
+                                            <p data-toggle="tooltip" title="Change active UI theme">Apply Theme:</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change to a light theme" data-placement="right">
+                                                    <input type="radio" class="form-check-input" name="theme" id="theme" value="cerulean">
+                                                    Cerulean (light)
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label" data-toggle="tooltip" title="Change to a dark theme" data-placement="right">
+                                                    <input type="radio" class="form-check-input" name="theme" id="theme" value="superhero">
+                                                    Superhero (dark)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Themes Tab -->
+
+					<div class="tab-pane fade" id="tempcontrol"> <!-- Temp Control Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Temperature Control</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form class="form-group" id="tempcontrol" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <div class="row col-12">
+
+                                    <div class="col-3">
+                                        <div class="row form-group">
+                                            <label for="setpoint" class="col-form-label" data-toggle="tooltip"
+                                                title="Enter the temperature setpoint in your selected units (&#x2109; or &#x2103;)">
+                                                <span class="setfarcel">Set Point</span>
+                                            </label>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label for="controlpoint" class="col-form-label" data-toggle="tooltip"
+                                                title="Enter the control point to use for temp control">
+                                                Control Point
+                                            </label>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label for="coolonhigh" class="col-form-label" data-toggle="tooltip"
+                                                title="Invert cooling control pin (logical pin high == cooling on)">
+                                                Invert Cooling Control
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-5">
+                                        <div class="row form-group">
+                                            <input type="number" class="form-control" name="setpoint" id="setpoint" min="0" max="80"
+                                                step=".1" placeholder="40">
+                                        </div>
+                                        <div class="row form-group">
+                                            <select class="form-control" name="controlpoint" id="controlpoint">
+                                                <option value="0">Room Temp Sensor</option>
+                                                <option value="1">Tower Temp Sensor</option>
+                                                <option value="2">Upper Chamber Temp Sensor</option>
+                                                <option value="3">Lower Chamber Temp Sensor</option>
+                                                <option value="4">Keg Temp Sensor</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="row form-group">
+                                            <fieldset class="form-group">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-sm-3">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Cooling pin normal (cool on pin low)">
+                                                                <input type="radio" class="form-check-input" name="coolonhigh" id="coolonhigh"
+                                                                value="false">
+                                                                Normal
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Invert cooling pin (cool on pin high)">
+                                                                <input type="radio" class="form-check-input" name="coolonhigh" id="coolonhigh"
+                                                                value="true">
+                                                                Inverted
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+
+                                    </div>
+
+									<div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Temperature control enabled">
+                                                            <input type="radio" class="form-check-input" name="controlenabled" id="controlenabled"
+															value="true">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Temperature control disabled">
+                                                            <input type="radio" class="form-check-input" name="controlenabled" id="controlenabled"
+															value="false">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                </div>
+
+                                <div class="row col-12"> <!-- Tower Fan Control -->
+                                    <div class="col-3">
+                                        <div class="row form-group">
+                                            <label for="tfansetpoint" class="col-form-label" data-toggle="tooltip"
+                                                title="Enter the temperature setpoint in your selected units (&#x2109; or &#x2103;)">
+                                                <span class="settfarcel">Tower Fan Set Point</span>
+                                            </label>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label for="tcoolonhigh" class="col-form-label" data-toggle="tooltip"
+                                                title="Invert tower fan control pin (logical pin high == cooling on)">
+                                                Invert Tower Fan Control
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-5">
+                                        <div class="row form-group">
+                                            <input type="number" class="form-control" name="tfansetpoint" id="tfansetpoint" min="0" max="80"
+                                                step=".1" placeholder="40">
+                                        </div>
+                                        <div class="row form-group">
+                                            <fieldset class="form-group">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-sm-3">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Fan pin normal (flow on pin low)">
+                                                                <input type="radio" class="form-check-input" name="tfanonhigh" id="tfanonhigh"
+                                                                value="false">
+                                                                Normal
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Invert fan control pin (flow on pin high)">
+                                                                <input type="radio" class="form-check-input" name="tfanonhigh" id="tfanonhigh"
+                                                                value="true">
+                                                                Inverted
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Tower fan control control enabled">
+                                                            <input type="radio" class="form-check-input" name="tfancontrolenabled" id="tfancontrolenabled"
+                                                            value="true">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Tower fan control disabled">
+                                                            <input type="radio" class="form-check-input" name="tfancontrolenabled" id="tfancontrolenabled"
+                                                            value="false">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div> <!-- Tower Fan Control -->
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Temp Control Tab -->
+
+                    <div class="tab-pane fade" id="sensorcontrol"> <!-- Sensor Control Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Temperature Sensor Control</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <!-- Sensor Control Form-->
+                            <form class="form-group" id="sensorcontrol" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <!-- Room Sensor Control -->
+                                <div class="row col-sm-12 justify-content-center">
+
+                                    <!-- Calibration Offset -->
+                                    <div class="col-sm-3">
+                                        <label
+                                            for="calRoom" class="col-form-label" data-toggle="tooltip"
+                                            title="Value by which the Room temperature display will be offset">Room
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input type="number" class="form-control" name="roomcal" id="roomcal"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <!-- Calibration Offset -->
+
+                                    <!-- Enable Sensor -->
+                                    <div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
+                                                            <input type="radio" class="form-check-input" name="enableroom" id="enableroom" value="true">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
+                                                            <input type="radio" class="form-check-input" name="enableroom" id="enableroom" value="false">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <!-- Enable Sensor -->
+
+                                </div>
+                                <!-- Room Sensor Control -->
+
+                                <p></p>
+
+                                <!-- Tower Sensor Control -->
+                                <div class="row col-sm-12 justify-content-center">
+
+                                    <!-- Calibration Offset -->
+                                    <div class="col-sm-3">
+                                        <label
+                                            for="calTower" class="col-form-label" data-toggle="tooltip"
+                                            title="Value by which the Tower temperature display will be offset">Tower
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input type="number" class="form-control" name="towercal" id="towercal"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <!-- Calibration Offset -->
+
+                                    <!-- Enable Sensor -->
+                                    <div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
+                                                            <input type="radio" class="form-check-input" name="enabletower" id="enabletower" value="true">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
+                                                            <input type="radio" class="form-check-input" name="enabletower" id="enabletower" value="false">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <!-- Enable Sensor -->
+
+                                </div>
+                                <!-- Tower Sensor Control -->
+
+                                <p></p>
+
+                                <!-- Upper Chamber Sensor Control -->
+                                <div class="row col-sm-12 justify-content-center">
+
+                                    <!-- Calibration Offset -->
+                                    <div class="col-sm-3">
+                                        <label
+                                            for="uppercal" class="col-form-label" data-toggle="tooltip"
+                                            title="Value by which the Upper Chamber temperature display will be offset">Upper Chamber
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input type="number" class="form-control" name="uppercal" id="uppercal"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <!-- Calibration Offset -->
+
+                                    <!-- Enable Sensor -->
+                                    <div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
+                                                            <input type="radio" class="form-check-input" name="enableupper" id="enableupper" value="true">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
+                                                            <input type="radio" class="form-check-input" name="enableupper" id="enableupper" value="false">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <!-- Enable Sensor -->
+
+                                </div>
+                                <!-- Upper Chamber Sensor Control -->
+
+                                <p></p>
+
+                                <!-- Lower Chamber Sensor Control -->
+                                <div class="row col-sm-12 justify-content-center">
+
+                                    <!-- Calibration Offset -->
+                                    <div class="col-sm-3">
+                                        <label
+                                            for="lowercal" class="col-form-label" data-toggle="tooltip"
+                                            title="Value by which the Lower Chamber temperature display will be offset">Lower Chamber
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input type="number" class="form-control" name="lowercal" id="lowercal"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <!-- Calibration Offset -->
+
+                                    <!-- Enable Sensor -->
+                                    <div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
+                                                            <input type="radio" class="form-check-input" name="enablelower" id="enablelower" value="true">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
+                                                            <input type="radio" class="form-check-input" name="enablelower" id="enablelower" value="false">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <!-- Enable Sensor -->
+
+                                </div>
+                                <!-- Lower Chamber Sensor Control -->
+
+                                <p></p>
+
+                                <!-- Keg Temperature Sensor Control -->
+                                <div class="row col-sm-12 justify-content-center">
+
+                                    <!-- Calibration Offset -->
+                                    <div class="col-sm-3">
+                                        <label
+                                            for="kegcal" class="col-form-label" data-toggle="tooltip"
+                                            title="Value by which the Keg temperature display will be offset">Keg
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input type="number" class="form-control" name="kegcal" id="kegcal"
+                                            min="-25" max="25" step=".01" placeholder="0.0">
+                                    </div>
+                                    <!-- Calibration Offset -->
+
+                                    <!-- Enable Sensor -->
+                                    <div class="col-sm-4">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor enabled">
+                                                            <input type="radio" class="form-check-input" name="enablekeg" id="enablekeg" value="true">
+                                                            Enabled
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Sensor disabled">
+                                                            <input type="radio" class="form-check-input" name="enablekeg" id="enablekeg" value="false"
+                                                                checked="">
+                                                            Disabled
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                </div>
+                                <!-- Keg Temperature Sensor Control -->
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form> <!-- Sensor Control Form-->
+
+                        </div>
+
+                    </div> <!-- Sensor Control Tab -->
+
+                    <div class="tab-pane fade" id="kegscreen"> <!-- KegScreen Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>KegScreen Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="kegscreen" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <div class="form-group row">
+                                    <label for="kegscreen" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Full URL to the KegScreen system handler. To stop reporting, clear this field">
+                                        KegScreen URL
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="kegscreen"
+                                            id="kegscreen" minlength="3" maxlength="128"
+                                            placeholder="http://kegscreen.local/kegcop">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- KegScreen Tab -->
+
+                    <div class="tab-pane fade" id="taplistio"> <!-- Taplist.io Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Taplist.io Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="taplistio" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <div class="form-group row">
+                                    <label for="taplistio_venue" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Site name. Found in your account at taplist.io under Dashboard > Web Settings > Web Address">
+                                        Taplist.io Site Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="taplistio_venue"
+                                            id="taplistio_venue" minlength="3" maxlength="255"
+                                            placeholder="taplist-123456">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="taplistio_secret" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Taplistio API Secret. Generated in your account at taplist.io under Account > Integrations > API. Begins with 'secret-' (NOT 'key-')">
+                                        Taplist.io Secret
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="taplistio_secret"
+                                            id="taplistio_secret" minlength="3" maxlength="255"
+                                            placeholder="secret-xxxxx">
+                                    </div>
+                                </div>
+
+                                <p></p>
+                                
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Keg Screen Tab -->
+
+                    <div class="tab-pane fade" id="targeturl"> <!-- Generic REST Target Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Generic REST Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <form id="targeturl" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <div class="form-group row">
+                                    <label for="targeturl" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Full URL to target system">
+                                        Target URL
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="targeturl"
+                                            id="targeturl" minlength="3" maxlength="128"
+                                            placeholder="http://raspberrypi.local">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="targetfreq" class="col-sm-2 col-form-label" data-toggle="tooltip"
+                                        title="Frequency in minutes at which to update the target (5 to 120 minutes)">Post Frequency</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="targetfreq" name="targetfreq"
+                                            min="5" max="120" step="1" placeholder="15">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Generic REST Target Tab -->
+
+                    <div class="tab-pane fade" id="rpints"> <!-- Raspberry Pints Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Raspberry Pints Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <p>
+                                Keg Cop sends only pour information to be consumed by a
+                                Raspberry Pints MQTT broker.
+                            </p>
+
+                            <form id="rpints" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <div class="form-group row">
+                                    <label for="rpintshost" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="Raspberry Pints broker hostname or IP address (do not include 'http://'">
+                                        Broker Address
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="rpintshost"
+                                            id="rpintshost" minlength="3" maxlength="128"
+                                            placeholder="raspberrypi.local">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="rpintsport" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT broker port">
+                                        Broker Port
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="rpintsport" name="rpintsport"
+                                            min="1" max="65535" step="1" placeholder="1883">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="rpintsusername" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT username if authentication is required">
+                                        User Name
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="rpintsusername"
+                                            id="rpintsusername" minlength="3" maxlength="128"
+                                            placeholder="">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="rpintspassword" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT password if authentication is required">
+                                        Password
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" name="rpintspassword"
+                                            id="rpintspassword" minlength="3" maxlength="128"
+                                            placeholder="">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="rpintstopic" class="col-sm-2 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT topic to which we will publish">
+                                        Topic
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="rpintstopic"
+                                            id="rpintstopic" minlength="3" maxlength="30"
+                                            placeholder="kegcop">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Raspberry Pints Tab -->
+
+                    <div class="tab-pane fade" id="hass"> <!-- Home Assistant Tab -->
+
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Home Assistant Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+                            <p>
+                                Keg Cop can send useful and consumable information to an MQTT
+                                broker for consumption by Home Assistant or another compatible
+                                subscriber.  To disable, clear the broker address.
+                            </p>
+
+                            <form id="hass" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+
+                                <div class="form-group row">
+                                    <label for="hahost" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT broker hostname or IP address (do not include 'http://'">
+                                        Broker Address
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="hahost"
+                                            id="hahost" minlength="3" maxlength="128"
+                                            placeholder="raspberrypi.local">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="haport" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT broker port">
+                                        Broker Port
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="haport" name="haport"
+                                            min="1" max="65535" step="1" placeholder="1883">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="hausername" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT username if authentication is required">
+                                        User Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="hausername"
+                                            id="hausername" minlength="3" maxlength="128"
+                                            placeholder="">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="hapassword" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT password if authentication is required">
+                                        Password
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="password" class="form-control" name="hapassword"
+                                            id="hapassword" minlength="3" maxlength="128"
+                                            placeholder="">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group row">
+                                    <label for="hatopic" class="col-sm-3 col-form-label"
+                                        data-toggle="tooltip"
+                                        title="MQTT topic to which we will publish discovery information">
+                                        Autodiscovery Topic
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="hatopic"
+                                            id="hatopic" minlength="3" maxlength="30"
+                                            placeholder="homeassistant">
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="d-grid gap-2 col-3 mx-auto">
+                                    <button id="submitsettings" class="btn btn-primary"
+                                        onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div> <!-- Home Assistat Tab -->
+
+                    <div class="tab-pane fade" id="flowcal"> <!-- Calibrate Flowmeters Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Calibrate Flowmeters</h4>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row col-sm-12 justify-content-center"> <!-- Pre-Flight Selection -->
+
+                                <div class="row col-sm-12 justify-content-center">
+
+                                    <div class="col-3">
+                                        <div class="row form-group">
+                                            <label for="setpoint" class="col-form-label" data-toggle="tooltip"
+                                                title="Select flowmeter and weight or volume calibration basis"> Select Flowmeter and Method
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <div class="row form-group">
+                                            <select class="form-control" name="flowmeter" id="flowmeter">
+                                                <option value="0">1</option>
+                                                <option value="1">2</option>
+                                                <option value="2">3</option>
+                                                <option value="3">4</option>
+                                                <option value="4">5</option>
+                                                <option value="5">6</option>
+                                                <option value="6">7</option>
+                                                <option value="7">8</option>
+                                                <option value="8">9</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <fieldset class="form-group">
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Calibrate by weight">
+                                                            <input type="radio" class="form-check-input" name="calbyvolume" id="calbyweight"
+                                                                value="false">
+                                                            Weight
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" data-toggle="tooltip" title="Calibrate by volume">
+                                                            <input type="radio" class="form-check-input" name="calbyvolume" id="calbyvolume"
+                                                                value="true">
+                                                            Volume
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                    <div class="col-sm-3 justify-content-center" id="byunspecified">
+                                        <label class="btn btn-primary disabled">Choose Mode</label>
+                                    </div>
+
+                                    <div class="col-sm-3 justify-content-center" id="byweight" style="display: none">
+                                        <label class="btn btn-primary" id="byweightlabel">Do Config by Weight</label>
+                                    </div>
+
+                                    <div class="col-sm-3 justify-content-center" id="byvolume" style="display: none">
+                                        <label class="btn btn-primary" id="byvolumelabel">Do Config by Volume</label>
+                                    </div>
+
+                                </div>
+
+                            </div> <!-- Pre-Flight Selection -->
+
+                            <div id="calsubmit" style="display: none"> <!-- Calibration Form -->
+
+                                <form class="form-group" id="flowcal" action="/api/v1/config/taps/" method="PUT" onsubmit="return processPost(this);">
+
+                                    <div class="row col-sm-12 justify-content-center" id="calbyvolumeblock" style="display: none"> <!-- Cal by volume -->
+                                        <div class="row col-sm-12 justify-content-center">
+                                            <p>
+                                                The flowmeter for this tap is now locked into calibration mode. Pull a measured
+                                                amount of beverage through this tap and record the volume below. The "Pulses" and
+                                                the <span class="ppu">PPU </span> fields will update every <span
+                                                class="updatepulsesecs">10</span> seconds. When you are finished, select "Update"
+                                                and the <span class="ppu">PPU</span> will be updated. You may select "Reset" if you
+                                                wish to start over. In any case, accumulated pulses will be debited from the keg
+                                                according to the currently configured <span class="ppu">PPU</span> value.
+                                            </p>
+                                        </div>
+                                        <div class="row col-sm-12 justify-content-center">
+                                            <label for="volume" class="ozml col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Volume of pour">
+                                                Units
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <input type="number" class="form-control" name="volume"
+                                                    id="volume" min="1" max="6000" step="any">
+                                            </div>
+                                        </div>
+                                    </div> <!-- Cal by volume -->
+
+                                    <div class="row col-sm-12 justify-content-center" id="calbyweightblock" style="display: none"> <!-- Cal by weight -->
+                                        <div class="row col-sm-12 justify-content-center">
+                                            <p>
+                                                The flowmeter for this tap is now locked into calibration mode. Enter the beverage's
+                                                Specific Gravity if known. If not, a good value for beer would be 1.015. Tare your
+                                                scale with a container and pull a reasonable amount of beverage through this tap.
+                                                Weigh it and record the net weight below. The "Pulses" and the <span class="ppu">PPU
+                                                </span> fields will update every <span class="updatepulsesecs">10</span> seconds.
+                                                When you are finished, select "Update" and the <span class="ppu">PPU</span> will be
+                                                updated. You may select "Reset" if you wish to start over. In any case, accumulated
+                                                pulses will be debited from the keg according to the currently configured <span
+                                                class="ppu">PPU</span> value.
+                                            </p>
+                                        </div>
+                                        <div class="row col-sm-12 justify-content-center">
+                                            <label for="sg" class="col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Specific gravity of beverage">
+                                                S.G.
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="sg"
+                                                    id="sg" min=".990" max="1.200" step="any">
+                                            </div>
+                                            <label for="weight" class="ozgrams col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Weight of pour">
+                                                Units
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="weight"
+                                                    id="weight" min="1" max="6000" step="any">
+                                            </div>
+                                        </div>
+                                    </div> <!-- Cal by weight -->
+
+                                    <div class="row col-sm-12 justify-content-center"> <!-- Calibration Row -->
+                                        <div class="row col-sm-12 justify-content-center">&nbsp;</div>
+                                        <div class="row col-sm-12 justify-content-center">
+                                            <label for="pulses" class="col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Pulses recorded by flowmeter">
+                                                Pulses
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="pulses" readonly
+                                                    id="pulses" min="0" max="99999" step="1" required>
+                                            </div>
+                                            <label for="ppu" class="col-sm-2 col-form-label"
+                                                data-toggle="tooltip"
+                                                title="Pulses per unit of calibration">
+                                                <span class="ppu">PPU</span>
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="ppu" readonly
+                                                    id="ppu" min="1" max="99999" step="1" required>
+                                            </div>
+                                        </div>
+                                    </div><!-- Calibration Row -->
+
+                                    <p></p>
+
+                                    <div class="d-grid gap-2 col-3 mx-auto">
+                                        <button disabled id="setppu" class="btn btn-primary"
+                                            onclick="if(!this.form.checkValidity(this)){return (false);}">Set PPU
+                                        </button>
+                                    </div>
+
+                                    <p></p>
+
+                                    <div class="d-grid gap-2 col-3 mx-auto">
+                                        <input type="reset" class="btn btn-primary" value="Reset">
+                                    </div>
+
+                                </form>
+
+                            </div> <!-- Calibration Form -->
+
+                        </div>
+
+                    </div> <!-- Calibrate Flowmeters Tab -->
+
+                    <div class="tab-pane fade" id="reset"> <!-- Reset Controller Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Reset Controller</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                You can perform a simple reset on your Keg Cop by pressing the button below. This
+                                has the same effect as pressing the reset button on the controller, and will not
+                                harm your settings.
+                            </p>
+                            <div class="d-grid gap-2 col-3 mx-auto">
+                                    <a href="/controllerreset/" class="btn btn-warning" type="button">Reset Controller</a>
+                            </div>
+                        </div>
+                    </div> <!-- Reset Controller Tab -->
+
+                    <div class="tab-pane fade" id="update"> <!-- Update Controller Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Update Controller</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                Below are the current and available versions for your controller.
+                            </p>
+                            <p>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Current</th>
+                                            <th scope="col">Available</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="table-firmware table-success">
+                                            <th scope="row">Firmware</th>
+                                            <td>
+                                                <div id="thisFWVersion">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="thatFWVersion">... loading</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="table-firmware table-info">
+                                            <th scope="row">Filesystem</th>
+                                            <td>
+                                                <div id="thisFSVersion">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="thatFSVersion">... loading</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </p>
+                            <div class="alert alert-danger" id="badota" style="display:none;">
+                                <p>Warning: Keg Cop has recorded a failed OTA attempt:</p>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Failed</th>
+                                            <th scope="col">Date/Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Firmware</th>
+                                            <td>
+                                                <div id="badfw">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="badfwtime">... loading</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Filesystem</th>
+                                            <td>
+                                                <div id="badfs">... loading</div>
+                                            </td>
+                                            <td>
+                                                <div id="badfstime">... loading</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p>
+                                If you would like to update your firmware and filesystem, click the button below.
+                            </p>
+                            <div class="d-grid gap-2 col-3 mx-auto">
+                                <a href="/ota/" id="proceed" class="btn btn-danger" type="button">Update Application</a>
+                            </div>
+                        </div>
+                    </div> <!-- Update Controller Tab -->
+
+                    <div class="tab-pane fade" id="debug"> <!-- Debug Configuration Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Debug Configuration</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                Keg Cop provides debug information via Serial and (optional) Telnet connections.
+                            </p>
+                            <p>
+                                Because Telnet does not have authentication and the communications are insecure, it may be considered a security risk and is disabled by default.
+                            </p>
+                            <p>
+                                Additionally, various debug levels are available to tailor the verbosity of the Serial and Telnet messages to your preferences.
+                            </p>
+                            <hr>
+                            <!-- Debug Control -->
+                            <div class="row col-sm-12 justify-content-center">
+
+                                <form id="tap0" action="/api/v1/config/settings/" method="PUT" onsubmit="return processPost(this);">
+                                    <div class="row col-sm-12 justify-content-center">
+
+                                        <!-- Log Level -->
+                                        <div class="col-sm-2">
+                                            <label
+                                                for="loglevel" class="col-form-label" data-toggle="tooltip"
+                                                title="Debug level for serial and telnet messages.">
+                                                Debug Level
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-select" id="loglevel" name="loglevel" data-form-type="other">
+                                                <option>0 - Silent, no output</option>
+                                                <option>1 - Fatal errors </option>
+                                                <option>2 - All errors </option>
+                                                <option>3 - Errors and warnings </option>
+                                                <option>4 - Errors, warnings, and notices </option>
+                                                <option>5 - Errors, warnings, notices, and traces </option>
+                                                <option>6 - All</option>
+                                            </select>
+                                        </div>
+                                        <!-- Log Level -->
+
+                                        <!-- Enable Telnet -->
+                                        <div class="col-sm-6">
+                                            <fieldset class="form-group">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-sm-5">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Telnet disabled">
+                                                                <input type="radio" class="form-check-input" name="telnet" id="telnet" value="false">
+                                                                Telnet Disabled
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" data-toggle="tooltip" title="Telnet enabled">
+                                                                <input type="radio" class="form-check-input" name="telnet" id="telnet" value="true">
+                                                                Telnet Enabled
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <!-- Enable Telnet -->
+
+                                    </div>
+
+                                    <p></p>
+
+                                    <div class="d-grid gap-2 col-3 mx-auto">
+                                        <button id="submitsettings" class="btn btn-primary"
+                                            onclick="if(!this.form.checkValidity(this)){return (false);}">Update
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Debug Control -->
+                        </div>
+                    </div> <!-- Debug Configuration Tab -->
+
+                    <div class="tab-pane fade" id="wifi"> <!-- Reset WiFi Tab -->
+                        <div class="card-header d-flex">
+                            <ul class="navbar me-auto">
+                                <h4>Reset WiFi</h4>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                If you plan on relocating your Keg Cop to a new network, you should reset the WiFi
+                                connection settings.
+                            </p>
+                            <p class="card-text"></p>
+                                If you are sure you want to completely reset your Keg Cop's WiFi configuration,
+                                click the red "Reset WiFi" button below. You will have to re-configure via the
+                                Access Point to join this device back to your local WiFi network.
+                            </p>
+                            <div class="d-grid gap-2 col-3 mx-auto">
+                                <a href="/wifireset/" class="btn btn-danger" type="button">Reset WiFi</a>
+                            </div>
+                        </div>
+                    </div> <!-- Reset WiFi Tab -->
+
+                </div> <!-- Navigation Tab contents -->
+
+            </div> <!-- Keg Cop Settings -->
+
+        </div> <!-- Container -->
+
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">Copyright &copy; 2019-2023, Lee C. Bussy</span>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+    <script src="/kegcop_post.js"></script>
+    <script src="/settings.js"></script>
+
+</body>
+
+</html>

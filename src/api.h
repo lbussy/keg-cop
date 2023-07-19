@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,20 +23,11 @@ SOFTWARE. */
 #ifndef _API_H
 #define _API_H
 
-#include "appconfig.h"
-#include "flowconfig.h"
-#include "serialhandler.h"
-
 #include <ArduinoJson.h>
 
-#define CAPACITY_ACTION_API 768
-#define CAPACITY_INFO_API 768
-#define CAPACITY_CONFIG_API 384
-#define CAPACITY_API 512
-
-struct ActionAPI
+struct Action_API_V1
 {
-    // Stores action API information
+    // Stores action API_V1 information
     const char base[7] = "action";
     const char ping[5] = "ping";
     const char wifireset[10] = "wifireset";
@@ -50,9 +41,9 @@ struct ActionAPI
     void save(JsonObject) const;
 };
 
-struct InfoAPI
+struct Info_API_V1
 {
-    // Stores information API information
+    // Stores information API_V1 information
     const char base[5] = "info";
     const char resetreason[12] = "resetreason";
     const char heap[5] = "heap";
@@ -63,18 +54,44 @@ struct InfoAPI
     const char sensors[8] = "sensors";
     const char tempcontrol[12] = "tempcontrol";
     const char secret[7] = "secret";
+    const char theme[6] = "theme";
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
 };
 
-struct ConfigAPI
+struct Config_API_V1
 {
-    // Stores configuration API information
+    // Stores configuration API_V1 information
     const char base[7] = "config";
     const char settings[9] = "settings";
-    const char theme[6] = "theme";
     const char taps[5] = "taps";
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+struct Files_API_V1
+{
+    // Stores files API_V1 information
+    const char base[3] = "fs";
+    const char listfiles[10] = "listfiles";
+    const char fsinfo[7] = "fsinfo";
+    const char downloadfile[13] = "downloadfile";
+    const char deletefile[11] = "deletefile";
+    const char upload[7] = "upload";
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+struct API_V1
+{
+    const char base[3] = "v1";
+    Action_API_V1 actionAPI;
+    Info_API_V1 infoAPI;
+    Config_API_V1 configAPI;
+    Files_API_V1 filesAPI;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -82,20 +99,12 @@ struct ConfigAPI
 
 struct API
 {
-    const char base[7] = "api/v1";
-    ActionAPI actionAPI;
-    InfoAPI infoAPI;
-    ConfigAPI configAPI;
+    const char base[4] = "api";
+    API_V1 api_v1;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
 };
-
-// bool serializeActionAPI(Print &dst);
-// bool serializeInfoAPI(Print &dst);
-// bool serializeConfigAPI(Print &dst);
-// bool serializeAPI(Print &dst);
-// bool printAPI();
 
 extern API api;
 

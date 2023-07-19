@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -24,9 +24,6 @@ SOFTWARE. */
 #define _THERMOSTAT_H
 
 #include "config.h"
-#include "tempsensors.h"
-#include "appconfig.h"
-#include "thermostat.h"
 
 enum ThermostatState
 {
@@ -51,7 +48,7 @@ enum ControlPoint
 {
     CP_COOL = COOL,
     CP_SOLENOID = SOLENOID,
-    CP_COUNT = 2 // Need this bound stated explicitly since it's not a normal enum
+    CP_COUNT
 };
 
 static const char *thermostatName[TS_COUNT] = {"Chamber", "Tower"};
@@ -73,6 +70,5 @@ void loopTstat(int ts);
 void newStatReport(int ts);
 
 extern Thermostat tstat[];
-extern ControlPoint cp[];
 
 #endif // _THERMOSTAT_H

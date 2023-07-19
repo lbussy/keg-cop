@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -21,6 +21,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "uptime.h"
+
+#include <Arduino.h>
+
+#define UPTIME_REFRESH 1
+#define DAY_MILLIS 86400000
+#define HOUR_MILLIS 3600000
+#define MIN_MILLIS 60000
+#define SEC_MILLIS 1000
 
 static int refresh = UPTIME_REFRESH * 1000;
 static unsigned long uptimeNow;

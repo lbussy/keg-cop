@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -22,7 +22,16 @@ SOFTWARE. */
 
 #include "mdnshandler.h"
 
-void mDNSSetup()
+#include "appconfig.h"
+#include "config.h"
+#include "tools.h"
+#include "kegscreen.h"
+
+#include <ArduinoLog.h>
+#include <ESPmDNS.h>
+#include <WiFi.h>
+
+void mDNSStart()
 {
     if (!MDNS.begin(WiFi.getHostname()))
     { // Start the mDNS responder
@@ -35,12 +44,18 @@ void mDNSSetup()
     }
 }
 
+void mDNSStop()
+{
+    Log.notice(F("Stopping mDNS." CR));
+    MDNS.end();
+}
+
 void mDNSReset()
 {
     MDNS.end();
     if (!MDNS.begin(app.copconfig.hostname))
     {
-        Log.error(F("Error resetting MDNS responder."));
+        Log.error(F("Error resetting MDNS responder." CR));
     }
     else
     {

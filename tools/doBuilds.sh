@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+# Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 # This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -67,7 +67,7 @@ get_git() {
             GITROOT="$SCRIPT_DIR"
         elif [[ -f "$SCRIPT_DIR/../platformio.ini" ]]; then
             # Platformio.ini is in the parent directory
-            GITROOT=`readlink -f "$SCRIPT_DIR/.."`
+            GITROOT=${readlink -f "$SCRIPT_DIR/.."}
         else
             echo -e "\nERROR: Git repository nor platformio.ini found."
             exit
@@ -117,7 +117,7 @@ create_version() {
     if [ ! -d "$GITROOT"/"$BINLOC"/ ]; then
         mkdir "$GITROOT"/"$BINLOC"
     fi
-    cat << EOF | tee "$GITROOT/data/version.json" "$GITROOT/$BINLOC/version.json" > /dev/null || exit
+    cat << EOF | tee "$GITROOT/data_source/version.json" "$GITROOT/$BINLOC/version.json" > /dev/null || exit
 {
     "fw_version": "$GITTAG",
     "fs_version": "$GITTAG"
@@ -141,6 +141,7 @@ build_binaries() {
 }
 
 copy_binaries() {
+    local isLittleFS=false
     echo
     if [ -d "$GITROOT"/"$BINLOC"/ ]; then
         for env in "${ENVIRONMENTS[@]}"
@@ -149,7 +150,18 @@ copy_binaries() {
                 echo -e "Copying binaries for $env."
                 cp "$GITROOT"/.pio/build/"$env"/firmware.bin "$GITROOT"/"$BINLOC"/"$env"_firmware.bin
                 cp "$GITROOT"/.pio/build/"$env"/partitions.bin "$GITROOT"/"$BINLOC"/"$env"_partitions.bin
-                cp "$GITROOT"/.pio/build/"$env"/spiffs.bin "$GITROOT"/"$BINLOC"/"$env"_spiffs.bin
+
+                # Handle SPIFFS vs LittleFS
+                while IFS= read -r line; do
+                if [[ $line == "board_build.filesystem"* && $line == *"littlefs" ]]; then
+                    isLittleFS=true
+                fi
+                done < "$GITROOT"/platformio.ini
+                if [ "$isLittleFS" ]; then
+                    cp "$GITROOT"/.pio/build/"$env"/littlefs.bin "$GITROOT"/"$BINLOC"/"$env"_littlefs.bin
+                else
+                    cp "$GITROOT"/.pio/build/"$env"/spiffs.bin "$GITROOT"/"$BINLOC"/"$env"_spiffs.bin
+                fi
             fi
         done
     else

@@ -1,4 +1,4 @@
-URL Target Report JSON Model:
+Generic REST Report JSON Model:
 ================================
 
 JSON Definition:

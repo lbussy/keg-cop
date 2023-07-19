@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,16 +23,8 @@ SOFTWARE. */
 #ifndef _JSONCONFIG_H
 #define _JSONCONFIG_H
 
-#include "serialhandler.h"
 #include "config.h"
-
 #include <ArduinoJson.h>
-#include <SPIFFS.h>
-#include <FS.h>
-
-#define APP_FILENAME "/appconfig.json"
-#define CAPACITY_APP_SERIAL 2048
-#define CAPACITY_APP_DESERIAL 3072
 
 struct ApConfig
 {
@@ -59,6 +51,9 @@ struct CopConfig
     bool pouremulate;
     bool tempemulate;
     char theme[32];
+    bool telnet;
+    bool kickdetect;
+    uint8_t loglevel;
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -76,6 +71,7 @@ struct Temperatures
     bool tfancontrolenabled;
     float tfansetpoint;
     bool tfanonhigh;
+
 
     void load(JsonObjectConst);
     void save(JsonObject) const;
@@ -103,7 +99,21 @@ struct TaplistIO
     void save(JsonObject) const;
 };
 
-struct MQTTTarget
+struct RPintsTarget
+{
+    // Stores MQTT Target configuration
+    char host[64];
+    int port;
+    char username[32];
+    char password[32];
+    char topic[30];
+    bool update;
+
+    void load(JsonObjectConst);
+    void save(JsonObject) const;
+};
+
+struct HATarget
 {
     // Stores MQTT Target configuration
     char host[64];
@@ -166,7 +176,8 @@ struct AppConfig
     KegScreen kegscreen;
     TaplistIO taplistio;
     URLTarget urltarget;
-    MQTTTarget rpintstarget;
+    RPintsTarget rpintstarget;
+    HATarget hatarget;
     CloudTarget cloud;
 
     void load(JsonObjectConst);
@@ -190,6 +201,7 @@ namespace AppKeys
     constexpr auto taplistio = "taplistio";
     constexpr auto urltarget = "urltarget";
     constexpr auto rpintstarget = "rpintstarget";
+    constexpr auto hatarget = "hatarget";
     constexpr auto cloud = "cloud";
 
     // AP Config
@@ -209,6 +221,9 @@ namespace AppKeys
     constexpr auto pouremulate = "pouremulate";
     constexpr auto tempemulate = "tempemulate";
     constexpr auto theme = "theme";
+    constexpr auto telnet = "telnet";
+    constexpr auto kickdetect = "kickdetect";
+    constexpr auto loglevel = "loglevel";
 
     // Temperatures
     constexpr auto setpoint = "setpoint";
@@ -220,6 +235,17 @@ namespace AppKeys
     constexpr auto tfancontrolenabled = "tfancontrolenabled";
     constexpr auto tfansetpoint = "tfansetpoint";
     constexpr auto tfanonhigh = "tfanonhigh";
+
+    constexpr auto roomenabled = "roomenabled";
+    constexpr auto roomcal = "roomcal";
+    constexpr auto towerenabled = "towerenabled";
+    constexpr auto towercal = "towercal";
+    constexpr auto upperenabled = "upperenabled";
+    constexpr auto uppercal = "uppercal";
+    constexpr auto lowerenabled = "lowerenabled";
+    constexpr auto lowercal = "lowercal";
+    constexpr auto kegenabled = "kegenabled";
+    constexpr auto kegcal = "kegcal";
 
     // KegScreen
     constexpr auto url = "url";
@@ -266,9 +292,13 @@ namespace AppKeys
 
 extern AppConfig app;
 
-bool loadAppConfig();
-bool saveAppConfig();
+bool loadAppConfig(const char *filename);
+bool loadAppConfig(const char *filename, bool isBackup);
+bool saveAppConfig(const char * filename);
 bool serializeAppConfig(Print &);
 bool deserializeAppConfig(Stream &);
+void debugAppLog(String area);
+void debugAppLog(bool fileExist);
+void debugAppLog(String area, bool fileExist);
 
 #endif // _JSONCONFIG_H

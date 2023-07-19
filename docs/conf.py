@@ -11,17 +11,9 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-import sys
+#import sys
 #sys.path.insert(0, os.path.abspath('.'))
 import subprocess
-import recommonmark
-
-# for MarkdownParser
-from recommonmark.transform import AutoStructify
-from sphinx_markdown_parser.parser import MarkdownParser
-
-# At top on conf.py (with other import statements)
-from sphinx_markdown_parser.transform import AutoStructify
 
 import sphinx_bootstrap_theme
 from sphinx.ext import todo
@@ -29,7 +21,7 @@ from sphinx.ext import todo
 # -- Project information -----------------------------------------------------
 
 project = u'Keg Cop'
-copyright = u'2019-2022 Lee C. Bussy'
+copyright = u'2019-2023 Lee C. Bussy'
 author = u'Lee C. Bussy'
 
 # Get 0.0.0 version from latest Git tag
@@ -49,7 +41,8 @@ release = version
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['recommonmark', 'sphinx.ext.todo']
+extensions = ['myst_parser', 'sphinx.ext.todo']
+myst_enable_extensions = ['html_admonition', 'colon_fence']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -60,10 +53,13 @@ exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store', 'README.*']
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = '.md'
 
 # The master toctree document.
 master_doc = 'index'
+
+myst_heading_anchors = 4
+
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -93,18 +89,6 @@ html_theme_options = {
 
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "Site",
-
-    # A list of tuples containing pages or urls to link to.
-    # Valid tuples should be in the following forms:
-    #    (name, page)                 # a link to a page
-    #    (name, "/aa/bb", 1)          # a link to an arbitrary relative url
-    #    (name, "http://example.com", True) # arbitrary absolute url
-    # Note the "1" or "True" value above as the third argument to indicate
-    # an arbitrary url.
-    # 'navbar_links': [
-    #     ("Examples", "examples"),
-    #     ("Link", "http://example.com", True),
-    # ],
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': True,
@@ -155,11 +139,5 @@ html_theme_options = {
 
     # Choose Bootstrap version.
     # Values: "3" (default) or "2" (in quotes)
-    'bootstrap_version': "4",
+    'bootstrap_version': "5",
 }
-
-# -- TODO Options ------------------------------------------------------------
-
-todo_include_todos = True   # If this is True, todo and todolist produce output, else they produce nothing. The default is False.
-todo_emit_warnings = False   # If this is True, todo emits a warning for each TODO entries. The default is False.
-todo_link_only = False      # If this is True, todolist produce output without file path and line, The default is False.

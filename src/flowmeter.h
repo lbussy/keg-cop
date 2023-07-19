@@ -1,4 +1,4 @@
-/* Copyright (C) 2019-2022 Lee C. Bussy (@LBussy)
+/* Copyright (C) 2019-2023 Lee C. Bussy (@LBussy)
 
 This file is part of Lee Bussy's Keg Cop (keg-cop).
 
@@ -23,19 +23,7 @@ SOFTWARE. */
 #ifndef _FLOWMETER_H
 #define _FLOWMETER_H
 
-#include "serialhandler.h"
-#include "config.h"
-#include "appconfig.h"
-#include "kegscreen.h"
-#include "flowconfig.h"
-
-#include <SPIFFS.h>
-#include <ArduinoJson.h>
-#include <ArduinoLog.h>
-#include <Arduino.h>
-
 // Flow methods
-void handleInterrupts(int);
 void logFlow();
 void logFlow(int tap, int pulses);
 unsigned long getPulseCount(int);
