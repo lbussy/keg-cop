@@ -22,17 +22,17 @@ You'll next need to configure Keg Cop to send its data to Home Assistant.  To do
 
 Keg Cop is now configured to send its data to Home Assistant.  If you've kept the default Home Assistant dashboard in place, in due course you'll see its data populate there.  It will look something like this:
 
-![Default dashboard display](766244-1690366289438.png)
+![Default dashboard display](default_dash.png)
 
 To create a more focused and attractive dashboard, in the Home Assistant web interface, go to Settings -> Dashboards, and then click **Add Dashboard**. Call it whatever you like ("kegcop" in this example) and choose any icon you like (mdi:keg is a good choice). Then click **Create**.  Next to your newly-created dashboard in the list, click **Open**.
 
 The new dashboard will default to showing all your data, which you don't want. Click on the three dots in the upper-right corner, and then **Edit dashboard**.
 
-![Edit dashboard](766245-1690366760021.png)
+![Edit dashboard](edit_dash.png)
 
  Turn on "Start with an empty dashboard" and click **Take control**.
 
- ![Take control](766246-1690366812780.png)
+ ![Take control](take_control.png)
 
  You now have an empty dashboard.  At the top, you can click on the pencil icon to the right of "Edit UI" to give it a name--something like "On Tap at Home Brewery" might be appropriate.  You'll next want to add some data to this dashboard.  Start by clicking on the **Add Card** button in the lower-right corner.  In the window that pops up, select **Horizontal Stack**.  The Horizontal stack card lets you stack two (or more) cards side-by-side.  In this case, we'll be stacking a text field to describe the beer on tap and a gauge showing how much of that beer is left.
 
@@ -40,17 +40,17 @@ The new dashboard will default to showing all your data, which you don't want. C
 
  In the Markdown card, you can enter a title (I'd use the tap number and the beer name), and any text you like to describe the beer.  You can format this text, if desired, using Markdown syntax.  It will look something like this:
 
- ![Markdown card](766454-1690539293517.png)
+ ![Markdown card](markdown_card.png)
 
  Once you've entered whatever text you like, click the + to the upper-right to add another card.  For this, you'll want to select **Gauge**.
 
  The gauge is the card that will show how much of your beer is remaining.  In the **Entity (required)** field, you'll need to select the entity that represents this amount, which will be named with the tap number followed by the name of the beer--in the example below, "1. Korbinian".  You'll want to set "maximum" to the volume of your keg, in whatever units you've told Keg Cop to use; I'm using 5 for five-gallon Corny kegs.  I also turned on the needle gauge and the severity indications, though this is at your preference.  The overall card configuration looks like this:
 
- ![Gauge card](766247-1690367172812.png)
+ ![Gauge card](gauge_card.png)
 
  Once you're finished, click **Save** in the lower-right corner.  Repeat this process, creating additional Horizontal Stack cards for your other taps.  When you're finished, click the **Done** button at the upper-right.  You should have a dashboard that looks something like this:
 
- ![Sample dashboard](766453-1690538465508.png)
+ ![Sample dashboard](sample_dashboard.png)
 
  ## Further reading
 
