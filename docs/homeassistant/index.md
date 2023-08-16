@@ -1,4 +1,6 @@
-# Integration with Home Assistant
+(hass_custom)=
+
+# Custom Integration with Home Assistant
 
 ## Introduction
 
