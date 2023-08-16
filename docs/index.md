@@ -35,6 +35,7 @@ operations/index
 api/index
 troubleshooting/index
 context/index
+homeassistant/index
 contributions/index
 todo
 ```

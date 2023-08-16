@@ -27,3 +27,5 @@ Because MQTT is not a stateful transport, you can experience a delay in changes 
 ```
 
 Home Assistant will group all monitorable points (called "entities") under their Keg Cop controller (called a "device.")  While I have made some effort to display these items pleasingly, you may wish to apply your knowledge and experience with Home Assistant to show them differently.  These changes are outside the scope of Keg Cop.
+
+Additional customization information may be found in [Custom Integration with Home Assistant](hass_custom).
