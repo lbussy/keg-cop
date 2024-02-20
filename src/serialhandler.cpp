@@ -62,13 +62,13 @@ void serialBegin()
     {
         SERIAL.setDebugOutput(false);
         Log.begin(LOG_LEVEL_SILENT, &SERIAL, true);
-        Log.setPrefix(printTimestamp);
+        Log.setPrefix(printPrefix);
     }
     else if (!app.copconfig.serial)
     {
         SERIAL.setDebugOutput(true);
         Log.begin(app.copconfig.loglevel, &SERIAL, true);
-        Log.setPrefix(printTimestamp);
+        Log.setPrefix(printPrefix);
         Log.notice(F("Serial logging started at %l." CR), BAUD);
     }
 #endif
@@ -88,13 +88,13 @@ void serialStop()
     {
         Serial.setDebugOutput(false);
         Log.begin(LOG_LEVEL_SILENT, &SERIAL, true);
-        Log.setPrefix(printTimestamp);
+        Log.setPrefix(printPrefix);
     }
     else if (!app.copconfig.serial)
     {
         Serial.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &SERIAL, true);
-        Log.setPrefix(printTimestamp);
+        Log.setPrefix(printPrefix);
         Log.notice(F("Local serial logging started at %l." CR), BAUD);
     }
 #endif
@@ -107,6 +107,11 @@ void serialRestart()
     serialBegin();
 }
 
+void printPrefix(Print* _logOutput, int logLevel) {
+    printTimestamp(_logOutput);
+    printLogLevel (_logOutput, logLevel);
+}
+
 void printTimestamp(Print *_logOutput)
 {
     time_t now;
@@ -116,6 +121,21 @@ void printTimestamp(Print *_logOutput)
     char locTime[22] = {'\0'};
     strftime(locTime, sizeof(locTime), "%FT%TZ ", &ts);
     _logOutput->print(locTime);
+}
+
+void printLogLevel(Print* _logOutput, int logLevel) {
+    /// Show log description based on log level
+    switch (logLevel)
+    {
+        default:
+        case 0:_logOutput->print("SILENT " ); break;
+        case 1:_logOutput->print("FATAL "  ); break;
+        case 2:_logOutput->print("ERROR "  ); break;
+        case 3:_logOutput->print("WARNING "); break;
+        case 4:_logOutput->print("INFO "   ); break;
+        case 5:_logOutput->print("TRACE "  ); break;
+        case 6:_logOutput->print("VERBOSE "); break;
+    }   
 }
 
 size_t printDot()
@@ -524,7 +544,7 @@ void toggleSerialCompat(bool enable)
         SERIAL.flush();
         SERIAL.setDebugOutput(true);
         Log.begin(LOG_LEVEL, &SERIAL, true);
-        Log.setPrefix(printTimestamp);
+        Log.setPrefix(printPrefix);
         Log.notice(F("Serial communications (terse mode) disabled, debug print enabled." CR));
     }
     else
